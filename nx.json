@@ -33,6 +33,13 @@
     "front-end-e2e": {
       "tags": [],
       "implicitDependencies": ["front-end"]
+    },
+    "portal": {
+      "tags": []
+    },
+    "portal-e2e": {
+      "tags": [],
+      "implicitDependencies": ["portal"]
     }
   }
 }
