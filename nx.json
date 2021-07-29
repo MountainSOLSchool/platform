@@ -27,6 +27,9 @@
     ]
   },
   "projects": {
+    "paths": {
+      "tags": ["scope:libs/paths"]
+    },
     "portal": {
       "tags": []
     },
