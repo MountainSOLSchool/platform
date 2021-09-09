@@ -42,6 +42,7 @@
     "@ngrx/effects": "^12.3.0",
     "@ngrx/store": "^12.3.0",
     "@nrwl/angular": "12.6.2",
+    "firebase": "^8.8.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
