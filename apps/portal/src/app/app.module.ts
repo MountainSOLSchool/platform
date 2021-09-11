@@ -11,6 +11,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
+// Initialize Firebase SDK
+import * as firebase from 'firebase';
+import * as firebaseui from 'firebaseui';
+// -----------------------
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
