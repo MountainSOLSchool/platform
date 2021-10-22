@@ -34,6 +34,7 @@
     "@angular/common": "^12.1.0",
     "@angular/compiler": "^12.1.0",
     "@angular/core": "^12.1.0",
+    "@angular/fire": "^7.0.4",
     "@angular/forms": "^12.1.0",
     "@angular/material": "^12.1.4",
     "@angular/platform-browser": "^12.1.0",
@@ -42,8 +43,9 @@
     "@ngrx/effects": "^12.3.0",
     "@ngrx/store": "^12.3.0",
     "@nrwl/angular": "12.6.2",
-    "firebase": "^8.8.0",
+    "firebase": "^9.0.2",
     "firebaseui": "^5.0.0",
+    "firebaseui-angular": "^5.1.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"

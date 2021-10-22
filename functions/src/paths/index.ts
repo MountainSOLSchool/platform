@@ -1,83 +1,256 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
-import * as XLSX from "xlsx";
 import * as pdf from "html-pdf";
 import * as CORS from "cors";
+import {
+  CellStyle,
+  FlatRecord,
+  CellStyleBuilder,
+  StudentDbEntry,
+  StudentRecord,
+  StudentRecordPropertyNames,
+  TableHeader,
+  TableRow,
+} from "../models";
 
 admin.initializeApp();
-
 const db = admin.firestore();
-
 const cors = CORS({ origin: true });
 
-export const roster = functions.https.onRequest(async (request, response) => {
-  cors(request, response, async () => {
-    const className = request.query.class as string;
+export const roster = aGetEndpoint(async (request, response) => {
+  const className = request.query.class as string;
 
-    const students = await getStudentsForClass(className);
-  
-    const spreadsheetHtml = generateSpreadsheetHtmlForClass(className, students);
+  const pdf = await createRosterPdf(className);
 
-    const spreadsheetPdf = pdf.create(spreadsheetHtml, { orientation: "landscape" });
-  
-    spreadsheetPdf.toBuffer((err, buffer) => response.send(buffer.toJSON()));
-  });
+  respondWithPdf(pdf, response);
 });
 
-function generateSpreadsheetHtmlForClass(className: string, students: { first_name: string; }[]) {
-  console.log(students);
-  
-  const worksheet = XLSX.utils.aoa_to_sheet([
-    [`${className} Roster`],
-    [],
-    ["Last Name", "First Name", "Code Word", "Can Photograph", "Can Use Name", "Can Apply Sunscreen/Bugspray"],
-  ]);
-
-  XLSX.utils.sheet_add_json(
-    worksheet,
-    students,
-    { skipHeader: true, origin: -1, header: ["last_name", "first_name", "code_word", "ok_to_photograph", "ok_use_name_photographs", "sunscreen_bug_spray"] });
-
-  const spreadsheetHtml = XLSX.utils.sheet_to_html(worksheet);
-  return spreadsheetHtml;
+function aGetEndpoint(
+  handler: (
+    request: functions.https.Request,
+    response: functions.Response
+  ) => void
+) {
+  return functions.https.onRequest(async (request, response) => {
+    cors(request, response, async () => handler(request, response));
+  });
 }
 
-async function getStudentsForClass(className: string) {
+function respondWithPdf(
+  pdf: pdf.CreateResult,
+  response: functions.Response
+): void {
+  pdf.toBuffer((err, buffer) => response.send(buffer.toJSON()));
+}
+
+async function createRosterPdf(className: string) {
+  const students = await fetchStudents(className);
+
+  return createTablePdf({
+    entities: students,
+    headers: studentRowHeaders,
+    recordTransformer: transformStudentEntriesIntoRecords,
+    styleBuilder: buildStudentRecordStyle,
+  });
+}
+
+function createTablePdf<T, PropertyNames extends string>({
+  entities,
+  headers,
+  recordTransformer,
+  styleBuilder,
+}: {
+  entities: Array<T>;
+  headers: readonly TableHeader<PropertyNames>[];
+  recordTransformer: RecordTransformer<T, PropertyNames>;
+  styleBuilder: CellStyleBuilder<PropertyNames>;
+}) {
+  const htmlTable = generateHtmlTableFromEntities({
+    entities,
+    headers,
+    recordTransformer,
+    styleBuilder,
+  });
+
+  return pdf.create(htmlTable, {
+    orientation: "landscape",
+  });
+}
+
+type RecordTransformer<T, PropertyNames extends string> = (
+  entities: Array<T>
+) => Array<FlatRecord<PropertyNames>>;
+
+function transformStudentEntriesIntoRecords(
+  students: Array<StudentDbEntry>
+): Array<StudentRecord> {
+  return students.map((student) => ({
+    firstName: student.first_name,
+    lastName: student.last_name,
+    codeWord: student.code_word,
+    okToPhotograph: student.ok_to_photograph ? "Yes" : "No",
+    okUseNamePhotographs: student.ok_use_name_photographs ? "Yes" : "No",
+    sunscreenBugSpray: student.sunscreen_bug_spray ? "Yes" : "No",
+    medications: student.medications
+      ?.map(
+        (med) =>
+          `${med.name} is prescribed by ${med.doctor} and show be taken "${med.dosage}"`
+      )
+      ?.join(", "),
+  }));
+}
+
+function transformRecordsIntoTableRows<PropertyNames extends string>(
+  records: Array<FlatRecord<PropertyNames>>,
+  styleBuilder: CellStyleBuilder<PropertyNames>
+): Array<TableRow<PropertyNames>> {
+  return records.map((record) => ({
+    cells: Object.entries(record).map(([key, value]) => {
+      const propertyName = key as PropertyNames;
+      const textContent = value as string;
+      return {
+        propertyName,
+        textContent,
+        style: styleBuilder(propertyName, textContent),
+      };
+    }),
+  }));
+}
+
+function createHtmlTable<T extends string>(
+  headers: readonly TableHeader<T>[],
+  rows: Array<TableRow<T>>
+): string {
+  const headerTitles = headers.map((h) => h.title);
+  return `
+  <table>
+      <tr>
+        ${headers.map((h) => "<th>" + h.title + "</th>").join("")}
+      </tr>
+      ${rows
+        .map(
+          (r) =>
+            "<tr>" +
+            [...r.cells]
+              .sort(
+                (a, b) =>
+                  headerTitles.indexOf(a.propertyName) -
+                  headerTitles.indexOf(b.propertyName)
+              )
+              .map(
+                (c) =>
+                  "<td style='background-color:" +
+                  (c.style.isHighlighted ? "yellow" : "white") +
+                  ";font-weight:" +
+                  (c.style.isBold ? "bold" : "normal") +
+                  "'>" +
+                  c.textContent +
+                  "</td>"
+              )
+              .join("") +
+            "</tr>"
+        )
+        .join("")}
+    </table>
+  `;
+}
+
+const studentRowHeaders: readonly TableHeader<StudentRecordPropertyNames>[] = [
+  {
+    title: "Last Name",
+    propertyName: "lastName",
+  },
+  {
+    title: "First Name",
+    propertyName: "firstName",
+  },
+  {
+    title: "Code Word",
+    propertyName: "codeWord",
+  },
+  {
+    title: "Can Photograph",
+    propertyName: "okToPhotograph",
+  },
+  {
+    title: "Can Use Name",
+    propertyName: "okUseNamePhotographs",
+  },
+
+  {
+    title: "Can Apply Sunscreen/Bugspray",
+    propertyName: "sunscreenBugSpray",
+  },
+  {
+    title: "Medications",
+    propertyName: "medications",
+  },
+] as const;
+
+function buildStudentRecordStyle(
+  propertyName: StudentRecordPropertyNames,
+  value: string
+): CellStyle {
+  const isImportant =
+    value === "No" || (propertyName === "medications" && value?.length > 0);
+  return {
+    isHighlighted: isImportant,
+    isBold: isImportant,
+  };
+}
+
+function generateHtmlTableFromEntities<T, PropertyNames extends string>({
+  entities,
+  headers,
+  recordTransformer: transformToRecords,
+  styleBuilder,
+}: {
+  entities: Array<T>;
+  headers: readonly TableHeader<PropertyNames>[];
+  recordTransformer: RecordTransformer<T, PropertyNames>;
+  styleBuilder: CellStyleBuilder<PropertyNames>;
+}) {
+  const records = transformToRecords(entities);
+
+  const rows = transformRecordsIntoTableRows(records, styleBuilder);
+
+  return createHtmlTable(headers, rows);
+}
+
+async function fetchStudents(
+  className: string
+): Promise<Array<StudentDbEntry>> {
   const classes = db.collection("classes");
 
-  const classDocument = await getFirstMatchingDocument(classes, [
+  const classDocument = await fetchFirstMatchingDocument(classes, [
     "name",
     "==",
     className,
   ]);
-  const classStudentRefs: Array<FirebaseFirestore.DocumentReference> = classDocument?.get("students") ?? [];
+
+  const classStudentRefs: Array<FirebaseFirestore.DocumentReference> =
+    classDocument?.get("students") ?? [];
+
   const students = await Promise.all(
     classStudentRefs.map(
-      async (studentRef) => (await studentRef.get()).data() as { "first_name": string; }
+      async (studentRef) => (await studentRef.get()).data() as StudentDbEntry
     )
   );
+
   return students;
 }
 
-/**
- * Find the first document in the collection for the query
- * @param {CollectionReference} collection
- * @param {Array} query
- * @return {Promise} a Promise returning a QueryDocumentSnapshot or undefined
- */
-async function getFirstMatchingDocument(
-    collection:
-      FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
-    query: [
-      string | FirebaseFirestore.FieldPath,
-      FirebaseFirestore.WhereFilterOp,
-      string
-    ]
-):
-  Promise<
-      FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData
-  >
-  | undefined> {
+async function fetchFirstMatchingDocument(
+  collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
+  query: [
+    string | FirebaseFirestore.FieldPath,
+    FirebaseFirestore.WhereFilterOp,
+    string
+  ]
+): Promise<
+  | FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
+  | undefined
+> {
   const documents = await collection.where(...query).get();
   return documents.docs[0];
 }
