@@ -46,29 +46,27 @@ function respondWithPdf(
 async function createRosterPdf(className: string) {
   const students = await fetchStudents(className);
 
+  const studentRecords = transformStudentEntriesIntoRecords(students);
+
   return createTablePdf({
-    entities: students,
+    records: studentRecords,
     headers: studentRowHeaders,
-    recordTransformer: transformStudentEntriesIntoRecords,
     styleBuilder: buildStudentRecordStyle,
   });
 }
 
 function createTablePdf<T, PropertyNames extends string>({
-  entities,
+  records,
   headers,
-  recordTransformer,
   styleBuilder,
 }: {
-  entities: Array<T>;
+  records: Array<FlatRecord<PropertyNames>>;
   headers: readonly TableHeader<PropertyNames>[];
-  recordTransformer: RecordTransformer<T, PropertyNames>;
   styleBuilder: CellStyleBuilder<PropertyNames>;
 }) {
-  const htmlTable = generateHtmlTableFromEntities({
-    entities,
+  const htmlTable = generateHtmlTableFromRecords({
+    records,
     headers,
-    recordTransformer,
     styleBuilder,
   });
 
@@ -76,10 +74,6 @@ function createTablePdf<T, PropertyNames extends string>({
     orientation: "landscape",
   });
 }
-
-type RecordTransformer<T, PropertyNames extends string> = (
-  entities: Array<T>
-) => Array<FlatRecord<PropertyNames>>;
 
 function transformStudentEntriesIntoRecords(
   students: Array<StudentDbEntry>
@@ -199,19 +193,15 @@ function buildStudentRecordStyle(
   };
 }
 
-function generateHtmlTableFromEntities<T, PropertyNames extends string>({
-  entities,
+function generateHtmlTableFromRecords<T, PropertyNames extends string>({
+  records,
   headers,
-  recordTransformer: transformToRecords,
   styleBuilder,
 }: {
-  entities: Array<T>;
+  records: Array<FlatRecord<PropertyNames>>;
   headers: readonly TableHeader<PropertyNames>[];
-  recordTransformer: RecordTransformer<T, PropertyNames>;
   styleBuilder: CellStyleBuilder<PropertyNames>;
 }) {
-  const records = transformToRecords(entities);
-
   const rows = transformRecordsIntoTableRows(records, styleBuilder);
 
   return createHtmlTable(headers, rows);
