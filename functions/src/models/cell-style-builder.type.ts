@@ -1,6 +1,7 @@
 import { CellStyle } from "./cell-style.type";
 
-export type CellStyleBuilder<PropertyNames extends string> = (
+export type CellStyleBuilder<PropertyNames extends string, Extras> = (
     propertyName: PropertyNames,
-    value: string
+    value: string,
+    extras?: Extras
   ) => CellStyle;

@@ -6,3 +6,4 @@ export { StudentRecordPropertyNames } from "./student-record-property-names";
 export { FlatRecord } from "./flat-record.type";
 export { StudentRecord } from "./student-record.type";
 export { TableHeader } from "./table-header.type";
+export { Contact } from "./contact.type";

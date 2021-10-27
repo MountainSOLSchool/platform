@@ -4,7 +4,8 @@
     "**/*"
   ],
   "plugins": [
-    "@nrwl/nx"
+    "@nrwl/nx",
+    "@typescript-eslint"
   ],
   "overrides": [
     {
@@ -35,7 +36,7 @@
         "ngrx"
       ],
       "extends": [
-        "plugin:ngrx/recommended"
+        "plugin:ngrx/recommended",
       ]
     },
     {

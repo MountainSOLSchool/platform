@@ -1,8 +1,12 @@
 export type StudentRecordPropertyNames =
 | "lastName"
 | "firstName"
+| "age"
+| "guardianContacts"
+| "emergencyContacts"
+| "authorizedPickUpContacts"
 | "codeWord"
-| "okToPhotograph"
-| "okUseNamePhotographs"
+| "medications"
 | "sunscreenBugSpray"
-| "medications";
+| "allergies"
+| "okToPhotographAndUseName";
