@@ -59,15 +59,15 @@ export function transformStudentEntriesIntoRecords(
         firstName: { value: student.first_name },
         age: { value: '9' }, // TODO: calculate from dateBirth
         guardianContacts: {
-            value: student.guardians.map(contactToString).join('\n'),
+            value: student.guardians?.map(contactToString).join('\n') ?? '',
         },
         emergencyContacts: {
-            value: student.emergency_contacts.map(contactToString).join('\n'),
+            value: student.emergency_contacts?.map(contactToString).join('\n') ?? '',
         },
         authorizedPickUpContacts: {
             value: student.authorized_pick_up_contacts
-                .map(contactToString)
-                .join('\n'),
+                ?.map(contactToString)
+                .join('\n') ?? '',
         },
         codeWord: { value: student.code_word },
         okToPhotographAndUseName: {
@@ -81,12 +81,12 @@ export function transformStudentEntriesIntoRecords(
             value: student.sunscreen_bug_spray ? 'Yes' : 'No',
         },
         allergies: {
-            value: student.allergies.map(allergiesToString).join('\n'),
-            extras: { isImportant: !!student.allergies.find(allergy => allergy.important) }
+            value: student.allergies?.map(allergiesToString).join('\n') ?? '',
+            extras: { isImportant: !!student.allergies?.find(allergy => allergy.important) }
         },
         medications: {
             value: student.medications?.map(medicationToString)?.join(', '),
-            extras: { isImportant: !!student.medications.find(med => med.important) }
+            extras: { isImportant: !!student.medications?.find(med => med.important) }
         },
     }));
 }
