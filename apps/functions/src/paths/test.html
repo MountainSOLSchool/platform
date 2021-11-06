@@ -33,7 +33,7 @@
             downloadButton.innerText = 'Downloading...';
             downloadButton.disabled = true;
             fetch(
-                'http://localhost:5001/mountain-sol-platform/us-central1/roster?class=Knots-fall-2021'
+                'http://localhost:5001/mountain-sol-platform/us-central1/roster?class=' + document.querySelector("#classNameInput").value
             )
                 .then((response) => response.json())
                 .then(({ data }) => {
@@ -46,5 +46,7 @@
                 });
         };
     </script>
+    <label for="classNameInput">Class Name</label>
+    <input id="classNameInput" placeholder="Knots-fall-2021"/>
     <button id="downloadBtn" onclick="downloadReport()">Download Report</button>
 </body>
