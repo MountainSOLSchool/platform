@@ -26,7 +26,7 @@
     "workspace-generator": "nx workspace-generator",
     "dep-graph": "nx dep-graph",
     "help": "nx help",
-    "build:functions": "tsc --p apps/functions && cp package.json apps/functions/lib/package.json",
+    "build:functions": "tsc --p apps/functions && cp package.json apps/functions/dist/package.json",
     "serve:functions": "firebase emulators:start --only functions",
     "deploy:functions": "npm run build:functions && firebase deploy --only functions"
   },
