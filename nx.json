@@ -1,41 +1,71 @@
 {
-  "npmScope": "sol",
-  "affected": {
-    "defaultBase": "master"
-  },
-  "implicitDependencies": {
-    "package.json": {
-      "dependencies": "*",
-      "devDependencies": "*"
+    "npmScope": "sol",
+    "affected": {
+        "defaultBase": "master"
     },
-    ".eslintrc.json": "*"
-  },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/workspace/tasks-runners/default",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
-      }
+    "implicitDependencies": {
+        "package.json": {
+            "dependencies": "*",
+            "devDependencies": "*"
+        },
+        ".eslintrc.json": "*"
+    },
+    "tasksRunnerOptions": {
+        "default": {
+            "runner": "@nrwl/workspace/tasks-runners/default",
+            "options": {
+                "cacheableOperations": ["build", "lint", "test", "e2e"]
+            }
+        }
+    },
+    "targetDependencies": {
+        "build": [
+            {
+                "target": "build",
+                "projects": "dependencies"
+            }
+        ]
+    },
+    "projects": {
+        "firebase-database": {
+            "tags": ["scope:firebase", "type:api"]
+        },
+        "firebase-functions": {
+            "tags": ["scope:firebase", "type:api"]
+        },
+        "paths": {
+            "tags": ["scope:libs/paths"]
+        },
+        "pdf-firebase": {
+            "tags": ["scope:pdf", "type:api"]
+        },
+        "pdf-generate": {
+            "tags": ["scope:pdf", "type:api"]
+        },
+        "portal": {
+            "tags": []
+        },
+        "portal-e2e": {
+            "tags": [],
+            "implicitDependencies": ["portal"]
+        },
+        "record-domain": {
+            "tags": ["scope:record", "type:api"]
+        },
+        "student-domain": {
+            "tags": ["scope:student"]
+        },
+        "student-reports": {
+            "tags": ["scope:student"]
+        },
+        "table-domain": {
+            "tags": ["scope:table", "type:api"]
+        },
+        "table-html": {
+            "tags": ["scope:table", "type:api"]
+        },
+        "table-pdf": {
+            "tags": ["scope:table", "type:api"]
+        }
     }
-  },
-  "targetDependencies": {
-    "build": [
-      {
-        "target": "build",
-        "projects": "dependencies"
-      }
-    ]
-  },
-  "projects": {
-    "paths": {
-      "tags": ["scope:libs/paths"]
-    },
-    "portal": {
-      "tags": []
-    },
-    "portal-e2e": {
-      "tags": [],
-      "implicitDependencies": ["portal"]
-    }
-  }
 }

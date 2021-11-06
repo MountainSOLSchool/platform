@@ -1,22 +1,32 @@
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2017", "dom"],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": ".",
-    "paths": {
-      "@sol/paths": ["libs/paths/src/index.ts"]
-    }
-  },
-  "exclude": ["node_modules", "tmp"]
+    "compileOnSave": false,
+    "compilerOptions": {
+        "rootDir": ".",
+        "sourceMap": true,
+        "declaration": false,
+        "moduleResolution": "node",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "es2015",
+        "module": "esnext",
+        "lib": ["es2017", "dom"],
+        "skipLibCheck": true,
+        "skipDefaultLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@sol/firebase/database": ["libs/firebase/database/src/index.ts"],
+            "@sol/firebase/functions": ["libs/firebase/functions/src/index.ts"],
+            "@sol/paths": ["libs/paths/src/index.ts"],
+            "@sol/pdf/firebase": ["libs/pdf/firebase/src/index.ts"],
+            "@sol/pdf/generate": ["libs/pdf/generate/src/index.ts"],
+            "@sol/record/domain": ["libs/record/domain/src/index.ts"],
+            "@sol/student/domain": ["libs/student/domain/src/index.ts"],
+            "@sol/student/reports": ["libs/student/reports/src/index.ts"],
+            "@sol/table/domain": ["libs/table/domain/src/index.ts"],
+            "@sol/table/html": ["libs/table/html/src/index.ts"],
+            "@sol/table/pdf": ["libs/table/pdf/src/index.ts"]
+        }
+    },
+    "exclude": ["node_modules", "tmp"]
 }
