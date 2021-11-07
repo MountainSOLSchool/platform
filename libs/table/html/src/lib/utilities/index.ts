@@ -1,1 +1,1 @@
-export {TableHtml} from './table-html.utility';
+export { TableHtml } from './table-html.utility';

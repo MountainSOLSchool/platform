@@ -32,7 +32,7 @@
         "serve:playground": "cd apps/functions/src/paths && http-server",
         "prepare": "husky install",
         "pre-commit": "pretty-quick --staged",
-        "fix:everything": "eslint --fix ./**/*.ts"
+        "format:everything": "prettier --write ."
     },
     "husky": {
         "hooks": {

@@ -1,1 +1,1 @@
-export {FirebasePdf} from './firebase-pdf.utility';
+export { FirebasePdf } from './firebase-pdf.utility';

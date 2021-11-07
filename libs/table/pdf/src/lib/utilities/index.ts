@@ -1,1 +1,1 @@
-export {TablePdfUtility } from './table-pdf.utility';
+export { TablePdfUtility } from './table-pdf.utility';

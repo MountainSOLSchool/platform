@@ -1,6 +1,6 @@
 import { FlatRecord } from '@sol/record/domain';
 import { TableHeader, CellStyleBuilder } from '@sol/table/domain';
-import {TableHtml} from '@sol/table/html';
+import { TableHtml } from '@sol/table/html';
 import * as pdf from 'html-pdf';
 
 export class TablePdfUtility {
@@ -18,7 +18,7 @@ export class TablePdfUtility {
             headers,
             styleBuilder,
         });
-    
+
         return pdf.create(htmlTable, {
             orientation: 'landscape',
         });

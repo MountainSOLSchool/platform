@@ -4,7 +4,7 @@ admin.initializeApp();
 const db = admin.firestore();
 
 type Collection = Array<Document>;
-    
+
 type Document = {
     [x: string]: Document | Collection | string;
 };
@@ -13,7 +13,7 @@ export class DatabaseUtility {
     public static getDatabase() {
         return db;
     }
-    
+
     public static async getHydratedCollection(
         collectionRef: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
     ): Promise<{ [collectionName: string]: Collection }> {
@@ -25,11 +25,15 @@ export class DatabaseUtility {
                 const hydratedCollections = await Promise.all(
                     subCollectionRefs.map(
                         async (subCollectionRef) =>
-                            await DatabaseUtility.getHydratedCollection(subCollectionRef)
+                            await DatabaseUtility.getHydratedCollection(
+                                subCollectionRef
+                            )
                     )
                 );
                 const mergedCollections: {
-                    [collectionName: string]: Array<FirebaseFirestore.DocumentData>;
+                    [
+                        collectionName: string
+                    ]: Array<FirebaseFirestore.DocumentData>;
                 } = Object.assign({}, ...hydratedCollections);
                 return {
                     ...fields,
@@ -41,7 +45,7 @@ export class DatabaseUtility {
             [collectionRef.id]: docValues,
         };
     }
-    
+
     public static async getHydratedDocuments<DocumentValue>(
         documentRefs: Array<
             FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
@@ -54,15 +58,21 @@ export class DatabaseUtility {
             documentRefs.map(async (documentRef) => {
                 const fields = (await documentRef.get()).data();
                 const collectionRefs = await documentRef.listCollections();
-    
+
                 const collectionsList: Array<{
-                    [collectionName: string]: Array<FirebaseFirestore.DocumentData>;
-                }> = await Promise.all(collectionRefs.map(DatabaseUtility.getHydratedCollection));
-    
+                    [
+                        collectionName: string
+                    ]: Array<FirebaseFirestore.DocumentData>;
+                }> = await Promise.all(
+                    collectionRefs.map(DatabaseUtility.getHydratedCollection)
+                );
+
                 const subCollectionsObject: {
-                    [collectionName: string]: Array<FirebaseFirestore.DocumentData>;
+                    [
+                        collectionName: string
+                    ]: Array<FirebaseFirestore.DocumentData>;
                 } = Object.assign({}, ...collectionsList);
-    
+
                 return {
                     ...fields,
                     ...subCollectionsObject,
@@ -70,7 +80,7 @@ export class DatabaseUtility {
             })
         );
     }
-    
+
     public static async fetchFirstMatchingDocument(
         collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
         query: [

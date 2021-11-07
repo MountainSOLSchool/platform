@@ -1,1 +1,1 @@
-export {HttpUtility} from './http.utility';
+export { HttpUtility } from './http.utility';

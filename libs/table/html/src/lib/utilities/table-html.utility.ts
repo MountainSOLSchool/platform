@@ -1,8 +1,7 @@
-import {CellStyleBuilder, TableHeader, TableRow} from '@sol/table/domain';
-import {FlatRecord} from '@sol/record/domain';
+import { CellStyleBuilder, TableHeader, TableRow } from '@sol/table/domain';
+import { FlatRecord } from '@sol/record/domain';
 
 export class TableHtml {
-
     public static generateHtmlTableFromRecords<
         T,
         PropertyNames extends string,
@@ -16,7 +15,10 @@ export class TableHtml {
         headers: readonly TableHeader<PropertyNames>[];
         styleBuilder: CellStyleBuilder<PropertyNames, Extras>;
     }) {
-        const rows = TableHtml.transformRecordsIntoTableRows(records, styleBuilder);
+        const rows = TableHtml.transformRecordsIntoTableRows(
+            records,
+            styleBuilder
+        );
 
         return TableHtml.createHtmlTable(headers, rows);
     }

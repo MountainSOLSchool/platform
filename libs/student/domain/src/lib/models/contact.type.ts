@@ -3,4 +3,4 @@ export type Contact = {
     relationship: string;
     phone: string;
     email: string;
-  };
+};

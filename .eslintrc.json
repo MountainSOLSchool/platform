@@ -1,81 +1,54 @@
 {
-  "root": true,
-  "ignorePatterns": [
-    "**/*"
-  ],
-  "plugins": [
-    "@nrwl/nx",
-    "@typescript-eslint",
-    "prettier"
-  ],
-  "overrides": [
-    {
-      "files": ["*.ts", "*.tsx"],
-      "parserOptions": {
-        "project": ["./tsconfig.base.json"]
-      }
-    },
-    {
-      "files": [
-        "*.ts",
-        "*.tsx",
-        "*.js",
-        "*.jsx"
-      ],
-      "parserOptions": {
-        "project": ["./tsconfig.base.json"]
-      },
-      "rules": {
-        "@nrwl/nx/enforce-module-boundaries": [
-          "error",
-          {
-            "enforceBuildableLibDependency": true,
-            "allow": [],
-            "depConstraints": [
-              {
-                "sourceTag": "*",
-                "onlyDependOnLibsWithTags": [
-                  "*"
-                ]
-              }
-            ]
-          }
-        ],
-        "prettier/prettier": "error"
-      },
-      "plugins": [
-        "ngrx"
-      ],
-      "extends": [
-        "plugin:ngrx/recommended"
-      ]
-    },
-    {
-      "files": [
-        "*.ts",
-        "*.tsx"
-      ],
-      "parserOptions": {
-        "project": ["./tsconfig.base.json"]
-      },
-      "extends": [
-        "plugin:@nrwl/nx/typescript",
-        "plugin:ngrx/recommended"
-      ],
-      "rules": {},
-      "plugins": [
-        "ngrx"
-      ]
-    },
-    {
-      "files": [
-        "*.js",
-        "*.jsx"
-      ],
-      "extends": [
-        "plugin:@nrwl/nx/javascript"
-      ],
-      "rules": {}
-    }
-  ]
+    "root": true,
+    "ignorePatterns": ["**/*"],
+    "plugins": ["@nrwl/nx", "@typescript-eslint", "prettier"],
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx"],
+            "parserOptions": {
+                "project": ["./tsconfig.base.json"]
+            }
+        },
+        {
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+            "parserOptions": {
+                "project": ["./tsconfig.base.json"]
+            },
+            "rules": {
+                "@nrwl/nx/enforce-module-boundaries": [
+                    "error",
+                    {
+                        "enforceBuildableLibDependency": true,
+                        "allow": [],
+                        "depConstraints": [
+                            {
+                                "sourceTag": "*",
+                                "onlyDependOnLibsWithTags": ["*"]
+                            }
+                        ]
+                    }
+                ],
+                "prettier/prettier": "error"
+            },
+            "plugins": ["ngrx"],
+            "extends": ["plugin:ngrx/recommended"]
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "parserOptions": {
+                "project": ["./tsconfig.base.json"]
+            },
+            "extends": [
+                "plugin:@nrwl/nx/typescript",
+                "plugin:ngrx/recommended"
+            ],
+            "rules": {},
+            "plugins": ["ngrx"]
+        },
+        {
+            "files": ["*.js", "*.jsx"],
+            "extends": ["plugin:@nrwl/nx/javascript"],
+            "rules": {}
+        }
+    ]
 }

@@ -6,8 +6,12 @@ import { pathsFeature } from './store/paths.reducer';
 import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
-  imports: [CommonModule, MatCardModule, StoreModule.forFeature(pathsFeature)],
-  declarations: [PathsPageComponent],
-  exports: [PathsPageComponent]
+    imports: [
+        CommonModule,
+        MatCardModule,
+        StoreModule.forFeature(pathsFeature),
+    ],
+    declarations: [PathsPageComponent],
+    exports: [PathsPageComponent],
 })
 export class PathsModule {}

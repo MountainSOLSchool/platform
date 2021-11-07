@@ -1,4 +1,4 @@
-import { Contact } from "./contact.type";
+import { Contact } from './contact.type';
 
 export type StudentDbEntry = {
     first_name: string;
@@ -12,15 +12,15 @@ export type StudentDbEntry = {
     emergency_contacts: Array<Contact>;
     authorized_pick_up_contacts: Array<Contact>;
     allergies: Array<{
-      name: string;
-      description: string;
-      response: string;
-      important: boolean;
+        name: string;
+        description: string;
+        response: string;
+        important: boolean;
     }>;
     medications: Array<{
-      name: string;
-      dosage: string;
-      doctor: { name: string; role?: string };
-      important: boolean;
+        name: string;
+        dosage: string;
+        doctor: { name: string; role?: string };
+        important: boolean;
     }>;
-  };
+};
