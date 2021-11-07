@@ -26,46 +26,35 @@
             }
         ]
     },
-    "projects": {
-        "firebase-database": {
-            "tags": ["scope:firebase", "type:api"]
+    "cli": {
+        "defaultCollection": "@nrwl/angular"
+    },
+    "defaultProject": "portal",
+    "generators": {
+        "@nrwl/angular": {
+            "application": {
+                "linter": "eslint"
+            },
+            "library": {
+                "linter": "eslint"
+            },
+            "storybook-configuration": {
+                "linter": "eslint"
+            }
         },
-        "firebase-functions": {
-            "tags": ["scope:firebase", "type:api"]
+        "@nrwl/angular:application": {
+            "style": "css",
+            "linter": "eslint",
+            "unitTestRunner": "jest",
+            "e2eTestRunner": "cypress"
         },
-        "paths": {
-            "tags": ["scope:libs/paths"]
+        "@nrwl/angular:library": {
+            "style": "css",
+            "linter": "eslint",
+            "unitTestRunner": "jest"
         },
-        "pdf-firebase": {
-            "tags": ["scope:pdf", "type:api"]
-        },
-        "pdf-generate": {
-            "tags": ["scope:pdf", "type:api"]
-        },
-        "portal": {
-            "tags": []
-        },
-        "portal-e2e": {
-            "tags": [],
-            "implicitDependencies": ["portal"]
-        },
-        "record-domain": {
-            "tags": ["scope:record", "type:api"]
-        },
-        "student-domain": {
-            "tags": ["scope:student"]
-        },
-        "student-reports": {
-            "tags": ["scope:student"]
-        },
-        "table-domain": {
-            "tags": ["scope:table", "type:api"]
-        },
-        "table-html": {
-            "tags": ["scope:table", "type:api"]
-        },
-        "table-pdf": {
-            "tags": ["scope:table", "type:api"]
+        "@nrwl/angular:component": {
+            "style": "css"
         }
     }
 }

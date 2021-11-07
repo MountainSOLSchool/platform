@@ -5,9 +5,16 @@
   ],
   "plugins": [
     "@nrwl/nx",
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "prettier"
   ],
   "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parserOptions": {
+        "project": ["./tsconfig.base.json"]
+      }
+    },
     {
       "files": [
         "*.ts",
@@ -15,6 +22,9 @@
         "*.js",
         "*.jsx"
       ],
+      "parserOptions": {
+        "project": ["./tsconfig.base.json"]
+      },
       "rules": {
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
@@ -30,13 +40,14 @@
               }
             ]
           }
-        ]
+        ],
+        "prettier/prettier": "error"
       },
       "plugins": [
         "ngrx"
       ],
       "extends": [
-        "plugin:ngrx/recommended",
+        "plugin:ngrx/recommended"
       ]
     },
     {
@@ -44,6 +55,9 @@
         "*.ts",
         "*.tsx"
       ],
+      "parserOptions": {
+        "project": ["./tsconfig.base.json"]
+      },
       "extends": [
         "plugin:@nrwl/nx/typescript",
         "plugin:ngrx/recommended"
@@ -63,8 +77,5 @@
       ],
       "rules": {}
     }
-  ],
-  "extends": [
-    "prettier"
   ]
 }

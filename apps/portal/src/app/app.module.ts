@@ -17,18 +17,18 @@ import * as firebaseui from 'firebaseui';
 // -----------------------
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    NoopAnimationsModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    AppRoutingModule,
-    StoreModule.forRoot({}, {}),
-    EffectsModule.forRoot([])
-  ],
-  providers: [],
-  bootstrap: [AppComponent],
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        NoopAnimationsModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        AppRoutingModule,
+        StoreModule.forRoot({}, {}),
+        EffectsModule.forRoot([]),
+    ],
+    providers: [],
+    bootstrap: [AppComponent],
 })
 export class AppModule {}

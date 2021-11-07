@@ -10,7 +10,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/firebase/database/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -20,7 +21,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": ["scope:firebase", "type:api"]
         },
         "firebase-functions": {
             "root": "libs/firebase/functions",
@@ -31,7 +33,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/firebase/functions/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -41,7 +44,31 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": ["scope:firebase", "type:api"]
+        },
+        "functions": {
+            "root": "apps/functions",
+            "sourceRoot": "apps/functions/src",
+            "projectType": "app",
+            "architect": {
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": ["apps/functions/**/*.ts"]
+                    },
+                    "outputs": ["{options.outputFile}"]
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/apps/functions"],
+                    "options": {
+                        "jestConfig": "apps/functions/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": []
         },
         "paths": {
             "projectType": "library",
@@ -64,9 +91,11 @@
                             "libs/paths/src/**/*.ts",
                             "libs/paths/src/**/*.html"
                         ]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 }
-            }
+            },
+            "tags": ["scope:libs/paths"]
         },
         "pdf-firebase": {
             "root": "libs/pdf/firebase",
@@ -77,7 +106,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/pdf/firebase/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -87,7 +117,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": ["scope:pdf", "type:api"]
         },
         "pdf-generate": {
             "root": "libs/pdf/generate",
@@ -98,7 +129,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/pdf/generate/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -108,7 +140,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": ["scope:pdf", "type:api"]
         },
         "portal": {
             "projectType": "application",
@@ -193,7 +226,8 @@
                             "apps/portal/src/**/*.ts",
                             "apps/portal/src/**/*.html"
                         ]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -203,7 +237,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": []
         },
         "portal-e2e": {
             "root": "apps/portal-e2e",
@@ -227,9 +262,12 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["apps/portal-e2e/**/*.{js,ts}"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 }
-            }
+            },
+            "tags": [],
+            "implicitDependencies": ["portal"]
         },
         "record-domain": {
             "root": "libs/record/domain",
@@ -240,7 +278,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/record/domain/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -250,7 +289,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": ["scope:record", "type:api"]
         },
         "student-domain": {
             "root": "libs/student/domain",
@@ -261,7 +301,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/student/domain/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -271,7 +312,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": ["scope:student"]
         },
         "student-reports": {
             "root": "libs/student/reports",
@@ -282,7 +324,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/student/reports/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -292,7 +335,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": ["scope:student"]
         },
         "table-domain": {
             "root": "libs/table/domain",
@@ -303,7 +347,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/table/domain/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -313,7 +358,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": ["scope:table", "type:api"]
         },
         "table-html": {
             "root": "libs/table/html",
@@ -324,7 +370,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/table/html/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -334,7 +381,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
+            },
+            "tags": ["scope:table", "type:api"]
         },
         "table-pdf": {
             "root": "libs/table/pdf",
@@ -345,7 +393,8 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": ["libs/table/pdf/**/*.ts"]
-                    }
+                    },
+                    "outputs": ["{options.outputFile}"]
                 },
                 "test": {
                     "builder": "@nrwl/jest:jest",
@@ -355,38 +404,8 @@
                         "passWithNoTests": true
                     }
                 }
-            }
-        }
-    },
-    "cli": {
-        "defaultCollection": "@nrwl/angular"
-    },
-    "schematics": {
-        "@nrwl/angular": {
-            "application": {
-                "linter": "eslint"
             },
-            "library": {
-                "linter": "eslint"
-            },
-            "storybook-configuration": {
-                "linter": "eslint"
-            }
-        },
-        "@nrwl/angular:application": {
-            "style": "css",
-            "linter": "eslint",
-            "unitTestRunner": "jest",
-            "e2eTestRunner": "cypress"
-        },
-        "@nrwl/angular:library": {
-            "style": "css",
-            "linter": "eslint",
-            "unitTestRunner": "jest"
-        },
-        "@nrwl/angular:component": {
-            "style": "css"
+            "tags": ["scope:table", "type:api"]
         }
-    },
-    "defaultProject": "portal"
+    }
 }
