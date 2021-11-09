@@ -27,7 +27,7 @@
         "help": "nx help",
         "lint:functions": "npm run lint --project=functions",
         "build:functions": "rm -rf dist && npm run build functions",
-        "serve:functions": "npm run build:functions && firebase serve --only functions",
+        "serve:functions": "npm run build:functions && firebase serve --only functions --port=5001",
         "deploy:functions": "firebase deploy",
         "serve:playground": "cd apps/functions/src && http-server",
         "prepare": "husky install",
