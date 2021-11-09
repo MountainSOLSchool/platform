@@ -26,6 +26,7 @@
         "workspace-generator": "nx workspace-generator",
         "dep-graph": "nx dep-graph",
         "help": "nx help",
+        "lint:functions": "npm run lint --project=functions",
         "build:functions": "rm -rf dist && npm run build functions",
         "serve:functions": "npm run build:functions && firebase serve --only functions",
         "deploy:functions": "firebase deploy",
