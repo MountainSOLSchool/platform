@@ -9,3 +9,9 @@ This monorepository is home to apps and libraries that serve the Mountain SOL or
 ## Setup
 
 Run `npm run install:all`.
+
+## Functions
+
+Run the Firebase functions locally with `npm run serve:functions`.
+
+Interact with the functions in the playground by running `npm run serve:playground`. Then a playground app will be available at localhost:8080.
