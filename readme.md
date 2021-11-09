@@ -1,15 +1,7 @@
-Student database
+# Mountain SOL Platform
 
-Things to store:
+<img src="https://avatars.githubusercontent.com/u/88068648?s=400&u=54adb4c777bdf083573ef7126a6c69ed2d0849f8&v=4" height="100px">
 
--   Medical information (Emergency contact info, Allergies, Hospital info, insurance)
--   Parent information (contact info for 1-2 people, email, phone, etc. also allowed to pick up up to 4 ppl and code word)
--   Student information (Name, gender, birth date, school, etc.)
--   Classes list (list of all classes taken)
--   Paths info (Scout, Provider, Medic, Herbalist, Lobo)
+<img src="https://ForTheBadge.com/images/badges/built-with-love.svg" height="25px">
 
-Classes table
-
--   class name
--   paths boxes checked
--   class type (afterschool, summer, etc.)
+This monorepository is home to apps and libraries that serve the Mountain SOL organization.
