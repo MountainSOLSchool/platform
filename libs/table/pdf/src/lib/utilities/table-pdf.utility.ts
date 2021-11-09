@@ -4,7 +4,7 @@ import { TableHtml } from '@sol/table/html';
 import * as pdf from 'html-pdf';
 
 export class TablePdfUtility {
-    public static createTablePdf<T, PropertyNames extends string, Extras>({
+    public static createTablePdf<PropertyNames extends string, Extras>({
         records,
         headers,
         styleBuilder,

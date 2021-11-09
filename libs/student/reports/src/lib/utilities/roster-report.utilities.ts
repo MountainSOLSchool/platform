@@ -187,10 +187,6 @@ export class RosterReportGenerator {
                 classStudentRefs
             );
 
-        console.log(students);
-        console.log(students[1].allergies);
-        console.log(students[1].medications[0].doctor);
-
         return students;
     }
 }
