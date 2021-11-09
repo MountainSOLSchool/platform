@@ -1,7 +1,7 @@
 import { DatabaseUtility } from '@sol/firebase/database';
 import * as admin from 'firebase-admin';
 import {
-    Contact,
+    ContactDbEntry,
     StudentDbEntry,
     StudentRecord,
     StudentRecordPropertyNames,
@@ -160,9 +160,9 @@ export class RosterReportGenerator {
         } and should be taken by "${med.dosage}"`;
     }
 
-    private contactToString(contact: Contact): string {
+    private contactToString(contact: ContactDbEntry): string {
         return [
-            contact.name,
+            `${contact.first_name} ${contact.last_name}`,
             contact.relationship,
             contact.phone,
             contact.email,

@@ -3,7 +3,6 @@ import { FlatRecord } from '@sol/record/domain';
 
 export class TableHtml {
     public static generateHtmlTableFromRecords<
-        T,
         PropertyNames extends string,
         Extras
     >({
@@ -23,12 +22,37 @@ export class TableHtml {
         return TableHtml.createHtmlTable(headers, rows);
     }
 
+    private static tableStyle = `
+            <style>
+            table {
+                font-size: 9px;
+                border-collapse: collapse;
+                width: 100%;
+            }
+            
+            table td, table th {
+                border: 1px solid #ddd;
+                padding: 8px;
+            }
+            
+            table tr:nth-child(even){background-color: #f2f2f2;}
+            
+            table th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #000;
+                color: white;
+            }
+        </style>`;
+
     private static createHtmlTable<T extends string>(
         headers: readonly TableHeader<T>[],
         rows: Array<TableRow<T>>
     ): string {
         const headerTitles = headers.map((h) => h.title);
         return `
+        ${this.tableStyle}
         <table>
             <tr>
               ${headers.map((h) => '<th>' + h.title + '</th>').join('')}

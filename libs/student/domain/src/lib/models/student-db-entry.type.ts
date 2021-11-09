@@ -1,4 +1,4 @@
-import { Contact } from './contact.type';
+import { ContactDbEntry } from './contact-db-entry.type';
 
 export type StudentDbEntry = {
     first_name: string;
@@ -8,9 +8,9 @@ export type StudentDbEntry = {
     ok_use_name_photographs: boolean;
     sunscreen_bug_spray: string;
     birth_date: string;
-    guardians: Array<Contact>;
-    emergency_contacts: Array<Contact>;
-    authorized_pick_up_contacts: Array<Contact>;
+    guardians: Array<ContactDbEntry>;
+    emergency_contacts: Array<ContactDbEntry>;
+    authorized_pick_up_contacts: Array<ContactDbEntry>;
     allergies: Array<{
         name: string;
         description: string;
