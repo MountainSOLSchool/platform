@@ -5,3 +5,7 @@
 <img src="http://ForTheBadge.com/images/badges/built-with-love.svg" height="25px">
 
 This monorepository is home to apps and libraries that serve the Mountain SOL organization.
+
+## Setup
+
+Run `npm run install:all`.
