@@ -42,7 +42,7 @@
     },
     "main": "dist/apps/functions/main.js",
     "engines": {
-        "node": "10"
+        "node": "14"
     },
     "private": true,
     "dependencies": {
