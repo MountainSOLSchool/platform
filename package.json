@@ -30,10 +30,9 @@
         "serve:functions": "npm run build:functions && firebase serve --only functions --port=5001",
         "deploy:functions": "firebase deploy",
         "serve:playground": "cd apps/functions/src && http-server",
-        "prepare": "husky install",
         "pre-commit": "pretty-quick --staged",
         "format:everything": "prettier --write .",
-        "install:all": "npm ci && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main"
+        "install:all": "npm ci && husky install && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main"
     },
     "husky": {
         "hooks": {
