@@ -4,15 +4,15 @@ import { FlatRecord } from '@sol/record/domain';
 export class TableHtml {
     public static generateHtmlTableFromRecords<
         PropertyNames extends string,
-        Extras
+        Metadata
     >({
         records,
         headers,
         styleBuilder,
     }: {
-        records: Array<FlatRecord<PropertyNames, Extras>>;
+        records: Array<FlatRecord<PropertyNames, Metadata>>;
         headers: readonly TableHeader<PropertyNames>[];
-        styleBuilder: CellStyleBuilder<PropertyNames, Extras>;
+        styleBuilder: CellStyleBuilder<PropertyNames, Metadata>;
     }) {
         const rows = TableHtml.transformRecordsIntoTableRows(
             records,
@@ -29,14 +29,14 @@ export class TableHtml {
                 border-collapse: collapse;
                 width: 100%;
             }
-            
+
             table td, table th {
                 border: 1px solid #ddd;
                 padding: 8px;
             }
-            
+
             table tr:nth-child(even){background-color: #f2f2f2;}
-            
+
             table th {
                 padding-top: 12px;
                 padding-bottom: 12px;
@@ -89,21 +89,21 @@ export class TableHtml {
 
     private static transformRecordsIntoTableRows<
         PropertyNames extends string,
-        Extras
+        Metadata
     >(
-        records: Array<FlatRecord<PropertyNames, Extras>>,
-        styleBuilder: CellStyleBuilder<PropertyNames, Extras>
+        records: Array<FlatRecord<PropertyNames, Metadata>>,
+        styleBuilder: CellStyleBuilder<PropertyNames, Metadata>
     ): Array<TableRow<PropertyNames>> {
         return records.map((record) => ({
             cells: Object.entries(record).map(([key, v]) => {
                 const propertyName = key as PropertyNames;
-                const theRecord = v as { value: string; extras: Extras };
+                const theRecord = v as { value: string; metadata: Metadata };
                 const textContent = theRecord.value as string;
-                const extras = theRecord.extras;
+                const metadata = theRecord.metadata;
                 return {
                     propertyName,
                     textContent,
-                    style: styleBuilder(propertyName, textContent, extras),
+                    style: styleBuilder(propertyName, textContent, metadata),
                 };
             }),
         }));

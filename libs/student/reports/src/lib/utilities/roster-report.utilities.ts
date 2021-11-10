@@ -28,11 +28,11 @@ export class RosterReportGenerator {
     private buildStudentRecordStyle(
         propertyName: StudentRecordPropertyNames,
         value: string,
-        extras: { isImportant: boolean } | undefined
+        metadata: { isImportant: boolean } | undefined
     ): CellStyle {
         return {
-            isHighlighted: !!extras?.isImportant,
-            isBold: !!extras?.isImportant,
+            isHighlighted: !!metadata?.isImportant,
+            isBold: !!metadata?.isImportant,
         };
     }
 
@@ -123,7 +123,7 @@ export class RosterReportGenerator {
                 value:
                     student.allergies?.map(this.allergiesToString).join('\n') ??
                     '',
-                extras: {
+                metadata: {
                     isImportant: !!student.allergies?.find(
                         (allergy) => allergy.important
                     ),
@@ -133,7 +133,7 @@ export class RosterReportGenerator {
                 value: student.medications
                     ?.map(this.medicationToString)
                     ?.join(', '),
-                extras: {
+                metadata: {
                     isImportant: !!student.medications?.find(
                         (med) => med.important
                     ),

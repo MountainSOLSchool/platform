@@ -1,6 +1,6 @@
-export type FlatRecord<PropertyNames extends string, Extras> = {
+export type FlatRecord<PropertyNames extends string, Metadata> = {
     [name in PropertyNames]: {
         value: string;
-        extras?: Extras;
+        metadata?: Metadata;
     };
 };
