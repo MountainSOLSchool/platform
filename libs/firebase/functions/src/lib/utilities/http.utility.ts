@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as CORS from 'cors';
+import { AuthUtility} from './auth.utility';
 
 const cors = CORS({ origin: true });
 
@@ -11,7 +12,10 @@ export class HttpUtility {
         ) => void
     ) {
         return functions.https.onRequest(async (request, response) => {
-            cors(request, response, async () => handler(request, response));
+            cors(request, response, async () => {
+                AuthUtility.validateFirebaseIdToken(request, response);
+                handler(request, response)
+            });
         });
     }
 }

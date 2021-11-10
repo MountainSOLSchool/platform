@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin';
 
+// TODO: move this to admin library and initialize the app from the main.ts instead
 admin.initializeApp();
 const db = admin.firestore();
 
