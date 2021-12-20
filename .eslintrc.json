@@ -4,21 +4,51 @@
     "**/*"
   ],
   "plugins": [
-    "@nrwl/nx",
-    "prettier"
+    "@nrwl/nx"
   ],
-  "rules": {
-    "prettier/prettier": "error"
-  },
   "overrides": [
     {
       "files": [
-        "*.ts",
-        "*.tsx",
-        "*.js",
-        "*.jsx"
+        "*.ts"
+      ],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:prettier/recommended"
       ],
       "rules": {
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "prefix": "app",
+            "style": "kebab-case",
+            "type": "element"
+          }
+        ],
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "prefix": "app",
+            "style": "camelCase",
+            "type": "attribute"
+          }
+        ],
+        "sort-imports": [
+          "error",
+          {
+            "ignoreCase": false,
+            "ignoreDeclarationSort": false,
+            "ignoreMemberSort": false,
+            "memberSyntaxSortOrder": [
+              "none",
+              "all",
+              "multiple",
+              "single"
+            ],
+            "allowSeparatedGroups": false
+          }
+        ],
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
           {
@@ -38,8 +68,7 @@
     },
     {
       "files": [
-        "*.ts",
-        "*.tsx"
+        "*.ts"
       ],
       "extends": [
         "plugin:@nrwl/nx/typescript"
@@ -64,6 +93,5 @@
         "plugin:ngrx/recommended"
       ]
     }
-  ],
-  "extends": ["plugin:prettier/recommended"]
+  ]
 }
