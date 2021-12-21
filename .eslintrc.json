@@ -34,21 +34,6 @@
             "type": "attribute"
           }
         ],
-        "sort-imports": [
-          "error",
-          {
-            "ignoreCase": false,
-            "ignoreDeclarationSort": false,
-            "ignoreMemberSort": false,
-            "memberSyntaxSortOrder": [
-              "none",
-              "all",
-              "multiple",
-              "single"
-            ],
-            "allowSeparatedGroups": false
-          }
-        ],
         "@nrwl/nx/enforce-module-boundaries": [
           "error",
           {
@@ -89,6 +74,9 @@
       "files": [
         "*.ts"
       ],
+      "parserOptions": {
+        "project": ["./tsconfig.base.json"]
+      },
       "extends": [
         "plugin:ngrx/recommended"
       ]
