@@ -15,8 +15,11 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@sol/auth/login": ["libs/auth/login/src/index.ts"],
+            "@sol/firebase/auth": ["libs/firebase/auth/src/index.ts"],
             "@sol/firebase/database": ["libs/firebase/database/src/index.ts"],
             "@sol/firebase/functions": ["libs/firebase/functions/src/index.ts"],
+            "@sol/header": ["libs/header/src/index.ts"],
             "@sol/paths": ["libs/paths/src/index.ts"],
             "@sol/pdf/firebase": ["libs/pdf/firebase/src/index.ts"],
             "@sol/pdf/generate": ["libs/pdf/generate/src/index.ts"],

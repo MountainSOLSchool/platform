@@ -1,16 +1,28 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { PathsModule, PathsPageComponent } from '@sol/paths';
+import { NoPreloading, RouterModule, Routes } from '@angular/router';
+import { HeaderComponent } from '@sol/header';
+import { ReportComponent } from './report.component';
 
 const routes: Routes = [
     {
-        path: 'paths',
-        component: PathsPageComponent,
+        path: '',
+        component: HeaderComponent,
+        children: [
+            {
+                path: 'user',
+                loadChildren: () =>
+                    import('@sol/auth/login').then((m) => m.AuthLoginModule),
+            },
+            {
+                path: 'report',
+                component: ReportComponent,
+            },
+        ],
     },
 ];
 
 @NgModule({
-    imports: [PathsModule, RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
 export class AppRoutingModule {}

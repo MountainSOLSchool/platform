@@ -1,6 +1,58 @@
 {
     "version": 1,
     "projects": {
+        "auth-login": {
+            "projectType": "library",
+            "root": "libs/auth/login",
+            "sourceRoot": "libs/auth/login/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/auth/login"],
+                    "options": {
+                        "jestConfig": "libs/auth/login/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/auth/login/src/**/*.ts",
+                            "libs/auth/login/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["scope:auth"]
+        },
+        "firebase-auth": {
+            "projectType": "library",
+            "root": "libs/firebase/auth",
+            "sourceRoot": "libs/firebase/auth/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/firebase/auth"],
+                    "options": {
+                        "jestConfig": "libs/firebase/auth/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/firebase/auth/src/**/*.ts",
+                            "libs/firebase/auth/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["scope:firebase"]
+        },
         "firebase-database": {
             "root": "libs/firebase/database",
             "sourceRoot": "libs/firebase/database/src",
@@ -99,6 +151,32 @@
             },
             "tags": []
         },
+        "header": {
+            "projectType": "library",
+            "root": "libs/header",
+            "sourceRoot": "libs/header/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/header"],
+                    "options": {
+                        "jestConfig": "libs/header/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/header/src/**/*.ts",
+                            "libs/header/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["scope:header"]
+        },
         "paths": {
             "projectType": "library",
             "root": "libs/paths",
@@ -192,8 +270,11 @@
                             "apps/portal/src/assets"
                         ],
                         "styles": [
-                            "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
-                            "apps/portal/src/styles.css"
+                            "apps/portal/src/styles.css",
+                            "node_modules/primeflex/primeflex.css",
+                            "node_modules/primeicons/primeicons.css",
+                            "node_modules/primeng/resources/primeng.min.css",
+                            "node_modules/primeng/resources/themes/lara-light-blue/theme.css"
                         ],
                         "scripts": []
                     },

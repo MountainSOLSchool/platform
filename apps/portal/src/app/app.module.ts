@@ -2,33 +2,46 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { RouterModule } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
+import { AngularFireModule } from '@angular/fire/compat';
+import { HeaderModule } from '@sol/header';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { ReportComponent } from './report.component';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '@sol/auth/login';
 
-// Initialize Firebase SDK
-import * as firebase from 'firebase';
-import * as firebaseui from 'firebaseui';
-// -----------------------
+const httpInterceptorProviders = [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+];
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, ReportComponent],
     imports: [
+        AngularFireModule.initializeApp({
+            apiKey: 'AIzaSyBxv66X_Ye4MXI5lt8Sjc1xz88rdWJJ0ho',
+            authDomain: 'mountain-sol-platform.firebaseapp.com',
+            projectId: 'mountain-sol-platform',
+            storageBucket: 'mountain-sol-platform.appspot.com',
+            messagingSenderId: '319228048592',
+            appId: '1:319228048592:web:2d418795ca948ba2665ad5',
+            measurementId: 'G-QN03ENCDDC',
+        }),
         BrowserModule,
         NoopAnimationsModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatButtonModule,
         AppRoutingModule,
+        HeaderModule,
         StoreModule.forRoot({}, {}),
+        StoreDevtoolsModule.instrument({
+            maxAge: 25, // Retains last 25 states
+            autoPause: true,
+        }),
         EffectsModule.forRoot([]),
+        HttpClientModule,
     ],
-    providers: [],
+    providers: [httpInterceptorProviders],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
