@@ -30,14 +30,13 @@
     "serve:functions": "npm run build:functions && firebase serve --only functions --port=5001",
     "deploy:functions": "firebase deploy",
     "serve:playground": "cd apps/functions/src && http-server",
-    "pre-commit": "pretty-quick --staged",
-    "pre-push": "npm run build:portal",
     "format:everything": "prettier --write .",
     "install:all": "npm ci && husky install && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged",
+      "pre-push": "npm run build:portal"
     }
   },
   "main": "dist/apps/functions/main.js",
