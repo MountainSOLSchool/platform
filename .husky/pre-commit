@@ -1,5 +1,5 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-npm run format:everything && npm run build:portal
+npm run format:everything && npm run build:portal && git add public
 
