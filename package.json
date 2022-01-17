@@ -28,6 +28,7 @@
         "build:functions": "rm -rf dist && npm run build functions",
         "build:portal": "nx build portal --outputPath=\"public\"",
         "serve:functions": "npm run build:functions && firebase serve --only functions --port=5001",
+        "serve:portal": "nx serve portal",
         "deploy:functions": "firebase deploy",
         "serve:playground": "cd apps/functions/src && http-server",
         "format:everything": "prettier --write .",

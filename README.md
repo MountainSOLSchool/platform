@@ -14,4 +14,4 @@ Run `npm run install:all`.
 
 Run the Firebase functions locally with `npm run serve:functions`.
 
-Interact with the functions in the playground by running `npm run serve:playground`. Then a playground app will be available at localhost:8080.
+Run the frontend portal with `npm run serve:portal`.

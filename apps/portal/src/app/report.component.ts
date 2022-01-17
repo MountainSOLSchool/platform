@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { environment } from '../environments/environment';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,10 +44,15 @@ export class ReportComponent {
             downloadButton.disabled = true;
             this.http
                 .get<{ data: Array<number> }>(
-                    'http://localhost:5001/mountain-sol-platform/us-central1/roster?class=' +
+                    `${
+                        environment.production
+                            ? 'http://localhost:5001'
+                            : 'https://us-central1-mountain-sol-platform.cloudfunctions.net'
+                    }/roster?class= ${
                         document.querySelector<HTMLInputElement>(
                             '#classNameInput'
                         )?.value
+                    }`
                 )
                 .subscribe(({ data }) => {
                     const spreadsheetFile = new Blob([new Uint8Array(data)], {
