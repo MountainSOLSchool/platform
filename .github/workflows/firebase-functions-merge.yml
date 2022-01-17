@@ -8,7 +8,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - run: npm ci && npm run build:functions
+            - run: npm ci && npm run nx dep-graph --file=output.html && npm run build:functions
             - uses: w9jds/firebase-action@v2.0.0
               with:
                   args: deploy --only functions
