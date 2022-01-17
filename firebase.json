@@ -5,10 +5,7 @@
     },
     "functions": {
         "source": "/",
-        "predeploy": [
-            "npm run lint:functions",
-            "npm run build:functions"
-        ]
+        "predeploy": ["npm run lint:functions", "npm run build:functions"]
     },
     "hosting": {
         "public": "dist/apps/portal",
