@@ -46,8 +46,8 @@ export class ReportComponent {
                 .get<{ data: Array<number> }>(
                     `${
                         environment.production
-                            ? 'http://localhost:5001'
-                            : 'https://us-central1-mountain-sol-platform.cloudfunctions.net'
+                            ? 'https://us-central1-mountain-sol-platform.cloudfunctions.net'
+                            : 'http://localhost:5001'
                     }/roster?class= ${
                         document.querySelector<HTMLInputElement>(
                             '#classNameInput'
