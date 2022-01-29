@@ -15,3 +15,7 @@ Run `npm run install:all`.
 Run the Firebase functions locally with `npm run serve:functions`.
 
 Run the frontend portal with `npm run serve:portal`.
+
+Links to front-end:
+Local: http://localhost:4200/
+Deployed: https://mountain-sol-platform.web.app/
