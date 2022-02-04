@@ -32,7 +32,8 @@
         "deploy:functions": "firebase deploy",
         "serve:playground": "cd apps/functions/src && http-server",
         "format:everything": "prettier --write .",
-        "install:all": "npm ci && husky install && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main"
+        "install:all": "npm ci && husky install && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
+        "postinstall": "ngcc --properties es2015 browser module main"
     },
     "main": "dist/apps/functions/main.js",
     "engines": {
@@ -50,6 +51,10 @@
         "@angular/platform-browser": "13.1.2",
         "@angular/platform-browser-dynamic": "13.1.2",
         "@angular/router": "13.1.2",
+        "@fullcalendar/angular": "^5.10.1",
+        "@fullcalendar/daygrid": "^5.10.1",
+        "@fullcalendar/interaction": "^5.10.1",
+        "@fullcalendar/timegrid": "^5.10.1",
         "@ngrx/effects": "13.0.2",
         "@ngrx/store": "13.0.2",
         "@ngrx/store-devtools": "^13.0.2",

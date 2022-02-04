@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NoPreloading, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HeaderComponent } from '@sol/header';
 import { ReportComponent } from './report.component';
 
@@ -16,6 +16,11 @@ const routes: Routes = [
             {
                 path: 'report',
                 component: ReportComponent,
+            },
+            {
+                path: 'calendar',
+                loadChildren: () =>
+                    import('@sol/calendar').then((m) => m.SolCalendarModule),
             },
         ],
     },

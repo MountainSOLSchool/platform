@@ -27,6 +27,32 @@
             },
             "tags": ["scope:auth"]
         },
+        "calendar-sol-calendar": {
+            "projectType": "library",
+            "root": "libs/calendar/sol-calendar",
+            "sourceRoot": "libs/calendar/sol-calendar/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/calendar/sol-calendar"],
+                    "options": {
+                        "jestConfig": "libs/calendar/sol-calendar/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/calendar/sol-calendar/src/**/*.ts",
+                            "libs/calendar/sol-calendar/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": []
+        },
         "firebase-auth": {
             "projectType": "library",
             "root": "libs/firebase/auth",
