@@ -20,6 +20,8 @@ Run the Firebase functions locally with `npm run serve:functions`.
 
 Run the frontend portal with `npm run serve:portal` and view at http://localhost:4200/.
 
+The default configuration uses remote addresses for Firebase functions. Run `npm run serve:dev:portal` to develop against locally served functions.
+
 ### Deployed
 
 `main` is continuously deployed to https://mountain-sol-platform.web.app/

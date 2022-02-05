@@ -14,10 +14,7 @@ export class AuthService {
 
     public emailSignup(email: string, password: string) {
         from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
-            tap((value) => {
-                console.log('Sucess', value);
-                this.router.navigateByUrl('/profile');
-            })
+            tap(() => this.router.navigateByUrl('/profile'))
         );
     }
 

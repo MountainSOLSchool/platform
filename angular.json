@@ -359,6 +359,20 @@
                             "extractLicenses": false,
                             "sourceMap": true,
                             "namedChunks": true
+                        },
+                        "developmentRemoteFunctions": {
+                            "buildOptimizer": false,
+                            "optimization": false,
+                            "vendorChunk": true,
+                            "extractLicenses": false,
+                            "sourceMap": true,
+                            "namedChunks": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/portal/src/environments/environment.ts",
+                                    "with": "apps/portal/src/environments/environment.default.ts"
+                                }
+                            ]
                         }
                     },
                     "defaultConfiguration": "production"
@@ -371,6 +385,9 @@
                         },
                         "development": {
                             "browserTarget": "portal:build:development"
+                        },
+                        "developmentRemoteFunctions": {
+                            "browserTarget": "portal:build:developmentRemoteFunctions"
                         }
                     },
                     "defaultConfiguration": "development"

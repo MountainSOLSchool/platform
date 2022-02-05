@@ -14,8 +14,10 @@ export class HttpUtility {
         return functions.https.onRequest(async (request, response) => {
             cors(request, response, async () => {
                 await AuthUtility.validateFirebaseIdToken(request, response);
-                console.log('✅ validated');
-                handler(request, response);
+                handler(request, {
+                    ...response,
+                    send: (data: unknown) => response.send({ data }),
+                } as functions.Response);
             });
         });
     }

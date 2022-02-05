@@ -15,11 +15,20 @@ import { AuthInterceptor } from '@sol/auth/login';
 import {
     AngularFireFunctionsModule,
     ORIGIN,
+    USE_EMULATOR,
 } from '@angular/fire/compat/functions';
+import { environment } from '../environments/environment';
 
 const httpInterceptorProviders = [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
 ];
+
+const functionsProvider = environment.remoteFunctions
+    ? {
+          provide: ORIGIN,
+          useValue: 'https://mountain-sol-platform.web.app',
+      }
+    : { provide: USE_EMULATOR, useValue: ['localhost', 5001] };
 
 @NgModule({
     declarations: [AppComponent, ReportComponent],
@@ -46,10 +55,7 @@ const httpInterceptorProviders = [
         AngularFireFunctionsModule,
         HttpClientModule,
     ],
-    providers: [
-        httpInterceptorProviders,
-        { provide: ORIGIN, useValue: 'https://mountain-sol-platform.web.app' },
-    ],
+    providers: [httpInterceptorProviders, functionsProvider],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
