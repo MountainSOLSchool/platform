@@ -15,17 +15,30 @@ window.appConfig = {
     defaultProjectGraph: 'local',
 };
 window.projectGraphResponse = {
-    hash: '7f3f0ffc3019209cf5ca1817bcbd343731ab8eb30fa842b3e295bc0cd71a17a1',
+    hash: '2607871922a480ea4959e3d2f140b27e70378986ba9ddb60ab04ca551e7e56db',
     projects: [
+        {
+            name: 'classes-calendar',
+            type: 'lib',
+            data: {
+                tags: ['scope:classes'],
+                root: 'libs/classes/class-calendar',
+                files: [],
+            },
+        },
+        {
+            name: 'classeses-domain',
+            type: 'lib',
+            data: {
+                tags: ['scope:classes'],
+                root: 'libs/classes/classes-domain',
+                files: [],
+            },
+        },
         {
             name: 'firebase-functions-api',
             type: 'lib',
             data: { tags: [], root: 'libs/firebase/functions-api', files: [] },
-        },
-        {
-            name: 'calendar',
-            type: 'lib',
-            data: { tags: [], root: 'libs/calendar/calendar', files: [] },
         },
         {
             name: 'firebase-functions',
@@ -35,6 +48,11 @@ window.projectGraphResponse = {
                 root: 'libs/firebase/functions',
                 files: [],
             },
+        },
+        {
+            name: 'calendar',
+            type: 'lib',
+            data: { tags: [], root: 'libs/calendar/calendar', files: [] },
         },
         {
             name: 'firebase-database',
@@ -128,6 +146,15 @@ window.projectGraphResponse = {
             },
         },
         {
+            name: 'auth-user',
+            type: 'lib',
+            data: {
+                tags: ['scope:auth', 'type:api'],
+                root: 'libs/auth/user',
+                files: [],
+            },
+        },
+        {
             name: 'functions',
             type: 'app',
             data: { tags: [], root: 'apps/functions', files: [] },
@@ -158,7 +185,22 @@ window.projectGraphResponse = {
         },
     ],
     dependencies: {
+        'classes-calendar': [
+            { source: 'classes-calendar', target: 'calendar', type: 'static' },
+            {
+                source: 'classes-calendar',
+                target: 'firebase-functions-api',
+                type: 'static',
+            },
+            {
+                source: 'classes-calendar',
+                target: 'classeses-domain',
+                type: 'static',
+            },
+        ],
+        'classeses-domain': [],
         'firebase-functions-api': [],
+        'firebase-functions': [],
         calendar: [
             {
                 source: 'calendar',
@@ -166,7 +208,6 @@ window.projectGraphResponse = {
                 type: 'static',
             },
         ],
-        'firebase-functions': [],
         'firebase-database': [],
         'student-reports': [
             {
@@ -208,6 +249,7 @@ window.projectGraphResponse = {
             { source: 'table-html', target: 'table-domain', type: 'static' },
             { source: 'table-html', target: 'record-domain', type: 'static' },
         ],
+        'auth-user': [],
         functions: [
             {
                 source: 'functions',
@@ -227,15 +269,14 @@ window.projectGraphResponse = {
             { source: 'table-pdf', target: 'table-domain', type: 'static' },
             { source: 'table-pdf', target: 'table-html', type: 'static' },
         ],
-        header: [{ source: 'header', target: 'auth-login', type: 'static' }],
+        header: [
+            { source: 'header', target: 'auth-user', type: 'static' },
+            { source: 'header', target: 'auth-login', type: 'static' },
+        ],
         portal: [
             { source: 'portal', target: 'header', type: 'static' },
             { source: 'portal', target: 'auth-login', type: 'static' },
-            {
-                source: 'portal',
-                target: 'calendar',
-                type: 'static',
-            },
+            { source: 'portal', target: 'classes-calendar', type: 'static' },
             {
                 source: 'portal',
                 target: 'firebase-functions-api',

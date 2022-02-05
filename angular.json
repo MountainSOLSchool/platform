@@ -27,6 +27,32 @@
             },
             "tags": ["scope:auth"]
         },
+        "auth-user": {
+            "projectType": "library",
+            "root": "libs/auth/user",
+            "sourceRoot": "libs/auth/user/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/auth/user"],
+                    "options": {
+                        "jestConfig": "libs/auth/user/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/auth/user/src/**/*.ts",
+                            "libs/auth/user/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["scope:auth", "type:api"]
+        },
         "calendar": {
             "projectType": "library",
             "root": "libs/calendar/calendar",

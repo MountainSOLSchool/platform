@@ -15,7 +15,10 @@ const routes: Routes = [
             },
             {
                 path: 'report',
-                component: ReportComponent,
+                loadChildren: () =>
+                    import('./report.component.module').then(
+                        (m) => m.ReportComponentModule
+                    ),
             },
             {
                 path: 'calendar',

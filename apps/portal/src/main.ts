@@ -11,6 +11,5 @@ if (environment.production) {
 platformBrowserDynamic()
     .bootstrapModule(AppModule, {
         defaultEncapsulation: ViewEncapsulation.ShadowDom,
-        // ngZone: 'noop',
     })
     .catch((err) => console.error(err));

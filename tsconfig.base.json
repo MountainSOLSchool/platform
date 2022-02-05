@@ -16,6 +16,7 @@
         "baseUrl": ".",
         "paths": {
             "@sol/auth/login": ["libs/auth/login/src/index.ts"],
+            "@sol/auth/user": ["libs/auth/user/src/index.ts"],
             "@sol/calendar": ["libs/calendar/calendar/src/index.ts"],
             "@sol/classes/calendar": [
                 "libs/classes/class-calendar/src/index.ts"

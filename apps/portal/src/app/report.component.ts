@@ -1,18 +1,85 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
+import {
+    filter,
+    map,
+    mapTo,
+    merge,
+    Observable,
+    startWith,
+    Subject,
+    switchMap,
+    tap,
+    withLatestFrom,
+} from 'rxjs';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `<label for="classNameInput">Class Name</label>
-        <input id="classNameInput" placeholder="Knots-fall-2021" />
-        <button id="downloadBtn" (click)="downloadReport()">
-            Download Report
-        </button>`,
+    template: `<span class="field" style="margin-right: 4px">
+            <label for="classNameInput" class="block">Class Name</label>
+            <input
+                pInputText
+                type="text"
+                (keyup)="reportNameInputChange$.next($event)"
+                (keydown)="reportNameInputKeydown$.next($event)"
+                id="classNameInput"
+                placeholder="Knots-fall-2021"
+            />
+        </span>
+        <p-button
+            label="Download"
+            icon="pi pi-download"
+            id="downloadBtn"
+            [loading]="(isLoadingReport$ | async) ?? false"
+            (click)="downloadClick$.next()"
+        >
+        </p-button>`,
 })
 export class ReportComponent {
     constructor(private readonly functionsApi: FunctionsApi) {}
 
-    downloadBlob(blob: Blob, name = 'file.txt') {
+    downloadClick$ = new Subject<void>();
+    reportNameInputChange$ = new Subject<Event>();
+    reportNameInputKeydown$ = new Subject<KeyboardEvent>();
+
+    #downloadIntent$ = merge(
+        this.downloadClick$,
+        this.reportNameInputKeydown$.pipe(
+            filter((event) => event.key === 'Enter')
+        )
+    );
+
+    #reportName$ = this.reportNameInputChange$.pipe(
+        map((event) => (event.target as HTMLInputElement).value ?? '')
+    );
+
+    isLoadingReport$ = this.#downloadIntent$.pipe(
+        withLatestFrom(this.#reportName$),
+        filter(([, reportName]) => reportName !== ''),
+        switchMap(([, reportName]) => {
+            return this.#downloadReport$(reportName).pipe(
+                map(({ finished }) => !finished)
+            );
+        }),
+        startWith(false)
+    );
+
+    #downloadReport$(reportName: string): Observable<{ finished: boolean }> {
+        return this.functionsApi
+            .get<{ data: Array<number> }>(`roster?class=${reportName}`)
+            .pipe(
+                tap(({ data }) => {
+                    const spreadsheetFile = new Blob([new Uint8Array(data)], {
+                        type: 'application/pdf',
+                    });
+                    this.#downloadBlob(spreadsheetFile, 'roster.pdf');
+                }),
+                mapTo({ finished: true }),
+                startWith({ finished: false })
+            );
+    }
+
+    #downloadBlob(blob: Blob, name = 'file.txt') {
         const data = window.URL.createObjectURL(blob);
 
         const link = document.createElement('a');
@@ -33,30 +100,5 @@ export class ReportComponent {
             window.URL.revokeObjectURL(data);
             link.remove();
         }, 100);
-    }
-
-    downloadReport() {
-        const downloadButton =
-            document.querySelector<HTMLButtonElement>('#downloadBtn');
-        if (downloadButton) {
-            downloadButton.innerText = 'Downloading...';
-            downloadButton.disabled = true;
-            this.functionsApi
-                .get<{ data: Array<number> }>(
-                    `roster?class= ${
-                        document.querySelector<HTMLInputElement>(
-                            '#classNameInput'
-                        )?.value
-                    }`
-                )
-                .subscribe(({ data }) => {
-                    const spreadsheetFile = new Blob([new Uint8Array(data)], {
-                        type: 'application/pdf',
-                    });
-                    this.downloadBlob(spreadsheetFile, 'roster.pdf');
-                    downloadButton.innerText = 'Download Report';
-                    downloadButton.disabled = false;
-                });
-        }
     }
 }

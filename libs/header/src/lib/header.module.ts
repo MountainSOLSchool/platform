@@ -4,9 +4,18 @@ import { HeaderComponent } from './components/header.component';
 import { UserButtonModule } from '@sol/auth/login';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { ToolbarModule } from 'primeng/toolbar';
+import { AuthUserModule } from '@sol/auth/user';
 
 @NgModule({
-    imports: [CommonModule, UserButtonModule, RouterModule, ButtonModule],
+    imports: [
+        CommonModule,
+        UserButtonModule,
+        RouterModule,
+        ButtonModule,
+        ToolbarModule,
+        AuthUserModule,
+    ],
     declarations: [HeaderComponent],
     exports: [HeaderComponent],
 })

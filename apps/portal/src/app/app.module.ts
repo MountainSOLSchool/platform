@@ -31,7 +31,7 @@ const functionsProvider = environment.remoteFunctions
     : { provide: USE_EMULATOR, useValue: ['localhost', 5001] };
 
 @NgModule({
-    declarations: [AppComponent, ReportComponent],
+    declarations: [AppComponent],
     imports: [
         AngularFireModule.initializeApp({
             apiKey: 'AIzaSyBxv66X_Ye4MXI5lt8Sjc1xz88rdWJJ0ho',

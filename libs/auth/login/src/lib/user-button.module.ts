@@ -4,9 +4,16 @@ import { UserButtonComponent } from './components/user-button.component';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
+import { MenuModule } from 'primeng/menu';
 
 @NgModule({
-    imports: [CommonModule, ButtonModule, AvatarModule, RouterModule],
+    imports: [
+        CommonModule,
+        ButtonModule,
+        AvatarModule,
+        RouterModule,
+        MenuModule,
+    ],
     declarations: [UserButtonComponent],
     exports: [UserButtonComponent],
 })

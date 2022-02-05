@@ -18,6 +18,8 @@ export class RosterReportGenerator {
         const studentRecords =
             this.transformStudentEntriesIntoRecords(students);
 
+        console.log(studentRecords);
+
         return TablePdfUtility.createTablePdf({
             records: studentRecords,
             headers: this.studentRowHeaders,
