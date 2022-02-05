@@ -7,9 +7,16 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
                 <h1 routerLink="/" style="cursor: pointer">Mountain SOL</h1>
                 <span style="flex: 1 1 auto"></span>
                 <p-button
-                    routerLink="/report"
-                    label="Report"
+                    style="margin-right: 4px"
+                    routerLink="/calendar/classes"
+                    label="Calendar Demo"
                     styleClass="p-button-success"
+                ></p-button>
+                <p-button
+                    style="margin-right: 4px"
+                    routerLink="/report"
+                    label="Report Demo"
+                    styleClass="p-button-help"
                 ></p-button>
                 <sol-user-button></sol-user-button>
             </div>
