@@ -1,11 +1,13 @@
 // © 2021 developed by Katie and David with ❤️❤️❤️
 
-import { HttpUtility } from '@sol/firebase/functions';
+import { AuthUtility, HttpUtility } from '@sol/firebase/functions';
 import { FirebasePdf } from '@sol/pdf/firebase';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { RosterReportGenerator } from '@sol/student/reports';
 
 export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
+    AuthUtility.validateIsAdmin(request, response);
+
     const className = request.query.class as string;
 
     const db = DatabaseUtility.getDatabase();
@@ -20,12 +22,6 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
 
     response.send({ classes: await _fetchClasses(db) });
 });
-
-interface ClassDbEntry {
-    name: string;
-    start: string;
-    end: string;
-}
 
 const _fetchClasses = async (
     database: FirebaseFirestore.Firestore

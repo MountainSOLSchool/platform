@@ -2,14 +2,16 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+    BrowserAnimationsModule,
+    NoopAnimationsModule,
+} from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { AngularFireModule } from '@angular/fire/compat';
 import { HeaderModule } from '@sol/header';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { ReportComponent } from './report.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '@sol/auth/login';
 import {
@@ -18,6 +20,10 @@ import {
     USE_EMULATOR,
 } from '@angular/fire/compat/functions';
 import { environment } from '../environments/environment';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 const httpInterceptorProviders = [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
@@ -43,7 +49,7 @@ const functionsProvider = environment.remoteFunctions
             measurementId: 'G-QN03ENCDDC',
         }),
         BrowserModule,
-        NoopAnimationsModule,
+        BrowserAnimationsModule,
         AppRoutingModule,
         HeaderModule,
         StoreModule.forRoot({}, {}),
@@ -54,8 +60,11 @@ const functionsProvider = environment.remoteFunctions
         EffectsModule.forRoot([]),
         AngularFireFunctionsModule,
         HttpClientModule,
+        MessagesModule,
+        MessageModule,
+        ToastModule,
     ],
-    providers: [httpInterceptorProviders, functionsProvider],
+    providers: [httpInterceptorProviders, functionsProvider, MessageService],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

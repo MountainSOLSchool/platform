@@ -15,7 +15,7 @@ window.appConfig = {
     defaultProjectGraph: 'local',
 };
 window.projectGraphResponse = {
-    hash: '2607871922a480ea4959e3d2f140b27e70378986ba9ddb60ab04ca551e7e56db',
+    hash: 'a5cfcbac43902172c5e53d925b495fa1998899545913d3ffb38d8215880b5dc4',
     projects: [
         {
             name: 'classes-calendar',
@@ -200,7 +200,13 @@ window.projectGraphResponse = {
         ],
         'classeses-domain': [],
         'firebase-functions-api': [],
-        'firebase-functions': [],
+        'firebase-functions': [
+            {
+                source: 'firebase-functions',
+                target: 'firebase-database',
+                type: 'static',
+            },
+        ],
         calendar: [
             {
                 source: 'calendar',
@@ -241,6 +247,7 @@ window.projectGraphResponse = {
         'table-domain': [],
         'auth-login': [
             { source: 'auth-login', target: 'firebase-auth', type: 'static' },
+            { source: 'auth-login', target: 'auth-user', type: 'static' },
         ],
         'portal-e2e': [
             { source: 'portal-e2e', target: 'portal', type: 'implicit' },

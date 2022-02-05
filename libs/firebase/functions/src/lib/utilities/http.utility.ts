@@ -16,6 +16,7 @@ export class HttpUtility {
                 await AuthUtility.validateFirebaseIdToken(request, response);
                 handler(request, {
                     ...response,
+                    status: (code: number) => response.status(code),
                     send: (data: unknown) => response.send({ data }),
                 } as functions.Response);
             });

@@ -15,49 +15,69 @@ import {
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `<span class="field" style="margin-right: 4px">
-            <label for="classNameInput" class="block">Class Name</label>
-            <input
-                pInputText
-                type="text"
-                (keyup)="reportNameInputChange$.next($event)"
-                (keydown)="reportNameInputKeydown$.next($event)"
-                id="classNameInput"
-                placeholder="Knots-fall-2021"
-            />
-        </span>
-        <p-button
-            label="Download"
-            icon="pi pi-download"
-            id="downloadBtn"
-            [loading]="(isLoadingReport$ | async) ?? false"
-            (click)="downloadClick$.next()"
-        >
-        </p-button>`,
+    template: `<div style="display:flex; align-items: flex-start">
+        <div style="align-self:flex-end">
+            <span class="field" style="margin-right: 4px">
+                <label for="classNameInput" class="block">Class Name</label>
+                <p-autoComplete
+                    field="name"
+                    (completeMethod)="classNameInput$.next($event)"
+                    (onSelect)="selectedClass$.next($event)"
+                    (onKeyUp)="reportNameKeydown$.next($event)"
+                    [showEmptyMessage]="true"
+                    [suggestions]="(classSuggestions$ | async) ?? []"
+                    field="name"
+                    [minLength]="1"
+                ></p-autoComplete>
+            </span>
+        </div>
+        <div style="align-self:flex-end">
+            <p-button
+                label="Download"
+                icon="pi pi-download"
+                id="downloadBtn"
+                [loading]="(isLoadingReport$ | async) ?? false"
+                (click)="downloadClick$.next()"
+            >
+            </p-button>
+        </div>
+    </div>`,
 })
 export class ReportComponent {
     constructor(private readonly functionsApi: FunctionsApi) {}
 
     downloadClick$ = new Subject<void>();
-    reportNameInputChange$ = new Subject<Event>();
-    reportNameInputKeydown$ = new Subject<KeyboardEvent>();
+    selectedClass$ = new Subject<{ name: string }>();
+    classNameInput$ = new Subject<{ query: string }>();
+    reportNameKeydown$ = new Subject<KeyboardEvent>();
 
     #downloadIntent$ = merge(
         this.downloadClick$,
-        this.reportNameInputKeydown$.pipe(
-            filter((event) => event.key === 'Enter')
-        )
+        this.reportNameKeydown$.pipe(filter((event) => event.key === 'Enter'))
     );
 
-    #reportName$ = this.reportNameInputChange$.pipe(
-        map((event) => (event.target as HTMLInputElement).value ?? '')
-    );
+    #classNames$ = this.functionsApi
+        .get<{
+            classes: Array<{ title: string }>;
+        }>('classes')
+        .pipe(map(({ classes }) => classes.map(({ title }) => title)));
+
+    classSuggestions$: Observable<Array<{ name: string }>> =
+        this.classNameInput$.pipe(
+            withLatestFrom(this.#classNames$),
+            map(([{ query }, classNames]) => {
+                return classNames.filter((c) =>
+                    c.toLocaleLowerCase().startsWith(query.toLocaleLowerCase())
+                );
+            }),
+            map((suggestions) => suggestions.map((s) => ({ name: s })))
+        );
 
     isLoadingReport$ = this.#downloadIntent$.pipe(
-        withLatestFrom(this.#reportName$),
-        filter(([, reportName]) => reportName !== ''),
-        switchMap(([, reportName]) => {
-            return this.#downloadReport$(reportName).pipe(
+        withLatestFrom(this.selectedClass$),
+        filter(([, { name }]) => name !== ''),
+        switchMap(([, { name }]) => {
+            return this.#downloadReport$(name).pipe(
                 map(({ finished }) => !finished)
             );
         }),

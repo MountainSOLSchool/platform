@@ -3,7 +3,10 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-root',
-    template: `<router-outlet></router-outlet>`,
+    template: ` <div>
+        <router-outlet></router-outlet>
+        <p-toast position="top-center"></p-toast>
+    </div>`,
     styles: [``],
 })
 export class AppComponent {}

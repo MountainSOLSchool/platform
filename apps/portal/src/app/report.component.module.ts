@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ReportRoutingModule } from './report-routing.module';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
     imports: [
@@ -13,6 +14,7 @@ import { InputTextModule } from 'primeng/inputtext';
         ReportRoutingModule,
         ButtonModule,
         InputTextModule,
+        AutoCompleteModule,
     ],
     declarations: [ReportComponent],
 })

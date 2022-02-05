@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { from } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 
 @Injectable()
 export class AuthService {
@@ -13,14 +13,17 @@ export class AuthService {
     }
 
     public emailSignup(email: string, password: string) {
-        from(this.afAuth.createUserWithEmailAndPassword(email, password)).pipe(
-            tap(() => this.router.navigateByUrl('/profile'))
+        return from(
+            this.afAuth.createUserWithEmailAndPassword(email, password)
         );
     }
 
-    public logout() {
-        from(this.afAuth.signOut()).pipe(
-            tap(() => this.router.navigate(['/']))
-        );
+    public logout(): void {
+        from(this.afAuth.signOut())
+            .pipe(
+                tap(() => this.router.navigate(['/'])),
+                take(1)
+            )
+            .subscribe();
     }
 }

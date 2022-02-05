@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
+import { UserService } from '@sol/auth/user';
+import { AuthService } from '@sol/firebase/auth';
 import { MenuItem } from 'primeng/api';
 import { map, Observable } from 'rxjs';
 
@@ -32,8 +34,8 @@ import { map, Observable } from 'rxjs';
 })
 export class UserButtonComponent implements OnInit {
     constructor(
-        private readonly afAuth: AngularFireAuth,
-        private readonly router: Router
+        private readonly auth: AuthService,
+        private readonly userService: UserService
     ) {}
 
     public email$: Observable<string | null | undefined> | undefined;
@@ -47,11 +49,12 @@ export class UserButtonComponent implements OnInit {
     ];
 
     ngOnInit() {
-        this.email$ = this.afAuth.user.pipe(map((user) => user?.email));
+        this.email$ = this.userService
+            .getUser()
+            .pipe(map((user) => user?.email));
     }
 
     signOut() {
-        this.afAuth.signOut();
-        this.router.navigate(['/']);
+        this.auth.logout();
     }
 }

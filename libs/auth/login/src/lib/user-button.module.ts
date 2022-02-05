@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
+import { FirebaseAuthModule } from '@sol/firebase/auth';
+import { AuthUserModule } from '@sol/auth/user';
 
 @NgModule({
     imports: [
@@ -13,6 +15,8 @@ import { MenuModule } from 'primeng/menu';
         AvatarModule,
         RouterModule,
         MenuModule,
+        FirebaseAuthModule,
+        AuthUserModule,
     ],
     declarations: [UserButtonComponent],
     exports: [UserButtonComponent],

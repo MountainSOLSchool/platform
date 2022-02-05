@@ -8,6 +8,10 @@ import { LoginEffects } from './store/login.effects';
 import { AuthLoginRoutingModule } from './auth-login-routing.module';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { CreateAccountComponent } from './components/create-account.component copy';
 
 @NgModule({
     imports: [
@@ -18,7 +22,10 @@ import { ButtonModule } from 'primeng/button';
         InputTextModule,
         FirebaseAuthModule,
         EffectsModule.forFeature([LoginEffects]),
+        MessagesModule,
+        MessageModule,
+        ToastModule,
     ],
-    declarations: [LoginComponent],
+    declarations: [LoginComponent, CreateAccountComponent],
 })
 export class AuthLoginModule {}

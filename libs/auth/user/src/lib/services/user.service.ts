@@ -11,4 +11,8 @@ export class UserService {
     isLoggedIn(): Observable<boolean> {
         return this.afAuth.user.pipe(map((u) => !!u));
     }
+
+    getUser(): Observable<firebase.default.User | null> {
+        return this.afAuth.user.pipe();
+    }
 }

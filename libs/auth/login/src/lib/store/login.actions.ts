@@ -10,4 +10,9 @@ export const LoginIntent = createAction(
     props<{ email: string; password: string }>()
 );
 
+export const CreateAccountIntent = createAction(
+    '[Login Service] Create Account Intent',
+    props<{ email: string; password: string }>()
+);
+
 export const LoginSuccess = createAction('[Login Effects] Login Success');
