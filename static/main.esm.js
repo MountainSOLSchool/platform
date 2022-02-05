@@ -16106,12 +16106,10 @@
                     },
                     once: function (e, t, n) {
                         for (var r = Bi(t), i = 0; i < this.length; i++) {
-                            this[i]
-                                .emitter()
-                                .on(e, r, n, {
-                                    once: !0,
-                                    onceCollection: this,
-                                });
+                            this[i].emitter().on(e, r, n, {
+                                once: !0,
+                                onceCollection: this,
+                            });
                         }
                     },
                     emit: function (e, t) {
@@ -27188,28 +27186,24 @@
                                                 );
                                             return (
                                                 v && v.isNode()
-                                                    ? (v
-                                                          .activate()
-                                                          .emit({
-                                                              originalEvent: t,
-                                                              type: 'cxttapstart',
-                                                              position: {
-                                                                  x: i[0],
-                                                                  y: i[1],
-                                                              },
-                                                          }),
+                                                    ? (v.activate().emit({
+                                                          originalEvent: t,
+                                                          type: 'cxttapstart',
+                                                          position: {
+                                                              x: i[0],
+                                                              y: i[1],
+                                                          },
+                                                      }),
                                                       (e.touchData.start = v))
                                                     : g && g.isNode()
-                                                    ? (g
-                                                          .activate()
-                                                          .emit({
-                                                              originalEvent: t,
-                                                              type: 'cxttapstart',
-                                                              position: {
-                                                                  x: i[0],
-                                                                  y: i[1],
-                                                              },
-                                                          }),
+                                                    ? (g.activate().emit({
+                                                          originalEvent: t,
+                                                          type: 'cxttapstart',
+                                                          position: {
+                                                              x: i[0],
+                                                              y: i[1],
+                                                          },
+                                                      }),
                                                       (e.touchData.start = g))
                                                     : r.emit({
                                                           originalEvent: t,

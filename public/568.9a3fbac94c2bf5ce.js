@@ -365,11 +365,9 @@
             }
             const Q = (e, { instanceIdentifier: t }) => {
                 const n = e.getProvider('app-compat').getImmediate(),
-                    r = e
-                        .getProvider('functions')
-                        .getImmediate({
-                            identifier: null != t ? t : 'us-central1',
-                        });
+                    r = e.getProvider('functions').getImmediate({
+                        identifier: null != t ? t : 'us-central1',
+                    });
                 return new P(n, r);
             };
             (function q() {
