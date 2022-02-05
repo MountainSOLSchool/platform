@@ -26,7 +26,7 @@ const httpInterceptorProviders = [
     imports: [
         AngularFireModule.initializeApp({
             apiKey: 'AIzaSyBxv66X_Ye4MXI5lt8Sjc1xz88rdWJJ0ho',
-            authDomain: 'mountain-sol-platform.firebaseapp.com',
+            authDomain: 'mountain-sol-platform.web.app',
             projectId: 'mountain-sol-platform',
             storageBucket: 'mountain-sol-platform.appspot.com',
             messagingSenderId: '319228048592',

@@ -1,6 +1,6 @@
 import { AngularFireFunctions } from '@angular/fire/compat/functions';
 import { Injectable } from '@angular/core';
-import { mergeMap, Observable, of, map, catchError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
