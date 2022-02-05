@@ -12,6 +12,14 @@
         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
         "rewrites": [
             {
+                "source": "/classes",
+                "function": "classes"
+            },
+            {
+                "source": "/roster",
+                "function": "roster"
+            },
+            {
                 "source": "**",
                 "destination": "/index.html"
             }

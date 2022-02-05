@@ -12,6 +12,10 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ReportComponent } from './report.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '@sol/auth/login';
+import {
+    AngularFireFunctionsModule,
+    ORIGIN,
+} from '@angular/fire/compat/functions';
 
 const httpInterceptorProviders = [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
@@ -39,9 +43,13 @@ const httpInterceptorProviders = [
             autoPause: true,
         }),
         EffectsModule.forRoot([]),
+        AngularFireFunctionsModule,
         HttpClientModule,
     ],
-    providers: [httpInterceptorProviders],
+    providers: [
+        httpInterceptorProviders,
+        { provide: ORIGIN, useValue: 'https://mountain-sol-platform.web.app' },
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

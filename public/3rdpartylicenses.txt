@@ -40,6 +40,12 @@ Apache-2.0
 @firebase/component
 Apache-2.0
 
+@firebase/functions
+Apache-2.0
+
+@firebase/functions-compat
+Apache-2.0
+
 @firebase/installations
 Apache-2.0
 
@@ -231,6 +237,8 @@ firebase/app-check
 firebase/compat/app
 
 firebase/compat/auth
+
+firebase/compat/functions
 
 firebase/messaging
 
