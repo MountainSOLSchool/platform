@@ -32,7 +32,8 @@
         "deploy:functions": "firebase deploy",
         "serve:playground": "cd apps/functions/src && http-server",
         "format:everything": "prettier --write .",
-        "install:all": "npm ci && husky install && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main"
+        "install:all": "npm ci && husky install && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
+        "postinstall": "ngcc --properties es2015 browser module main"
     },
     "main": "dist/apps/functions/main.js",
     "engines": {

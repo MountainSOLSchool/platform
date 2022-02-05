@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     CalendarOptions,
@@ -6,6 +5,7 @@ import {
     EventClickArg,
     EventInput,
 } from '@fullcalendar/angular';
+import { FunctionsApi } from '@sol/firebase/functions-api';
 import { mergeMap, Observable, of, scan, Subject, map, startWith } from 'rxjs';
 
 interface Class {
@@ -27,7 +27,7 @@ interface Class {
         </p-card>`,
 })
 export class CalendarComponent {
-    constructor(private http: HttpClient) {}
+    constructor(private readonly firebaseApi: FunctionsApi) {}
 
     // Stream of class selection events
     private _classSelected$ = new Subject<EventApi>();
@@ -43,10 +43,10 @@ export class CalendarComponent {
         )
     );
 
-    private _initialClassEvents$ = this.http
+    private _initialClassEvents$ = this.firebaseApi
         .get<{
             classes: Array<EventInput>;
-        }>('http://localhost:5001/mountain-sol-platform/us-central1/classes')
+        }>('classes')
         .pipe(map((response) => response.classes));
 
     // Stream of classes as events, with color mapped to green when selected

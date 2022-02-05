@@ -1,5 +1,4 @@
 window.exclude = [];
-window.groupByFolder = false;
 window.watch = false;
 window.environment = 'release';
 window.localMode = 'build';
@@ -16,8 +15,13 @@ window.appConfig = {
     defaultProjectGraph: 'local',
 };
 window.projectGraphResponse = {
-    hash: 'cd873687b313fdbc3c3b245b14851c294d4b66d196c20931862cbb58f761139c',
+    hash: '7f3f0ffc3019209cf5ca1817bcbd343731ab8eb30fa842b3e295bc0cd71a17a1',
     projects: [
+        {
+            name: 'firebase-functions-api',
+            type: 'lib',
+            data: { tags: [], root: 'libs/firebase/functions-api', files: [] },
+        },
         {
             name: 'calendar-sol-calendar',
             type: 'lib',
@@ -154,7 +158,14 @@ window.projectGraphResponse = {
         },
     ],
     dependencies: {
-        'calendar-sol-calendar': [],
+        'firebase-functions-api': [],
+        'calendar-sol-calendar': [
+            {
+                source: 'calendar-sol-calendar',
+                target: 'firebase-functions-api',
+                type: 'static',
+            },
+        ],
         'firebase-functions': [],
         'firebase-database': [],
         'student-reports': [
@@ -219,12 +230,17 @@ window.projectGraphResponse = {
         header: [{ source: 'header', target: 'auth-login', type: 'static' }],
         portal: [
             { source: 'portal', target: 'header', type: 'static' },
+            { source: 'portal', target: 'auth-login', type: 'static' },
             {
                 source: 'portal',
                 target: 'calendar-sol-calendar',
                 type: 'static',
             },
-            { source: 'portal', target: 'auth-login', type: 'static' },
+            {
+                source: 'portal',
+                target: 'firebase-functions-api',
+                type: 'static',
+            },
         ],
         paths: [],
     },

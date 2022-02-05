@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { environment } from '../environments/environment';
+import { FunctionsApi } from '@sol/firebase/functions-api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,7 +10,7 @@ import { environment } from '../environments/environment';
         </button>`,
 })
 export class ReportComponent {
-    constructor(private readonly http: HttpClient) {}
+    constructor(private readonly functionsApi: FunctionsApi) {}
 
     downloadBlob(blob: Blob, name = 'file.txt') {
         const data = window.URL.createObjectURL(blob);
@@ -42,13 +41,9 @@ export class ReportComponent {
         if (downloadButton) {
             downloadButton.innerText = 'Downloading...';
             downloadButton.disabled = true;
-            this.http
+            this.functionsApi
                 .get<{ data: Array<number> }>(
-                    `${
-                        environment.production
-                            ? 'https://us-central1-mountain-sol-platform.cloudfunctions.net'
-                            : 'http://localhost:5001'
-                    }/roster?class= ${
+                    `roster?class= ${
                         document.querySelector<HTMLInputElement>(
                             '#classNameInput'
                         )?.value

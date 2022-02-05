@@ -1,9 +1,8 @@
-import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 export class AuthUtility {
     // TODO: strongly type?
-    public static async validateFirebaseIdToken(req, res) {
+    public static async validateFirebaseIdToken(req: any, res: any) {
         console.log('🔎 Check if request is authorized with Firebase ID token');
         if (
             (!req.headers.authorization ||

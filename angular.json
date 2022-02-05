@@ -125,6 +125,32 @@
             },
             "tags": ["scope:firebase", "type:api"]
         },
+        "firebase-functions-api": {
+            "projectType": "library",
+            "root": "libs/firebase/functions-api",
+            "sourceRoot": "libs/firebase/functions-api/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/firebase/functions-api"],
+                    "options": {
+                        "jestConfig": "libs/firebase/functions-api/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/firebase/functions-api/src/**/*.ts",
+                            "libs/firebase/functions-api/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": []
+        },
         "functions": {
             "root": "apps/functions",
             "sourceRoot": "apps/functions/src",

@@ -1,12 +1,12 @@
 'use strict';
 (self.webpackChunkportal = self.webpackChunkportal || []).push([
-    [283],
+    [522],
     {
-        8283: (ue, We, k) => {
+        3522: (ue, We, k) => {
             k.r(We),
                 k.d(We, {
                     CalendarRoutingModule: () => Xo,
-                    SolCalendarModule: () => Rp,
+                    SolCalendarModule: () => kp,
                 });
             var pe,
                 C,
@@ -11554,14 +11554,14 @@
                         t
                     );
                 })();
-            var Go = k(520),
-                Zo = k(6115),
+            var Go = k(6115),
                 Qf = k(7579),
-                jo = k(5026),
-                Yo = k(4004),
-                qo = k(5577),
-                Jo = k(8675),
-                Wf = k(9646);
+                Zo = k(5026),
+                jo = k(4004),
+                Yo = k(5577),
+                qo = k(8675),
+                Wf = k(9646),
+                Jo = k(1485);
             const Vf = function () {
                 return { width: '25rem', 'margin-bottom': '2em' };
             };
@@ -11585,11 +11585,11 @@
                     component: (() => {
                         class t {
                             constructor(n) {
-                                (this.http = n),
+                                (this.firebaseApi = n),
                                     (this._classSelected$ = new Qf.x()),
                                     (this.selectedClasses$ =
                                         this._classSelected$.pipe(
-                                            (0, jo.R)(
+                                            (0, Zo.R)(
                                                 (r, i) =>
                                                     r.find((o) => o.id === i.id)
                                                         ? r.filter(
@@ -11606,16 +11606,15 @@
                                                 new Array()
                                             )
                                         )),
-                                    (this._initialClassEvents$ = this.http
-                                        .get(
-                                            'http://localhost:5001/mountain-sol-platform/us-central1/classes'
-                                        )
-                                        .pipe((0, Yo.U)((r) => r.classes))),
+                                    (this._initialClassEvents$ =
+                                        this.firebaseApi
+                                            .get('classes')
+                                            .pipe((0, jo.U)((r) => r.classes))),
                                     (this._classEvents$ =
                                         this._initialClassEvents$.pipe(
-                                            (0, qo.z)((r) =>
+                                            (0, Yo.z)((r) =>
                                                 this._classSelected$.pipe(
-                                                    (0, jo.R)(
+                                                    (0, Zo.R)(
                                                         (i, o) =>
                                                             i.map((a) =>
                                                                 a.id === o.id
@@ -11636,7 +11635,7 @@
                                                             ),
                                                         r
                                                     ),
-                                                    (0, Jo.O)(r)
+                                                    (0, qo.O)(r)
                                                 )
                                             )
                                         )),
@@ -11658,15 +11657,15 @@
                                     (this.options$ = (0, Wf.of)(
                                         this._options
                                     ).pipe(
-                                        (0, qo.z)((r) =>
+                                        (0, Yo.z)((r) =>
                                             this._classEvents$.pipe(
-                                                (0, Yo.U)((i) =>
+                                                (0, jo.U)((i) =>
                                                     Object.assign(
                                                         Object.assign({}, r),
                                                         { events: i }
                                                     )
                                                 ),
-                                                (0, Jo.O)(r)
+                                                (0, qo.O)(r)
                                             )
                                         )
                                     ));
@@ -11674,7 +11673,7 @@
                         }
                         return (
                             (t.ɵfac = function (n) {
-                                return new (n || t)(w.Y36(Go.eN));
+                                return new (n || t)(w.Y36(Jo.O));
                             }),
                             (t.ɵcmp = w.Xpm({
                                 type: t,
@@ -11737,7 +11736,7 @@
                     }),
                     (t.ɵmod = w.oAB({ type: t })),
                     (t.ɵinj = w.cJS({
-                        imports: [[Zo.Bz.forChild(Zf)], Zo.Bz],
+                        imports: [[Go.Bz.forChild(Zf)], Go.Bz],
                     })),
                     t
                 );
@@ -17189,7 +17188,7 @@
                                                 ? s.computeSegHStyle(P)
                                                 : { left: 0, right: 0 },
                                         rt = Boolean(P) && P.stackForward > 0,
-                                        kp =
+                                        Mp =
                                             Boolean(P) &&
                                             P.span.end - P.span.start < d;
                                     return h(
@@ -17222,7 +17221,7 @@
                                                     isResizing: o,
                                                     isDateSelecting: a,
                                                     isSelected: q === A,
-                                                    isShort: kp,
+                                                    isShort: Mp,
                                                 },
                                                 Ae(F, m, E)
                                             )
@@ -18024,7 +18023,7 @@
                 var n = new To(t.renderRange, e);
                 return new Ro(n, !1);
             }
-            var xp = de({
+            const Tp = de({
                 initialView: 'timeGridWeek',
                 optionRefiners: { allDaySlot: Boolean },
                 views: {
@@ -18039,7 +18038,6 @@
                     timeGridWeek: { type: 'timeGrid', duration: { weeks: 1 } },
                 },
             });
-            Vo.registerPlugins([bu, Lu, xp]);
             let Rp = (() => {
                 class t {}
                 return (
@@ -18047,7 +18045,19 @@
                         return new (n || t)();
                     }),
                     (t.ɵmod = w.oAB({ type: t })),
-                    (t.ɵinj = w.cJS({ imports: [[H.ez, Vo, Lf, Go.JF, Xo]] })),
+                    (t.ɵinj = w.cJS({ providers: [Jo.O] })),
+                    t
+                );
+            })();
+            Vo.registerPlugins([bu, Lu, Tp]);
+            let kp = (() => {
+                class t {}
+                return (
+                    (t.ɵfac = function (n) {
+                        return new (n || t)();
+                    }),
+                    (t.ɵmod = w.oAB({ type: t })),
+                    (t.ɵinj = w.cJS({ imports: [[H.ez, Vo, Lf, Xo, Rp]] })),
                     t
                 );
             })();

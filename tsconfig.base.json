@@ -20,6 +20,9 @@
             "@sol/firebase/auth": ["libs/firebase/auth/src/index.ts"],
             "@sol/firebase/database": ["libs/firebase/database/src/index.ts"],
             "@sol/firebase/functions": ["libs/firebase/functions/src/index.ts"],
+            "@sol/firebase/functions-api": [
+                "libs/firebase/functions-api/src/index.ts"
+            ],
             "@sol/header": ["libs/header/src/index.ts"],
             "@sol/paths": ["libs/paths/src/index.ts"],
             "@sol/pdf/firebase": ["libs/pdf/firebase/src/index.ts"],
