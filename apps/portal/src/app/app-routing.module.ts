@@ -20,7 +20,9 @@ const routes: Routes = [
             {
                 path: 'calendar',
                 loadChildren: () =>
-                    import('@sol/calendar').then((m) => m.SolCalendarModule),
+                    import('@sol/classes/calendar').then(
+                        (m) => m.ClassesCalendarModule
+                    ),
             },
         ],
     },

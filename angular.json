@@ -27,17 +27,17 @@
             },
             "tags": ["scope:auth"]
         },
-        "calendar-sol-calendar": {
+        "calendar": {
             "projectType": "library",
-            "root": "libs/calendar/sol-calendar",
-            "sourceRoot": "libs/calendar/sol-calendar/src",
+            "root": "libs/calendar/calendar",
+            "sourceRoot": "libs/calendar/calendar/src",
             "prefix": "sol",
             "architect": {
                 "test": {
                     "builder": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/calendar/sol-calendar"],
+                    "outputs": ["coverage/libs/calendar/calendar"],
                     "options": {
-                        "jestConfig": "libs/calendar/sol-calendar/jest.config.js",
+                        "jestConfig": "libs/calendar/calendar/jest.config.js",
                         "passWithNoTests": true
                     }
                 },
@@ -45,13 +45,65 @@
                     "builder": "@nrwl/linter:eslint",
                     "options": {
                         "lintFilePatterns": [
-                            "libs/calendar/sol-calendar/src/**/*.ts",
-                            "libs/calendar/sol-calendar/src/**/*.html"
+                            "libs/calendar/calendar/src/**/*.ts",
+                            "libs/calendar/calendar/src/**/*.html"
                         ]
                     }
                 }
             },
             "tags": []
+        },
+        "classes-calendar": {
+            "projectType": "library",
+            "root": "libs/classes/class-calendar",
+            "sourceRoot": "libs/classes/class-calendar/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/classes/class-calendar"],
+                    "options": {
+                        "jestConfig": "libs/classes/class-calendar/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/classes/class-calendar/src/**/*.ts",
+                            "libs/classes/class-calendar/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["scope:classes"]
+        },
+        "classeses-domain": {
+            "projectType": "library",
+            "root": "libs/classes/classes-domain",
+            "sourceRoot": "libs/classes/classes-domain/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/classes/classes-domain"],
+                    "options": {
+                        "jestConfig": "libs/classes/classes-domain/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/classes/classes-domain/src/**/*.ts",
+                            "libs/classes/classes-domain/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["scope:classes"]
         },
         "firebase-auth": {
             "projectType": "library",

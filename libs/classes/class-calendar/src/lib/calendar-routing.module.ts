@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CalendarComponent } from './components/calendar.component';
+import { SelectClassesCalendarComponent } from './components/classes-calendar.component';
 
 const routes: Routes = [
     {
         path: 'classes',
-        component: CalendarComponent,
+        component: SelectClassesCalendarComponent,
         children: [],
     },
 ];

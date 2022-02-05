@@ -1,5 +1,5 @@
 module.exports = {
-    displayName: 'calendar-sol-calendar',
+    displayName: 'calendar',
     preset: '../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
@@ -8,7 +8,7 @@ module.exports = {
             stringifyContentPathRegex: '\\.(html|svg)$',
         },
     },
-    coverageDirectory: '../../../coverage/libs/calendar/sol-calendar',
+    coverageDirectory: '../../../coverage/libs/calendar/calendar',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
     },

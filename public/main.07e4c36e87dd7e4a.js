@@ -9048,9 +9048,9 @@
                         {
                             path: 'calendar',
                             loadChildren: () =>
-                                Promise.all([_.e(592), _.e(522)])
-                                    .then(_.bind(_, 3522))
-                                    .then((d) => d.SolCalendarModule),
+                                Promise.all([_.e(592), _.e(613)])
+                                    .then(_.bind(_, 613))
+                                    .then((d) => d.ClassesCalendarModule),
                         },
                     ],
                 },

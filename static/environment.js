@@ -23,9 +23,9 @@ window.projectGraphResponse = {
             data: { tags: [], root: 'libs/firebase/functions-api', files: [] },
         },
         {
-            name: 'calendar-sol-calendar',
+            name: 'calendar',
             type: 'lib',
-            data: { tags: [], root: 'libs/calendar/sol-calendar', files: [] },
+            data: { tags: [], root: 'libs/calendar/calendar', files: [] },
         },
         {
             name: 'firebase-functions',
@@ -159,9 +159,9 @@ window.projectGraphResponse = {
     ],
     dependencies: {
         'firebase-functions-api': [],
-        'calendar-sol-calendar': [
+        calendar: [
             {
-                source: 'calendar-sol-calendar',
+                source: 'calendar',
                 target: 'firebase-functions-api',
                 type: 'static',
             },
@@ -233,7 +233,7 @@ window.projectGraphResponse = {
             { source: 'portal', target: 'auth-login', type: 'static' },
             {
                 source: 'portal',
-                target: 'calendar-sol-calendar',
+                target: 'calendar',
                 type: 'static',
             },
             {

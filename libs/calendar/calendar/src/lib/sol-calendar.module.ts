@@ -2,12 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CalendarComponent } from './components/calendar.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
-import { CardModule } from 'primeng/card';
-import { CalendarRoutingModule } from './calendar-routing.module';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { FunctionsApiModule } from '@sol/firebase/functions-api';
+import { SkeletonModule } from 'primeng/skeleton';
 
 FullCalendarModule.registerPlugins([
     interactionPlugin,
@@ -16,13 +14,8 @@ FullCalendarModule.registerPlugins([
 ]);
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FullCalendarModule,
-        CardModule,
-        CalendarRoutingModule,
-        FunctionsApiModule,
-    ],
+    imports: [CommonModule, FullCalendarModule, SkeletonModule],
     declarations: [CalendarComponent],
+    exports: [CalendarComponent],
 })
 export class SolCalendarModule {}

@@ -16,7 +16,11 @@
         "baseUrl": ".",
         "paths": {
             "@sol/auth/login": ["libs/auth/login/src/index.ts"],
-            "@sol/calendar": ["libs/calendar/sol-calendar/src/index.ts"],
+            "@sol/calendar": ["libs/calendar/calendar/src/index.ts"],
+            "@sol/classes/calendar": [
+                "libs/classes/class-calendar/src/index.ts"
+            ],
+            "@sol/classes/domain": ["libs/classes/classes-domain/src/index.ts"],
             "@sol/firebase/auth": ["libs/firebase/auth/src/index.ts"],
             "@sol/firebase/database": ["libs/firebase/database/src/index.ts"],
             "@sol/firebase/functions": ["libs/firebase/functions/src/index.ts"],
