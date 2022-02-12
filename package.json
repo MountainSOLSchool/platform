@@ -34,7 +34,7 @@
         "serve:playground": "cd apps/functions/src && http-server",
         "format:everything": "prettier --write .",
         "install:all": "npm ci && husky install && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
-        "postinstall": "if [ \"$IS_GITHUB_ACTION\" == true ]; then true; else ngcc --properties es2015 browser module main; fi"
+        "postinstall": "if [ \"$IS_CI\" == true ]; then true; else ngcc --properties es2015 browser module main; fi"
     },
     "main": "dist/apps/functions/main.js",
     "engines": {

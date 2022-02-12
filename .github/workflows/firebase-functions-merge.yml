@@ -5,7 +5,7 @@ name: Deploy Firebase Functions on merge
             - main
 
 env:
-    IS_GITHUB_ACTION: true
+    IS_CI: true
 
 jobs:
     build_and_deploy:
