@@ -27,6 +27,18 @@ const routes: Routes = [
                         (m) => m.ClassesCalendarModule
                     ),
             },
+            {
+                path: 'classes',
+                children: [
+                    {
+                        path: 'management',
+                        loadChildren: () =>
+                            import('@sol/classes/class-management').then(
+                                (m) => m.ClassManagementModule
+                            ),
+                    },
+                ],
+            },
         ],
     },
 ];

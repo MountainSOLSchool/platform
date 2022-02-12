@@ -1,1 +1,1 @@
-export * from './lib/classes-class-management.module';
+export * from './lib/class-management.module';
