@@ -3,6 +3,10 @@ name: Deploy Firebase Functions on merge
     push:
         branches:
             - main
+
+env:
+    IS_GITHUB_ACTION: true
+
 jobs:
     build_and_deploy:
         runs-on: ubuntu-latest
