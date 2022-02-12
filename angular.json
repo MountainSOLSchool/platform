@@ -105,6 +105,58 @@
             },
             "tags": ["scope:classes"]
         },
+        "classes-class-enrollment": {
+            "projectType": "library",
+            "root": "libs/classes/class-enrollment",
+            "sourceRoot": "libs/classes/class-enrollment/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/classes/class-enrollment"],
+                    "options": {
+                        "jestConfig": "libs/classes/class-enrollment/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/classes/class-enrollment/src/**/*.ts",
+                            "libs/classes/class-enrollment/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["classes"]
+        },
+        "classes-class-management": {
+            "projectType": "library",
+            "root": "libs/classes/class-management",
+            "sourceRoot": "libs/classes/class-management/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/classes/class-management"],
+                    "options": {
+                        "jestConfig": "libs/classes/class-management/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/classes/class-management/src/**/*.ts",
+                            "libs/classes/class-management/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["scope:classes"]
+        },
         "classeses-domain": {
             "projectType": "library",
             "root": "libs/classes/classes-domain",
