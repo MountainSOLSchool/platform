@@ -13,6 +13,14 @@ import { UserService } from '@sol/auth/user';
     template: `<header class="toolbarz">
             <p-toolbar styleClass="toolbar">
                 <div class="p-toolbar-group-left">
+                    <div>
+                        <img
+                            src="assets/header/sol-logo.png"
+                            alt="sol-logo"
+                            height="50px"
+                            style="margin-right:10px"
+                        />
+                    </div>
                     <h2 routerLink="/" style="margin: 0; cursor: pointer">
                         Mountain SOL School
                     </h2>
