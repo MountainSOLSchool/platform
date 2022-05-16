@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HeaderComponent } from '@sol/header';
-import { ReportComponent } from './report.component';
+import { ReportComponent } from './report-component/report.component';
 
 const routes: Routes = [
     {
@@ -16,7 +16,7 @@ const routes: Routes = [
             {
                 path: 'report',
                 loadChildren: () =>
-                    import('./report.component.module').then(
+                    import('./report-component/report.component.module').then(
                         (m) => m.ReportComponentModule
                     ),
             },

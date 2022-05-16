@@ -1,5 +1,5 @@
-<div style="display:flex; align-items: flex-start">
-    <div style="align-self:flex-end">
+<div style="display: flex; align-items: flex-start">
+    <div style="align-self: flex-end">
         <span class="field" style="margin-right: 4px">
             <label for="classNameInput" class="block">Class Name</label>
             <p-autoComplete
@@ -14,13 +14,23 @@
             ></p-autoComplete>
         </span>
     </div>
-    <div style="align-self:flex-end">
+    <div style="align-self: flex-end">
         <p-button
-            label="Download"
+            label="Download Doom Sheet"
             icon="pi pi-download"
             id="downloadBtn"
             [loading]="(isLoadingReport$ | async) ?? false"
             (click)="downloadClick$.next()"
+        >
+        </p-button>
+        <p-button
+            label="Download Sign In/Out"
+            id="signin"
+        >
+        </p-button>
+        <p-button
+            label="Generate Email List"
+            id="emails"
         >
         </p-button>
     </div>
