@@ -15,7 +15,8 @@
         </span>
     </div>
     <div style="align-self: flex-end">
-        <p-button
+        <p-button 
+            class="sol-button"
             label="Download Doom Sheet"
             icon="pi pi-download"
             id="downloadBtn"
@@ -23,15 +24,17 @@
             (click)="downloadClick$.next()"
         >
         </p-button>
-        <p-button
-            label="Download Sign In/Out"
+        <p-button 
+            class="sol-button" 
+            label="Download Sign In/Out" 
             id="signin"
-        >
+        > 
         </p-button>
-        <p-button
-            label="Generate Email List"
+        <p-button 
+            class="sol-button"
+            label="Generate Email List" 
             id="emails"
-        >
+        > 
         </p-button>
     </div>
 </div>
