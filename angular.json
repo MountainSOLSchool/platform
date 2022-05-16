@@ -450,7 +450,11 @@
                         "assets": [
                             "apps/portal/src/favicon.ico",
                             "apps/portal/src/assets",
-                            { "glob": "**/*", "input": "libs/header/src/lib/assets/", "output": "./assets/header/" }
+                            {
+                                "glob": "**/*",
+                                "input": "libs/header/src/lib/assets/",
+                                "output": "./assets/header/"
+                            }
                         ],
                         "styles": [
                             "apps/portal/src/styles.css",

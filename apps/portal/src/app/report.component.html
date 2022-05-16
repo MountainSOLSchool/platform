@@ -1,0 +1,27 @@
+<div style="display:flex; align-items: flex-start">
+    <div style="align-self:flex-end">
+        <span class="field" style="margin-right: 4px">
+            <label for="classNameInput" class="block">Class Name</label>
+            <p-autoComplete
+                field="name"
+                (completeMethod)="classNameInput$.next($event)"
+                (onSelect)="selectedClass$.next($event)"
+                (onKeyUp)="reportNameKeydown$.next($event)"
+                [showEmptyMessage]="true"
+                [suggestions]="(classSuggestions$ | async) ?? []"
+                field="name"
+                [minLength]="1"
+            ></p-autoComplete>
+        </span>
+    </div>
+    <div style="align-self:flex-end">
+        <p-button
+            label="Download"
+            icon="pi pi-download"
+            id="downloadBtn"
+            [loading]="(isLoadingReport$ | async) ?? false"
+            (click)="downloadClick$.next()"
+        >
+        </p-button>
+    </div>
+</div>
