@@ -24,6 +24,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 const httpInterceptorProviders = [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
@@ -63,6 +64,7 @@ const functionsProvider = environment.remoteFunctions
         MessagesModule,
         MessageModule,
         ToastModule,
+        ClipboardModule,
     ],
     providers: [httpInterceptorProviders, functionsProvider, MessageService],
     bootstrap: [AppComponent],

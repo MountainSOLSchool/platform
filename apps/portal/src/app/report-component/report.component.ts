@@ -1,29 +1,37 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import {
+    delay,
     filter,
     map,
     mapTo,
     merge,
     Observable,
+    of,
+    pairwise,
     startWith,
     Subject,
     switchMap,
     tap,
     withLatestFrom,
 } from 'rxjs';
+import { Clipboard } from '@angular/cdk/clipboard';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './report.component.html',
 })
 export class ReportComponent {
-    constructor(private readonly functionsApi: FunctionsApi) {}
+    constructor(
+        private readonly functionsApi: FunctionsApi,
+        private readonly clipboard: Clipboard
+    ) {}
 
     downloadClick$ = new Subject<void>();
     selectedClass$ = new Subject<{ name: string }>();
     classNameInput$ = new Subject<{ query: string }>();
     reportNameKeydown$ = new Subject<KeyboardEvent>();
+    emailClick$ = new Subject<void>();
 
     #downloadIntent$ = merge(
         this.downloadClick$,
@@ -57,6 +65,47 @@ export class ReportComponent {
         }),
         startWith(false)
     );
+
+    isLoadingEmails$ = this.emailClick$.pipe(
+        withLatestFrom(this.selectedClass$),
+        filter(([, { name }]) => name !== ''),
+        switchMap(([, { name }]) =>
+            this.copyEmailsToClipboard(name).pipe(
+                map(({ finished }) => !finished)
+            )
+        ),
+        startWith(false)
+    );
+
+    copyEmailsButtonLabelWhenCopyHappens$ = this.isLoadingEmails$.pipe(
+        pairwise(),
+        filter(([last, current]) => last === true && current === false),
+        map(() => 'Copied emails!')
+    );
+
+    copyEmailsButtonLabel$ = merge(
+        of('Copy Email List'),
+        this.copyEmailsButtonLabelWhenCopyHappens$,
+        this.copyEmailsButtonLabelWhenCopyHappens$.pipe(
+            delay(5000),
+            map(() => 'Copy Email List')
+        )
+    );
+
+    copyEmailButtonStyleClass$ = this.copyEmailsButtonLabel$.pipe(
+        map((label) => (label === 'Copied emails!' ? 'p-button-success' : ''))
+    );
+
+    copyEmailsToClipboard(className: string) {
+        return this.functionsApi
+            .get<{ emails: Array<string> }>(`emails?class=${className}`)
+            .pipe(
+                map(({ emails }) => emails.join(', ')),
+                tap((joinedEmails) => this.clipboard.copy(joinedEmails)),
+                mapTo({ finished: true }),
+                startWith({ finished: false })
+            );
+    }
 
     #downloadReport$(reportName: string): Observable<{ finished: boolean }> {
         return this.functionsApi

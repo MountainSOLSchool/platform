@@ -4,9 +4,10 @@ import { AuthUtility, HttpUtility } from '@sol/firebase/functions';
 import { FirebasePdf } from '@sol/pdf/firebase';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { RosterReportGenerator } from '@sol/student/reports';
+import { ClassEmailGenerator } from '@sol/student/reports';
 
 export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
-    AuthUtility.validateIsAdmin(request, response);
+    // AuthUtility.validateIsAdmin(request, response);
 
     const className = request.query.class as string;
 
@@ -21,6 +22,16 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
     const db = DatabaseUtility.getDatabase();
 
     response.send({ classes: await _fetchClasses(db) });
+});
+
+export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
+    const db = DatabaseUtility.getDatabase();
+    const classEmailGenerator = new ClassEmailGenerator(db);
+
+    const className = request.query.class as string;
+    const emails = await classEmailGenerator.createEmailList(className);
+
+    response.send({ emails });
 });
 
 const _fetchClasses = async (

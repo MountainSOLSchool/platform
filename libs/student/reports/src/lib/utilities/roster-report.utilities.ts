@@ -1,4 +1,3 @@
-import { DatabaseUtility } from '@sol/firebase/database';
 import * as admin from 'firebase-admin';
 import {
     ContactDbEntry,
@@ -8,12 +7,17 @@ import {
 } from '@sol/student/domain';
 import { CellStyle, TableHeader } from '@sol/table/domain';
 import { TablePdfUtility } from '@sol/table/pdf';
+import { StudentUtility } from './student.utility';
 
 export class RosterReportGenerator {
-    constructor(private readonly database: admin.firestore.Firestore) {}
+    private studentUtility: StudentUtility;
+
+    constructor(private readonly database: admin.firestore.Firestore) {
+        this.studentUtility = new StudentUtility(database);
+    }
 
     public async createRosterPdf(className: string) {
-        const students = await this.fetchStudents(className);
+        const students = await this.studentUtility.fetchStudents(className);
 
         const studentRecords =
             this.transformStudentEntriesIntoRecords(students);
@@ -169,26 +173,5 @@ export class RosterReportGenerator {
             contact.phone,
             contact.email,
         ].join(', ');
-    }
-
-    private async fetchStudents(
-        className: string
-    ): Promise<Array<StudentDbEntry>> {
-        const classes = this.database.collection('classes');
-
-        const classDocument = await DatabaseUtility.fetchFirstMatchingDocument(
-            classes,
-            ['name', '==', className]
-        );
-
-        const classStudentRefs: Array<FirebaseFirestore.DocumentReference> =
-            classDocument?.get('students') ?? [];
-
-        const students =
-            await DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
-                classStudentRefs
-            );
-
-        return students;
     }
 }
