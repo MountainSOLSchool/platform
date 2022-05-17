@@ -7,7 +7,7 @@ import { RosterReportGenerator } from '@sol/student/reports';
 import { ClassEmailGenerator } from '@sol/student/reports';
 
 export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
-    // AuthUtility.validateIsAdmin(request, response);
+    AuthUtility.validateIsAdmin(request, response);
 
     const className = request.query.class as string;
 
@@ -25,6 +25,8 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
 });
 
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
+    AuthUtility.validateIsAdmin(request, response);
+
     const db = DatabaseUtility.getDatabase();
     const classEmailGenerator = new ClassEmailGenerator(db);
 

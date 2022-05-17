@@ -26,11 +26,11 @@
         </p-button>
         <p-button class="sol-button" label="Download Sign In/Out" id="signin">
         </p-button>
-        <p-button 
-            class="sol-button" 
-            [label]="(copyEmailsButtonLabel$ | async) ?? ''" 
+        <p-button
+            class="sol-button"
+            [label]="(copyEmailsButtonLabel$ | async) ?? ''"
             [styleClass]="(copyEmailButtonStyleClass$ | async) ?? ''"
-            id="emails" 
+            id="emails"
             [loading]="(isLoadingEmails$ | async) ?? false"
             (click)="emailClick$.next()"
         >
