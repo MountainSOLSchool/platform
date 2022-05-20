@@ -7,15 +7,18 @@ export class TablePdfUtility {
     public static createTablePdf<PropertyNames extends string, Metadata>({
         records,
         headers,
+        title,
         styleBuilder,
     }: {
         records: Array<FlatRecord<PropertyNames, Metadata>>;
         headers: readonly TableHeader<PropertyNames>[];
-        styleBuilder: CellStyleBuilder<PropertyNames, Metadata>;
+        title: string;
+        styleBuilder?: CellStyleBuilder<PropertyNames, Metadata>;
     }) {
         const htmlTable = TableHtml.generateHtmlTableFromRecords({
             records,
             headers,
+            title,
             styleBuilder,
         });
 

@@ -17,15 +17,15 @@
     <div style="align-self: flex-end">
         <p-button
             class="sol-button"
-            label="Download Doom Sheet"
+            label="Download Class Forms"
             icon="pi pi-download"
             id="downloadBtn"
             [loading]="(isLoadingReport$ | async) ?? false"
             (click)="downloadClick$.next()"
         >
         </p-button>
-        <p-button class="sol-button" label="Download Sign In/Out" id="signin">
-        </p-button>
+        <!-- <p-button class="sol-button" label="Download Sign In/Out" id="signin"> -->
+        <!-- </p-button> -->
         <p-button
             class="sol-button"
             [label]="(copyEmailsButtonLabel$ | async) ?? ''"

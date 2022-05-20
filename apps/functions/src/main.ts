@@ -18,10 +18,26 @@ export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
     FirebasePdf.respondWithPdf(pdf, response);
 });
 
+export const signIn = HttpUtility.aGetEndpoint(async (request, response) => {
+    AuthUtility.validateIsAdmin(request, response);
+
+    const className = request.query.class as string;
+
+    const db = DatabaseUtility.getDatabase();
+    const reportGenerator = new RosterReportGenerator(db);
+    const pdf = await reportGenerator.createSignInOutPdf(className);
+
+    FirebasePdf.respondWithPdf(pdf, response);
+});
+
 export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
     const db = DatabaseUtility.getDatabase();
 
-    response.send({ classes: await _fetchClasses(db) });
+    const classes = await _fetchClasses(db);
+
+    console.log(classes);
+
+    response.send({ classes });
 });
 
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {

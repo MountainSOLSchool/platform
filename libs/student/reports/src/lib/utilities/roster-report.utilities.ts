@@ -4,10 +4,13 @@ import {
     StudentDbEntry,
     StudentRecord,
     StudentRecordPropertyNames,
+    StudentSignInRecordPropertyNames,
 } from '@sol/student/domain';
 import { CellStyle, TableHeader } from '@sol/table/domain';
 import { TablePdfUtility } from '@sol/table/pdf';
 import { StudentUtility } from './student.utility';
+import { createInjectableType } from '@angular/compiler';
+import { FlatRecord } from '@sol/record/domain';
 
 export class RosterReportGenerator {
     private studentUtility: StudentUtility;
@@ -27,7 +30,21 @@ export class RosterReportGenerator {
         return TablePdfUtility.createTablePdf({
             records: studentRecords,
             headers: this.studentRowHeaders,
+            title: `Class Roster for ${className}`, //later display name from class
             styleBuilder: this.buildStudentRecordStyle,
+        });
+    }
+
+    public async createSignInOutPdf(className: string) {
+        const students = await this.studentUtility.fetchStudents(className);
+
+        const studentSignInSheetRecords =
+            this.transformStudentEntriesIntoSignInSheet(students);
+
+        return TablePdfUtility.createTablePdf({
+            records: studentSignInSheetRecords,
+            headers: this.signInRowHeaders,
+            title: `Sign In/Out for ${className}`,
         });
     }
 
@@ -41,6 +58,41 @@ export class RosterReportGenerator {
             isBold: !!metadata?.isImportant,
         };
     }
+
+    /* Sign In/Out Sheet */
+
+    private signInRowHeaders: readonly TableHeader<StudentSignInRecordPropertyNames>[] =
+        [
+            {
+                title: 'Last Name',
+                propertyName: 'lastName',
+            },
+            {
+                title: 'First Name',
+                propertyName: 'firstName',
+            },
+            {
+                title: 'Sign In',
+                propertyName: 'signIn',
+            },
+            {
+                title: 'Sign Out',
+                propertyName: 'signOut',
+            },
+        ];
+
+    private transformStudentEntriesIntoSignInSheet(
+        students: Array<StudentDbEntry>
+    ): Array<FlatRecord<StudentSignInRecordPropertyNames>> {
+        return students.map((student) => ({
+            lastName: { value: student.last_name },
+            firstName: { value: student.first_name },
+            signIn: { value: '' },
+            signOut: { value: '' },
+        }));
+    }
+
+    /* Records = Doom Sheet = Roster */
 
     private studentRowHeaders: readonly TableHeader<StudentRecordPropertyNames>[] =
         [

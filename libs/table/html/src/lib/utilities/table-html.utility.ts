@@ -1,4 +1,9 @@
-import { CellStyleBuilder, TableHeader, TableRow } from '@sol/table/domain';
+import {
+    CellStyle,
+    CellStyleBuilder,
+    TableHeader,
+    TableRow,
+} from '@sol/table/domain';
 import { FlatRecord } from '@sol/record/domain';
 
 export class TableHtml {
@@ -8,18 +13,23 @@ export class TableHtml {
     >({
         records,
         headers,
+        title,
         styleBuilder,
     }: {
         records: Array<FlatRecord<PropertyNames, Metadata>>;
         headers: readonly TableHeader<PropertyNames>[];
-        styleBuilder: CellStyleBuilder<PropertyNames, Metadata>;
+        title: string;
+        styleBuilder?: CellStyleBuilder<PropertyNames, Metadata>;
     }) {
         const rows = TableHtml.transformRecordsIntoTableRows(
             records,
             styleBuilder
         );
 
-        return TableHtml.createHtmlTable(headers, rows);
+        const tableHtml = TableHtml.createHtmlTable(headers, rows);
+        const titleHtml = `<h1>${title}</h1>`;
+
+        return titleHtml + tableHtml;
     }
 
     private static tableStyle = `
@@ -92,7 +102,7 @@ export class TableHtml {
         Metadata
     >(
         records: Array<FlatRecord<PropertyNames, Metadata>>,
-        styleBuilder: CellStyleBuilder<PropertyNames, Metadata>
+        styleBuilder?: CellStyleBuilder<PropertyNames, Metadata>
     ): Array<TableRow<PropertyNames>> {
         return records.map((record) => ({
             cells: Object.entries(record).map(([key, v]) => {
@@ -103,7 +113,9 @@ export class TableHtml {
                 return {
                     propertyName,
                     textContent,
-                    style: styleBuilder(propertyName, textContent, metadata),
+                    style: styleBuilder
+                        ? styleBuilder(propertyName, textContent, metadata)
+                        : { isBold: false, isHighlighted: false },
                 };
             }),
         }));

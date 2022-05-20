@@ -59,8 +59,13 @@ export class ReportComponent {
         withLatestFrom(this.selectedClass$),
         filter(([, { name }]) => name !== ''),
         switchMap(([, { name }]) => {
-            return this.#downloadReport$(name).pipe(
-                map(({ finished }) => !finished)
+            return merge(
+                this.#downloadRosterReport$(name).pipe(
+                    map(({ finished }) => !finished)
+                ),
+                this.#downloadSignInReport$(name).pipe(
+                    map(({ finished }) => !finished)
+                )
             );
         }),
         startWith(false)
@@ -107,15 +112,34 @@ export class ReportComponent {
             );
     }
 
-    #downloadReport$(reportName: string): Observable<{ finished: boolean }> {
+    #downloadRosterReport$(
+        className: string
+    ): Observable<{ finished: boolean }> {
         return this.functionsApi
-            .get<{ data: Array<number> }>(`roster?class=${reportName}`)
+            .get<{ data: Array<number> }>(`roster?class=${className}`)
             .pipe(
                 tap(({ data }) => {
                     const spreadsheetFile = new Blob([new Uint8Array(data)], {
                         type: 'application/pdf',
                     });
                     this.#downloadBlob(spreadsheetFile, 'roster.pdf');
+                }),
+                mapTo({ finished: true }),
+                startWith({ finished: false })
+            );
+    }
+
+    #downloadSignInReport$(
+        className: string
+    ): Observable<{ finished: boolean }> {
+        return this.functionsApi
+            .get<{ data: Array<number> }>(`signIn?class=${className}`)
+            .pipe(
+                tap(({ data }) => {
+                    const spreadsheetFile = new Blob([new Uint8Array(data)], {
+                        type: 'application/pdf',
+                    });
+                    this.#downloadBlob(spreadsheetFile, 'sign-in.pdf');
                 }),
                 mapTo({ finished: true }),
                 startWith({ finished: false })
