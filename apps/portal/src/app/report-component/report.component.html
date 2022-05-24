@@ -24,8 +24,6 @@
             (click)="downloadClick$.next()"
         >
         </p-button>
-        <!-- <p-button class="sol-button" label="Download Sign In/Out" id="signin"> -->
-        <!-- </p-button> -->
         <p-button
             class="sol-button"
             [label]="(copyEmailsButtonLabel$ | async) ?? ''"

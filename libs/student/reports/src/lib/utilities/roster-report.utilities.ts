@@ -23,7 +23,7 @@ export class RosterReportGenerator {
         const students = await this.studentUtility.fetchStudents(className);
 
         const studentRecords =
-            this.transformStudentEntriesIntoRecords(students);
+            this.transformStudentEntriesIntoRosterRecords(students);
 
         console.log(studentRecords);
 
@@ -142,7 +142,7 @@ export class RosterReportGenerator {
             },
         ] as const;
 
-    private transformStudentEntriesIntoRecords(
+    private transformStudentEntriesIntoRosterRecords(
         students: Array<StudentDbEntry>
     ): Array<StudentRecord> {
         return students.map((student) => ({
@@ -167,12 +167,15 @@ export class RosterReportGenerator {
                         .join('\n') ?? '',
             },
             codeWord: { value: student.code_word },
-            okToPhotographAndUseName: {
-                value: `${student.ok_to_photograph ? 'Yes' : 'No'}${
-                    student.ok_to_photograph && !student.ok_use_name_photographs
-                        ? ', but no name'
-                        : ''
-                }`,
+            medications: {
+                value: student.medications
+                    ?.map(this.medicationToString)
+                    ?.join(', '),
+                metadata: {
+                    isImportant: !!student.medications?.find(
+                        (med) => med.important
+                    ),
+                },
             },
             sunscreenBugSpray: {
                 value: student.sunscreen_bug_spray ? 'Yes' : 'No',
@@ -187,15 +190,12 @@ export class RosterReportGenerator {
                     ),
                 },
             },
-            medications: {
-                value: student.medications
-                    ?.map(this.medicationToString)
-                    ?.join(', '),
-                metadata: {
-                    isImportant: !!student.medications?.find(
-                        (med) => med.important
-                    ),
-                },
+            okToPhotographAndUseName: {
+                value: `${student.ok_to_photograph ? 'Yes' : 'No'}${
+                    student.ok_to_photograph && !student.ok_use_name_photographs
+                        ? ', but no name'
+                        : ''
+                }`,
             },
         }));
     }
