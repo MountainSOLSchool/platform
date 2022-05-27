@@ -629,6 +629,58 @@
             },
             "tags": ["scope:student"]
         },
+        "student-import": {
+            "projectType": "library",
+            "root": "libs/student/import",
+            "sourceRoot": "libs/student/import/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/student/import"],
+                    "options": {
+                        "jestConfig": "libs/student/import/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/student/import/src/**/*.ts",
+                            "libs/student/import/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["scope:student"]
+        },
+        "student-persistence": {
+            "projectType": "library",
+            "root": "libs/student/persistence",
+            "sourceRoot": "libs/student/persistence/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/student/persistence"],
+                    "options": {
+                        "jestConfig": "libs/student/persistence/jest.config.js",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/student/persistence/src/**/*.ts",
+                            "libs/student/persistence/src/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": ["scope:student"]
+        },
         "student-reports": {
             "root": "libs/student/reports",
             "sourceRoot": "libs/student/reports/src",

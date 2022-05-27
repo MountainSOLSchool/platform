@@ -35,3 +35,12 @@
         </p-button>
     </div>
 </div>
+<div style="margin-top: 30px">
+    <h2>Upload enrollment file</h2>
+</div>
+<div>
+    <p-fileUpload
+        [customUpload]="true"
+        (uploadHandler)="upload($event)"
+    ></p-fileUpload>
+</div>

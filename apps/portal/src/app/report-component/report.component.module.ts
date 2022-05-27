@@ -6,6 +6,7 @@ import { ReportRoutingModule } from './report-routing.module';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { FileUploadModule } from 'primeng/fileupload';
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
         ButtonModule,
         InputTextModule,
         AutoCompleteModule,
+        FileUploadModule,
     ],
     declarations: [ReportComponent],
 })

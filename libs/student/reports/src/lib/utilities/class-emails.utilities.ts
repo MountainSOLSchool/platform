@@ -1,15 +1,17 @@
+import { StudentRepositoryUtility } from '@sol/student/persistence';
 import * as admin from 'firebase-admin';
-import { StudentUtility } from './student.utility';
 
 export class ClassEmailGenerator {
-    private studentUtility: StudentUtility;
+    private studentRepositoryUtility: StudentRepositoryUtility;
 
     constructor(private readonly database: admin.firestore.Firestore) {
-        this.studentUtility = new StudentUtility(database);
+        this.studentRepositoryUtility = new StudentRepositoryUtility(database);
     }
 
     public async createEmailList(className: string) {
-        const students = await this.studentUtility.fetchStudents(className);
+        const students = await this.studentRepositoryUtility.fetchStudents(
+            className
+        );
         return students
             .map(
                 (student) =>

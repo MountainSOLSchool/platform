@@ -5,6 +5,8 @@ import { FirebasePdf } from '@sol/pdf/firebase';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { RosterReportGenerator } from '@sol/student/reports';
 import { ClassEmailGenerator } from '@sol/student/reports';
+import * as Papa from 'papaparse';
+import { StudentEnrollmentEntry } from '@sol/student/import';
 
 export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
     AuthUtility.validateIsAdmin(request, response);
@@ -51,6 +53,25 @@ export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
 
     response.send({ emails });
 });
+
+export const importStudentEnrollmentSummer2022 = HttpUtility.aGetEndpoint(
+    async (request, response) => {
+        request.body as { enrollments: Array<StudentEnrollmentEntry> };
+
+        // transform entries to db records
+
+        // for each record create or replace
+
+        // const doc = await DatabaseUtility.getDatabase()
+        //     .collection('students')
+        //     .doc('6R53VzBytDr7n4f2aIzG')
+        //     .collection('allergies')
+        //     .add({
+        //         description: 'some allergy',
+        //     });
+        response.send({ idk: 'idk' });
+    }
+);
 
 const _fetchClasses = async (
     database: FirebaseFirestore.Firestore

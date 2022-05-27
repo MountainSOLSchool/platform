@@ -96,4 +96,6 @@ export class DatabaseUtility {
         const documents = await collection.where(...query).get();
         return documents.docs[0];
     }
+
+    public static async update() {}
 }

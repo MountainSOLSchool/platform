@@ -8,19 +8,20 @@ import {
 } from '@sol/student/domain';
 import { CellStyle, TableHeader } from '@sol/table/domain';
 import { TablePdfUtility } from '@sol/table/pdf';
-import { StudentUtility } from './student.utility';
-import { createInjectableType } from '@angular/compiler';
 import { FlatRecord } from '@sol/record/domain';
+import { StudentRepositoryUtility } from '@sol/student/persistence';
 
 export class RosterReportGenerator {
-    private studentUtility: StudentUtility;
+    private studentRepositoryUtility: StudentRepositoryUtility;
 
     constructor(private readonly database: admin.firestore.Firestore) {
-        this.studentUtility = new StudentUtility(database);
+        this.studentRepositoryUtility = new StudentRepositoryUtility(database);
     }
 
     public async createRosterPdf(className: string) {
-        const students = await this.studentUtility.fetchStudents(className);
+        const students = await this.studentRepositoryUtility.fetchStudents(
+            className
+        );
 
         const studentRecords =
             this.transformStudentEntriesIntoRosterRecords(students);
@@ -36,7 +37,9 @@ export class RosterReportGenerator {
     }
 
     public async createSignInOutPdf(className: string) {
-        const students = await this.studentUtility.fetchStudents(className);
+        const students = await this.studentRepositoryUtility.fetchStudents(
+            className
+        );
 
         const studentSignInSheetRecords =
             this.transformStudentEntriesIntoSignInSheet(students);

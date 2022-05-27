@@ -2,8 +2,14 @@ import { DatabaseUtility } from '@sol/firebase/database';
 import * as admin from 'firebase-admin';
 import { StudentDbEntry } from '@sol/student/domain';
 
-export class StudentUtility {
+export class StudentRepositoryUtility {
     constructor(private readonly database: admin.firestore.Firestore) {}
+
+    public async updateStudents(
+        students: Array<StudentDbEntry>
+    ): Promise<void> {
+        this.database;
+    }
 
     public async fetchStudents(
         className: string

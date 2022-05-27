@@ -16,6 +16,8 @@ import {
     withLatestFrom,
 } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
+import * as Papa from 'papaparse';
+import { StudentEnrollmentCsvHeaderMap } from '@sol/student/import';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -100,6 +102,32 @@ export class ReportComponent {
     copyEmailButtonStyleClass$ = this.copyEmailsButtonLabel$.pipe(
         map((label) => (label === 'Copied emails!' ? 'p-button-success' : ''))
     );
+
+    upload({ files }: { files: Array<File> }): void {
+        files.forEach((file) => {
+            file.text().then((text) => {
+                console.log(text);
+                const repeatedHeaderCount = new Map<string, number>();
+                console.log(
+                    Papa.parse(text, {
+                        header: true,
+                        transformHeader: (h) => {
+                            const transformConfig =
+                                StudentEnrollmentCsvHeaderMap[h];
+                            const repeatedCount =
+                                repeatedHeaderCount.get(h) ?? 0;
+                            const transformed =
+                                typeof transformConfig === 'string'
+                                    ? transformConfig
+                                    : transformConfig[repeatedCount];
+                            repeatedHeaderCount.set(h, repeatedCount + 1);
+                            return transformed;
+                        },
+                    })
+                );
+            });
+        });
+    }
 
     copyEmailsToClipboard(className: string) {
         return this.functionsApi
