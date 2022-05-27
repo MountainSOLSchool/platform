@@ -49,6 +49,8 @@ export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
     const className = request.query.class as string;
     const emails = await classEmailGenerator.createEmailList(className);
 
+    console.log('🚨 HERE be emails ' + emails);
+
     response.send({ emails });
 });
 
