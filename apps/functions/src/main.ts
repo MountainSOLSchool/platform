@@ -5,6 +5,7 @@ import { FirebasePdf } from '@sol/pdf/firebase';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { RosterReportGenerator } from '@sol/student/reports';
 import { ClassEmailGenerator } from '@sol/student/reports';
+import * as functions from 'firebase-functions';
 
 export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
     AuthUtility.validateIsAdmin(request, response);
@@ -38,6 +39,14 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
     console.log(classes);
 
     response.send({ classes });
+});
+
+export const hello = HttpUtility.aGetEndpoint(async (request, response) => {
+    response.send({ hello: 'Hello!' });
+});
+
+export const helloBasic = functions.https.onRequest((request, response) => {
+    response.send({ hello: 'Hello!' });
 });
 
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
