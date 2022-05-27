@@ -41,17 +41,22 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
 });
 
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
-    AuthUtility.validateIsAdmin(request, response);
+    try {
+        AuthUtility.validateIsAdmin(request, response);
 
-    const db = DatabaseUtility.getDatabase();
-    const classEmailGenerator = new ClassEmailGenerator(db);
+        const db = DatabaseUtility.getDatabase();
+        const classEmailGenerator = new ClassEmailGenerator(db);
 
-    const className = request.query.class as string;
-    const emails = await classEmailGenerator.createEmailList(className);
+        const className = request.query.class as string;
+        const emailList = await classEmailGenerator.createEmailList(className);
 
-    console.log('🚨 HERE be emails ' + emails);
+        console.log('🚨 HERE be emails ' + emailList);
 
-    response.send({ emails });
+        response.send({ emails: emailList });
+    } catch (e) {
+        console.log(e);
+        response.send({ error: 'There was an error' });
+    }
 });
 
 const _fetchClasses = async (
