@@ -83,6 +83,23 @@ export const emailsTestList = HttpUtility.aGetEndpoint(
     }
 );
 
+export const emailsTestListResponse = HttpUtility.aGetEndpoint(
+    async (request, response) => {
+        await AuthUtility.validateFirebaseIdToken(request, response);
+        await AuthUtility.validateIsAdmin(request, response);
+        const db = DatabaseUtility.getDatabase();
+        const classEmailGenerator = new ClassEmailGenerator(db);
+        const className = request.query.class as string;
+        console.log(className);
+        const emailList = await classEmailGenerator.createEmailList(className);
+        console.log('email list is ' + emailList);
+        response.send({
+            message: 'Loading email list is okay!',
+            list: emailList,
+        });
+    }
+);
+
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
     try {
         await AuthUtility.validateIsAdmin(request, response);
