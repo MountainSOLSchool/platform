@@ -60,6 +60,29 @@ export const helloAdmin = HttpUtility.aGetEndpoint(
     }
 );
 
+export const emailsTestGenerator = HttpUtility.aGetEndpoint(
+    async (request, response) => {
+        await AuthUtility.validateFirebaseIdToken(request, response);
+        await AuthUtility.validateIsAdmin(request, response);
+        const db = DatabaseUtility.getDatabase();
+        const classEmailGenerator = new ClassEmailGenerator(db);
+        response.send({ message: 'Generate is okay!' });
+    }
+);
+
+export const emailsTestList = HttpUtility.aGetEndpoint(
+    async (request, response) => {
+        await AuthUtility.validateFirebaseIdToken(request, response);
+        await AuthUtility.validateIsAdmin(request, response);
+        const db = DatabaseUtility.getDatabase();
+        const classEmailGenerator = new ClassEmailGenerator(db);
+        const className = request.query.class as string;
+        console.log(className);
+        const emailList = await classEmailGenerator.createEmailList(className);
+        response.send({ message: 'Loading email list is okay!' });
+    }
+);
+
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
     try {
         await AuthUtility.validateIsAdmin(request, response);

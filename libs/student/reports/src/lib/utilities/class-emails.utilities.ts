@@ -10,6 +10,7 @@ export class ClassEmailGenerator {
 
     public async createEmailList(className: string) {
         const students = await this.studentUtility.fetchStudents(className);
+        console.log(students);
         return students
             .map(
                 (student) =>
