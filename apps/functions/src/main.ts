@@ -45,13 +45,24 @@ export const hello = HttpUtility.aGetEndpoint(async (request, response) => {
     response.send({ hello: 'Hello!' });
 });
 
-export const helloBasic = functions.https.onRequest((request, response) => {
-    response.send({ hello: 'Hello!' });
-});
+export const helloBasicAuth = HttpUtility.aGetEndpoint(
+    async (request, response) => {
+        await AuthUtility.validateFirebaseIdToken(request, response);
+        response.send({ hello: 'Hello user!' });
+    }
+);
+
+export const helloAdmin = HttpUtility.aGetEndpoint(
+    async (request, response) => {
+        await AuthUtility.validateFirebaseIdToken(request, response);
+        await AuthUtility.validateIsAdmin(request, response);
+        response.send({ hello: 'Hello admin!' });
+    }
+);
 
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
     try {
-        AuthUtility.validateIsAdmin(request, response);
+        await AuthUtility.validateIsAdmin(request, response);
 
         const db = DatabaseUtility.getDatabase();
         const classEmailGenerator = new ClassEmailGenerator(db);
