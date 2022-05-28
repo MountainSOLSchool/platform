@@ -103,9 +103,9 @@ export class ReportComponent {
 
     copyEmailsToClipboard(className: string) {
         return this.functionsApi
-            .get<{ emails: Array<string> }>(`emails?class=${className}`)
+            .get<{ list: Array<string> }>(`emails?class=${className}`)
             .pipe(
-                map(({ emails }) => emails.join(', ')),
+                map(({ list }) => list.join(', ')),
                 tap((joinedEmails) => this.clipboard.copy(joinedEmails)),
                 mapTo({ finished: true }),
                 startWith({ finished: false })
