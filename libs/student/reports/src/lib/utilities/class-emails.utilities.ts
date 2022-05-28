@@ -1,24 +1,22 @@
+import { StudentRepositoryUtility } from '@sol/student/persistence';
 import * as admin from 'firebase-admin';
-import { StudentUtility } from './student.utility';
 
 export class ClassEmailGenerator {
-    private studentUtility: StudentUtility;
+    private studentRepositoryUtility: StudentRepositoryUtility;
 
     constructor(private readonly database: admin.firestore.Firestore) {
-        this.studentUtility = new StudentUtility(database);
+        this.studentRepositoryUtility = new StudentRepositoryUtility(database);
     }
 
     public async createEmailList(className: string) {
-        const students = await this.studentUtility.fetchStudents(className);
-        console.log(students);
-        return students
-            .map(
-                (student) =>
-                    student.guardians?.map(
-                        (guardian) =>
-                            `${guardian.first_name} ${guardian.last_name} <${guardian.email}>`
-                    ) ?? []
-            )
-            .reduce((aggregated, emails) => [...aggregated, ...emails], []);
+        const students = await this.studentRepositoryUtility.fetchStudents(
+            className
+        );
+        return students.map((student) => {
+            const primaryContact = student.emergency_contacts?.[0];
+            return `${primaryContact ? primaryContact.first_name + ' ' : ''}${
+                primaryContact ? primaryContact.last_name + ' ' : ''
+            }<${student.primary_email}>`;
+        });
     }
 }

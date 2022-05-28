@@ -40,6 +40,10 @@
             "@sol/pdf/generate": ["libs/pdf/generate/src/index.ts"],
             "@sol/record/domain": ["libs/record/domain/src/index.ts"],
             "@sol/student/domain": ["libs/student/domain/src/index.ts"],
+            "@sol/student/import": ["libs/student/import/src/index.ts"],
+            "@sol/student/persistence": [
+                "libs/student/persistence/src/index.ts"
+            ],
             "@sol/student/reports": ["libs/student/reports/src/index.ts"],
             "@sol/table/domain": ["libs/table/domain/src/index.ts"],
             "@sol/table/html": ["libs/table/html/src/index.ts"],

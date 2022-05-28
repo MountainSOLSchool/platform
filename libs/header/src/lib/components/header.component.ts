@@ -22,7 +22,7 @@ import { UserService } from '@sol/auth/user';
                         />
                     </div>
                     <h2 routerLink="/" style="margin: 0; cursor: pointer">
-                        Mountain SOL School
+                        Mountain SOL School Portal
                     </h2>
                 </div>
                 <div class="p-toolbar-group-right">

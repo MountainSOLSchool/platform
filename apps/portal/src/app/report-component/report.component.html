@@ -35,3 +35,17 @@
         </p-button>
     </div>
 </div>
+<div style="margin-top: 30px">
+    <h2>Upload enrollment file</h2>
+</div>
+<div>
+    <p-fileUpload
+        [customUpload]="true"
+        (uploadHandler)="uploadClick$.next($event)"
+    ></p-fileUpload>
+</div>
+<p-progressBar
+    *ngIf="isUploading$ | async"
+    mode="indeterminate"
+    [style]="{ height: '6px' }"
+></p-progressBar>

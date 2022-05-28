@@ -5,6 +5,12 @@ import { FirebasePdf } from '@sol/pdf/firebase';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { RosterReportGenerator } from '@sol/student/reports';
 import { ClassEmailGenerator } from '@sol/student/reports';
+import {
+    EnrollmentClassesMap,
+    StudentEnrollmentEntry,
+} from '@sol/student/import';
+import { StudentRepositoryUtility } from '@sol/student/persistence';
+import { StudentDbEntry } from '@sol/student/domain';
 
 export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
     AuthUtility.validateIsAdmin(request, response);
@@ -51,6 +57,184 @@ export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
         list: emailList,
     });
 });
+
+export const importStudentEnrollmentSummer2022 = HttpUtility.aGetEndpoint(
+    async (request, response) => {
+        const { data: entries } = request.body as {
+            data: Array<StudentEnrollmentEntry>;
+        };
+
+        // transform entries to db records
+        const updatedStudentEntries = entries
+            .filter((e) => !!e.firstName)
+            .map((entry) => {
+                return {
+                    first_name: entry.firstName,
+                    last_name: entry.lastName,
+                    code_word: entry.codeWord,
+                    primary_email: entry.primaryEmailContact,
+                    ok_to_photograph: entry.canPhotograph?.includes('Yes'),
+                    ok_use_name_photographs: entry.canPhotograph === 'Yes',
+                    sunscreen_bug_spray:
+                        entry.canUseSunscreenAndInsectRepellant?.includes('Yes')
+                            ? 'Yes'
+                            : 'No',
+                    birth_date: entry.dateOfBirth,
+                    guardians: [],
+                    emergency_contacts: [
+                        {
+                            first_name: entry.emergencyContactOneFirstName,
+                            last_name: entry.emergencyContactOneLastName,
+                            relationship: entry.emergencyContactOneRelationship,
+                            phone: entry.emergencyContactOnePhoneNumber,
+                            email: entry.emergencyContactOneEmail,
+                        },
+                    ],
+                    authorized_pick_up_contacts: [],
+                    allergies: [],
+                    medications: [],
+                };
+            });
+
+        // for each record create or replace
+
+        const matchingStudentResults = await Promise.all(
+            updatedStudentEntries.map(async (updatedStudentEntry) => ({
+                update: updatedStudentEntry,
+                match: await new StudentRepositoryUtility(
+                    DatabaseUtility.getDatabase()
+                ).fetchMatchingStudent({
+                    firstName: updatedStudentEntry.first_name ?? '',
+                    lastName: updatedStudentEntry.last_name ?? '',
+                    birthDate: updatedStudentEntry.birth_date ?? '',
+                }),
+            }))
+        );
+
+        const existingStudentUpdates: Array<StudentDbEntry> =
+            matchingStudentResults
+                .filter(({ match }) => !!match)
+                .map(({ match: { id }, update }) => ({ id, ...update }));
+
+        const newStudents: Array<StudentDbEntry> = matchingStudentResults
+            .filter(({ match }) => !match)
+            .map(({ update }) => ({ id: undefined, ...update }));
+
+        const updatedExisting = new Array<{
+            update: FirebaseFirestore.DocumentData;
+            data: StudentDbEntry;
+        }>();
+        for (const record of existingStudentUpdates) {
+            const { id, ...update } = record;
+            updatedExisting.push({
+                update: await DatabaseUtility.getDatabase()
+                    .collection('students')
+                    .doc(id)
+                    .update(update),
+                data: { id: id, ...update },
+            });
+        }
+
+        const addedNew = new Array<{
+            add: FirebaseFirestore.DocumentData;
+            data: StudentDbEntry;
+        }>();
+        for (const record of newStudents) {
+            const { id, ...addition } = record;
+            addedNew.push({
+                add: await DatabaseUtility.getDatabase()
+                    .collection('students')
+                    .doc()
+                    .create(addition),
+                data: { ...record },
+            });
+        }
+
+        const enrollments = entries
+            .map((entry) => ({
+                classSignups: entry.classes,
+                student: {
+                    firstName: entry.firstName,
+                    lastName: entry.lastName,
+                    birthDate: entry.dateOfBirth,
+                },
+            }))
+            .filter(({ classSignups }) => !!classSignups);
+
+        const enrolled = new Array<{
+            studentRef: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>;
+            className: string;
+        }>();
+        for (const studentEnrollment of enrollments) {
+            const classesToEnroll = Object.entries(EnrollmentClassesMap)
+                .filter(([key]) => studentEnrollment.classSignups.includes(key))
+                .map(([, classEnrollmentName]) => classEnrollmentName)
+                .reduce((agg, classes) => [...agg, ...classes], []);
+            const studentRef = await new StudentRepositoryUtility(
+                DatabaseUtility.getDatabase()
+            ).fetchMatchingStudentRef(studentEnrollment.student);
+            for (const classToEnroll of classesToEnroll) {
+                const classRef =
+                    (await fetchMatchingClassRef({
+                        name: classToEnroll,
+                    })) ??
+                    (await DatabaseUtility.getDatabase()
+                        .collection('classes')
+                        .add({
+                            name: classToEnroll,
+                            class_type: '2022 Summer',
+                        }));
+
+                const enrolledStudents =
+                    ((await classRef.get()).data()?.students as Array<
+                        FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
+                    >) ?? [];
+                if (
+                    !enrolledStudents
+                        ?.map((ref) => ref.id)
+                        .find((s) => s === studentRef.id)
+                ) {
+                    await classRef.update({
+                        students: [...enrolledStudents, studentRef],
+                    });
+                    enrolled.push({ studentRef, className: classToEnroll });
+                }
+            }
+        }
+
+        response.send({
+            gotIt: {
+                updatedStudentEntries,
+                addedNew,
+                updatedExisting,
+                matchingStudentResults,
+                enrollments,
+                enrolled,
+            },
+        });
+    }
+);
+
+async function fetchMatchingClassRef({
+    name,
+}: {
+    name: string;
+}): Promise<
+    | FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
+    | undefined
+> {
+    const classes = DatabaseUtility.getDatabase().collection('classes');
+
+    const classRef = (
+        await DatabaseUtility.fetchFirstMatchingDocument(classes, [
+            'name',
+            '==',
+            name,
+        ])
+    )?.ref;
+
+    return classRef;
+}
 
 const _fetchClasses = async (
     database: FirebaseFirestore.Firestore
