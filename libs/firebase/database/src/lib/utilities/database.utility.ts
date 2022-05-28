@@ -47,7 +47,9 @@ export class DatabaseUtility {
         };
     }
 
-    public static async getHydratedDocuments<DocumentValue>(
+    public static async getHydratedDocuments<
+        DocumentValue extends { id: string }
+    >(
         documentRefs: Array<
             FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
         >
@@ -75,6 +77,7 @@ export class DatabaseUtility {
                 } = Object.assign({}, ...collectionsList);
 
                 return {
+                    id: documentRef.id,
                     ...fields,
                     ...subCollectionsObject,
                 } as DocumentValue;
@@ -84,16 +87,24 @@ export class DatabaseUtility {
 
     public static async fetchFirstMatchingDocument(
         collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
-        query: [
-            string | FirebaseFirestore.FieldPath,
-            FirebaseFirestore.WhereFilterOp,
-            string
-        ]
+        ...queries: Array<
+            [
+                string | FirebaseFirestore.FieldPath,
+                FirebaseFirestore.WhereFilterOp,
+                string
+            ]
+        >
     ): Promise<
         | FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
         | undefined
     > {
-        const documents = await collection.where(...query).get();
+        const queried = queries
+            .slice(1)
+            .reduce(
+                (agg, q) => agg.where(...q),
+                collection.where(...queries[0])
+            );
+        const documents = await queried.get();
         return documents.docs[0];
     }
 

@@ -151,11 +151,9 @@ export class RosterReportGenerator {
         return students.map((student) => ({
             lastName: { value: student.last_name },
             firstName: { value: student.first_name },
-            age: { value: '9' }, // TODO: calculate from dateBirth
+            age: { value: 'TBD' }, // TODO: calculate from dateBirth
             guardianContacts: {
-                value:
-                    student.guardians?.map(this.contactToString).join('\n') ??
-                    '',
+                value: '',
             },
             emergencyContacts: {
                 value:
@@ -164,10 +162,7 @@ export class RosterReportGenerator {
                         .join('\n') ?? '',
             },
             authorizedPickUpContacts: {
-                value:
-                    student.authorized_pick_up_contacts
-                        ?.map(this.contactToString)
-                        .join('\n') ?? '',
+                value: '',
             },
             codeWord: { value: student.code_word },
             medications: {

@@ -43,7 +43,7 @@ export class SelectClassesCalendarComponent {
     );
 
     #serverClassEvents$ = this.functionsApi
-        .get<{
+        .call<{
             classes: Array<EventInput>;
         }>('classes')
         .pipe(map((response) => response.classes));

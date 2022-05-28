@@ -41,6 +41,11 @@
 <div>
     <p-fileUpload
         [customUpload]="true"
-        (uploadHandler)="upload($event)"
+        (uploadHandler)="uploadClick$.next($event)"
     ></p-fileUpload>
 </div>
+<p-progressBar
+    *ngIf="isUploading$ | async"
+    mode="indeterminate"
+    [style]="{ height: '6px' }"
+></p-progressBar>

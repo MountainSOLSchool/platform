@@ -8,10 +8,10 @@ import { Observable } from 'rxjs';
 export class FunctionsApi {
     constructor(private readonly fns: AngularFireFunctions) {}
 
-    public get<T>(resourcePath: string): Observable<T> {
+    public call<T>(resourcePath: string, data?: unknown): Observable<T> {
         const firebaseFunction = this.fns.httpsCallable<unknown, T>(
             resourcePath
         );
-        return firebaseFunction(undefined);
+        return firebaseFunction(data);
     }
 }

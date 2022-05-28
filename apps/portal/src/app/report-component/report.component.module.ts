@@ -7,6 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FileUploadModule } from 'primeng/fileupload';
+import { ProgressBarModule } from 'primeng/progressbar';
 
 @NgModule({
     imports: [
@@ -17,6 +18,7 @@ import { FileUploadModule } from 'primeng/fileupload';
         InputTextModule,
         AutoCompleteModule,
         FileUploadModule,
+        ProgressBarModule,
     ],
     declarations: [ReportComponent],
 })

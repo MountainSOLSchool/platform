@@ -15,7 +15,7 @@ window.appConfig = {
     defaultProjectGraph: 'local',
 };
 window.projectGraphResponse = {
-    hash: '4e72c32e0a2e55ee3bb1e2ca8656fa59144021f59758770ed314a5c3e4bb5259',
+    hash: 'a4aedfa5800b50d74932d7c83f97cc9f3fac74e785a0d880081ff243123aff1f',
     projects: [
         {
             name: 'classes-class-enrollment',
@@ -59,6 +59,15 @@ window.projectGraphResponse = {
             data: { tags: [], root: 'libs/firebase/functions-api', files: [] },
         },
         {
+            name: 'student-persistence',
+            type: 'lib',
+            data: {
+                tags: ['scope:student'],
+                root: 'libs/student/persistence',
+                files: [],
+            },
+        },
+        {
             name: 'firebase-functions',
             type: 'lib',
             data: {
@@ -96,6 +105,15 @@ window.projectGraphResponse = {
             data: {
                 tags: ['scope:student'],
                 root: 'libs/student/domain',
+                files: [],
+            },
+        },
+        {
+            name: 'student-import',
+            type: 'lib',
+            data: {
+                tags: ['scope:student'],
+                root: 'libs/student/import',
                 files: [],
             },
         },
@@ -220,6 +238,18 @@ window.projectGraphResponse = {
         ],
         'classeses-domain': [],
         'firebase-functions-api': [],
+        'student-persistence': [
+            {
+                source: 'student-persistence',
+                target: 'firebase-database',
+                type: 'static',
+            },
+            {
+                source: 'student-persistence',
+                target: 'student-domain',
+                type: 'static',
+            },
+        ],
         'firebase-functions': [
             {
                 source: 'firebase-functions',
@@ -238,6 +268,11 @@ window.projectGraphResponse = {
         'student-reports': [
             {
                 source: 'student-reports',
+                target: 'student-persistence',
+                type: 'static',
+            },
+            {
+                source: 'student-reports',
                 target: 'student-domain',
                 type: 'static',
             },
@@ -252,11 +287,6 @@ window.projectGraphResponse = {
                 target: 'record-domain',
                 type: 'static',
             },
-            {
-                source: 'student-reports',
-                target: 'firebase-database',
-                type: 'static',
-            },
         ],
         'student-domain': [
             {
@@ -265,6 +295,7 @@ window.projectGraphResponse = {
                 type: 'static',
             },
         ],
+        'student-import': [],
         'firebase-auth': [],
         'record-domain': [],
         'pdf-firebase': [],
@@ -295,6 +326,13 @@ window.projectGraphResponse = {
                 type: 'static',
             },
             { source: 'functions', target: 'student-reports', type: 'static' },
+            { source: 'functions', target: 'student-import', type: 'static' },
+            {
+                source: 'functions',
+                target: 'student-persistence',
+                type: 'static',
+            },
+            { source: 'functions', target: 'student-domain', type: 'static' },
         ],
         'table-pdf': [
             { source: 'table-pdf', target: 'record-domain', type: 'static' },
@@ -319,6 +357,7 @@ window.projectGraphResponse = {
                 target: 'firebase-functions-api',
                 type: 'static',
             },
+            { source: 'portal', target: 'student-import', type: 'static' },
         ],
         paths: [],
     },

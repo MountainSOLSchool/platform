@@ -3,6 +3,8 @@ import { FunctionsApi } from '@sol/firebase/functions-api';
 import {
     delay,
     filter,
+    forkJoin,
+    from,
     map,
     mapTo,
     merge,
@@ -17,7 +19,10 @@ import {
 } from 'rxjs';
 import { Clipboard } from '@angular/cdk/clipboard';
 import * as Papa from 'papaparse';
-import { StudentEnrollmentCsvHeaderMap } from '@sol/student/import';
+import {
+    StudentEnrollmentCsvHeaderMap,
+    StudentEnrollmentEntry,
+} from '@sol/student/import';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +34,7 @@ export class ReportComponent {
         private readonly clipboard: Clipboard
     ) {}
 
+    uploadClick$ = new Subject<{ files: Array<File> }>();
     downloadClick$ = new Subject<void>();
     selectedClass$ = new Subject<{ name: string }>();
     classNameInput$ = new Subject<{ query: string }>();
@@ -41,7 +47,7 @@ export class ReportComponent {
     );
 
     #classNames$ = this.functionsApi
-        .get<{
+        .call<{
             classes: Array<{ title: string }>;
         }>('classes')
         .pipe(map(({ classes }) => classes.map(({ title }) => title)));
@@ -103,35 +109,65 @@ export class ReportComponent {
         map((label) => (label === 'Copied emails!' ? 'p-button-success' : ''))
     );
 
-    upload({ files }: { files: Array<File> }): void {
-        files.forEach((file) => {
-            file.text().then((text) => {
-                console.log(text);
-                const repeatedHeaderCount = new Map<string, number>();
-                console.log(
-                    Papa.parse(text, {
-                        header: true,
-                        transformHeader: (h) => {
-                            const transformConfig =
-                                StudentEnrollmentCsvHeaderMap[h];
-                            const repeatedCount =
-                                repeatedHeaderCount.get(h) ?? 0;
-                            const transformed =
-                                typeof transformConfig === 'string'
-                                    ? transformConfig
-                                    : transformConfig[repeatedCount];
-                            repeatedHeaderCount.set(h, repeatedCount + 1);
-                            return transformed;
-                        },
-                    })
-                );
-            });
-        });
-    }
+    isUploading$ = this.uploadClick$.pipe(
+        switchMap(({ files }) => {
+            return forkJoin(
+                files.map((file) => {
+                    return from(file.text()).pipe(
+                        map((text) => {
+                            const repeatedHeaderCount = new Map<
+                                string,
+                                number
+                            >();
+                            const enrollmentRecords =
+                                Papa.parse<StudentEnrollmentEntry>(text, {
+                                    header: true,
+                                    transform: (value) => value?.trim() ?? '',
+                                    transformHeader: (h) => {
+                                        const transformConfig =
+                                            StudentEnrollmentCsvHeaderMap[h];
+                                        const repeatedCount =
+                                            repeatedHeaderCount.get(h) ?? 0;
+                                        const transformed =
+                                            typeof transformConfig === 'string'
+                                                ? transformConfig
+                                                : transformConfig[
+                                                      repeatedCount
+                                                  ];
+                                        repeatedHeaderCount.set(
+                                            h,
+                                            repeatedCount + 1
+                                        );
+                                        return transformed;
+                                    },
+                                });
+                            return enrollmentRecords.data;
+                        })
+                    );
+                })
+            ).pipe(
+                map((enrollmentGroups) =>
+                    enrollmentGroups.reduce(
+                        (agg, group) => [...agg, ...group],
+                        []
+                    )
+                ),
+                switchMap((enrollmentEntries) =>
+                    this.functionsApi
+                        .call(
+                            'importStudentEnrollmentSummer2022',
+                            enrollmentEntries
+                        )
+                        .pipe(tap(console.log), mapTo(false))
+                ),
+                startWith(true)
+            );
+        })
+    );
 
     copyEmailsToClipboard(className: string) {
         return this.functionsApi
-            .get<{ list: Array<string> }>(`emails?class=${className}`)
+            .call<{ list: Array<string> }>(`emails?class=${className}`)
             .pipe(
                 map(({ list }) => list.join(', ')),
                 tap((joinedEmails) => this.clipboard.copy(joinedEmails)),
@@ -144,13 +180,16 @@ export class ReportComponent {
         className: string
     ): Observable<{ finished: boolean }> {
         return this.functionsApi
-            .get<{ data: Array<number> }>(`roster?class=${className}`)
+            .call<{ data: Array<number> }>(`roster?class=${className}`)
             .pipe(
                 tap(({ data }) => {
                     const spreadsheetFile = new Blob([new Uint8Array(data)], {
                         type: 'application/pdf',
                     });
-                    this.#downloadBlob(spreadsheetFile, 'roster.pdf');
+                    this.#downloadBlob(
+                        spreadsheetFile,
+                        `${className} roster.pdf`
+                    );
                 }),
                 mapTo({ finished: true }),
                 startWith({ finished: false })
@@ -161,13 +200,16 @@ export class ReportComponent {
         className: string
     ): Observable<{ finished: boolean }> {
         return this.functionsApi
-            .get<{ data: Array<number> }>(`signIn?class=${className}`)
+            .call<{ data: Array<number> }>(`signIn?class=${className}`)
             .pipe(
                 tap(({ data }) => {
                     const spreadsheetFile = new Blob([new Uint8Array(data)], {
                         type: 'application/pdf',
                     });
-                    this.#downloadBlob(spreadsheetFile, 'sign-in.pdf');
+                    this.#downloadBlob(
+                        spreadsheetFile,
+                        `${className} sign-in.pdf`
+                    );
                 }),
                 mapTo({ finished: true }),
                 startWith({ finished: false })
