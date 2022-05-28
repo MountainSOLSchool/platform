@@ -41,48 +41,6 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
     response.send({ classes });
 });
 
-export const hello = HttpUtility.aGetEndpoint(async (request, response) => {
-    response.send({ hello: 'Hello!' });
-});
-
-export const helloBasicAuth = HttpUtility.aGetEndpoint(
-    async (request, response) => {
-        await AuthUtility.validateFirebaseIdToken(request, response);
-        response.send({ hello: 'Hello user!' });
-    }
-);
-
-export const helloAdmin = HttpUtility.aGetEndpoint(
-    async (request, response) => {
-        await AuthUtility.validateFirebaseIdToken(request, response);
-        await AuthUtility.validateIsAdmin(request, response);
-        response.send({ hello: 'Hello admin!' });
-    }
-);
-
-export const emailsTestGenerator = HttpUtility.aGetEndpoint(
-    async (request, response) => {
-        await AuthUtility.validateFirebaseIdToken(request, response);
-        await AuthUtility.validateIsAdmin(request, response);
-        const db = DatabaseUtility.getDatabase();
-        const classEmailGenerator = new ClassEmailGenerator(db);
-        response.send({ message: 'Generate is okay!' });
-    }
-);
-
-export const emailsTestList = HttpUtility.aGetEndpoint(
-    async (request, response) => {
-        await AuthUtility.validateFirebaseIdToken(request, response);
-        await AuthUtility.validateIsAdmin(request, response);
-        const db = DatabaseUtility.getDatabase();
-        const classEmailGenerator = new ClassEmailGenerator(db);
-        const className = request.query.class as string;
-        console.log(className);
-        const emailList = await classEmailGenerator.createEmailList(className);
-        response.send({ message: 'Loading email list is okay!' });
-    }
-);
-
 export const emailsTestListResponse = HttpUtility.aGetEndpoint(
     async (request, response) => {
         await AuthUtility.validateFirebaseIdToken(request, response);
@@ -101,22 +59,15 @@ export const emailsTestListResponse = HttpUtility.aGetEndpoint(
 );
 
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
-    try {
-        await AuthUtility.validateIsAdmin(request, response);
-
-        const db = DatabaseUtility.getDatabase();
-        const classEmailGenerator = new ClassEmailGenerator(db);
-
-        const className = request.query.class as string;
-        const emailList = await classEmailGenerator.createEmailList(className);
-
-        console.log('🚨 HERE be emails ' + emailList);
-
-        response.send({ emails: emailList });
-    } catch (e) {
-        console.log(e);
-        response.send({ error: 'There was an error' });
-    }
+    await AuthUtility.validateFirebaseIdToken(request, response);
+    await AuthUtility.validateIsAdmin(request, response);
+    const db = DatabaseUtility.getDatabase();
+    const classEmailGenerator = new ClassEmailGenerator(db);
+    const className = request.query.class as string;
+    const emailList = await classEmailGenerator.createEmailList(className);
+    response.send({
+        list: emailList,
+    });
 });
 
 const _fetchClasses = async (
