@@ -20,6 +20,14 @@
                 "function": "roster"
             },
             {
+                "source": "/emails",
+                "function": "emails"
+            },
+            {
+                "source": "/signIn",
+                "function": "signIn"
+            },
+            {
                 "source": "**",
                 "destination": "/index.html"
             }
