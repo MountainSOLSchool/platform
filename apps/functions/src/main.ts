@@ -43,15 +43,15 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
 });
 
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
-    AuthUtility.validateIsAdmin(request, response);
-
+    await AuthUtility.validateFirebaseIdToken(request, response);
+    await AuthUtility.validateIsAdmin(request, response);
     const db = DatabaseUtility.getDatabase();
     const classEmailGenerator = new ClassEmailGenerator(db);
-
     const className = request.query.class as string;
-    const emails = await classEmailGenerator.createEmailList(className);
-
-    response.send({ emails });
+    const emailList = await classEmailGenerator.createEmailList(className);
+    response.send({
+        list: emailList,
+    });
 });
 
 export const importStudentEnrollmentSummer2022 = HttpUtility.aGetEndpoint(
