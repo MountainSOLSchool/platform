@@ -107,6 +107,4 @@ export class DatabaseUtility {
         const documents = await queried.get();
         return documents.docs[0];
     }
-
-    public static async update() {}
 }

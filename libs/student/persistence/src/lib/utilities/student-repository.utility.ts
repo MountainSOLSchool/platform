@@ -5,12 +5,6 @@ import { StudentDbEntry } from '@sol/student/domain';
 export class StudentRepositoryUtility {
     constructor(private readonly database: admin.firestore.Firestore) {}
 
-    public async updateStudents(
-        students: Array<StudentDbEntry>
-    ): Promise<void> {
-        this.database;
-    }
-
     public async fetchMatchingStudent({
         firstName,
         lastName,

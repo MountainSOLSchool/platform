@@ -164,9 +164,10 @@ export const importEnrollment = HttpUtility.aGetEndpoint(
                 .filter(({ match }) => !!match)
                 .map(({ match: { id }, update }) => ({ id, ...update }));
 
-        const newStudents: Array<StudentDbEntry> = matchingStudentResults
-            .filter(({ match }) => !match)
-            .map(({ update }) => ({ id: undefined, ...update }));
+        const newStudents: Array<Omit<StudentDbEntry, 'id'>> =
+            matchingStudentResults
+                .filter(({ match }) => !match)
+                .map(({ update }) => ({ ...update }));
 
         const updatedExisting = new Array<{
             update: FirebaseFirestore.DocumentData;
@@ -186,16 +187,15 @@ export const importEnrollment = HttpUtility.aGetEndpoint(
 
         const addedNew = new Array<{
             add: FirebaseFirestore.DocumentData;
-            data: StudentDbEntry;
+            data: Omit<StudentDbEntry, 'id'>;
         }>();
         for (const record of newStudents) {
-            const { id, ...addition } = record;
             addedNew.push({
                 add: await DatabaseUtility.getDatabase()
                     .collection('students')
                     .doc()
-                    .create(addition),
-                data: { ...record },
+                    .create(record),
+                data: record,
             });
         }
 

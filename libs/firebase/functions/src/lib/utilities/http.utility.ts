@@ -1,6 +1,5 @@
 import * as functions from 'firebase-functions';
 import * as CORS from 'cors';
-import { AuthUtility } from './auth.utility';
 
 const cors = CORS({ origin: true });
 
