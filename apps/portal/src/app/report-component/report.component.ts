@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import {
+    BehaviorSubject,
     delay,
     filter,
     forkJoin,
@@ -11,6 +12,7 @@ import {
     Observable,
     of,
     pairwise,
+    shareReplay,
     startWith,
     Subject,
     switchMap,
@@ -35,45 +37,57 @@ export class ReportComponent {
     ) {}
 
     uploadClick$ = new Subject<{ files: Array<File> }>();
-    downloadClick$ = new Subject<void>();
-    selectedClass$ = new Subject<{ name: string }>();
+    downloadClick$ = new Subject<string | undefined>();
+    selectedClass$ = new BehaviorSubject<{ name: string } | undefined>(
+        undefined
+    );
     classNameInput$ = new Subject<{ query: string }>();
     reportNameKeydown$ = new Subject<KeyboardEvent>();
-    emailClick$ = new Subject<void>();
+    emailClick$ = new Subject<string | undefined>();
 
     #downloadIntent$ = merge(
         this.downloadClick$,
-        this.reportNameKeydown$.pipe(filter((event) => event.key === 'Enter'))
+        this.reportNameKeydown$.pipe(
+            filter((event) => event.key === 'Enter'),
+            mapTo(undefined)
+        )
     );
 
-    #classNames$ = this.functionsApi
+    classes$ = this.functionsApi
         .call<{
-            classes: Array<{ title: string }>;
+            classes: Array<{ title: string; enrollmentCount: string }>;
         }>('classes')
-        .pipe(map(({ classes }) => classes.map(({ title }) => title)));
+        .pipe(shareReplay(1));
 
     classSuggestions$: Observable<Array<{ name: string }>> =
         this.classNameInput$.pipe(
-            withLatestFrom(this.#classNames$),
-            map(([{ query }, classNames]) => {
-                return classNames.filter((c) =>
-                    c.toLocaleLowerCase().startsWith(query.toLocaleLowerCase())
-                );
+            withLatestFrom(this.classes$),
+            map(([{ query }, { classes }]) => {
+                return classes
+                    .map((c) => c.title)
+                    .filter((c) =>
+                        c
+                            .toLocaleLowerCase()
+                            .startsWith(query.toLocaleLowerCase())
+                    );
             }),
             map((suggestions) => suggestions.map((s) => ({ name: s })))
         );
 
     isLoadingReport$ = this.#downloadIntent$.pipe(
         withLatestFrom(this.selectedClass$),
-        filter(([, { name }]) => name !== ''),
-        switchMap(([, { name }]) => {
+        filter(
+            ([classFromRow, selected]) =>
+                !!classFromRow ?? selected?.name !== ''
+        ),
+        switchMap(([classFromRow, selected]) => {
             return merge(
-                this.#downloadRosterReport$(name).pipe(
-                    map(({ finished }) => !finished)
-                ),
-                this.#downloadSignInReport$(name).pipe(
-                    map(({ finished }) => !finished)
-                )
+                this.#downloadRosterReport$(
+                    classFromRow ?? selected?.name ?? ''
+                ).pipe(map(({ finished }) => !finished)),
+                this.#downloadSignInReport$(
+                    classFromRow ?? selected?.name ?? ''
+                ).pipe(map(({ finished }) => !finished))
             );
         }),
         startWith(false)
@@ -81,11 +95,14 @@ export class ReportComponent {
 
     isLoadingEmails$ = this.emailClick$.pipe(
         withLatestFrom(this.selectedClass$),
-        filter(([, { name }]) => name !== ''),
-        switchMap(([, { name }]) =>
-            this.copyEmailsToClipboard(name).pipe(
-                map(({ finished }) => !finished)
-            )
+        filter(
+            ([classFromRow, selected]) =>
+                !!classFromRow ?? selected?.name !== ''
+        ),
+        switchMap(([classFromRow, selected]) =>
+            this.copyEmailsToClipboard(
+                classFromRow ?? selected?.name ?? ''
+            ).pipe(map(({ finished }) => !finished))
         ),
         startWith(false)
     );

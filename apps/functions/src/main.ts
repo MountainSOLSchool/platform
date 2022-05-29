@@ -294,12 +294,13 @@ const _fetchClasses = async (
         classes
     );
 
-    const mappedClasses = hydratedClasses.classes.map((c, i) => ({
-        title: c.name,
-        start: c.start,
-        end: c.end,
-        id: String(i),
-    }));
+    const mappedClasses = hydratedClasses.classes.map((c, i) => {
+        return {
+            title: c.name,
+            enrolledCount: c.students?.length ?? 0,
+            id: String(i),
+        };
+    });
 
     return mappedClasses;
 };
