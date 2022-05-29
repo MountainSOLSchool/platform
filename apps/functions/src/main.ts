@@ -56,7 +56,7 @@ export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
     });
 });
 
-export const importStudentEnrollmentSummer2022 = HttpUtility.aGetEndpoint(
+export const importEnrollment = HttpUtility.aGetEndpoint(
     async (request, response) => {
         const { data: entries } = request.body as {
             data: Array<StudentEnrollmentEntry>;
