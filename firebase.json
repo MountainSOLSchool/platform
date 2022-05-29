@@ -28,6 +28,10 @@
                 "function": "signIn"
             },
             {
+                "source": "/importEnrollment",
+                "function": "importEnrollment"
+            },
+            {
                 "source": "**",
                 "destination": "/index.html"
             }
