@@ -39,7 +39,7 @@ export type StudentEnrollmentEntry = Record<
     | 'emergencyContactHousingType'
     | 'emergencyContactHousingName'
     | 'emergencyContactHousingOther'
-    | 'relationshipNamePhoneEntries'
+    | 'authorizedPickupEntries'
     | 'codeWord'
     | 'gender'
     | 'doctorName'

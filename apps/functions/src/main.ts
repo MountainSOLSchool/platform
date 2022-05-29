@@ -41,8 +41,6 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
 
     const classes = await _fetchClasses(db);
 
-    console.log(classes);
-
     response.send({ classes });
 });
 
@@ -64,7 +62,6 @@ export const importStudentEnrollmentSummer2022 = HttpUtility.aGetEndpoint(
             data: Array<StudentEnrollmentEntry>;
         };
 
-        // transform entries to db records
         const updatedStudentEntries = entries
             .filter((e) => !!e.firstName)
             .map((entry) => {
@@ -90,13 +87,64 @@ export const importStudentEnrollmentSummer2022 = HttpUtility.aGetEndpoint(
                             email: entry.emergencyContactOneEmail,
                         },
                     ],
-                    authorized_pick_up_contacts: [],
-                    allergies: [],
-                    medications: [],
+                    authorized_pick_up_contacts: entry.authorizedPickupEntries
+                        .split('\n')
+                        .map((pickup) =>
+                            pickup
+                                .split(', ')
+                                .map((t) =>
+                                    t
+                                        .replace('Name: ', '')
+                                        .replace('Relationship: ', '')
+                                        .replace('Phone: ', '')
+                                )
+                        )
+                        .filter(
+                            (pickup) => pickup.length > 1 && pickup[0] !== ''
+                        )
+                        .map(([name, relationship, phone]) => {
+                            const names = name.split(' ');
+                            return {
+                                first_name: names.slice(0, -1).join(' '),
+                                last_name: names[names.length - 1],
+                                relationship:
+                                    relationship ?? 'unknown relationship',
+                                phone: phone ?? '',
+                                email: '',
+                            };
+                        }),
+                    allergies: [
+                        {
+                            name: '',
+                            description: entry.specialHealthConsiderations,
+                            response: '',
+                            important: false,
+                        },
+                    ],
+                    medications: entry.medicationDosageFrequencyEntries
+                        .split('\n')
+                        .map((med) =>
+                            med
+                                .split(', ')
+                                .map((t) =>
+                                    t
+                                        .replace('Medication: ', '')
+                                        .replace('Dosage & frequency: ', '')
+                                        .replace('Perscribing doctor: ', '')
+                                )
+                        )
+                        .filter(
+                            (medication) =>
+                                medication.length > 1 && medication[0] !== ''
+                        )
+                        .map(([name, dosage, doctor]) => ({
+                            name,
+                            dosage: dosage ?? '',
+                            doctor: doctor ?? '',
+                            important: false,
+                        })),
                 };
             });
-
-        // for each record create or replace
 
         const matchingStudentResults = await Promise.all(
             updatedStudentEntries.map(async (updatedStudentEntry) => ({
@@ -124,6 +172,7 @@ export const importStudentEnrollmentSummer2022 = HttpUtility.aGetEndpoint(
             update: FirebaseFirestore.DocumentData;
             data: StudentDbEntry;
         }>();
+
         for (const record of existingStudentUpdates) {
             const { id, ...update } = record;
             updatedExisting.push({
@@ -203,7 +252,7 @@ export const importStudentEnrollmentSummer2022 = HttpUtility.aGetEndpoint(
         }
 
         response.send({
-            gotIt: {
+            result: {
                 updatedStudentEntries,
                 addedNew,
                 updatedExisting,

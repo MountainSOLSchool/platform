@@ -26,8 +26,6 @@ export class RosterReportGenerator {
         const studentRecords =
             this.transformStudentEntriesIntoRosterRecords(students);
 
-        console.log(studentRecords);
-
         return TablePdfUtility.createTablePdf({
             records: studentRecords,
             headers: this.studentRowHeaders,
@@ -75,24 +73,43 @@ export class RosterReportGenerator {
                 propertyName: 'firstName',
             },
             {
-                title: 'Sign In',
-                propertyName: 'signIn',
+                title: 'Sign In Time',
+                propertyName: 'signInTime',
             },
             {
-                title: 'Sign Out',
-                propertyName: 'signOut',
+                title: 'Signature',
+                propertyName: 'signInSignature',
+            },
+            {
+                title: 'Sign Out Time',
+                propertyName: 'signOutTime',
+            },
+            {
+                title: 'Signature',
+                propertyName: 'signOutSignature',
             },
         ];
 
     private transformStudentEntriesIntoSignInSheet(
         students: Array<StudentDbEntry>
     ): Array<FlatRecord<StudentSignInRecordPropertyNames>> {
-        return students.map((student) => ({
-            lastName: { value: student.last_name },
-            firstName: { value: student.first_name },
-            signIn: { value: '' },
-            signOut: { value: '' },
-        }));
+        return students
+            .map((student) => ({
+                lastName: { value: student.last_name },
+                firstName: { value: student.first_name },
+                signInTime: { value: '' },
+                signInSignature: { value: '' },
+                signOutTime: { value: '' },
+                signOutSignature: { value: '' },
+            }))
+            .sort((a, b) => {
+                const lastNameDiff = a.lastName.value.localeCompare(
+                    b.lastName.value
+                );
+                return lastNameDiff === 0
+                    ? a.firstName.value.localeCompare(b.firstName.value)
+                    : lastNameDiff;
+            });
     }
 
     /* Records = Doom Sheet = Roster */
@@ -148,72 +165,106 @@ export class RosterReportGenerator {
     private transformStudentEntriesIntoRosterRecords(
         students: Array<StudentDbEntry>
     ): Array<StudentRecord> {
-        return students.map((student) => ({
-            lastName: { value: student.last_name },
-            firstName: { value: student.first_name },
-            age: { value: 'TBD' }, // TODO: calculate from dateBirth
-            guardianContacts: {
-                value: '',
-            },
-            emergencyContacts: {
-                value:
-                    student.emergency_contacts
-                        ?.map(this.contactToString)
-                        .join('\n') ?? '',
-            },
-            authorizedPickUpContacts: {
-                value: '',
-            },
-            codeWord: { value: student.code_word },
-            medications: {
-                value: student.medications
-                    ?.map(this.medicationToString)
-                    ?.join(', '),
-                metadata: {
-                    isImportant: !!student.medications?.find(
-                        (med) => med.important
-                    ),
+        return students
+            .map((student) => ({
+                lastName: { value: student.last_name },
+                firstName: { value: student.first_name },
+                age: {
+                    value: (() => {
+                        const today = new Date();
+                        const birthDate = new Date(student.birth_date);
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const monthDiff =
+                            today.getMonth() - birthDate.getMonth();
+                        if (
+                            monthDiff < 0 ||
+                            (monthDiff === 0 &&
+                                today.getDate() < birthDate.getDate())
+                        ) {
+                            age--;
+                        }
+                        return String(age);
+                    })(),
                 },
-            },
-            sunscreenBugSpray: {
-                value: student.sunscreen_bug_spray ? 'Yes' : 'No',
-            },
-            allergies: {
-                value:
-                    student.allergies?.map(this.allergiesToString).join('\n') ??
-                    '',
-                metadata: {
-                    isImportant: !!student.allergies?.find(
-                        (allergy) => allergy.important
-                    ),
+                guardianContacts: {
+                    value: '',
                 },
-            },
-            okToPhotographAndUseName: {
-                value: `${student.ok_to_photograph ? 'Yes' : 'No'}${
-                    student.ok_to_photograph && !student.ok_use_name_photographs
-                        ? ', but no name'
-                        : ''
-                }`,
-            },
-        }));
+                emergencyContacts: {
+                    value:
+                        student.emergency_contacts
+                            ?.map(this.contactToString)
+                            .join('\n') ?? '',
+                },
+                authorizedPickUpContacts: {
+                    value:
+                        student.authorized_pick_up_contacts
+                            ?.map(this.contactToString)
+                            .join('\n') ?? '',
+                },
+                codeWord: { value: student.code_word },
+                medications: {
+                    value: student.medications
+                        ?.map(this.medicationToString)
+                        ?.join(', '),
+                    metadata: {
+                        isImportant: !!student.medications?.find(
+                            (med) => med.important
+                        ),
+                    },
+                },
+                sunscreenBugSpray: {
+                    value: student.sunscreen_bug_spray ? 'Yes' : 'No',
+                },
+                allergies: {
+                    value:
+                        student.allergies
+                            ?.map(this.allergiesToString)
+                            .join('\n') ?? '',
+                    metadata: {
+                        isImportant: !!student.allergies?.find(
+                            (allergy) => allergy.important
+                        ),
+                    },
+                },
+                okToPhotographAndUseName: {
+                    value: `${student.ok_to_photograph ? 'Yes' : 'No'}${
+                        student.ok_to_photograph &&
+                        !student.ok_use_name_photographs
+                            ? ', but no name'
+                            : ''
+                    }`,
+                },
+            }))
+            .sort((a, b) => {
+                const lastNameDiff = a.lastName.value.localeCompare(
+                    b.lastName.value
+                );
+                return lastNameDiff === 0
+                    ? a.firstName.value.localeCompare(b.firstName.value)
+                    : lastNameDiff;
+            });
     }
 
-    private allergiesToString(allergies: {
+    private allergiesToString({
+        name,
+        description,
+        response,
+    }: {
         name: string;
         description: string;
         response: string;
     }): string {
-        return `${allergies.name}, ${allergies.description}, Response to Allergy: ${allergies.response}`;
+        return [name, description, response]
+            .filter((prop) => prop?.length > 0)
+            .join(', ');
     }
 
     private medicationToString(med: {
         name: string;
-        doctor: { name: string; role?: string };
+        doctor: string;
         dosage: string;
     }): string {
-        return `${med.name} is prescribed by ${med.doctor.name}${
-            med.doctor.role ? `: ${med.doctor.role}` : ''
-        } and should be taken by "${med.dosage}"`;
+        return `${med.name} is prescribed by ${med.doctor} and should be taken "${med.dosage}"`;
     }
 
     private contactToString(contact: ContactDbEntry): string {

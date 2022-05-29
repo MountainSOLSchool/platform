@@ -74,7 +74,7 @@
             }
             var p = h(4128),
                 f = h(8996),
-                C = h(8505),
+                w = h(8505),
                 S = h(3028);
             const H = {
                 'Submission Date': 'submissionDate',
@@ -133,7 +133,7 @@
                 'Which parent?': 'emergencyContactHousingName',
                 'Other:': 'emergencyContactHousingOther',
                 'Please add full name, relationship and phone. Save after each person.':
-                    'relationshipNamePhoneEntries',
+                    'authorizedPickupEntries',
                 'Code word': 'codeWord',
                 Gender: 'gender',
                 "Doctor's Name": 'doctorName',
@@ -179,7 +179,7 @@
                     : o;
             }
             var D = h(8421),
-                w = h(1144),
+                C = h(1144),
                 q = h(576),
                 ee = h(3268);
             const X = ['addListener', 'removeListener'],
@@ -207,7 +207,7 @@
                       })(i)
                     ? te.map(J(i, o))
                     : [];
-                if (!s && (0, w.z)(i))
+                if (!s && (0, C.z)(i))
                     return (0, ke.z)((c) => W(c, o, e))((0, D.Xf)(i));
                 if (!s) throw new TypeError('Invalid event target');
                 return new j.y((c) => {
@@ -4899,7 +4899,7 @@
                                                 'importStudentEnrollmentSummer2022',
                                                 s
                                             )
-                                            .pipe((0, C.b)(console.log), ue(!1))
+                                            .pipe(ue(!1))
                                     ),
                                     (0, Q.O)(!0)
                                 )
@@ -4909,7 +4909,7 @@
                 copyEmailsToClipboard(o) {
                     return this.functionsApi.call(`emails?class=${o}`).pipe(
                         (0, G.U)(({ list: e }) => e.join(', ')),
-                        (0, C.b)((e) => this.clipboard.copy(e)),
+                        (0, w.b)((e) => this.clipboard.copy(e)),
                         ue({ finished: !0 }),
                         (0, Q.O)({ finished: !1 })
                     );
@@ -4920,7 +4920,7 @@
                 (Se = new WeakSet()),
                 (mt = function (o) {
                     return this.functionsApi.call(`roster?class=${o}`).pipe(
-                        (0, C.b)(({ data: e }) => {
+                        (0, w.b)(({ data: e }) => {
                             const n = new Blob([new Uint8Array(e)], {
                                 type: 'application/pdf',
                             });
@@ -4936,7 +4936,7 @@
                 }),
                 (gt = function (o) {
                     return this.functionsApi.call(`signIn?class=${o}`).pipe(
-                        (0, C.b)(({ data: e }) => {
+                        (0, w.b)(({ data: e }) => {
                             const n = new Blob([new Uint8Array(e)], {
                                 type: 'application/pdf',
                             });
@@ -5201,7 +5201,7 @@
                                     if (!y.WORKERS_SUPPORTED) return !1;
                                     var H,
                                         B,
-                                        C =
+                                        w =
                                             ((H = A.URL || A.webkitURL || null),
                                             (B = Te.toString()),
                                             y.BLOB_URL ||
@@ -5210,7 +5210,7 @@
                                                         type: 'text/javascript',
                                                     })
                                                 ))),
-                                        S = new A.Worker(C);
+                                        S = new A.Worker(w);
                                     return (
                                         (S.onmessage = Ue),
                                         (S.id = G++),
@@ -5250,7 +5250,7 @@
                             var d = !1,
                                 p = !0,
                                 f = ',',
-                                C = '\r\n',
+                                w = '\r\n',
                                 S = '"',
                                 H = S + S,
                                 B = !1,
@@ -5278,7 +5278,7 @@
                                                 typeof l.skipEmptyLines) ||
                                             (B = l.skipEmptyLines),
                                         'string' == typeof l.newline &&
-                                            (C = l.newline),
+                                            (w = l.newline),
                                         'string' == typeof l.quoteChar &&
                                             (S = l.quoteChar),
                                         'boolean' == typeof l.header &&
@@ -5343,7 +5343,7 @@
                                 if (O && p) {
                                     for (var Z = 0; Z < u.length; Z++)
                                         0 < Z && (T += f), (T += P(u[Z], Z));
-                                    0 < I.length && (T += C);
+                                    0 < I.length && (T += w);
                                 }
                                 for (var m = 0; m < I.length; m++) {
                                     var k = O ? u.length : I[m].length,
@@ -5367,15 +5367,15 @@
                                         M = '' === b.join('').trim();
                                     }
                                     if (!M) {
-                                        for (var w = 0; w < k; w++)
-                                            0 < w && !N && (T += f),
+                                        for (var C = 0; C < k; C++)
+                                            0 < C && !N && (T += f),
                                                 (T += P(
-                                                    I[m][O && V ? u[w] : w],
-                                                    w
+                                                    I[m][O && V ? u[C] : C],
+                                                    C
                                                 ));
                                         m < I.length - 1 &&
                                             (!F || (0 < k && !N)) &&
-                                            (T += C);
+                                            (T += w);
                                     }
                                 }
                                 return T;
@@ -5431,7 +5431,7 @@
                         var l = a.config || {},
                             d = [];
                         return (
-                            this.each(function (C) {
+                            this.each(function (w) {
                                 if (
                                     'INPUT' !==
                                         ne(this)
@@ -5535,7 +5535,7 @@
                             (this.isFirstChunk = !1), (this._halted = !1);
                             var f = this._partialLine + l;
                             this._partialLine = '';
-                            var C = this._handle.parse(
+                            var w = this._handle.parse(
                                 f,
                                 this._baseIndex,
                                 !this._finished
@@ -5544,33 +5544,33 @@
                                 !this._handle.paused() &&
                                 !this._handle.aborted()
                             ) {
-                                var S = C.meta.cursor;
+                                var S = w.meta.cursor;
                                 this._finished ||
                                     ((this._partialLine = f.substring(
                                         S - this._baseIndex
                                     )),
                                     (this._baseIndex = S)),
-                                    C &&
-                                        C.data &&
-                                        (this._rowCount += C.data.length);
+                                    w &&
+                                        w.data &&
+                                        (this._rowCount += w.data.length);
                                 var H =
                                     this._finished ||
                                     (this._config.preview &&
                                         this._rowCount >= this._config.preview);
                                 if (me)
                                     A.postMessage({
-                                        results: C,
+                                        results: w,
                                         workerId: y.WORKER_ID,
                                         finished: H,
                                     });
                                 else if (L(this._config.chunk) && !d) {
                                     if (
-                                        (this._config.chunk(C, this._handle),
+                                        (this._config.chunk(w, this._handle),
                                         this._handle.paused() ||
                                             this._handle.aborted())
                                     )
                                         return void (this._halted = !0);
-                                    (C = void 0),
+                                    (w = void 0),
                                         (this._completeResults = void 0);
                                 }
                                 return (
@@ -5578,26 +5578,26 @@
                                         this._config.chunk ||
                                         ((this._completeResults.data =
                                             this._completeResults.data.concat(
-                                                C.data
+                                                w.data
                                             )),
                                         (this._completeResults.errors =
                                             this._completeResults.errors.concat(
-                                                C.errors
+                                                w.errors
                                             )),
-                                        (this._completeResults.meta = C.meta)),
+                                        (this._completeResults.meta = w.meta)),
                                     this._completed ||
                                         !H ||
                                         !L(this._config.complete) ||
-                                        (C && C.meta.aborted) ||
+                                        (w && w.meta.aborted) ||
                                         (this._config.complete(
                                             this._completeResults,
                                             this._input
                                         ),
                                         (this._completed = !0)),
                                     H ||
-                                        (C && C.meta.paused) ||
+                                        (w && w.meta.paused) ||
                                         this._nextChunk(),
-                                    C
+                                    w
                                 );
                             }
                             this._halted = !0;
@@ -5671,8 +5671,8 @@
                                     );
                                 try {
                                     l.send(this._config.downloadRequestBody);
-                                } catch (C) {
-                                    this._chunkError(C.message);
+                                } catch (w) {
+                                    this._chunkError(w.message);
                                 }
                                 U && 0 === l.status && this._chunkError();
                             }
@@ -5732,11 +5732,11 @@
                         (this._readChunk = function () {
                             var f = this._input;
                             if (this._config.chunkSize) {
-                                var C = Math.min(
+                                var w = Math.min(
                                     this._start + this._config.chunkSize,
                                     this._input.size
                                 );
-                                f = d.call(f, this._start, C);
+                                f = d.call(f, this._start, w);
                             }
                             var S = l.readAsText(f, this._config.encoding);
                             p || this._chunkLoaded({ target: { result: S } });
@@ -5812,8 +5812,8 @@
                                         ((d = !1),
                                         this._checkIsFinished(),
                                         this.parseChunk(l.shift()));
-                            } catch (C) {
-                                this._streamError(C);
+                            } catch (w) {
+                                this._streamError(w);
                             }
                         }, this)),
                         (this._streamError = j(function (f) {
@@ -5844,7 +5844,7 @@
                         d,
                         p,
                         f = Math.pow(2, 53),
-                        C = -f,
+                        w = -f,
                         S = /^\s*-?(\d+\.?|\.\d+|\d+\.\d+)([eE][-+]?\d+)?\s*$/,
                         H =
                             /^(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d([+-][0-2]\d:[0-5]\d|Z))$/,
@@ -5920,19 +5920,19 @@
                                         E = a.header ? {} : [];
                                     for (b = 0; b < M.length; b++) {
                                         var D = b,
-                                            w = M[b];
+                                            C = M[b];
                                         a.header &&
                                             (D =
                                                 b >= P.length
                                                     ? '__parsed_extra'
                                                     : P[b]),
                                             a.transform &&
-                                                (w = a.transform(w, D)),
-                                            (w = V(D, w)),
+                                                (C = a.transform(C, D)),
+                                            (C = V(D, C)),
                                             '__parsed_extra' === D
                                                 ? ((E[D] = E[D] || []),
-                                                  E[D].push(w))
-                                                : (E[D] = w);
+                                                  E[D].push(C))
+                                                : (E[D] = C);
                                     }
                                     return (
                                         a.header &&
@@ -5990,7 +5990,7 @@
                                       ((function (N) {
                                           if (S.test(N)) {
                                               var b = parseFloat(N);
-                                              if (C < b && b < f) return !0;
+                                              if (w < b && b < f) return !0;
                                           }
                                           return !1;
                                       })(k)
@@ -6011,10 +6011,10 @@
                     (this.parse = function (m, k, M) {
                         if (
                             (a.newline ||
-                                (a.newline = (function (D, w) {
+                                (a.newline = (function (D, C) {
                                     D = D.substring(0, 1048576);
                                     var q = new RegExp(
-                                            _e(w) + '([^]*?)' + _e(w),
+                                            _e(C) + '([^]*?)' + _e(C),
                                             'gm'
                                         ),
                                         ee = (D = D.replace(q, '')).split('\r'),
@@ -6036,7 +6036,7 @@
                                 ((a.delimiter = a.delimiter(m)),
                                 (u.meta.delimiter = a.delimiter));
                         else {
-                            var b = (function (D, w, q, ee, X) {
+                            var b = (function (D, C, q, ee, X) {
                                 var re, te, W, J;
                                 X = X || [
                                     ',',
@@ -6056,7 +6056,7 @@
                                         var oe = new Ce({
                                                 comments: ee,
                                                 delimiter: $,
-                                                newline: w,
+                                                newline: C,
                                                 preview: 10,
                                             }).parse(D),
                                             xe = 0;
@@ -6143,7 +6143,7 @@
                         d = (a = a || {}).delimiter,
                         p = a.newline,
                         f = a.comments,
-                        C = a.step,
+                        w = a.step,
                         S = a.preview,
                         H = a.fastMode,
                         B = (l = null == a.quoteChar ? '"' : a.quoteChar);
@@ -6170,7 +6170,7 @@
                             I = d.length,
                             F = p.length,
                             T = f.length,
-                            O = L(C),
+                            O = L(w),
                             V = [],
                             Z = [],
                             m = [],
@@ -6199,7 +6199,7 @@
                             var b = _.indexOf(d, t),
                                 E = _.indexOf(p, t),
                                 D = new RegExp(_e(B) + _e(l), 'g'),
-                                w = _.indexOf(l, t);
+                                C = _.indexOf(l, t);
                             ;
 
                         )
@@ -6226,8 +6226,8 @@
                                     if (S && V.length >= S) return J(!0);
                                 }
                             else
-                                for (w = t, t++; ; ) {
-                                    if (-1 === (w = _.indexOf(l, w + 1)))
+                                for (C = t, t++; ; ) {
+                                    if (-1 === (C = _.indexOf(l, C + 1)))
                                         return (
                                             P ||
                                                 Z.push({
@@ -6240,35 +6240,35 @@
                                                 }),
                                             te()
                                         );
-                                    if (w === u - 1)
+                                    if (C === u - 1)
                                         return te(
-                                            _.substring(t, w).replace(D, l)
+                                            _.substring(t, C).replace(D, l)
                                         );
-                                    if (l !== B || _[w + 1] !== B) {
+                                    if (l !== B || _[C + 1] !== B) {
                                         if (
                                             l === B ||
-                                            0 === w ||
-                                            _[w - 1] !== B
+                                            0 === C ||
+                                            _[C - 1] !== B
                                         ) {
                                             -1 !== b &&
-                                                b < w + 1 &&
-                                                (b = _.indexOf(d, w + 1)),
+                                                b < C + 1 &&
+                                                (b = _.indexOf(d, C + 1)),
                                                 -1 !== E &&
-                                                    E < w + 1 &&
-                                                    (E = _.indexOf(p, w + 1));
+                                                    E < C + 1 &&
+                                                    (E = _.indexOf(p, C + 1));
                                             var q = re(
                                                 -1 === E ? b : Math.min(b, E)
                                             );
-                                            if (_.substr(w + 1 + q, I) === d) {
+                                            if (_.substr(C + 1 + q, I) === d) {
                                                 m.push(
-                                                    _.substring(t, w).replace(
+                                                    _.substring(t, C).replace(
                                                         D,
                                                         l
                                                     )
                                                 ),
-                                                    _[(t = w + 1 + q + I)] !==
+                                                    _[(t = C + 1 + q + I)] !==
                                                         l &&
-                                                        (w = _.indexOf(l, t)),
+                                                        (C = _.indexOf(l, t)),
                                                     (b = _.indexOf(d, t)),
                                                     (E = _.indexOf(p, t));
                                                 break;
@@ -6276,20 +6276,20 @@
                                             var ee = re(E);
                                             if (
                                                 _.substring(
-                                                    w + 1 + ee,
-                                                    w + 1 + ee + F
+                                                    C + 1 + ee,
+                                                    C + 1 + ee + F
                                                 ) === p
                                             ) {
                                                 if (
                                                     (m.push(
                                                         _.substring(
                                                             t,
-                                                            w
+                                                            C
                                                         ).replace(D, l)
                                                     ),
-                                                    W(w + 1 + ee + F),
+                                                    W(C + 1 + ee + F),
                                                     (b = _.indexOf(d, t)),
-                                                    (w = _.indexOf(l, t)),
+                                                    (C = _.indexOf(l, t)),
                                                     O && (le(), z))
                                                 )
                                                     return J();
@@ -6305,9 +6305,9 @@
                                                 row: V.length,
                                                 index: t,
                                             }),
-                                                w++;
+                                                C++;
                                         }
-                                    } else w++;
+                                    } else C++;
                                 }
                         return te();
                         function X($) {
@@ -6316,7 +6316,7 @@
                         function re($) {
                             var pe = 0;
                             if (-1 !== $) {
-                                var ie = _.substring(w + 1, $);
+                                var ie = _.substring(C + 1, $);
                                 ie && '' === ie.trim() && (pe = ie.length);
                             }
                             return pe;
@@ -6349,7 +6349,7 @@
                             };
                         }
                         function le() {
-                            C(J()), (V = []), (Z = []);
+                            w(J()), (V = []), (Z = []);
                         }
                     }),
                         (this.abort = function () {
@@ -6379,18 +6379,18 @@
                         };
                         if (L(d.userStep)) {
                             for (
-                                var C = 0;
-                                C < l.results.data.length &&
+                                var w = 0;
+                                w < l.results.data.length &&
                                 (d.userStep(
                                     {
-                                        data: l.results.data[C],
+                                        data: l.results.data[w],
                                         errors: l.results.errors,
                                         meta: l.results.meta,
                                     },
                                     f
                                 ),
                                 !p);
-                                C++
+                                w++
                             );
                             delete l.results;
                         } else

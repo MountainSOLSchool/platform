@@ -61,7 +61,7 @@ export const StudentEnrollmentCsvHeaderMap: Record<
     'Which parent?': 'emergencyContactHousingName',
     'Other:': 'emergencyContactHousingOther',
     'Please add full name, relationship and phone. Save after each person.':
-        'relationshipNamePhoneEntries',
+        'authorizedPickupEntries',
     'Code word': 'codeWord',
     Gender: 'gender',
     "Doctor's Name": 'doctorName',

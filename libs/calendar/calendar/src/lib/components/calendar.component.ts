@@ -51,7 +51,6 @@ export class CalendarComponent {
 
     @Input() set events(events: Array<EventInput> | null) {
         this.#events$.next(events);
-        console.log(events);
     }
 
     calendarRows = Array(6);

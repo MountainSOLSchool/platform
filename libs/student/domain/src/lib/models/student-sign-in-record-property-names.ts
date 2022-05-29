@@ -1,5 +1,7 @@
 export type StudentSignInRecordPropertyNames =
     | 'lastName'
     | 'firstName'
-    | 'signIn'
-    | 'signOut';
+    | 'signInTime'
+    | 'signInSignature'
+    | 'signOutTime'
+    | 'signOutSignature';

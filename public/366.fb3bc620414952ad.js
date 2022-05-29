@@ -18051,7 +18051,7 @@
                         ));
                 }
                 set events(e) {
-                    (0, u.Q_)(this, it, 'f').next(e), console.log(e);
+                    (0, u.Q_)(this, it, 'f').next(e);
                 }
             }
             (it = new WeakMap()),

@@ -158,7 +158,7 @@ export class ReportComponent {
                             'importStudentEnrollmentSummer2022',
                             enrollmentEntries
                         )
-                        .pipe(tap(console.log), mapTo(false))
+                        .pipe(mapTo(false))
                 ),
                 startWith(true)
             );

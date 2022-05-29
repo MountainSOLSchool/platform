@@ -21,7 +21,7 @@ export type StudentDbEntry = {
     medications: Array<{
         name: string;
         dosage: string;
-        doctor: { name: string; role?: string };
+        doctor: string;
         important: boolean;
     }>;
 };
