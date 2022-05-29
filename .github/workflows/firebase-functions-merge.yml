@@ -12,6 +12,6 @@ jobs:
             - run: npm ci && npm run build:functions
             - uses: w9jds/firebase-action@v2.1.2
               with:
-                  args: deploy --only functions
+                  args: deploy --only functions --verbose
               env:
                   FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MOUNTAIN_SOL_PLATFORM_FUNCTIONS }}
