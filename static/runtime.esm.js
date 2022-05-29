@@ -68,9 +68,7 @@
                         if (d) var u = d(t);
                     }
                     for (r && r(o); f < a.length; f++)
-                        (l = a[f]),
-                            t.o(e, l) && e[l] && e[l][0](),
-                            (e[a[f]] = 0);
+                        (l = a[f]), t.o(e, l) && e[l] && e[l][0](), (e[l] = 0);
                     return t.O(u);
                 },
                 o = (self.webpackChunk = self.webpackChunk || []);
