@@ -49,7 +49,7 @@ import { UserService } from '@sol/auth/user';
                 </li>
                 <li>
                     <a routerLink="/import" (click)="display = false"
-                        >Import Summer 2022 Enrollmeent</a
+                        >Import Summer 2022 Enrollment</a
                     >
                 </li>
             </ul>
