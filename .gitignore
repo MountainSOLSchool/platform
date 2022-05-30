@@ -44,3 +44,4 @@ ui-debug.log
 firebase-debug.log
 .angular
 public/
+static/
