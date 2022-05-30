@@ -52,6 +52,11 @@ import { UserService } from '@sol/auth/user';
                         >Import Summer 2022 Enrollment</a
                     >
                 </li>
+                <li>
+                    <a routerLink="/calendar/classes" (click)="display = false"
+                        >Class Calendar</a
+                    >
+                </li>
             </ul>
         </p-sidebar>`,
 })

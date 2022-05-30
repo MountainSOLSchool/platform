@@ -63,7 +63,7 @@ export class CalendarComponent {
     @Output() eventClick = new Subject<EventApi>();
 
     private _options: CalendarOptions = {
-        initialDate: '2019-01-01',
+        initialDate: new Date(),
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
