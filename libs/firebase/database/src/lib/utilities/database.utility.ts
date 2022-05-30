@@ -1,8 +1,8 @@
 import * as admin from 'firebase-admin';
+import * as functions from 'firebase-functions';
 
-// TODO: move this to admin library and initialize the app from the main.ts instead
 admin.initializeApp();
-const db = admin.firestore();
+const db = admin.firestore(functions.config().firebase);
 
 type Collection = Array<Document>;
 
