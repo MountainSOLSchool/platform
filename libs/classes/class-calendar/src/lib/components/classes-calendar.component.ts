@@ -44,13 +44,32 @@ export class SelectClassesCalendarComponent {
 
     #serverClassEvents$ = this.functionsApi
         .call<{
-            classes: Array<EventInput>;
+            classes: Array<{
+                title: string;
+                start: { _seconds: number };
+                end: { _seconds: number };
+                id: string;
+            }>;
         }>('classes')
         .pipe(map((response) => response.classes));
 
     classEvents$: Observable<Array<EventInput>> = this.#serverClassEvents$.pipe(
-        mergeMap((initialClassEvents) =>
-            this.classSelected$.pipe(
+        map((classes) =>
+            classes.map((c) => {
+                const start = new Date((c.start?._seconds ?? 0) * 1000);
+                const end = new Date((c.start?._seconds ?? 0) * 1000);
+                const event: EventInput = {
+                    id: c.id,
+                    title: c.title,
+                    start,
+                    end,
+                };
+                return event;
+            })
+        ),
+        mergeMap((initialClassEvents) => {
+            console.log(initialClassEvents);
+            return this.classSelected$.pipe(
                 scan(
                     (classEvents, selectedClass) =>
                         this.#mapToClassesWithUpdatedColors(
@@ -60,8 +79,8 @@ export class SelectClassesCalendarComponent {
                     initialClassEvents
                 ),
                 startWith(initialClassEvents)
-            )
-        )
+            );
+        })
     );
 
     #mapToClassesWithUpdatedColors(

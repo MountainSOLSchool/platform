@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
-import { BehaviorSubject, Observable, shareReplay, Subject } from 'rxjs';
+import { BehaviorSubject, map, Observable, shareReplay, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { reportComponentActions } from './store/report.actions';
 import { reportComponentFeature } from './store/report.feature';
@@ -34,9 +34,34 @@ export class ReportComponent implements OnInit {
 
     classes$ = this.functionsApi
         .call<{
-            classes: Array<{ title: string; enrolledCount: string }>;
+            classes: Array<{
+                title: string;
+                start: { _seconds: number };
+                end: { _seconds: number };
+                id: string;
+                enrolledCount: string;
+            }>;
         }>('classes')
-        .pipe(shareReplay(1));
+        .pipe(
+            map(({ classes }) =>
+                classes.map((c) => {
+                    const start = new Date(
+                        (c.start?._seconds ?? 0) * 1000
+                    ).toLocaleDateString();
+                    const end = new Date(
+                        (c.end?._seconds ?? 0) * 1000
+                    ).toLocaleDateString();
+                    return {
+                        id: c.id,
+                        title: c.title,
+                        enrolledCount: c.enrolledCount,
+                        start,
+                        end,
+                    };
+                })
+            ),
+            shareReplay(1)
+        );
 
     ngOnInit(): void {
         this.isClassFormDownloadInProgress$ = this.store.select(
