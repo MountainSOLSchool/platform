@@ -1,13 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HeaderComponent } from '@sol/header';
-import { ReportComponent } from './report-component/report.component';
 
 const routes: Routes = [
     {
         path: '',
         component: HeaderComponent,
         children: [
+            {
+                path: '',
+                loadChildren: () =>
+                    import(
+                        './dashboard-component/dashboard.component.module'
+                    ).then((m) => m.DashboardComponentModule),
+            },
             {
                 path: 'user',
                 loadChildren: () =>

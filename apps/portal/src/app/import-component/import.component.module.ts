@@ -9,10 +9,6 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
-import { StoreModule } from '@ngrx/store';
-import { reportComponentFeature } from './store/report.feature';
-import { EffectsModule } from '@ngrx/effects';
-import { ReportComponentEffects } from './store/report.effects';
 
 @NgModule({
     imports: [
@@ -25,8 +21,6 @@ import { ReportComponentEffects } from './store/report.effects';
         FileUploadModule,
         ProgressBarModule,
         TableModule,
-        StoreModule.forFeature(reportComponentFeature),
-        EffectsModule.forFeature([ReportComponentEffects]),
     ],
     declarations: [ImportComponent],
 })

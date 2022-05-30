@@ -23,39 +23,37 @@ export class ReportComponentEffects {
             switchMap(({ className }) => {
                 return forkJoin([
                     this.functionsApi
-                        .call<{ data: Array<number> }>(
-                            `roster?class=${className}`
-                        )
+                        .call<{ html: string }>(`roster?class=${className}`)
                         .pipe(
-                            tap(({ data }) => {
-                                const spreadsheetFile = new Blob(
-                                    [new Uint8Array(data)],
-                                    {
-                                        type: 'application/pdf',
-                                    }
+                            tap(({ html }) => {
+                                const win = window.open(
+                                    '',
+                                    `${className} Roster`,
+                                    `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${
+                                        screen.width / 2
+                                    },height=${screen.height},top=0,left=0`
                                 );
-                                this.#downloadBlob(
-                                    spreadsheetFile,
-                                    `${className} roster.pdf`
-                                );
+                                if (win) {
+                                    win.document.body.innerHTML = html;
+                                }
                             })
                         ),
                     this.functionsApi
-                        .call<{ data: Array<number> }>(
-                            `signIn?class=${className}`
-                        )
+                        .call<{ html: string }>(`signIn?class=${className}`)
                         .pipe(
-                            tap(({ data }) => {
-                                const spreadsheetFile = new Blob(
-                                    [new Uint8Array(data)],
-                                    {
-                                        type: 'application/pdf',
-                                    }
+                            tap(({ html }) => {
+                                const win = window.open(
+                                    '',
+                                    `${className} Sign In/Out`,
+                                    `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${
+                                        screen.width / 2
+                                    },height=${screen.height},top=0,left=${
+                                        screen.width / 2
+                                    }`
                                 );
-                                this.#downloadBlob(
-                                    spreadsheetFile,
-                                    `${className} sign-in.pdf`
-                                );
+                                if (win) {
+                                    win.document.body.innerHTML = html;
+                                }
                             })
                         ),
                 ]).pipe(

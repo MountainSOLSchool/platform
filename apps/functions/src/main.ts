@@ -1,7 +1,6 @@
 // © 2021 developed by Katie and David with ❤️❤️❤️
 
 import { AuthUtility, HttpUtility } from '@sol/firebase/functions';
-import { FirebasePdf } from '@sol/pdf/firebase';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { RosterReportGenerator } from '@sol/student/reports';
 import { ClassEmailGenerator } from '@sol/student/reports';
@@ -11,6 +10,7 @@ import {
 } from '@sol/student/import';
 import { StudentRepositoryUtility } from '@sol/student/persistence';
 import { StudentDbEntry } from '@sol/student/domain';
+import { TableHtml } from '@sol/table/html';
 
 export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
     AuthUtility.validateIsAdmin(request, response);
@@ -19,9 +19,22 @@ export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
 
     const db = DatabaseUtility.getDatabase();
     const reportGenerator = new RosterReportGenerator(db);
-    const pdf = await reportGenerator.createRosterPdf(className);
 
-    FirebasePdf.respondWithPdf(pdf, response);
+    const students = await new StudentRepositoryUtility(db).fetchStudents(
+        className
+    );
+
+    const studentRecords =
+        reportGenerator.transformStudentEntriesIntoRosterRecords(students);
+
+    const htmlTable = TableHtml.generateHtmlTableFromRecords({
+        records: studentRecords,
+        headers: reportGenerator.studentRowHeaders,
+        title: `Class Roster for ${className}`,
+        styleBuilder: reportGenerator.buildStudentRecordStyle,
+    });
+
+    response.send({ html: htmlTable });
 });
 
 export const signIn = HttpUtility.aGetEndpoint(async (request, response) => {
@@ -31,9 +44,21 @@ export const signIn = HttpUtility.aGetEndpoint(async (request, response) => {
 
     const db = DatabaseUtility.getDatabase();
     const reportGenerator = new RosterReportGenerator(db);
-    const pdf = await reportGenerator.createSignInOutPdf(className);
 
-    FirebasePdf.respondWithPdf(pdf, response);
+    const students = await new StudentRepositoryUtility(db).fetchStudents(
+        className
+    );
+
+    const studentRecords =
+        reportGenerator.transformStudentEntriesIntoSignInSheet(students);
+
+    const htmlTable = TableHtml.generateHtmlTableFromRecords({
+        records: studentRecords,
+        headers: reportGenerator.signInRowHeaders,
+        title: `Sign In/Out for ${className}`,
+    });
+
+    response.send({ html: htmlTable });
 });
 
 export const classes = HttpUtility.aGetEndpoint(async (request, response) => {

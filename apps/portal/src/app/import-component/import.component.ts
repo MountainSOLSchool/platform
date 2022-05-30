@@ -15,7 +15,6 @@ import {
     StudentEnrollmentCsvHeaderMap,
     StudentEnrollmentEntry,
 } from '@sol/student/import';
-import { Store } from '@ngrx/store';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -25,7 +24,6 @@ import { MessageService } from 'primeng/api';
 export class ImportComponent implements OnInit {
     constructor(
         private readonly functionsApi: FunctionsApi,
-        private readonly store: Store,
         private readonly messageService: MessageService
     ) {}
 

@@ -16,7 +16,7 @@ window.appConfig = {
     defaultProjectGraph: 'local',
 };
 window.projectGraphResponse = {
-    hash: '8dc60851150edc20485c7b05a7a55e511a3903904af1296af798cd30afa6df15',
+    hash: '3abf75b3144b0616d6a1a6f8e2c1164b887613715925e91c0f16fe634f2c19ae',
     projects: [
         {
             name: 'classes-class-enrollment',
@@ -606,7 +606,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'libs/student/reports/src/lib/utilities/roster-report.utilities.ts',
-                        hash: 'aa47de2d35a9ec4216c8fde548205f048ed304d0',
+                        hash: '29d4181a611aa3f9eaec37053ba18334cc630b37',
                         deps: [
                             'npm:firebase-admin',
                             'student-domain',
@@ -1300,7 +1300,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'libs/table/html/src/lib/utilities/table-html.utility.ts',
-                        hash: 'f7b03574495b1988bbee25c2808834efb031332c',
+                        hash: 'cd21e7ea3f3d8331d3d4f6ff614a6a402fcdf5c5',
                         deps: ['table-domain', 'record-domain'],
                     },
                     {
@@ -1412,7 +1412,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'apps/functions/src/main.ts',
-                        hash: '47193b565f22ef8020cfccecf1b08189e32446f1',
+                        hash: '89f74543d6de153fff9e1640da899ef2577a5c6b',
                         deps: [
                             'firebase-functions',
                             'pdf-firebase',
@@ -1421,6 +1421,7 @@ window.projectGraphResponse = {
                             'student-import',
                             'student-persistence',
                             'student-domain',
+                            'table-html',
                         ],
                     },
                     {
@@ -1535,7 +1536,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'libs/header/src/lib/components/header.component.ts',
-                        hash: '927d5f038aa06b56d3f4e01b43d6012c165620dc',
+                        hash: 'e334a652a01df404a47925b23d49b102c71b7956',
                         deps: ['npm:@angular/core', 'auth-user'],
                     },
                     {
@@ -1591,7 +1592,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'apps/portal/src/app/app-routing.module.ts',
-                        hash: '14010c802a91e0329228e245bdc08f116912c839',
+                        hash: 'b6cb3f744a46a66f03b8727ccc00e7d5365b13ac',
                         deps: [
                             'npm:@angular/core',
                             'npm:@angular/router',
@@ -1629,13 +1630,73 @@ window.projectGraphResponse = {
                         ],
                     },
                     {
+                        file: 'apps/portal/src/app/dashboard-component/dashboard-routing.module.ts',
+                        hash: 'aef414ea64fd41803183ca41006893af7e092bd8',
+                        deps: ['npm:@angular/core', 'npm:@angular/router'],
+                    },
+                    {
+                        file: 'apps/portal/src/app/dashboard-component/dashboard.component.html',
+                        hash: 'f64346ca55746bbf6cc278d5ecf5bfe4d27fab66',
+                    },
+                    {
+                        file: 'apps/portal/src/app/dashboard-component/dashboard.component.module.ts',
+                        hash: '60e72a651c3fda53f59c7033191975a4726fa95b',
+                        deps: [
+                            'npm:@angular/core',
+                            'npm:@angular/common',
+                            'npm:primeng',
+                            'firebase-functions-api',
+                        ],
+                    },
+                    {
+                        file: 'apps/portal/src/app/dashboard-component/dashboard.component.ts',
+                        hash: '748d23c49c2f745274682105ae7e04c43d807df0',
+                        deps: [
+                            'npm:@angular/core',
+                            'firebase-functions-api',
+                            'npm:chart.js',
+                            'npm:rxjs',
+                        ],
+                    },
+                    {
+                        file: 'apps/portal/src/app/import-component/import-routing.module.ts',
+                        hash: 'b61eb7d805d4dd887b1f39a8a0cd0978787d1de3',
+                        deps: ['npm:@angular/core', 'npm:@angular/router'],
+                    },
+                    {
+                        file: 'apps/portal/src/app/import-component/import.component.html',
+                        hash: 'e0b39d70a06faeee36547c63e6216cf11814a6b1',
+                    },
+                    {
+                        file: 'apps/portal/src/app/import-component/import.component.module.ts',
+                        hash: '8f8d11f60d135fa042eb2360f238c710739b009b',
+                        deps: [
+                            'npm:@angular/core',
+                            'firebase-functions-api',
+                            'npm:@angular/common',
+                            'npm:primeng',
+                        ],
+                    },
+                    {
+                        file: 'apps/portal/src/app/import-component/import.component.ts',
+                        hash: '3e08864ca1181423f2d04b0da18ff3effd02c00b',
+                        deps: [
+                            'npm:@angular/core',
+                            'firebase-functions-api',
+                            'npm:rxjs',
+                            'npm:papaparse',
+                            'student-import',
+                            'npm:primeng',
+                        ],
+                    },
+                    {
                         file: 'apps/portal/src/app/report-component/report-routing.module.ts',
                         hash: '3743311925fb9b460b6bf13b2dd8f0695b591ac0',
                         deps: ['npm:@angular/core', 'npm:@angular/router'],
                     },
                     {
                         file: 'apps/portal/src/app/report-component/report.component.html',
-                        hash: '61212496e9d06420706bd973bab7ca74f2a40e1b',
+                        hash: '128594fd60db3f76fca3af78a622f3ca82a5369e',
                     },
                     {
                         file: 'apps/portal/src/app/report-component/report.component.module.ts',
@@ -1651,7 +1712,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'apps/portal/src/app/report-component/report.component.ts',
-                        hash: '46d98add881b4ff0414022730c9579db6eec579d',
+                        hash: '0c171433ce01070dcbe00d9d2fd93412c28bbdd9',
                         deps: [
                             'npm:@angular/core',
                             'firebase-functions-api',
@@ -1669,7 +1730,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'apps/portal/src/app/report-component/store/report.effects.ts',
-                        hash: '480ae143938feea2791aa002acd102f5b18d6e11',
+                        hash: '54b99801595d1e580b948cee2ddcb982806dc5c1',
                         deps: [
                             'npm:@angular/cdk',
                             'npm:@angular/core',
@@ -1754,96 +1815,6 @@ window.projectGraphResponse = {
                     {
                         file: 'apps/portal/tsconfig.spec.json',
                         hash: 'b1cdf859c8d4b7a43a5c7ff905462b98c8dca9ad',
-                    },
-                    {
-                        file: 'apps/portal/src/app/report-component copy/report-routing.module.ts',
-                        hash: '3743311925fb9b460b6bf13b2dd8f0695b591ac0',
-                        deps: ['npm:@angular/core', 'npm:@angular/router'],
-                    },
-                    {
-                        file: 'apps/portal/src/app/report-component copy/report.component.html',
-                        hash: '61212496e9d06420706bd973bab7ca74f2a40e1b',
-                    },
-                    {
-                        file: 'apps/portal/src/app/report-component copy/report.component.module.ts',
-                        hash: '6bcc53afa4744a02530c88fb1fb1ca6d73492321',
-                        deps: [
-                            'npm:@angular/core',
-                            'firebase-functions-api',
-                            'npm:@angular/common',
-                            'npm:primeng',
-                            'npm:@ngrx/store',
-                            'npm:@ngrx/effects',
-                        ],
-                    },
-                    {
-                        file: 'apps/portal/src/app/report-component copy/report.component.ts',
-                        hash: '46d98add881b4ff0414022730c9579db6eec579d',
-                        deps: [
-                            'npm:@angular/core',
-                            'firebase-functions-api',
-                            'npm:rxjs',
-                            'npm:@angular/cdk',
-                            'npm:papaparse',
-                            'student-import',
-                            'npm:@ngrx/store',
-                        ],
-                    },
-                    {
-                        file: 'apps/portal/src/app/report-component copy/store/report.actions.ts',
-                        hash: '57b9d11349524e11d101c42f7f04514a6b0757ec',
-                        deps: ['npm:@ngrx/store'],
-                    },
-                    {
-                        file: 'apps/portal/src/app/report-component copy/store/report.effects.ts',
-                        hash: '480ae143938feea2791aa002acd102f5b18d6e11',
-                        deps: [
-                            'npm:@angular/cdk',
-                            'npm:@angular/core',
-                            'npm:@ngrx/effects',
-                            'npm:@ngrx/store',
-                            'firebase-functions-api',
-                            'npm:primeng',
-                            'npm:rxjs',
-                        ],
-                    },
-                    {
-                        file: 'apps/portal/src/app/report-component copy/store/report.feature.ts',
-                        hash: '778047e41ab46fe762e40d2787b951bd6db9000f',
-                        deps: ['npm:@ngrx/store'],
-                    },
-                    {
-                        file: 'apps/portal/src/app/import-component/import.component.ts',
-                        hash: '8b8081cd496c6c8ae5004fc4f1d80d4753a17c0f',
-                        deps: [
-                            'npm:@angular/core',
-                            'firebase-functions-api',
-                            'npm:rxjs',
-                            'npm:papaparse',
-                            'student-import',
-                            'npm:@ngrx/store',
-                        ],
-                    },
-                    {
-                        file: 'apps/portal/src/app/import-component/import.component.html',
-                        hash: 'e0b39d70a06faeee36547c63e6216cf11814a6b1',
-                    },
-                    {
-                        file: 'apps/portal/src/app/import-component/import.component.module.ts',
-                        hash: '8e6be9da371bdcd628ecbfee3a202791070b2997',
-                        deps: [
-                            'npm:@angular/core',
-                            'firebase-functions-api',
-                            'npm:@angular/common',
-                            'npm:primeng',
-                            'npm:@ngrx/store',
-                            'npm:@ngrx/effects',
-                        ],
-                    },
-                    {
-                        file: 'apps/portal/src/app/import-component/import-routing.module.ts',
-                        hash: 'b61eb7d805d4dd887b1f39a8a0cd0978787d1de3',
-                        deps: ['npm:@angular/core', 'npm:@angular/router'],
                     },
                 ],
             },
@@ -2041,6 +2012,7 @@ window.projectGraphResponse = {
                 type: 'static',
             },
             { source: 'functions', target: 'student-domain', type: 'static' },
+            { source: 'functions', target: 'table-html', type: 'static' },
         ],
         'table-pdf': [
             { source: 'table-pdf', target: 'record-domain', type: 'static' },

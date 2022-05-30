@@ -41,13 +41,18 @@ import { UserService } from '@sol/auth/user';
         </header>
         <div style="padding: 1rem"><router-outlet></router-outlet></div>
         <p-sidebar [(visible)]="display" position="right">
-            <a routerLink="/report" (click)="display = false"
-                >Class Forms and Contacts</a
-            >
-            <br />
-            <a routerLink="/import" (click)="display = false"
-                >Import Summer 2022 Enrollmeent</a
-            >
+            <ul style="font-size:16px">
+                <li>
+                    <a routerLink="/report" (click)="display = false"
+                        >Class Forms and Contacts</a
+                    >
+                </li>
+                <li>
+                    <a routerLink="/import" (click)="display = false"
+                        >Import Summer 2022 Enrollmeent</a
+                    >
+                </li>
+            </ul>
         </p-sidebar>`,
 })
 export class HeaderComponent {

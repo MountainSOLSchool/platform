@@ -2,36 +2,36 @@
 (self.webpackChunkportal = self.webpackChunkportal || []).push([
     [655],
     {
-        3655: (pe, ve, N) => {
-            N.r(ve),
-                N.d(ve, {
+        3655: (ne, oe, R) => {
+            R.r(oe),
+                R.d(oe, {
                     ClassesCalendarModule: () => Wp,
-                    SelectClassesCalendarComponent: () => ot,
+                    SelectClassesCalendarComponent: () => Qe,
                 });
-            var le,
-                k,
-                lt,
-                We,
-                ct,
-                pn,
-                ft,
-                O = N(9808),
-                ee = N(2559),
-                q = N.n(ee),
-                u = N(655),
-                Ve = {},
-                vn = [],
-                _r =
+            var K,
+                S,
+                st,
+                Ge,
+                dr,
+                fr,
+                ur,
+                I = R(9808),
+                Y = R(2559),
+                W = R.n(Y),
+                u = R(655),
+                lt = {},
+                pr = [],
+                Sa =
                     /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
-            function he(t, e) {
+            function ae(t, e) {
                 for (var n in e) t[n] = e[n];
                 return t;
             }
-            function Oe(t) {
+            function vr(t) {
                 var e = t.parentNode;
                 e && e.removeChild(t);
             }
-            function ce(t, e, n) {
+            function $(t, e, n) {
                 var r,
                     i,
                     o,
@@ -45,14 +45,14 @@
                 if (
                     (arguments.length > 2 &&
                         (a.children =
-                            arguments.length > 3 ? le.call(arguments, 2) : n),
+                            arguments.length > 3 ? K.call(arguments, 2) : n),
                     'function' == typeof t && null != t.defaultProps)
                 )
                     for (o in t.defaultProps)
                         void 0 === a[o] && (a[o] = t.defaultProps[o]);
-                return Ge(t, a, r, i, null);
+                return Ze(t, a, r, i, null);
             }
-            function Ge(t, e, n, r, i) {
+            function Ze(t, e, n, r, i) {
                 var o = {
                     type: t,
                     props: e,
@@ -66,24 +66,24 @@
                     __c: null,
                     __h: null,
                     constructor: void 0,
-                    __v: null == i ? ++lt : i,
+                    __v: null == i ? ++st : i,
                 };
-                return null == i && null != k.vnode && k.vnode(o), o;
+                return null == i && null != S.vnode && S.vnode(o), o;
             }
-            function ge(t) {
+            function re(t) {
                 return t.children;
             }
-            function ae(t, e) {
+            function ee(t, e) {
                 (this.props = t), (this.context = e);
             }
-            function He(t, e) {
+            function Te(t, e) {
                 if (null == e)
-                    return t.__ ? He(t.__, t.__.__k.indexOf(t) + 1) : null;
+                    return t.__ ? Te(t.__, t.__.__k.indexOf(t) + 1) : null;
                 for (var n; e < t.__k.length; e++)
                     if (null != (n = t.__k[e]) && null != n.__e) return n.__e;
-                return 'function' == typeof t.type ? He(t) : null;
+                return 'function' == typeof t.type ? Te(t) : null;
             }
-            function gn(t) {
+            function gr(t) {
                 var e, n;
                 if (null != (t = t.__) && null != t.__c) {
                     for (
@@ -95,28 +95,28 @@
                             t.__e = t.__c.base = n.__e;
                             break;
                         }
-                    return gn(t);
+                    return gr(t);
                 }
             }
-            function dt(t) {
-                ((!t.__d && (t.__d = !0) && We.push(t) && !ut.__r++) ||
-                    pn !== k.debounceRendering) &&
-                    ((pn = k.debounceRendering) || ct)(ut);
+            function Yt(t) {
+                ((!t.__d && (t.__d = !0) && Ge.push(t) && !ct.__r++) ||
+                    fr !== S.debounceRendering) &&
+                    ((fr = S.debounceRendering) || dr)(ct);
             }
-            function ut() {
-                for (var t; (ut.__r = We.length); )
-                    (t = We.sort(function (e, n) {
+            function ct() {
+                for (var t; (ct.__r = Ge.length); )
+                    (t = Ge.sort(function (e, n) {
                         return e.__v.__b - n.__v.__b;
                     })),
-                        (We = []),
+                        (Ge = []),
                         t.some(function (e) {
                             var n, r, i, o, a, s;
                             e.__d &&
                                 ((a = (o = (n = e).__v).__e),
                                 (s = n.__P) &&
                                     ((r = []),
-                                    ((i = he({}, o)).__v = o.__v + 1),
-                                    H(
+                                    ((i = ae({}, o)).__v = o.__v + 1),
+                                    qt(
                                         s,
                                         o,
                                         i,
@@ -124,109 +124,109 @@
                                         void 0 !== s.ownerSVGElement,
                                         null != o.__h ? [a] : null,
                                         r,
-                                        null == a ? He(o) : a,
+                                        null == a ? Te(o) : a,
                                         o.__h
                                     ),
-                                    te(r, o),
-                                    o.__e != a && gn(o)));
+                                    Dr(r, o),
+                                    o.__e != a && gr(o)));
                         });
             }
-            function D(t, e, n, r, i, o, a, s, l, c) {
-                var f,
-                    d,
+            function mr(t, e, n, r, i, o, a, s, l, c) {
+                var d,
+                    f,
                     p,
                     v,
                     g,
                     b,
                     E,
-                    m = (r && r.__k) || vn,
+                    m = (r && r.__k) || pr,
                     w = m.length;
-                for (n.__k = [], f = 0; f < e.length; f++)
+                for (n.__k = [], d = 0; d < e.length; d++)
                     if (
                         null !=
-                        (v = n.__k[f] =
-                            null == (v = e[f]) || 'boolean' == typeof v
+                        (v = n.__k[d] =
+                            null == (v = e[d]) || 'boolean' == typeof v
                                 ? null
                                 : 'string' == typeof v ||
                                   'number' == typeof v ||
                                   'bigint' == typeof v
-                                ? Ge(null, v, null, null, v)
+                                ? Ze(null, v, null, null, v)
                                 : Array.isArray(v)
-                                ? Ge(ge, { children: v }, null, null, null)
+                                ? Ze(re, { children: v }, null, null, null)
                                 : v.__b > 0
-                                ? Ge(v.type, v.props, v.key, null, v.__v)
+                                ? Ze(v.type, v.props, v.key, null, v.__v)
                                 : v)
                     ) {
                         if (
                             ((v.__ = n),
                             (v.__b = n.__b + 1),
-                            null === (p = m[f]) ||
+                            null === (p = m[d]) ||
                                 (p && v.key == p.key && v.type === p.type))
                         )
-                            m[f] = void 0;
+                            m[d] = void 0;
                         else
-                            for (d = 0; d < w; d++) {
+                            for (f = 0; f < w; f++) {
                                 if (
-                                    (p = m[d]) &&
+                                    (p = m[f]) &&
                                     v.key == p.key &&
                                     v.type === p.type
                                 ) {
-                                    m[d] = void 0;
+                                    m[f] = void 0;
                                     break;
                                 }
                                 p = null;
                             }
-                        H(t, v, (p = p || Ve), i, o, a, s, l, c),
+                        qt(t, v, (p = p || lt), i, o, a, s, l, c),
                             (g = v.__e),
-                            (d = v.ref) &&
-                                p.ref != d &&
+                            (f = v.ref) &&
+                                p.ref != f &&
                                 (E || (E = []),
                                 p.ref && E.push(p.ref, null, v),
-                                E.push(d, v.__c || g, v)),
+                                E.push(f, v.__c || g, v)),
                             null != g
                                 ? (null == b && (b = g),
                                   'function' == typeof v.type && v.__k === p.__k
-                                      ? (v.__d = l = C(v, l, t))
-                                      : (l = x(t, v, p, m, g, l)),
+                                      ? (v.__d = l = yr(v, l, t))
+                                      : (l = br(t, v, p, m, g, l)),
                                   'function' == typeof n.type && (n.__d = l))
                                 : l &&
                                   p.__e == l &&
                                   l.parentNode != t &&
-                                  (l = He(p));
+                                  (l = Te(p));
                     }
-                for (n.__e = b, f = w; f--; )
-                    null != m[f] &&
+                for (n.__e = b, d = w; d--; )
+                    null != m[d] &&
                         ('function' == typeof n.type &&
-                            null != m[f].__e &&
-                            m[f].__e == n.__d &&
-                            (n.__d = He(r, f + 1)),
-                        Ae(m[f], m[f]));
-                if (E) for (f = 0; f < E.length; f++) J(E[f], E[++f], E[++f]);
+                            null != m[d].__e &&
+                            m[d].__e == n.__d &&
+                            (n.__d = Te(r, d + 1)),
+                        Sr(m[d], m[d]));
+                if (E) for (d = 0; d < E.length; d++) Cr(E[d], E[++d], E[++d]);
             }
-            function C(t, e, n) {
+            function yr(t, e, n) {
                 for (var r, i = t.__k, o = 0; i && o < i.length; o++)
                     (r = i[o]) &&
                         ((r.__ = t),
                         (e =
                             'function' == typeof r.type
-                                ? C(r, e, n)
-                                : x(n, r, r, i, r.__e, e)));
+                                ? yr(r, e, n)
+                                : br(n, r, r, i, r.__e, e)));
                 return e;
             }
-            function S(t, e) {
+            function se(t, e) {
                 return (
                     (e = e || []),
                     null == t ||
                         'boolean' == typeof t ||
                         (Array.isArray(t)
                             ? t.some(function (n) {
-                                  S(n, e);
+                                  se(n, e);
                               })
                             : e.push(t)),
                     e
                 );
             }
-            function x(t, e, n, r, i, o) {
+            function br(t, e, n, r, i, o) {
                 var a, s, l;
                 if (void 0 !== e.__d) (a = e.__d), (e.__d = void 0);
                 else if (null == n || i != o || null == i.parentNode)
@@ -243,17 +243,17 @@
                     }
                 return void 0 !== a ? a : i.nextSibling;
             }
-            function T(t, e, n) {
+            function Ar(t, e, n) {
                 '-' === e[0]
                     ? t.setProperty(e, n)
                     : (t[e] =
                           null == n
                               ? ''
-                              : 'number' != typeof n || _r.test(e)
+                              : 'number' != typeof n || Sa.test(e)
                               ? n
                               : n + 'px');
             }
-            function B(t, e, n, r, i) {
+            function dt(t, e, n, r, i) {
                 var o;
                 e: if ('style' === e)
                     if ('string' == typeof n) t.style.cssText = n;
@@ -262,10 +262,10 @@
                             ('string' == typeof r && (t.style.cssText = r = ''),
                             r)
                         )
-                            for (e in r) (n && e in n) || T(t.style, e, '');
+                            for (e in r) (n && e in n) || Ar(t.style, e, '');
                         if (n)
                             for (e in n)
-                                (r && n[e] === r[e]) || T(t.style, e, n[e]);
+                                (r && n[e] === r[e]) || Ar(t.style, e, n[e]);
                     }
                 else if ('o' === e[0] && 'n' === e[1])
                     (o = e !== (e = e.replace(/Capture$/, ''))),
@@ -276,8 +276,8 @@
                         t.l || (t.l = {}),
                         (t.l[e + o] = n),
                         n
-                            ? r || t.addEventListener(e, o ? ue : G, o)
-                            : t.removeEventListener(e, o ? ue : G, o);
+                            ? r || t.addEventListener(e, o ? wr : Er, o)
+                            : t.removeEventListener(e, o ? wr : Er, o);
                 else if ('dangerouslySetInnerHTML' !== e) {
                     if (i)
                         e = e
@@ -302,16 +302,16 @@
                             : t.removeAttribute(e));
                 }
             }
-            function G(t) {
-                this.l[t.type + !1](k.event ? k.event(t) : t);
+            function Er(t) {
+                this.l[t.type + !1](S.event ? S.event(t) : t);
             }
-            function ue(t) {
-                this.l[t.type + !0](k.event ? k.event(t) : t);
+            function wr(t) {
+                this.l[t.type + !0](S.event ? S.event(t) : t);
             }
-            function H(t, e, n, r, i, o, a, s, l) {
+            function qt(t, e, n, r, i, o, a, s, l) {
                 var c,
-                    f,
                     d,
+                    f,
                     p,
                     v,
                     g,
@@ -319,103 +319,103 @@
                     E,
                     m,
                     w,
-                    _,
-                    R = e.type;
+                    C,
+                    D = e.type;
                 if (void 0 !== e.constructor) return null;
                 null != n.__h &&
                     ((l = n.__h),
                     (s = e.__e = n.__e),
                     (e.__h = null),
                     (o = [s])),
-                    (c = k.__b) && c(e);
+                    (c = S.__b) && c(e);
                 try {
-                    e: if ('function' == typeof R) {
+                    e: if ('function' == typeof D) {
                         if (
                             ((E = e.props),
-                            (m = (c = R.contextType) && r[c.__c]),
+                            (m = (c = D.contextType) && r[c.__c]),
                             (w = c ? (m ? m.props.value : c.__) : r),
                             n.__c
-                                ? (b = (f = e.__c = n.__c).__ = f.__E)
-                                : ('prototype' in R && R.prototype.render
-                                      ? (e.__c = f = new R(E, w))
-                                      : ((e.__c = f = new ae(E, w)),
-                                        (f.constructor = R),
-                                        (f.render = pt)),
-                                  m && m.sub(f),
-                                  (f.props = E),
-                                  f.state || (f.state = {}),
-                                  (f.context = w),
-                                  (f.__n = r),
-                                  (d = f.__d = !0),
-                                  (f.__h = [])),
-                            null == f.__s && (f.__s = f.state),
-                            null != R.getDerivedStateFromProps &&
-                                (f.__s == f.state && (f.__s = he({}, f.__s)),
-                                he(
-                                    f.__s,
-                                    R.getDerivedStateFromProps(E, f.__s)
+                                ? (b = (d = e.__c = n.__c).__ = d.__E)
+                                : ('prototype' in D && D.prototype.render
+                                      ? (e.__c = d = new D(E, w))
+                                      : ((e.__c = d = new ee(E, w)),
+                                        (d.constructor = D),
+                                        (d.render = Ta)),
+                                  m && m.sub(d),
+                                  (d.props = E),
+                                  d.state || (d.state = {}),
+                                  (d.context = w),
+                                  (d.__n = r),
+                                  (f = d.__d = !0),
+                                  (d.__h = [])),
+                            null == d.__s && (d.__s = d.state),
+                            null != D.getDerivedStateFromProps &&
+                                (d.__s == d.state && (d.__s = ae({}, d.__s)),
+                                ae(
+                                    d.__s,
+                                    D.getDerivedStateFromProps(E, d.__s)
                                 )),
-                            (p = f.props),
-                            (v = f.state),
-                            d)
+                            (p = d.props),
+                            (v = d.state),
+                            f)
                         )
-                            null == R.getDerivedStateFromProps &&
-                                null != f.componentWillMount &&
-                                f.componentWillMount(),
-                                null != f.componentDidMount &&
-                                    f.__h.push(f.componentDidMount);
+                            null == D.getDerivedStateFromProps &&
+                                null != d.componentWillMount &&
+                                d.componentWillMount(),
+                                null != d.componentDidMount &&
+                                    d.__h.push(d.componentDidMount);
                         else {
                             if (
-                                (null == R.getDerivedStateFromProps &&
+                                (null == D.getDerivedStateFromProps &&
                                     E !== p &&
-                                    null != f.componentWillReceiveProps &&
-                                    f.componentWillReceiveProps(E, w),
-                                (!f.__e &&
-                                    null != f.shouldComponentUpdate &&
+                                    null != d.componentWillReceiveProps &&
+                                    d.componentWillReceiveProps(E, w),
+                                (!d.__e &&
+                                    null != d.shouldComponentUpdate &&
                                     !1 ===
-                                        f.shouldComponentUpdate(E, f.__s, w)) ||
+                                        d.shouldComponentUpdate(E, d.__s, w)) ||
                                     e.__v === n.__v)
                             ) {
-                                (f.props = E),
-                                    (f.state = f.__s),
-                                    e.__v !== n.__v && (f.__d = !1),
-                                    (f.__v = e),
+                                (d.props = E),
+                                    (d.state = d.__s),
+                                    e.__v !== n.__v && (d.__d = !1),
+                                    (d.__v = e),
                                     (e.__e = n.__e),
                                     (e.__k = n.__k),
-                                    e.__k.forEach(function (F) {
-                                        F && (F.__ = e);
+                                    e.__k.forEach(function (_) {
+                                        _ && (_.__ = e);
                                     }),
-                                    f.__h.length && a.push(f);
+                                    d.__h.length && a.push(d);
                                 break e;
                             }
-                            null != f.componentWillUpdate &&
-                                f.componentWillUpdate(E, f.__s, w),
-                                null != f.componentDidUpdate &&
-                                    f.__h.push(function () {
-                                        f.componentDidUpdate(p, v, g);
+                            null != d.componentWillUpdate &&
+                                d.componentWillUpdate(E, d.__s, w),
+                                null != d.componentDidUpdate &&
+                                    d.__h.push(function () {
+                                        d.componentDidUpdate(p, v, g);
                                     });
                         }
-                        (f.context = w),
-                            (f.props = E),
-                            (f.state = f.__s),
-                            (c = k.__r) && c(e),
-                            (f.__d = !1),
-                            (f.__v = e),
-                            (f.__P = t),
-                            (c = f.render(f.props, f.state, f.context)),
-                            (f.state = f.__s),
-                            null != f.getChildContext &&
-                                (r = he(he({}, r), f.getChildContext())),
-                            d ||
-                                null == f.getSnapshotBeforeUpdate ||
-                                (g = f.getSnapshotBeforeUpdate(p, v)),
-                            (_ =
-                                null != c && c.type === ge && null == c.key
+                        (d.context = w),
+                            (d.props = E),
+                            (d.state = d.__s),
+                            (c = S.__r) && c(e),
+                            (d.__d = !1),
+                            (d.__v = e),
+                            (d.__P = t),
+                            (c = d.render(d.props, d.state, d.context)),
+                            (d.state = d.__s),
+                            null != d.getChildContext &&
+                                (r = ae(ae({}, r), d.getChildContext())),
+                            f ||
+                                null == d.getSnapshotBeforeUpdate ||
+                                (g = d.getSnapshotBeforeUpdate(p, v)),
+                            (C =
+                                null != c && c.type === re && null == c.key
                                     ? c.props.children
                                     : c),
-                            D(
+                            mr(
                                 t,
-                                Array.isArray(_) ? _ : [_],
+                                Array.isArray(C) ? C : [C],
                                 e,
                                 n,
                                 r,
@@ -425,19 +425,19 @@
                                 s,
                                 l
                             ),
-                            (f.base = e.__e),
+                            (d.base = e.__e),
                             (e.__h = null),
-                            f.__h.length && a.push(f),
-                            b && (f.__E = f.__ = null),
-                            (f.__e = !1);
+                            d.__h.length && a.push(d),
+                            b && (d.__E = d.__ = null),
+                            (d.__e = !1);
                     } else
                         null == o && e.__v === n.__v
                             ? ((e.__k = n.__k), (e.__e = n.__e))
-                            : (e.__e = (function Re(t, e, n, r, i, o, a, s) {
+                            : (e.__e = (function Ra(t, e, n, r, i, o, a, s) {
                                   var l,
                                       c,
-                                      f,
-                                      d = n.props,
+                                      d,
+                                      f = n.props,
                                       p = e.props,
                                       v = e.type,
                                       g = 0;
@@ -469,42 +469,42 @@
                                           (s = !1);
                                   }
                                   if (null === v)
-                                      d === p ||
+                                      f === p ||
                                           (s && t.data === p) ||
                                           (t.data = p);
                                   else {
                                       if (
-                                          ((o = o && le.call(t.childNodes)),
-                                          (c = (d = n.props || Ve)
+                                          ((o = o && K.call(t.childNodes)),
+                                          (c = (f = n.props || lt)
                                               .dangerouslySetInnerHTML),
-                                          (f = p.dangerouslySetInnerHTML),
+                                          (d = p.dangerouslySetInnerHTML),
                                           !s)
                                       ) {
                                           if (null != o)
                                               for (
-                                                  d = {}, g = 0;
+                                                  f = {}, g = 0;
                                                   g < t.attributes.length;
                                                   g++
                                               )
-                                                  d[t.attributes[g].name] =
+                                                  f[t.attributes[g].name] =
                                                       t.attributes[g].value;
-                                          (f || c) &&
-                                              ((f &&
+                                          (d || c) &&
+                                              ((d &&
                                                   ((c &&
-                                                      f.__html == c.__html) ||
-                                                      f.__html ===
+                                                      d.__html == c.__html) ||
+                                                      d.__html ===
                                                           t.innerHTML)) ||
                                                   (t.innerHTML =
-                                                      (f && f.__html) || ''));
+                                                      (d && d.__html) || ''));
                                       }
                                       if (
-                                          ((function M(t, e, n, r, i) {
+                                          ((function xa(t, e, n, r, i) {
                                               var o;
                                               for (o in n)
                                                   'children' === o ||
                                                       'key' === o ||
                                                       o in e ||
-                                                      B(t, o, null, n[o], r);
+                                                      dt(t, o, null, n[o], r);
                                               for (o in e)
                                                   (i &&
                                                       'function' !=
@@ -514,14 +514,14 @@
                                                       'value' === o ||
                                                       'checked' === o ||
                                                       n[o] === e[o] ||
-                                                      B(t, o, e[o], n[o], r);
-                                          })(t, p, d, i, s),
-                                          f)
+                                                      dt(t, o, e[o], n[o], r);
+                                          })(t, p, f, i, s),
+                                          d)
                                       )
                                           e.__k = [];
                                       else if (
                                           ((g = e.props.children),
-                                          D(
+                                          mr(
                                               t,
                                               Array.isArray(g) ? g : [g],
                                               e,
@@ -530,46 +530,46 @@
                                               i && 'foreignObject' !== v,
                                               o,
                                               a,
-                                              o ? o[0] : n.__k && He(n, 0),
+                                              o ? o[0] : n.__k && Te(n, 0),
                                               s
                                           ),
                                           null != o)
                                       )
                                           for (g = o.length; g--; )
-                                              null != o[g] && Oe(o[g]);
+                                              null != o[g] && vr(o[g]);
                                       s ||
                                           ('value' in p &&
                                               void 0 !== (g = p.value) &&
                                               (g !== t.value ||
                                                   ('progress' === v && !g) ||
                                                   ('option' === v &&
-                                                      g !== d.value)) &&
-                                              B(t, 'value', g, d.value, !1),
+                                                      g !== f.value)) &&
+                                              dt(t, 'value', g, f.value, !1),
                                           'checked' in p &&
                                               void 0 !== (g = p.checked) &&
                                               g !== t.checked &&
-                                              B(
+                                              dt(
                                                   t,
                                                   'checked',
                                                   g,
-                                                  d.checked,
+                                                  f.checked,
                                                   !1
                                               ));
                                   }
                                   return t;
                               })(n.__e, e, n, r, i, o, a, l));
-                    (c = k.diffed) && c(e);
-                } catch (F) {
+                    (c = S.diffed) && c(e);
+                } catch (_) {
                     (e.__v = null),
                         (l || null != o) &&
                             ((e.__e = s),
                             (e.__h = !!l),
                             (o[o.indexOf(s)] = null)),
-                        k.__e(F, e, n);
+                        S.__e(_, e, n);
                 }
             }
-            function te(t, e) {
-                k.__c && k.__c(e, t),
+            function Dr(t, e) {
+                S.__c && S.__c(e, t),
                     t.some(function (n) {
                         try {
                             (t = n.__h),
@@ -578,69 +578,69 @@
                                     r.call(n);
                                 });
                         } catch (r) {
-                            k.__e(r, n.__v);
+                            S.__e(r, n.__v);
                         }
                     });
             }
-            function J(t, e, n) {
+            function Cr(t, e, n) {
                 try {
                     'function' == typeof t ? t(e) : (t.current = e);
                 } catch (r) {
-                    k.__e(r, n);
+                    S.__e(r, n);
                 }
             }
-            function Ae(t, e, n) {
+            function Sr(t, e, n) {
                 var r, i;
                 if (
-                    (k.unmount && k.unmount(t),
+                    (S.unmount && S.unmount(t),
                     (r = t.ref) &&
-                        ((r.current && r.current !== t.__e) || J(r, null, e)),
+                        ((r.current && r.current !== t.__e) || Cr(r, null, e)),
                     null != (r = t.__c))
                 ) {
                     if (r.componentWillUnmount)
                         try {
                             r.componentWillUnmount();
                         } catch (o) {
-                            k.__e(o, e);
+                            S.__e(o, e);
                         }
                     r.base = r.__P = null;
                 }
                 if ((r = t.__k))
                     for (i = 0; i < r.length; i++)
-                        r[i] && Ae(r[i], e, 'function' != typeof t.type);
-                n || null == t.__e || Oe(t.__e), (t.__e = t.__d = void 0);
+                        r[i] && Sr(r[i], e, 'function' != typeof t.type);
+                n || null == t.__e || vr(t.__e), (t.__e = t.__d = void 0);
             }
-            function pt(t, e, n) {
+            function Ta(t, e, n) {
                 return this.constructor(t, n);
             }
-            function ye(t, e, n) {
+            function he(t, e, n) {
                 var r, i, o;
-                k.__ && k.__(t, e),
+                S.__ && S.__(t, e),
                     (i = (r = 'function' == typeof n)
                         ? null
                         : (n && n.__k) || e.__k),
                     (o = []),
-                    H(
+                    qt(
                         e,
-                        (t = ((!r && n) || e).__k = ce(ge, null, [t])),
-                        i || Ve,
-                        Ve,
+                        (t = ((!r && n) || e).__k = $(re, null, [t])),
+                        i || lt,
+                        lt,
                         void 0 !== e.ownerSVGElement,
                         !r && n
                             ? [n]
                             : i
                             ? null
                             : e.firstChild
-                            ? le.call(e.childNodes)
+                            ? K.call(e.childNodes)
                             : null,
                         o,
                         !r && n ? n : i ? i.__e : e.firstChild,
                         r
                     ),
-                    te(o, t);
+                    Dr(o, t);
             }
-            (le = vn.slice),
-                (k = {
+            (K = pr.slice),
+                (S = {
                     __e: function (t, e, n, r) {
                         for (var i, o, a; (e = e.__); )
                             if ((i = e.__c) && !i.__)
@@ -665,149 +665,149 @@
                         throw t;
                     },
                 }),
-                (lt = 0),
-                (ae.prototype.setState = function (t, e) {
+                (st = 0),
+                (ee.prototype.setState = function (t, e) {
                     var n;
                     (n =
                         null != this.__s && this.__s !== this.state
                             ? this.__s
-                            : (this.__s = he({}, this.state))),
+                            : (this.__s = ae({}, this.state))),
                         'function' == typeof t &&
-                            (t = t(he({}, n), this.props)),
-                        t && he(n, t),
+                            (t = t(ae({}, n), this.props)),
+                        t && ae(n, t),
                         null != t &&
                             this.__v &&
-                            (e && this.__h.push(e), dt(this));
+                            (e && this.__h.push(e), Yt(this));
                 }),
-                (ae.prototype.forceUpdate = function (t) {
+                (ee.prototype.forceUpdate = function (t) {
                     this.__v &&
-                        ((this.__e = !0), t && this.__h.push(t), dt(this));
+                        ((this.__e = !0), t && this.__h.push(t), Yt(this));
                 }),
-                (ae.prototype.render = ge),
-                (We = []),
-                (ct =
+                (ee.prototype.render = re),
+                (Ge = []),
+                (dr =
                     'function' == typeof Promise
                         ? Promise.prototype.then.bind(Promise.resolve())
                         : setTimeout),
-                (ut.__r = 0),
-                (ft = 0);
-            var $,
-                Ir,
-                Nr = [],
-                Pr = k.__b,
-                Br = k.__r,
-                Or = k.diffed,
-                Hr = k.__c,
-                zr = k.unmount;
-            function Oa() {
-                for (var t; (t = Nr.shift()); )
+                (ct.__r = 0),
+                (ur = 0);
+            var Q,
+                Tr,
+                kr = [],
+                _r = S.__b,
+                Mr = S.__r,
+                Ir = S.diffed,
+                Nr = S.__c,
+                Pr = S.unmount;
+            function Ha() {
+                for (var t; (t = kr.shift()); )
                     if (t.__P)
                         try {
-                            t.__H.__h.forEach(Rt),
-                                t.__H.__h.forEach(yn),
+                            t.__H.__h.forEach(ft),
+                                t.__H.__h.forEach(Xt),
                                 (t.__H.__h = []);
                         } catch (e) {
-                            (t.__H.__h = []), k.__e(e, t.__v);
+                            (t.__H.__h = []), S.__e(e, t.__v);
                         }
             }
-            (k.__b = function (t) {
-                ($ = null), Pr && Pr(t);
+            (S.__b = function (t) {
+                (Q = null), _r && _r(t);
             }),
-                (k.__r = function (t) {
-                    Br && Br(t);
-                    var e = ($ = t.__c).__H;
-                    e && (e.__h.forEach(Rt), e.__h.forEach(yn), (e.__h = []));
+                (S.__r = function (t) {
+                    Mr && Mr(t);
+                    var e = (Q = t.__c).__H;
+                    e && (e.__h.forEach(ft), e.__h.forEach(Xt), (e.__h = []));
                 }),
-                (k.diffed = function (t) {
-                    Or && Or(t);
+                (S.diffed = function (t) {
+                    Ir && Ir(t);
                     var e = t.__c;
                     e &&
                         e.__H &&
                         e.__H.__h.length &&
-                        ((1 !== Nr.push(e) && Ir === k.requestAnimationFrame) ||
+                        ((1 !== kr.push(e) && Tr === S.requestAnimationFrame) ||
                             (
-                                (Ir = k.requestAnimationFrame) ||
+                                (Tr = S.requestAnimationFrame) ||
                                 function (n) {
                                     var r,
                                         i = function () {
                                             clearTimeout(o),
-                                                Qr && cancelAnimationFrame(r),
+                                                zr && cancelAnimationFrame(r),
                                                 setTimeout(n);
                                         },
                                         o = setTimeout(i, 100);
-                                    Qr && (r = requestAnimationFrame(i));
+                                    zr && (r = requestAnimationFrame(i));
                                 }
-                            )(Oa)),
-                        ($ = null);
+                            )(Ha)),
+                        (Q = null);
                 }),
-                (k.__c = function (t, e) {
+                (S.__c = function (t, e) {
                     e.some(function (n) {
                         try {
-                            n.__h.forEach(Rt),
+                            n.__h.forEach(ft),
                                 (n.__h = n.__h.filter(function (r) {
-                                    return !r.__ || yn(r);
+                                    return !r.__ || Xt(r);
                                 }));
                         } catch (r) {
                             e.some(function (i) {
                                 i.__h && (i.__h = []);
                             }),
                                 (e = []),
-                                k.__e(r, n.__v);
+                                S.__e(r, n.__v);
                         }
                     }),
-                        Hr && Hr(t, e);
+                        Nr && Nr(t, e);
                 }),
-                (k.unmount = function (t) {
-                    zr && zr(t);
+                (S.unmount = function (t) {
+                    Pr && Pr(t);
                     var e,
                         n = t.__c;
                     n &&
                         n.__H &&
                         (n.__H.__.forEach(function (r) {
                             try {
-                                Rt(r);
+                                ft(r);
                             } catch (i) {
                                 e = i;
                             }
                         }),
-                        e && k.__e(e, n.__v));
+                        e && S.__e(e, n.__v));
                 });
-            var Qr = 'function' == typeof requestAnimationFrame;
-            function Rt(t) {
-                var e = $,
+            var zr = 'function' == typeof requestAnimationFrame;
+            function ft(t) {
+                var e = Q,
                     n = t.__c;
-                'function' == typeof n && ((t.__c = void 0), n()), ($ = e);
+                'function' == typeof n && ((t.__c = void 0), n()), (Q = e);
             }
-            function yn(t) {
-                var e = $;
-                (t.__c = t.__()), ($ = e);
+            function Xt(t) {
+                var e = Q;
+                (t.__c = t.__()), (Q = e);
             }
-            function An(t, e) {
+            function $t(t, e) {
                 for (var n in t) if ('__source' !== n && !(n in e)) return !0;
                 for (var r in e)
                     if ('__source' !== r && t[r] !== e[r]) return !0;
                 return !1;
             }
-            function En(t) {
+            function en(t) {
                 this.props = t;
             }
-            ((En.prototype = new ae()).isPureReactComponent = !0),
-                (En.prototype.shouldComponentUpdate = function (t, e) {
-                    return An(this.props, t) || An(this.state, e);
+            ((en.prototype = new ee()).isPureReactComponent = !0),
+                (en.prototype.shouldComponentUpdate = function (t, e) {
+                    return $t(this.props, t) || $t(this.state, e);
                 });
-            var Gr = k.__b;
-            (k.__b = function (t) {
+            var Lr = S.__b;
+            (S.__b = function (t) {
                 t.type &&
                     t.type.__f &&
                     t.ref &&
                     ((t.props.ref = t.ref), (t.ref = null)),
-                    Gr && Gr(t);
+                    Lr && Lr(t);
             }),
                 'undefined' != typeof Symbol &&
                     Symbol.for &&
                     Symbol.for('react.forward_ref');
-            var La = k.__e;
-            k.__e = function (t, e, n, r) {
+            var La = S.__e;
+            S.__e = function (t, e, n, r) {
                 if (t.then)
                     for (var i, o = e; (o = o.__); )
                         if ((i = o.__c) && i.__c)
@@ -818,28 +818,28 @@
                             );
                 La(t, e, n, r);
             };
-            var jr = k.unmount;
-            function _t() {
+            var Wr = S.unmount;
+            function ut() {
                 (this.__u = 0), (this.t = null), (this.__b = null);
             }
-            function Yr(t) {
+            function Vr(t) {
                 var e = t.__.__c;
                 return e && e.__e && e.__e(t);
             }
-            function vt() {
+            function je() {
                 (this.u = null), (this.o = null);
             }
-            (k.unmount = function (t) {
+            (S.unmount = function (t) {
                 var e = t.__c;
                 e && e.__R && e.__R(),
                     e && !0 === t.__h && (t.type = null),
-                    jr && jr(t);
+                    Wr && Wr(t);
             }),
-                ((_t.prototype = new ae()).__c = function (t, e) {
+                ((ut.prototype = new ee()).__c = function (t, e) {
                     var n = e.__c,
                         r = this;
                     null == r.t && (r.t = []), r.t.push(n);
-                    var i = Yr(r.__v),
+                    var i = Vr(r.__v),
                         o = !1,
                         a = function () {
                             o || ((o = !0), (n.__R = null), i ? i(s) : s());
@@ -849,14 +849,14 @@
                             if (!--r.__u) {
                                 if (r.state.__e) {
                                     var c = r.state.__e;
-                                    r.__v.__k[0] = (function d(p, v, g) {
+                                    r.__v.__k[0] = (function f(p, v, g) {
                                         return (
                                             p &&
                                                 ((p.__v = null),
                                                 (p.__k =
                                                     p.__k &&
                                                     p.__k.map(function (b) {
-                                                        return d(b, v, g);
+                                                        return f(b, v, g);
                                                     })),
                                                 p.__c &&
                                                     p.__c.__P === v &&
@@ -871,23 +871,23 @@
                                         );
                                     })(c, c.__c.__P, c.__c.__O);
                                 }
-                                var f;
+                                var d;
                                 for (
                                     r.setState({ __e: (r.__b = null) });
-                                    (f = r.t.pop());
+                                    (d = r.t.pop());
 
                                 )
-                                    f.forceUpdate();
+                                    d.forceUpdate();
                             }
                         },
                         l = !0 === e.__h;
                     r.__u++ || l || r.setState({ __e: (r.__b = r.__v.__k[0]) }),
                         t.then(a, a);
                 }),
-                (_t.prototype.componentWillUnmount = function () {
+                (ut.prototype.componentWillUnmount = function () {
                     this.t = [];
                 }),
-                (_t.prototype.render = function (t, e) {
+                (ut.prototype.render = function (t, e) {
                     if (this.__b) {
                         if (this.__v.__k) {
                             var n = document.createElement('div'),
@@ -903,7 +903,7 @@
                                             }),
                                             (a.__c.__H = null)),
                                         null !=
-                                            (a = (function Vr(t, e) {
+                                            (a = (function Ur(t, e) {
                                                 for (var n in e) t[n] = e[n];
                                                 return t;
                                             })({}, a)).__c &&
@@ -920,13 +920,13 @@
                         }
                         this.__b = null;
                     }
-                    var i = e.__e && ce(ge, null, t.fallback);
+                    var i = e.__e && $(re, null, t.fallback);
                     return (
                         i && (i.__h = null),
-                        [ce(ge, null, e.__e ? null : t.children), i]
+                        [$(re, null, e.__e ? null : t.children), i]
                     );
                 });
-            var qr = function (t, e, n) {
+            var Gr = function (t, e, n) {
                 if (
                     (++n[1] === n[0] && t.o.delete(e),
                     t.props.revealOrder &&
@@ -950,7 +950,7 @@
                 var e = this,
                     n = t.i;
                 (e.componentWillUnmount = function () {
-                    ye(null, e.l), (e.l = null), (e.i = null);
+                    he(null, e.l), (e.l = null), (e.i = null);
                 }),
                     e.i && e.i !== n && e.componentWillUnmount(),
                     t.__v
@@ -976,42 +976,42 @@
                                           e.i.removeChild(r);
                                   },
                               })),
-                          ye(ce(Wa, { context: e.context }, t.__v), e.l))
+                          he($(Wa, { context: e.context }, t.__v), e.l))
                         : e.l && e.componentWillUnmount();
             }
-            ((vt.prototype = new ae()).__e = function (t) {
+            ((je.prototype = new ee()).__e = function (t) {
                 var e = this,
-                    n = Yr(e.__v),
+                    n = Vr(e.__v),
                     r = e.o.get(t);
                 return (
                     r[0]++,
                     function (i) {
                         var o = function () {
                             e.props.revealOrder
-                                ? (r.push(i), qr(e, t, r))
+                                ? (r.push(i), Gr(e, t, r))
                                 : i();
                         };
                         n ? n(o) : o();
                     }
                 );
             }),
-                (vt.prototype.render = function (t) {
+                (je.prototype.render = function (t) {
                     (this.u = null), (this.o = new Map());
-                    var e = S(t.children);
+                    var e = se(t.children);
                     t.revealOrder && 'b' === t.revealOrder[0] && e.reverse();
                     for (var n = e.length; n--; )
                         this.o.set(e[n], (this.u = [1, 0, this.u]));
                     return t.children;
                 }),
-                (vt.prototype.componentDidUpdate =
-                    vt.prototype.componentDidMount =
+                (je.prototype.componentDidUpdate =
+                    je.prototype.componentDidMount =
                         function () {
                             var t = this;
                             this.o.forEach(function (e, n) {
-                                qr(t, n, e);
+                                Gr(t, n, e);
                             });
                         });
-            var Xr =
+            var jr =
                     ('undefined' != typeof Symbol &&
                         Symbol.for &&
                         Symbol.for('react.element')) ||
@@ -1027,13 +1027,13 @@
                             : /fil|che|ra/i
                     ).test(t);
                 };
-            (ae.prototype.isReactComponent = {}),
+            (ee.prototype.isReactComponent = {}),
                 [
                     'componentWillMount',
                     'componentWillReceiveProps',
                     'componentWillUpdate',
                 ].forEach(function (t) {
-                    Object.defineProperty(ae.prototype, t, {
+                    Object.defineProperty(ee.prototype, t, {
                         configurable: !0,
                         get: function () {
                             return this['UNSAFE_' + t];
@@ -1047,7 +1047,7 @@
                         },
                     });
                 });
-            var Kr = k.event;
+            var Yr = S.event;
             function Ja() {}
             function Xa() {
                 return this.cancelBubble;
@@ -1055,23 +1055,23 @@
             function Ka() {
                 return this.defaultPrevented;
             }
-            k.event = function (t) {
+            S.event = function (t) {
                 return (
-                    Kr && (t = Kr(t)),
+                    Yr && (t = Yr(t)),
                     (t.persist = Ja),
                     (t.isPropagationStopped = Xa),
                     (t.isDefaultPrevented = Ka),
                     (t.nativeEvent = t)
                 );
             };
-            var ei = {
+            var Jr = {
                     configurable: !0,
                     get: function () {
                         return this.class;
                     },
                 },
-                ti = k.vnode;
-            k.vnode = function (t) {
+                Xr = S.vnode;
+            S.vnode = function (t) {
                 var e = t.type,
                     n = t.props,
                     r = n;
@@ -1110,13 +1110,13 @@
                     'select' == e &&
                         r.multiple &&
                         Array.isArray(r.value) &&
-                        (r.value = S(n.children).forEach(function (s) {
+                        (r.value = se(n.children).forEach(function (s) {
                             s.props.selected =
                                 -1 != r.value.indexOf(s.props.value);
                         })),
                         'select' == e &&
                             null != r.defaultValue &&
-                            (r.value = S(n.children).forEach(function (s) {
+                            (r.value = se(n.children).forEach(function (s) {
                                 s.props.selected = r.multiple
                                     ? -1 !=
                                       r.defaultValue.indexOf(s.props.value)
@@ -1124,31 +1124,31 @@
                             })),
                         (t.props = r),
                         n.class != n.className &&
-                            ((ei.enumerable = 'className' in n),
+                            ((Jr.enumerable = 'className' in n),
                             null != n.className && (r.class = n.className),
-                            Object.defineProperty(r, 'className', ei));
+                            Object.defineProperty(r, 'className', Jr));
                 }
-                (t.$$typeof = Xr), ti && ti(t);
+                (t.$$typeof = jr), Xr && Xr(t);
             };
-            var ni = k.__r;
-            k.__r = function (t) {
-                ni && ni(t);
+            var Kr = S.__r;
+            S.__r = function (t) {
+                Kr && Kr(t);
             };
-            var ii = 'undefined' != typeof globalThis ? globalThis : window;
-            ii.FullCalendarVDom
+            var ei = 'undefined' != typeof globalThis ? globalThis : window;
+            ei.FullCalendarVDom
                 ? console.warn('FullCalendar VDOM already loaded')
-                : (ii.FullCalendarVDom = {
-                      Component: ae,
-                      createElement: ce,
-                      render: ye,
-                      createRef: function hn() {
+                : (ei.FullCalendarVDom = {
+                      Component: ee,
+                      createElement: $,
+                      render: he,
+                      createRef: function hr() {
                           return { current: null };
                       },
-                      Fragment: ge,
+                      Fragment: re,
                       createContext: function ls(t) {
-                          var e = (function Mr(t, e) {
+                          var e = (function Rr(t, e) {
                                   var n = {
-                                      __c: (e = '__cC' + ft++),
+                                      __c: (e = '__cC' + ur++),
                                       __: t,
                                       Consumer: function (r, i) {
                                           return r.children(i);
@@ -1167,7 +1167,7 @@
                                                       function (a) {
                                                           this.props.value !==
                                                               a.value &&
-                                                              i.some(dt);
+                                                              i.some(Yt);
                                                       }),
                                                   (this.sub = function (a) {
                                                       i.push(a);
@@ -1223,27 +1223,27 @@
                               e
                           );
                       },
-                      createPortal: function Jr(t, e) {
-                          var n = ce(Va, { __v: t, i: e });
+                      createPortal: function Zr(t, e) {
+                          var n = $(Va, { __v: t, i: e });
                           return (n.containerInfo = e), n;
                       },
                       flushSync: function as(t) {
                           t();
-                          var e = k.debounceRendering,
+                          var e = S.debounceRendering,
                               n = [];
                           for (
-                              k.debounceRendering = function r(i) {
+                              S.debounceRendering = function r(i) {
                                   n.push(i);
                               },
-                                  ye(ce(ss, {}), document.createElement('div'));
+                                  he($(ss, {}), document.createElement('div'));
                               n.length;
 
                           )
                               n.shift()();
-                          k.debounceRendering = e;
+                          S.debounceRendering = e;
                       },
                       unmountComponentAtNode: function cs(t) {
-                          ye(null, t);
+                          he(null, t);
                       },
                   });
             var ss = (function (t) {
@@ -1253,28 +1253,28 @@
                 return (
                     (0, u.ZT)(e, t),
                     (e.prototype.render = function () {
-                        return ce('div', {});
+                        return $('div', {});
                     }),
                     (e.prototype.componentDidMount = function () {
                         this.setState({});
                     }),
                     e
                 );
-            })(ae);
-            if ((N(4602), 'undefined' == typeof FullCalendarVDom))
+            })(ee);
+            if ((R(4602), 'undefined' == typeof FullCalendarVDom))
                 throw new Error(
                     'Please import the top-level fullcalendar lib before attempting to import a plugin.'
                 );
-            var wn = FullCalendarVDom.Component,
+            var tn = FullCalendarVDom.Component,
                 h = FullCalendarVDom.createElement,
-                fs = FullCalendarVDom.render,
-                X = FullCalendarVDom.createRef,
-                K = FullCalendarVDom.Fragment,
-                oi = FullCalendarVDom.createContext,
-                ds = FullCalendarVDom.createPortal,
-                ai = FullCalendarVDom.flushSync,
+                ds = FullCalendarVDom.render,
+                U = FullCalendarVDom.createRef,
+                L = FullCalendarVDom.Fragment,
+                ti = FullCalendarVDom.createContext,
+                fs = FullCalendarVDom.createPortal,
+                ni = FullCalendarVDom.flushSync,
                 us = FullCalendarVDom.unmountComponentAtNode,
-                Ye = (function () {
+                Me = (function () {
                     function t(e, n) {
                         (this.context = e), (this.internalEventSource = n);
                     }
@@ -1316,19 +1316,19 @@
                         t
                     );
                 })();
-            function Dn(t) {
+            function nn(t) {
                 t.parentNode && t.parentNode.removeChild(t);
             }
-            function ne(t, e) {
+            function V(t, e) {
                 if (t.closest) return t.closest(e);
                 if (!document.documentElement.contains(t)) return null;
                 do {
-                    if (Sn(t, e)) return t;
+                    if (rn(t, e)) return t;
                     t = t.parentElement || t.parentNode;
                 } while (null !== t && 1 === t.nodeType);
                 return null;
             }
-            function Sn(t, e) {
+            function rn(t, e) {
                 return (
                     t.matches ||
                     t.matchesSelector ||
@@ -1336,10 +1336,10 @@
                 ).call(t, e);
             }
             var vs = /(top|left|right|bottom|width|height)$/i;
-            function ht(t, e) {
-                for (var n in e) si(t, n, e[n]);
+            function Ye(t, e) {
+                for (var n in e) ri(t, n, e[n]);
             }
-            function si(t, e, n) {
+            function ri(t, e, n) {
                 t.style[e] =
                     null == n
                         ? ''
@@ -1347,7 +1347,7 @@
                         ? n + 'px'
                         : n;
             }
-            function li(t) {
+            function ii(t) {
                 var e, n;
                 return null !==
                     (n =
@@ -1357,20 +1357,20 @@
                     ? n
                     : t.target;
             }
-            function ci(t) {
+            function oi(t) {
                 return t.getRootNode ? t.getRootNode() : document;
             }
-            var fi = 0;
-            function kt() {
-                return 'fc-dom-' + (fi += 1);
+            var ai = 0;
+            function pt() {
+                return 'fc-dom-' + (ai += 1);
             }
-            function Mt(t) {
+            function vt(t) {
                 t.preventDefault();
             }
-            function di(t, e, n, r) {
+            function si(t, e, n, r) {
                 var i = (function hs(t, e) {
                     return function (n) {
-                        var r = ne(n.target, t);
+                        var r = V(n.target, t);
                         r && e.call(r, n, r);
                     };
                 })(n, r);
@@ -1381,17 +1381,17 @@
                     }
                 );
             }
-            var ui = [
+            var li = [
                 'webkitTransitionEnd',
                 'otransitionend',
                 'oTransitionEnd',
                 'msTransitionEnd',
                 'transitionend',
             ];
-            function pi(t) {
-                return (0, u.pi)({ onClick: t }, vi(t));
+            function ci(t) {
+                return (0, u.pi)({ onClick: t }, di(t));
             }
-            function vi(t) {
+            function di(t) {
                 return {
                     tabIndex: 0,
                     onKeyDown: function (e) {
@@ -1400,20 +1400,20 @@
                     },
                 };
             }
-            var hi = 0;
-            function qe() {
-                return String((hi += 1));
+            var fi = 0;
+            function Ie() {
+                return String((fi += 1));
             }
-            function It() {
+            function ht() {
                 document.body.classList.add('fc-not-allowed');
             }
-            function Nt() {
+            function gt() {
                 document.body.classList.remove('fc-not-allowed');
             }
-            function Ss(t, e, n) {
+            function Cs(t, e, n) {
                 return n.func
                     ? n.func(t, e)
-                    : (function Cs(t, e) {
+                    : (function Ss(t, e) {
                           return t || e
                               ? null == e
                                   ? -1
@@ -1425,11 +1425,11 @@
                               : 0;
                       })(t[n.field], e[n.field]) * (n.order || 1);
             }
-            function Je(t, e) {
+            function Ne(t, e) {
                 var n = String(t);
                 return '000'.substr(0, e - n.length) + n;
             }
-            function gt(t, e, n) {
+            function qe(t, e, n) {
                 return 'function' == typeof t
                     ? t.apply(void 0, e)
                     : 'string' == typeof t
@@ -1441,10 +1441,10 @@
             function xs(t, e) {
                 return t - e;
             }
-            function Pt(t) {
+            function mt(t) {
                 return t % 1 == 0;
             }
-            function Ts(t) {
+            function Rs(t) {
                 var e = t.querySelector('.fc-scrollgrid-shrink-frame'),
                     n = t.querySelector('.fc-scrollgrid-shrink-cushion');
                 if (!e)
@@ -1461,43 +1461,39 @@
                     n.getBoundingClientRect().width
                 );
             }
-            var gi = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-            function mi(t, e) {
-                var n = ke(t);
-                return (n[2] += 7 * e), se(n);
+            var ui = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+            function pi(t, e) {
+                var n = me(t);
+                return (n[2] += 7 * e), q(n);
             }
-            function ie(t, e) {
-                var n = ke(t);
-                return (n[2] += e), se(n);
+            function Z(t, e) {
+                var n = me(t);
+                return (n[2] += e), q(n);
             }
-            function Fe(t, e) {
-                var n = ke(t);
-                return (n[6] += e), se(n);
+            function Ce(t, e) {
+                var n = me(t);
+                return (n[6] += e), q(n);
             }
-            function _e(t, e) {
+            function ge(t, e) {
                 return (e.valueOf() - t.valueOf()) / 864e5;
             }
-            function Bt(t, e) {
-                return Me(t) === Me(e) ? Math.round(_e(t, e)) : null;
+            function yt(t, e) {
+                return ye(t) === ye(e) ? Math.round(ge(t, e)) : null;
             }
-            function V(t) {
-                return se([
-                    t.getUTCFullYear(),
-                    t.getUTCMonth(),
-                    t.getUTCDate(),
-                ]);
+            function H(t) {
+                return q([t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate()]);
             }
-            function Cn(t, e, n, r) {
-                var i = se([e, 0, 1 + zs(e, n, r)]),
-                    o = V(t),
-                    a = Math.round(_e(i, o));
+            function on(t, e, n, r) {
+                var i = q([e, 0, 1 + zs(e, n, r)]),
+                    o = H(t),
+                    a = Math.round(ge(i, o));
                 return Math.floor(a / 7) + 1;
             }
             function zs(t, e, n) {
                 var r = 7 + e - n;
-                return (-(7 + se([t, 0, r]).getUTCDay() - e) % 7) + r - 1;
+                return (-(7 + q([t, 0, r]).getUTCDay() - e) % 7) + r - 1;
             }
-            function yi(t) {
+            function vi(t) {
                 return [
                     t.getFullYear(),
                     t.getMonth(),
@@ -1508,7 +1504,7 @@
                     t.getMilliseconds(),
                 ];
             }
-            function bi(t) {
+            function hi(t) {
                 return new Date(
                     t[0],
                     t[1] || 0,
@@ -1518,7 +1514,7 @@
                     t[5] || 0
                 );
             }
-            function ke(t) {
+            function me(t) {
                 return [
                     t.getUTCFullYear(),
                     t.getUTCMonth(),
@@ -1529,16 +1525,16 @@
                     t.getUTCMilliseconds(),
                 ];
             }
-            function se(t) {
+            function q(t) {
                 return (
                     1 === t.length && (t = t.concat([0])),
                     new Date(Date.UTC.apply(Date, t))
                 );
             }
-            function Ai(t) {
+            function gi(t) {
                 return !isNaN(t.valueOf());
             }
-            function Me(t) {
+            function ye(t) {
                 return (
                     1e3 * t.getUTCHours() * 60 * 60 +
                     1e3 * t.getUTCMinutes() * 60 +
@@ -1546,17 +1542,17 @@
                     t.getUTCMilliseconds()
                 );
             }
-            function Ot(t, e, n, r) {
+            function bt(t, e, n, r) {
                 return {
-                    instanceId: qe(),
+                    instanceId: Ie(),
                     defId: t,
                     range: e,
                     forcedStartTzo: null == n ? null : n,
                     forcedEndTzo: null == r ? null : r,
                 };
             }
-            var Ht = Object.prototype.hasOwnProperty;
-            function xn(t, e) {
+            var At = Object.prototype.hasOwnProperty;
+            function an(t, e) {
                 var n = {};
                 if (e)
                     for (var r in e) {
@@ -1568,7 +1564,7 @@
                                 break;
                             }
                         }
-                        i.length && (n[r] = xn(i));
+                        i.length && (n[r] = an(i));
                     }
                 for (o = t.length - 1; o >= 0; o -= 1) {
                     var s = t[o];
@@ -1576,38 +1572,38 @@
                 }
                 return n;
             }
-            function Ue(t, e) {
+            function Se(t, e) {
                 var n = {};
                 for (var r in t) e(t[r], r) && (n[r] = t[r]);
                 return n;
             }
-            function Ee(t, e) {
+            function le(t, e) {
                 var n = {};
                 for (var r in t) n[r] = e(t[r], r);
                 return n;
             }
-            function Ei(t) {
+            function mi(t) {
                 for (var e = {}, n = 0, r = t; n < r.length; n++) e[r[n]] = !0;
                 return e;
             }
-            function Tn(t) {
+            function sn(t) {
                 var e = [];
                 for (var n in t) e.push(t[n]);
                 return e;
             }
-            function we(t, e) {
+            function ce(t, e) {
                 if (t === e) return !0;
-                for (var n in t) if (Ht.call(t, n) && !(n in e)) return !1;
-                for (var n in e) if (Ht.call(e, n) && t[n] !== e[n]) return !1;
+                for (var n in t) if (At.call(t, n) && !(n in e)) return !1;
+                for (var n in e) if (At.call(e, n) && t[n] !== e[n]) return !1;
                 return !0;
             }
-            function wi(t, e) {
+            function yi(t, e) {
                 var n = [];
-                for (var r in t) Ht.call(t, r) && (r in e || n.push(r));
-                for (var r in e) Ht.call(e, r) && t[r] !== e[r] && n.push(r);
+                for (var r in t) At.call(t, r) && (r in e || n.push(r));
+                for (var r in e) At.call(e, r) && t[r] !== e[r] && n.push(r);
                 return n;
             }
-            function Di(t, e, n) {
+            function bi(t, e, n) {
                 if ((void 0 === n && (n = {}), t === e)) return !0;
                 for (var r in e)
                     if (!(r in t) || !Fs(t[r], e[r], n[r])) return !1;
@@ -1617,30 +1613,30 @@
             function Fs(t, e, n) {
                 return t === e || !0 === n || (!!n && n(t, e));
             }
-            function Xe(t, e, n) {
+            function Pe(t, e, n) {
                 var r = n.dateEnv,
                     i = n.pluginHooks,
                     o = n.options,
                     a = t.defs,
                     s = t.instances;
-                for (var l in ((s = Ue(s, function (E) {
+                for (var l in ((s = Se(s, function (E) {
                     return !a[E.defId].recurringDef;
                 })),
                 a)) {
                     var c = a[l];
                     if (c.recurringDef) {
-                        var f = c.recurringDef.duration;
-                        f ||
-                            (f = c.allDay
+                        var d = c.recurringDef.duration;
+                        d ||
+                            (d = c.allDay
                                 ? o.defaultAllDayEventDuration
                                 : o.defaultTimedEventDuration);
                         for (
-                            var p = 0, v = Qs(c, f, e, r, i.recurringTypes);
+                            var p = 0, v = Qs(c, d, e, r, i.recurringTypes);
                             p < v.length;
                             p++
                         ) {
                             var g = v[p],
-                                b = Ot(l, { start: g, end: r.add(g, f) });
+                                b = bt(l, { start: g, end: r.add(g, d) });
                             s[b.instanceId] = b;
                         }
                     }
@@ -1653,11 +1649,11 @@
                     { start: r.subtract(n.start, e), end: n.end },
                     r
                 );
-                return t.allDay && (a = a.map(V)), a;
+                return t.allDay && (a = a.map(H)), a;
             }
-            var Si = ['years', 'months', 'days', 'milliseconds'],
+            var Ai = ['years', 'months', 'days', 'milliseconds'],
                 Ws = /^(-?)(?:(\d+)\.)?(\d+):(\d\d)(?::(\d\d)(?:\.(\d\d\d))?)?/;
-            function U(t, e) {
+            function M(t, e) {
                 var n;
                 return 'string' == typeof t
                     ? (function Vs(t) {
@@ -1685,12 +1681,12 @@
                           return null;
                       })(t)
                     : 'object' == typeof t && t
-                    ? Ci(t)
+                    ? Ei(t)
                     : 'number' == typeof t
-                    ? Ci((((n = {})[e || 'milliseconds'] = t), n))
+                    ? Ei((((n = {})[e || 'milliseconds'] = t), n))
                     : null;
             }
-            function Ci(t) {
+            function Ei(t) {
                 var e = {
                         years: t.years || t.year || 0,
                         months: t.months || t.month || 0,
@@ -1704,7 +1700,7 @@
                     n = t.weeks || t.week;
                 return n && ((e.days += 7 * n), (e.specifiedWeeks = !0)), e;
             }
-            function Rn(t, e) {
+            function ln(t, e) {
                 return {
                     years: t.years + e.years,
                     months: t.months + e.months,
@@ -1712,10 +1708,10 @@
                     milliseconds: t.milliseconds + e.milliseconds,
                 };
             }
-            function Ke(t) {
-                return fe(t) / 864e5;
+            function Be(t) {
+                return J(t) / 864e5;
             }
-            function fe(t) {
+            function J(t) {
                 return (
                     31536e6 * t.years +
                     2592e6 * t.months +
@@ -1723,18 +1719,18 @@
                     t.milliseconds
                 );
             }
-            function _n(t, e) {
-                for (var n = null, r = 0; r < Si.length; r += 1) {
-                    var i = Si[r];
+            function cn(t, e) {
+                for (var n = null, r = 0; r < Ai.length; r += 1) {
+                    var i = Ai[r];
                     if (e[i]) {
                         var o = t[i] / e[i];
-                        if (!Pt(o) || (null !== n && n !== o)) return null;
+                        if (!mt(o) || (null !== n && n !== o)) return null;
                         n = o;
                     } else if (t[i]) return null;
                 }
                 return n;
             }
-            function kn(t) {
+            function dn(t) {
                 var e = t.milliseconds;
                 if (e) {
                     if (e % 1e3 != 0) return { unit: 'millisecond', value: e };
@@ -1753,7 +1749,7 @@
                     ? { unit: 'year', value: t.years }
                     : { unit: 'millisecond', value: 0 };
             }
-            function xi(t, e, n) {
+            function wi(t, e, n) {
                 void 0 === n && (n = !1);
                 var r = t.toISOString();
                 return (
@@ -1762,33 +1758,33 @@
                     r.length > 10 &&
                         (null == e
                             ? (r = r.replace('Z', ''))
-                            : 0 !== e && (r = r.replace('Z', Mn(e, !0)))),
+                            : 0 !== e && (r = r.replace('Z', fn(e, !0)))),
                     r
                 );
             }
-            function Ti(t) {
+            function Di(t) {
                 return t.toISOString().replace(/T.*$/, '');
             }
             function Js(t) {
                 return (
-                    Je(t.getUTCHours(), 2) +
+                    Ne(t.getUTCHours(), 2) +
                     ':' +
-                    Je(t.getUTCMinutes(), 2) +
+                    Ne(t.getUTCMinutes(), 2) +
                     ':' +
-                    Je(t.getUTCSeconds(), 2)
+                    Ne(t.getUTCSeconds(), 2)
                 );
             }
-            function Mn(t, e) {
+            function fn(t, e) {
                 void 0 === e && (e = !1);
                 var n = t < 0 ? '-' : '+',
                     r = Math.abs(t),
                     i = Math.floor(r / 60),
                     o = Math.round(r % 60);
                 return e
-                    ? n + Je(i, 2) + ':' + Je(o, 2)
-                    : 'GMT' + n + i + (o ? ':' + Je(o, 2) : '');
+                    ? n + Ne(i, 2) + ':' + Ne(o, 2)
+                    : 'GMT' + n + i + (o ? ':' + Ne(o, 2) : '');
             }
-            function Ie(t, e, n) {
+            function be(t, e, n) {
                 if (t === e) return !0;
                 var i,
                     r = t.length;
@@ -1797,13 +1793,13 @@
                     if (!(n ? n(t[i], e[i]) : t[i] === e[i])) return !1;
                 return !0;
             }
-            function I(t, e, n) {
+            function x(t, e, n) {
                 var r, i;
                 return function () {
                     for (var o = [], a = 0; a < arguments.length; a++)
                         o[a] = arguments[a];
                     if (r) {
-                        if (!Ie(r, o)) {
+                        if (!be(r, o)) {
                             n && n(i);
                             var s = t.apply(this, o);
                             (!e || !e(s, i)) && (i = s);
@@ -1812,13 +1808,13 @@
                     return (r = o), i;
                 };
             }
-            function zt(t, e, n) {
+            function Et(t, e, n) {
                 var i,
                     o,
                     r = this;
                 return function (a) {
                     if (i) {
-                        if (!we(i, a)) {
+                        if (!ce(i, a)) {
                             n && n(o);
                             var s = t.call(r, a);
                             (!e || !e(s, o)) && (o = s);
@@ -1827,14 +1823,14 @@
                     return (i = a), o;
                 };
             }
-            var Ri = {
+            var Ci = {
                     week: 3,
                     separator: 0,
                     omitZeroMinute: 0,
                     meridiem: 0,
                     omitCommas: 0,
                 },
-                Ft = {
+                wt = {
                     timeZoneName: 7,
                     era: 6,
                     year: 5,
@@ -1845,7 +1841,7 @@
                     minute: 1,
                     second: 1,
                 },
-                Ut = /\s*([ap])\.?m\.?/i,
+                Dt = /\s*([ap])\.?m\.?/i,
                 Xs = /,/g,
                 Ks = /\s+/g,
                 $s = /\u200e/g,
@@ -1856,14 +1852,14 @@
                             r = {},
                             i = 0;
                         for (var o in e)
-                            o in Ri
-                                ? ((r[o] = e[o]), (i = Math.max(Ri[o], i)))
+                            o in Ci
+                                ? ((r[o] = e[o]), (i = Math.max(Ci[o], i)))
                                 : ((n[o] = e[o]),
-                                  o in Ft && (i = Math.max(Ft[o], i)));
+                                  o in wt && (i = Math.max(wt[o], i)));
                         (this.standardDateProps = n),
                             (this.extendedSettings = r),
                             (this.severity = i),
-                            (this.buildFormattingFunc = I(_i));
+                            (this.buildFormattingFunc = x(Si));
                     }
                     return (
                         (t.prototype.format = function (e, n) {
@@ -1886,7 +1882,7 @@
                                         : n.getMarkerDay(t) !==
                                           n.getMarkerDay(e)
                                         ? 2
-                                        : Me(t) !== Me(e)
+                                        : ye(t) !== ye(e)
                                         ? 1
                                         : 0;
                                 })(e.marker, n.marker, r.calendarSystem);
@@ -1899,17 +1895,17 @@
                                     '2-digit' === a.month) &&
                                 ('numeric' === a.day || '2-digit' === a.day) &&
                                 (c = 1);
-                            var f = this.format(e, r),
-                                d = this.format(n, r);
-                            if (f === d) return f;
+                            var d = this.format(e, r),
+                                f = this.format(n, r);
+                            if (d === f) return d;
                             var p = (function ll(t, e) {
                                     var n = {};
                                     for (var r in t)
-                                        (!(r in Ft) || Ft[r] <= e) &&
+                                        (!(r in wt) || wt[r] <= e) &&
                                             (n[r] = t[r]);
                                     return n;
                                 })(a, c),
-                                v = _i(p, s, r),
+                                v = Si(p, s, r),
                                 g = v(e),
                                 b = v(n),
                                 E = (function cl(t, e, n, r) {
@@ -1927,16 +1923,16 @@
                                         ) {
                                             var c = n.indexOf(r, l);
                                             if (-1 === c) break;
-                                            var f = n.substr(0, c),
-                                                d = n.substr(
+                                            var d = n.substr(0, c),
+                                                f = n.substr(
                                                     (l = c + r.length)
                                                 );
-                                            if (a === f && s === d)
+                                            if (a === d && s === f)
                                                 return { before: a, after: s };
                                         }
                                     }
                                     return null;
-                                })(f, g, d, b),
+                                })(d, g, f, b),
                                 m =
                                     s.separator ||
                                     i ||
@@ -1944,7 +1940,7 @@
                                     '';
                             return E
                                 ? E.before + g + m + b + E.after
-                                : f + m + d;
+                                : d + m + f;
                         }),
                         (t.prototype.getLargestUnit = function () {
                             switch (this.severity) {
@@ -1965,11 +1961,11 @@
                         t
                     );
                 })();
-            function _i(t, e, n) {
+            function Si(t, e, n) {
                 var r = Object.keys(t).length;
                 return 1 === r && 'short' === t.timeZoneName
                     ? function (i) {
-                          return Mn(i.timeZoneOffset);
+                          return fn(i.timeZoneOffset);
                       }
                     : 0 === r && e.week
                     ? function (i) {
@@ -2041,26 +2037,26 @@
                                               'UTC' === i.timeZone ||
                                                   null == e.timeZoneOffset
                                                   ? 'UTC'
-                                                  : Mn(e.timeZoneOffset)
+                                                  : fn(e.timeZoneOffset)
                                           )),
                                       r.omitCommas &&
                                           (t = t.replace(Xs, '').trim()),
                                       r.omitZeroMinute &&
                                           (t = t.replace(':00', '')),
                                       !1 === r.meridiem
-                                          ? (t = t.replace(Ut, '').trim())
+                                          ? (t = t.replace(Dt, '').trim())
                                           : 'narrow' === r.meridiem
-                                          ? (t = t.replace(Ut, function (o, a) {
+                                          ? (t = t.replace(Dt, function (o, a) {
                                                 return a.toLocaleLowerCase();
                                             }))
                                           : 'short' === r.meridiem
-                                          ? (t = t.replace(Ut, function (o, a) {
+                                          ? (t = t.replace(Dt, function (o, a) {
                                                 return (
                                                     a.toLocaleLowerCase() + 'm'
                                                 );
                                             }))
                                           : 'lowercase' === r.meridiem &&
-                                            (t = t.replace(Ut, function (o) {
+                                            (t = t.replace(Dt, function (o) {
                                                 return o.toLocaleLowerCase();
                                             })),
                                       (t = t.replace(Ks, ' ')).trim()
@@ -2075,7 +2071,7 @@
                           };
                       })(t, e, n);
             }
-            function ki(t, e) {
+            function xi(t, e) {
                 var n = e.markerToArray(t.marker);
                 return {
                     marker: t.marker,
@@ -2090,18 +2086,18 @@
                     millisecond: n[6],
                 };
             }
-            function Lt(t, e, n, r) {
-                var i = ki(t, n.calendarSystem);
+            function Ct(t, e, n, r) {
+                var i = xi(t, n.calendarSystem);
                 return {
                     date: i,
                     start: i,
-                    end: e ? ki(e, n.calendarSystem) : null,
+                    end: e ? xi(e, n.calendarSystem) : null,
                     timeZone: n.timeZone,
                     localeCodes: n.locale.codes,
                     defaultSeparator: r || n.defaultSeparator,
                 };
             }
-            var fl = (function () {
+            var dl = (function () {
                     function t(e) {
                         this.cmdStr = e;
                     }
@@ -2109,62 +2105,62 @@
                         (t.prototype.format = function (e, n, r) {
                             return n.cmdFormatter(
                                 this.cmdStr,
-                                Lt(e, null, n, r)
+                                Ct(e, null, n, r)
                             );
                         }),
                         (t.prototype.formatRange = function (e, n, r, i) {
-                            return r.cmdFormatter(this.cmdStr, Lt(e, n, r, i));
+                            return r.cmdFormatter(this.cmdStr, Ct(e, n, r, i));
                         }),
                         t
                     );
                 })(),
-                dl = (function () {
+                fl = (function () {
                     function t(e) {
                         this.func = e;
                     }
                     return (
                         (t.prototype.format = function (e, n, r) {
-                            return this.func(Lt(e, null, n, r));
+                            return this.func(Ct(e, null, n, r));
                         }),
                         (t.prototype.formatRange = function (e, n, r, i) {
-                            return this.func(Lt(e, n, r, i));
+                            return this.func(Ct(e, n, r, i));
                         }),
                         t
                     );
                 })();
-            function Z(t) {
+            function O(t) {
                 return 'object' == typeof t && t
                     ? new tl(t)
                     : 'string' == typeof t
-                    ? new fl(t)
-                    : 'function' == typeof t
                     ? new dl(t)
+                    : 'function' == typeof t
+                    ? new fl(t)
                     : null;
             }
-            var Mi = {
+            var Ri = {
                     navLinkDayClick: A,
                     navLinkWeekClick: A,
-                    duration: U,
+                    duration: M,
                     bootstrapFontAwesome: A,
                     buttonIcons: A,
                     customButtons: A,
-                    defaultAllDayEventDuration: U,
-                    defaultTimedEventDuration: U,
-                    nextDayThreshold: U,
-                    scrollTime: U,
+                    defaultAllDayEventDuration: M,
+                    defaultTimedEventDuration: M,
+                    nextDayThreshold: M,
+                    scrollTime: M,
                     scrollTimeReset: Boolean,
-                    slotMinTime: U,
-                    slotMaxTime: U,
-                    dayPopoverFormat: Z,
-                    slotDuration: U,
-                    snapDuration: U,
+                    slotMinTime: M,
+                    slotMaxTime: M,
+                    dayPopoverFormat: O,
+                    slotDuration: M,
+                    snapDuration: M,
                     headerToolbar: A,
                     footerToolbar: A,
                     defaultRangeSeparator: String,
                     titleRangeSeparator: String,
                     forceEventDuration: Boolean,
                     dayHeaders: Boolean,
-                    dayHeaderFormat: Z,
+                    dayHeaderFormat: O,
                     dayHeaderClassNames: A,
                     dayHeaderContent: A,
                     dayHeaderDidMount: A,
@@ -2238,7 +2234,7 @@
                     height: A,
                     contentHeight: A,
                     direction: String,
-                    weekNumberFormat: Z,
+                    weekNumberFormat: O,
                     eventResizableFromStart: Boolean,
                     displayEventTime: Boolean,
                     displayEventEnd: Boolean,
@@ -2286,7 +2282,7 @@
                     dayMaxEvents: A,
                     dayMaxEventRows: A,
                     dayMinWidth: Number,
-                    slotLabelInterval: U,
+                    slotLabelInterval: M,
                     allDayText: String,
                     allDayClassNames: A,
                     allDayContent: A,
@@ -2294,7 +2290,7 @@
                     allDayWillUnmount: A,
                     slotMinWidth: Number,
                     navLinks: Boolean,
-                    eventTimeFormat: Z,
+                    eventTimeFormat: O,
                     rerenderDelay: Number,
                     moreLinkText: A,
                     moreLinkHint: A,
@@ -2312,7 +2308,7 @@
                     firstDay: Number,
                     dayCount: Number,
                     dateAlignment: String,
-                    dateIncrement: U,
+                    dateIncrement: M,
                     hiddenDays: A,
                     monthMode: Boolean,
                     fixedWeekCount: Boolean,
@@ -2332,7 +2328,7 @@
                     moreLinkDidMount: A,
                     moreLinkWillUnmount: A,
                 },
-                De = {
+                de = {
                     eventDisplay: 'auto',
                     defaultRangeSeparator: ' - ',
                     titleRangeSeparator: ' \u2013 ',
@@ -2388,7 +2384,7 @@
                     eventMinWidth: 30,
                     eventShortHeight: 30,
                 },
-                Ii = {
+                Ti = {
                     datesSet: A,
                     eventsSet: A,
                     eventAdd: A,
@@ -2409,7 +2405,7 @@
                     _resize: A,
                     _scrollRequest: A,
                 },
-                Ni = {
+                ki = {
                     buttonText: A,
                     buttonHints: A,
                     views: A,
@@ -2418,16 +2414,16 @@
                     events: A,
                     eventSources: A,
                 },
-                In = {
-                    headerToolbar: mt,
-                    footerToolbar: mt,
-                    buttonText: mt,
-                    buttonHints: mt,
-                    buttonIcons: mt,
+                un = {
+                    headerToolbar: Je,
+                    footerToolbar: Je,
+                    buttonText: Je,
+                    buttonHints: Je,
+                    buttonIcons: Je,
                 };
-            function mt(t, e) {
+            function Je(t, e) {
                 return 'object' == typeof t && 'object' == typeof e && t && e
-                    ? we(t, e)
+                    ? ce(t, e)
                     : t === e;
             }
             var ul = {
@@ -2442,10 +2438,10 @@
                 didMount: A,
                 willUnmount: A,
             };
-            function Nn(t) {
-                return xn(t, In);
+            function pn(t) {
+                return an(t, un);
             }
-            function Qt(t, e) {
+            function St(t, e) {
                 var n = {},
                     r = {};
                 for (var i in e) i in t && (n[i] = e[i](t[i]));
@@ -2455,21 +2451,21 @@
             function A(t) {
                 return t;
             }
-            function Wt(t, e, n, r) {
+            function xt(t, e, n, r) {
                 for (
                     var i = { defs: {}, instances: {} },
-                        o = zn(n),
+                        o = yn(n),
                         a = 0,
                         s = t;
                     a < s.length;
                     a++
                 ) {
-                    var c = Oi(s[a], e, n, r, o);
-                    c && yt(c, i);
+                    var c = Ii(s[a], e, n, r, o);
+                    c && Xe(c, i);
                 }
                 return i;
             }
-            function yt(t, e) {
+            function Xe(t, e) {
                 return (
                     void 0 === e && (e = { defs: {}, instances: {} }),
                     (e.defs[t.def.defId] = t.def),
@@ -2478,11 +2474,11 @@
                     e
                 );
             }
-            function Pn(t, e) {
+            function vn(t, e) {
                 var n = t.instances[e];
                 if (n) {
                     var r = t.defs[n.defId],
-                        i = Vt(t, function (o) {
+                        i = Rt(t, function (o) {
                             return (function pl(t, e) {
                                 return Boolean(
                                     t.groupId && t.groupId === e.groupId
@@ -2497,7 +2493,7 @@
                 }
                 return { defs: {}, instances: {} };
             }
-            function Bn(t, e) {
+            function hn(t, e) {
                 return {
                     defs: (0, u.pi)((0, u.pi)({}, t.defs), e.defs),
                     instances: (0, u.pi)(
@@ -2506,21 +2502,21 @@
                     ),
                 };
             }
-            function Vt(t, e) {
-                var n = Ue(t.defs, e),
-                    r = Ue(t.instances, function (i) {
+            function Rt(t, e) {
+                var n = Se(t.defs, e),
+                    r = Se(t.instances, function (i) {
                         return n[i.defId];
                     });
                 return { defs: n, instances: r };
             }
-            function On(t) {
+            function gn(t) {
                 return Array.isArray(t)
                     ? t
                     : 'string' == typeof t
                     ? t.split(/\s+/)
                     : [];
             }
-            var Gt = {
+            var Tt = {
                     display: String,
                     editable: Boolean,
                     startEditable: Boolean,
@@ -2528,8 +2524,8 @@
                     constraint: A,
                     overlap: A,
                     allow: A,
-                    className: On,
-                    classNames: On,
+                    className: gn,
+                    classNames: gn,
                     color: String,
                     backgroundColor: String,
                     borderColor: String,
@@ -2547,12 +2543,12 @@
                     textColor: '',
                     classNames: [],
                 };
-            function Zt(t, e) {
+            function kt(t, e) {
                 var n = (function hl(t, e) {
                     return Array.isArray(t)
-                        ? Wt(t, null, e, !0)
+                        ? xt(t, null, e, !0)
                         : 'object' == typeof t && t
-                        ? Wt([t], null, e, !0)
+                        ? xt([t], null, e, !0)
                         : null != t
                         ? String(t)
                         : null;
@@ -2574,7 +2570,7 @@
                     classNames: (t.className || []).concat(t.classNames || []),
                 };
             }
-            function Pi(t) {
+            function _i(t) {
                 return t.reduce(ml, gl);
             }
             function ml(t, e) {
@@ -2598,20 +2594,20 @@
                     classNames: t.classNames.concat(e.classNames),
                 };
             }
-            var jt = {
+            var _t = {
                     id: String,
                     groupId: String,
                     title: String,
                     url: String,
                     interactive: Boolean,
                 },
-                Bi = { start: A, end: A, date: A, allDay: Boolean },
-                yl = (0, u.pi)((0, u.pi)((0, u.pi)({}, jt), Bi), {
+                Mi = { start: A, end: A, date: A, allDay: Boolean },
+                yl = (0, u.pi)((0, u.pi)((0, u.pi)({}, _t), Mi), {
                     extendedProps: A,
                 });
-            function Oi(t, e, n, r, i) {
-                void 0 === i && (i = zn(n));
-                var o = Hn(t, n, i),
+            function Ii(t, e, n, r, i) {
+                void 0 === i && (i = yn(n));
+                var o = mn(t, n, i),
                     a = o.refined,
                     s = o.extra,
                     l = (function Al(t, e) {
@@ -2645,7 +2641,7 @@
                     })(a, l, n.dateEnv, n.pluginHooks.recurringTypes);
                 if (c)
                     return (
-                        ((f = Yt(
+                        ((d = Mt(
                             a,
                             s,
                             e ? e.sourceId : '',
@@ -2657,10 +2653,10 @@
                             typeData: c.typeData,
                             duration: c.duration,
                         }),
-                        { def: f, instance: null }
+                        { def: d, instance: null }
                     );
-                var f,
-                    d = (function bl(t, e, n, r) {
+                var d,
+                    f = (function bl(t, e, n, r) {
                         var o,
                             l,
                             i = t.allDay,
@@ -2683,10 +2679,10 @@
                                         ? e
                                         : (!o || o.isTimeUnspecified) &&
                                           (!l || l.isTimeUnspecified)),
-                            i && a && (a = V(a)),
+                            i && a && (a = H(a)),
                             l &&
                                 ((c = l.marker),
-                                i && (c = V(c)),
+                                i && (c = H(c)),
                                 a && c <= a && (c = null)),
                             c
                                 ? (s = !0)
@@ -2707,35 +2703,35 @@
                             }
                         );
                     })(a, l, n, r);
-                return d
+                return f
                     ? {
-                          def: (f = Yt(
+                          def: (d = Mt(
                               a,
                               s,
                               e ? e.sourceId : '',
-                              d.allDay,
-                              d.hasEnd,
+                              f.allDay,
+                              f.hasEnd,
                               n
                           )),
-                          instance: Ot(
-                              f.defId,
-                              d.range,
-                              d.forcedStartTzo,
-                              d.forcedEndTzo
+                          instance: bt(
+                              d.defId,
+                              f.range,
+                              f.forcedStartTzo,
+                              f.forcedEndTzo
                           ),
                       }
                     : null;
             }
-            function Hn(t, e, n) {
-                return void 0 === n && (n = zn(e)), Qt(t, n);
+            function mn(t, e, n) {
+                return void 0 === n && (n = yn(e)), St(t, n);
             }
-            function zn(t) {
+            function yn(t) {
                 return (0, u.pi)(
-                    (0, u.pi)((0, u.pi)({}, Gt), yl),
+                    (0, u.pi)((0, u.pi)({}, Tt), yl),
                     t.pluginHooks.eventRefiners
                 );
             }
-            function Yt(t, e, n, r, i, o) {
+            function Mt(t, e, n, r, i, o) {
                 for (
                     var a = {
                             title: t.title || '',
@@ -2743,12 +2739,12 @@
                             publicId: t.id || '',
                             url: t.url || '',
                             recurringDef: null,
-                            defId: qe(),
+                            defId: Ie(),
                             sourceId: n,
                             allDay: r,
                             hasEnd: i,
                             interactive: t.interactive,
-                            ui: Zt(t, o),
+                            ui: kt(t, o),
                             extendedProps: (0, u.pi)(
                                 (0, u.pi)({}, t.extendedProps || {}),
                                 e
@@ -2766,38 +2762,37 @@
                     a
                 );
             }
-            function Hi(t) {
-                var e = Math.floor(_e(t.start, t.end)) || 1,
-                    n = V(t.start);
-                return { start: n, end: ie(n, e) };
+            function Ni(t) {
+                var e = Math.floor(ge(t.start, t.end)) || 1,
+                    n = H(t.start);
+                return { start: n, end: Z(n, e) };
             }
-            function Fn(t, e) {
-                void 0 === e && (e = U(0));
+            function bn(t, e) {
+                void 0 === e && (e = M(0));
                 var n = null,
                     r = null;
                 if (t.end) {
-                    r = V(t.end);
+                    r = H(t.end);
                     var i = t.end.valueOf() - r.valueOf();
-                    i && i >= fe(e) && (r = ie(r, 1));
+                    i && i >= J(e) && (r = Z(r, 1));
                 }
                 return (
-                    t.start &&
-                        ((n = V(t.start)), r && r <= n && (r = ie(n, 1))),
+                    t.start && ((n = H(t.start)), r && r <= n && (r = Z(n, 1))),
                     { start: n, end: r }
                 );
             }
-            function $e(t, e, n, r) {
+            function He(t, e, n, r) {
                 return 'year' === r
-                    ? U(n.diffWholeYears(t, e), 'year')
+                    ? M(n.diffWholeYears(t, e), 'year')
                     : 'month' === r
-                    ? U(n.diffWholeMonths(t, e), 'month')
+                    ? M(n.diffWholeMonths(t, e), 'month')
                     : (function Is(t, e) {
-                          var n = V(t),
-                              r = V(e);
+                          var n = H(t),
+                              r = H(e);
                           return {
                               years: 0,
                               months: 0,
-                              days: Math.round(_e(n, r)),
+                              days: Math.round(ge(n, r)),
                               milliseconds:
                                   e.valueOf() -
                                   r.valueOf() -
@@ -2805,7 +2800,7 @@
                           };
                       })(t, e);
             }
-            function zi(t, e) {
+            function Pi(t, e) {
                 var i,
                     o,
                     n = [],
@@ -2818,7 +2813,7 @@
             function wl(t, e) {
                 return t.start.valueOf() - e.start.valueOf();
             }
-            function et(t, e) {
+            function Oe(t, e) {
                 var n = t.start,
                     r = t.end,
                     i = null;
@@ -2842,53 +2837,53 @@
                     i
                 );
             }
-            function Un(t, e) {
+            function An(t, e) {
                 return (
                     (null === t.end || null === e.start || t.end > e.start) &&
                     (null === t.start || null === e.end || t.start < e.end)
                 );
             }
-            function qt(t, e) {
+            function It(t, e) {
                 return (
                     (null === t.start ||
                         (null !== e.start && e.start >= t.start)) &&
                     (null === t.end || (null !== e.end && e.end <= t.end))
                 );
             }
-            function Ne(t, e) {
+            function Ae(t, e) {
                 return (
                     (null === t.start || e >= t.start) &&
                     (null === t.end || e < t.end)
                 );
             }
-            function Ln(t, e, n, r) {
+            function En(t, e, n, r) {
                 var i = {},
                     o = {},
                     a = {},
                     s = [],
                     l = [],
-                    c = Jt(t.defs, e);
-                for (var f in t.defs)
+                    c = Nt(t.defs, e);
+                for (var d in t.defs)
                     'inverse-background' ===
-                        (p = c[(d = t.defs[f]).defId]).display &&
-                        (d.groupId
-                            ? ((i[d.groupId] = []),
-                              a[d.groupId] || (a[d.groupId] = d))
-                            : (o[f] = []));
+                        (p = c[(f = t.defs[d]).defId]).display &&
+                        (f.groupId
+                            ? ((i[f.groupId] = []),
+                              a[f.groupId] || (a[f.groupId] = f))
+                            : (o[d] = []));
                 for (var v in t.instances) {
                     var g = t.instances[v],
-                        p = c[(d = t.defs[g.defId]).defId],
+                        p = c[(f = t.defs[g.defId]).defId],
                         b = g.range,
-                        E = !d.allDay && r ? Fn(b, r) : b,
-                        m = et(E, n);
+                        E = !f.allDay && r ? bn(b, r) : b,
+                        m = Oe(E, n);
                     m &&
                         ('inverse-background' === p.display
-                            ? d.groupId
-                                ? i[d.groupId].push(m)
+                            ? f.groupId
+                                ? i[f.groupId].push(m)
                                 : o[g.defId].push(m)
                             : 'none' !== p.display &&
                               ('background' === p.display ? s : l).push({
-                                  def: d,
+                                  def: f,
                                   ui: p,
                                   instance: g,
                                   range: m,
@@ -2901,57 +2896,57 @@
                               }));
                 }
                 for (var w in i)
-                    for (var F = 0, z = zi(i[w], n); F < z.length; F++) {
-                        var d;
+                    for (var _ = 0, k = Pi(i[w], n); _ < k.length; _++) {
+                        var f;
                         s.push({
-                            def: (d = a[w]),
-                            ui: (p = c[d.defId]),
+                            def: (f = a[w]),
+                            ui: (p = c[f.defId]),
                             instance: null,
-                            range: z[F],
+                            range: k[_],
                             isStart: !1,
                             isEnd: !1,
                         });
                     }
-                for (var f in o)
-                    for (var P = 0, Y = zi(o[f], n); P < Y.length; P++)
+                for (var d in o)
+                    for (var T = 0, F = Pi(o[d], n); T < F.length; T++)
                         s.push({
-                            def: t.defs[f],
-                            ui: c[f],
+                            def: t.defs[d],
+                            ui: c[d],
                             instance: null,
-                            range: Y[P],
+                            range: F[T],
                             isStart: !1,
                             isEnd: !1,
                         });
                 return { bg: s, fg: l };
             }
-            function Fi(t, e) {
+            function Bi(t, e) {
                 t.fcSeg = e;
             }
-            function tt(t) {
+            function ze(t) {
                 return t.fcSeg || t.parentNode.fcSeg || null;
             }
-            function Jt(t, e) {
-                return Ee(t, function (n) {
-                    return Ui(n, e);
+            function Nt(t, e) {
+                return le(t, function (n) {
+                    return Hi(n, e);
                 });
             }
-            function Ui(t, e) {
+            function Hi(t, e) {
                 var n = [];
                 return (
                     e[''] && n.push(e['']),
                     e[t.defId] && n.push(e[t.defId]),
                     n.push(t.ui),
-                    Pi(n)
+                    _i(n)
                 );
             }
-            function Li(t, e) {
+            function Oi(t, e) {
                 var n = t.map(xl);
                 return (
                     n.sort(function (r, i) {
                         return (function Ds(t, e, n) {
                             var r, i;
                             for (r = 0; r < n.length; r += 1)
-                                if ((i = Ss(t, e, n[r]))) return i;
+                                if ((i = Cs(t, e, n[r]))) return i;
                             return 0;
                         })(r, i, e);
                     }),
@@ -2975,7 +2970,7 @@
                     _seg: t,
                 });
             }
-            function Tl(t, e) {
+            function Rl(t, e) {
                 for (
                     var i = t.eventRange,
                         o = i.def,
@@ -2989,34 +2984,34 @@
                     s = (0, c[l])(s, o, a, e);
                 return s;
             }
-            function Rl(t, e) {
+            function Tl(t, e) {
                 return (
                     t.isStart &&
                     t.eventRange.ui.durationEditable &&
                     e.options.eventResizableFromStart
                 );
             }
-            function _l(t, e) {
+            function kl(t, e) {
                 return t.isEnd && t.eventRange.ui.durationEditable;
             }
-            function Qi(t, e, n, r, i, o, a) {
+            function zi(t, e, n, r, i, o, a) {
                 var s = n.dateEnv,
                     l = n.options,
                     c = l.displayEventTime,
-                    f = l.displayEventEnd,
-                    d = t.eventRange.def,
+                    d = l.displayEventEnd,
+                    f = t.eventRange.def,
                     p = t.eventRange.instance;
-                null == c && (c = !1 !== r), null == f && (f = !1 !== i);
+                null == c && (c = !1 !== r), null == d && (d = !1 !== i);
                 var v = p.range.start,
                     g = p.range.end,
                     b = o || t.start || t.eventRange.range.start,
                     E = a || t.end || t.eventRange.range.end,
-                    m = V(v).valueOf() === V(b).valueOf(),
-                    w = V(Fe(g, -1)).valueOf() === V(Fe(E, -1)).valueOf();
-                return c && !d.allDay && (m || w)
+                    m = H(v).valueOf() === H(b).valueOf(),
+                    w = H(Ce(g, -1)).valueOf() === H(Ce(E, -1)).valueOf();
+                return c && !f.allDay && (m || w)
                     ? ((b = m ? v : b),
                       (E = w ? g : E),
-                      f && d.hasEnd
+                      d && f.hasEnd
                           ? s.formatRange(b, E, e, {
                                 forcedStartTzo: o ? null : p.forcedStartTzo,
                                 forcedEndTzo: a ? null : p.forcedEndTzo,
@@ -3026,20 +3021,20 @@
                             }))
                     : '';
             }
-            function Pe(t, e, n) {
+            function Ee(t, e, n) {
                 var r = t.eventRange.range;
                 return {
                     isPast: r.end < (n || e.start),
                     isFuture: r.start >= (n || e.end),
-                    isToday: e && Ne(e, r.start),
+                    isToday: e && Ae(e, r.start),
                 };
             }
-            function Wi(t) {
+            function Fi(t) {
                 return t.instance
                     ? t.instance.instanceId
                     : t.def.defId + ':' + t.range.start.toISOString();
             }
-            function Vi(t, e) {
+            function Ui(t, e) {
                 var n = t.eventRange,
                     r = n.def,
                     i = n.instance,
@@ -3052,10 +3047,10 @@
                         null == (l = r.interactive) &&
                         (l = Boolean(a.hasHandlers('eventClick'))),
                     l
-                        ? vi(function (c) {
+                        ? di(function (c) {
                               a.trigger('eventClick', {
                                   el: c.target,
-                                  event: new j(e, r, i),
+                                  event: new z(e, r, i),
                                   jsEvent: c,
                                   view: e.viewApi,
                               });
@@ -3064,12 +3059,12 @@
                 );
             }
             var Ml = { start: A, end: A, allDay: Boolean };
-            function Gi(t, e, n) {
-                return (0, u.pi)((0, u.pi)({}, Zi(t, e, n)), {
+            function Li(t, e, n) {
+                return (0, u.pi)((0, u.pi)({}, Qi(t, e, n)), {
                     timeZone: e.timeZone,
                 });
             }
-            function Zi(t, e, n) {
+            function Qi(t, e, n) {
                 return {
                     start: e.toDate(t.start),
                     end: e.toDate(t.end),
@@ -3077,28 +3072,28 @@
                     endStr: e.formatIso(t.end, { omitTime: n }),
                 };
             }
-            function Hl(t, e, n) {
-                var r = Hn({ editable: !1 }, n),
-                    i = Yt(r.refined, r.extra, '', t.allDay, !0, n);
+            function Ol(t, e, n) {
+                var r = mn({ editable: !1 }, n),
+                    i = Mt(r.refined, r.extra, '', t.allDay, !0, n);
                 return {
                     def: i,
-                    ui: Ui(i, e),
-                    instance: Ot(i.defId, t.range),
+                    ui: Hi(i, e),
+                    instance: bt(i.defId, t.range),
                     range: t.range,
                     isStart: !0,
                     isEnd: !0,
                 };
             }
-            function ji(t, e, n) {
+            function Wi(t, e, n) {
                 n.emitter.trigger(
                     'select',
-                    (0, u.pi)((0, u.pi)({}, Qn(t, n)), {
+                    (0, u.pi)((0, u.pi)({}, wn(t, n)), {
                         jsEvent: e ? e.origEvent : null,
                         view: n.viewApi || n.calendarApi.view,
                     })
                 );
             }
-            function Qn(t, e) {
+            function wn(t, e) {
                 for (
                     var n = {}, r = 0, i = e.pluginHooks.dateSpanTransforms;
                     r < i.length;
@@ -3108,9 +3103,9 @@
                 return (
                     (0, u.pi)(
                         n,
-                        (function Ol(t, e) {
+                        (function Hl(t, e) {
                             return (0, u.pi)(
-                                (0, u.pi)({}, Zi(t.range, e, t.allDay)),
+                                (0, u.pi)({}, Qi(t.range, e, t.allDay)),
                                 { allDay: t.allDay }
                             );
                         })(t, e.dateEnv)
@@ -3118,20 +3113,20 @@
                     n
                 );
             }
-            function Wn(t, e, n) {
+            function Dn(t, e, n) {
                 var r = n.dateEnv,
                     i = n.options,
                     o = e;
                 return (
                     t
-                        ? ((o = V(o)),
+                        ? ((o = H(o)),
                           (o = r.add(o, i.defaultAllDayEventDuration)))
                         : (o = r.add(o, i.defaultTimedEventDuration)),
                     o
                 );
             }
-            function Vn(t, e, n, r) {
-                var i = Jt(t.defs, e),
+            function Cn(t, e, n, r) {
+                var i = Nt(t.defs, e),
                     o = { defs: {}, instances: {} };
                 for (var a in t.defs) o.defs[a] = Fl(t.defs[a], i[a], n, r);
                 for (var l in t.instances) {
@@ -3173,7 +3168,7 @@
                     s = r.standardProps && !1 === r.standardProps.hasEnd,
                     l = (0, u.pi)({}, t);
                 return (
-                    a && (l.range = Hi(l.range)),
+                    a && (l.range = Ni(l.range)),
                     r.datesDelta &&
                         n.startEditable &&
                         (l.range = {
@@ -3195,15 +3190,15 @@
                     s &&
                         (l.range = {
                             start: l.range.start,
-                            end: Wn(e.allDay, l.range.start, i),
+                            end: Dn(e.allDay, l.range.start, i),
                         }),
                     e.allDay &&
                         (l.range = {
-                            start: V(l.range.start),
-                            end: V(l.range.end),
+                            start: H(l.range.start),
+                            end: H(l.range.end),
                         }),
                     l.range.end < l.range.start &&
-                        (l.range.end = Wn(e.allDay, l.range.start, i)),
+                        (l.range.end = Dn(e.allDay, l.range.start, i)),
                     l
                 );
             }
@@ -3284,10 +3279,10 @@
                     success: A,
                     failure: A,
                 };
-            function Yi(t, e, n) {
+            function Vi(t, e, n) {
                 var r;
                 if (
-                    (void 0 === n && (n = qi(e)),
+                    (void 0 === n && (n = Gi(e)),
                     'string' == typeof t
                         ? (r = { url: t })
                         : 'function' == typeof t || Array.isArray(t)
@@ -3295,7 +3290,7 @@
                         : 'object' == typeof t && t && (r = t),
                     r)
                 ) {
-                    var i = Qt(r, n),
+                    var i = St(r, n),
                         o = i.refined,
                         a = i.extra,
                         s = (function Wl(t, e) {
@@ -3321,22 +3316,22 @@
                             success: o.success,
                             failure: o.failure,
                             publicId: o.id || '',
-                            sourceId: qe(),
+                            sourceId: Ie(),
                             sourceDefId: s.sourceDefId,
                             meta: s.meta,
-                            ui: Zt(o, e),
+                            ui: kt(o, e),
                             extendedProps: a,
                         };
                 }
                 return null;
             }
-            function qi(t) {
+            function Gi(t) {
                 return (0, u.pi)(
-                    (0, u.pi)((0, u.pi)({}, Gt), Ql),
+                    (0, u.pi)((0, u.pi)({}, Tt), Ql),
                     t.pluginHooks.eventSourceRefiners
                 );
             }
-            function bt(t, e) {
+            function Ke(t, e) {
                 return (
                     'function' == typeof t && (t = t()),
                     null == t ? e.createNowMarker() : e.createMarker(t)
@@ -3498,7 +3493,7 @@
                             this.unselect(),
                                 this.dispatch({
                                     type: 'CHANGE_DATE',
-                                    dateMarker: bt(
+                                    dateMarker: Ke(
                                         e.calendarOptions.now,
                                         e.dateEnv
                                     ),
@@ -3514,7 +3509,7 @@
                         }),
                         (t.prototype.incrementDate = function (e) {
                             var n = this.getCurrentData(),
-                                r = U(e);
+                                r = M(e);
                             r &&
                                 (this.unselect(),
                                 this.dispatch({
@@ -3528,14 +3523,14 @@
                         }),
                         (t.prototype.formatDate = function (e, n) {
                             var r = this.getCurrentData().dateEnv;
-                            return r.format(r.createMarker(e), Z(n));
+                            return r.format(r.createMarker(e), O(n));
                         }),
                         (t.prototype.formatRange = function (e, n, r) {
                             var i = this.getCurrentData().dateEnv;
                             return i.formatRange(
                                 i.createMarker(e),
                                 i.createMarker(n),
-                                Z(r),
+                                O(r),
                                 r
                             );
                         }),
@@ -3556,7 +3551,7 @@
                             var i = this.getCurrentData(),
                                 o = (function Il(t, e, n) {
                                     var r = (function Nl(t, e) {
-                                            var n = Qt(t, Ml),
+                                            var n = St(t, Ml),
                                                 r = n.refined,
                                                 i = n.extra,
                                                 o = r.start
@@ -3598,13 +3593,13 @@
                                         i.end = e.add(i.start, n);
                                     }
                                     return r;
-                                })(r, i.dateEnv, U({ days: 1 }));
+                                })(r, i.dateEnv, M({ days: 1 }));
                             o &&
                                 (this.dispatch({
                                     type: 'SELECT_DATES',
                                     selection: o,
                                 }),
-                                ji(o, null, i));
+                                Wi(o, null, i));
                         }),
                         (t.prototype.unselect = function (e) {
                             var n = this.getCurrentData();
@@ -3618,7 +3613,7 @@
                                 })(e, n));
                         }),
                         (t.prototype.addEvent = function (e, n) {
-                            if (e instanceof j) {
+                            if (e instanceof z) {
                                 var r = e._def,
                                     i = e._instance;
                                 return (
@@ -3627,7 +3622,7 @@
                                     ] ||
                                         (this.dispatch({
                                             type: 'ADD_EVENTS',
-                                            eventStore: yt({
+                                            eventStore: Xe({
                                                 def: r,
                                                 instance: i,
                                             }),
@@ -3638,9 +3633,9 @@
                             }
                             var s,
                                 a = this.getCurrentData();
-                            if (n instanceof Ye) s = n.internalEventSource;
+                            if (n instanceof Me) s = n.internalEventSource;
                             else if ('boolean' == typeof n)
-                                n && (s = Tn(a.eventSources)[0]);
+                                n && (s = sn(a.eventSources)[0]);
                             else if (null != n) {
                                 var l = this.getEventSourceById(n);
                                 if (!l)
@@ -3654,9 +3649,9 @@
                                     );
                                 s = l.internalEventSource;
                             }
-                            var c = Oi(e, s, a, !1);
+                            var c = Ii(e, s, a, !1);
                             if (c) {
-                                var f = new j(
+                                var d = new z(
                                     a,
                                     c.def,
                                     c.def.recurringDef ? null : c.instance
@@ -3664,10 +3659,10 @@
                                 return (
                                     this.dispatch({
                                         type: 'ADD_EVENTS',
-                                        eventStore: yt(c),
+                                        eventStore: Xe(c),
                                     }),
-                                    this.triggerEventAdd(f),
-                                    f
+                                    this.triggerEventAdd(d),
+                                    d
                                 );
                             }
                             return null;
@@ -3680,7 +3675,7 @@
                                 revert: function () {
                                     n.dispatch({
                                         type: 'REMOVE_EVENTS',
-                                        eventStore: Ji(e),
+                                        eventStore: Zi(e),
                                     });
                                 },
                             });
@@ -3694,11 +3689,11 @@
                                 var s = i[a];
                                 if (s.publicId === e) {
                                     if (s.recurringDef)
-                                        return new j(n, s, null);
+                                        return new z(n, s, null);
                                     for (var l in o) {
                                         var c = o[l];
                                         if (c.defId === s.defId)
-                                            return new j(n, s, c);
+                                            return new z(n, s, c);
                                     }
                                 }
                             }
@@ -3706,7 +3701,7 @@
                         }),
                         (t.prototype.getEvents = function () {
                             var e = this.getCurrentData();
-                            return Le(e.eventStore, e);
+                            return xe(e.eventStore, e);
                         }),
                         (t.prototype.removeAllEvents = function () {
                             this.dispatch({ type: 'REMOVE_ALL_EVENTS' });
@@ -3715,19 +3710,19 @@
                             var e = this.getCurrentData(),
                                 n = e.eventSources,
                                 r = [];
-                            for (var i in n) r.push(new Ye(e, n[i]));
+                            for (var i in n) r.push(new Me(e, n[i]));
                             return r;
                         }),
                         (t.prototype.getEventSourceById = function (e) {
                             var n = this.getCurrentData(),
                                 r = n.eventSources;
                             for (var i in ((e = String(e)), r))
-                                if (r[i].publicId === e) return new Ye(n, r[i]);
+                                if (r[i].publicId === e) return new Me(n, r[i]);
                             return null;
                         }),
                         (t.prototype.addEventSource = function (e) {
                             var n = this.getCurrentData();
-                            if (e instanceof Ye)
+                            if (e instanceof Me)
                                 return (
                                     n.eventSources[
                                         e.internalEventSource.sourceId
@@ -3738,13 +3733,13 @@
                                         }),
                                     e
                                 );
-                            var r = Yi(e, n);
+                            var r = Vi(e, n);
                             return r
                                 ? (this.dispatch({
                                       type: 'ADD_EVENT_SOURCES',
                                       sources: [r],
                                   }),
-                                  new Ye(n, r))
+                                  new Me(n, r))
                                 : null;
                         }),
                         (t.prototype.removeAllEventSources = function () {
@@ -3757,13 +3752,13 @@
                             });
                         }),
                         (t.prototype.scrollToTime = function (e) {
-                            var n = U(e);
+                            var n = M(e);
                             n && this.trigger('_scrollRequest', { time: n });
                         }),
                         t
                     );
                 })(),
-                j = (function () {
+                z = (function () {
                     function t(e, n, r) {
                         (this._context = e),
                             (this._def = n),
@@ -3772,23 +3767,23 @@
                     return (
                         (t.prototype.setProp = function (e, n) {
                             var r, i;
-                            if (e in Bi)
+                            if (e in Mi)
                                 console.warn(
                                     "Could not set date-related prop 'name'. Use one of the date-related methods instead."
                                 );
                             else if ('id' === e)
-                                (n = jt[e](n)),
+                                (n = _t[e](n)),
                                     this.mutate({
                                         standardProps: { publicId: n },
                                     });
-                            else if (e in jt)
-                                (n = jt[e](n)),
+                            else if (e in _t)
+                                (n = _t[e](n)),
                                     this.mutate({
                                         standardProps:
                                             ((r = {}), (r[e] = n), r),
                                     });
-                            else if (e in Gt) {
-                                var o = Gt[e](n);
+                            else if (e in Tt) {
+                                var o = Tt[e](n);
                                 'color' === e
                                     ? (o = {
                                           backgroundColor: n,
@@ -3819,7 +3814,7 @@
                             var r = this._context.dateEnv,
                                 i = r.createMarker(e);
                             if (i && this._instance) {
-                                var a = $e(
+                                var a = He(
                                     this._instance.range.start,
                                     i,
                                     r,
@@ -3841,7 +3836,7 @@
                                 this._instance
                             )
                                 if (i) {
-                                    var o = $e(
+                                    var o = He(
                                         this._instance.range.end,
                                         i,
                                         r,
@@ -3865,10 +3860,10 @@
                                 this._instance
                             ) {
                                 var l = this._instance.range;
-                                !0 === r.allDay && (l = Hi(l));
-                                var c = $e(l.start, a, i, r.granularity);
+                                !0 === r.allDay && (l = Ni(l));
+                                var c = He(l.start, a, i, r.granularity);
                                 if (s) {
-                                    var f = $e(l.end, s, i, r.granularity);
+                                    var d = He(l.end, s, i, r.granularity);
                                     !(function Gs(t, e) {
                                         return (
                                             t.years === e.years &&
@@ -3876,10 +3871,10 @@
                                             t.days === e.days &&
                                             t.milliseconds === e.milliseconds
                                         );
-                                    })(c, f)
+                                    })(c, d)
                                         ? this.mutate({
                                               startDelta: c,
-                                              endDelta: f,
+                                              endDelta: d,
                                               standardProps: o,
                                           })
                                         : this.mutate({
@@ -3895,15 +3890,15 @@
                             }
                         }),
                         (t.prototype.moveStart = function (e) {
-                            var n = U(e);
+                            var n = M(e);
                             n && this.mutate({ startDelta: n });
                         }),
                         (t.prototype.moveEnd = function (e) {
-                            var n = U(e);
+                            var n = M(e);
                             n && this.mutate({ endDelta: n });
                         }),
                         (t.prototype.moveDates = function (e) {
-                            var n = U(e);
+                            var n = M(e);
                             n && this.mutate({ datesDelta: n });
                         }),
                         (t.prototype.setAllDay = function (e, n) {
@@ -3920,7 +3915,7 @@
                         (t.prototype.formatRange = function (e) {
                             var n = this._context.dateEnv,
                                 r = this._instance,
-                                i = Z(e);
+                                i = O(e);
                             return this._def.hasEnd
                                 ? n.formatRange(r.range.start, r.range.end, i, {
                                       forcedStartTzo: r.forcedStartTzo,
@@ -3936,8 +3931,8 @@
                                 var r = this._def,
                                     i = this._context,
                                     o = i.getCurrentData().eventStore,
-                                    a = Pn(o, n.instanceId);
-                                a = Vn(
+                                    a = vn(o, n.instanceId);
+                                a = Cn(
                                     a,
                                     {
                                         '': {
@@ -3967,7 +3962,7 @@
                                     i.emitter.trigger('eventChange', {
                                         oldEvent: l,
                                         event: this,
-                                        relatedEvents: Le(a, i, n),
+                                        relatedEvents: xe(a, i, n),
                                         revert: function () {
                                             i.dispatch({
                                                 type: 'RESET_EVENTS',
@@ -3979,7 +3974,7 @@
                         }),
                         (t.prototype.remove = function () {
                             var e = this._context,
-                                n = Ji(this);
+                                n = Zi(this);
                             e.dispatch({
                                 type: 'REMOVE_EVENTS',
                                 eventStore: n,
@@ -3999,7 +3994,7 @@
                             get: function () {
                                 var e = this._def.sourceId;
                                 return e
-                                    ? new Ye(
+                                    ? new Me(
                                           this._context,
                                           this._context.getCurrentData().eventSources[
                                               e
@@ -4218,7 +4213,7 @@
                         t
                     );
                 })();
-            function Ji(t) {
+            function Zi(t) {
                 var e,
                     n,
                     r = t._def,
@@ -4228,20 +4223,20 @@
                     instances: i ? ((n = {}), (n[i.instanceId] = i), n) : {},
                 };
             }
-            function Le(t, e, n) {
+            function xe(t, e, n) {
                 var r = t.defs,
                     i = t.instances,
                     o = [],
                     a = n ? n.instanceId : '';
                 for (var s in i) {
                     var l = i[s];
-                    l.instanceId !== a && o.push(new j(e, r[l.defId], l));
+                    l.instanceId !== a && o.push(new z(e, r[l.defId], l));
                 }
                 return o;
             }
-            var Xi = {};
+            var ji = {};
             !(function jl(t, e) {
-                Xi[t] = e;
+                ji[t] = e;
             })(
                 'gregory',
                 (function () {
@@ -4257,10 +4252,10 @@
                             return e.getUTCDate();
                         }),
                         (t.prototype.arrayToMarker = function (e) {
-                            return se(e);
+                            return q(e);
                         }),
                         (t.prototype.markerToArray = function (e) {
-                            return ke(e);
+                            return me(e);
                         }),
                         t
                     );
@@ -4268,7 +4263,7 @@
             );
             var Jl =
                     /^\s*(\d{4})(-?(\d{2})(-?(\d{2})([T ](\d{2}):?(\d{2})(:?(\d{2})(\.(\d+))?)?(Z|(([-+])(\d{2})(:?(\d{2}))?))?)?)?)?$/,
-                Ki = (function () {
+                Yi = (function () {
                     function t(e) {
                         var n = (this.timeZone = e.timeZone),
                             r = 'local' !== n && 'UTC' !== n;
@@ -4281,7 +4276,7 @@
                                 !r || this.namedTimeZoneImpl
                             )),
                             (this.calendarSystem = (function Yl(t) {
-                                return new Xi[t]();
+                                return new ji[t]();
                             })(e.calendarSystem)),
                             (this.locale = e.locale),
                             (this.weekDow = e.locale.week.dow),
@@ -4312,7 +4307,7 @@
                         (t.prototype.createNowMarker = function () {
                             return this.canComputeOffset
                                 ? this.timestampToMarker(new Date().valueOf())
-                                : se(yi(new Date()));
+                                : q(vi(new Date()));
                         }),
                         (t.prototype.createMarkerMeta = function (e) {
                             if ('string' == typeof e) return this.parse(e);
@@ -4324,8 +4319,8 @@
                                     ? ((e = e.valueOf()),
                                       isNaN(e) ||
                                           (n = this.timestampToMarker(e)))
-                                    : Array.isArray(e) && (n = se(e)),
-                                null !== n && Ai(n)
+                                    : Array.isArray(e) && (n = q(e)),
+                                null !== n && gi(n)
                                     ? {
                                           marker: n,
                                           isTimeUnspecified: !1,
@@ -4351,7 +4346,7 @@
                                                 : 0
                                         )
                                     );
-                                    if (Ai(n)) {
+                                    if (gi(n)) {
                                         var r = null;
                                         return (
                                             e[13] &&
@@ -4429,7 +4424,7 @@
                         }),
                         (t.prototype.diffWholeYears = function (e, n) {
                             var r = this.calendarSystem;
-                            return Me(e) === Me(n) &&
+                            return ye(e) === ye(n) &&
                                 r.getMarkerDay(e) === r.getMarkerDay(n) &&
                                 r.getMarkerMonth(e) === r.getMarkerMonth(n)
                                 ? r.getMarkerYear(n) - r.getMarkerYear(e)
@@ -4437,7 +4432,7 @@
                         }),
                         (t.prototype.diffWholeMonths = function (e, n) {
                             var r = this.calendarSystem;
-                            return Me(e) === Me(n) &&
+                            return ye(e) === ye(n) &&
                                 r.getMarkerDay(e) === r.getMarkerDay(n)
                                 ? r.getMarkerMonth(n) -
                                       r.getMarkerMonth(e) +
@@ -4453,31 +4448,31 @@
                                 : null !== (r = this.diffWholeMonths(e, n))
                                 ? { unit: 'month', value: r }
                                 : ((r = (function Ns(t, e) {
-                                      var n = Bt(t, e);
+                                      var n = yt(t, e);
                                       return null !== n && n % 7 == 0
                                           ? n / 7
                                           : null;
                                   })(e, n)),
                                   null !== r
                                       ? { unit: 'week', value: r }
-                                      : null !== (r = Bt(e, n))
+                                      : null !== (r = yt(e, n))
                                       ? { unit: 'day', value: r }
-                                      : ((r = (function _s(t, e) {
+                                      : ((r = (function ks(t, e) {
                                             return (
                                                 (e.valueOf() - t.valueOf()) /
                                                 36e5
                                             );
                                         })(e, n)),
-                                        Pt(r)
+                                        mt(r)
                                             ? { unit: 'hour', value: r }
-                                            : ((r = (function ks(t, e) {
+                                            : ((r = (function _s(t, e) {
                                                   return (
                                                       (e.valueOf() -
                                                           t.valueOf()) /
                                                       6e4
                                                   );
                                               })(e, n)),
-                                              Pt(r)
+                                              mt(r)
                                                   ? { unit: 'minute', value: r }
                                                   : ((r = (function Ms(t, e) {
                                                         return (
@@ -4486,7 +4481,7 @@
                                                             1e3
                                                         );
                                                     })(e, n)),
-                                                    Pt(r)
+                                                    mt(r)
                                                         ? {
                                                               unit: 'second',
                                                               value: r,
@@ -4508,17 +4503,17 @@
                                 null !== (i = this.diffWholeYears(e, n))
                                 ? i /
                                       (function Ys(t) {
-                                          return Ke(t) / 365;
+                                          return Be(t) / 365;
                                       })(r)
                                 : r.months &&
                                   null !== (i = this.diffWholeMonths(e, n))
                                 ? i /
                                   (function qs(t) {
-                                      return Ke(t) / 30;
+                                      return Be(t) / 30;
                                   })(r)
-                                : r.days && null !== (i = Bt(e, n))
-                                ? i / Ke(r)
-                                : (n.valueOf() - e.valueOf()) / fe(r);
+                                : r.days && null !== (i = yt(e, n))
+                                ? i / Be(r)
+                                : (n.valueOf() - e.valueOf()) / J(r);
                         }),
                         (t.prototype.startOf = function (e, n) {
                             return 'year' === n
@@ -4528,10 +4523,10 @@
                                 : 'week' === n
                                 ? this.startOfWeek(e)
                                 : 'day' === n
-                                ? V(e)
+                                ? H(e)
                                 : 'hour' === n
                                 ? (function Ps(t) {
-                                      return se([
+                                      return q([
                                           t.getUTCFullYear(),
                                           t.getUTCMonth(),
                                           t.getUTCDate(),
@@ -4540,7 +4535,7 @@
                                   })(e)
                                 : 'minute' === n
                                 ? (function Bs(t) {
-                                      return se([
+                                      return q([
                                           t.getUTCFullYear(),
                                           t.getUTCMonth(),
                                           t.getUTCDate(),
@@ -4549,8 +4544,8 @@
                                       ]);
                                   })(e)
                                 : 'second' === n
-                                ? (function Os(t) {
-                                      return se([
+                                ? (function Hs(t) {
+                                      return q([
                                           t.getUTCFullYear(),
                                           t.getUTCMonth(),
                                           t.getUTCDate(),
@@ -4583,11 +4578,11 @@
                         (t.prototype.computeWeekNumber = function (e) {
                             return this.weekNumberFunc
                                 ? this.weekNumberFunc(this.toDate(e))
-                                : (function Hs(t, e, n) {
+                                : (function Os(t, e, n) {
                                       var r = t.getUTCFullYear(),
-                                          i = Cn(t, r, e, n);
-                                      if (i < 1) return Cn(t, r - 1, e, n);
-                                      var o = Cn(t, r + 1, e, n);
+                                          i = on(t, r, e, n);
+                                      if (i < 1) return on(t, r - 1, e, n);
+                                      var o = on(t, r + 1, e, n);
                                       return o >= 1 ? Math.min(i, o) : i;
                                   })(e, this.weekDow, this.weekDoy);
                         }),
@@ -4609,7 +4604,7 @@
                         (t.prototype.formatRange = function (e, n, r, i) {
                             return (
                                 void 0 === i && (i = {}),
-                                i.isEndExclusive && (n = Fe(n, -1)),
+                                i.isEndExclusive && (n = Ce(n, -1)),
                                 r.formatRange(
                                     {
                                         marker: e,
@@ -4639,29 +4634,29 @@
                                         null != n.forcedTzo
                                             ? n.forcedTzo
                                             : this.offsetForMarker(e)),
-                                xi(e, r, n.omitTime)
+                                wi(e, r, n.omitTime)
                             );
                         }),
                         (t.prototype.timestampToMarker = function (e) {
                             return 'local' === this.timeZone
-                                ? se(yi(new Date(e)))
+                                ? q(vi(new Date(e)))
                                 : 'UTC' !== this.timeZone &&
                                   this.namedTimeZoneImpl
-                                ? se(this.namedTimeZoneImpl.timestampToArray(e))
+                                ? q(this.namedTimeZoneImpl.timestampToArray(e))
                                 : new Date(e);
                         }),
                         (t.prototype.offsetForMarker = function (e) {
                             return 'local' === this.timeZone
-                                ? -bi(ke(e)).getTimezoneOffset()
+                                ? -hi(me(e)).getTimezoneOffset()
                                 : 'UTC' === this.timeZone
                                 ? 0
                                 : this.namedTimeZoneImpl
-                                ? this.namedTimeZoneImpl.offsetForArray(ke(e))
+                                ? this.namedTimeZoneImpl.offsetForArray(me(e))
                                 : null;
                         }),
                         (t.prototype.toDate = function (e, n) {
                             return 'local' === this.timeZone
-                                ? bi(ke(e))
+                                ? hi(me(e))
                                 : 'UTC' === this.timeZone
                                 ? new Date(e.valueOf())
                                 : this.namedTimeZoneImpl
@@ -4669,7 +4664,7 @@
                                       e.valueOf() -
                                           1e3 *
                                               this.namedTimeZoneImpl.offsetForArray(
-                                                  ke(e)
+                                                  me(e)
                                               ) *
                                               60
                                   )
@@ -4679,7 +4674,7 @@
                     );
                 })(),
                 Kl = [],
-                $i = {
+                qi = {
                     code: 'en',
                     week: { dow: 0, doy: 4 },
                     direction: 'ltr',
@@ -4704,7 +4699,7 @@
                     moreLinkText: 'more',
                     noEventsText: 'No events to display',
                 },
-                eo = (0, u.pi)((0, u.pi)({}, $i), {
+                Ji = (0, u.pi)((0, u.pi)({}, qi), {
                     buttonHints: {
                         prev: 'Previous $0',
                         next: 'Next $0',
@@ -4720,11 +4715,11 @@
                         );
                     },
                 });
-            function to(t) {
+            function Xi(t) {
                 for (
                     var e = t.length > 0 ? t[0].code : 'en',
                         n = Kl.concat(t),
-                        r = { en: eo },
+                        r = { en: Ji },
                         i = 0,
                         o = n;
                     i < o.length;
@@ -4735,7 +4730,7 @@
                 }
                 return { map: r, defaultCode: e };
             }
-            function Gn(t, e) {
+            function Sn(t, e) {
                 return 'object' != typeof t || Array.isArray(t)
                     ? (function $l(t, e) {
                           var n = [].concat(t || []),
@@ -4754,13 +4749,13 @@
                                               if (e[o]) return e[o];
                                           }
                                       return null;
-                                  })(n, e) || eo;
-                          return no(t, n, r);
+                                  })(n, e) || Ji;
+                          return Ki(t, n, r);
                       })(t, e)
-                    : no(t.code, [t.code], t);
+                    : Ki(t.code, [t.code], t);
             }
-            function no(t, e, n) {
-                var r = xn([$i, n], ['buttonText']);
+            function Ki(t, e, n) {
+                var r = an([qi, n], ['buttonText']);
                 delete r.code;
                 var i = r.week;
                 return (
@@ -4774,7 +4769,7 @@
                     }
                 );
             }
-            var Zn,
+            var xn,
                 tc = {
                     startTime: '09:00',
                     endTime: '17:00',
@@ -4791,7 +4786,7 @@
                     t.top < e.bottom
                 );
             }
-            function io(t, e) {
+            function eo(t, e) {
                 var n = {
                     left: Math.max(t.left, e.left),
                     right: Math.min(t.right, e.right),
@@ -4800,10 +4795,10 @@
                 };
                 return n.left < n.right && n.top < n.bottom && n;
             }
-            function oo() {
+            function to() {
                 return (
-                    null == Zn &&
-                        (Zn = (function lc() {
+                    null == xn &&
+                        (xn = (function lc() {
                             if ('undefined' == typeof document) return !0;
                             var t = document.createElement('div');
                             (t.style.position = 'absolute'),
@@ -4818,22 +4813,22 @@
                             var n = t.querySelector('div').offsetHeight > 0;
                             return document.body.removeChild(t), n;
                         })()),
-                    Zn
+                    xn
                 );
             }
-            var jn = { defs: {}, instances: {} },
+            var Rn = { defs: {}, instances: {} },
                 cc = (function () {
                     function t() {
-                        (this.getKeysForEventDefs = I(
+                        (this.getKeysForEventDefs = x(
                             this._getKeysForEventDefs
                         )),
-                            (this.splitDateSelection = I(this._splitDateSpan)),
-                            (this.splitEventStore = I(this._splitEventStore)),
-                            (this.splitIndividualUi = I(
+                            (this.splitDateSelection = x(this._splitDateSpan)),
+                            (this.splitEventStore = x(this._splitEventStore)),
+                            (this.splitIndividualUi = x(
                                 this._splitIndividualUi
                             )),
-                            (this.splitEventDrag = I(this._splitInteraction)),
-                            (this.splitEventResize = I(this._splitInteraction)),
+                            (this.splitEventDrag = x(this._splitInteraction)),
+                            (this.splitEventResize = x(this._splitInteraction)),
                             (this.eventUiBuilders = {});
                     }
                     return (
@@ -4846,36 +4841,36 @@
                                 s = this.splitEventStore(e.eventStore, i),
                                 l = this.splitEventDrag(e.eventDrag),
                                 c = this.splitEventResize(e.eventResize),
-                                f = {};
-                            for (var d in ((this.eventUiBuilders = Ee(
+                                d = {};
+                            for (var f in ((this.eventUiBuilders = le(
                                 r,
                                 function (b, E) {
-                                    return n.eventUiBuilders[E] || I(fc);
+                                    return n.eventUiBuilders[E] || x(dc);
                                 }
                             )),
                             r)) {
-                                var p = r[d],
-                                    v = s[d] || jn;
-                                f[d] = {
+                                var p = r[f],
+                                    v = s[f] || Rn;
+                                d[f] = {
                                     businessHours:
                                         p.businessHours || e.businessHours,
-                                    dateSelection: o[d] || null,
+                                    dateSelection: o[f] || null,
                                     eventStore: v,
-                                    eventUiBases: (0, this.eventUiBuilders[d])(
+                                    eventUiBases: (0, this.eventUiBuilders[f])(
                                         e.eventUiBases[''],
                                         p.ui,
-                                        a[d]
+                                        a[f]
                                     ),
                                     eventSelection: v.instances[
                                         e.eventSelection
                                     ]
                                         ? e.eventSelection
                                         : '',
-                                    eventDrag: l[d] || null,
-                                    eventResize: c[d] || null,
+                                    eventDrag: l[f] || null,
+                                    eventResize: c[f] || null,
                                 };
                             }
-                            return f;
+                            return d;
                         }),
                         (t.prototype._splitDateSpan = function (e) {
                             var n = {};
@@ -4890,7 +4885,7 @@
                         }),
                         (t.prototype._getKeysForEventDefs = function (e) {
                             var n = this;
-                            return Ee(e.defs, function (r) {
+                            return le(e.defs, function (r) {
                                 return n.getKeysForEventDef(r);
                             });
                         }),
@@ -4903,14 +4898,14 @@
                                     o[(c = l[s])] ||
                                         (o[c] = { defs: {}, instances: {} }),
                                         (o[c].defs[a] = r[a]);
-                            for (var f in i)
+                            for (var d in i)
                                 for (
-                                    var d = i[f], p = 0, v = n[d.defId];
+                                    var f = i[d], p = 0, v = n[f.defId];
                                     p < v.length;
                                     p++
                                 ) {
                                     var c;
-                                    o[(c = v[p])] && (o[c].instances[f] = d);
+                                    o[(c = v[p])] && (o[c].instances[d] = f);
                                 }
                             return o;
                         }),
@@ -4947,8 +4942,8 @@
                                     a = function (l) {
                                         n[l] ||
                                             (n[l] = {
-                                                affectedEvents: r[l] || jn,
-                                                mutatedEvents: o[l] || jn,
+                                                affectedEvents: r[l] || Rn,
+                                                mutatedEvents: o[l] || Rn,
                                                 isEvent: e.isEvent,
                                             });
                                     };
@@ -4960,24 +4955,24 @@
                         t
                     );
                 })();
-            function fc(t, e, n) {
+            function dc(t, e, n) {
                 var r = [];
                 t && r.push(t), e && r.push(e);
-                var i = { '': Pi(r) };
+                var i = { '': _i(r) };
                 return n && (0, u.pi)(i, n), i;
             }
-            function ao(t, e, n, r) {
+            function no(t, e, n, r) {
                 return {
                     dow: t.getUTCDay(),
-                    isDisabled: Boolean(r && !Ne(r.activeRange, t)),
-                    isOther: Boolean(r && !Ne(r.currentRange, t)),
-                    isToday: Boolean(e && Ne(e, t)),
+                    isDisabled: Boolean(r && !Ae(r.activeRange, t)),
+                    isOther: Boolean(r && !Ae(r.currentRange, t)),
+                    isToday: Boolean(e && Ae(e, t)),
                     isPast: Boolean(n ? t < n : !!e && t < e.start),
                     isFuture: Boolean(n ? t > n : !!e && t >= e.end),
                 };
             }
-            function Yn(t, e) {
-                var n = ['fc-day', 'fc-day-' + gi[t.dow]];
+            function Tn(t, e) {
+                var n = ['fc-day', 'fc-day-' + ui[t.dow]];
                 return (
                     t.isDisabled
                         ? n.push('fc-day-disabled')
@@ -4990,41 +4985,41 @@
                     n
                 );
             }
-            var dc = Z({ year: 'numeric', month: 'long', day: 'numeric' }),
-                uc = Z({ week: 'long' });
-            function Xt(t, e, n, r) {
+            var fc = O({ year: 'numeric', month: 'long', day: 'numeric' }),
+                uc = O({ week: 'long' });
+            function Pt(t, e, n, r) {
                 void 0 === n && (n = 'day'), void 0 === r && (r = !0);
                 var i = t.dateEnv,
                     o = t.options,
                     a = t.calendarApi,
-                    s = i.format(e, 'week' === n ? uc : dc);
+                    s = i.format(e, 'week' === n ? uc : fc);
                 if (o.navLinks) {
                     var l = i.toDate(e),
-                        c = function (f) {
-                            var d =
+                        c = function (d) {
+                            var f =
                                 'day' === n
                                     ? o.navLinkDayClick
                                     : 'week' === n
                                     ? o.navLinkWeekClick
                                     : null;
-                            'function' == typeof d
-                                ? d.call(a, i.toDate(e), f)
-                                : ('string' == typeof d && (n = d),
+                            'function' == typeof f
+                                ? f.call(a, i.toDate(e), d)
+                                : ('string' == typeof f && (n = f),
                                   a.zoomTo(e, n));
                         };
                     return (0, u.pi)(
                         {
-                            title: gt(o.navLinkHint, [s, l], s),
+                            title: qe(o.navLinkHint, [s, l], s),
                             'data-navlink': '',
                         },
-                        r ? pi(c) : { onClick: c }
+                        r ? ci(c) : { onClick: c }
                     );
                 }
                 return { 'aria-label': s };
             }
-            var Jn,
-                qn = null;
-            function so(t) {
+            var _n,
+                kn = null;
+            function ro(t) {
                 return {
                     x: t.offsetHeight - t.clientHeight,
                     y: t.offsetWidth - t.clientWidth,
@@ -5032,7 +5027,7 @@
             }
             function yc(t, e, n) {
                 void 0 === e && (e = !1);
-                var r = n ? t.getBoundingClientRect() : Xn(t),
+                var r = n ? t.getBoundingClientRect() : Mn(t),
                     i = (function mc(t, e) {
                         void 0 === e && (e = !1);
                         var n = window.getComputedStyle(t),
@@ -5040,9 +5035,9 @@
                             i = parseInt(n.borderRightWidth, 10) || 0,
                             o = parseInt(n.borderTopWidth, 10) || 0,
                             a = parseInt(n.borderBottomWidth, 10) || 0,
-                            s = so(t),
+                            s = ro(t),
                             l = s.y - r - i,
-                            f = {
+                            d = {
                                 borderLeft: r,
                                 borderRight: i,
                                 borderTop: o,
@@ -5054,11 +5049,11 @@
                         return (
                             (function pc() {
                                 return (
-                                    null === qn &&
-                                        (qn = (function vc() {
+                                    null === kn &&
+                                        (kn = (function vc() {
                                             var t =
                                                 document.createElement('div');
-                                            ht(t, {
+                                            Ye(t, {
                                                 position: 'absolute',
                                                 top: -1e3,
                                                 left: 0,
@@ -5073,23 +5068,23 @@
                                                 t.firstChild.getBoundingClientRect()
                                                     .left >
                                                 t.getBoundingClientRect().left;
-                                            return Dn(t), n;
+                                            return nn(t), n;
                                         })()),
-                                    qn
+                                    kn
                                 );
                             })() && 'rtl' === n.direction
-                                ? (f.scrollbarLeft = l)
-                                : (f.scrollbarRight = l),
+                                ? (d.scrollbarLeft = l)
+                                : (d.scrollbarRight = l),
                             e &&
-                                ((f.paddingLeft =
+                                ((d.paddingLeft =
                                     parseInt(n.paddingLeft, 10) || 0),
-                                (f.paddingRight =
+                                (d.paddingRight =
                                     parseInt(n.paddingRight, 10) || 0),
-                                (f.paddingTop =
+                                (d.paddingTop =
                                     parseInt(n.paddingTop, 10) || 0),
-                                (f.paddingBottom =
+                                (d.paddingBottom =
                                     parseInt(n.paddingBottom, 10) || 0)),
-                            f
+                            d
                         );
                     })(t, e),
                     o = {
@@ -5107,7 +5102,7 @@
                     o
                 );
             }
-            function Xn(t) {
+            function Mn(t) {
                 var e = t.getBoundingClientRect();
                 return {
                     left: e.left + window.pageXOffset,
@@ -5116,7 +5111,7 @@
                     bottom: e.bottom + window.pageYOffset,
                 };
             }
-            function lo(t) {
+            function io(t) {
                 for (var e = []; t instanceof HTMLElement; ) {
                     var n = window.getComputedStyle(t);
                     if ('fixed' === n.position) break;
@@ -5127,7 +5122,7 @@
                 }
                 return e;
             }
-            var Kt = (function () {
+            var Bt = (function () {
                     function t() {
                         (this.handlers = {}), (this.thisContext = null);
                     }
@@ -5178,7 +5173,7 @@
                         t
                     );
                 })(),
-                At = (function () {
+                $e = (function () {
                     function t(e, n, r, i) {
                         this.els = n;
                         var o = (this.originClientRect =
@@ -5234,7 +5229,7 @@
                         t
                     );
                 })(),
-                Kn = (function () {
+                In = (function () {
                     function t() {}
                     return (
                         (t.prototype.getMaxScrollTop = function () {
@@ -5270,7 +5265,7 @@
                         t
                     );
                 })(),
-                Sc = (function (t) {
+                Cc = (function (t) {
                     function e(n) {
                         var r = t.call(this) || this;
                         return (r.el = n), r;
@@ -5303,8 +5298,8 @@
                         }),
                         e
                     );
-                })(Kn),
-                Cc = (function (t) {
+                })(In),
+                Sc = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -5336,8 +5331,8 @@
                         }),
                         e
                     );
-                })(Kn),
-                Et = (function () {
+                })(In),
+                et = (function () {
                     function t(e) {
                         this.iconOverrideOption &&
                             this.setIconOverride(e[this.iconOverrideOption]);
@@ -5384,10 +5379,10 @@
                         t
                     );
                 })();
-            (Et.prototype.classes = {}),
-                (Et.prototype.iconClasses = {}),
-                (Et.prototype.baseIconClass = ''),
-                (Et.prototype.iconOverridePrefix = '');
+            (et.prototype.classes = {}),
+                (et.prototype.iconClasses = {}),
+                (et.prototype.baseIconClass = ''),
+                (et.prototype.iconOverridePrefix = '');
             var xc = (function () {
                     function t(e, n, r, i) {
                         var o = this;
@@ -5429,8 +5424,8 @@
                         t
                     );
                 })(),
-                Se = oi({});
-            function Tc(t, e, n, r, i, o, a, s, l, c, f, d, p) {
+                fe = ti({});
+            function Rc(t, e, n, r, i, o, a, s, l, c, d, f, p) {
                 return {
                     dateEnv: i,
                     options: n,
@@ -5438,7 +5433,7 @@
                     emitter: c,
                     dispatch: s,
                     getCurrentData: l,
-                    calendarApi: f,
+                    calendarApi: d,
                     viewSpec: t,
                     viewApi: e,
                     dateProfileGenerator: r,
@@ -5451,13 +5446,13 @@
                         c.off('_resize', v);
                     },
                     createScrollResponder: function (v) {
-                        return new xc(v, c, U(n.scrollTime), n.scrollTimeReset);
+                        return new xc(v, c, M(n.scrollTime), n.scrollTimeReset);
                     },
-                    registerInteractiveComponent: d,
+                    registerInteractiveComponent: f,
                     unregisterInteractiveComponent: p,
                 };
             }
-            var $t = (function (t) {
+            var Ht = (function (t) {
                 function e() {
                     return (null !== t && t.apply(this, arguments)) || this;
                 }
@@ -5467,41 +5462,41 @@
                         return (
                             this.debug &&
                                 console.log(
-                                    wi(n, this.props),
-                                    wi(r, this.state)
+                                    yi(n, this.props),
+                                    yi(r, this.state)
                                 ),
-                            !Di(this.props, n, this.propEquality) ||
-                                !Di(this.state, r, this.stateEquality)
+                            !bi(this.props, n, this.propEquality) ||
+                                !bi(this.state, r, this.stateEquality)
                         );
                     }),
-                    (e.addPropsEquality = Rc),
-                    (e.addStateEquality = _c),
-                    (e.contextType = Se),
+                    (e.addPropsEquality = Tc),
+                    (e.addStateEquality = kc),
+                    (e.contextType = fe),
                     e
                 );
-            })(wn);
-            ($t.prototype.propEquality = {}), ($t.prototype.stateEquality = {});
-            var L = (function (t) {
+            })(tn);
+            (Ht.prototype.propEquality = {}), (Ht.prototype.stateEquality = {});
+            var N = (function (t) {
                 function e() {
                     return (null !== t && t.apply(this, arguments)) || this;
                 }
-                return (0, u.ZT)(e, t), (e.contextType = Se), e;
-            })($t);
-            function Rc(t) {
+                return (0, u.ZT)(e, t), (e.contextType = fe), e;
+            })(Ht);
+            function Tc(t) {
                 var e = Object.create(this.prototype.propEquality);
                 (0, u.pi)(e, t), (this.prototype.propEquality = e);
             }
-            function _c(t) {
+            function kc(t) {
                 var e = Object.create(this.prototype.stateEquality);
                 (0, u.pi)(e, t), (this.prototype.stateEquality = e);
             }
-            function me(t, e) {
+            function te(t, e) {
                 'function' == typeof t ? t(e) : t && (t.current = e);
             }
-            var Ce = (function (t) {
+            var ue = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
-                    return (n.uid = qe()), n;
+                    return (n.uid = Ie()), n;
                 }
                 return (
                     (0, u.ZT)(e, t),
@@ -5513,23 +5508,23 @@
                         return (
                             !this.props.eventDrag &&
                             !this.props.eventResize &&
-                            !ne(n, '.fc-event-mirror')
+                            !V(n, '.fc-event-mirror')
                         );
                     }),
                     (e.prototype.isValidDateDownEl = function (n) {
                         return !(
-                            ne(n, '.fc-event:not(.fc-bg-event)') ||
-                            ne(n, '.fc-more-link') ||
-                            ne(n, 'a[data-navlink]') ||
-                            ne(n, '.fc-popover')
+                            V(n, '.fc-event:not(.fc-bg-event)') ||
+                            V(n, '.fc-more-link') ||
+                            V(n, 'a[data-navlink]') ||
+                            V(n, '.fc-popover')
                         );
                     }),
                     e
                 );
-            })(L);
-            function xe(t) {
+            })(N);
+            function pe(t) {
                 return {
-                    id: qe(),
+                    id: Ie(),
                     deps: t.deps || [],
                     reducers: t.reducers || [],
                     isLoadingFuncs: t.isLoadingFuncs || [],
@@ -5661,22 +5656,22 @@
                     ),
                 };
             }
-            var Be = (function (t) {
+            var we = (function (t) {
                 function e() {
                     return (null !== t && t.apply(this, arguments)) || this;
                 }
                 return (0, u.ZT)(e, t), e;
-            })(Et);
-            function $n(t, e, n, r) {
+            })(et);
+            function Nn(t, e, n, r) {
                 if (e[t]) return e[t];
                 var i = (function Pc(t, e, n, r) {
                     var i = n[t],
                         o = r[t],
-                        a = function (f) {
-                            return i && null !== i[f]
-                                ? i[f]
-                                : o && null !== o[f]
-                                ? o[f]
+                        a = function (d) {
+                            return i && null !== i[d]
+                                ? i[d]
+                                : o && null !== o[d]
+                                ? o[d]
                                 : null;
                         },
                         s = a('component'),
@@ -5687,7 +5682,7 @@
                             throw new Error(
                                 "Can't have a custom view type that references itself"
                             );
-                        c = $n(l, e, n, r);
+                        c = Nn(l, e, n, r);
                     }
                     return (
                         !s && c && (s = c.component),
@@ -5709,39 +5704,39 @@
                 })(t, e, n, r);
                 return i && (e[t] = i), i;
             }
-            (Be.prototype.classes = {
+            (we.prototype.classes = {
                 root: 'fc-theme-standard',
                 tableCellShaded: 'fc-cell-shaded',
                 buttonGroup: 'fc-button-group',
                 button: 'fc-button fc-button-primary',
                 buttonActive: 'fc-button-active',
             }),
-                (Be.prototype.baseIconClass = 'fc-icon'),
-                (Be.prototype.iconClasses = {
+                (we.prototype.baseIconClass = 'fc-icon'),
+                (we.prototype.iconClasses = {
                     close: 'fc-icon-x',
                     prev: 'fc-icon-chevron-left',
                     next: 'fc-icon-chevron-right',
                     prevYear: 'fc-icon-chevrons-left',
                     nextYear: 'fc-icon-chevrons-right',
                 }),
-                (Be.prototype.rtlIconClasses = {
+                (we.prototype.rtlIconClasses = {
                     prev: 'fc-icon-chevron-right',
                     next: 'fc-icon-chevron-left',
                     prevYear: 'fc-icon-chevrons-right',
                     nextYear: 'fc-icon-chevrons-left',
                 }),
-                (Be.prototype.iconOverrideOption = 'buttonIcons'),
-                (Be.prototype.iconOverrideCustomButtonOption = 'icon'),
-                (Be.prototype.iconOverridePrefix = 'fc-icon-');
-            var be = (function (t) {
+                (we.prototype.iconOverrideOption = 'buttonIcons'),
+                (we.prototype.iconOverrideCustomButtonOption = 'icon'),
+                (we.prototype.iconOverridePrefix = 'fc-icon-');
+            var ie = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.rootElRef = X()),
+                            (n.rootElRef = U()),
                             (n.handleRootEl = function (r) {
-                                me(n.rootElRef, r),
-                                    n.props.elRef && me(n.props.elRef, r);
+                                te(n.rootElRef, r),
+                                    n.props.elRef && te(n.props.elRef, r);
                             }),
                             n
                         );
@@ -5753,7 +5748,7 @@
                                 r = this.props,
                                 i = r.hookProps;
                             return h(
-                                er,
+                                Pn,
                                 {
                                     hookProps: i,
                                     didMount: r.didMount,
@@ -5762,7 +5757,7 @@
                                 },
                                 function (o) {
                                     return h(
-                                        fo,
+                                        ao,
                                         {
                                             hookProps: i,
                                             content: r.content,
@@ -5772,7 +5767,7 @@
                                         function (a, s) {
                                             return r.children(
                                                 o,
-                                                po(r.classNames, i),
+                                                lo(r.classNames, i),
                                                 a,
                                                 s
                                             );
@@ -5783,10 +5778,10 @@
                         }),
                         e
                     );
-                })(L),
-                co = oi(0);
-            function fo(t) {
-                return h(co.Consumer, null, function (e) {
+                })(N),
+                oo = ti(0);
+            function ao(t) {
+                return h(oo.Consumer, null, function (e) {
                     return h(Bc, (0, u.pi)({ renderId: e }, t));
                 });
             }
@@ -5794,7 +5789,7 @@
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
-                        return (n.innerElRef = X()), n;
+                        return (n.innerElRef = U()), n;
                     }
                     return (
                         (0, u.ZT)(e, t),
@@ -5840,10 +5835,10 @@
                         }),
                         (e.prototype.getInnerContent = function () {
                             var n = this.props,
-                                r = vo(n.content, n.hookProps);
+                                r = co(n.content, n.hookProps);
                             return (
                                 void 0 === r &&
-                                    (r = vo(n.defaultContent, n.hookProps)),
+                                    (r = co(n.defaultContent, n.hookProps)),
                                 null == r ? null : r
                             );
                         }),
@@ -5871,15 +5866,15 @@
                         }),
                         e
                     );
-                })(L),
-                er = (function (t) {
+                })(N),
+                Pn = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
                             (n.handleRootEl = function (r) {
                                 (n.rootEl = r),
-                                    n.props.elRef && me(n.props.elRef, r);
+                                    n.props.elRef && te(n.props.elRef, r);
                             }),
                             n
                         );
@@ -5911,29 +5906,29 @@
                         }),
                         e
                     );
-                })(L);
-            function uo() {
+                })(N);
+            function so() {
                 var t,
                     e,
                     n = [];
                 return function (r, i) {
                     return (
-                        (!e || !we(e, i) || r !== t) &&
-                            ((t = r), (e = i), (n = po(r, i))),
+                        (!e || !ce(e, i) || r !== t) &&
+                            ((t = r), (e = i), (n = lo(r, i))),
                         n
                     );
                 };
             }
-            function po(t, e) {
-                return 'function' == typeof t && (t = t(e)), On(t);
+            function lo(t, e) {
+                return 'function' == typeof t && (t = t(e)), gn(t);
             }
-            function vo(t, e) {
+            function co(t, e) {
                 return 'function' == typeof t ? t(e, h) : t;
             }
-            var wt = (function (t) {
+            var tt = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
-                    return (n.normalizeClassNames = uo()), n;
+                    return (n.normalizeClassNames = so()), n;
                 }
                 return (
                     (0, u.ZT)(e, t),
@@ -5944,7 +5939,7 @@
                             a = { view: i.viewApi },
                             s = this.normalizeClassNames(o.viewClassNames, a);
                         return h(
-                            er,
+                            Pn,
                             {
                                 hookProps: a,
                                 didMount: o.viewDidMount,
@@ -5964,20 +5959,20 @@
                     }),
                     e
                 );
-            })(L);
-            function ho(t) {
-                return Ee(t, Oc);
+            })(N);
+            function fo(t) {
+                return le(t, Hc);
             }
-            function Oc(t) {
+            function Hc(t) {
                 var e = 'function' == typeof t ? { component: t } : t,
                     n = e.component;
                 return (
                     e.content &&
-                        (n = (function Hc(t) {
+                        (n = (function Oc(t) {
                             return function (e) {
-                                return h(Se.Consumer, null, function (n) {
+                                return h(fe.Consumer, null, function (n) {
                                     return h(
-                                        wt,
+                                        tt,
                                         { viewSpec: n.viewSpec },
                                         function (r, i) {
                                             var o = (0, u.pi)(
@@ -5989,7 +5984,7 @@
                                                 }
                                             );
                                             return h(
-                                                be,
+                                                ie,
                                                 {
                                                     hookProps: o,
                                                     classNames: t.classNames,
@@ -6020,16 +6015,16 @@
                 );
             }
             function zc(t, e, n, r) {
-                var i = ho(t),
-                    o = ho(e.views),
+                var i = fo(t),
+                    o = fo(e.views),
                     a = (function Nc(t, e) {
                         var r,
                             n = {};
-                        for (r in t) $n(r, n, t, e);
-                        for (r in e) $n(r, n, t, e);
+                        for (r in t) Nn(r, n, t, e);
+                        for (r in e) Nn(r, n, t, e);
                         return n;
                     })(i, o);
-                return Ee(a, function (s) {
+                return le(a, function (s) {
                     return (function Fc(t, e, n, r, i) {
                         var o =
                                 t.overrides.duration ||
@@ -6044,19 +6039,19 @@
                             o &&
                             (a = (function Uc(t) {
                                 var e = JSON.stringify(t),
-                                    n = go[e];
+                                    n = uo[e];
                                 return (
-                                    void 0 === n && ((n = U(t)), (go[e] = n)), n
+                                    void 0 === n && ((n = M(t)), (uo[e] = n)), n
                                 );
                             })(o))
                         ) {
-                            var f = kn(a);
-                            (s = f.unit),
-                                1 === f.value &&
+                            var d = dn(a);
+                            (s = d.unit),
+                                1 === d.value &&
                                     ((l = s),
                                     (c = e[s] ? e[s].rawOptions : {}));
                         }
-                        var d = function (v) {
+                        var f = function (v) {
                                 var g = v.buttonText || {},
                                     b = t.defaults.buttonTextKey;
                                 return null != b && null != g[b]
@@ -6090,25 +6085,25 @@
                                 t.overrides
                             ),
                             buttonTextOverride:
-                                d(r) || d(n) || t.overrides.buttonText,
+                                f(r) || f(n) || t.overrides.buttonText,
                             buttonTextDefault:
-                                d(i) ||
+                                f(i) ||
                                 t.defaults.buttonText ||
-                                d(De) ||
+                                f(de) ||
                                 t.type,
                             buttonTitleOverride:
                                 p(r) || p(n) || t.overrides.buttonHint,
                             buttonTitleDefault:
-                                p(i) || t.defaults.buttonHint || p(De),
+                                p(i) || t.defaults.buttonHint || p(de),
                         };
                     })(s, o, e, n, r);
                 });
             }
-            var go = {},
-                mo = (function () {
+            var uo = {},
+                po = (function () {
                     function t(e) {
                         (this.props = e),
-                            (this.nowDate = bt(e.nowInput, e.dateEnv)),
+                            (this.nowDate = Ke(e.nowInput, e.dateEnv)),
                             this.initHiddenDays();
                     }
                     return (
@@ -6135,13 +6130,13 @@
                                 s,
                                 l,
                                 c,
-                                f,
+                                d,
                                 i = this.props;
                             return (
                                 (o = this.buildValidRange()),
                                 (o = this.trimHiddenDays(o)),
                                 r &&
-                                    (e = (function Sl(t, e) {
+                                    (e = (function Cl(t, e) {
                                         return null != e.start && t < e.start
                                             ? e.start
                                             : null != e.end && t >= e.end
@@ -6156,9 +6151,9 @@
                                     s
                                 )),
                                 (c = l = this.trimHiddenDays(l)),
-                                i.showNonCurrentDates || (c = et(c, a.range)),
-                                (c = et((c = this.adjustActiveRange(c)), o)),
-                                (f = Un(a.range, o)),
+                                i.showNonCurrentDates || (c = Oe(c, a.range)),
+                                (c = Oe((c = this.adjustActiveRange(c)), o)),
+                                (d = An(a.range, o)),
                                 {
                                     validRange: o,
                                     currentRange: a.range,
@@ -6168,7 +6163,7 @@
                                     renderRange: l,
                                     slotMinTime: i.slotMinTime,
                                     slotMaxTime: i.slotMaxTime,
-                                    isValid: f,
+                                    isValid: d,
                                     dateIncrement: this.buildDateIncrement(
                                         a.duration
                                     ),
@@ -6217,7 +6212,7 @@
                                           a.start,
                                           a.end
                                       ).unit)
-                                    : ((o = kn(
+                                    : ((o = dn(
                                           (i = this.getFallbackDuration())
                                       ).unit),
                                       (a = this.buildRangeFromDuration(
@@ -6230,7 +6225,7 @@
                             );
                         }),
                         (t.prototype.getFallbackDuration = function () {
-                            return U({ day: 1 });
+                            return M({ day: 1 });
                         }),
                         (t.prototype.adjustActiveRange = function (e) {
                             var n = this.props,
@@ -6241,10 +6236,10 @@
                                 l = e.end;
                             return (
                                 n.usesMinMaxTime &&
-                                    (Ke(o) < 0 &&
-                                        ((s = V(s)), (s = r.add(s, o))),
-                                    Ke(a) > 1 &&
-                                        ((l = ie((l = V(l)), -1)),
+                                    (Be(o) < 0 &&
+                                        ((s = H(s)), (s = r.add(s, o))),
+                                    Be(a) > 1 &&
+                                        ((l = Z((l = H(l)), -1)),
                                         (l = r.add(l, a)))),
                                 { start: s, end: l }
                             );
@@ -6257,27 +6252,27 @@
                         ) {
                             var l,
                                 c,
-                                f,
+                                d,
                                 o = this.props,
                                 a = o.dateEnv,
                                 s = o.dateAlignment;
                             if (!s) {
-                                var d = this.props.dateIncrement;
-                                s = d && fe(d) < fe(r) ? kn(d).unit : i;
+                                var f = this.props.dateIncrement;
+                                s = f && J(f) < J(r) ? dn(f).unit : i;
                             }
                             function p() {
                                 (l = a.startOf(e, s)),
                                     (c = a.add(l, r)),
-                                    (f = { start: l, end: c });
+                                    (d = { start: l, end: c });
                             }
                             return (
-                                Ke(r) <= 1 &&
+                                Be(r) <= 1 &&
                                     this.isHiddenDay(l) &&
-                                    (l = V((l = this.skipHiddenDays(l, n)))),
+                                    (l = H((l = this.skipHiddenDays(l, n)))),
                                 p(),
-                                this.trimHiddenDays(f) ||
+                                this.trimHiddenDays(d) ||
                                     ((e = this.skipHiddenDays(e, n)), p()),
-                                f
+                                d
                             );
                         }),
                         (t.prototype.buildRangeFromDayCount = function (
@@ -6291,10 +6286,10 @@
                                 s = 0,
                                 l = e;
                             a && (l = i.dateEnv.startOf(l, a)),
-                                (l = V(l)),
+                                (l = H(l)),
                                 (c = l = this.skipHiddenDays(l, n));
                             do {
-                                (c = ie(c, 1)), this.isHiddenDay(c) || (s += 1);
+                                (c = Z(c, 1)), this.isHiddenDay(c) || (s += 1);
                             } while (s < r);
                             return { start: l, end: c };
                         }),
@@ -6321,8 +6316,8 @@
                             return (
                                 this.props.dateIncrement ||
                                 ((r = this.props.dateAlignment)
-                                    ? U(1, r)
-                                    : e || U({ days: 1 }))
+                                    ? M(1, r)
+                                    : e || M({ days: 1 }))
                             );
                         }),
                         (t.prototype.refineRange = function (e) {
@@ -6339,7 +6334,7 @@
                                             : { start: n, end: r }
                                     );
                                 })(e, this.props.dateEnv);
-                                return n && (n = Fn(n)), n;
+                                return n && (n = bn(n)), n;
                             }
                             return null;
                         }),
@@ -6384,29 +6379,29 @@
                                 ];
 
                             )
-                                e = ie(e, n);
+                                e = Z(e, n);
                             return e;
                         }),
                         t
                     );
                 })();
-            function yo(t) {
+            function vo(t) {
                 for (var e in t) if (t[e].isFetching) return !0;
                 return !1;
             }
-            function bo(t, e, n, r) {
+            function ho(t, e, n, r) {
                 for (var i = {}, o = 0, a = e; o < a.length; o++) {
                     var s = a[o];
                     i[s.sourceId] = s;
                 }
-                return n && (i = Ao(i, n, r)), (0, u.pi)((0, u.pi)({}, t), i);
+                return n && (i = go(i, n, r)), (0, u.pi)((0, u.pi)({}, t), i);
             }
-            function Ao(t, e, n) {
-                return tr(
+            function go(t, e, n) {
+                return Bn(
                     t,
-                    Ue(t, function (r) {
+                    Se(t, function (r) {
                         return (function Yc(t, e, n) {
-                            return wo(t, n)
+                            return yo(t, n)
                                 ? !n.options.lazyFetching ||
                                       !t.fetchRange ||
                                       t.isFetching ||
@@ -6420,7 +6415,7 @@
                     n
                 );
             }
-            function tr(t, e, n, r, i) {
+            function Bn(t, e, n, r, i) {
                 var o = {};
                 for (var a in t) {
                     var s = t[a];
@@ -6432,7 +6427,7 @@
                 var i = r.options,
                     o = r.calendarApi,
                     a = r.pluginHooks.eventSourceDefs[t.sourceDefId],
-                    s = qe();
+                    s = Ie();
                 return (
                     a.fetch(
                         { eventSource: t, range: e, isRefetch: n, context: r },
@@ -6472,16 +6467,16 @@
                     })
                 );
             }
-            function Eo(t, e) {
-                return Ue(t, function (n) {
-                    return wo(n, e);
+            function mo(t, e) {
+                return Se(t, function (n) {
+                    return yo(n, e);
                 });
             }
-            function wo(t, e) {
+            function yo(t, e) {
                 return !e.pluginHooks.eventSourceDefs[t.sourceDefId]
                     .ignoreRange;
             }
-            function Do(t, e) {
+            function bo(t, e) {
                 var n;
                 if (e) {
                     n = [];
@@ -6493,12 +6488,12 @@
                 } else n = t;
                 return n;
             }
-            function So(t, e) {
-                return Vt(t, function (n) {
+            function Ao(t, e) {
+                return Rt(t, function (n) {
                     return n.sourceId !== e;
                 });
             }
-            function of(t, e) {
+            function id(t, e) {
                 switch (e.type) {
                     case 'UNSELECT_DATES':
                         return null;
@@ -6508,7 +6503,7 @@
                         return t;
                 }
             }
-            function af(t, e) {
+            function od(t, e) {
                 switch (e.type) {
                     case 'UNSELECT_EVENT':
                         return '';
@@ -6518,7 +6513,7 @@
                         return t;
                 }
             }
-            function sf(t, e) {
+            function ad(t, e) {
                 var n;
                 switch (e.type) {
                     case 'UNSET_EVENT_DRAG':
@@ -6533,7 +6528,7 @@
                         return t;
                 }
             }
-            function lf(t, e) {
+            function sd(t, e) {
                 var n;
                 switch (e.type) {
                     case 'UNSET_EVENT_RESIZE':
@@ -6548,35 +6543,35 @@
                         return t;
                 }
             }
-            function cf(t, e, n, r, i) {
+            function ld(t, e, n, r, i) {
                 return {
                     header: t.headerToolbar
-                        ? Co(t.headerToolbar, t, e, n, r, i)
+                        ? Eo(t.headerToolbar, t, e, n, r, i)
                         : null,
                     footer: t.footerToolbar
-                        ? Co(t.footerToolbar, t, e, n, r, i)
+                        ? Eo(t.footerToolbar, t, e, n, r, i)
                         : null,
                 };
             }
-            function Co(t, e, n, r, i, o) {
+            function Eo(t, e, n, r, i, o) {
                 var a = {},
                     s = [],
                     l = !1;
                 for (var c in t) {
-                    var d = ff(t[c], e, n, r, i, o);
-                    (a[c] = d.widgets),
-                        s.push.apply(s, d.viewsWithButtons),
-                        (l = l || d.hasTitle);
+                    var f = cd(t[c], e, n, r, i, o);
+                    (a[c] = f.widgets),
+                        s.push.apply(s, f.viewsWithButtons),
+                        (l = l || f.hasTitle);
                 }
                 return { sectionWidgets: a, viewsWithButtons: s, hasTitle: l };
             }
-            function ff(t, e, n, r, i, o) {
+            function cd(t, e, n, r, i, o) {
                 var a = 'rtl' === e.direction,
                     s = e.customButtons || {},
                     l = n.buttonText || {},
                     c = e.buttonText || {},
-                    f = n.buttonHints || {},
-                    d = e.buttonHints || {},
+                    d = n.buttonHints || {},
+                    f = e.buttonHints || {},
                     p = t ? t.split(' ') : [],
                     v = [],
                     g = !1;
@@ -6585,63 +6580,63 @@
                         return E.split(',').map(function (m) {
                             if ('title' === m)
                                 return (g = !0), { buttonName: m };
-                            var w, _, R, F, z, Q;
+                            var w, C, D, _, k, P;
                             if ((w = s[m]))
-                                (R = function (W) {
+                                (D = function (B) {
                                     w.click &&
-                                        w.click.call(W.target, W, W.target);
+                                        w.click.call(B.target, B, B.target);
                                 }),
-                                    (F = r.getCustomButtonIconClass(w)) ||
-                                        (F = r.getIconClass(m, a)) ||
-                                        (z = w.text),
-                                    (Q = w.hint || w.text);
-                            else if ((_ = i[m])) {
+                                    (_ = r.getCustomButtonIconClass(w)) ||
+                                        (_ = r.getIconClass(m, a)) ||
+                                        (k = w.text),
+                                    (P = w.hint || w.text);
+                            else if ((C = i[m])) {
                                 v.push(m),
-                                    (R = function () {
+                                    (D = function () {
                                         o.changeView(m);
                                     }),
-                                    (z = _.buttonTextOverride) ||
-                                        (F = r.getIconClass(m, a)) ||
-                                        (z = _.buttonTextDefault);
-                                var P =
-                                    _.buttonTextOverride || _.buttonTextDefault;
-                                Q = gt(
-                                    _.buttonTitleOverride ||
-                                        _.buttonTitleDefault ||
+                                    (k = C.buttonTextOverride) ||
+                                        (_ = r.getIconClass(m, a)) ||
+                                        (k = C.buttonTextDefault);
+                                var T =
+                                    C.buttonTextOverride || C.buttonTextDefault;
+                                P = qe(
+                                    C.buttonTitleOverride ||
+                                        C.buttonTitleDefault ||
                                         e.viewHint,
-                                    [P, m],
-                                    P
+                                    [T, m],
+                                    T
                                 );
                             } else if (o[m])
                                 if (
-                                    ((R = function () {
+                                    ((D = function () {
                                         o[m]();
                                     }),
-                                    (z = l[m]) ||
-                                        (F = r.getIconClass(m, a)) ||
-                                        (z = c[m]),
+                                    (k = l[m]) ||
+                                        (_ = r.getIconClass(m, a)) ||
+                                        (k = c[m]),
                                     'prevYear' === m || 'nextYear' === m)
                                 ) {
-                                    var Y = 'prevYear' === m ? 'prev' : 'next';
-                                    Q = gt(
-                                        f[Y] || d[Y],
+                                    var F = 'prevYear' === m ? 'prev' : 'next';
+                                    P = qe(
+                                        d[F] || f[F],
                                         [c.year || 'year', 'year'],
                                         c[m]
                                     );
                                 } else
-                                    Q = function (W) {
-                                        return gt(
-                                            f[m] || d[m],
-                                            [c[W] || W, W],
+                                    P = function (B) {
+                                        return qe(
+                                            d[m] || f[m],
+                                            [c[B] || B, B],
                                             c[m]
                                         );
                                     };
                             return {
                                 buttonName: m,
-                                buttonClick: R,
-                                buttonIcon: F,
-                                buttonText: z,
-                                buttonHint: Q,
+                                buttonClick: D,
+                                buttonIcon: _,
+                                buttonText: k,
+                                buttonHint: P,
                             };
                         });
                     }),
@@ -6649,7 +6644,7 @@
                     hasTitle: g,
                 };
             }
-            function xo(t) {
+            function wo(t) {
                 var e = [];
                 for (var n in t)
                     e.push(
@@ -6657,9 +6652,9 @@
                     );
                 return e.join('&');
             }
-            function To(t, e) {
+            function Do(t, e) {
                 for (
-                    var n = Tn(e.getCurrentData().eventSources),
+                    var n = sn(e.getCurrentData().eventSources),
                         r = [],
                         i = 0,
                         o = t;
@@ -6673,16 +6668,16 @@
                         }
                     s || r.push(a);
                 }
-                for (var c = 0, f = n; c < f.length; c++)
+                for (var c = 0, d = n; c < d.length; c++)
                     e.dispatch({
                         type: 'REMOVE_EVENT_SOURCE',
-                        sourceId: f[c].sourceId,
+                        sourceId: d[c].sourceId,
                     });
                 for (var p = 0, v = r; p < v.length; p++)
                     e.calendarApi.addEventSource(v[p]);
             }
-            var Ro = [
-                    xe({
+            var Co = [
+                    pe({
                         eventSourceDefs: [
                             {
                                 ignoreRange: !0,
@@ -6697,7 +6692,7 @@
                             },
                         ],
                     }),
-                    xe({
+                    pe({
                         eventSourceDefs: [
                             {
                                 parseMeta: function (t) {
@@ -6729,7 +6724,7 @@
                                     })(
                                         t.eventSource.meta.bind(
                                             null,
-                                            Gi(t.range, t.context.dateEnv)
+                                            Li(t.range, t.context.dateEnv)
                                         ),
                                         function (o) {
                                             e({ rawEvents: o });
@@ -6740,7 +6735,7 @@
                             },
                         ],
                     }),
-                    xe({
+                    pe({
                         eventSourceRefiners: {
                             method: String,
                             extraParams: A,
@@ -6768,7 +6763,7 @@
                                 },
                                 fetch: function (t, e, n) {
                                     var r = t.eventSource.meta,
-                                        i = (function Af(t, e, n) {
+                                        i = (function bd(t, e, n) {
                                             var o,
                                                 a,
                                                 s,
@@ -6796,19 +6791,19 @@
                                                 c
                                             );
                                         })(r, t.range, t.context);
-                                    !(function hf(t, e, n, r, i) {
+                                    !(function vd(t, e, n, r, i) {
                                         var o = null;
                                         'GET' === (t = t.toUpperCase())
-                                            ? (e = (function gf(t, e) {
+                                            ? (e = (function hd(t, e) {
                                                   return (
                                                       t +
                                                       (-1 === t.indexOf('?')
                                                           ? '?'
                                                           : '&') +
-                                                      xo(e)
+                                                      wo(e)
                                                   );
                                               })(e, n))
-                                            : (o = xo(n));
+                                            : (o = wo(n));
                                         var a = new XMLHttpRequest();
                                         a.open(t, e, !0),
                                             'GET' !== t &&
@@ -6856,7 +6851,7 @@
                             },
                         ],
                     }),
-                    xe({
+                    pe({
                         recurringTypes: [
                             {
                                 parse: function (t, e) {
@@ -6911,15 +6906,15 @@
                                     return null;
                                 },
                                 expand: function (t, e, n) {
-                                    var r = et(e, {
+                                    var r = Oe(e, {
                                         start: t.startRecur,
                                         end: t.endRecur,
                                     });
                                     return r
-                                        ? (function Sf(t, e, n, r) {
+                                        ? (function Dd(t, e, n, r) {
                                               for (
-                                                  var i = t ? Ei(t) : null,
-                                                      o = V(n.start),
+                                                  var i = t ? mi(t) : null,
+                                                      o = H(n.start),
                                                       a = n.end,
                                                       s = [];
                                                   o < a;
@@ -6931,7 +6926,7 @@
                                                           ? r.add(o, e)
                                                           : o),
                                                       s.push(l)),
-                                                      (o = ie(o, 1));
+                                                      (o = Z(o, 1));
                                               }
                                               return s;
                                           })(t.daysOfWeek, t.startTime, r, n)
@@ -6941,29 +6936,29 @@
                         ],
                         eventRefiners: {
                             daysOfWeek: A,
-                            startTime: U,
-                            endTime: U,
-                            duration: U,
+                            startTime: M,
+                            endTime: M,
+                            duration: M,
                             startRecur: A,
                             endRecur: A,
                         },
                     }),
-                    xe({
+                    pe({
                         optionChangeHandlers: {
                             events: function (t, e) {
-                                To([t], e);
+                                Do([t], e);
                             },
-                            eventSources: To,
+                            eventSources: Do,
                         },
                     }),
-                    xe({
+                    pe({
                         isLoadingFuncs: [
                             function (t) {
-                                return yo(t.eventSources);
+                                return vo(t.eventSources);
                             },
                         ],
                         contentTypeHandlers: {
-                            html: function Rf() {
+                            html: function Rd() {
                                 var t = null,
                                     e = '';
                                 return {
@@ -6980,16 +6975,16 @@
                                     },
                                 };
                             },
-                            domNodes: function _f() {
+                            domNodes: function Td() {
                                 var t = null,
                                     e = [];
                                 function r() {
-                                    e.forEach(Dn), (e = []), (t = null);
+                                    e.forEach(nn), (e = []), (t = null);
                                 }
                                 return {
                                     render: function n(i, o) {
                                         var a = Array.prototype.slice.call(o);
-                                        if (i !== t || !Ie(e, a)) {
+                                        if (i !== t || !be(e, a)) {
                                             for (
                                                 var s = 0, l = a;
                                                 s < l.length;
@@ -7005,27 +7000,27 @@
                             },
                         },
                         propSetHandlers: {
-                            dateProfile: function xf(t, e) {
+                            dateProfile: function Sd(t, e) {
                                 e.emitter.trigger(
                                     'datesSet',
                                     (0, u.pi)(
                                         (0, u.pi)(
                                             {},
-                                            Gi(t.activeRange, e.dateEnv)
+                                            Li(t.activeRange, e.dateEnv)
                                         ),
                                         { view: e.viewApi }
                                     )
                                 );
                             },
-                            eventStore: function Tf(t, e) {
+                            eventStore: function xd(t, e) {
                                 var n = e.emitter;
                                 n.hasHandlers('eventsSet') &&
-                                    n.trigger('eventsSet', Le(t, e));
+                                    n.trigger('eventsSet', xe(t, e));
                             },
                         },
                     }),
                 ],
-                nr = (function () {
+                Hn = (function () {
                     function t(e) {
                         (this.drainedOption = e),
                             (this.isRunning = !1),
@@ -7085,12 +7080,12 @@
                         t
                     );
                 })(),
-                kf = (function () {
+                kd = (function () {
                     function t(e, n) {
                         (this.runTaskOption = e),
                             (this.drainedOption = n),
                             (this.queue = []),
-                            (this.delayedRunner = new nr(
+                            (this.delayedRunner = new Hn(
                                 this.drain.bind(this)
                             ));
                     }
@@ -7120,7 +7115,7 @@
                         t
                     );
                 })();
-            function Mf(t, e, n) {
+            function _d(t, e, n) {
                 var r;
                 return (
                     (r = /^(year|month)$/.test(t.currentRangeUnit)
@@ -7129,9 +7124,9 @@
                     n.formatRange(
                         r.start,
                         r.end,
-                        Z(
+                        O(
                             e.titleFormat ||
-                                (function If(t) {
+                                (function Md(t) {
                                     var e = t.currentRangeUnit;
                                     if ('year' === e)
                                         return { year: 'numeric' };
@@ -7140,7 +7135,7 @@
                                             year: 'numeric',
                                             month: 'long',
                                         };
-                                    var n = Bt(
+                                    var n = yt(
                                         t.currentRange.start,
                                         t.currentRange.end
                                     );
@@ -7164,23 +7159,23 @@
                     )
                 );
             }
-            var _o = (function () {
+            var So = (function () {
                 function t(e) {
                     var n = this;
-                    (this.computeOptionsData = I(this._computeOptionsData)),
-                        (this.computeCurrentViewData = I(
+                    (this.computeOptionsData = x(this._computeOptionsData)),
+                        (this.computeCurrentViewData = x(
                             this._computeCurrentViewData
                         )),
-                        (this.organizeRawLocales = I(to)),
-                        (this.buildLocale = I(Gn)),
+                        (this.organizeRawLocales = x(Xi)),
+                        (this.buildLocale = x(Sn)),
                         (this.buildPluginHooks = (function Mc() {
                             var n,
                                 t = [],
                                 e = [];
                             return function (r, i) {
                                 return (
-                                    (!n || !Ie(r, t) || !Ie(i, e)) &&
-                                        (n = (function kc(t, e) {
+                                    (!n || !be(r, t) || !be(i, e)) &&
+                                        (n = (function _c(t, e) {
                                             var n = {},
                                                 r = {
                                                     reducers: [],
@@ -7241,19 +7236,19 @@
                                 );
                             };
                         })()),
-                        (this.buildDateEnv = I(Nf)),
-                        (this.buildTheme = I(Pf)),
-                        (this.parseToolbars = I(cf)),
-                        (this.buildViewSpecs = I(zc)),
-                        (this.buildDateProfileGenerator = zt(Bf)),
-                        (this.buildViewApi = I(Of)),
-                        (this.buildViewUiProps = zt(Ff)),
-                        (this.buildEventUiBySource = I(Hf, we)),
-                        (this.buildEventUiBases = I(zf)),
-                        (this.parseContextBusinessHours = zt(Uf)),
-                        (this.buildTitle = I(Mf)),
-                        (this.emitter = new Kt()),
-                        (this.actionRunner = new kf(
+                        (this.buildDateEnv = x(Id)),
+                        (this.buildTheme = x(Nd)),
+                        (this.parseToolbars = x(ld)),
+                        (this.buildViewSpecs = x(zc)),
+                        (this.buildDateProfileGenerator = Et(Pd)),
+                        (this.buildViewApi = x(Bd)),
+                        (this.buildViewUiProps = Et(zd)),
+                        (this.buildEventUiBySource = x(Hd, ce)),
+                        (this.buildEventUiBases = x(Od)),
+                        (this.parseContextBusinessHours = Et(Fd)),
+                        (this.buildTitle = x(_d)),
+                        (this.emitter = new Bt()),
+                        (this.actionRunner = new kd(
                             this._handleAction.bind(this),
                             this.updateData.bind(this)
                         )),
@@ -7265,8 +7260,8 @@
                         (this.getCurrentData = function () {
                             return n.data;
                         }),
-                        (this.dispatch = function (_) {
-                            n.actionRunner.request(_);
+                        (this.dispatch = function (C) {
+                            n.actionRunner.request(C);
                         }),
                         (this.props = e),
                         this.actionRunner.pause();
@@ -7290,10 +7285,10 @@
                         this.emitter.setOptions(a.options);
                     var s = (function Gl(t, e) {
                             var n = t.initialDate;
-                            return null != n ? e.createMarker(n) : bt(t.now, e);
+                            return null != n ? e.createMarker(n) : Ke(t.now, e);
                         })(i.calendarOptions, i.dateEnv),
                         l = a.dateProfileGenerator.build(s);
-                    Ne(l.activeRange, s) || (s = l.currentRange.start);
+                    Ae(l.activeRange, s) || (s = l.currentRange.start);
                     for (
                         var c = {
                                 dateEnv: i.dateEnv,
@@ -7304,19 +7299,19 @@
                                 emitter: this.emitter,
                                 getCurrentData: this.getCurrentData,
                             },
-                            f = 0,
-                            d = i.pluginHooks.contextInit;
-                        f < d.length;
-                        f++
+                            d = 0,
+                            f = i.pluginHooks.contextInit;
+                        d < f.length;
+                        d++
                     )
-                        (0, d[f])(c);
+                        (0, f[d])(c);
                     for (
                         var v = (function Vc(t, e, n) {
                                 var r = e ? e.activeRange : null;
-                                return bo(
+                                return ho(
                                     {},
                                     (function Xc(t, e) {
-                                        var n = qi(e),
+                                        var n = Gi(e),
                                             r = [].concat(t.eventSources || []),
                                             i = [];
                                         t.initialEvents &&
@@ -7327,7 +7322,7 @@
                                             o < a.length;
                                             o++
                                         ) {
-                                            var l = Yi(a[o], e, n);
+                                            var l = Vi(a[o], e, n);
                                             l && i.push(l);
                                         }
                                         return i;
@@ -7364,7 +7359,7 @@
                         E++
                     )
                         (0, u.pi)(g, (0, m[E])(null, null, b));
-                    rr(g, c) && this.emitter.trigger('loading', !0),
+                    On(g, c) && this.emitter.trigger('loading', !0),
                         (this.state = g),
                         this.updateData(),
                         this.actionRunner.resume();
@@ -7414,7 +7409,7 @@
                         (r.calendarApi.currentDataManager = this),
                             o.setThisContext(r.calendarApi),
                             o.setOptions(c.options);
-                        var f = {
+                        var d = {
                                 dateEnv: s.dateEnv,
                                 options: s.calendarOptions,
                                 pluginHooks: s.pluginHooks,
@@ -7423,17 +7418,17 @@
                                 emitter: o,
                                 getCurrentData: this.getCurrentData,
                             },
-                            d = i.currentDate,
+                            f = i.currentDate,
                             p = i.dateProfile;
                         this.data &&
                             this.data.dateProfileGenerator !==
                                 c.dateProfileGenerator &&
-                            (p = c.dateProfileGenerator.build(d)),
-                            (d = (function Vl(t, e) {
+                            (p = c.dateProfileGenerator.build(f)),
+                            (f = (function Vl(t, e) {
                                 return 'CHANGE_DATE' === e.type
                                     ? e.dateMarker
                                     : t;
-                            })(d, e)),
+                            })(f, e)),
                             (p = (function Wc(t, e, n, r) {
                                 var i;
                                 switch (e.type) {
@@ -7450,20 +7445,20 @@
                                             return i;
                                 }
                                 return t;
-                            })(p, e, d, c.dateProfileGenerator)),
+                            })(p, e, f, c.dateProfileGenerator)),
                             ('PREV' === e.type ||
                                 'NEXT' === e.type ||
-                                !Ne(p.currentRange, d)) &&
-                                (d = p.currentRange.start);
+                                !Ae(p.currentRange, f)) &&
+                                (f = p.currentRange.start);
                         for (
                             var v = (function Gc(t, e, n, r) {
                                     var i = n ? n.activeRange : null;
                                     switch (e.type) {
                                         case 'ADD_EVENT_SOURCES':
-                                            return bo(t, e.sources, i, r);
+                                            return ho(t, e.sources, i, r);
                                         case 'REMOVE_EVENT_SOURCE':
                                             return (function jc(t, e) {
-                                                return Ue(t, function (n) {
+                                                return Se(t, function (n) {
                                                     return n.sourceId !== e;
                                                 });
                                             })(t, e.sourceId);
@@ -7471,13 +7466,13 @@
                                         case 'NEXT':
                                         case 'CHANGE_DATE':
                                         case 'CHANGE_VIEW_TYPE':
-                                            return n ? Ao(t, i, r) : t;
+                                            return n ? go(t, i, r) : t;
                                         case 'FETCH_EVENT_SOURCES':
-                                            return tr(
+                                            return Bn(
                                                 t,
                                                 e.sourceIds
-                                                    ? Ei(e.sourceIds)
-                                                    : Eo(t, r),
+                                                    ? mi(e.sourceIds)
+                                                    : mo(t, r),
                                                 i,
                                                 e.isRefetch || !1,
                                                 r
@@ -7514,7 +7509,7 @@
                                         default:
                                             return t;
                                     }
-                                })(i.eventSources, e, p, f),
+                                })(i.eventSources, e, p, d),
                                 g = (function Kc(t, e, n, r, i) {
                                     switch (e.type) {
                                         case 'RECEIVE_EVENTS':
@@ -7530,8 +7525,8 @@
                                                     e &&
                                                     n === e.latestFetchId
                                                 ) {
-                                                    var a = Wt(
-                                                        (function ef(t, e, n) {
+                                                    var a = xt(
+                                                        (function ed(t, e, n) {
                                                             var r =
                                                                     n.options
                                                                         .eventDataTransform,
@@ -7540,12 +7535,12 @@
                                                                     : null;
                                                             return (
                                                                 i &&
-                                                                    (t = Do(
+                                                                    (t = bo(
                                                                         t,
                                                                         i
                                                                     )),
                                                                 r &&
-                                                                    (t = Do(
+                                                                    (t = bo(
                                                                         t,
                                                                         r
                                                                     )),
@@ -7556,8 +7551,8 @@
                                                         o
                                                     );
                                                     return (
-                                                        r && (a = Xe(a, r, o)),
-                                                        Bn(So(t, e.sourceId), a)
+                                                        r && (a = Pe(a, r, o)),
+                                                        hn(Ao(t, e.sourceId), a)
                                                     );
                                                 }
                                                 return t;
@@ -7570,10 +7565,10 @@
                                                 i
                                             );
                                         case 'ADD_EVENTS':
-                                            return (function tf(t, e, n, r) {
+                                            return (function td(t, e, n, r) {
                                                 return (
-                                                    n && (e = Xe(e, n, r)),
-                                                    Bn(t, e)
+                                                    n && (e = Pe(e, n, r)),
+                                                    hn(t, e)
                                                 );
                                             })(
                                                 t,
@@ -7584,13 +7579,13 @@
                                         case 'RESET_EVENTS':
                                             return e.eventStore;
                                         case 'MERGE_EVENTS':
-                                            return Bn(t, e.eventStore);
+                                            return hn(t, e.eventStore);
                                         case 'PREV':
                                         case 'NEXT':
                                         case 'CHANGE_DATE':
                                         case 'CHANGE_VIEW_TYPE':
                                             return r
-                                                ? Xe(t, r.activeRange, i)
+                                                ? Pe(t, r.activeRange, i)
                                                 : t;
                                         case 'REMOVE_EVENTS':
                                             return (function vl(t, e) {
@@ -7610,9 +7605,9 @@
                                                 };
                                             })(t, e.eventStore);
                                         case 'REMOVE_EVENT_SOURCE':
-                                            return So(t, e.sourceId);
+                                            return Ao(t, e.sourceId);
                                         case 'REMOVE_ALL_EVENT_SOURCES':
-                                            return Vt(t, function (o) {
+                                            return Rt(t, function (o) {
                                                 return !o.sourceId;
                                             });
                                         case 'REMOVE_ALL_EVENTS':
@@ -7620,50 +7615,50 @@
                                         default:
                                             return t;
                                     }
-                                })(i.eventStore, e, v, p, f),
+                                })(i.eventStore, e, v, p, d),
                                 E =
-                                    (yo(v) &&
+                                    (vo(v) &&
                                         !c.options.progressiveEventRendering &&
                                         i.renderableEventStore) ||
                                     g,
-                                m = this.buildViewUiProps(f),
+                                m = this.buildViewUiProps(d),
                                 w = m.eventUiSingleBase,
-                                _ = m.selectionConfig,
-                                R = this.buildEventUiBySource(v),
-                                z = {
+                                C = m.selectionConfig,
+                                D = this.buildEventUiBySource(v),
+                                k = {
                                     dynamicOptionOverrides: a,
                                     currentViewType: l,
-                                    currentDate: d,
+                                    currentDate: f,
                                     dateProfile: p,
                                     eventSources: v,
                                     eventStore: g,
                                     renderableEventStore: E,
-                                    selectionConfig: _,
+                                    selectionConfig: C,
                                     eventUiBases: this.buildEventUiBases(
                                         E.defs,
                                         w,
-                                        R
+                                        D
                                     ),
                                     businessHours:
-                                        this.parseContextBusinessHours(f),
-                                    dateSelection: of(i.dateSelection, e),
-                                    eventSelection: af(i.eventSelection, e),
-                                    eventDrag: sf(i.eventDrag, e),
-                                    eventResize: lf(i.eventResize, e),
+                                        this.parseContextBusinessHours(d),
+                                    dateSelection: id(i.dateSelection, e),
+                                    eventSelection: od(i.eventSelection, e),
+                                    eventDrag: ad(i.eventDrag, e),
+                                    eventResize: sd(i.eventResize, e),
                                 },
-                                Q = (0, u.pi)((0, u.pi)({}, f), z),
-                                P = 0,
-                                Y = s.pluginHooks.reducers;
-                            P < Y.length;
-                            P++
+                                P = (0, u.pi)((0, u.pi)({}, d), k),
+                                T = 0,
+                                F = s.pluginHooks.reducers;
+                            T < F.length;
+                            T++
                         )
-                            (0, u.pi)(z, (0, Y[P])(i, e, Q));
-                        var de = rr(i, f),
-                            oe = rr(z, f);
-                        !de && oe
+                            (0, u.pi)(k, (0, F[T])(i, e, P));
+                        var X = On(i, d),
+                            j = On(k, d);
+                        !X && j
                             ? o.trigger('loading', !0)
-                            : de && !oe && o.trigger('loading', !1),
-                            (this.state = z),
+                            : X && !j && o.trigger('loading', !1),
+                            (this.state = k),
                             r.onAction && r.onAction(e);
                     }),
                     (t.prototype.updateData = function () {
@@ -7703,18 +7698,18 @@
                             )),
                             l = o.pluginHooks.optionChangeHandlers,
                             c = i && i.calendarOptions,
-                            f = o.calendarOptions;
-                        if (c && c !== f)
-                            for (var d in (c.timeZone !== f.timeZone &&
+                            d = o.calendarOptions;
+                        if (c && c !== d)
+                            for (var f in (c.timeZone !== d.timeZone &&
                                 ((r.eventSources = s.eventSources =
                                     (function Zc(t, e, n) {
                                         var r = e ? e.activeRange : null;
-                                        return tr(t, Eo(t, n), r, !0, n);
+                                        return Bn(t, mo(t, n), r, !0, n);
                                     })(s.eventSources, r.dateProfile, s)),
                                 (r.eventStore = s.eventStore =
-                                    (function nf(t, e, n) {
+                                    (function nd(t, e, n) {
                                         var r = t.defs,
-                                            i = Ee(t.instances, function (o) {
+                                            i = le(t.instances, function (o) {
                                                 var a = r[o.defId];
                                                 return a.allDay ||
                                                     a.recurringDef
@@ -7754,7 +7749,7 @@
                                         return { defs: r, instances: i };
                                     })(s.eventStore, i.dateEnv, s.dateEnv))),
                             l))
-                                c[d] !== f[d] && l[d](f[d], s);
+                                c[f] !== d[f] && l[f](d[f], s);
                         n.onData && n.onData(s);
                     }),
                     (t.prototype._computeOptionsData = function (e, n, r) {
@@ -7763,8 +7758,8 @@
                             a = i.pluginHooks,
                             s = i.localeDefaults,
                             l = i.availableLocaleData;
-                        ko(i.extra);
-                        var f = this.buildDateEnv(
+                        xo(i.extra);
+                        var d = this.buildDateEnv(
                                 o.timeZone,
                                 o.locale,
                                 o.weekNumberCalculation,
@@ -7774,41 +7769,41 @@
                                 l,
                                 o.defaultRangeSeparator
                             ),
-                            d = this.buildViewSpecs(a.views, e, n, s),
+                            f = this.buildViewSpecs(a.views, e, n, s),
                             p = this.buildTheme(o, a);
                         return {
                             calendarOptions: o,
                             pluginHooks: a,
-                            dateEnv: f,
-                            viewSpecs: d,
+                            dateEnv: d,
+                            viewSpecs: f,
                             theme: p,
-                            toolbarConfig: this.parseToolbars(o, e, p, d, r),
+                            toolbarConfig: this.parseToolbars(o, e, p, f, r),
                             localeDefaults: s,
                             availableRawLocales: l.map,
                         };
                     }),
                     (t.prototype.processRawCalendarOptions = function (e, n) {
-                        var r = Nn([De, e, n]),
+                        var r = pn([de, e, n]),
                             o = r.locale,
                             a = this.organizeRawLocales(r.locales),
                             l = this.buildLocale(
                                 o || a.defaultCode,
                                 a.map
                             ).options,
-                            c = this.buildPluginHooks(e.plugins || [], Ro),
-                            f = (this.currentCalendarOptionsRefiners = (0,
+                            c = this.buildPluginHooks(e.plugins || [], Co),
+                            d = (this.currentCalendarOptionsRefiners = (0,
                             u.pi)(
                                 (0, u.pi)(
                                     (0, u.pi)(
-                                        (0, u.pi)((0, u.pi)({}, Mi), Ii),
-                                        Ni
+                                        (0, u.pi)((0, u.pi)({}, Ri), Ti),
+                                        ki
                                     ),
                                     c.listenerRefiners
                                 ),
                                 c.optionRefiners
                             )),
-                            d = {},
-                            p = Nn([De, l, e, n]),
+                            f = {},
+                            p = pn([de, l, e, n]),
                             v = {},
                             g = this.currentCalendarOptionsInput,
                             b = this.currentCalendarOptionsRefined,
@@ -7816,11 +7811,11 @@
                         for (var m in p)
                             'plugins' !== m &&
                                 (p[m] === g[m] ||
-                                (In[m] && m in g && In[m](g[m], p[m]))
+                                (un[m] && m in g && un[m](g[m], p[m]))
                                     ? (v[m] = b[m])
-                                    : f[m]
-                                    ? ((v[m] = f[m](p[m])), (E = !0))
-                                    : (d[m] = g[m]));
+                                    : d[m]
+                                    ? ((v[m] = d[m](p[m])), (E = !0))
+                                    : (f[m] = g[m]));
                         return (
                             E &&
                                 ((this.currentCalendarOptionsInput = p),
@@ -7832,7 +7827,7 @@
                                 pluginHooks: c,
                                 availableLocaleData: a,
                                 localeDefaults: l,
-                                extra: d,
+                                extra: f,
                             }
                         );
                     }),
@@ -7858,7 +7853,7 @@
                             ),
                             s = a.refinedOptions;
                         return (
-                            ko(a.extra),
+                            xo(a.extra),
                             {
                                 viewSpec: o,
                                 options: s,
@@ -7903,8 +7898,8 @@
                         i,
                         o
                     ) {
-                        var a = Nn([
-                                De,
+                        var a = pn([
+                                de,
                                 e.optionDefaults,
                                 r,
                                 i,
@@ -7915,8 +7910,8 @@
                                 (0, u.pi)(
                                     (0, u.pi)(
                                         (0, u.pi)(
-                                            (0, u.pi)((0, u.pi)({}, Mi), Ii),
-                                            Ni
+                                            (0, u.pi)((0, u.pi)({}, Ri), Ti),
+                                            ki
                                         ),
                                         ul
                                     ),
@@ -7926,12 +7921,12 @@
                             ),
                             l = {},
                             c = this.currentViewOptionsInput,
-                            f = this.currentViewOptionsRefined,
-                            d = !1,
+                            d = this.currentViewOptionsRefined,
+                            f = !1,
                             p = {};
                         for (var v in a)
                             a[v] === c[v]
-                                ? (l[v] = f[v])
+                                ? (l[v] = d[v])
                                 : (a[v] === this.currentCalendarOptionsInput[v]
                                       ? v in
                                             this
@@ -7943,9 +7938,9 @@
                                       : s[v]
                                       ? (l[v] = s[v](a[v]))
                                       : (p[v] = a[v]),
-                                  (d = !0));
+                                  (f = !0));
                         return (
-                            d &&
+                            f &&
                                 ((this.currentViewOptionsInput = a),
                                 (this.currentViewOptionsRefined = l)),
                             {
@@ -7958,9 +7953,9 @@
                     t
                 );
             })();
-            function Nf(t, e, n, r, i, o, a, s) {
-                var l = Gn(e || a.defaultCode, a.map);
-                return new Ki({
+            function Id(t, e, n, r, i, o, a, s) {
+                var l = Sn(e || a.defaultCode, a.map);
+                return new Yi({
                     calendarSystem: 'gregory',
                     timeZone: t,
                     namedTimeZoneImpl: o.namedTimeZonedImpl,
@@ -7972,21 +7967,21 @@
                     defaultSeparator: s,
                 });
             }
-            function Pf(t, e) {
-                return new (e.themeClasses[t.themeSystem] || Be)(t);
+            function Nd(t, e) {
+                return new (e.themeClasses[t.themeSystem] || we)(t);
             }
-            function Bf(t) {
-                return new (t.dateProfileGeneratorClass || mo)(t);
+            function Pd(t) {
+                return new (t.dateProfileGeneratorClass || po)(t);
             }
-            function Of(t, e, n) {
+            function Bd(t, e, n) {
                 return new Ll(t, e, n);
             }
-            function Hf(t) {
-                return Ee(t, function (e) {
+            function Hd(t) {
+                return le(t, function (e) {
                     return e.ui;
                 });
             }
-            function zf(t, e, n) {
+            function Od(t, e, n) {
                 var r = { '': e };
                 for (var i in t) {
                     var o = t[i];
@@ -7994,10 +7989,10 @@
                 }
                 return r;
             }
-            function Ff(t) {
+            function zd(t) {
                 var e = t.options;
                 return {
-                    eventUiSingleBase: Zt(
+                    eventUiSingleBase: kt(
                         {
                             display: e.eventDisplay,
                             editable: e.editable,
@@ -8016,7 +8011,7 @@
                         },
                         t
                     ),
-                    selectionConfig: Zt(
+                    selectionConfig: kt(
                         {
                             constraint: e.selectConstraint,
                             overlap:
@@ -8029,7 +8024,7 @@
                     ),
                 };
             }
-            function rr(t, e) {
+            function On(t, e) {
                 for (
                     var n = 0, r = e.pluginHooks.isLoadingFuncs;
                     n < r.length;
@@ -8038,9 +8033,9 @@
                     if ((0, r[n])(t)) return !0;
                 return !1;
             }
-            function Uf(t) {
+            function Fd(t) {
                 return (function nc(t, e) {
-                    return Wt(
+                    return xt(
                         (function rc(t) {
                             return (
                                 !0 === t
@@ -8061,7 +8056,7 @@
                     );
                 })(t.options.businessHours, t);
             }
-            function ko(t, e) {
+            function xo(t, e) {
                 for (var n in t)
                     console.warn(
                         "Unknown option '" +
@@ -8077,7 +8072,7 @@
                         (r.handleData = function (i) {
                             r.dataManager ? r.setState(i) : (r.state = i);
                         }),
-                        (r.dataManager = new _o({
+                        (r.dataManager = new So({
                             optionOverrides: n.optionOverrides,
                             calendarApi: n.calendarApi,
                             onData: r.handleData,
@@ -8094,8 +8089,8 @@
                         r !== n.optionOverrides &&
                             this.dataManager.resetOptions(r);
                     });
-            })(wn);
-            var Mo = (function () {
+            })(tn);
+            var Ro = (function () {
                 function t() {
                     (this.strictOrder = !1),
                         (this.allowReslicing = !1),
@@ -8162,7 +8157,7 @@
                                               {
                                                   index: e.index,
                                                   thickness: e.thickness,
-                                                  span: or(s, a),
+                                                  span: Fn(s, a),
                                               },
                                           ],
                                           o
@@ -8175,10 +8170,10 @@
                     (t.prototype.insertEntryAt = function (e, n) {
                         var i = this.entriesByLevel;
                         -1 === n.lateral
-                            ? (ar(this.levelCoords, n.level, n.levelCoord),
-                              ar(i, n.level, [e]))
-                            : ar(i[n.level], n.lateral, e),
-                            (this.stackCnts[Qe(e)] = n.stackCnt);
+                            ? (Un(this.levelCoords, n.level, n.levelCoord),
+                              Un(i, n.level, [e]))
+                            : Un(i[n.level], n.lateral, e),
+                            (this.stackCnts[Re(e)] = n.stackCnt);
                     }),
                     (t.prototype.findInsertion = function (e) {
                         for (
@@ -8190,8 +8185,8 @@
                                 s = r.length,
                                 l = 0,
                                 c = -1,
-                                f = -1,
-                                d = null,
+                                d = -1,
+                                f = null,
                                 p = 0,
                                 v = 0;
                             v < s;
@@ -8202,32 +8197,32 @@
                             for (
                                 var b = i[v],
                                     E = void 0,
-                                    m = sr(b, e.span.start, ir),
+                                    m = Ln(b, e.span.start, zn),
                                     w = m[0] + m[1];
                                 (E = b[w]) && E.span.start < e.span.end;
 
                             ) {
-                                var _ = g + E.thickness;
-                                _ > l && ((l = _), (d = E), (c = v), (f = w)),
-                                    _ === l && (p = Math.max(p, a[Qe(E)] + 1)),
+                                var C = g + E.thickness;
+                                C > l && ((l = C), (f = E), (c = v), (d = w)),
+                                    C === l && (p = Math.max(p, a[Re(E)] + 1)),
                                     (w += 1);
                             }
                         }
-                        var R = 0;
-                        if (d) for (R = c + 1; R < s && r[R] < l; ) R += 1;
-                        var F = -1;
+                        var D = 0;
+                        if (f) for (D = c + 1; D < s && r[D] < l; ) D += 1;
+                        var _ = -1;
                         return (
-                            R < s &&
-                                r[R] === l &&
-                                (F = sr(i[R], e.span.end, ir)[0]),
+                            D < s &&
+                                r[D] === l &&
+                                (_ = Ln(i[D], e.span.end, zn)[0]),
                             {
                                 touchingLevel: c,
-                                touchingLateral: f,
-                                touchingEntry: d,
+                                touchingLateral: d,
+                                touchingEntry: f,
                                 stackCnt: p,
                                 levelCoord: l,
-                                level: R,
-                                lateral: F,
+                                level: D,
+                                lateral: _,
                             }
                         );
                     }),
@@ -8242,12 +8237,12 @@
                             a += 1
                         )
                             for (
-                                var l = r[a], c = 0, f = n[a];
-                                c < f.length;
+                                var l = r[a], c = 0, d = n[a];
+                                c < d.length;
                                 c++
                             )
                                 o.push(
-                                    (0, u.pi)((0, u.pi)({}, f[c]), {
+                                    (0, u.pi)((0, u.pi)({}, d[c]), {
                                         levelCoord: l,
                                     })
                                 );
@@ -8256,27 +8251,27 @@
                     t
                 );
             })();
-            function ir(t) {
+            function zn(t) {
                 return t.span.end;
             }
-            function Qe(t) {
+            function Re(t) {
                 return t.index + ':' + t.span.start;
             }
-            function Qf(t, e) {
+            function Ld(t, e) {
                 return {
                     start: Math.min(t.start, e.start),
                     end: Math.max(t.end, e.end),
                 };
             }
-            function or(t, e) {
+            function Fn(t, e) {
                 var n = Math.max(t.start, e.start),
                     r = Math.min(t.end, e.end);
                 return n < r ? { start: n, end: r } : null;
             }
-            function ar(t, e, n) {
+            function Un(t, e, n) {
                 t.splice(e, 0, n);
             }
-            function sr(t, e, n) {
+            function Ln(t, e, n) {
                 var r = 0,
                     i = t.length;
                 if (!i || e < n(t[r])) return [0, 0];
@@ -8292,14 +8287,14 @@
                 }
                 return [r, 0];
             }
-            var nt = (function () {
+            var Fe = (function () {
                 function t(e) {
                     (this.component = e.component),
                         (this.isHitComboAllowed = e.isHitComboAllowed || null);
                 }
                 return (t.prototype.destroy = function () {}), t;
             })();
-            function Wf(t, e) {
+            function Qd(t, e) {
                 return {
                     component: t,
                     el: e.el,
@@ -8308,14 +8303,14 @@
                     isHitComboAllowed: e.isHitComboAllowed || null,
                 };
             }
-            function lr(t) {
+            function Qn(t) {
                 var e;
                 return ((e = {})[t.component.uid] = t), e;
             }
-            var en = {},
-                Io = (function () {
+            var Ot = {},
+                To = (function () {
                     function t(e, n) {
-                        this.emitter = new Kt();
+                        this.emitter = new Bt();
                     }
                     return (
                         (t.prototype.destroy = function () {}),
@@ -8325,15 +8320,15 @@
                         t
                     );
                 })(),
-                tn = {},
-                Vf = {
-                    startTime: U,
-                    duration: U,
+                zt = {},
+                Wd = {
+                    startTime: M,
+                    duration: M,
                     create: Boolean,
                     sourceId: String,
                 };
-            function cr(t) {
-                var e = Qt(t, Vf),
+            function Wn(t) {
+                var e = St(t, Wd),
                     n = e.refined;
                 return {
                     startTime: n.startTime || null,
@@ -8343,7 +8338,7 @@
                     leftoverProps: e.extra,
                 };
             }
-            var Gf = (function (t) {
+            var Vd = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -8374,12 +8369,12 @@
                                 s++
                             ) {
                                 var c = l[s],
-                                    f = c.buttonName,
-                                    d = c.buttonClick,
+                                    d = c.buttonName,
+                                    f = c.buttonClick,
                                     p = c.buttonText,
                                     v = c.buttonIcon,
                                     g = c.buttonHint;
-                                if ('title' === f)
+                                if ('title' === d)
                                     (a = !1),
                                         o.push(
                                             h(
@@ -8393,15 +8388,15 @@
                                             )
                                         );
                                 else {
-                                    var b = f === r.activeButton,
+                                    var b = d === r.activeButton,
                                         E =
                                             (!r.isTodayEnabled &&
-                                                'today' === f) ||
+                                                'today' === d) ||
                                             (!r.isPrevEnabled &&
-                                                'prev' === f) ||
-                                            (!r.isNextEnabled && 'next' === f),
+                                                'prev' === d) ||
+                                            (!r.isNextEnabled && 'next' === d),
                                         m = [
-                                            'fc-' + f + '-button',
+                                            'fc-' + d + '-button',
                                             i.getClass('button'),
                                         ];
                                     b && m.push(i.getClass('buttonActive')),
@@ -8417,7 +8412,7 @@
                                                     disabled: E,
                                                     'aria-pressed': b,
                                                     className: m.join(' '),
-                                                    onClick: d,
+                                                    onClick: f,
                                                 },
                                                 p ||
                                                     (v
@@ -8440,8 +8435,8 @@
                         }),
                         e
                     );
-                })(L),
-                No = (function (t) {
+                })(N),
+                ko = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -8478,7 +8473,7 @@
                         }),
                         (e.prototype.renderSection = function (n, r) {
                             var i = this.props;
-                            return h(Gf, {
+                            return h(Vd, {
                                 key: n,
                                 widgetGroups: r,
                                 title: i.title,
@@ -8492,8 +8487,8 @@
                         }),
                         e
                     );
-                })(L),
-                Zf = (function (t) {
+                })(N),
+                Gd = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
@@ -8501,7 +8496,7 @@
                             (n.state = { availableWidth: null }),
                             (n.handleEl = function (r) {
                                 (n.el = r),
-                                    me(n.props.elRef, r),
+                                    te(n.props.elRef, r),
                                     n.updateAvailableWidth();
                             }),
                             (n.handleResize = function () {
@@ -8556,26 +8551,23 @@
                         }),
                         e
                     );
-                })(L),
-                jf = (function (t) {
+                })(N),
+                Zd = (function (t) {
                     function e(n) {
                         var r = t.call(this, n) || this;
                         return (
                             (r.handleSegClick = function (i, o) {
                                 var a = r.component,
                                     s = a.context,
-                                    l = tt(o);
+                                    l = ze(o);
                                 if (l && a.isValidSegDownEl(i.target)) {
-                                    var c = ne(
-                                            i.target,
-                                            '.fc-event-forced-url'
-                                        ),
-                                        f = c
+                                    var c = V(i.target, '.fc-event-forced-url'),
+                                        d = c
                                             ? c.querySelector('a[href]').href
                                             : '';
                                     s.emitter.trigger('eventClick', {
                                         el: o,
-                                        event: new j(
+                                        event: new z(
                                             a.context,
                                             l.eventRange.def,
                                             l.eventRange.instance
@@ -8583,12 +8575,12 @@
                                         jsEvent: i,
                                         view: s.viewApi,
                                     }),
-                                        f &&
+                                        d &&
                                             !i.defaultPrevented &&
-                                            (window.location.href = f);
+                                            (window.location.href = d);
                                 }
                             }),
-                            (r.destroy = di(
+                            (r.destroy = si(
                                 n.el,
                                 'click',
                                 '.fc-event',
@@ -8598,8 +8590,8 @@
                         );
                     }
                     return (0, u.ZT)(e, t), e;
-                })(nt),
-                Yf = (function (t) {
+                })(Fe),
+                jd = (function (t) {
                     function e(n) {
                         var r = t.call(this, n) || this;
                         return (
@@ -8608,7 +8600,7 @@
                                     r.handleSegLeave(null, r.currentSegEl);
                             }),
                             (r.handleSegEnter = function (i, o) {
-                                tt(o) &&
+                                ze(o) &&
                                     ((r.currentSegEl = o),
                                     r.triggerEvent('eventMouseEnter', i, o));
                             }),
@@ -8619,7 +8611,7 @@
                             }),
                             (r.removeHoverListeners = (function gs(t, e, n, r) {
                                 var i;
-                                return di(t, 'mouseover', e, function (o, a) {
+                                return si(t, 'mouseover', e, function (o, a) {
                                     if (a !== i) {
                                         (i = a), n(o, a);
                                         var s = function (l) {
@@ -8650,11 +8642,11 @@
                         (e.prototype.triggerEvent = function (n, r, i) {
                             var o = this.component,
                                 a = o.context,
-                                s = tt(i);
+                                s = ze(i);
                             (!r || o.isValidSegDownEl(r.target)) &&
                                 a.emitter.trigger(n, {
                                     el: i,
-                                    event: new j(
+                                    event: new z(
                                         a,
                                         s.eventRange.def,
                                         s.eventRange.instance
@@ -8665,22 +8657,22 @@
                         }),
                         e
                     );
-                })(nt),
-                qf = (function (t) {
+                })(Fe),
+                Yd = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.buildViewContext = I(Tc)),
-                            (n.buildViewPropTransformers = I(Xf)),
-                            (n.buildToolbarProps = I(Jf)),
-                            (n.headerRef = X()),
-                            (n.footerRef = X()),
+                            (n.buildViewContext = x(Rc)),
+                            (n.buildViewPropTransformers = x(Jd)),
+                            (n.buildToolbarProps = x(qd)),
+                            (n.headerRef = U()),
+                            (n.footerRef = U()),
                             (n.interactionsStore = {}),
-                            (n.state = { viewLabelId: kt() }),
+                            (n.state = { viewLabelId: pt() }),
                             (n.registerInteractiveComponent = function (r, i) {
-                                var o = Wf(r, i),
-                                    l = [jf, Yf]
+                                var o = Qd(r, i),
+                                    l = [Zd, jd]
                                         .concat(
                                             n.props.pluginHooks
                                                 .componentInteractions
@@ -8689,7 +8681,7 @@
                                             return new c(o);
                                         });
                                 (n.interactionsStore[r.uid] = l),
-                                    (en[r.uid] = o);
+                                    (Ot[r.uid] = o);
                             }),
                             (n.unregisterInteractiveComponent = function (r) {
                                 var i = n.interactionsStore[r.uid];
@@ -8698,9 +8690,9 @@
                                         a[o].destroy();
                                     delete n.interactionsStore[r.uid];
                                 }
-                                delete en[r.uid];
+                                delete Ot[r.uid];
                             }),
-                            (n.resizeRunner = new nr(function () {
+                            (n.resizeRunner = new Hn(function () {
                                 n.props.emitter.trigger('_resize', !0),
                                     n.props.emitter.trigger('windowResize', {
                                         view: n.props.viewApi,
@@ -8727,7 +8719,7 @@
                                     n.dateProfile,
                                     n.dateProfileGenerator,
                                     n.currentDate,
-                                    bt(n.options.now, n.dateEnv),
+                                    Ke(n.options.now, n.dateEnv),
                                     n.viewTitle
                                 ),
                                 a = !1,
@@ -8754,41 +8746,41 @@
                                     this.registerInteractiveComponent,
                                     this.unregisterInteractiveComponent
                                 ),
-                                f =
+                                d =
                                     r.header && r.header.hasTitle
                                         ? this.state.viewLabelId
                                         : '';
                             return h(
-                                Se.Provider,
+                                fe.Provider,
                                 { value: c },
                                 r.header &&
                                     h(
-                                        No,
+                                        ko,
                                         (0, u.pi)(
                                             {
                                                 ref: this.headerRef,
                                                 extraClassName:
                                                     'fc-header-toolbar',
                                                 model: r.header,
-                                                titleId: f,
+                                                titleId: d,
                                             },
                                             o
                                         )
                                     ),
                                 h(
-                                    Zf,
+                                    Gd,
                                     {
                                         liquid: a,
                                         height: s,
                                         aspectRatio: l,
-                                        labeledById: f,
+                                        labeledById: d,
                                     },
                                     this.renderView(n),
                                     this.buildAppendContent()
                                 ),
                                 r.footer &&
                                     h(
-                                        No,
+                                        ko,
                                         (0, u.pi)(
                                             {
                                                 ref: this.footerRef,
@@ -8843,7 +8835,7 @@
                                         return i(n);
                                     }
                                 );
-                            return h.apply(void 0, (0, u.ev)([K, {}], r));
+                            return h.apply(void 0, (0, u.ev)([L, {}], r));
                         }),
                         (e.prototype.renderView = function (n) {
                             for (
@@ -8872,8 +8864,8 @@
                         }),
                         e
                     );
-                })($t);
-            function Jf(t, e, n, r, i, o) {
+                })(Ht);
+            function qd(t, e, n, r, i, o) {
                 var a = n.build(i, void 0, !1),
                     s = n.buildPrev(e, r, !1),
                     l = n.buildNext(e, r, !1);
@@ -8881,17 +8873,17 @@
                     title: o,
                     activeButton: t.type,
                     navUnit: t.singleUnit,
-                    isTodayEnabled: a.isValid && !Ne(e.currentRange, i),
+                    isTodayEnabled: a.isValid && !Ae(e.currentRange, i),
                     isPrevEnabled: s.isValid,
                     isNextEnabled: l.isValid,
                 };
             }
-            function Xf(t) {
+            function Jd(t) {
                 return t.map(function (e) {
                     return new e();
                 });
             }
-            var Kf = (function (t) {
+            var Xd = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
@@ -8924,7 +8916,7 @@
                                     n.theme.getClass('root'),
                                 ];
                             return (
-                                oo() || s.push('fc-liquid-hack'),
+                                to() || s.push('fc-liquid-hack'),
                                 n.children(s, a, o, i)
                             );
                         }),
@@ -8940,12 +8932,12 @@
                         }),
                         e
                     );
-                })(L),
-                Po = 'fc-col-header-cell';
-            function Bo(t) {
+                })(N),
+                _o = 'fc-col-header-cell';
+            function Mo(t) {
                 return t.text;
             }
-            var ed = (function (t) {
+            var $d = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -8959,12 +8951,12 @@
                                 a = n.viewApi,
                                 s = this.props,
                                 l = s.date,
-                                f = ao(l, s.todayRange, null, s.dateProfile),
-                                d = [Po].concat(Yn(f, o)),
+                                d = no(l, s.todayRange, null, s.dateProfile),
+                                f = [_o].concat(Tn(d, o)),
                                 p = r.format(l, s.dayHeaderFormat),
                                 v =
-                                    !f.isDisabled && s.colCnt > 1
-                                        ? Xt(this.context, l)
+                                    !d.isDisabled && s.colCnt > 1
+                                        ? Pt(this.context, l)
                                         : {},
                                 g = (0, u.pi)(
                                     (0, u.pi)(
@@ -8974,15 +8966,15 @@
                                         ),
                                         { text: p }
                                     ),
-                                    f
+                                    d
                                 );
                             return h(
-                                be,
+                                ie,
                                 {
                                     hookProps: g,
                                     classNames: i.dayHeaderClassNames,
                                     content: i.dayHeaderContent,
-                                    defaultContent: Bo,
+                                    defaultContent: Mo,
                                     didMount: i.dayHeaderDidMount,
                                     willUnmount: i.dayHeaderWillUnmount,
                                 },
@@ -8993,12 +8985,12 @@
                                             {
                                                 ref: b,
                                                 role: 'columnheader',
-                                                className: d
+                                                className: f
                                                     .concat(E)
                                                     .join(' '),
-                                                'data-date': f.isDisabled
+                                                'data-date': d.isDisabled
                                                     ? void 0
-                                                    : Ti(l),
+                                                    : Di(l),
                                                 colSpan: s.colSpan,
                                             },
                                             s.extraDataAttrs
@@ -9009,7 +9001,7 @@
                                                 className:
                                                     'fc-scrollgrid-sync-inner',
                                             },
-                                            !f.isDisabled &&
+                                            !d.isDisabled &&
                                                 h(
                                                     'a',
                                                     (0, u.pi)(
@@ -9033,9 +9025,9 @@
                         }),
                         e
                     );
-                })(L),
-                td = Z({ weekday: 'long' }),
-                nd = (function (t) {
+                })(N),
+                ef = O({ weekday: 'long' }),
+                tf = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -9048,7 +9040,7 @@
                                 o = r.theme,
                                 a = r.viewApi,
                                 s = r.options,
-                                l = ie(new Date(2592e5), n.dow),
+                                l = Z(new Date(2592e5), n.dow),
                                 c = {
                                     dow: n.dow,
                                     isDisabled: !1,
@@ -9057,11 +9049,11 @@
                                     isToday: !1,
                                     isOther: !1,
                                 },
-                                f = [Po].concat(
-                                    Yn(c, o),
+                                d = [_o].concat(
+                                    Tn(c, o),
                                     n.extraClassNames || []
                                 ),
-                                d = i.format(l, n.dayHeaderFormat),
+                                f = i.format(l, n.dayHeaderFormat),
                                 p = (0, u.pi)(
                                     (0, u.pi)(
                                         (0, u.pi)((0, u.pi)({ date: l }, c), {
@@ -9069,15 +9061,15 @@
                                         }),
                                         n.extraHookProps
                                     ),
-                                    { text: d }
+                                    { text: f }
                                 );
                             return h(
-                                be,
+                                ie,
                                 {
                                     hookProps: p,
                                     classNames: s.dayHeaderClassNames,
                                     content: s.dayHeaderContent,
-                                    defaultContent: Bo,
+                                    defaultContent: Mo,
                                     didMount: s.dayHeaderDidMount,
                                     willUnmount: s.dayHeaderWillUnmount,
                                 },
@@ -9088,7 +9080,7 @@
                                             {
                                                 ref: v,
                                                 role: 'columnheader',
-                                                className: f
+                                                className: d
                                                     .concat(g)
                                                     .join(' '),
                                                 colSpan: n.colSpan,
@@ -9106,7 +9098,7 @@
                                                 {
                                                     'aria-label': i.format(
                                                         l,
-                                                        td
+                                                        ef
                                                     ),
                                                     className: [
                                                         'fc-col-header-cell-cushion',
@@ -9125,12 +9117,12 @@
                         }),
                         e
                     );
-                })(L),
-                nn = (function (t) {
+                })(N),
+                Ft = (function (t) {
                     function e(n, r) {
                         var i = t.call(this, n, r) || this;
                         return (
-                            (i.initialNowDate = bt(r.options.now, r.dateEnv)),
+                            (i.initialNowDate = Ke(r.options.now, r.dateEnv)),
                             (i.initialNowQueriedMs = new Date().valueOf()),
                             (i.state = i.computeTiming().currentState),
                             i
@@ -9155,24 +9147,24 @@
                         (e.prototype.computeTiming = function () {
                             var r = this.props,
                                 i = this.context,
-                                o = Fe(
+                                o = Ce(
                                     this.initialNowDate,
                                     new Date().valueOf() -
                                         this.initialNowQueriedMs
                                 ),
                                 a = i.dateEnv.startOf(o, r.unit),
-                                s = i.dateEnv.add(a, U(1, r.unit)),
+                                s = i.dateEnv.add(a, M(1, r.unit)),
                                 l = s.valueOf() - o.valueOf();
                             return (
                                 (l = Math.min(864e5, l)),
                                 {
                                     currentState: {
                                         nowDate: a,
-                                        todayRange: Oo(a),
+                                        todayRange: Io(a),
                                     },
                                     nextState: {
                                         nowDate: s,
-                                        todayRange: Oo(s),
+                                        todayRange: Io(s),
                                     },
                                     waitMs: l,
                                 }
@@ -9191,18 +9183,18 @@
                         (e.prototype.clearTimeout = function () {
                             this.timeoutId && clearTimeout(this.timeoutId);
                         }),
-                        (e.contextType = Se),
+                        (e.contextType = fe),
                         e
                     );
-                })(wn);
-            function Oo(t) {
-                var e = V(t);
-                return { start: e, end: ie(e, 1) };
+                })(tn);
+            function Io(t) {
+                var e = H(t);
+                return { start: e, end: Z(e, 1) };
             }
-            var Ho = (function (t) {
+            var No = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
-                    return (n.createDayHeaderFormatter = I(rd)), n;
+                    return (n.createDayHeaderFormatter = x(nf)), n;
                 }
                 return (
                     (0, u.ZT)(e, t),
@@ -9217,24 +9209,24 @@
                                 a,
                                 i.length
                             );
-                        return h(nn, { unit: 'day' }, function (c, f) {
+                        return h(Ft, { unit: 'day' }, function (c, d) {
                             return h(
                                 'tr',
                                 { role: 'row' },
                                 s && s('day'),
-                                i.map(function (d) {
+                                i.map(function (f) {
                                     return a
-                                        ? h(ed, {
-                                              key: d.toISOString(),
-                                              date: d,
+                                        ? h($d, {
+                                              key: f.toISOString(),
+                                              date: f,
                                               dateProfile: o,
-                                              todayRange: f,
+                                              todayRange: d,
                                               colCnt: i.length,
                                               dayHeaderFormat: l,
                                           })
-                                        : h(nd, {
-                                              key: d.getUTCDay(),
-                                              dow: d.getUTCDay(),
+                                        : h(tf, {
+                                              key: f.getUTCDay(),
+                                              dow: f.getUTCDay(),
                                               dayHeaderFormat: l,
                                           });
                                 })
@@ -9243,12 +9235,12 @@
                     }),
                     e
                 );
-            })(L);
-            function rd(t, e, n) {
+            })(N);
+            function nf(t, e, n) {
                 return (
                     t ||
-                    (function $f(t, e) {
-                        return Z(
+                    (function Kd(t, e) {
+                        return O(
                             !t || e > 10
                                 ? { weekday: 'short' }
                                 : e > 1
@@ -9263,7 +9255,7 @@
                     })(e, n)
                 );
             }
-            var zo = (function () {
+            var Po = (function () {
                     function t(e, n) {
                         for (
                             var r = e.start, i = e.end, o = [], a = [], s = -1;
@@ -9273,7 +9265,7 @@
                             n.isHiddenDay(r)
                                 ? o.push(s + 0.5)
                                 : (o.push((s += 1)), a.push(r)),
-                                (r = ie(r, 1));
+                                (r = Z(r, 1));
                         (this.dates = a),
                             (this.indices = o),
                             (this.cnt = a.length);
@@ -9281,7 +9273,7 @@
                     return (
                         (t.prototype.sliceRange = function (e) {
                             var n = this.getDateDayIndex(e.start),
-                                r = this.getDateDayIndex(ie(e.end, -1)),
+                                r = this.getDateDayIndex(Z(e.end, -1)),
                                 i = Math.max(0, n),
                                 o = Math.min(this.cnt - 1, r);
                             return (i = Math.ceil(i)) <= (o = Math.floor(o))
@@ -9295,7 +9287,7 @@
                         }),
                         (t.prototype.getDateDayIndex = function (e) {
                             var n = this.indices,
-                                r = Math.floor(_e(this.dates[0], e));
+                                r = Math.floor(ge(this.dates[0], e));
                             return r < 0
                                 ? n[0] - 1
                                 : r >= n.length
@@ -9305,7 +9297,7 @@
                         t
                     );
                 })(),
-                Fo = (function () {
+                Bo = (function () {
                     function t(e, n) {
                         var i,
                             o,
@@ -9371,13 +9363,13 @@
                         t
                     );
                 })(),
-                Uo = (function () {
+                Ho = (function () {
                     function t() {
-                        (this.sliceBusinessHours = I(this._sliceBusinessHours)),
-                            (this.sliceDateSelection = I(this._sliceDateSpan)),
-                            (this.sliceEventStore = I(this._sliceEventStore)),
-                            (this.sliceEventDrag = I(this._sliceInteraction)),
-                            (this.sliceEventResize = I(this._sliceInteraction)),
+                        (this.sliceBusinessHours = x(this._sliceBusinessHours)),
+                            (this.sliceDateSelection = x(this._sliceDateSpan)),
+                            (this.sliceEventStore = x(this._sliceEventStore)),
+                            (this.sliceEventDrag = x(this._sliceInteraction)),
+                            (this.sliceEventResize = x(this._sliceInteraction)),
                             (this.forceDayIfListItem = !1);
                     }
                     return (
@@ -9420,7 +9412,7 @@
                                 (0, u.ev)(
                                     [
                                         {
-                                            range: { start: e, end: Fe(e, 1) },
+                                            range: { start: e, end: Ce(e, 1) },
                                             allDay: !1,
                                         },
                                         {},
@@ -9443,7 +9435,7 @@
                                       this,
                                       (0, u.ev)(
                                           [
-                                              Xe(e, fr(n, Boolean(r)), i),
+                                              Pe(e, Vn(n, Boolean(r)), i),
                                               {},
                                               n,
                                               r,
@@ -9457,7 +9449,7 @@
                             for (var o = [], a = 4; a < arguments.length; a++)
                                 o[a - 4] = arguments[a];
                             if (e) {
-                                var s = Ln(e, n, fr(r, Boolean(i)), i);
+                                var s = En(e, n, Vn(r, Boolean(i)), i);
                                 return {
                                     bg: this.sliceEventRanges(s.bg, o),
                                     fg: this.sliceEventRanges(s.fg, o),
@@ -9469,10 +9461,10 @@
                             for (var o = [], a = 4; a < arguments.length; a++)
                                 o[a - 4] = arguments[a];
                             if (!e) return null;
-                            var s = Ln(
+                            var s = En(
                                 e.mutatedEvents,
                                 n,
-                                fr(r, Boolean(i)),
+                                Vn(r, Boolean(i)),
                                 i
                             );
                             return {
@@ -9486,7 +9478,7 @@
                                 i[o - 3] = arguments[o];
                             if (!e) return [];
                             for (
-                                var a = Hl(e, n, r),
+                                var a = Ol(e, n, r),
                                     s = this.sliceRange.apply(
                                         this,
                                         (0, u.ev)([e.range], i)
@@ -9496,8 +9488,8 @@
                                 l < c.length;
                                 l++
                             ) {
-                                var f = c[l];
-                                f.eventRange = a;
+                                var d = c[l];
+                                d.eventRange = a;
                             }
                             return s;
                         }),
@@ -9510,7 +9502,7 @@
                             var r = e.range;
                             this.forceDayIfListItem &&
                                 'list-item' === e.ui.display &&
-                                (r = { start: r.start, end: ie(r.start, 1) });
+                                (r = { start: r.start, end: Z(r.start, 1) });
                             for (
                                 var i = this.sliceRange.apply(
                                         this,
@@ -9531,21 +9523,21 @@
                         t
                     );
                 })();
-            function fr(t, e) {
+            function Vn(t, e) {
                 var n = t.activeRange;
                 return e
                     ? n
                     : {
-                          start: Fe(n.start, t.slotMinTime.milliseconds),
-                          end: Fe(n.end, t.slotMaxTime.milliseconds - 864e5),
+                          start: Ce(n.start, t.slotMinTime.milliseconds),
+                          end: Ce(n.end, t.slotMaxTime.milliseconds - 864e5),
                       };
             }
-            function dr(t, e, n) {
+            function Gn(t, e, n) {
                 var r = t.mutatedEvents.instances;
-                for (var i in r) if (!qt(e.validRange, r[i].range)) return !1;
-                return Lo({ eventDrag: t }, n);
+                for (var i in r) if (!It(e.validRange, r[i].range)) return !1;
+                return Oo({ eventDrag: t }, n);
             }
-            function Lo(t, e) {
+            function Oo(t, e) {
                 var n = e.getCurrentData(),
                     r = (0, u.pi)(
                         {
@@ -9559,30 +9551,30 @@
                         },
                         t
                     );
-                return (e.pluginHooks.isPropsValid || od)(r, e);
+                return (e.pluginHooks.isPropsValid || of)(r, e);
             }
-            function od(t, e, n, r) {
+            function of(t, e, n, r) {
                 return (
                     void 0 === n && (n = {}),
                     !(
                         (t.eventDrag &&
-                            !(function ad(t, e, n, r) {
+                            !(function af(t, e, n, r) {
                                 var i = e.getCurrentData(),
                                     o = t.eventDrag,
                                     a = o.mutatedEvents,
                                     s = a.defs,
                                     l = a.instances,
-                                    c = Jt(
+                                    c = Nt(
                                         s,
                                         o.isEvent
                                             ? t.eventUiBases
                                             : { '': i.selectionConfig }
                                     );
-                                r && (c = Ee(c, r));
-                                var f = (function rf(t, e) {
+                                r && (c = le(c, r));
+                                var d = (function rd(t, e) {
                                         return {
                                             defs: t.defs,
-                                            instances: Ue(
+                                            instances: Se(
                                                 t.instances,
                                                 function (n) {
                                                     return !e[n.instanceId];
@@ -9593,60 +9585,60 @@
                                         t.eventStore,
                                         o.affectedEvents.instances
                                     ),
-                                    d = f.defs,
-                                    p = f.instances,
-                                    v = Jt(d, t.eventUiBases);
+                                    f = d.defs,
+                                    p = d.instances,
+                                    v = Nt(f, t.eventUiBases);
                                 for (var g in l) {
                                     var b = l[g],
                                         E = b.range,
                                         m = c[b.defId],
                                         w = s[b.defId];
                                     if (
-                                        !Qo(
+                                        !zo(
                                             m.constraints,
                                             E,
-                                            f,
+                                            d,
                                             t.businessHours,
                                             e
                                         )
                                     )
                                         return !1;
-                                    var _ = e.options.eventOverlap,
-                                        R = 'function' == typeof _ ? _ : null;
-                                    for (var F in p) {
-                                        var z = p[F];
+                                    var C = e.options.eventOverlap,
+                                        D = 'function' == typeof C ? C : null;
+                                    for (var _ in p) {
+                                        var k = p[_];
                                         if (
-                                            Un(E, z.range) &&
-                                            ((!1 === v[z.defId].overlap &&
+                                            An(E, k.range) &&
+                                            ((!1 === v[k.defId].overlap &&
                                                 o.isEvent) ||
                                                 !1 === m.overlap ||
-                                                (R &&
-                                                    !R(
-                                                        new j(e, d[z.defId], z),
-                                                        new j(e, w, b)
+                                                (D &&
+                                                    !D(
+                                                        new z(e, f[k.defId], k),
+                                                        new z(e, w, b)
                                                     )))
                                         )
                                             return !1;
                                     }
                                     for (
-                                        var P = i.eventStore,
-                                            Y = 0,
-                                            W = m.allows;
-                                        Y < W.length;
-                                        Y++
+                                        var T = i.eventStore,
+                                            F = 0,
+                                            B = m.allows;
+                                        F < B.length;
+                                        F++
                                     ) {
-                                        var Tt,
-                                            de = W[Y],
-                                            oe = (0, u.pi)((0, u.pi)({}, n), {
+                                        var at,
+                                            X = B[F],
+                                            j = (0, u.pi)((0, u.pi)({}, n), {
                                                 range: b.range,
                                                 allDay: w.allDay,
                                             }),
-                                            at = P.defs[w.defId];
+                                            We = T.defs[w.defId];
                                         if (
-                                            ((Tt = at
-                                                ? new j(e, at, P.instances[g])
-                                                : new j(e, w)),
-                                            !de(Qn(oe, e), Tt))
+                                            ((at = We
+                                                ? new z(e, We, T.instances[g])
+                                                : new z(e, w)),
+                                            !X(wn(j, e), at))
                                         )
                                             return !1;
                                     }
@@ -9654,7 +9646,7 @@
                                 return !0;
                             })(t, e, n, r)) ||
                         (t.dateSelection &&
-                            !(function sd(t, e, n, r) {
+                            !(function sf(t, e, n, r) {
                                 var i = t.eventStore,
                                     o = i.defs,
                                     a = i.instances,
@@ -9663,7 +9655,7 @@
                                     c = e.getCurrentData().selectionConfig;
                                 if (
                                     (r && (c = r(c)),
-                                    !Qo(
+                                    !zo(
                                         c.constraints,
                                         l,
                                         i,
@@ -9672,16 +9664,16 @@
                                     ))
                                 )
                                     return !1;
-                                var f = e.options.selectOverlap,
-                                    d = 'function' == typeof f ? f : null;
+                                var d = e.options.selectOverlap,
+                                    f = 'function' == typeof d ? d : null;
                                 for (var p in a) {
                                     var v = a[p];
                                     if (
-                                        Un(l, v.range) &&
+                                        An(l, v.range) &&
                                         (!1 === c.overlap ||
-                                            (d &&
-                                                !d(
-                                                    new j(e, o[v.defId], v),
+                                            (f &&
+                                                !f(
+                                                    new z(e, o[v.defId], v),
                                                     null
                                                 )))
                                     )
@@ -9690,7 +9682,7 @@
                                 for (var g = 0, b = c.allows; g < b.length; g++)
                                     if (
                                         !(0, b[g])(
-                                            Qn(
+                                            wn(
                                                 (0, u.pi)((0, u.pi)({}, n), s),
                                                 e
                                             ),
@@ -9703,43 +9695,43 @@
                     )
                 );
             }
-            function Qo(t, e, n, r, i) {
+            function zo(t, e, n, r, i) {
                 for (var o = 0, a = t; o < a.length; o++)
-                    if (!cd(ld(a[o], e, n, r, i), e)) return !1;
+                    if (!cf(lf(a[o], e, n, r, i), e)) return !1;
                 return !0;
             }
-            function ld(t, e, n, r, i) {
+            function lf(t, e, n, r, i) {
                 return 'businessHours' === t
-                    ? ur(Xe(r, e, i))
+                    ? Zn(Pe(r, e, i))
                     : 'string' == typeof t
-                    ? ur(
-                          Vt(n, function (o) {
+                    ? Zn(
+                          Rt(n, function (o) {
                               return o.groupId === t;
                           })
                       )
                     : 'object' == typeof t && t
-                    ? ur(Xe(t, e, i))
+                    ? Zn(Pe(t, e, i))
                     : [];
             }
-            function ur(t) {
+            function Zn(t) {
                 var e = t.instances,
                     n = [];
                 for (var r in e) n.push(e[r].range);
                 return n;
             }
-            function cd(t, e) {
+            function cf(t, e) {
                 for (var n = 0, r = t; n < r.length; n++)
-                    if (qt(r[n], e)) return !0;
+                    if (It(r[n], e)) return !0;
                 return !1;
             }
-            var rn = /^(visible|hidden)$/,
-                fd = (function (t) {
+            var Ut = /^(visible|hidden)$/,
+                df = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
                             (n.handleEl = function (r) {
-                                (n.el = r), me(n.props.elRef, r);
+                                (n.el = r), te(n.props.elRef, r);
                             }),
                             n
                         );
@@ -9798,7 +9790,7 @@
                             );
                         }),
                         (e.prototype.needsXScrolling = function () {
-                            if (rn.test(this.props.overflowX)) return !1;
+                            if (Ut.test(this.props.overflowX)) return !1;
                             for (
                                 var n = this.el,
                                     r =
@@ -9814,7 +9806,7 @@
                             return !1;
                         }),
                         (e.prototype.needsYScrolling = function () {
-                            if (rn.test(this.props.overflowY)) return !1;
+                            if (Ut.test(this.props.overflowY)) return !1;
                             for (
                                 var n = this.el,
                                     r =
@@ -9830,19 +9822,19 @@
                             return !1;
                         }),
                         (e.prototype.getXScrollbarWidth = function () {
-                            return rn.test(this.props.overflowX)
+                            return Ut.test(this.props.overflowX)
                                 ? 0
                                 : this.el.offsetHeight - this.el.clientHeight;
                         }),
                         (e.prototype.getYScrollbarWidth = function () {
-                            return rn.test(this.props.overflowY)
+                            return Ut.test(this.props.overflowY)
                                 ? 0
                                 : this.el.offsetWidth - this.el.clientWidth;
                         }),
                         e
                     );
-                })(L),
-                Te = (function () {
+                })(N),
+                ve = (function () {
                     function t(e) {
                         var n = this;
                         (this.masterCallback = e),
@@ -9896,18 +9888,18 @@
                             })(this.currentMap, e, n, r);
                         }),
                         (t.prototype.getAll = function () {
-                            return Tn(this.currentMap);
+                            return sn(this.currentMap);
                         }),
                         t
                     );
                 })();
-            function Wo(t, e) {
+            function Fo(t, e) {
                 return t.liquid && e.liquid;
             }
-            function vd(t, e) {
-                return Ie(t, e, we);
+            function vf(t, e) {
+                return be(t, e, ce);
             }
-            function hd(t, e) {
+            function hf(t, e) {
                 for (var n = [], r = 0, i = t; r < i.length; r++)
                     for (var o = i[r], a = o.span || 1, s = 0; s < a; s += 1)
                         n.push(
@@ -9915,7 +9907,7 @@
                                 style: {
                                     width:
                                         'shrink' === o.width
-                                            ? gd(e)
+                                            ? gf(e)
                                             : o.width || '',
                                     minWidth: o.minWidth || '',
                                 },
@@ -9923,10 +9915,10 @@
                         );
                 return h.apply(void 0, (0, u.ev)(['colgroup', {}], n));
             }
-            function gd(t) {
+            function gf(t) {
                 return null == t ? 4 : t;
             }
-            function bd(t, e) {
+            function bf(t, e) {
                 var n = [
                     'fc-scrollgrid-section',
                     'fc-scrollgrid-section-' + t.type,
@@ -9941,13 +9933,13 @@
                     n
                 );
             }
-            function pr(t) {
+            function jn(t) {
                 return h('div', {
                     className: 'fc-scrollgrid-sticky-shim',
                     style: { width: t.clientWidth, minWidth: t.tableMinWidth },
                 });
             }
-            function on(t) {
+            function Lt(t) {
                 var e = t.stickyHeaderDates;
                 return (
                     (null == e || 'auto' === e) &&
@@ -9955,7 +9947,7 @@
                     e
                 );
             }
-            function Vo(t) {
+            function Uo(t) {
                 var e = t.stickyFooterScrollbar;
                 return (
                     (null == e || 'auto' === e) &&
@@ -9963,16 +9955,16 @@
                     e
                 );
             }
-            var vr = (function (t) {
+            var Yn = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
                     return (
-                        (n.processCols = I(function (r) {
+                        (n.processCols = x(function (r) {
                             return r;
-                        }, vd)),
-                        (n.renderMicroColGroup = I(hd)),
-                        (n.scrollerRefs = new Te()),
-                        (n.scrollerElRefs = new Te(
+                        }, vf)),
+                        (n.renderMicroColGroup = x(hf)),
+                        (n.scrollerRefs = new ve()),
+                        (n.scrollerElRefs = new ve(
                             n._handleScrollerEl.bind(n)
                         )),
                         (n.state = {
@@ -10002,7 +9994,7 @@
                             a = r.sections || [],
                             s = this.processCols(r.cols),
                             l = this.renderMicroColGroup(s, i.shrinkWidth),
-                            c = (function yd(t, e) {
+                            c = (function yf(t, e) {
                                 var n = [
                                     'fc-scrollgrid',
                                     e.theme.getClass('table'),
@@ -10012,16 +10004,16 @@
                         r.collapsibleWidth &&
                             c.push('fc-scrollgrid-collapsible');
                         for (
-                            var p, f = a.length, d = 0, v = [], g = [], b = [];
-                            d < f && 'header' === (p = a[d]).type;
+                            var p, d = a.length, f = 0, v = [], g = [], b = [];
+                            f < d && 'header' === (p = a[f]).type;
 
                         )
-                            v.push(this.renderSection(p, l, !0)), (d += 1);
-                        for (; d < f && 'body' === (p = a[d]).type; )
-                            g.push(this.renderSection(p, l, !1)), (d += 1);
-                        for (; d < f && 'footer' === (p = a[d]).type; )
-                            b.push(this.renderSection(p, l, !0)), (d += 1);
-                        var E = !oo(),
+                            v.push(this.renderSection(p, l, !0)), (f += 1);
+                        for (; f < d && 'body' === (p = a[f]).type; )
+                            g.push(this.renderSection(p, l, !1)), (f += 1);
+                        for (; f < d && 'footer' === (p = a[f]).type; )
+                            b.push(this.renderSection(p, l, !0)), (f += 1);
+                        var E = !to(),
                             m = { role: 'rowgroup' };
                         return h(
                             'table',
@@ -10051,13 +10043,13 @@
                     }),
                     (e.prototype.renderSection = function (n, r, i) {
                         return 'outerContent' in n
-                            ? h(K, { key: n.key }, n.outerContent)
+                            ? h(L, { key: n.key }, n.outerContent)
                             : h(
                                   'tr',
                                   {
                                       key: n.key,
                                       role: 'presentation',
-                                      className: bd(n, this.props.liquid).join(
+                                      className: bf(n, this.props.liquid).join(
                                           ' '
                                       ),
                                   },
@@ -10070,20 +10062,20 @@
                             s = this.state,
                             l = s.forceYScrollbars,
                             c = s.scrollerClientWidths,
-                            f = s.scrollerClientHeights,
-                            d = (function ud(t, e) {
-                                return null != e.maxHeight || Wo(t, e);
+                            d = s.scrollerClientHeights,
+                            f = (function uf(t, e) {
+                                return null != e.maxHeight || Fo(t, e);
                             })(a, n),
-                            p = Wo(a, n),
+                            p = Fo(a, n),
                             v = a.liquid
                                 ? l
                                     ? 'scroll'
-                                    : d
+                                    : f
                                     ? 'auto'
                                     : 'hidden'
                                 : 'visible',
                             g = n.key,
-                            b = (function pd(t, e, n, r) {
+                            b = (function pf(t, e, n, r) {
                                 var i = n.expandRows;
                                 return 'function' == typeof e.content
                                     ? e.content(n)
@@ -10124,7 +10116,7 @@
                                         a.collapsibleWidth || void 0 === c[g]
                                             ? null
                                             : c[g],
-                                    clientHeight: void 0 !== f[g] ? f[g] : null,
+                                    clientHeight: void 0 !== d[g] ? d[g] : null,
                                     expandRows: n.expandRows,
                                     syncRowHeights: !1,
                                     rowSyncHeights: [],
@@ -10145,7 +10137,7 @@
                                             : ''),
                                 },
                                 h(
-                                    fd,
+                                    df,
                                     {
                                         ref: this.scrollerRefs.createRef(g),
                                         elRef: this.scrollerElRefs.createRef(g),
@@ -10163,14 +10155,14 @@
                         );
                     }),
                     (e.prototype._handleScrollerEl = function (n, r) {
-                        var i = (function Ad(t, e) {
+                        var i = (function Af(t, e) {
                             for (var n = 0, r = t; n < r.length; n++) {
                                 var i = r[n];
                                 if (i.key === e) return i;
                             }
                             return null;
                         })(this.props.sections, r);
-                        i && me(i.chunk.scrollerElRef, n);
+                        i && te(i.chunk.scrollerElRef, n);
                     }),
                     (e.prototype.componentDidMount = function () {
                         this.handleSizing(),
@@ -10183,12 +10175,12 @@
                         this.context.removeResizeHandler(this.handleSizing);
                     }),
                     (e.prototype.computeShrinkWidth = function () {
-                        return (function md(t) {
+                        return (function mf(t) {
                             for (var e = 0, n = t; e < n.length; e++)
                                 if ('shrink' === n[e].width) return !0;
                             return !1;
                         })(this.props.cols)
-                            ? (function dd(t) {
+                            ? (function ff(t) {
                                   for (
                                       var e = (function ps(t, e) {
                                               for (
@@ -10222,7 +10214,7 @@
                                       r < i.length;
                                       r++
                                   )
-                                      n = Math.max(n, Ts(i[r]));
+                                      n = Math.max(n, Rs(i[r]));
                                   return Math.ceil(n);
                               })(this.scrollerElRefs.getAll())
                             : 0;
@@ -10230,8 +10222,8 @@
                     (e.prototype.computeScrollerDims = function () {
                         var n = (function hc() {
                                 return (
-                                    Jn ||
-                                        (Jn = (function gc() {
+                                    _n ||
+                                        (_n = (function gc() {
                                             var t =
                                                 document.createElement('div');
                                             (t.style.overflow = 'scroll'),
@@ -10239,12 +10231,12 @@
                                                 (t.style.top = '-9999px'),
                                                 (t.style.left = '-9999px'),
                                                 document.body.appendChild(t);
-                                            var e = so(t);
+                                            var e = ro(t);
                                             return (
                                                 document.body.removeChild(t), e
                                             );
                                         })()),
-                                    Jn
+                                    _n
                                 );
                             })(),
                             i = this.scrollerRefs,
@@ -10253,18 +10245,18 @@
                             s = {},
                             l = {};
                         for (var c in i.currentMap) {
-                            var f = i.currentMap[c];
-                            if (f && f.needsYScrolling()) {
+                            var d = i.currentMap[c];
+                            if (d && d.needsYScrolling()) {
                                 a = !0;
                                 break;
                             }
                         }
                         for (
-                            var d = 0, p = this.props.sections;
-                            d < p.length;
-                            d++
+                            var f = 0, p = this.props.sections;
+                            f < p.length;
+                            f++
                         ) {
-                            var g = o.currentMap[(c = p[d].key)];
+                            var g = o.currentMap[(c = p[f].key)];
                             if (g) {
                                 var b = g.parentNode;
                                 (s[c] = Math.floor(
@@ -10284,16 +10276,16 @@
                     }),
                     e
                 );
-            })(L);
-            vr.addStateEquality({
-                scrollerClientWidths: we,
-                scrollerClientHeights: we,
+            })(N);
+            Yn.addStateEquality({
+                scrollerClientWidths: ce,
+                scrollerClientHeights: ce,
             });
-            var hr = (function (t) {
+            var qn = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
-                        return (n.elRef = X()), n;
+                        return (n.elRef = U()), n;
                     }
                     return (
                         (0, u.ZT)(e, t),
@@ -10305,16 +10297,16 @@
                                 s = a.eventRange,
                                 l = s.ui,
                                 c = {
-                                    event: new j(i, s.def, s.instance),
+                                    event: new z(i, s.def, s.instance),
                                     view: i.viewApi,
                                     timeText: r.timeText,
                                     textColor: l.textColor,
                                     backgroundColor: l.backgroundColor,
                                     borderColor: l.borderColor,
-                                    isDraggable: !r.disableDragging && Tl(a, i),
+                                    isDraggable: !r.disableDragging && Rl(a, i),
                                     isStartResizable:
-                                        !r.disableResizing && Rl(a, i),
-                                    isEndResizable: !r.disableResizing && _l(a),
+                                        !r.disableResizing && Tl(a, i),
+                                    isEndResizable: !r.disableResizing && kl(a),
                                     isMirror: Boolean(
                                         r.isDragging ||
                                             r.isResizing ||
@@ -10329,7 +10321,7 @@
                                     isDragging: Boolean(r.isDragging),
                                     isResizing: Boolean(r.isResizing),
                                 },
-                                f = (function kl(t) {
+                                d = (function _l(t) {
                                     var e = ['fc-event'];
                                     return (
                                         t.isMirror && e.push('fc-event-mirror'),
@@ -10353,7 +10345,7 @@
                                     );
                                 })(c).concat(l.classNames);
                             return h(
-                                be,
+                                ie,
                                 {
                                     hookProps: c,
                                     classNames: o.eventClassNames,
@@ -10363,22 +10355,22 @@
                                     willUnmount: o.eventWillUnmount,
                                     elRef: this.elRef,
                                 },
-                                function (d, p, v, g) {
-                                    return r.children(d, f.concat(p), v, g, c);
+                                function (f, p, v, g) {
+                                    return r.children(f, d.concat(p), v, g, c);
                                 }
                             );
                         }),
                         (e.prototype.componentDidMount = function () {
-                            Fi(this.elRef.current, this.props.seg);
+                            Bi(this.elRef.current, this.props.seg);
                         }),
                         (e.prototype.componentDidUpdate = function (n) {
                             var r = this.props.seg;
-                            r !== n.seg && Fi(this.elRef.current, r);
+                            r !== n.seg && Bi(this.elRef.current, r);
                         }),
                         e
                     );
-                })(L),
-                Go = (function (t) {
+                })(N),
+                Lo = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -10388,7 +10380,7 @@
                             var r = this.props,
                                 i = this.context,
                                 o = r.seg,
-                                s = Qi(
+                                s = zi(
                                     o,
                                     i.options.eventTimeFormat ||
                                         r.defaultTimeFormat,
@@ -10397,13 +10389,13 @@
                                     r.defaultDisplayEventEnd
                                 );
                             return h(
-                                hr,
+                                qn,
                                 {
                                     seg: o,
                                     timeText: s,
                                     disableDragging: r.disableDragging,
                                     disableResizing: r.disableResizing,
-                                    defaultContent: r.defaultContent || Ed,
+                                    defaultContent: r.defaultContent || Ef,
                                     isDragging: r.isDragging,
                                     isResizing: r.isResizing,
                                     isDateSelecting: r.isDateSelecting,
@@ -10412,7 +10404,7 @@
                                     isFuture: r.isFuture,
                                     isToday: r.isToday,
                                 },
-                                function (l, c, f, d, p) {
+                                function (l, c, d, f, p) {
                                     return h(
                                         'a',
                                         (0, u.pi)(
@@ -10427,16 +10419,16 @@
                                                 },
                                                 ref: l,
                                             },
-                                            Vi(o, i)
+                                            Ui(o, i)
                                         ),
                                         h(
                                             'div',
                                             {
                                                 className: 'fc-event-main',
-                                                ref: f,
+                                                ref: d,
                                                 style: { color: p.textColor },
                                             },
-                                            d
+                                            f
                                         ),
                                         p.isStartResizable &&
                                             h('div', {
@@ -10454,8 +10446,8 @@
                         }),
                         e
                     );
-                })(L);
-            function Ed(t) {
+                })(N);
+            function Ef(t) {
                 return h(
                     'div',
                     { className: 'fc-event-main-frame' },
@@ -10467,13 +10459,13 @@
                         h(
                             'div',
                             { className: 'fc-event-title fc-sticky' },
-                            t.event.title || h(K, null, '\xa0')
+                            t.event.title || h(L, null, '\xa0')
                         )
                     )
                 );
             }
-            var gr = function (t) {
-                    return h(Se.Consumer, null, function (e) {
+            var Jn = function (t) {
+                    return h(fe.Consumer, null, function (e) {
                         var n = e.options,
                             r = {
                                 isAxis: t.isAxis,
@@ -10481,7 +10473,7 @@
                                 view: e.viewApi,
                             };
                         return h(
-                            be,
+                            ie,
                             {
                                 hookProps: r,
                                 classNames: n.nowIndicatorClassNames,
@@ -10493,8 +10485,8 @@
                         );
                     });
                 },
-                wd = Z({ day: 'numeric' }),
-                mr = (function (t) {
+                wf = O({ day: 'numeric' }),
+                Xn = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -10504,7 +10496,7 @@
                             var r = this.props,
                                 i = this.context,
                                 o = i.options,
-                                a = Zo({
+                                a = Qo({
                                     date: r.date,
                                     dateProfile: r.dateProfile,
                                     todayRange: r.todayRange,
@@ -10514,7 +10506,7 @@
                                     dateEnv: i.dateEnv,
                                 });
                             return h(
-                                fo,
+                                ao,
                                 {
                                     hookProps: a,
                                     content: o.dayCellContent,
@@ -10525,29 +10517,29 @@
                         }),
                         e
                     );
-                })(L);
-            function Zo(t) {
+                })(N);
+            function Qo(t) {
                 var e = t.date,
                     n = t.dateEnv,
-                    r = ao(e, t.todayRange, null, t.dateProfile);
+                    r = no(e, t.todayRange, null, t.dateProfile);
                 return (0, u.pi)(
                     (0, u.pi)(
                         (0, u.pi)({ date: n.toDate(e), view: t.viewApi }, r),
                         {
                             dayNumberText: t.showDayNumber
-                                ? n.format(e, wd)
+                                ? n.format(e, wf)
                                 : '',
                         }
                     ),
                     t.extraProps
                 );
             }
-            var yr = (function (t) {
+            var Kn = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
                     return (
-                        (n.refineHookProps = zt(Zo)),
-                        (n.normalizeClassNames = uo()),
+                        (n.refineHookProps = Et(Qo)),
+                        (n.normalizeClassNames = so()),
                         n
                     );
                 }
@@ -10566,7 +10558,7 @@
                                 viewApi: i.viewApi,
                                 dateEnv: i.dateEnv,
                             }),
-                            s = Yn(a, i.theme).concat(
+                            s = Tn(a, i.theme).concat(
                                 a.isDisabled
                                     ? []
                                     : this.normalizeClassNames(
@@ -10574,9 +10566,9 @@
                                           a
                                       )
                             ),
-                            l = a.isDisabled ? {} : { 'data-date': Ti(r.date) };
+                            l = a.isDisabled ? {} : { 'data-date': Di(r.date) };
                         return h(
-                            er,
+                            Pn,
                             {
                                 hookProps: a,
                                 didMount: o.dayCellDidMount,
@@ -10590,15 +10582,15 @@
                     }),
                     e
                 );
-            })(L);
-            function jo(t) {
+            })(N);
+            function Wo(t) {
                 return h('div', { className: 'fc-' + t });
             }
-            var Yo = function (t) {
+            var Vo = function (t) {
                 return h(
-                    hr,
+                    qn,
                     {
-                        defaultContent: Dd,
+                        defaultContent: Df,
                         seg: t.seg,
                         timeText: '',
                         disableDragging: !0,
@@ -10624,14 +10616,14 @@
                     }
                 );
             };
-            function Dd(t) {
+            function Df(t) {
                 return (
                     t.event.title &&
                     h('div', { className: 'fc-event-title' }, t.event.title)
                 );
             }
-            var qo = function (t) {
-                return h(Se.Consumer, null, function (e) {
+            var Go = function (t) {
+                return h(fe.Consumer, null, function (e) {
                     var n = e.dateEnv,
                         r = e.options,
                         i = t.date,
@@ -10639,12 +10631,12 @@
                         a = n.computeWeekNumber(i),
                         s = n.format(i, o);
                     return h(
-                        be,
+                        ie,
                         {
                             hookProps: { num: a, text: s, date: i },
                             classNames: r.weekNumberClassNames,
                             content: r.weekNumberContent,
-                            defaultContent: Sd,
+                            defaultContent: Cf,
                             didMount: r.weekNumberDidMount,
                             willUnmount: r.weekNumberWillUnmount,
                         },
@@ -10652,21 +10644,21 @@
                     );
                 });
             };
-            function Sd(t) {
+            function Cf(t) {
                 return t.text;
             }
-            var Cd = (function (t) {
+            var Sf = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.state = { titleId: kt() }),
+                            (n.state = { titleId: pt() }),
                             (n.handleRootEl = function (r) {
                                 (n.rootEl = r),
-                                    n.props.elRef && me(n.props.elRef, r);
+                                    n.props.elRef && te(n.props.elRef, r);
                             }),
                             (n.handleDocumentMouseDown = function (r) {
-                                var i = li(r);
+                                var i = ii(r);
                                 n.rootEl.contains(i) || n.handleCloseClick();
                             }),
                             (n.handleDocumentKeyDown = function (r) {
@@ -10691,7 +10683,7 @@
                                     'fc-popover',
                                     r.getClass('popover'),
                                 ].concat(a.extraClassNames || []);
-                            return ds(
+                            return fs(
                                 h(
                                     'div',
                                     (0, u.pi)(
@@ -10768,14 +10760,14 @@
                                 a = this.rootEl,
                                 s = (function bc(t) {
                                     for (
-                                        var e = lo(t),
+                                        var e = io(t),
                                             n = t.getBoundingClientRect(),
                                             r = 0,
                                             i = e;
                                         r < i.length;
                                         r++
                                     ) {
-                                        var a = io(
+                                        var a = eo(
                                             n,
                                             i[r].getBoundingClientRect()
                                         );
@@ -10787,28 +10779,28 @@
                             if (s) {
                                 var l = a.getBoundingClientRect(),
                                     c = o
-                                        ? ne(
+                                        ? V(
                                               i,
                                               '.fc-scrollgrid'
                                           ).getBoundingClientRect().top
                                         : s.top,
-                                    f = n ? s.right - l.width : s.left;
+                                    d = n ? s.right - l.width : s.left;
                                 (c = Math.max(c, 10)),
-                                    (f = Math.min(
-                                        f,
+                                    (d = Math.min(
+                                        d,
                                         document.documentElement.clientWidth -
                                             10 -
                                             l.width
                                     )),
-                                    (f = Math.max(f, 10));
-                                var d = a.offsetParent.getBoundingClientRect();
-                                ht(a, { top: c - d.top, left: f - d.left });
+                                    (d = Math.max(d, 10));
+                                var f = a.offsetParent.getBoundingClientRect();
+                                Ye(a, { top: c - f.top, left: d - f.left });
                             }
                         }),
                         e
                     );
-                })(L),
-                xd = (function (t) {
+                })(N),
+                xf = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
@@ -10840,23 +10832,23 @@
                                     n.options.dayPopoverFormat
                                 );
                             return h(
-                                yr,
+                                Kn,
                                 {
                                     date: a,
                                     dateProfile: l,
                                     todayRange: s,
                                     elRef: this.handleRootEl,
                                 },
-                                function (f, d, p) {
+                                function (d, f, p) {
                                     return h(
-                                        Cd,
+                                        Sf,
                                         {
-                                            elRef: f,
+                                            elRef: d,
                                             id: o.id,
                                             title: c,
                                             extraClassNames: [
                                                 'fc-more-popover',
-                                            ].concat(d),
+                                            ].concat(f),
                                             extraAttrs: p,
                                             parentEl: o.parentEl,
                                             alignmentEl: o.alignmentEl,
@@ -10864,7 +10856,7 @@
                                             onClose: o.onClose,
                                         },
                                         h(
-                                            mr,
+                                            Xn,
                                             {
                                                 date: a,
                                                 dateProfile: l,
@@ -10919,28 +10911,28 @@
                         }),
                         e
                     );
-                })(Ce),
-                Jo = (function (t) {
+                })(ue),
+                Zo = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.linkElRef = X()),
-                            (n.state = { isPopoverOpen: !1, popoverId: kt() }),
+                            (n.linkElRef = U()),
+                            (n.state = { isPopoverOpen: !1, popoverId: pt() }),
                             (n.handleClick = function (r) {
                                 var o = n.props,
                                     a = n.context,
                                     s = a.options.moreLinkClick,
-                                    l = Xo(o).start;
-                                function c(f) {
-                                    var d = f.eventRange,
-                                        g = d.range;
+                                    l = jo(o).start;
+                                function c(d) {
+                                    var f = d.eventRange,
+                                        g = f.range;
                                     return {
-                                        event: new j(a, d.def, d.instance),
+                                        event: new z(a, f.def, f.instance),
                                         start: a.dateEnv.toDate(g.start),
                                         end: a.dateEnv.toDate(g.end),
-                                        isStart: f.isStart,
-                                        isEnd: f.isEnd,
+                                        isStart: d.isStart,
+                                        isEnd: d.isEnd,
                                     };
                                 }
                                 'function' == typeof s &&
@@ -10969,30 +10961,30 @@
                             var n = this,
                                 i = this.props,
                                 o = this.state;
-                            return h(Se.Consumer, null, function (a) {
+                            return h(fe.Consumer, null, function (a) {
                                 var s = a.viewApi,
                                     l = a.options,
                                     c = a.calendarApi,
-                                    f = l.moreLinkText,
-                                    d = i.moreCnt,
-                                    p = Xo(i),
+                                    d = l.moreLinkText,
+                                    f = i.moreCnt,
+                                    p = jo(i),
                                     v =
-                                        'function' == typeof f
-                                            ? f.call(c, d)
-                                            : '+' + d + ' ' + f,
-                                    g = gt(l.moreLinkHint, [d], v),
+                                        'function' == typeof d
+                                            ? d.call(c, f)
+                                            : '+' + f + ' ' + d,
+                                    g = qe(l.moreLinkHint, [f], v),
                                     b = {
-                                        num: d,
-                                        shortText: '+' + d,
+                                        num: f,
+                                        shortText: '+' + f,
                                         text: v,
                                         view: s,
                                     };
                                 return h(
-                                    K,
+                                    L,
                                     null,
                                     Boolean(i.moreCnt) &&
                                         h(
-                                            be,
+                                            ie,
                                             {
                                                 elRef: n.linkElRef,
                                                 hookProps: b,
@@ -11000,17 +10992,17 @@
                                                     l.moreLinkClassNames,
                                                 content: l.moreLinkContent,
                                                 defaultContent:
-                                                    i.defaultContent || Td,
+                                                    i.defaultContent || Rf,
                                                 didMount: l.moreLinkDidMount,
                                                 willUnmount:
                                                     l.moreLinkWillUnmount,
                                             },
-                                            function (E, m, w, _) {
+                                            function (E, m, w, C) {
                                                 return i.children(
                                                     E,
                                                     ['fc-more-link'].concat(m),
                                                     w,
-                                                    _,
+                                                    C,
                                                     n.handleClick,
                                                     g,
                                                     o.isPopoverOpen,
@@ -11022,7 +11014,7 @@
                                         ),
                                     o.isPopoverOpen &&
                                         h(
-                                            xd,
+                                            xf,
                                             {
                                                 id: o.popoverId,
                                                 startDate: p.start,
@@ -11049,38 +11041,38 @@
                         }),
                         (e.prototype.updateParentEl = function () {
                             this.linkElRef.current &&
-                                (this.parentEl = ne(
+                                (this.parentEl = V(
                                     this.linkElRef.current,
                                     '.fc-view-harness'
                                 ));
                         }),
                         e
                     );
-                })(L);
-            function Td(t) {
+                })(N);
+            function Rf(t) {
                 return t.text;
             }
-            function Xo(t) {
+            function jo(t) {
                 if (t.allDayDate)
-                    return { start: t.allDayDate, end: ie(t.allDayDate, 1) };
+                    return { start: t.allDayDate, end: Z(t.allDayDate, 1) };
                 var e = t.hiddenSegs;
-                return { start: Ko(e), end: _d(e) };
+                return { start: Yo(e), end: kf(e) };
             }
-            function Ko(t) {
-                return t.reduce(Rd).eventRange.range.start;
+            function Yo(t) {
+                return t.reduce(Tf).eventRange.range.start;
             }
-            function Rd(t, e) {
+            function Tf(t, e) {
                 return t.eventRange.range.start < e.eventRange.range.start
                     ? t
                     : e;
             }
-            function _d(t) {
-                return t.reduce(kd).eventRange.range.end;
+            function kf(t) {
+                return t.reduce(_f).eventRange.range.end;
             }
-            function kd(t, e) {
+            function _f(t, e) {
                 return t.eventRange.range.end > e.eventRange.range.end ? t : e;
             }
-            var Md = (function (t) {
+            var Mf = (function (t) {
                     function e(n, r) {
                         void 0 === r && (r = {});
                         var i = t.call(this) || this;
@@ -11106,10 +11098,10 @@
                                 if (i.isRendering) {
                                     i.isRendered = !0;
                                     var o = i.currentData;
-                                    ai(function () {
-                                        fs(
+                                    ni(function () {
+                                        ds(
                                             h(
-                                                Kf,
+                                                Xd,
                                                 {
                                                     options: o.calendarOptions,
                                                     theme: o.theme,
@@ -11120,12 +11112,12 @@
                                                         i.setClassNames(a),
                                                         i.setHeight(s),
                                                         h(
-                                                            co.Provider,
+                                                            oo.Provider,
                                                             {
                                                                 value: i.customContentRenderId,
                                                             },
                                                             h(
-                                                                qf,
+                                                                Yd,
                                                                 (0, u.pi)(
                                                                     {
                                                                         isHeightAuto:
@@ -11151,8 +11143,8 @@
                                         i.setHeight(''));
                             }),
                             (i.el = n),
-                            (i.renderRunner = new nr(i.handleRenderRequest)),
-                            new _o({
+                            (i.renderRunner = new Hn(i.handleRenderRequest)),
+                            new So({
                                 optionOverrides: r,
                                 calendarApi: i,
                                 onAction: i.handleAction,
@@ -11185,7 +11177,7 @@
                         }),
                         (e.prototype.updateSize = function () {
                             var n = this;
-                            ai(function () {
+                            ni(function () {
                                 t.prototype.updateSize.call(n);
                             });
                         }),
@@ -11204,7 +11196,7 @@
                             this.currentDataManager.resetOptions(n, r);
                         }),
                         (e.prototype.setClassNames = function (n) {
-                            if (!Ie(n, this.currentClassNames)) {
+                            if (!be(n, this.currentClassNames)) {
                                 for (
                                     var r = this.el.classList,
                                         i = 0,
@@ -11219,23 +11211,23 @@
                             }
                         }),
                         (e.prototype.setHeight = function (n) {
-                            si(this.el, 'height', n);
+                            ri(this.el, 'height', n);
                         }),
                         e
                     );
                 })(Zl),
-                y = N(5e3);
-            const Id = Object.prototype.hasOwnProperty;
-            function an(t) {
+                y = R(5e3);
+            const If = Object.prototype.hasOwnProperty;
+            function Qt(t) {
                 return Array.isArray(t)
-                    ? t.map(an)
+                    ? t.map(Qt)
                     : t instanceof Date
                     ? new Date(t.valueOf())
                     : 'object' == typeof t && t
-                    ? $o(t, an)
+                    ? qo(t, Qt)
                     : t;
             }
-            function Nd(t) {
+            function Nf(t) {
                 return (
                     'object' == typeof t &&
                         (Array.isArray(t)
@@ -11244,19 +11236,19 @@
                     t
                 );
             }
-            function $o(t, e) {
+            function qo(t, e) {
                 const n = {};
-                for (const r in t) Id.call(t, r) && (n[r] = e(t[r], r));
+                for (const r in t) If.call(t, r) && (n[r] = e(t[r], r));
                 return n;
             }
-            const ea = {
+            const Jo = {
                 headerToolbar: !0,
                 footerToolbar: !0,
                 events: !0,
                 eventSources: !0,
                 resources: !0,
             };
-            let Pd = (() => {
+            let Pf = (() => {
                     class t {
                         constructor(n) {
                             (this.element = n), (this.optionSnapshot = {});
@@ -11264,10 +11256,10 @@
                         ngAfterViewInit() {
                             const { deepChangeDetection: n } = this,
                                 r = this.options || {};
-                            (this.optionSnapshot = $o(r, (i, o) =>
-                                n && ea[o] ? an(i) : i
+                            (this.optionSnapshot = qo(r, (i, o) =>
+                                n && Jo[o] ? Qt(i) : i
                             )),
-                                (this.calendar = new Md(
+                                (this.calendar = new Mf(
                                     this.element.nativeElement,
                                     r
                                 )),
@@ -11285,11 +11277,11 @@
                                 for (const l in i)
                                     if (i.hasOwnProperty(l)) {
                                         let c = i[l];
-                                        n && ea[l]
-                                            ? q()(r[l], c) ||
-                                              ((r[l] = an(c)),
+                                        n && Jo[l]
+                                            ? W()(r[l], c) ||
+                                              ((r[l] = Qt(c)),
                                               (a = !0),
-                                              (c = Nd(c)))
+                                              (c = Nf(c)))
                                             : r[l] !== c &&
                                               ((r[l] = c), (a = !0)),
                                             (o[l] = c);
@@ -11336,10 +11328,10 @@
                         t
                     );
                 })(),
-                ta = (() => {
+                Xo = (() => {
                     class t {
                         static registerPlugins(n) {
-                            Ro.push(...n);
+                            Co.push(...n);
                         }
                     }
                     return (
@@ -11351,11 +11343,11 @@
                         t
                     );
                 })();
-            tn.touchMouseIgnoreWait = 500;
-            var Ar = 0,
-                sn = 0,
-                Er = !1,
-                wr = (function () {
+            zt.touchMouseIgnoreWait = 500;
+            var er = 0,
+                Wt = 0,
+                tr = !1,
+                nr = (function () {
                     function t(e) {
                         var n = this;
                         (this.subjectEl = null),
@@ -11369,7 +11361,7 @@
                             (this.handleMouseDown = function (r) {
                                 if (
                                     !n.shouldIgnoreMouse() &&
-                                    (function Bd(t) {
+                                    (function Bf(t) {
                                         return 0 === t.button && !t.ctrlKey;
                                     })(r) &&
                                     n.tryStart(r)
@@ -11466,11 +11458,11 @@
                                         ),
                                         n.cleanup(),
                                         (n.isTouchDragging = !1),
-                                        (function Od() {
-                                            (Ar += 1),
+                                        (function Hf() {
+                                            (er += 1),
                                                 setTimeout(function () {
-                                                    Ar -= 1;
-                                                }, tn.touchMouseIgnoreWait);
+                                                    er -= 1;
+                                                }, zt.touchMouseIgnoreWait);
                                         })();
                                 }
                             }),
@@ -11499,7 +11491,7 @@
                                 }
                             }),
                             (this.containerEl = e),
-                            (this.emitter = new Kt()),
+                            (this.emitter = new Bt()),
                             e.addEventListener(
                                 'mousedown',
                                 this.handleMouseDown
@@ -11509,9 +11501,9 @@
                                 this.handleTouchStart,
                                 { passive: !0 }
                             ),
-                            (function Hd() {
-                                1 === (sn += 1) &&
-                                    window.addEventListener('touchmove', na, {
+                            (function Of() {
+                                1 === (Wt += 1) &&
+                                    window.addEventListener('touchmove', Ko, {
                                         passive: !1,
                                     });
                             })();
@@ -11527,11 +11519,11 @@
                                     this.handleTouchStart,
                                     { passive: !0 }
                                 ),
-                                (function zd() {
-                                    (sn -= 1) ||
+                                (function zf() {
+                                    (Wt -= 1) ||
                                         window.removeEventListener(
                                             'touchmove',
-                                            na,
+                                            Ko,
                                             { passive: !1 }
                                         );
                                 })();
@@ -11541,7 +11533,7 @@
                             return !(
                                 !n ||
                                 (this.handleSelector &&
-                                    !ne(e.target, this.handleSelector)) ||
+                                    !V(e.target, this.handleSelector)) ||
                                 ((this.subjectEl = n),
                                 (this.isDragging = !0),
                                 (this.wasTouchScroll = !1),
@@ -11549,21 +11541,21 @@
                             );
                         }),
                         (t.prototype.cleanup = function () {
-                            (Er = !1),
+                            (tr = !1),
                                 (this.isDragging = !1),
                                 (this.subjectEl = null),
                                 this.destroyScrollWatch();
                         }),
                         (t.prototype.querySubjectEl = function (e) {
                             return this.selector
-                                ? ne(e.target, this.selector)
+                                ? V(e.target, this.selector)
                                 : this.containerEl;
                         }),
                         (t.prototype.shouldIgnoreMouse = function () {
-                            return Ar || this.isTouchDragging;
+                            return er || this.isTouchDragging;
                         }),
                         (t.prototype.cancelTouchScroll = function () {
-                            this.isDragging && (Er = !0);
+                            this.isDragging && (tr = !0);
                         }),
                         (t.prototype.initScrollWatch = function (e) {
                             this.shouldWatchScroll &&
@@ -11638,10 +11630,10 @@
                         t
                     );
                 })();
-            function na(t) {
-                Er && t.preventDefault();
+            function Ko(t) {
+                tr && t.preventDefault();
             }
-            var Fd = (function () {
+            var Ff = (function () {
                     function t() {
                         (this.isVisible = !1),
                             (this.sourceEl = null),
@@ -11699,15 +11691,15 @@
                                 i = this.sourceEl.getBoundingClientRect();
                             (r.style.transition =
                                 'top ' + n + 'ms,left ' + n + 'ms'),
-                                ht(r, { left: i.left, top: i.top }),
+                                Ye(r, { left: i.left, top: i.top }),
                                 (function ms(t, e) {
                                     var n = function (r) {
                                         e(r),
-                                            ui.forEach(function (i) {
+                                            li.forEach(function (i) {
                                                 t.removeEventListener(i, n);
                                             });
                                     };
-                                    ui.forEach(function (r) {
+                                    li.forEach(function (r) {
                                         t.addEventListener(r, n);
                                     });
                                 })(r, function () {
@@ -11716,13 +11708,13 @@
                         }),
                         (t.prototype.cleanup = function () {
                             this.mirrorEl &&
-                                (Dn(this.mirrorEl), (this.mirrorEl = null)),
+                                (nn(this.mirrorEl), (this.mirrorEl = null)),
                                 (this.sourceEl = null);
                         }),
                         (t.prototype.updateElPosition = function () {
                             this.sourceEl &&
                                 this.isVisible &&
-                                ht(this.getMirrorEl(), {
+                                Ye(this.getMirrorEl(), {
                                     left: this.sourceElRect.left + this.deltaX,
                                     top: this.sourceElRect.top + this.deltaY,
                                 });
@@ -11737,7 +11729,7 @@
                                             !0
                                         )).classList.add('fc-unselectable'),
                                     n.classList.add('fc-event-dragging'),
-                                    ht(n, {
+                                    Ye(n, {
                                         position: 'fixed',
                                         zIndex: this.zIndex,
                                         visibility: '',
@@ -11755,7 +11747,7 @@
                         t
                     );
                 })(),
-                ra = (function (t) {
+                $o = (function (t) {
                     function e(n, r) {
                         var i = t.call(this) || this;
                         return (
@@ -11831,10 +11823,10 @@
                         (e.prototype.handleScrollChange = function () {}),
                         e
                     );
-                })(Kn),
-                ia = (function (t) {
+                })(In),
+                ea = (function (t) {
                     function e(n, r) {
-                        return t.call(this, new Sc(n), r) || this;
+                        return t.call(this, new Cc(n), r) || this;
                     }
                     return (
                         (0, u.ZT)(e, t),
@@ -11846,10 +11838,10 @@
                         }),
                         e
                     );
-                })(ra),
-                Ud = (function (t) {
+                })($o),
+                Uf = (function (t) {
                     function e(n) {
-                        return t.call(this, new Cc(), n) || this;
+                        return t.call(this, new Sc(), n) || this;
                     }
                     return (
                         (0, u.ZT)(e, t),
@@ -11869,12 +11861,12 @@
                         }),
                         e
                     );
-                })(ra),
-                oa =
+                })($o),
+                ta =
                     'function' == typeof performance
                         ? performance.now
                         : Date.now,
-                Ld = (function () {
+                Lf = (function () {
                     function t() {
                         var e = this;
                         (this.isEnabled = !0),
@@ -11896,7 +11888,7 @@
                                         e.pointerScreenY + window.pageYOffset
                                     );
                                     if (n) {
-                                        var r = oa();
+                                        var r = ta();
                                         e.handleSide(
                                             n,
                                             (r - e.msSinceRequest) / 1e3
@@ -11940,7 +11932,7 @@
                                     (this.pointerScreenY = i),
                                     this.isAnimating ||
                                         ((this.isAnimating = !0),
-                                        this.requestAnimation(oa()));
+                                        this.requestAnimation(ta()));
                             }
                         }),
                         (t.prototype.stop = function () {
@@ -11988,12 +11980,12 @@
                             ) {
                                 var l = s[a],
                                     c = l.clientRect,
-                                    f = e - c.left,
-                                    d = c.right - e,
+                                    d = e - c.left,
+                                    f = c.right - e,
                                     p = n - c.top,
                                     v = c.bottom - n;
-                                f >= 0 &&
-                                    d >= 0 &&
+                                d >= 0 &&
+                                    f >= 0 &&
                                     p >= 0 &&
                                     v >= 0 &&
                                     (p <= r &&
@@ -12014,23 +12006,23 @@
                                             name: 'bottom',
                                             distance: v,
                                         }),
-                                    f <= r &&
+                                    d <= r &&
                                         this.everMovedLeft &&
                                         l.canScrollLeft() &&
-                                        (!i || i.distance > f) &&
-                                        (i = {
-                                            scrollCache: l,
-                                            name: 'left',
-                                            distance: f,
-                                        }),
-                                    d <= r &&
-                                        this.everMovedRight &&
-                                        l.canScrollRight() &&
                                         (!i || i.distance > d) &&
                                         (i = {
                                             scrollCache: l,
-                                            name: 'right',
+                                            name: 'left',
                                             distance: d,
+                                        }),
+                                    f <= r &&
+                                        this.everMovedRight &&
+                                        l.canScrollRight() &&
+                                        (!i || i.distance > f) &&
+                                        (i = {
+                                            scrollCache: l,
+                                            name: 'right',
+                                            distance: f,
                                         }));
                             }
                             return i;
@@ -12038,8 +12030,8 @@
                         (t.prototype.buildCaches = function (e) {
                             return this.queryScrollEls(e).map(function (n) {
                                 return n === window
-                                    ? new Ud(!1)
-                                    : new ia(n, !1);
+                                    ? new Uf(!1)
+                                    : new ea(n, !1);
                             });
                         }),
                         (t.prototype.queryScrollEls = function (e) {
@@ -12054,7 +12046,7 @@
                                     : n.push.apply(
                                           n,
                                           Array.prototype.slice.call(
-                                              ci(e).querySelectorAll(o)
+                                              oi(e).querySelectorAll(o)
                                           )
                                       );
                             }
@@ -12063,7 +12055,7 @@
                         t
                     );
                 })(),
-                rt = (function (t) {
+                Ue = (function (t) {
                     function e(n, r) {
                         var i = t.call(this, n) || this;
                         (i.containerEl = n),
@@ -12085,11 +12077,11 @@
                                         t.classList.add('fc-unselectable'),
                                             t.addEventListener(
                                                 'selectstart',
-                                                Mt
+                                                vt
                                             );
                                     })(document.body),
                                     (function As(t) {
-                                        t.addEventListener('contextmenu', Mt);
+                                        t.addEventListener('contextmenu', vt);
                                     })(document.body),
                                     a.isTouch || a.origEvent.preventDefault(),
                                     i.emitter.trigger('pointerdown', a),
@@ -12113,8 +12105,8 @@
                                     ) {
                                         var s = i.minDistance,
                                             c = a.deltaX,
-                                            f = a.deltaY;
-                                        c * c + f * f >= s * s &&
+                                            d = a.deltaY;
+                                        c * c + d * d >= s * s &&
                                             i.handleDistanceSurpassed(a);
                                     }
                                     i.isDragging &&
@@ -12137,13 +12129,13 @@
                                         t.classList.remove('fc-unselectable'),
                                             t.removeEventListener(
                                                 'selectstart',
-                                                Mt
+                                                vt
                                             );
                                     })(document.body),
                                     (function Es(t) {
                                         t.removeEventListener(
                                             'contextmenu',
-                                            Mt
+                                            vt
                                         );
                                     })(document.body),
                                     i.emitter.trigger('pointerup', a),
@@ -12154,14 +12146,14 @@
                                         (clearTimeout(i.delayTimeoutId),
                                         (i.delayTimeoutId = null)));
                             });
-                        var o = (i.pointer = new wr(n));
+                        var o = (i.pointer = new nr(n));
                         return (
                             o.emitter.on('pointerdown', i.onPointerDown),
                             o.emitter.on('pointermove', i.onPointerMove),
                             o.emitter.on('pointerup', i.onPointerUp),
                             r && (o.selector = r),
-                            (i.mirror = new Fd()),
-                            (i.autoScroller = new Ld()),
+                            (i.mirror = new Ff()),
+                            (i.autoScroller = new Lf()),
                             i
                         );
                     }
@@ -12229,12 +12221,12 @@
                         }),
                         e
                     );
-                })(Io),
-                Qd = (function () {
+                })(To),
+                Qf = (function () {
                     function t(e) {
-                        (this.origRect = Xn(e)),
-                            (this.scrollCaches = lo(e).map(function (n) {
-                                return new ia(n, !0);
+                        (this.origRect = Mn(e)),
+                            (this.scrollCaches = io(e).map(function (n) {
+                                return new ea(n, !0);
                             }));
                     }
                     return (
@@ -12282,7 +12274,7 @@
                             ) {
                                 var a = o[i];
                                 if (
-                                    !Wd(a.getEventTarget()) &&
+                                    !Wf(a.getEventTarget()) &&
                                     !ic(r, a.clientRect)
                                 )
                                     return !1;
@@ -12292,11 +12284,11 @@
                         t
                     );
                 })();
-            function Wd(t) {
+            function Wf(t) {
                 var e = t.tagName;
                 return 'HTML' === e || 'BODY' === e;
             }
-            var Dt = (function () {
+            var nt = (function () {
                 function t(e, n) {
                     var r = this;
                     (this.useSubjectCenter = !1),
@@ -12340,7 +12332,7 @@
                         e.emitter.on('pointerup', this.handlePointerUp),
                         e.emitter.on('dragend', this.handleDragEnd),
                         (this.dragging = e),
-                        (this.emitter = new Kt());
+                        (this.emitter = new Bt());
                 }
                 return (
                     (t.prototype.processFirstCoord = function (e) {
@@ -12360,14 +12352,14 @@
                                         e.bottom
                                     ),
                                 };
-                            })(r, (o = Xn(i))));
+                            })(r, (o = Mn(i))));
                         var a = (this.initialHit = this.queryHitForOffset(
                             r.left,
                             r.top
                         ));
                         if (a) {
                             if (this.useSubjectCenter && o) {
-                                var s = io(o, a.rect);
+                                var s = eo(o, a.rect);
                                 s &&
                                     (r = (function ac(t) {
                                         return {
@@ -12389,15 +12381,15 @@
                             e.pageX + this.coordAdjust.left,
                             e.pageY + this.coordAdjust.top
                         );
-                        (n || !ln(this.movingHit, r)) &&
+                        (n || !Vt(this.movingHit, r)) &&
                             ((this.movingHit = r),
                             this.emitter.trigger('hitupdate', r, !1, e));
                     }),
                     (t.prototype.prepareHits = function () {
-                        this.offsetTrackers = Ee(
+                        this.offsetTrackers = le(
                             this.droppableStore,
                             function (e) {
-                                return e.component.prepareHits(), new Qd(e.el);
+                                return e.component.prepareHits(), new Qf(e.el);
                             }
                         );
                     }),
@@ -12414,27 +12406,27 @@
                             var l = i[s].component,
                                 c = o[s];
                             if (c && c.isWithinClipping(e, n)) {
-                                var f = c.computeLeft(),
-                                    d = c.computeTop(),
-                                    p = e - f,
-                                    v = n - d,
+                                var d = c.computeLeft(),
+                                    f = c.computeTop(),
+                                    p = e - d,
+                                    v = n - f,
                                     g = c.origRect,
                                     b = g.right - g.left,
                                     E = g.bottom - g.top;
                                 if (p >= 0 && p < b && v >= 0 && v < E) {
                                     var m = l.queryHit(p, v, b, E);
                                     m &&
-                                        qt(
+                                        It(
                                             m.dateProfile.activeRange,
                                             m.dateSpan.range
                                         ) &&
                                         (!a || m.layer > a.layer) &&
                                         ((m.componentId = s),
                                         (m.context = l.context),
-                                        (m.rect.left += f),
-                                        (m.rect.right += f),
-                                        (m.rect.top += d),
-                                        (m.rect.bottom += d),
+                                        (m.rect.left += d),
+                                        (m.rect.right += d),
+                                        (m.rect.top += f),
+                                        (m.rect.bottom += f),
                                         (a = m));
                                 }
                             }
@@ -12444,7 +12436,7 @@
                     t
                 );
             })();
-            function ln(t, e) {
+            function Vt(t, e) {
                 return (
                     (!t && !e) ||
                     (Boolean(t) === Boolean(e) &&
@@ -12482,7 +12474,7 @@
                         })(t.dateSpan, e.dateSpan))
                 );
             }
-            function Dr(t, e) {
+            function rr(t, e) {
                 for (
                     var n = {}, r = 0, i = e.pluginHooks.datePointTransforms;
                     r < i.length;
@@ -12492,7 +12484,7 @@
                 return (
                     (0, u.pi)(
                         n,
-                        (function Vd(t, e) {
+                        (function Vf(t, e) {
                             return {
                                 date: e.toDate(t.range.start),
                                 dateStr: e.formatIso(t.range.start, {
@@ -12505,7 +12497,7 @@
                     n
                 );
             }
-            var Gd = (function (t) {
+            var Gf = (function (t) {
                     function e(n) {
                         var r = t.call(this, n) || this;
                         (r.handlePointerDown = function (o) {
@@ -12520,29 +12512,29 @@
                                 if (!r.dragging.pointer.wasTouchScroll) {
                                     var l = r.hitDragging,
                                         c = l.initialHit,
-                                        f = l.finalHit;
-                                    if (c && f && ln(c, f)) {
-                                        var d = a.context,
+                                        d = l.finalHit;
+                                    if (c && d && Vt(c, d)) {
+                                        var f = a.context,
                                             p = (0, u.pi)(
                                                 (0, u.pi)(
                                                     {},
-                                                    Dr(c.dateSpan, d)
+                                                    rr(c.dateSpan, f)
                                                 ),
                                                 {
                                                     dayEl: c.dayEl,
                                                     jsEvent: o.origEvent,
                                                     view:
-                                                        d.viewApi ||
-                                                        d.calendarApi.view,
+                                                        f.viewApi ||
+                                                        f.calendarApi.view,
                                                 }
                                             );
-                                        d.emitter.trigger('dateClick', p);
+                                        f.emitter.trigger('dateClick', p);
                                     }
                                 }
                             }),
-                            (r.dragging = new rt(n.el)),
+                            (r.dragging = new Ue(n.el)),
                             (r.dragging.autoScroller.isEnabled = !1);
-                        var i = (r.hitDragging = new Dt(r.dragging, lr(n)));
+                        var i = (r.hitDragging = new nt(r.dragging, Qn(n)));
                         return (
                             i.emitter.on('pointerdown', r.handlePointerDown),
                             i.emitter.on('dragend', r.handleDragEnd),
@@ -12556,20 +12548,20 @@
                         }),
                         e
                     );
-                })(nt),
-                Zd = (function (t) {
+                })(Fe),
+                Zf = (function (t) {
                     function e(n) {
                         var r = t.call(this, n) || this;
                         (r.dragSelection = null),
                             (r.handlePointerDown = function (l) {
-                                var f = r.component,
-                                    d = r.dragging,
+                                var d = r.component,
+                                    f = r.dragging,
                                     v =
-                                        f.context.options.selectable &&
-                                        f.isValidDateDownEl(l.origEvent.target);
-                                d.setIgnoreMove(!v),
-                                    (d.delay = l.isTouch
-                                        ? (function jd(t) {
+                                        d.context.options.selectable &&
+                                        d.isValidDateDownEl(l.origEvent.target);
+                                f.setIgnoreMove(!v),
+                                    (f.delay = l.isTouch
+                                        ? (function jf(t) {
                                               var e = t.context.options,
                                                   n = e.selectLongPressDelay;
                                               return (
@@ -12577,22 +12569,22 @@
                                                       (n = e.longPressDelay),
                                                   n
                                               );
-                                          })(f)
+                                          })(d)
                                         : null);
                             }),
                             (r.handleDragStart = function (l) {
                                 r.component.context.calendarApi.unselect(l);
                             }),
                             (r.handleHitUpdate = function (l, c) {
-                                var f = r.component.context,
-                                    d = null,
+                                var d = r.component.context,
+                                    f = null,
                                     p = !1;
                                 if (l) {
                                     var v = r.hitDragging.initialHit;
                                     (l.componentId === v.componentId &&
                                         r.isHitComboAllowed &&
                                         !r.isHitComboAllowed(v, l)) ||
-                                        (d = (function Yd(t, e, n) {
+                                        (f = (function Yf(t, e, n) {
                                             var r = t.dateSpan,
                                                 i = e.dateSpan,
                                                 o = [
@@ -12607,9 +12599,9 @@
                                                 s < l.length;
                                                 s++
                                             ) {
-                                                var f = (0, l[s])(t, e);
-                                                if (!1 === f) return null;
-                                                f && (0, u.pi)(a, f);
+                                                var d = (0, l[s])(t, e);
+                                                if (!1 === d) return null;
+                                                d && (0, u.pi)(a, d);
                                             }
                                             return (
                                                 (a.range = {
@@ -12622,34 +12614,34 @@
                                         })(
                                             v,
                                             l,
-                                            f.pluginHooks
+                                            d.pluginHooks
                                                 .dateSelectionTransformers
                                         )),
-                                        (!d ||
-                                            !(function id(t, e, n) {
+                                        (!f ||
+                                            !(function rf(t, e, n) {
                                                 return (
-                                                    !!qt(
+                                                    !!It(
                                                         e.validRange,
                                                         t.range
                                                     ) &&
-                                                    Lo({ dateSelection: t }, n)
+                                                    Oo({ dateSelection: t }, n)
                                                 );
-                                            })(d, l.dateProfile, f)) &&
-                                            ((p = !0), (d = null));
+                                            })(f, l.dateProfile, d)) &&
+                                            ((p = !0), (f = null));
                                 }
-                                d
-                                    ? f.dispatch({
+                                f
+                                    ? d.dispatch({
                                           type: 'SELECT_DATES',
-                                          selection: d,
+                                          selection: f,
                                       })
                                     : c ||
-                                      f.dispatch({ type: 'UNSELECT_DATES' }),
-                                    p ? It() : Nt(),
-                                    c || (r.dragSelection = d);
+                                      d.dispatch({ type: 'UNSELECT_DATES' }),
+                                    p ? ht() : gt(),
+                                    c || (r.dragSelection = f);
                             }),
                             (r.handlePointerUp = function (l) {
                                 r.dragSelection &&
-                                    (ji(
+                                    (Wi(
                                         r.dragSelection,
                                         l,
                                         r.component.context
@@ -12657,11 +12649,11 @@
                                     (r.dragSelection = null));
                             });
                         var o = n.component.context.options,
-                            a = (r.dragging = new rt(n.el));
+                            a = (r.dragging = new Ue(n.el));
                         (a.touchScrollAllowed = !1),
                             (a.minDistance = o.selectMinDistance || 0),
                             (a.autoScroller.isEnabled = o.dragScroll);
-                        var s = (r.hitDragging = new Dt(r.dragging, lr(n)));
+                        var s = (r.hitDragging = new nt(r.dragging, Qn(n)));
                         return (
                             s.emitter.on('pointerdown', r.handlePointerDown),
                             s.emitter.on('dragstart', r.handleDragStart),
@@ -12677,8 +12669,8 @@
                         }),
                         e
                     );
-                })(nt),
-                aa = (function (t) {
+                })(Fe),
+                na = (function (t) {
                     function e(n) {
                         var r = t.call(this, n) || this;
                         (r.subjectEl = null),
@@ -12691,16 +12683,16 @@
                             (r.mutatedRelevantEvents = null),
                             (r.handlePointerDown = function (l) {
                                 var c = l.origEvent.target,
-                                    d = r.component,
+                                    f = r.component,
                                     p = r.dragging,
                                     v = p.mirror,
-                                    g = d.context.options,
-                                    b = d.context;
+                                    g = f.context.options,
+                                    b = f.context;
                                 r.subjectEl = l.subjectEl;
-                                var E = (r.subjectSeg = tt(l.subjectEl)),
+                                var E = (r.subjectSeg = ze(l.subjectEl)),
                                     w = (r.eventRange = E.eventRange).instance
                                         .instanceId;
-                                (r.relevantEvents = Pn(
+                                (r.relevantEvents = vn(
                                     b.getCurrentData().eventStore,
                                     w
                                 )),
@@ -12709,8 +12701,8 @@
                                         : g.eventDragMinDistance),
                                     (p.delay =
                                         l.isTouch &&
-                                        w !== d.props.eventSelection
-                                            ? (function Jd(t) {
+                                        w !== f.props.eventSelection
+                                            ? (function Jf(t) {
                                                   var e = t.context.options,
                                                       n = e.eventLongPressDelay;
                                                   return (
@@ -12719,53 +12711,53 @@
                                                               e.longPressDelay),
                                                       n
                                                   );
-                                              })(d)
+                                              })(f)
                                             : null),
                                     (v.parentNode = g.fixedMirrorParent
                                         ? g.fixedMirrorParent
-                                        : ne(c, '.fc')),
+                                        : V(c, '.fc')),
                                     (v.revertDuration = g.dragRevertDuration);
-                                var _ =
-                                    d.isValidSegDownEl(c) &&
-                                    !ne(c, '.fc-event-resizer');
-                                p.setIgnoreMove(!_),
+                                var C =
+                                    f.isValidSegDownEl(c) &&
+                                    !V(c, '.fc-event-resizer');
+                                p.setIgnoreMove(!C),
                                     (r.isDragging =
-                                        _ &&
+                                        C &&
                                         l.subjectEl.classList.contains(
                                             'fc-event-draggable'
                                         ));
                             }),
                             (r.handleDragStart = function (l) {
                                 var c = r.component.context,
-                                    f = r.eventRange,
-                                    d = f.instance.instanceId;
+                                    d = r.eventRange,
+                                    f = d.instance.instanceId;
                                 l.isTouch
-                                    ? d !== r.component.props.eventSelection &&
+                                    ? f !== r.component.props.eventSelection &&
                                       c.dispatch({
                                           type: 'SELECT_EVENT',
-                                          eventInstanceId: d,
+                                          eventInstanceId: f,
                                       })
                                     : c.dispatch({ type: 'UNSELECT_EVENT' }),
                                     r.isDragging &&
                                         (c.calendarApi.unselect(l),
                                         c.emitter.trigger('eventDragStart', {
                                             el: r.subjectEl,
-                                            event: new j(c, f.def, f.instance),
+                                            event: new z(c, d.def, d.instance),
                                             jsEvent: l.origEvent,
                                             view: c.viewApi,
                                         }));
                             }),
                             (r.handleHitUpdate = function (l, c) {
                                 if (r.isDragging) {
-                                    var f = r.relevantEvents,
-                                        d = r.hitDragging.initialHit,
+                                    var d = r.relevantEvents,
+                                        f = r.hitDragging.initialHit,
                                         p = r.component.context,
                                         v = null,
                                         g = null,
                                         b = null,
                                         E = !1,
                                         m = {
-                                            affectedEvents: f,
+                                            affectedEvents: d,
                                             mutatedEvents: {
                                                 defs: {},
                                                 instances: {},
@@ -12775,7 +12767,7 @@
                                     if (l) {
                                         var w = (v = l.context).options;
                                         p === v || (w.editable && w.droppable)
-                                            ? ((g = (function qd(t, e, n) {
+                                            ? ((g = (function qf(t, e, n) {
                                                   var r = t.dateSpan,
                                                       i = e.dateSpan,
                                                       o = r.range.start,
@@ -12785,8 +12777,8 @@
                                                       ((s.allDay = i.allDay),
                                                       (s.hasEnd =
                                                           e.context.options.allDayMaintainDuration),
-                                                      i.allDay && (o = V(o)));
-                                                  var l = $e(
+                                                      i.allDay && (o = H(o)));
+                                                  var l = He(
                                                       o,
                                                       a,
                                                       t.context.dateEnv,
@@ -12802,29 +12794,29 @@
                                                               datesDelta: l,
                                                               standardProps: s,
                                                           },
-                                                          f = 0,
-                                                          d = n;
-                                                      f < d.length;
-                                                      f++
+                                                          d = 0,
+                                                          f = n;
+                                                      d < f.length;
+                                                      d++
                                                   )
-                                                      (0, d[f])(c, t, e);
+                                                      (0, f[d])(c, t, e);
                                                   return c;
                                               })(
-                                                  d,
+                                                  f,
                                                   l,
                                                   v.getCurrentData().pluginHooks
                                                       .eventDragMutationMassagers
                                               )),
                                               g &&
-                                                  ((b = Vn(
-                                                      f,
+                                                  ((b = Cn(
+                                                      d,
                                                       v.getCurrentData()
                                                           .eventUiBases,
                                                       g,
                                                       v
                                                   )),
                                                   (m.mutatedEvents = b),
-                                                  dr(m, l.dateProfile, v) ||
+                                                  Gn(m, l.dateProfile, v) ||
                                                       ((E = !0),
                                                       (g = null),
                                                       (b = null),
@@ -12835,13 +12827,13 @@
                                             : (v = null);
                                     }
                                     r.displayDrag(v, m),
-                                        E ? It() : Nt(),
+                                        E ? ht() : gt(),
                                         c ||
-                                            (p === v && ln(d, l) && (g = null),
+                                            (p === v && Vt(f, l) && (g = null),
                                             r.dragging.setMirrorNeedsRevert(!g),
                                             r.dragging.setMirrorIsVisible(
                                                 !l ||
-                                                    !ci(
+                                                    !oi(
                                                         r.subjectEl
                                                     ).querySelector(
                                                         '.fc-event-mirror'
@@ -12858,27 +12850,27 @@
                             (r.handleDragEnd = function (l) {
                                 if (r.isDragging) {
                                     var c = r.component.context,
-                                        f = c.viewApi,
+                                        d = c.viewApi,
                                         p = r.receivingContext,
                                         v = r.validMutation,
                                         g = r.eventRange.def,
                                         b = r.eventRange.instance,
-                                        E = new j(c, g, b),
+                                        E = new z(c, g, b),
                                         m = r.relevantEvents,
                                         w = r.mutatedRelevantEvents,
-                                        _ = r.hitDragging.finalHit;
+                                        C = r.hitDragging.finalHit;
                                     if (
                                         (r.clearDrag(),
                                         c.emitter.trigger('eventDragStop', {
                                             el: r.subjectEl,
                                             event: E,
                                             jsEvent: l.origEvent,
-                                            view: f,
+                                            view: d,
                                         }),
                                         v)
                                     ) {
                                         if (p === c) {
-                                            var R = new j(
+                                            var D = new z(
                                                 c,
                                                 w.defs[g.defId],
                                                 b
@@ -12890,10 +12882,10 @@
                                                 eventStore: w,
                                             });
                                             for (
-                                                var F = {
+                                                var _ = {
                                                         oldEvent: E,
-                                                        event: R,
-                                                        relatedEvents: Le(
+                                                        event: D,
+                                                        relatedEvents: xe(
                                                             w,
                                                             c,
                                                             b
@@ -12905,39 +12897,39 @@
                                                             });
                                                         },
                                                     },
-                                                    z = {},
-                                                    Q = 0,
-                                                    P =
+                                                    k = {},
+                                                    P = 0,
+                                                    T =
                                                         c.getCurrentData()
                                                             .pluginHooks
                                                             .eventDropTransformers;
-                                                Q < P.length;
-                                                Q++
+                                                P < T.length;
+                                                P++
                                             )
-                                                (0, u.pi)(z, (0, P[Q])(v, c));
+                                                (0, u.pi)(k, (0, T[P])(v, c));
                                             c.emitter.trigger(
                                                 'eventDrop',
                                                 (0, u.pi)(
                                                     (0, u.pi)(
-                                                        (0, u.pi)({}, F),
-                                                        z
+                                                        (0, u.pi)({}, _),
+                                                        k
                                                     ),
                                                     {
                                                         el: l.subjectEl,
                                                         delta: v.datesDelta,
                                                         jsEvent: l.origEvent,
-                                                        view: f,
+                                                        view: d,
                                                     }
                                                 )
                                             ),
                                                 c.emitter.trigger(
                                                     'eventChange',
-                                                    F
+                                                    _
                                                 );
                                         } else if (p) {
-                                            var W = {
+                                            var B = {
                                                 event: E,
-                                                relatedEvents: Le(m, c, b),
+                                                relatedEvents: xe(m, c, b),
                                                 revert: function () {
                                                     c.dispatch({
                                                         type: 'MERGE_EVENTS',
@@ -12947,9 +12939,9 @@
                                             };
                                             c.emitter.trigger(
                                                 'eventLeave',
-                                                (0, u.pi)((0, u.pi)({}, W), {
+                                                (0, u.pi)((0, u.pi)({}, B), {
                                                     draggedEl: l.subjectEl,
-                                                    view: f,
+                                                    view: d,
                                                 })
                                             ),
                                                 c.dispatch({
@@ -12958,21 +12950,21 @@
                                                 }),
                                                 c.emitter.trigger(
                                                     'eventRemove',
-                                                    W
+                                                    B
                                                 );
-                                            var oe = w.instances[b.instanceId],
-                                                at = new j(
+                                            var j = w.instances[b.instanceId],
+                                                We = new z(
                                                     p,
                                                     w.defs[g.defId],
-                                                    oe
+                                                    j
                                                 );
                                             p.dispatch({
                                                 type: 'MERGE_EVENTS',
                                                 eventStore: w,
                                             });
-                                            var st = {
-                                                event: at,
-                                                relatedEvents: Le(w, p, oe),
+                                            var Ve = {
+                                                event: We,
+                                                relatedEvents: xe(w, p, j),
                                                 revert: function () {
                                                     p.dispatch({
                                                         type: 'REMOVE_EVENTS',
@@ -12980,7 +12972,7 @@
                                                     });
                                                 },
                                             };
-                                            p.emitter.trigger('eventAdd', st),
+                                            p.emitter.trigger('eventAdd', Ve),
                                                 l.isTouch &&
                                                     p.dispatch({
                                                         type: 'SELECT_EVENT',
@@ -12992,14 +12984,14 @@
                                                     (0, u.pi)(
                                                         (0, u.pi)(
                                                             {},
-                                                            Dr(_.dateSpan, p)
+                                                            rr(C.dateSpan, p)
                                                         ),
                                                         {
                                                             draggedEl:
                                                                 l.subjectEl,
                                                             jsEvent:
                                                                 l.origEvent,
-                                                            view: _.context
+                                                            view: C.context
                                                                 .viewApi,
                                                         }
                                                     )
@@ -13007,11 +12999,11 @@
                                                 p.emitter.trigger(
                                                     'eventReceive',
                                                     (0, u.pi)(
-                                                        (0, u.pi)({}, st),
+                                                        (0, u.pi)({}, Ve),
                                                         {
                                                             draggedEl:
                                                                 l.subjectEl,
-                                                            view: _.context
+                                                            view: C.context
                                                                 .viewApi,
                                                         }
                                                     )
@@ -13022,11 +13014,11 @@
                                 r.cleanup();
                             });
                         var o = r.component.context.options,
-                            a = (r.dragging = new rt(n.el));
+                            a = (r.dragging = new Ue(n.el));
                         (a.pointer.selector = e.SELECTOR),
                             (a.touchScrollAllowed = !1),
                             (a.autoScroller.isEnabled = o.dragScroll);
-                        var s = (r.hitDragging = new Dt(r.dragging, en));
+                        var s = (r.hitDragging = new nt(r.dragging, Ot));
                         return (
                             (s.useSubjectCenter = n.useEventCenter),
                             s.emitter.on('pointerdown', r.handlePointerDown),
@@ -13088,8 +13080,8 @@
                             '.fc-event-draggable, .fc-event-resizable'),
                         e
                     );
-                })(nt),
-                Xd = (function (t) {
+                })(Fe),
+                Xf = (function (t) {
                     function e(n) {
                         var r = t.call(this, n) || this;
                         (r.draggingSegEl = null),
@@ -13100,8 +13092,8 @@
                             (r.mutatedRelevantEvents = null),
                             (r.handlePointerDown = function (s) {
                                 var l = r.component,
-                                    f = tt(r.querySegEl(s)),
-                                    d = (r.eventRange = f.eventRange);
+                                    d = ze(r.querySegEl(s)),
+                                    f = (r.eventRange = d.eventRange);
                                 (r.dragging.minDistance =
                                     l.context.options.eventDragMinDistance),
                                     r.dragging.setIgnoreMove(
@@ -13111,37 +13103,37 @@
                                             (s.isTouch &&
                                                 r.component.props
                                                     .eventSelection !==
-                                                    d.instance.instanceId)
+                                                    f.instance.instanceId)
                                     );
                             }),
                             (r.handleDragStart = function (s) {
                                 var l = r.component.context,
                                     c = r.eventRange;
-                                r.relevantEvents = Pn(
+                                r.relevantEvents = vn(
                                     l.getCurrentData().eventStore,
                                     r.eventRange.instance.instanceId
                                 );
-                                var f = r.querySegEl(s);
-                                (r.draggingSegEl = f),
-                                    (r.draggingSeg = tt(f)),
+                                var d = r.querySegEl(s);
+                                (r.draggingSegEl = d),
+                                    (r.draggingSeg = ze(d)),
                                     l.calendarApi.unselect(),
                                     l.emitter.trigger('eventResizeStart', {
-                                        el: f,
-                                        event: new j(l, c.def, c.instance),
+                                        el: d,
+                                        event: new z(l, c.def, c.instance),
                                         jsEvent: s.origEvent,
                                         view: l.viewApi,
                                     });
                             }),
                             (r.handleHitUpdate = function (s, l, c) {
-                                var f = r.component.context,
-                                    d = r.relevantEvents,
+                                var d = r.component.context,
+                                    f = r.relevantEvents,
                                     p = r.hitDragging.initialHit,
                                     v = r.eventRange.instance,
                                     g = null,
                                     b = null,
                                     E = !1,
                                     m = {
-                                        affectedEvents: d,
+                                        affectedEvents: f,
                                         mutatedEvents: {
                                             defs: {},
                                             instances: {},
@@ -13152,9 +13144,9 @@
                                     ((s.componentId === p.componentId &&
                                         r.isHitComboAllowed &&
                                         !r.isHitComboAllowed(p, s)) ||
-                                        (g = (function Kd(t, e, n, r) {
+                                        (g = (function Kf(t, e, n, r) {
                                             var i = t.context.dateEnv,
-                                                s = $e(
+                                                s = He(
                                                     t.dateSpan.range.start,
                                                     e.dateSpan.range.start,
                                                     i,
@@ -13177,19 +13169,19 @@
                                             v.range
                                         ))),
                                     g &&
-                                        ((b = Vn(
-                                            d,
-                                            f.getCurrentData().eventUiBases,
+                                        ((b = Cn(
+                                            f,
+                                            d.getCurrentData().eventUiBases,
                                             g,
-                                            f
+                                            d
                                         )),
                                         (m.mutatedEvents = b),
-                                        dr(m, s.dateProfile, f) ||
+                                        Gn(m, s.dateProfile, d) ||
                                             ((E = !0),
                                             (g = null),
                                             (b = null),
                                             (m.mutatedEvents = null))),
-                                    f.dispatch(
+                                    d.dispatch(
                                         b
                                             ? {
                                                   type: 'SET_EVENT_RESIZE',
@@ -13197,41 +13189,41 @@
                                               }
                                             : { type: 'UNSET_EVENT_RESIZE' }
                                     ),
-                                    E ? It() : Nt(),
+                                    E ? ht() : gt(),
                                     l ||
-                                        (g && ln(p, s) && (g = null),
+                                        (g && Vt(p, s) && (g = null),
                                         (r.validMutation = g),
                                         (r.mutatedRelevantEvents = b));
                             }),
                             (r.handleDragEnd = function (s) {
                                 var l = r.component.context,
                                     c = r.eventRange.def,
-                                    f = r.eventRange.instance,
-                                    d = new j(l, c, f),
+                                    d = r.eventRange.instance,
+                                    f = new z(l, c, d),
                                     p = r.relevantEvents,
                                     v = r.mutatedRelevantEvents;
                                 if (
                                     (l.emitter.trigger('eventResizeStop', {
                                         el: r.draggingSegEl,
-                                        event: d,
+                                        event: f,
                                         jsEvent: s.origEvent,
                                         view: l.viewApi,
                                     }),
                                     r.validMutation)
                                 ) {
-                                    var g = new j(
+                                    var g = new z(
                                         l,
                                         v.defs[c.defId],
-                                        f ? v.instances[f.instanceId] : null
+                                        d ? v.instances[d.instanceId] : null
                                     );
                                     l.dispatch({
                                         type: 'MERGE_EVENTS',
                                         eventStore: v,
                                     });
                                     var b = {
-                                        oldEvent: d,
+                                        oldEvent: f,
                                         event: g,
-                                        relatedEvents: Le(v, l, f),
+                                        relatedEvents: xe(v, l, d),
                                         revert: function () {
                                             l.dispatch({
                                                 type: 'MERGE_EVENTS',
@@ -13245,10 +13237,10 @@
                                             el: r.draggingSegEl,
                                             startDelta:
                                                 r.validMutation.startDelta ||
-                                                U(0),
+                                                M(0),
                                             endDelta:
                                                 r.validMutation.endDelta ||
-                                                U(0),
+                                                M(0),
                                             jsEvent: s.origEvent,
                                             view: l.viewApi,
                                         })
@@ -13260,12 +13252,12 @@
                                     (r.validMutation = null);
                             });
                         var i = n.component,
-                            o = (r.dragging = new rt(n.el));
+                            o = (r.dragging = new Ue(n.el));
                         (o.pointer.selector = '.fc-event-resizer'),
                             (o.touchScrollAllowed = !1),
                             (o.autoScroller.isEnabled =
                                 i.context.options.dragScroll);
-                        var a = (r.hitDragging = new Dt(r.dragging, lr(n)));
+                        var a = (r.hitDragging = new nt(r.dragging, Qn(n)));
                         return (
                             a.emitter.on('pointerdown', r.handlePointerDown),
                             a.emitter.on('dragstart', r.handleDragStart),
@@ -13280,12 +13272,12 @@
                             this.dragging.destroy();
                         }),
                         (e.prototype.querySegEl = function (n) {
-                            return ne(n.subjectEl, '.fc-event');
+                            return V(n.subjectEl, '.fc-event');
                         }),
                         e
                     );
-                })(nt),
-                $d = (function () {
+                })(Fe),
+                $f = (function () {
                     function t(e) {
                         var n = this;
                         (this.context = e),
@@ -13297,9 +13289,9 @@
                             }),
                             (this.onDocumentPointerDown = function (i) {
                                 var o = n.context.options.unselectCancel,
-                                    a = li(i.origEvent);
-                                (n.matchesCancel = !!ne(a, o)),
-                                    (n.matchesEvent = !!ne(a, aa.SELECTOR));
+                                    a = ii(i.origEvent);
+                                (n.matchesCancel = !!V(a, o)),
+                                    (n.matchesEvent = !!V(a, na.SELECTOR));
                             }),
                             (this.onDocumentPointerUp = function (i) {
                                 var o = n.context,
@@ -13321,7 +13313,7 @@
                                 }
                                 n.isRecentPointerDateSelect = !1;
                             });
-                        var r = (this.documentPointer = new wr(document));
+                        var r = (this.documentPointer = new nr(document));
                         (r.shouldIgnoreMove = !0),
                             (r.shouldWatchScroll = !1),
                             r.emitter.on(
@@ -13365,8 +13357,8 @@
                         (this.handleHitUpdate = function (o, a, s) {
                             var l = r.hitDragging.dragging,
                                 c = null,
-                                f = null,
-                                d = !1,
+                                d = null,
+                                f = !1,
                                 p = {
                                     affectedEvents: { defs: {}, instances: {} },
                                     mutatedEvents: { defs: {}, instances: {} },
@@ -13377,7 +13369,7 @@
                                     s.subjectEl,
                                     (c = o.context)
                                 ) &&
-                                ((f = (function nu(t, e, n) {
+                                ((d = (function nu(t, e, n) {
                                     for (
                                         var r = (0, u.pi)({}, e.leftoverProps),
                                             i = 0,
@@ -13388,8 +13380,8 @@
                                         i++
                                     )
                                         (0, u.pi)(r, (0, o[i])(t, e));
-                                    var s = Hn(r, n),
-                                        f = Yt(
+                                    var s = mn(r, n),
+                                        d = Mt(
                                             s.refined,
                                             s.extra,
                                             e.sourceId,
@@ -13398,64 +13390,64 @@
                                                 Boolean(e.duration),
                                             n
                                         ),
-                                        d = t.range.start;
+                                        f = t.range.start;
                                     t.allDay &&
                                         e.startTime &&
-                                        (d = n.dateEnv.add(d, e.startTime));
+                                        (f = n.dateEnv.add(f, e.startTime));
                                     var p = e.duration
-                                        ? n.dateEnv.add(d, e.duration)
-                                        : Wn(t.allDay, d, n);
+                                        ? n.dateEnv.add(f, e.duration)
+                                        : Dn(t.allDay, f, n);
                                     return {
-                                        def: f,
-                                        instance: Ot(f.defId, {
-                                            start: d,
+                                        def: d,
+                                        instance: bt(d.defId, {
+                                            start: f,
                                             end: p,
                                         }),
                                     };
                                 })(o.dateSpan, r.dragMeta, c)),
-                                (p.mutatedEvents = yt(f)),
-                                (d = !dr(p, o.dateProfile, c)) &&
+                                (p.mutatedEvents = Xe(d)),
+                                (f = !Gn(p, o.dateProfile, c)) &&
                                     ((p.mutatedEvents = {
                                         defs: {},
                                         instances: {},
                                     }),
-                                    (f = null))),
+                                    (d = null))),
                                 r.displayDrag(c, p),
                                 l.setMirrorIsVisible(
                                     a ||
-                                        !f ||
+                                        !d ||
                                         !document.querySelector(
                                             '.fc-event-mirror'
                                         )
                                 ),
-                                d ? It() : Nt(),
+                                f ? ht() : gt(),
                                 a ||
-                                    (l.setMirrorNeedsRevert(!f),
+                                    (l.setMirrorNeedsRevert(!d),
                                     (r.receivingContext = c),
-                                    (r.droppableEvent = f));
+                                    (r.droppableEvent = d));
                         }),
                         (this.handleDragEnd = function (o) {
                             var s = r.receivingContext,
                                 l = r.droppableEvent;
                             if ((r.clearDrag(), s && l)) {
                                 var c = r.hitDragging.finalHit,
-                                    f = c.context.viewApi,
-                                    d = r.dragMeta;
+                                    d = c.context.viewApi,
+                                    f = r.dragMeta;
                                 if (
                                     (s.emitter.trigger(
                                         'drop',
                                         (0, u.pi)(
-                                            (0, u.pi)({}, Dr(c.dateSpan, s)),
+                                            (0, u.pi)({}, rr(c.dateSpan, s)),
                                             {
                                                 draggedEl: o.subjectEl,
                                                 jsEvent: o.origEvent,
-                                                view: f,
+                                                view: d,
                                             }
                                         )
                                     ),
-                                    d.create)
+                                    f.create)
                                 ) {
-                                    var p = yt(l);
+                                    var p = Xe(l);
                                     s.dispatch({
                                         type: 'MERGE_EVENTS',
                                         eventStore: p,
@@ -13467,7 +13459,7 @@
                                                     l.instance.instanceId,
                                             }),
                                         s.emitter.trigger('eventReceive', {
-                                            event: new j(s, l.def, l.instance),
+                                            event: new z(s, l.def, l.instance),
                                             relatedEvents: [],
                                             revert: function () {
                                                 s.dispatch({
@@ -13476,14 +13468,14 @@
                                                 });
                                             },
                                             draggedEl: o.subjectEl,
-                                            view: f,
+                                            view: d,
                                         });
                                 }
                             }
                             (r.receivingContext = null),
                                 (r.droppableEvent = null);
                         });
-                    var i = (this.hitDragging = new Dt(e, en));
+                    var i = (this.hitDragging = new nt(e, Ot));
                     (i.requireInitial = !1),
                         i.emitter.on('dragstart', this.handleDragStart),
                         i.emitter.on('hitupdate', this.handleHitUpdate),
@@ -13492,19 +13484,19 @@
                 }
                 (t.prototype.buildDragMeta = function (e) {
                     return 'object' == typeof this.suppliedDragMeta
-                        ? cr(this.suppliedDragMeta)
+                        ? Wn(this.suppliedDragMeta)
                         : 'function' == typeof this.suppliedDragMeta
-                        ? cr(this.suppliedDragMeta(e))
+                        ? Wn(this.suppliedDragMeta(e))
                         : (function ru(t) {
                               var e = (function iu(t, e) {
-                                  var n = tn.dataAttrPrefix;
+                                  var n = zt.dataAttrPrefix;
                                   return (
                                       t.getAttribute(
                                           'data-' + (n ? n + '-' : '') + e
                                       ) || ''
                                   );
                               })(t, 'event');
-                              return cr(e ? JSON.parse(e) : { create: !1 });
+                              return Wn(e ? JSON.parse(e) : { create: !1 });
                           })(e);
                 }),
                     (t.prototype.displayDrag = function (e, n) {
@@ -13528,10 +13520,10 @@
                         var r = n.options.dropAccept;
                         return 'function' == typeof r
                             ? r.call(n.calendarApi, e)
-                            : 'string' != typeof r || !r || Boolean(Sn(e, r));
+                            : 'string' != typeof r || !r || Boolean(rn(e, r));
                     });
             })();
-            tn.dataAttrPrefix = '';
+            zt.dataAttrPrefix = '';
             !(function (t) {
                 function e(n) {
                     var r = t.call(this, n) || this;
@@ -13552,7 +13544,7 @@
                                 r.shouldIgnoreMove ||
                                     r.emitter.trigger('dragend', o);
                         });
-                    var i = (r.pointer = new wr(n));
+                    var i = (r.pointer = new nr(n));
                     return (
                         i.emitter.on('pointerdown', r.handlePointerDown),
                         i.emitter.on('pointermove', r.handlePointerMove),
@@ -13581,19 +13573,19 @@
                                 (r.style.visibility = 'hidden'));
                         }
                     });
-            })(Io);
-            const su = xe({
-                componentInteractions: [Gd, Zd, aa, Xd],
-                calendarInteractions: [$d],
-                elementDraggingImpl: rt,
+            })(To);
+            const su = pe({
+                componentInteractions: [Gf, Zf, na, Xf],
+                calendarInteractions: [$f],
+                elementDraggingImpl: Ue,
                 optionRefiners: eu,
                 listenerRefiners: tu,
             });
-            N(4516);
+            R(4516);
             var lu = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
-                    return (n.headerElRef = X()), n;
+                    return (n.headerElRef = U()), n;
                 }
                 return (
                     (0, u.ZT)(e, t),
@@ -13601,7 +13593,7 @@
                         var o = this.props,
                             a = this.context,
                             s = [],
-                            l = on(a.options);
+                            l = Lt(a.options);
                         return (
                             n &&
                                 s.push({
@@ -13620,16 +13612,16 @@
                                 liquid: !0,
                                 chunk: { content: r },
                             }),
-                            h(wt, { viewSpec: a.viewSpec }, function (c, f) {
+                            h(tt, { viewSpec: a.viewSpec }, function (c, d) {
                                 return h(
                                     'div',
                                     {
                                         ref: c,
                                         className: ['fc-daygrid']
-                                            .concat(f)
+                                            .concat(d)
                                             .join(' '),
                                     },
-                                    h(vr, {
+                                    h(Yn, {
                                         liquid: !o.isHeightAuto && !o.forPrint,
                                         collapsibleWidth: o.forPrint,
                                         cols: [],
@@ -13644,15 +13636,15 @@
                         if (!a) throw new Error('No ScrollGrid implementation');
                         var l = this.props,
                             c = this.context,
-                            f = !l.forPrint && on(c.options),
-                            d = !l.forPrint && Vo(c.options),
+                            d = !l.forPrint && Lt(c.options),
+                            f = !l.forPrint && Uo(c.options),
                             p = [];
                         return (
                             n &&
                                 p.push({
                                     type: 'header',
                                     key: 'header',
-                                    isSticky: f,
+                                    isSticky: d,
                                     chunks: [
                                         {
                                             key: 'main',
@@ -13668,14 +13660,14 @@
                                 liquid: !0,
                                 chunks: [{ key: 'main', content: r }],
                             }),
-                            d &&
+                            f &&
                                 p.push({
                                     type: 'footer',
                                     key: 'footer',
                                     isSticky: !0,
-                                    chunks: [{ key: 'main', content: pr }],
+                                    chunks: [{ key: 'main', content: jn }],
                                 }),
-                            h(wt, { viewSpec: c.viewSpec }, function (v, g) {
+                            h(tt, { viewSpec: c.viewSpec }, function (v, g) {
                                 return h(
                                     'div',
                                     {
@@ -13702,8 +13694,8 @@
                     }),
                     e
                 );
-            })(Ce);
-            function cn(t, e) {
+            })(ue);
+            function Gt(t, e) {
                 for (var n = [], r = 0; r < e; r += 1) n[r] = [];
                 for (var i = 0, o = t; i < o.length; i++) {
                     var a = o[i];
@@ -13711,7 +13703,7 @@
                 }
                 return n;
             }
-            function fn(t, e) {
+            function Zt(t, e) {
                 for (var n = [], r = 0; r < e; r += 1) n[r] = [];
                 for (var i = 0, o = t; i < o.length; i++) {
                     var a = o[i];
@@ -13719,7 +13711,7 @@
                 }
                 return n;
             }
-            function la(t, e) {
+            function ia(t, e) {
                 var n = [];
                 if (t) {
                     for (var r = 0; r < e; r += 1)
@@ -13743,16 +13735,16 @@
                     (0, u.ZT)(e, t),
                     (e.prototype.render = function () {
                         var n = this.props,
-                            r = Xt(this.context, n.date);
+                            r = Pt(this.context, n.date);
                         return h(
-                            mr,
+                            Xn,
                             {
                                 date: n.date,
                                 dateProfile: n.dateProfile,
                                 todayRange: n.todayRange,
                                 showDayNumber: n.showDayNumber,
                                 extraHookProps: n.extraHookProps,
-                                defaultContent: fu,
+                                defaultContent: du,
                             },
                             function (i, o) {
                                 return (
@@ -13773,7 +13765,7 @@
                                                 },
                                                 r
                                             ),
-                                            o || h(K, null, '\xa0')
+                                            o || h(L, null, '\xa0')
                                         )
                                     )
                                 );
@@ -13782,17 +13774,17 @@
                     }),
                     e
                 );
-            })(L);
-            function fu(t) {
+            })(N);
+            function du(t) {
                 return t.dayNumberText;
             }
-            var ca = Z({
+            var oa = O({
                 hour: 'numeric',
                 minute: '2-digit',
                 omitZeroMinute: !0,
                 meridiem: 'narrow',
             });
-            function fa(t) {
+            function aa(t) {
                 var e = t.eventRange.ui.display;
                 return (
                     'list-item' === e ||
@@ -13803,7 +13795,7 @@
                         t.isEnd)
                 );
             }
-            var da = (function (t) {
+            var sa = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -13812,14 +13804,14 @@
                         (e.prototype.render = function () {
                             var n = this.props;
                             return h(
-                                Go,
+                                Lo,
                                 (0, u.pi)({}, n, {
                                     extraClassNames: [
                                         'fc-daygrid-event',
                                         'fc-daygrid-block-event',
                                         'fc-h-event',
                                     ],
-                                    defaultTimeFormat: ca,
+                                    defaultTimeFormat: oa,
                                     defaultDisplayEventEnd:
                                         n.defaultDisplayEventEnd,
                                     disableResizing:
@@ -13829,8 +13821,8 @@
                         }),
                         e
                     );
-                })(L),
-                ua = (function (t) {
+                })(N),
+                la = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -13839,19 +13831,19 @@
                         (e.prototype.render = function () {
                             var r = this.props,
                                 i = this.context,
-                                a = Qi(
+                                a = zi(
                                     r.seg,
-                                    i.options.eventTimeFormat || ca,
+                                    i.options.eventTimeFormat || oa,
                                     i,
                                     !0,
                                     r.defaultDisplayEventEnd
                                 );
                             return h(
-                                hr,
+                                qn,
                                 {
                                     seg: r.seg,
                                     timeText: a,
-                                    defaultContent: du,
+                                    defaultContent: fu,
                                     isDragging: r.isDragging,
                                     isResizing: !1,
                                     isDateSelecting: !1,
@@ -13860,7 +13852,7 @@
                                     isFuture: r.isFuture,
                                     isToday: r.isToday,
                                 },
-                                function (s, l, c, f) {
+                                function (s, l, c, d) {
                                     return h(
                                         'a',
                                         (0, u.pi)(
@@ -13873,19 +13865,19 @@
                                                     .join(' '),
                                                 ref: s,
                                             },
-                                            Vi(r.seg, i)
+                                            Ui(r.seg, i)
                                         ),
-                                        f
+                                        d
                                     );
                                 }
                             );
                         }),
                         e
                     );
-                })(L);
-            function du(t) {
+                })(N);
+            function fu(t) {
                 return h(
-                    K,
+                    L,
                     null,
                     h('div', {
                         className: 'fc-daygrid-event-dot',
@@ -13898,14 +13890,14 @@
                     h(
                         'div',
                         { className: 'fc-event-title' },
-                        t.event.title || h(K, null, '\xa0')
+                        t.event.title || h(L, null, '\xa0')
                     )
                 );
             }
             var uu = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
-                    return (n.compileSegs = I(pu)), n;
+                    return (n.compileSegs = x(pu)), n;
                 }
                 return (
                     (0, u.ZT)(e, t),
@@ -13914,7 +13906,7 @@
                             r = this.compileSegs(n.singlePlacements),
                             i = r.allSegs;
                         return h(
-                            Jo,
+                            Zo,
                             {
                                 dateProfile: n.dateProfile,
                                 todayRange: n.todayRange,
@@ -13935,7 +13927,7 @@
                                             : null) ||
                                         {};
                                     return h(
-                                        K,
+                                        L,
                                         null,
                                         i.map(function (s) {
                                             var l =
@@ -13953,9 +13945,9 @@
                                                             : '',
                                                     },
                                                 },
-                                                fa(s)
+                                                aa(s)
                                                     ? h(
-                                                          ua,
+                                                          la,
                                                           (0, u.pi)(
                                                               {
                                                                   seg: s,
@@ -13967,14 +13959,14 @@
                                                                   defaultDisplayEventEnd:
                                                                       !1,
                                                               },
-                                                              Pe(
+                                                              Ee(
                                                                   s,
                                                                   n.todayRange
                                                               )
                                                           )
                                                       )
                                                     : h(
-                                                          da,
+                                                          sa,
                                                           (0, u.pi)(
                                                               {
                                                                   seg: s,
@@ -13990,7 +13982,7 @@
                                                                   defaultDisplayEventEnd:
                                                                       !1,
                                                               },
-                                                              Pe(
+                                                              Ee(
                                                                   s,
                                                                   n.todayRange
                                                               )
@@ -14001,7 +13993,7 @@
                                     );
                                 },
                             },
-                            function (a, s, l, c, f, d, p, v) {
+                            function (a, s, l, c, d, f, p, v) {
                                 return h(
                                     'a',
                                     (0, u.pi)(
@@ -14010,11 +14002,11 @@
                                             className: ['fc-daygrid-more-link']
                                                 .concat(s)
                                                 .join(' '),
-                                            title: d,
+                                            title: f,
                                             'aria-expanded': p,
                                             'aria-controls': v,
                                         },
-                                        pi(f)
+                                        ci(d)
                                     ),
                                     c
                                 );
@@ -14023,7 +14015,7 @@
                     }),
                     e
                 );
-            })(L);
+            })(N);
             function pu(t) {
                 for (var e = [], n = [], r = 0, i = t; r < i.length; r++) {
                     var o = i[r];
@@ -14031,16 +14023,16 @@
                 }
                 return { allSegs: e, invisibleSegs: n };
             }
-            var vu = Z({ week: 'narrow' }),
+            var vu = O({ week: 'narrow' }),
                 hu = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.rootElRef = X()),
-                            (n.state = { dayNumberId: kt() }),
+                            (n.rootElRef = U()),
+                            (n.state = { dayNumberId: pt() }),
                             (n.handleRootEl = function (r) {
-                                me(n.rootElRef, r), me(n.props.elRef, r);
+                                te(n.rootElRef, r), te(n.props.elRef, r);
                             }),
                             n
                         );
@@ -14054,9 +14046,9 @@
                                 a = n.rootElRef,
                                 s = i.date,
                                 l = i.dateProfile,
-                                c = Xt(n.context, s, 'week');
+                                c = Pt(n.context, s, 'week');
                             return h(
-                                yr,
+                                Kn,
                                 {
                                     date: s,
                                     dateProfile: l,
@@ -14065,16 +14057,16 @@
                                     extraHookProps: i.extraHookProps,
                                     elRef: this.handleRootEl,
                                 },
-                                function (f, d, p, v) {
+                                function (d, f, p, v) {
                                     return h(
                                         'td',
                                         (0, u.pi)(
                                             {
-                                                ref: f,
+                                                ref: d,
                                                 role: 'gridcell',
                                                 className: ['fc-daygrid-day']
                                                     .concat(
-                                                        d,
+                                                        f,
                                                         i.extraClassNames || []
                                                     )
                                                     .join(' '),
@@ -14097,7 +14089,7 @@
                                             },
                                             i.showWeekNumber &&
                                                 h(
-                                                    qo,
+                                                    Go,
                                                     {
                                                         date: s,
                                                         defaultFormat: vu,
@@ -14191,12 +14183,12 @@
                         }),
                         e
                     );
-                })(Ce);
-            function it(t, e, n, r) {
+                })(ue);
+            function Le(t, e, n, r) {
                 if (t.firstCol === e && t.lastCol === n - 1) return t;
                 var i = t.eventRange,
                     o = i.range,
-                    a = et(o, { start: r[e].date, end: ie(r[n - 1].date, 1) });
+                    a = Oe(o, { start: r[e].date, end: Z(r[n - 1].date, 1) });
                 return (0, u.pi)((0, u.pi)({}, t), {
                     firstCol: e,
                     lastCol: n - 1,
@@ -14227,7 +14219,7 @@
                                     i = t.prototype.addSegs.call(this, n),
                                     o = this.entriesByLevel,
                                     a = function (l) {
-                                        return !r.forceHidden[Qe(l)];
+                                        return !r.forceHidden[Re(l)];
                                     },
                                     s = 0;
                                 s < o.length;
@@ -14245,18 +14237,18 @@
                                 s = this.forceHidden,
                                 l = n.touchingEntry,
                                 c = n.touchingLevel,
-                                f = n.touchingLateral;
+                                d = n.touchingLateral;
                             if (this.hiddenConsumes && l) {
-                                var d = Qe(l);
-                                if (!s[d])
+                                var f = Re(l);
+                                if (!s[f])
                                     if (this.allowReslicing) {
                                         var p = (0, u.pi)((0, u.pi)({}, l), {
-                                            span: or(l.span, r.span),
+                                            span: Fn(l.span, r.span),
                                         });
-                                        (s[Qe(p)] = !0),
-                                            (a[c][f] = p),
+                                        (s[Re(p)] = !0),
+                                            (a[c][d] = p),
                                             this.splitEntry(l, r, i);
-                                    } else (s[d] = !0), i.push(l);
+                                    } else (s[f] = !0), i.push(l);
                             }
                             return t.prototype.handleInvalidInsertion.call(
                                 this,
@@ -14267,17 +14259,17 @@
                         }),
                         e
                     );
-                })(Mo),
-                pa = (function (t) {
+                })(Ro),
+                ca = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.cellElRefs = new Te()),
-                            (n.frameElRefs = new Te()),
-                            (n.fgElRefs = new Te()),
-                            (n.segHarnessRefs = new Te()),
-                            (n.rootElRef = X()),
+                            (n.cellElRefs = new ve()),
+                            (n.frameElRefs = new ve()),
+                            (n.fgElRefs = new ve()),
+                            (n.segHarnessRefs = new ve()),
+                            (n.rootElRef = U()),
                             (n.state = {
                                 framePositions: null,
                                 maxContentHeight: null,
@@ -14295,10 +14287,10 @@
                                 o = r.state,
                                 s = r.context.options,
                                 l = i.cells.length,
-                                c = fn(i.businessHourSegs, l),
-                                f = fn(i.bgEventSegs, l),
-                                d = fn(this.getHighlightSegs(), l),
-                                p = fn(this.getMirrorSegs(), l),
+                                c = Zt(i.businessHourSegs, l),
+                                d = Zt(i.bgEventSegs, l),
+                                f = Zt(this.getHighlightSegs(), l),
+                                p = Zt(this.getMirrorSegs(), l),
                                 v = (function gu(t, e, n, r, i, o, a) {
                                     var s = new bu();
                                     (s.allowReslicing = !0),
@@ -14312,25 +14304,25 @@
                                               ((s.maxStackCnt = n),
                                               (s.hiddenConsumes = !0));
                                     for (
-                                        var l = [], c = [], f = 0;
-                                        f < t.length;
-                                        f += 1
+                                        var l = [], c = [], d = 0;
+                                        d < t.length;
+                                        d += 1
                                     ) {
                                         var v =
                                             i[
-                                                (d = t[f]).eventRange.instance
+                                                (f = t[d]).eventRange.instance
                                                     .instanceId
                                             ];
                                         null != v
                                             ? l.push({
-                                                  index: f,
+                                                  index: d,
                                                   thickness: v,
                                                   span: {
-                                                      start: d.firstCol,
-                                                      end: d.lastCol + 1,
+                                                      start: f.firstCol,
+                                                      end: f.lastCol + 1,
                                                   },
                                               })
-                                            : c.push(d);
+                                            : c.push(f);
                                     }
                                     for (
                                         var g = s.addSegs(l),
@@ -14375,15 +14367,15 @@
                                                     for (
                                                         var l = r[s],
                                                             c = [],
-                                                            f = 0,
                                                             d = 0,
+                                                            f = 0,
                                                             p = 0,
                                                             v = l;
                                                         p < v.length;
                                                         p++
                                                     )
                                                         c.push({
-                                                            seg: it(
+                                                            seg: Le(
                                                                 (b =
                                                                     e[
                                                                         (g =
@@ -14402,13 +14394,13 @@
                                                                 g.levelCoord,
                                                             marginTop:
                                                                 g.levelCoord -
-                                                                f,
+                                                                d,
                                                         }),
-                                                            (f =
+                                                            (d =
                                                                 g.levelCoord +
                                                                 g.thickness);
                                                     var E = [];
-                                                    (f = 0), (d = 0);
+                                                    (d = 0), (f = 0);
                                                     for (
                                                         var m = 0, w = l;
                                                         m < w.length;
@@ -14420,21 +14412,21 @@
                                                                     (g = w[m])
                                                                         .index
                                                                 ],
-                                                            R =
+                                                            D =
                                                                 g.span.start ===
                                                                 s;
-                                                        (d += g.levelCoord - f),
-                                                            (f =
+                                                        (f += g.levelCoord - d),
+                                                            (d =
                                                                 g.levelCoord +
                                                                 g.thickness),
                                                             g.span.end -
                                                                 g.span.start >
                                                             1
-                                                                ? ((d +=
+                                                                ? ((f +=
                                                                       g.thickness),
-                                                                  R &&
+                                                                  D &&
                                                                       E.push({
-                                                                          seg: it(
+                                                                          seg: Le(
                                                                               b,
                                                                               g
                                                                                   .span
@@ -14452,9 +14444,9 @@
                                                                               g.levelCoord,
                                                                           marginTop: 0,
                                                                       }))
-                                                                : R &&
+                                                                : D &&
                                                                   (E.push({
-                                                                      seg: it(
+                                                                      seg: Le(
                                                                           b,
                                                                           g.span
                                                                               .start,
@@ -14469,13 +14461,13 @@
                                                                       absoluteTop:
                                                                           g.levelCoord,
                                                                       marginTop:
-                                                                          d,
+                                                                          f,
                                                                   }),
-                                                                  (d = 0));
+                                                                  (f = 0));
                                                     }
                                                     i.push(c),
                                                         o.push(E),
-                                                        a.push(d);
+                                                        a.push(f);
                                                 }
                                                 return {
                                                     singleColPlacements: i,
@@ -14485,45 +14477,45 @@
                                             })(s.toRects(), t, a),
                                             m = E.singleColPlacements,
                                             w = E.multiColPlacements,
-                                            _ = E.leftoverMargins,
-                                            R = [],
-                                            F = [],
-                                            z = 0,
-                                            Q = c;
-                                        z < Q.length;
-                                        z++
+                                            C = E.leftoverMargins,
+                                            D = [],
+                                            _ = [],
+                                            k = 0,
+                                            P = c;
+                                        k < P.length;
+                                        k++
                                     ) {
-                                        w[(d = Q[z]).firstCol].push({
-                                            seg: d,
+                                        w[(f = P[k]).firstCol].push({
+                                            seg: f,
                                             isVisible: !1,
                                             isAbsolute: !0,
                                             absoluteTop: 0,
                                             marginTop: 0,
                                         });
                                         for (
-                                            var P = d.firstCol;
-                                            P <= d.lastCol;
-                                            P += 1
+                                            var T = f.firstCol;
+                                            T <= f.lastCol;
+                                            T += 1
                                         )
-                                            m[P].push({
-                                                seg: it(d, P, P + 1, a),
+                                            m[T].push({
+                                                seg: Le(f, T, T + 1, a),
                                                 isVisible: !1,
                                                 isAbsolute: !1,
                                                 absoluteTop: 0,
                                                 marginTop: 0,
                                             });
                                     }
-                                    for (P = 0; P < a.length; P += 1) R.push(0);
-                                    for (var Y = 0, W = g; Y < W.length; Y++) {
-                                        var d,
-                                            de = W[Y],
-                                            oe = de.span;
+                                    for (T = 0; T < a.length; T += 1) D.push(0);
+                                    for (var F = 0, B = g; F < B.length; F++) {
+                                        var f,
+                                            X = B[F],
+                                            j = X.span;
                                         for (
-                                            w[oe.start].push({
-                                                seg: it(
-                                                    (d = t[de.index]),
-                                                    oe.start,
-                                                    oe.end,
+                                            w[j.start].push({
+                                                seg: Le(
+                                                    (f = t[X.index]),
+                                                    j.start,
+                                                    j.end,
                                                     a
                                                 ),
                                                 isVisible: !1,
@@ -14531,29 +14523,29 @@
                                                 absoluteTop: 0,
                                                 marginTop: 0,
                                             }),
-                                                P = oe.start;
-                                            P < oe.end;
-                                            P += 1
+                                                T = j.start;
+                                            T < j.end;
+                                            T += 1
                                         )
-                                            (R[P] += 1),
-                                                m[P].push({
-                                                    seg: it(d, P, P + 1, a),
+                                            (D[T] += 1),
+                                                m[T].push({
+                                                    seg: Le(f, T, T + 1, a),
                                                     isVisible: !1,
                                                     isAbsolute: !1,
                                                     absoluteTop: 0,
                                                     marginTop: 0,
                                                 });
                                     }
-                                    for (P = 0; P < a.length; P += 1)
-                                        F.push(_[P]);
+                                    for (T = 0; T < a.length; T += 1)
+                                        _.push(C[T]);
                                     return {
                                         singleColPlacements: m,
                                         multiColPlacements: w,
-                                        moreCnts: R,
-                                        moreMarginTops: F,
+                                        moreCnts: D,
+                                        moreMarginTops: _,
                                     };
                                 })(
-                                    Li(i.fgEventSegs, s.eventOrder),
+                                    Oi(i.fgEventSegs, s.eventOrder),
                                     i.dayMaxEvents,
                                     i.dayMaxEventRows,
                                     s.eventOrderStrict,
@@ -14575,15 +14567,15 @@
                                 'tr',
                                 { ref: this.rootElRef, role: 'row' },
                                 i.renderIntro && i.renderIntro(),
-                                i.cells.map(function (_, R) {
-                                    var F = n.renderFgSegs(
-                                            R,
-                                            i.forPrint ? g[R] : b[R],
+                                i.cells.map(function (C, D) {
+                                    var _ = n.renderFgSegs(
+                                            D,
+                                            i.forPrint ? g[D] : b[D],
                                             i.todayRange,
                                             w
                                         ),
-                                        z = n.renderFgSegs(
-                                            R,
+                                        k = n.renderFgSegs(
+                                            D,
                                             (function Au(t, e) {
                                                 if (!t.length) return [];
                                                 var n = (function Eu(t) {
@@ -14620,7 +14612,7 @@
                                                         marginTop: 0,
                                                     };
                                                 });
-                                            })(p[R], b),
+                                            })(p[D], b),
                                             i.todayRange,
                                             {},
                                             Boolean(i.eventDrag),
@@ -14628,46 +14620,46 @@
                                             !1
                                         );
                                     return h(hu, {
-                                        key: _.key,
-                                        elRef: n.cellElRefs.createRef(_.key),
+                                        key: C.key,
+                                        elRef: n.cellElRefs.createRef(C.key),
                                         innerElRef: n.frameElRefs.createRef(
-                                            _.key
+                                            C.key
                                         ),
                                         dateProfile: i.dateProfile,
-                                        date: _.date,
+                                        date: C.date,
                                         showDayNumber: i.showDayNumbers,
                                         showWeekNumber:
-                                            i.showWeekNumbers && 0 === R,
+                                            i.showWeekNumbers && 0 === D,
                                         forceDayTop: i.showWeekNumbers,
                                         todayRange: i.todayRange,
                                         eventSelection: i.eventSelection,
                                         eventDrag: i.eventDrag,
                                         eventResize: i.eventResize,
-                                        extraHookProps: _.extraHookProps,
-                                        extraDataAttrs: _.extraDataAttrs,
-                                        extraClassNames: _.extraClassNames,
-                                        extraDateSpan: _.extraDateSpan,
-                                        moreCnt: E[R],
-                                        moreMarginTop: m[R],
-                                        singlePlacements: g[R],
+                                        extraHookProps: C.extraHookProps,
+                                        extraDataAttrs: C.extraDataAttrs,
+                                        extraClassNames: C.extraClassNames,
+                                        extraDateSpan: C.extraDateSpan,
+                                        moreCnt: E[D],
+                                        moreMarginTop: m[D],
+                                        singlePlacements: g[D],
                                         fgContentElRef: n.fgElRefs.createRef(
-                                            _.key
+                                            C.key
                                         ),
                                         fgContent: h(
-                                            K,
+                                            L,
                                             null,
-                                            h(K, null, F),
-                                            h(K, null, z)
+                                            h(L, null, _),
+                                            h(L, null, k)
                                         ),
                                         bgContent: h(
-                                            K,
+                                            L,
                                             null,
-                                            n.renderFillSegs(d[R], 'highlight'),
+                                            n.renderFillSegs(f[D], 'highlight'),
                                             n.renderFillSegs(
-                                                c[R],
+                                                c[D],
                                                 'non-business'
                                             ),
-                                            n.renderFillSegs(f[R], 'bg-event')
+                                            n.renderFillSegs(d[D], 'bg-event')
                                         ),
                                     });
                                 })
@@ -14677,7 +14669,7 @@
                             this.updateSizing(!0);
                         }),
                         (e.prototype.componentDidUpdate = function (n, r) {
-                            this.updateSizing(!we(n, this.props));
+                            this.updateSizing(!ce(n, this.props));
                         }),
                         (e.prototype.getHighlightSegs = function () {
                             var n = this.props;
@@ -14703,77 +14695,77 @@
                             l
                         ) {
                             var c = this.context,
-                                f = this.props.eventSelection,
-                                d = this.state.framePositions,
+                                d = this.props.eventSelection,
+                                f = this.state.framePositions,
                                 p = 1 === this.props.cells.length,
                                 v = a || s || l,
                                 g = [];
-                            if (d)
+                            if (f)
                                 for (var b = 0, E = r; b < E.length; b++) {
                                     var m = E[b],
                                         w = m.seg,
-                                        _ = w.eventRange.instance.instanceId,
-                                        R = _ + ':' + n,
-                                        F = m.isVisible && !o[_],
-                                        z = m.isAbsolute,
-                                        Q = '',
-                                        P = '';
-                                    z &&
+                                        C = w.eventRange.instance.instanceId,
+                                        D = C + ':' + n,
+                                        _ = m.isVisible && !o[C],
+                                        k = m.isAbsolute,
+                                        P = '',
+                                        T = '';
+                                    k &&
                                         (c.isRtl
-                                            ? ((P = 0),
-                                              (Q =
-                                                  d.lefts[w.lastCol] -
-                                                  d.lefts[w.firstCol]))
-                                            : ((Q = 0),
+                                            ? ((T = 0),
                                               (P =
-                                                  d.rights[w.firstCol] -
-                                                  d.rights[w.lastCol]))),
+                                                  f.lefts[w.lastCol] -
+                                                  f.lefts[w.firstCol]))
+                                            : ((P = 0),
+                                              (T =
+                                                  f.rights[w.firstCol] -
+                                                  f.rights[w.lastCol]))),
                                         g.push(
                                             h(
                                                 'div',
                                                 {
                                                     className:
                                                         'fc-daygrid-event-harness' +
-                                                        (z
+                                                        (k
                                                             ? ' fc-daygrid-event-harness-abs'
                                                             : ''),
-                                                    key: R,
+                                                    key: D,
                                                     ref: v
                                                         ? null
                                                         : this.segHarnessRefs.createRef(
-                                                              R
+                                                              D
                                                           ),
                                                     style: {
-                                                        visibility: F
+                                                        visibility: _
                                                             ? ''
                                                             : 'hidden',
-                                                        marginTop: z
+                                                        marginTop: k
                                                             ? ''
                                                             : m.marginTop,
-                                                        top: z
+                                                        top: k
                                                             ? m.absoluteTop
                                                             : '',
-                                                        left: Q,
-                                                        right: P,
+                                                        left: P,
+                                                        right: T,
                                                     },
                                                 },
-                                                fa(w)
+                                                aa(w)
                                                     ? h(
-                                                          ua,
+                                                          la,
                                                           (0, u.pi)(
                                                               {
                                                                   seg: w,
                                                                   isDragging: a,
                                                                   isSelected:
-                                                                      _ === f,
+                                                                      C === d,
                                                                   defaultDisplayEventEnd:
                                                                       p,
                                                               },
-                                                              Pe(w, i)
+                                                              Ee(w, i)
                                                           )
                                                       )
                                                     : h(
-                                                          da,
+                                                          sa,
                                                           (0, u.pi)(
                                                               {
                                                                   seg: w,
@@ -14782,11 +14774,11 @@
                                                                   isDateSelecting:
                                                                       l,
                                                                   isSelected:
-                                                                      _ === f,
+                                                                      C === d,
                                                                   defaultDisplayEventEnd:
                                                                       p,
                                                               },
-                                                              Pe(w, i)
+                                                              Ee(w, i)
                                                           )
                                                       )
                                             )
@@ -14801,54 +14793,54 @@
                                 s = [];
                             if (a)
                                 for (var l = 0, c = n; l < c.length; l++) {
-                                    var f = c[l],
-                                        d = i
+                                    var d = c[l],
+                                        f = i
                                             ? {
                                                   right: 0,
                                                   left:
-                                                      a.lefts[f.lastCol] -
-                                                      a.lefts[f.firstCol],
+                                                      a.lefts[d.lastCol] -
+                                                      a.lefts[d.firstCol],
                                               }
                                             : {
                                                   left: 0,
                                                   right:
-                                                      a.rights[f.firstCol] -
-                                                      a.rights[f.lastCol],
+                                                      a.rights[d.firstCol] -
+                                                      a.rights[d.lastCol],
                                               };
                                     s.push(
                                         h(
                                             'div',
                                             {
-                                                key: Wi(f.eventRange),
+                                                key: Fi(d.eventRange),
                                                 className:
                                                     'fc-daygrid-bg-harness',
-                                                style: d,
+                                                style: f,
                                             },
                                             'bg-event' === r
                                                 ? h(
-                                                      Yo,
+                                                      Vo,
                                                       (0, u.pi)(
-                                                          { seg: f },
-                                                          Pe(f, o)
+                                                          { seg: d },
+                                                          Ee(d, o)
                                                       )
                                                   )
-                                                : jo(r)
+                                                : Wo(r)
                                         )
                                     );
                                 }
-                            return h.apply(void 0, (0, u.ev)([K, {}], s));
+                            return h.apply(void 0, (0, u.ev)([L, {}], s));
                         }),
                         (e.prototype.updateSizing = function (n) {
                             var i = this.props,
                                 o = this.frameElRefs;
                             if (!i.forPrint && null !== i.clientWidth) {
                                 if (n) {
-                                    var a = i.cells.map(function (d) {
-                                        return o.currentMap[d.key];
+                                    var a = i.cells.map(function (f) {
+                                        return o.currentMap[f.key];
                                     });
                                     a.length &&
                                         this.setState({
-                                            framePositions: new At(
+                                            framePositions: new $e(
                                                 this.rootElRef.current,
                                                 a,
                                                 !0,
@@ -14858,7 +14850,7 @@
                                 }
                                 var l = this.state.eventInstanceHeights,
                                     c = this.queryEventInstanceHeights(),
-                                    f =
+                                    d =
                                         !0 === i.dayMaxEvents ||
                                         !0 === i.dayMaxEventRows;
                                 this.setState({
@@ -14866,7 +14858,7 @@
                                         (0, u.pi)({}, l),
                                         c
                                     ),
-                                    maxContentHeight: f
+                                    maxContentHeight: d
                                         ? this.computeMaxContentHeight()
                                         : null,
                                 });
@@ -14902,19 +14894,19 @@
                         }),
                         e
                     );
-                })(Ce);
-            pa.addStateEquality({ eventInstanceHeights: we });
+                })(ue);
+            ca.addStateEquality({ eventInstanceHeights: ce });
             var wu = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
                     return (
-                        (n.splitBusinessHourSegs = I(cn)),
-                        (n.splitBgEventSegs = I(cn)),
-                        (n.splitFgEventSegs = I(cn)),
-                        (n.splitDateSelectionSegs = I(cn)),
-                        (n.splitEventDrag = I(la)),
-                        (n.splitEventResize = I(la)),
-                        (n.rowRefs = new Te()),
+                        (n.splitBusinessHourSegs = x(Gt)),
+                        (n.splitBgEventSegs = x(Gt)),
+                        (n.splitFgEventSegs = x(Gt)),
+                        (n.splitDateSelectionSegs = x(Gt)),
+                        (n.splitEventDrag = x(ia)),
+                        (n.splitEventResize = x(ia)),
+                        (n.rowRefs = new ve()),
                         (n.handleRootEl = function (r) {
                             (n.rootEl = r),
                                 r
@@ -14947,8 +14939,8 @@
                                 r.businessHourSegs,
                                 l
                             ),
-                            f = this.splitBgEventSegs(r.bgEventSegs, l),
-                            d = this.splitFgEventSegs(r.fgEventSegs, l),
+                            d = this.splitBgEventSegs(r.bgEventSegs, l),
+                            f = this.splitFgEventSegs(r.fgEventSegs, l),
                             p = this.splitDateSelectionSegs(
                                 r.dateSelectionSegs,
                                 l
@@ -14974,9 +14966,9 @@
                                         minWidth: r.tableMinWidth,
                                     },
                                 },
-                                h(nn, { unit: 'day' }, function (m, w) {
+                                h(Ft, { unit: 'day' }, function (m, w) {
                                     return h(
-                                        K,
+                                        L,
                                         null,
                                         h(
                                             'table',
@@ -14996,31 +14988,31 @@
                                             h(
                                                 'tbody',
                                                 { role: 'presentation' },
-                                                r.cells.map(function (_, R) {
-                                                    return h(pa, {
+                                                r.cells.map(function (C, D) {
+                                                    return h(ca, {
                                                         ref: n.rowRefs.createRef(
-                                                            R
+                                                            D
                                                         ),
-                                                        key: _.length
-                                                            ? _[0].date.toISOString()
-                                                            : R,
+                                                        key: C.length
+                                                            ? C[0].date.toISOString()
+                                                            : D,
                                                         showDayNumbers: l > 1,
                                                         showWeekNumbers:
                                                             r.showWeekNumbers,
                                                         todayRange: w,
                                                         dateProfile: i,
-                                                        cells: _,
+                                                        cells: C,
                                                         renderIntro:
                                                             r.renderRowIntro,
-                                                        businessHourSegs: c[R],
+                                                        businessHourSegs: c[D],
                                                         eventSelection:
                                                             r.eventSelection,
                                                         bgEventSegs:
-                                                            f[R].filter(Du),
-                                                        fgEventSegs: d[R],
-                                                        dateSelectionSegs: p[R],
-                                                        eventDrag: v[R],
-                                                        eventResize: g[R],
+                                                            d[D].filter(Du),
+                                                        fgEventSegs: f[D],
+                                                        dateSelectionSegs: p[D],
+                                                        eventDrag: v[D],
+                                                        eventResize: g[D],
                                                         dayMaxEvents: a,
                                                         dayMaxEventRows: o,
                                                         clientWidth:
@@ -15038,7 +15030,7 @@
                         );
                     }),
                     (e.prototype.prepareHits = function () {
-                        (this.rowPositions = new At(
+                        (this.rowPositions = new $e(
                             this.rootEl,
                             this.rowRefs.collect().map(function (n) {
                                 return n.getCellEls()[0];
@@ -15046,7 +15038,7 @@
                             !1,
                             !0
                         )),
-                            (this.colPositions = new At(
+                            (this.colPositions = new $e(
                                 this.rootEl,
                                 this.rowRefs.currentMap[0].getCellEls(),
                                 !0,
@@ -15086,15 +15078,15 @@
                     }),
                     (e.prototype.getCellRange = function (n, r) {
                         var i = this.props.cells[n][r].date;
-                        return { start: i, end: ie(i, 1) };
+                        return { start: i, end: Z(i, 1) };
                     }),
                     e
                 );
-            })(Ce);
+            })(ue);
             function Du(t) {
                 return t.eventRange.def.allDay;
             }
-            var Su = (function (t) {
+            var Cu = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
@@ -15107,12 +15099,12 @@
                         }),
                         e
                     );
-                })(Uo),
-                va = (function (t) {
+                })(Ho),
+                da = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
-                        return (n.slicer = new Su()), (n.tableRef = X()), n;
+                        return (n.slicer = new Cu()), (n.tableRef = U()), n;
                     }
                     return (
                         (0, u.ZT)(e, t),
@@ -15149,12 +15141,12 @@
                         }),
                         e
                     );
-                })(Ce);
+                })(ue);
             function xu(t, e) {
-                var n = new zo(t.renderRange, e);
-                return new Fo(n, /year|month|week/.test(t.currentRangeUnit));
+                var n = new Po(t.renderRange, e);
+                return new Bo(n, /year|month|week/.test(t.currentRangeUnit));
             }
-            const _u = xe({
+            const ku = pe({
                 initialView: 'dayGridMonth',
                 views: {
                     dayGrid: {
@@ -15164,9 +15156,9 @@
                                     (null !== t && t.apply(this, arguments)) ||
                                     this;
                                 return (
-                                    (n.buildDayTableModel = I(xu)),
-                                    (n.headerRef = X()),
-                                    (n.tableRef = X()),
+                                    (n.buildDayTableModel = x(xu)),
+                                    (n.headerRef = U()),
+                                    (n.tableRef = U()),
                                     n
                                 );
                             }
@@ -15183,15 +15175,15 @@
                                         ),
                                         l =
                                             i.dayHeaders &&
-                                            h(Ho, {
+                                            h(No, {
                                                 ref: this.headerRef,
                                                 dateProfile: a.dateProfile,
                                                 dates: s.headerDates,
                                                 datesRepDistinctDays:
                                                     1 === s.rowCnt,
                                             }),
-                                        c = function (f) {
-                                            return h(va, {
+                                        c = function (d) {
+                                            return h(da, {
                                                 ref: n.tableRef,
                                                 dateProfile: a.dateProfile,
                                                 dayTableModel: s,
@@ -15206,16 +15198,16 @@
                                                 nextDayThreshold:
                                                     i.nextDayThreshold,
                                                 colGroupNode:
-                                                    f.tableColGroupNode,
-                                                tableMinWidth: f.tableMinWidth,
+                                                    d.tableColGroupNode,
+                                                tableMinWidth: d.tableMinWidth,
                                                 dayMaxEvents: i.dayMaxEvents,
                                                 dayMaxEventRows:
                                                     i.dayMaxEventRows,
                                                 showWeekNumbers: i.weekNumbers,
                                                 expandRows: !a.isHeightAuto,
                                                 headerAlignElRef: n.headerElRef,
-                                                clientWidth: f.clientWidth,
-                                                clientHeight: f.clientHeight,
+                                                clientWidth: d.clientWidth,
+                                                clientHeight: d.clientHeight,
                                                 forPrint: a.forPrint,
                                             });
                                         };
@@ -15259,22 +15251,22 @@
                                         (/^(year|month)$/.test(r) &&
                                             ((s = o.startOfWeek(s)),
                                             (c = o.startOfWeek(l)).valueOf() !==
-                                                l.valueOf() && (l = mi(c, 1))),
+                                                l.valueOf() && (l = pi(c, 1))),
                                         this.props.monthMode &&
                                             this.props.fixedWeekCount)
                                     ) {
-                                        var f = Math.ceil(
-                                            (function Rs(t, e) {
-                                                return _e(t, e) / 7;
+                                        var d = Math.ceil(
+                                            (function Ts(t, e) {
+                                                return ge(t, e) / 7;
                                             })(s, l)
                                         );
-                                        l = mi(l, 6 - f);
+                                        l = pi(l, 6 - d);
                                     }
                                     return { start: s, end: l };
                                 }),
                                 e
                             );
-                        })(mo),
+                        })(po),
                     },
                     dayGridDay: { type: 'dayGrid', duration: { days: 1 } },
                     dayGridWeek: { type: 'dayGrid', duration: { weeks: 1 } },
@@ -15286,8 +15278,8 @@
                     },
                 },
             });
-            N(8537);
-            var ku = (function (t) {
+            R(8537);
+            var _u = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -15301,7 +15293,7 @@
                         }),
                         (e.prototype.getKeysForEventDef = function (n) {
                             return n.allDay
-                                ? (function Cl(t) {
+                                ? (function Sl(t) {
                                       return (
                                           'background' === t.ui.display ||
                                           'inverse-background' === t.ui.display
@@ -15314,13 +15306,13 @@
                         e
                     );
                 })(cc),
-                Mu = Z({
+                Mu = O({
                     hour: 'numeric',
                     minute: '2-digit',
                     omitZeroMinute: !0,
                     meridiem: 'short',
                 });
-            function ha(t) {
+            function fa(t) {
                 var e = [
                     'fc-timegrid-slot',
                     'fc-timegrid-slot-label',
@@ -15328,7 +15320,7 @@
                         ? 'fc-scrollgrid-shrink'
                         : 'fc-timegrid-slot-minor',
                 ];
-                return h(Se.Consumer, null, function (n) {
+                return h(fe.Consumer, null, function (n) {
                     if (!t.isLabeled)
                         return h('td', {
                             className: e.join(' '),
@@ -15341,8 +15333,8 @@
                             null == i.slotLabelFormat
                                 ? Mu
                                 : Array.isArray(i.slotLabelFormat)
-                                ? Z(i.slotLabelFormat[0])
-                                : Z(i.slotLabelFormat),
+                                ? O(i.slotLabelFormat[0])
+                                : O(i.slotLabelFormat),
                         s = {
                             level: 0,
                             time: t.time,
@@ -15351,7 +15343,7 @@
                             text: r.format(t.date, a),
                         };
                     return h(
-                        be,
+                        ie,
                         {
                             hookProps: s,
                             classNames: i.slotLabelClassNames,
@@ -15360,7 +15352,7 @@
                             didMount: i.slotLabelDidMount,
                             willUnmount: i.slotLabelWillUnmount,
                         },
-                        function (l, c, f, d) {
+                        function (l, c, d, f) {
                             return h(
                                 'td',
                                 {
@@ -15379,9 +15371,9 @@
                                         {
                                             className:
                                                 'fc-timegrid-slot-label-cushion fc-scrollgrid-shrink-cushion',
-                                            ref: f,
+                                            ref: d,
                                         },
-                                        d
+                                        f
                                     )
                                 )
                             );
@@ -15403,23 +15395,23 @@
                                 return h(
                                     'tr',
                                     { key: n.key },
-                                    h(ha, (0, u.pi)({}, n))
+                                    h(fa, (0, u.pi)({}, n))
                                 );
                             });
                         }),
                         e
                     );
-                })(L),
-                Pu = Z({ week: 'short' }),
-                Ou = (function (t) {
+                })(N),
+                Pu = O({ week: 'short' }),
+                Hu = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.allDaySplitter = new ku()),
-                            (n.headerElRef = X()),
-                            (n.rootElRef = X()),
-                            (n.scrollerElRef = X()),
+                            (n.allDaySplitter = new _u()),
+                            (n.headerElRef = U()),
+                            (n.rootElRef = U()),
+                            (n.scrollerElRef = U()),
                             (n.state = { slatCoords: null }),
                             (n.handleScrollTopRequest = function (r) {
                                 var i = n.scrollerElRef.current;
@@ -15430,24 +15422,24 @@
                                 var o = n.context.options,
                                     s = n.props.dateProfile.renderRange,
                                     c =
-                                        1 === _e(s.start, s.end)
-                                            ? Xt(n.context, s.start, 'week')
+                                        1 === ge(s.start, s.end)
+                                            ? Pt(n.context, s.start, 'week')
                                             : {};
                                 return o.weekNumbers && 'day' === r
                                     ? h(
-                                          qo,
+                                          Go,
                                           { date: s.start, defaultFormat: Pu },
-                                          function (f, d, p, v) {
+                                          function (d, f, p, v) {
                                               return h(
                                                   'th',
                                                   {
-                                                      ref: f,
+                                                      ref: d,
                                                       'aria-hidden': !0,
                                                       className: [
                                                           'fc-timegrid-axis',
                                                           'fc-scrollgrid-shrink',
                                                       ]
-                                                          .concat(d)
+                                                          .concat(f)
                                                           .join(' '),
                                                   },
                                                   h(
@@ -15490,7 +15482,7 @@
                                 var i = n.context,
                                     o = i.options;
                                 return h(
-                                    be,
+                                    ie,
                                     {
                                         hookProps: {
                                             text: o.allDayText,
@@ -15498,11 +15490,11 @@
                                         },
                                         classNames: o.allDayClassNames,
                                         content: o.allDayContent,
-                                        defaultContent: Hu,
+                                        defaultContent: Ou,
                                         didMount: o.allDayDidMount,
                                         willUnmount: o.allDayWillUnmount,
                                     },
-                                    function (l, c, f, d) {
+                                    function (l, c, d, f) {
                                         return h(
                                             'td',
                                             {
@@ -15530,9 +15522,9 @@
                                                     {
                                                         className:
                                                             'fc-timegrid-axis-cushion fc-scrollgrid-shrink-cushion fc-scrollgrid-sync-inner',
-                                                        ref: f,
+                                                        ref: d,
                                                     },
-                                                    d
+                                                    f
                                                 )
                                             )
                                         );
@@ -15551,7 +15543,7 @@
                             var a = this.context,
                                 s = this.props,
                                 l = [],
-                                c = on(a.options);
+                                c = Lt(a.options);
                             return (
                                 n &&
                                     l.push({
@@ -15600,21 +15592,21 @@
                                     },
                                 }),
                                 h(
-                                    wt,
+                                    tt,
                                     {
                                         viewSpec: a.viewSpec,
                                         elRef: this.rootElRef,
                                     },
-                                    function (f, d) {
+                                    function (d, f) {
                                         return h(
                                             'div',
                                             {
                                                 className: ['fc-timegrid']
-                                                    .concat(d)
+                                                    .concat(f)
                                                     .join(' '),
-                                                ref: f,
+                                                ref: d,
                                             },
-                                            h(vr, {
+                                            h(Yn, {
                                                 liquid:
                                                     !s.isHeightAuto &&
                                                     !s.forPrint,
@@ -15637,13 +15629,13 @@
                             l
                         ) {
                             var c = this,
-                                f = this.context.pluginHooks.scrollGridImpl;
-                            if (!f)
+                                d = this.context.pluginHooks.scrollGridImpl;
+                            if (!d)
                                 throw new Error('No ScrollGrid implementation');
                             var p = this.context,
                                 v = this.props,
-                                g = !v.forPrint && on(p.options),
-                                b = !v.forPrint && Vo(p.options),
+                                g = !v.forPrint && Lt(p.options),
+                                b = !v.forPrint && Uo(p.options),
                                 E = [];
                             n &&
                                 E.push({
@@ -15759,52 +15751,52 @@
                                                                 'fc-timegrid-now-indicator-container',
                                                         },
                                                         h(
-                                                            nn,
+                                                            Ft,
                                                             {
                                                                 unit: m
                                                                     ? 'minute'
                                                                     : 'day',
                                                             },
-                                                            function (_) {
-                                                                var R =
+                                                            function (C) {
+                                                                var D =
                                                                     m &&
                                                                     l &&
                                                                     l.safeComputeTop(
-                                                                        _
+                                                                        C
                                                                     );
                                                                 return 'number' ==
-                                                                    typeof R
+                                                                    typeof D
                                                                     ? h(
-                                                                          gr,
+                                                                          Jn,
                                                                           {
                                                                               isAxis: !0,
-                                                                              date: _,
+                                                                              date: C,
                                                                           },
                                                                           function (
-                                                                              F,
-                                                                              z,
-                                                                              Q,
-                                                                              P
+                                                                              _,
+                                                                              k,
+                                                                              P,
+                                                                              T
                                                                           ) {
                                                                               return h(
                                                                                   'div',
                                                                                   {
-                                                                                      ref: F,
+                                                                                      ref: _,
                                                                                       className:
                                                                                           [
                                                                                               'fc-timegrid-now-indicator-arrow',
                                                                                           ]
                                                                                               .concat(
-                                                                                                  z
+                                                                                                  k
                                                                                               )
                                                                                               .join(
                                                                                                   ' '
                                                                                               ),
                                                                                       style: {
-                                                                                          top: R,
+                                                                                          top: D,
                                                                                       },
                                                                                   },
-                                                                                  P
+                                                                                  T
                                                                               );
                                                                           }
                                                                       )
@@ -15828,26 +15820,26 @@
                                         type: 'footer',
                                         isSticky: !0,
                                         chunks: [
-                                            { key: 'axis', content: pr },
-                                            { key: 'cols', content: pr },
+                                            { key: 'axis', content: jn },
+                                            { key: 'cols', content: jn },
                                         ],
                                     }),
                                 h(
-                                    wt,
+                                    tt,
                                     {
                                         viewSpec: p.viewSpec,
                                         elRef: this.rootElRef,
                                     },
-                                    function (w, _) {
+                                    function (w, C) {
                                         return h(
                                             'div',
                                             {
                                                 className: ['fc-timegrid']
-                                                    .concat(_)
+                                                    .concat(C)
                                                     .join(' '),
                                                 ref: w,
                                             },
-                                            h(f, {
+                                            h(d, {
                                                 liquid:
                                                     !v.isHeightAuto &&
                                                     !v.forPrint,
@@ -15887,8 +15879,8 @@
                         }),
                         e
                     );
-                })(Ce);
-            function Hu(t) {
+                })(ue);
+            function Ou(t) {
                 return t.text;
             }
             var zu = (function () {
@@ -15900,22 +15892,22 @@
                     return (
                         (t.prototype.safeComputeTop = function (e) {
                             var n = this.dateProfile;
-                            if (Ne(n.currentRange, e)) {
-                                var r = V(e),
+                            if (Ae(n.currentRange, e)) {
+                                var r = H(e),
                                     i = e.valueOf() - r.valueOf();
                                 if (
-                                    i >= fe(n.slotMinTime) &&
-                                    i < fe(n.slotMaxTime)
+                                    i >= J(n.slotMinTime) &&
+                                    i < J(n.slotMaxTime)
                                 )
-                                    return this.computeTimeTop(U(i));
+                                    return this.computeTimeTop(M(i));
                             }
                             return null;
                         }),
                         (t.prototype.computeDateTop = function (e, n) {
                             return (
-                                n || (n = V(e)),
+                                n || (n = H(e)),
                                 this.computeTimeTop(
-                                    U(e.valueOf() - n.valueOf())
+                                    M(e.valueOf() - n.valueOf())
                                 )
                             );
                         }),
@@ -15926,8 +15918,8 @@
                                 o = r.els.length,
                                 a =
                                     (e.milliseconds -
-                                        fe(this.dateProfile.slotMinTime)) /
-                                    fe(this.slotDuration);
+                                        J(this.dateProfile.slotMinTime)) /
+                                    J(this.slotDuration);
                             return (
                                 (a = Math.max(0, a)),
                                 (a = Math.min(o, a)),
@@ -15959,7 +15951,7 @@
                                             date: i.dateEnv.toDate(s.date),
                                             view: i.viewApi,
                                         },
-                                        f = [
+                                        d = [
                                             'fc-timegrid-slot',
                                             'fc-timegrid-slot-lane',
                                             s.isLabeled
@@ -15969,9 +15961,9 @@
                                     return h(
                                         'tr',
                                         { key: s.key, ref: a.createRef(s.key) },
-                                        r.axis && h(ha, (0, u.pi)({}, s)),
+                                        r.axis && h(fa, (0, u.pi)({}, s)),
                                         h(
-                                            be,
+                                            ie,
                                             {
                                                 hookProps: c,
                                                 classNames:
@@ -15981,12 +15973,12 @@
                                                 willUnmount:
                                                     o.slotLaneWillUnmount,
                                             },
-                                            function (d, p, v, g) {
+                                            function (f, p, v, g) {
                                                 return h(
                                                     'td',
                                                     {
-                                                        ref: d,
-                                                        className: f
+                                                        ref: f,
+                                                        className: d
                                                             .concat(p)
                                                             .join(' '),
                                                         'data-time':
@@ -16002,13 +15994,13 @@
                         }),
                         e
                     );
-                })(L),
+                })(N),
                 Uu = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.rootElRef = X()), (n.slatElRefs = new Te()), n
+                            (n.rootElRef = U()), (n.slatElRefs = new ve()), n
                         );
                     }
                     return (
@@ -16061,7 +16053,7 @@
                                 this.rootElRef.current.offsetHeight &&
                                 i.onCoords(
                                     new zu(
-                                        new At(
+                                        new $e(
                                             this.rootElRef.current,
                                             (function Lu(t, e) {
                                                 return e.map(function (n) {
@@ -16081,15 +16073,15 @@
                         }),
                         e
                     );
-                })(L);
-            function St(t, e) {
+                })(N);
+            function rt(t, e) {
                 var r,
                     n = [];
                 for (r = 0; r < e; r += 1) n.push([]);
                 if (t) for (r = 0; r < t.length; r += 1) n[t[r].col].push(t[r]);
                 return n;
             }
-            function ga(t, e) {
+            function ua(t, e) {
                 var n = [];
                 if (t) {
                     for (var r = 0; r < e; r += 1)
@@ -16108,7 +16100,7 @@
             var Qu = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
-                    return (n.rootElRef = X()), n;
+                    return (n.rootElRef = U()), n;
                 }
                 return (
                     (0, u.ZT)(e, t),
@@ -16116,7 +16108,7 @@
                         var n = this,
                             r = this.props;
                         return h(
-                            Jo,
+                            Zo,
                             {
                                 allDayDate: null,
                                 moreCnt: r.hiddenSegs.length,
@@ -16128,15 +16120,15 @@
                                 dateProfile: r.dateProfile,
                                 todayRange: r.todayRange,
                                 popoverContent: function () {
-                                    return Aa(r.hiddenSegs, r);
+                                    return ga(r.hiddenSegs, r);
                                 },
                             },
-                            function (i, o, a, s, l, c, f, d) {
+                            function (i, o, a, s, l, c, d, f) {
                                 return h(
                                     'a',
                                     {
                                         ref: function (p) {
-                                            me(i, p), me(n.rootElRef, p);
+                                            te(i, p), te(n.rootElRef, p);
                                         },
                                         className: ['fc-timegrid-more-link']
                                             .concat(o)
@@ -16144,8 +16136,8 @@
                                         style: { top: r.top, bottom: r.bottom },
                                         onClick: l,
                                         title: c,
-                                        'aria-expanded': f,
-                                        'aria-controls': d,
+                                        'aria-expanded': d,
+                                        'aria-controls': f,
                                     },
                                     h(
                                         'div',
@@ -16162,11 +16154,11 @@
                     }),
                     e
                 );
-            })(L);
+            })(N);
             function Wu(t) {
                 return t.shortText;
             }
-            function ma(t, e) {
+            function pa(t, e) {
                 if (!t) return [[], 0];
                 for (
                     var n = t.level,
@@ -16185,7 +16177,7 @@
             function ju(t) {
                 return t[0];
             }
-            function Sr(t, e) {
+            function ir(t, e) {
                 var n = {};
                 return function () {
                     for (var r = [], i = 0; i < arguments.length; i++)
@@ -16194,7 +16186,7 @@
                     return o in n ? n[o] : (n[o] = e.apply(void 0, r));
                 };
             }
-            function ya(t, e, n, r) {
+            function va(t, e, n, r) {
                 void 0 === n && (n = null), void 0 === r && (r = 0);
                 var i = [];
                 if (n)
@@ -16209,8 +16201,8 @@
                     }
                 return i;
             }
-            var Ku = Z({ hour: 'numeric', minute: '2-digit', meridiem: !1 }),
-                ba = (function (t) {
+            var Ku = O({ hour: 'numeric', minute: '2-digit', meridiem: !1 }),
+                ha = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
                     }
@@ -16222,7 +16214,7 @@
                                 this.props.isShort &&
                                     n.push('fc-timegrid-event-short'),
                                 h(
-                                    Go,
+                                    Lo,
                                     (0, u.pi)({}, this.props, {
                                         defaultTimeFormat: Ku,
                                         extraClassNames: n,
@@ -16232,7 +16224,7 @@
                         }),
                         e
                     );
-                })(L),
+                })(N),
                 $u = (function (t) {
                     function e() {
                         return (null !== t && t.apply(this, arguments)) || this;
@@ -16242,7 +16234,7 @@
                         (e.prototype.render = function () {
                             var n = this.props;
                             return h(
-                                mr,
+                                Xn,
                                 {
                                     date: n.date,
                                     dateProfile: n.dateProfile,
@@ -16267,12 +16259,12 @@
                         }),
                         e
                     );
-                })(L),
+                })(N),
                 ep = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
-                        return (n.sortEventSegs = I(Li)), n;
+                        return (n.sortEventSegs = x(Oi)), n;
                     }
                     return (
                         (0, u.ZT)(e, t),
@@ -16297,7 +16289,7 @@
                                     o.options.eventOrder
                                 );
                             return h(
-                                yr,
+                                Kn,
                                 {
                                     elRef: i.elRef,
                                     date: i.date,
@@ -16305,16 +16297,16 @@
                                     todayRange: i.todayRange,
                                     extraHookProps: i.extraHookProps,
                                 },
-                                function (f, d, p) {
+                                function (d, f, p) {
                                     return h(
                                         'td',
                                         (0, u.pi)(
                                             {
-                                                ref: f,
+                                                ref: d,
                                                 role: 'gridcell',
                                                 className: ['fc-timegrid-col']
                                                     .concat(
-                                                        d,
+                                                        f,
                                                         i.extraClassNames || []
                                                     )
                                                     .join(' '),
@@ -16394,7 +16386,7 @@
                         (e.prototype.renderFgSegs = function (n, r, i, o, a) {
                             var s = this.props;
                             return s.forPrint
-                                ? Aa(n, s)
+                                ? ga(n, s)
                                 : this.renderPositionedFgSegs(n, r, i, o, a);
                         }),
                         (e.prototype.renderPositionedFgSegs = function (
@@ -16407,14 +16399,14 @@
                             var s = this,
                                 l = this.context.options,
                                 c = l.eventMaxStack,
-                                f = l.eventShortHeight,
-                                d = l.eventOrderStrict,
+                                d = l.eventShortHeight,
+                                f = l.eventOrderStrict,
                                 v = this.props,
                                 E = v.eventSelection,
                                 m = v.todayRange,
                                 w = v.nowDate,
-                                _ = i || o || a,
-                                F = (function Xu(t, e, n, r) {
+                                C = i || o || a,
+                                _ = (function Xu(t, e, n, r) {
                                     for (
                                         var i = [], o = [], a = 0;
                                         a < t.length;
@@ -16431,12 +16423,12 @@
                                     }
                                     for (
                                         var l = (function Vu(t, e, n) {
-                                                var r = new Mo();
+                                                var r = new Ro();
                                                 null != e &&
                                                     (r.strictOrder = e),
                                                     null != n &&
                                                         (r.maxStackCnt = n);
-                                                var o = (function Lf(t) {
+                                                var o = (function Ud(t) {
                                                         for (
                                                             var e = [],
                                                                 n = 0,
@@ -16458,7 +16450,7 @@
                                                                 s++
                                                             ) {
                                                                 var c = l[s];
-                                                                or(
+                                                                Fn(
                                                                     c.span,
                                                                     a.span
                                                                 )
@@ -16467,7 +16459,7 @@
                                                                               c.entries.concat(
                                                                                   a.entries
                                                                               ),
-                                                                          span: Qf(
+                                                                          span: Ld(
                                                                               c.span,
                                                                               a.span
                                                                           ),
@@ -16481,7 +16473,7 @@
                                                     a = (function Gu(t) {
                                                         var e =
                                                                 t.entriesByLevel,
-                                                            n = Sr(
+                                                            n = ir(
                                                                 function (
                                                                     r,
                                                                     i
@@ -16541,26 +16533,26 @@
                                                                                                 i[
                                                                                                     l
                                                                                                 ],
-                                                                                            f =
-                                                                                                void 0,
                                                                                             d =
-                                                                                                sr(
+                                                                                                void 0,
+                                                                                            f =
+                                                                                                Ln(
                                                                                                     c,
                                                                                                     o
                                                                                                         .span
                                                                                                         .start,
-                                                                                                    ir
+                                                                                                    zn
                                                                                                 ),
                                                                                             p =
-                                                                                                d[0] +
-                                                                                                d[1],
+                                                                                                f[0] +
+                                                                                                f[1],
                                                                                             v =
                                                                                                 p;
-                                                                                        (f =
+                                                                                        (d =
                                                                                             c[
                                                                                                 v
                                                                                             ]) &&
-                                                                                        f
+                                                                                        d
                                                                                             .span
                                                                                             .start <
                                                                                             o
@@ -16587,7 +16579,7 @@
                                                                                 r,
                                                                                 i
                                                                             ),
-                                                                        a = ma(
+                                                                        a = pa(
                                                                             o,
                                                                             n
                                                                         ),
@@ -16615,7 +16607,7 @@
                                                                     ];
                                                                 }
                                                             );
-                                                        return ma(
+                                                        return pa(
                                                             e.length
                                                                 ? {
                                                                       level: 0,
@@ -16629,18 +16621,18 @@
                                                         )[0];
                                                     })(r);
                                                 a = (function qu(t, e) {
-                                                    var n = Sr(
+                                                    var n = ir(
                                                         function (r, i, o) {
-                                                            return Qe(r);
+                                                            return Re(r);
                                                         },
                                                         function (r, i, o) {
-                                                            var f,
+                                                            var d,
                                                                 a =
                                                                     r.nextLevelNodes,
                                                                 s = r.thickness,
                                                                 l = s + o,
                                                                 c = s / l,
-                                                                d = [];
+                                                                f = [];
                                                             if (a.length)
                                                                 for (
                                                                     var p = 0,
@@ -16653,34 +16645,34 @@
                                                                         v[p];
                                                                     if (
                                                                         void 0 ===
-                                                                        f
+                                                                        d
                                                                     )
-                                                                        (f =
+                                                                        (d =
                                                                             (b =
                                                                                 n(
                                                                                     g,
                                                                                     i,
                                                                                     l
                                                                                 ))[0]),
-                                                                            d.push(
+                                                                            f.push(
                                                                                 b[1]
                                                                             );
                                                                     else {
                                                                         var b =
                                                                             n(
                                                                                 g,
-                                                                                f,
+                                                                                d,
                                                                                 0
                                                                             );
-                                                                        d.push(
+                                                                        f.push(
                                                                             b[1]
                                                                         );
                                                                     }
                                                                 }
-                                                            else f = e;
-                                                            var E = (f - i) * c;
+                                                            else d = e;
+                                                            var E = (d - i) * c;
                                                             return [
-                                                                f - E,
+                                                                d - E,
                                                                 (0, u.pi)(
                                                                     (0, u.pi)(
                                                                         {},
@@ -16690,7 +16682,7 @@
                                                                         thickness:
                                                                             E,
                                                                         nextLevelNodes:
-                                                                            d,
+                                                                            f,
                                                                     }
                                                                 ),
                                                             ];
@@ -16702,9 +16694,9 @@
                                                 })(a, 1);
                                                 var s = (function Ju(t) {
                                                     var e = [],
-                                                        n = Sr(
+                                                        n = ir(
                                                             function (i, o, a) {
-                                                                return Qe(i);
+                                                                return Re(i);
                                                             },
                                                             function (i, o, a) {
                                                                 var s = (0,
@@ -16755,85 +16747,85 @@
                                                     hiddenGroups: o,
                                                 };
                                             })(i, n, r),
-                                            f = l.hiddenGroups,
-                                            d = [],
+                                            d = l.hiddenGroups,
+                                            f = [],
                                             p = 0,
                                             v = l.segRects;
                                         p < v.length;
                                         p++
                                     ) {
                                         var g = v[p];
-                                        d.push({ seg: t[g.index], rect: g });
+                                        f.push({ seg: t[g.index], rect: g });
                                     }
                                     for (var b = 0, E = o; b < E.length; b++)
-                                        d.push({ seg: E[b], rect: null });
+                                        f.push({ seg: E[b], rect: null });
                                     return {
-                                        segPlacements: d,
-                                        hiddenGroups: f,
+                                        segPlacements: f,
+                                        hiddenGroups: d,
                                     };
                                 })(
                                     n,
-                                    ya(
+                                    va(
                                         n,
                                         v.date,
                                         v.slatCoords,
                                         l.eventMinHeight
                                     ),
-                                    d,
+                                    f,
                                     c
                                 ),
-                                z = F.segPlacements;
+                                k = _.segPlacements;
                             return h(
-                                K,
+                                L,
                                 null,
-                                this.renderHiddenGroups(F.hiddenGroups, n),
-                                z.map(function (P) {
-                                    var Y = P.seg,
-                                        W = P.rect,
-                                        de = Y.eventRange.instance.instanceId,
-                                        oe = _ || Boolean(!r[de] && W),
-                                        at = Cr(W && W.span),
-                                        st =
-                                            !_ && W
-                                                ? s.computeSegHStyle(W)
+                                this.renderHiddenGroups(_.hiddenGroups, n),
+                                k.map(function (T) {
+                                    var F = T.seg,
+                                        B = T.rect,
+                                        X = F.eventRange.instance.instanceId,
+                                        j = C || Boolean(!r[X] && B),
+                                        We = or(B && B.span),
+                                        Ve =
+                                            !C && B
+                                                ? s.computeSegHStyle(B)
                                                 : { left: 0, right: 0 },
-                                        Tt = Boolean(W) && W.stackForward > 0,
+                                        at = Boolean(B) && B.stackForward > 0,
                                         Vp =
-                                            Boolean(W) &&
-                                            W.span.end - W.span.start < f;
+                                            Boolean(B) &&
+                                            B.span.end - B.span.start < d;
                                     return h(
                                         'div',
                                         {
                                             className:
                                                 'fc-timegrid-event-harness' +
-                                                (Tt
+                                                (at
                                                     ? ' fc-timegrid-event-harness-inset'
                                                     : ''),
-                                            key: de,
+                                            key: X,
                                             style: (0, u.pi)(
                                                 (0, u.pi)(
                                                     {
-                                                        visibility: oe
+                                                        visibility: j
                                                             ? ''
                                                             : 'hidden',
                                                     },
-                                                    at
+                                                    We
                                                 ),
-                                                st
+                                                Ve
                                             ),
                                         },
                                         h(
-                                            ba,
+                                            ha,
                                             (0, u.pi)(
                                                 {
-                                                    seg: Y,
+                                                    seg: F,
                                                     isDragging: i,
                                                     isResizing: o,
                                                     isDateSelecting: a,
-                                                    isSelected: de === E,
+                                                    isSelected: X === E,
                                                     isShort: Vp,
                                                 },
-                                                Pe(Y, m, w)
+                                                Ee(F, m, w)
                                             )
                                         )
                                     );
@@ -16847,20 +16839,20 @@
                                 s = i.todayRange,
                                 l = i.nowDate,
                                 c = i.eventSelection,
-                                f = i.eventDrag,
-                                d = i.eventResize;
+                                d = i.eventDrag,
+                                f = i.eventResize;
                             return h(
-                                K,
+                                L,
                                 null,
                                 n.map(function (p) {
-                                    var v = Cr(p.span),
+                                    var v = or(p.span),
                                         g = (function tp(t, e) {
                                             return t.map(function (n) {
                                                 return e[n.index];
                                             });
                                         })(p.entries, r);
                                     return h(Qu, {
-                                        key: xi(Ko(g)),
+                                        key: wi(Yo(g)),
                                         hiddenSegs: g,
                                         top: v.top,
                                         bottom: v.bottom,
@@ -16869,44 +16861,44 @@
                                         todayRange: s,
                                         nowDate: l,
                                         eventSelection: c,
-                                        eventDrag: f,
-                                        eventResize: d,
+                                        eventDrag: d,
+                                        eventResize: f,
                                     });
                                 })
                             );
                         }),
                         (e.prototype.renderFillSegs = function (n, r) {
                             var o = this.props,
-                                l = ya(
+                                l = va(
                                     n,
                                     o.date,
                                     o.slatCoords,
                                     this.context.options.eventMinHeight
-                                ).map(function (c, f) {
-                                    var d = n[f];
+                                ).map(function (c, d) {
+                                    var f = n[d];
                                     return h(
                                         'div',
                                         {
-                                            key: Wi(d.eventRange),
+                                            key: Fi(f.eventRange),
                                             className: 'fc-timegrid-bg-harness',
-                                            style: Cr(c),
+                                            style: or(c),
                                         },
                                         'bg-event' === r
                                             ? h(
-                                                  Yo,
+                                                  Vo,
                                                   (0, u.pi)(
-                                                      { seg: d },
-                                                      Pe(
-                                                          d,
+                                                      { seg: f },
+                                                      Ee(
+                                                          f,
                                                           o.todayRange,
                                                           o.nowDate
                                                       )
                                                   )
                                               )
-                                            : jo(r)
+                                            : Wo(r)
                                     );
                                 });
-                            return h(K, null, l);
+                            return h(L, null, l);
                         }),
                         (e.prototype.renderNowIndicator = function (n) {
                             var r = this.props,
@@ -16915,9 +16907,9 @@
                             return i
                                 ? n.map(function (a, s) {
                                       return h(
-                                          gr,
+                                          Jn,
                                           { isAxis: !1, date: o, key: s },
-                                          function (l, c, f, d) {
+                                          function (l, c, d, f) {
                                               return h(
                                                   'div',
                                                   {
@@ -16934,7 +16926,7 @@
                                                           ),
                                                       },
                                                   },
-                                                  d
+                                                  f
                                               );
                                           }
                                       );
@@ -16943,7 +16935,7 @@
                         }),
                         (e.prototype.computeSegHStyle = function (n) {
                             var c,
-                                f,
+                                d,
                                 r = this.context,
                                 i = r.isRtl,
                                 a = r.options.slotEventOverlap,
@@ -16951,24 +16943,24 @@
                                 l = n.levelCoord + n.thickness;
                             a && (l = Math.min(1, s + 2 * (l - s))),
                                 i
-                                    ? ((c = 1 - l), (f = s))
-                                    : ((c = s), (f = 1 - l));
-                            var d = {
+                                    ? ((c = 1 - l), (d = s))
+                                    : ((c = s), (d = 1 - l));
+                            var f = {
                                 zIndex: n.stackDepth + 1,
                                 left: 100 * c + '%',
-                                right: 100 * f + '%',
+                                right: 100 * d + '%',
                             };
                             return (
                                 a &&
                                     !n.stackForward &&
-                                    (d[i ? 'marginLeft' : 'marginRight'] = 20),
-                                d
+                                    (f[i ? 'marginLeft' : 'marginRight'] = 20),
+                                f
                             );
                         }),
                         e
                     );
-                })(L);
-            function Aa(t, e) {
+                })(N);
+            function ga(t, e) {
                 var n = e.todayRange,
                     r = e.nowDate,
                     i = e.eventSelection,
@@ -16979,7 +16971,7 @@
                         (a ? a.affectedInstances : null) ||
                         {};
                 return h(
-                    K,
+                    L,
                     null,
                     t.map(function (l) {
                         var c = l.eventRange.instance.instanceId;
@@ -16990,7 +16982,7 @@
                                 style: { visibility: s[c] ? 'hidden' : '' },
                             },
                             h(
-                                ba,
+                                ha,
                                 (0, u.pi)(
                                     {
                                         seg: l,
@@ -17000,14 +16992,14 @@
                                         isSelected: c === i,
                                         isShort: !1,
                                     },
-                                    Pe(l, n, r)
+                                    Ee(l, n, r)
                                 )
                             )
                         );
                     })
                 );
             }
-            function Cr(t) {
+            function or(t) {
                 return t
                     ? { top: t.start, bottom: -t.end }
                     : { top: '', bottom: '' };
@@ -17017,15 +17009,15 @@
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.splitFgEventSegs = I(St)),
-                            (n.splitBgEventSegs = I(St)),
-                            (n.splitBusinessHourSegs = I(St)),
-                            (n.splitNowIndicatorSegs = I(St)),
-                            (n.splitDateSelectionSegs = I(St)),
-                            (n.splitEventDrag = I(ga)),
-                            (n.splitEventResize = I(ga)),
-                            (n.rootElRef = X()),
-                            (n.cellElRefs = new Te()),
+                            (n.splitFgEventSegs = x(rt)),
+                            (n.splitBgEventSegs = x(rt)),
+                            (n.splitBusinessHourSegs = x(rt)),
+                            (n.splitNowIndicatorSegs = x(rt)),
+                            (n.splitDateSelectionSegs = x(rt)),
+                            (n.splitEventDrag = x(ua)),
+                            (n.splitEventResize = x(ua)),
+                            (n.rootElRef = U()),
+                            (n.cellElRefs = new ve()),
                             n
                         );
                     }
@@ -17041,11 +17033,11 @@
                                 s = i.cells.length,
                                 l = this.splitFgEventSegs(i.fgEventSegs, s),
                                 c = this.splitBgEventSegs(i.bgEventSegs, s),
-                                f = this.splitBusinessHourSegs(
+                                d = this.splitBusinessHourSegs(
                                     i.businessHourSegs,
                                     s
                                 ),
-                                d = this.splitNowIndicatorSegs(
+                                f = this.splitNowIndicatorSegs(
                                     i.nowIndicatorSegs,
                                     s
                                 ),
@@ -17100,7 +17092,7 @@
                                                             'number' ==
                                                                 typeof a &&
                                                                 h(
-                                                                    gr,
+                                                                    Jn,
                                                                     {
                                                                         isAxis: !0,
                                                                         date: i.nowDate,
@@ -17156,8 +17148,8 @@
                                                         b.extraDateSpan,
                                                     fgEventSegs: l[E],
                                                     bgEventSegs: c[E],
-                                                    businessHourSegs: f[E],
-                                                    nowIndicatorSegs: d[E],
+                                                    businessHourSegs: d[E],
+                                                    nowIndicatorSegs: f[E],
                                                     dateSelectionSegs: p[E],
                                                     eventDrag: v[E],
                                                     eventResize: g[E],
@@ -17183,7 +17175,7 @@
                             n.onColCoords &&
                                 null !== n.clientWidth &&
                                 n.onColCoords(
-                                    new At(
+                                    new $e(
                                         this.rootElRef.current,
                                         (function rp(t, e) {
                                             return e.map(function (n) {
@@ -17197,13 +17189,13 @@
                         }),
                         e
                     );
-                })(L),
+                })(N),
                 ip = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.processSlotOptions = I(op)),
+                            (n.processSlotOptions = x(op)),
                             (n.state = { slatCoords: null }),
                             (n.handleRootEl = function (r) {
                                 r
@@ -17314,21 +17306,21 @@
                                 s = this.colCoords,
                                 l = this.props.dateProfile,
                                 c = this.state.slatCoords,
-                                f = this.processSlotOptions(
+                                d = this.processSlotOptions(
                                     this.props.slotDuration,
                                     i.options.snapDuration
                                 ),
-                                d = f.snapDuration,
-                                p = f.snapsPerSlot,
+                                f = d.snapDuration,
+                                p = d.snapsPerSlot,
                                 v = s.leftToIndex(n),
                                 g = c.positions.topToIndex(r);
                             if (null != v && null != g) {
                                 var b = this.props.cells[v],
                                     E = c.positions.tops[g],
                                     m = c.positions.getHeight(g),
-                                    _ = Math.floor(((r - E) / m) * p),
-                                    F = this.props.cells[v].date,
-                                    z = Rn(
+                                    C = Math.floor(((r - E) / m) * p),
+                                    _ = this.props.cells[v].date,
+                                    k = ln(
                                         l.slotMinTime,
                                         (function js(t, e) {
                                             return {
@@ -17338,15 +17330,15 @@
                                                 milliseconds:
                                                     t.milliseconds * e,
                                             };
-                                        })(d, g * p + _)
+                                        })(f, g * p + C)
                                     ),
-                                    Q = o.add(F, z),
-                                    P = o.add(Q, d);
+                                    P = o.add(_, k),
+                                    T = o.add(P, f);
                                 return {
                                     dateProfile: l,
                                     dateSpan: (0, u.pi)(
                                         {
-                                            range: { start: Q, end: P },
+                                            range: { start: P, end: T },
                                             allDay: !1,
                                         },
                                         b.extraDateSpan
@@ -17365,10 +17357,10 @@
                         }),
                         e
                     );
-                })(Ce);
+                })(ue);
             function op(t, e) {
                 var n = e || t,
-                    r = _n(t, n);
+                    r = cn(t, n);
                 return (
                     null === r && ((n = t), (r = 1)),
                     { snapDuration: n, snapsPerSlot: r }
@@ -17382,7 +17374,7 @@
                         (0, u.ZT)(e, t),
                         (e.prototype.sliceRange = function (n, r) {
                             for (var i = [], o = 0; o < r.length; o += 1) {
-                                var a = et(n, r[o]);
+                                var a = Oe(n, r[o]);
                                 a &&
                                     i.push({
                                         start: a.start,
@@ -17399,15 +17391,15 @@
                         }),
                         e
                     );
-                })(Uo),
+                })(Ho),
                 sp = (function (t) {
                     function e() {
                         var n =
                             (null !== t && t.apply(this, arguments)) || this;
                         return (
-                            (n.buildDayRanges = I(lp)),
+                            (n.buildDayRanges = x(lp)),
                             (n.slicer = new ap()),
-                            (n.timeColsRef = X()),
+                            (n.timeColsRef = U()),
                             n
                         );
                     }
@@ -17422,9 +17414,9 @@
                                 l = o.options.nowIndicator,
                                 c = this.buildDayRanges(s, a, o.dateEnv);
                             return h(
-                                nn,
+                                Ft,
                                 { unit: l ? 'minute' : 'day' },
-                                function (f, d) {
+                                function (d, f) {
                                     return h(
                                         ip,
                                         (0, u.pi)(
@@ -17449,15 +17441,15 @@
                                                 clientWidth: i.clientWidth,
                                                 clientHeight: i.clientHeight,
                                                 expandRows: i.expandRows,
-                                                nowDate: f,
+                                                nowDate: d,
                                                 nowIndicatorSegs:
                                                     l &&
                                                     n.slicer.sliceNowDate(
-                                                        f,
+                                                        d,
                                                         o,
                                                         c
                                                     ),
-                                                todayRange: d,
+                                                todayRange: f,
                                                 onScrollTopRequest:
                                                     i.onScrollTopRequest,
                                                 onSlatCoords: i.onSlatCoords,
@@ -17469,7 +17461,7 @@
                         }),
                         e
                     );
-                })(Ce);
+                })(ue);
             function lp(t, e, n) {
                 for (var r = [], i = 0, o = t.headerDates; i < o.length; i++) {
                     var a = o[i];
@@ -17480,7 +17472,7 @@
                 }
                 return r;
             }
-            var Ea = [
+            var ma = [
                 { hours: 1 },
                 { minutes: 30 },
                 { minutes: 15 },
@@ -17491,43 +17483,43 @@
                 for (
                     var o = new Date(0),
                         a = t,
-                        s = U(0),
+                        s = M(0),
                         l =
                             n ||
-                            (function fp(t) {
+                            (function dp(t) {
                                 var e, n, r;
-                                for (e = Ea.length - 1; e >= 0; e -= 1)
+                                for (e = ma.length - 1; e >= 0; e -= 1)
                                     if (
-                                        null !== (r = _n((n = U(Ea[e])), t)) &&
+                                        null !== (r = cn((n = M(ma[e])), t)) &&
                                         r > 1
                                     )
                                         return n;
                                 return t;
                             })(r),
                         c = [];
-                    fe(a) < fe(e);
+                    J(a) < J(e);
 
                 ) {
-                    var f = i.add(o, a),
-                        d = null !== _n(s, l);
+                    var d = i.add(o, a),
+                        f = null !== cn(s, l);
                     c.push({
-                        date: f,
+                        date: d,
                         time: a,
-                        key: f.toISOString(),
-                        isoTimeStr: Js(f),
-                        isLabeled: d,
+                        key: d.toISOString(),
+                        isoTimeStr: Js(d),
+                        isLabeled: f,
                     }),
-                        (a = Rn(a, r)),
-                        (s = Rn(s, r));
+                        (a = ln(a, r)),
+                        (s = ln(s, r));
                 }
                 return c;
             }
-            var dp = (function (t) {
+            var fp = (function (t) {
                 function e() {
                     var n = (null !== t && t.apply(this, arguments)) || this;
                     return (
-                        (n.buildTimeColsModel = I(up)),
-                        (n.buildSlatMetas = I(cp)),
+                        (n.buildTimeColsModel = x(up)),
+                        (n.buildSlatMetas = x(cp)),
                         n
                     );
                 }
@@ -17544,8 +17536,8 @@
                                 l,
                                 r.dateProfileGenerator
                             ),
-                            f = this.allDaySplitter.splitProps(s),
-                            d = this.buildSlatMetas(
+                            d = this.allDaySplitter.splitProps(s),
+                            f = this.buildSlatMetas(
                                 l.slotMinTime,
                                 l.slotMaxTime,
                                 i.slotLabelInterval,
@@ -17557,7 +17549,7 @@
                             g = p,
                             b =
                                 i.dayHeaders &&
-                                h(Ho, {
+                                h(No, {
                                     dates: c.headerDates,
                                     dateProfile: l,
                                     datesRepDistinctDays: !0,
@@ -17567,10 +17559,10 @@
                                 !1 !== i.allDaySlot &&
                                 function (w) {
                                     return h(
-                                        va,
+                                        da,
                                         (0, u.pi)(
                                             {},
-                                            f.allDay,
+                                            d.allDay,
                                             {
                                                 dateProfile: l,
                                                 dayTableModel: c,
@@ -17596,12 +17588,12 @@
                             m = function (w) {
                                 return h(
                                     sp,
-                                    (0, u.pi)({}, f.timed, {
+                                    (0, u.pi)({}, d.timed, {
                                         dayTableModel: c,
                                         dateProfile: l,
                                         axis: v,
                                         slotDuration: i.slotDuration,
-                                        slatMetas: d,
+                                        slatMetas: f,
                                         forPrint: s.forPrint,
                                         tableColGroupNode: w.tableColGroupNode,
                                         tableMinWidth: w.tableMinWidth,
@@ -17621,24 +17613,24 @@
                                   m,
                                   c.colCnt,
                                   p,
-                                  d,
+                                  f,
                                   this.state.slatCoords
                               )
                             : this.renderSimpleLayout(b, E, m);
                     }),
                     e
                 );
-            })(Ou);
+            })(Hu);
             function up(t, e) {
-                var n = new zo(t.renderRange, e);
-                return new Fo(n, !1);
+                var n = new Po(t.renderRange, e);
+                return new Bo(n, !1);
             }
-            const hp = xe({
+            const hp = pe({
                 initialView: 'timeGridWeek',
                 optionRefiners: { allDaySlot: Boolean },
                 views: {
                     timeGrid: {
-                        component: dp,
+                        component: fp,
                         usesMinMaxTime: !0,
                         allDaySlot: !0,
                         slotDuration: '00:30:00',
@@ -17712,7 +17704,7 @@
                                             r.containerStyle()
                                         ));
                             },
-                            directives: [O.mk, O.PC],
+                            directives: [I.mk, I.PC],
                             styles: [
                                 '.p-skeleton{position:relative;overflow:hidden}.p-skeleton:after{content:"";animation:p-skeleton-animation 1.2s infinite;height:100%;left:0;position:absolute;right:0;top:0;transform:translate(-100%);z-index:1}.p-skeleton.p-skeleton-circle{border-radius:50%}.p-skeleton-none:after{animation:none}@keyframes p-skeleton-animation{0%{transform:translate(-100%)}to{transform:translate(100%)}}\n',
                             ],
@@ -17729,11 +17721,11 @@
                             return new (n || t)();
                         }),
                         (t.ɵmod = y.oAB({ type: t })),
-                        (t.ɵinj = y.cJS({ imports: [[O.ez]] })),
+                        (t.ɵinj = y.cJS({ imports: [[I.ez]] })),
                         t
                     );
                 })();
-            ta.registerPlugins([su, _u, hp]);
+            Xo.registerPlugins([su, ku, hp]);
             let yp = (() => {
                 class t {}
                 return (
@@ -17741,11 +17733,11 @@
                         return new (n || t)();
                     }),
                     (t.ɵmod = y.oAB({ type: t })),
-                    (t.ɵinj = y.cJS({ imports: [[O.ez, ta, mp]] })),
+                    (t.ɵinj = y.cJS({ imports: [[I.ez, Xo, mp]] })),
                     t
                 );
             })();
-            var dn = N(9783);
+            var jt = R(9783);
             function bp(t, e) {
                 1 & t && y.GkF(0);
             }
@@ -17784,7 +17776,7 @@
             function Dp(t, e) {
                 1 & t && y.GkF(0);
             }
-            function Sp(t, e) {
+            function Cp(t, e) {
                 if (
                     (1 & t &&
                         (y.TgZ(0, 'div', 10),
@@ -17800,13 +17792,13 @@
                         y.Q6J('ngTemplateOutlet', n.subtitleTemplate);
                 }
             }
-            function Cp(t, e) {
+            function Sp(t, e) {
                 1 & t && y.GkF(0);
             }
             function xp(t, e) {
                 1 & t && y.GkF(0);
             }
-            function Tp(t, e) {
+            function Rp(t, e) {
                 if (
                     (1 & t &&
                         (y.TgZ(0, 'div', 11),
@@ -17819,9 +17811,9 @@
                     y.xp6(2), y.Q6J('ngTemplateOutlet', n.footerTemplate);
                 }
             }
-            const Rp = ['*', [['p-header']], [['p-footer']]],
-                _p = ['*', 'p-header', 'p-footer'];
-            let kp = (() => {
+            const Tp = ['*', [['p-header']], [['p-footer']]],
+                kp = ['*', 'p-header', 'p-footer'];
+            let _p = (() => {
                     class t {
                         constructor(n) {
                             this.el = n;
@@ -17861,9 +17853,9 @@
                             contentQueries: function (n, r, i) {
                                 if (
                                     (1 & n &&
-                                        (y.Suo(i, dn.h4, 5),
-                                        y.Suo(i, dn.$_, 5),
-                                        y.Suo(i, dn.jx, 4)),
+                                        (y.Suo(i, jt.h4, 5),
+                                        y.Suo(i, jt.$_, 5),
+                                        y.Suo(i, jt.jx, 4)),
                                     2 & n)
                                 ) {
                                     let o;
@@ -17882,7 +17874,7 @@
                                 style: 'style',
                                 styleClass: 'styleClass',
                             },
-                            ngContentSelectors: _p,
+                            ngContentSelectors: kp,
                             decls: 9,
                             vars: 9,
                             consts: [
@@ -17901,17 +17893,17 @@
                             ],
                             template: function (n, r) {
                                 1 & n &&
-                                    (y.F$t(Rp),
+                                    (y.F$t(Tp),
                                     y.TgZ(0, 'div', 0),
                                     y.YNc(1, Ap, 3, 1, 'div', 1),
                                     y.TgZ(2, 'div', 2),
                                     y.YNc(3, wp, 3, 2, 'div', 3),
-                                    y.YNc(4, Sp, 3, 2, 'div', 4),
+                                    y.YNc(4, Cp, 3, 2, 'div', 4),
                                     y.TgZ(5, 'div', 5),
                                     y.Hsn(6),
-                                    y.YNc(7, Cp, 1, 0, 'ng-container', 6),
+                                    y.YNc(7, Sp, 1, 0, 'ng-container', 6),
                                     y.qZA(),
-                                    y.YNc(8, Tp, 3, 1, 'div', 7),
+                                    y.YNc(8, Rp, 3, 1, 'div', 7),
                                     y.qZA()()),
                                     2 & n &&
                                         (y.Tol(r.styleClass),
@@ -17945,7 +17937,7 @@
                                             r.footerFacet || r.footerTemplate
                                         ));
                             },
-                            directives: [O.mk, O.PC, O.O5, O.tP],
+                            directives: [I.mk, I.PC, I.O5, I.tP],
                             styles: ['.p-card-header img{width:100%}\n'],
                             encapsulation: 2,
                             changeDetection: 0,
@@ -17960,24 +17952,24 @@
                             return new (n || t)();
                         }),
                         (t.ɵmod = y.oAB({ type: t })),
-                        (t.ɵinj = y.cJS({ imports: [[O.ez], dn.m8] })),
+                        (t.ɵinj = y.cJS({ imports: [[I.ez], jt.m8] })),
                         t
                     );
                 })();
-            var Ct,
-                Tr,
-                Rr,
-                Ra,
-                Ip = N(6666),
-                wa = N(6115),
-                Da = N(7579),
-                Sa = N(5026),
-                xr = N(4004),
-                Ca = N(5577),
-                xa = N(8675),
-                Ta = N(1485),
-                Np = N(4707),
-                Pp = N(9646);
+            var it,
+                sr,
+                lr,
+                Ca,
+                Ip = R(6666),
+                ya = R(6115),
+                ba = R(7579),
+                Aa = R(5026),
+                ar = R(4004),
+                Ea = R(5577),
+                wa = R(8675),
+                Da = R(1485),
+                Np = R(4707),
+                Pp = R(9646);
             function Bp(t, e) {
                 if (
                     (1 & t &&
@@ -17999,14 +17991,14 @@
                         );
                 }
             }
-            function Op(t, e) {
+            function Hp(t, e) {
                 1 & t &&
                     (y.TgZ(0, 'td', 7), y._UZ(1, 'p-skeleton', 8), y.qZA());
             }
-            function Hp(t, e) {
+            function Op(t, e) {
                 if (
                     (1 & t &&
-                        (y.TgZ(0, 'tr'), y.YNc(1, Op, 2, 0, 'td', 6), y.qZA()),
+                        (y.TgZ(0, 'tr'), y.YNc(1, Hp, 2, 0, 'td', 6), y.qZA()),
                     2 & t)
                 ) {
                     const n = y.oxw(2);
@@ -18020,7 +18012,7 @@
                         y._uU(1, 'Loading Calendar...'),
                         y.qZA(),
                         y.TgZ(2, 'table', 4),
-                        y.YNc(3, Hp, 2, 1, 'tr', 5),
+                        y.YNc(3, Op, 2, 1, 'tr', 5),
                         y.qZA()),
                     2 & t)
                 ) {
@@ -18028,16 +18020,16 @@
                     y.xp6(3), y.Q6J('ngForOf', n.calendarRows);
                 }
             }
-            class xt {
+            class ot {
                 constructor(e) {
                     (this.firebaseApi = e),
                         (this.calendarRows = Array(6)),
                         (this.calendarColumns = Array(7)),
-                        Ct.set(this, new Np.t()),
-                        (this.areEventsLoaded$ = (0, u.Q_)(this, Ct, 'f').pipe(
-                            (0, xr.U)((n) => !!n)
+                        it.set(this, new Np.t()),
+                        (this.areEventsLoaded$ = (0, u.Q_)(this, it, 'f').pipe(
+                            (0, ar.U)((n) => !!n)
                         )),
-                        (this.eventClick = new Da.x()),
+                        (this.eventClick = new ba.x()),
                         (this._options = {
                             initialDate: '2019-01-01',
                             headerToolbar: {
@@ -18054,28 +18046,28 @@
                                 this.eventClick.next(n),
                         }),
                         (this.options$ = (0, Pp.of)(this._options).pipe(
-                            (0, Ca.z)((n) =>
-                                (0, u.Q_)(this, Ct, 'f').pipe(
-                                    (0, xr.U)((r) =>
+                            (0, Ea.z)((n) =>
+                                (0, u.Q_)(this, it, 'f').pipe(
+                                    (0, ar.U)((r) =>
                                         Object.assign(Object.assign({}, n), {
                                             events: null != r ? r : [],
                                         })
                                     ),
-                                    (0, xa.O)(n)
+                                    (0, wa.O)(n)
                                 )
                             )
                         ));
                 }
                 set events(e) {
-                    (0, u.Q_)(this, Ct, 'f').next(e);
+                    (0, u.Q_)(this, it, 'f').next(e);
                 }
             }
-            (Ct = new WeakMap()),
-                (xt.ɵfac = function (e) {
-                    return new (e || xt)(y.Y36(Ta.O));
+            (it = new WeakMap()),
+                (ot.ɵfac = function (e) {
+                    return new (e || ot)(y.Y36(Da.O));
                 }),
-                (xt.ɵcmp = y.Xpm({
-                    type: xt,
+                (ot.ɵcmp = y.Xpm({
+                    type: ot,
                     selectors: [['sol-calendar']],
                     inputs: { events: 'events' },
                     outputs: { eventClick: 'eventClick' },
@@ -18126,8 +18118,8 @@
                             );
                         }
                     },
-                    directives: [O.O5, Pd, O.sg, gp],
-                    pipes: [O.Ov],
+                    directives: [I.O5, Pf, I.sg, gp],
+                    pipes: [I.Ov],
                     encapsulation: 2,
                     changeDetection: 0,
                 }));
@@ -18146,13 +18138,13 @@
                     y.Akn(y.DdM(3, Fp)), y.Q6J('header', n.name);
                 }
             }
-            class ot {
+            class Qe {
                 constructor(e) {
                     (this.functionsApi = e),
-                        Tr.add(this),
-                        (this.classSelected$ = new Da.x()),
+                        sr.add(this),
+                        (this.classSelected$ = new ba.x()),
                         (this.selectedClasses$ = this.classSelected$.pipe(
-                            (0, Sa.R)(
+                            (0, Aa.R)(
                                 (n, r) =>
                                     n.find((o) => o.id === r.id)
                                         ? n.filter((o) => o.id !== r.id)
@@ -18160,33 +18152,33 @@
                                 new Array()
                             )
                         )),
-                        Rr.set(
+                        lr.set(
                             this,
                             this.functionsApi
                                 .call('classes')
-                                .pipe((0, xr.U)((n) => n.classes))
+                                .pipe((0, ar.U)((n) => n.classes))
                         ),
-                        (this.classEvents$ = (0, u.Q_)(this, Rr, 'f').pipe(
-                            (0, Ca.z)((n) =>
+                        (this.classEvents$ = (0, u.Q_)(this, lr, 'f').pipe(
+                            (0, Ea.z)((n) =>
                                 this.classSelected$.pipe(
-                                    (0, Sa.R)(
+                                    (0, Aa.R)(
                                         (r, i) =>
-                                            (0, u.Q_)(this, Tr, 'm', Ra).call(
+                                            (0, u.Q_)(this, sr, 'm', Ca).call(
                                                 this,
                                                 r,
                                                 i
                                             ),
                                         n
                                     ),
-                                    (0, xa.O)(n)
+                                    (0, wa.O)(n)
                                 )
                             )
                         ));
                 }
             }
-            (Rr = new WeakMap()),
-                (Tr = new WeakSet()),
-                (Ra = function (e, n) {
+            (lr = new WeakMap()),
+                (sr = new WeakSet()),
+                (Ca = function (e, n) {
                     return e.map((r) =>
                         r.id === n.id
                             ? Object.assign(Object.assign({}, r), {
@@ -18196,11 +18188,11 @@
                             : r
                     );
                 }),
-                (ot.ɵfac = function (e) {
-                    return new (e || ot)(y.Y36(Ta.O));
+                (Qe.ɵfac = function (e) {
+                    return new (e || Qe)(y.Y36(Da.O));
                 }),
-                (ot.ɵcmp = y.Xpm({
-                    type: ot,
+                (Qe.ɵcmp = y.Xpm({
+                    type: Qe,
                     selectors: [['ng-component']],
                     decls: 4,
                     vars: 6,
@@ -18227,12 +18219,12 @@
                                     y.lcZ(3, 4, n.selectedClasses$)
                                 ));
                     },
-                    directives: [xt, O.sg, kp],
-                    pipes: [O.Ov],
+                    directives: [ot, I.sg, _p],
+                    pipes: [I.Ov],
                     encapsulation: 2,
                     changeDetection: 0,
                 }));
-            const Lp = [{ path: 'classes', component: ot, children: [] }];
+            const Lp = [{ path: 'classes', component: Qe, children: [] }];
             let Qp = (() => {
                     class t {}
                     return (
@@ -18241,7 +18233,7 @@
                         }),
                         (t.ɵmod = y.oAB({ type: t })),
                         (t.ɵinj = y.cJS({
-                            imports: [[wa.Bz.forChild(Lp)], wa.Bz],
+                            imports: [[ya.Bz.forChild(Lp)], ya.Bz],
                         })),
                         t
                     );
@@ -18254,46 +18246,46 @@
                         }),
                         (t.ɵmod = y.oAB({ type: t })),
                         (t.ɵinj = y.cJS({
-                            imports: [[O.ez, yp, Mp, Ip.B, Qp]],
+                            imports: [[I.ez, yp, Mp, Ip.B, Qp]],
                         })),
                         t
                     );
                 })();
         },
-        6666: (pe, ve, N) => {
-            N.d(ve, { B: () => q });
-            var O = N(1485),
-                ee = N(5e3);
-            let q = (() => {
+        6666: (ne, oe, R) => {
+            R.d(oe, { B: () => W });
+            var I = R(1485),
+                Y = R(5e3);
+            let W = (() => {
                 class u {}
                 return (
-                    (u.ɵfac = function (k) {
-                        return new (k || u)();
+                    (u.ɵfac = function (S) {
+                        return new (S || u)();
                     }),
-                    (u.ɵmod = ee.oAB({ type: u })),
-                    (u.ɵinj = ee.cJS({ providers: [O.O] })),
+                    (u.ɵmod = Y.oAB({ type: u })),
+                    (u.ɵinj = Y.cJS({ providers: [I.O] })),
                     u
                 );
             })();
         },
-        1485: (pe, ve, N) => {
-            N.d(ve, { O: () => q });
-            var O = N(5e3),
-                ee = N(2228);
-            let q = (() => {
+        1485: (ne, oe, R) => {
+            R.d(oe, { O: () => W });
+            var I = R(5e3),
+                Y = R(2228);
+            let W = (() => {
                 class u {
-                    constructor(k) {
-                        this.fns = k;
+                    constructor(S) {
+                        this.fns = S;
                     }
-                    call(k, lt) {
-                        return this.fns.httpsCallable(k)(lt);
+                    call(S, st) {
+                        return this.fns.httpsCallable(S)(st);
                     }
                 }
                 return (
-                    (u.ɵfac = function (k) {
-                        return new (k || u)(O.LFG(ee.l4));
+                    (u.ɵfac = function (S) {
+                        return new (S || u)(I.LFG(Y.l4));
                     }),
-                    (u.ɵprov = O.Yz7({
+                    (u.ɵprov = I.Yz7({
                         token: u,
                         factory: u.ɵfac,
                         providedIn: 'root',
@@ -18302,150 +18294,50 @@
                 );
             })();
         },
-        2559: (pe) => {
-            pe.exports = function ve(N, O) {
-                if (N === O) return !0;
-                if (N && O && 'object' == typeof N && 'object' == typeof O) {
-                    if (N.constructor !== O.constructor) return !1;
-                    var ee, q, u;
-                    if (Array.isArray(N)) {
-                        if ((ee = N.length) != O.length) return !1;
-                        for (q = ee; 0 != q--; ) if (!ve(N[q], O[q])) return !1;
+        2559: (ne) => {
+            ne.exports = function oe(R, I) {
+                if (R === I) return !0;
+                if (R && I && 'object' == typeof R && 'object' == typeof I) {
+                    if (R.constructor !== I.constructor) return !1;
+                    var Y, W, u;
+                    if (Array.isArray(R)) {
+                        if ((Y = R.length) != I.length) return !1;
+                        for (W = Y; 0 != W--; ) if (!oe(R[W], I[W])) return !1;
                         return !0;
                     }
-                    if (N.constructor === RegExp)
-                        return N.source === O.source && N.flags === O.flags;
-                    if (N.valueOf !== Object.prototype.valueOf)
-                        return N.valueOf() === O.valueOf();
-                    if (N.toString !== Object.prototype.toString)
-                        return N.toString() === O.toString();
+                    if (R.constructor === RegExp)
+                        return R.source === I.source && R.flags === I.flags;
+                    if (R.valueOf !== Object.prototype.valueOf)
+                        return R.valueOf() === I.valueOf();
+                    if (R.toString !== Object.prototype.toString)
+                        return R.toString() === I.toString();
                     if (
-                        (ee = (u = Object.keys(N)).length) !==
-                        Object.keys(O).length
+                        (Y = (u = Object.keys(R)).length) !==
+                        Object.keys(I).length
                     )
                         return !1;
-                    for (q = ee; 0 != q--; )
-                        if (!Object.prototype.hasOwnProperty.call(O, u[q]))
+                    for (W = Y; 0 != W--; )
+                        if (!Object.prototype.hasOwnProperty.call(I, u[W]))
                             return !1;
-                    for (q = ee; 0 != q--; ) {
-                        var le = u[q];
-                        if (!ve(N[le], O[le])) return !1;
+                    for (W = Y; 0 != W--; ) {
+                        var K = u[W];
+                        if (!oe(R[K], I[K])) return !1;
                     }
                     return !0;
                 }
-                return N != N && O != O;
+                return R != R && I != I;
             };
         },
-        655: (pe, ve, N) => {
-            N.d(ve, {
-                Q_: () => dt,
-                ZT: () => ee,
-                _T: () => u,
-                ev: () => he,
-                pi: () => q,
-            });
-            var O = function (D, C) {
-                return (O =
-                    Object.setPrototypeOf ||
-                    ({ __proto__: [] } instanceof Array &&
-                        function (S, x) {
-                            S.__proto__ = x;
-                        }) ||
-                    function (S, x) {
-                        for (var M in x)
-                            Object.prototype.hasOwnProperty.call(x, M) &&
-                                (S[M] = x[M]);
-                    })(D, C);
-            };
-            function ee(D, C) {
-                if ('function' != typeof C && null !== C)
-                    throw new TypeError(
-                        'Class extends value ' +
-                            String(C) +
-                            ' is not a constructor or null'
-                    );
-                function S() {
-                    this.constructor = D;
-                }
-                O(D, C),
-                    (D.prototype =
-                        null === C
-                            ? Object.create(C)
-                            : ((S.prototype = C.prototype), new S()));
-            }
-            var q = function () {
-                return (
-                    (q =
-                        Object.assign ||
-                        function (C) {
-                            for (var S, x = 1, M = arguments.length; x < M; x++)
-                                for (var T in (S = arguments[x]))
-                                    Object.prototype.hasOwnProperty.call(
-                                        S,
-                                        T
-                                    ) && (C[T] = S[T]);
-                            return C;
-                        }),
-                    q.apply(this, arguments)
-                );
-            };
-            function u(D, C) {
-                var S = {};
-                for (var x in D)
-                    Object.prototype.hasOwnProperty.call(D, x) &&
-                        C.indexOf(x) < 0 &&
-                        (S[x] = D[x]);
-                if (
-                    null != D &&
-                    'function' == typeof Object.getOwnPropertySymbols
-                ) {
-                    var M = 0;
-                    for (x = Object.getOwnPropertySymbols(D); M < x.length; M++)
-                        C.indexOf(x[M]) < 0 &&
-                            Object.prototype.propertyIsEnumerable.call(
-                                D,
-                                x[M]
-                            ) &&
-                            (S[x[M]] = D[x[M]]);
-                }
-                return S;
-            }
-            function he(D, C, S) {
-                if (S || 2 === arguments.length)
-                    for (var T, x = 0, M = C.length; x < M; x++)
-                        (T || !(x in C)) &&
-                            (T || (T = Array.prototype.slice.call(C, 0, x)),
-                            (T[x] = C[x]));
-                return D.concat(T || Array.prototype.slice.call(C));
-            }
-            function dt(D, C, S, x) {
-                if ('a' === S && !x)
-                    throw new TypeError(
-                        'Private accessor was defined without a getter'
-                    );
-                if ('function' == typeof C ? D !== C || !x : !C.has(D))
-                    throw new TypeError(
-                        'Cannot read private member from an object whose class did not declare it'
-                    );
-                return 'm' === S
-                    ? x
-                    : 'a' === S
-                    ? x.call(D)
-                    : x
-                    ? x.value
-                    : C.get(D);
-            }
-        },
-        4602: (pe) => {
-            pe.exports =
+        4602: (ne) => {
+            ne.exports =
                 '\n/* classes attached to <body> */\n/* TODO: make fc-event selector work when calender in shadow DOM */\n.fc-not-allowed,\n.fc-not-allowed .fc-event { /* override events\' custom cursors */\n  cursor: not-allowed;\n}\n/* TODO: not attached to body. attached to specific els. move */\n.fc-unselectable {\n  -webkit-user-select: none;\n          user-select: none;\n  -webkit-touch-callout: none;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n}\n.fc {\n  /* layout of immediate children */\n  display: flex;\n  flex-direction: column;\n\n  font-size: 1em\n}\n.fc,\n  .fc *,\n  .fc *:before,\n  .fc *:after {\n    box-sizing: border-box;\n  }\n.fc table {\n    border-collapse: collapse;\n    border-spacing: 0;\n    font-size: 1em; /* normalize cross-browser */\n  }\n.fc th {\n    text-align: center;\n  }\n.fc th,\n  .fc td {\n    vertical-align: top;\n    padding: 0;\n  }\n.fc a[data-navlink] {\n    cursor: pointer;\n  }\n.fc a[data-navlink]:hover {\n    text-decoration: underline;\n  }\n.fc-direction-ltr {\n  direction: ltr;\n  text-align: left;\n}\n.fc-direction-rtl {\n  direction: rtl;\n  text-align: right;\n}\n.fc-theme-standard td,\n  .fc-theme-standard th {\n    border: 1px solid #ddd;\n    border: 1px solid var(--fc-border-color, #ddd);\n  }\n/* for FF, which doesn\'t expand a 100% div within a table cell. use absolute positioning */\n/* inner-wrappers are responsible for being absolute */\n/* TODO: best place for this? */\n.fc-liquid-hack td,\n  .fc-liquid-hack th {\n    position: relative;\n  }\n@font-face {\n  font-family: \'fcicons\';\n  src: url("data:application/x-font-ttf;charset=utf-8;base64,AAEAAAALAIAAAwAwT1MvMg8SBfAAAAC8AAAAYGNtYXAXVtKNAAABHAAAAFRnYXNwAAAAEAAAAXAAAAAIZ2x5ZgYydxIAAAF4AAAFNGhlYWQUJ7cIAAAGrAAAADZoaGVhB20DzAAABuQAAAAkaG10eCIABhQAAAcIAAAALGxvY2ED4AU6AAAHNAAAABhtYXhwAA8AjAAAB0wAAAAgbmFtZXsr690AAAdsAAABhnBvc3QAAwAAAAAI9AAAACAAAwPAAZAABQAAApkCzAAAAI8CmQLMAAAB6wAzAQkAAAAAAAAAAAAAAAAAAAABEAAAAAAAAAAAAAAAAAAAAABAAADpBgPA/8AAQAPAAEAAAAABAAAAAAAAAAAAAAAgAAAAAAADAAAAAwAAABwAAQADAAAAHAADAAEAAAAcAAQAOAAAAAoACAACAAIAAQAg6Qb//f//AAAAAAAg6QD//f//AAH/4xcEAAMAAQAAAAAAAAAAAAAAAQAB//8ADwABAAAAAAAAAAAAAgAANzkBAAAAAAEAAAAAAAAAAAACAAA3OQEAAAAAAQAAAAAAAAAAAAIAADc5AQAAAAABAWIAjQKeAskAEwAAJSc3NjQnJiIHAQYUFwEWMjc2NCcCnuLiDQ0MJAz/AA0NAQAMJAwNDcni4gwjDQwM/wANIwz/AA0NDCMNAAAAAQFiAI0CngLJABMAACUBNjQnASYiBwYUHwEHBhQXFjI3AZ4BAA0N/wAMJAwNDeLiDQ0MJAyNAQAMIw0BAAwMDSMM4uINIwwNDQAAAAIA4gC3Ax4CngATACcAACUnNzY0JyYiDwEGFB8BFjI3NjQnISc3NjQnJiIPAQYUHwEWMjc2NCcB87e3DQ0MIw3VDQ3VDSMMDQ0BK7e3DQ0MJAzVDQ3VDCQMDQ3zuLcMJAwNDdUNIwzWDAwNIwy4twwkDA0N1Q0jDNYMDA0jDAAAAgDiALcDHgKeABMAJwAAJTc2NC8BJiIHBhQfAQcGFBcWMjchNzY0LwEmIgcGFB8BBwYUFxYyNwJJ1Q0N1Q0jDA0Nt7cNDQwjDf7V1Q0N1QwkDA0Nt7cNDQwkDLfWDCMN1Q0NDCQMt7gMIw0MDNYMIw3VDQ0MJAy3uAwjDQwMAAADAFUAAAOrA1UAMwBoAHcAABMiBgcOAQcOAQcOARURFBYXHgEXHgEXHgEzITI2Nz4BNz4BNz4BNRE0JicuAScuAScuASMFITIWFx4BFx4BFx4BFREUBgcOAQcOAQcOASMhIiYnLgEnLgEnLgE1ETQ2Nz4BNz4BNz4BMxMhMjY1NCYjISIGFRQWM9UNGAwLFQkJDgUFBQUFBQ4JCRULDBgNAlYNGAwLFQkJDgUFBQUFBQ4JCRULDBgN/aoCVgQIBAQHAwMFAQIBAQIBBQMDBwQECAT9qgQIBAQHAwMFAQIBAQIBBQMDBwQECASAAVYRGRkR/qoRGRkRA1UFBAUOCQkVDAsZDf2rDRkLDBUJCA4FBQUFBQUOCQgVDAsZDQJVDRkLDBUJCQ4FBAVVAgECBQMCBwQECAX9qwQJAwQHAwMFAQICAgIBBQMDBwQDCQQCVQUIBAQHAgMFAgEC/oAZEhEZGRESGQAAAAADAFUAAAOrA1UAMwBoAIkAABMiBgcOAQcOAQcOARURFBYXHgEXHgEXHgEzITI2Nz4BNz4BNz4BNRE0JicuAScuAScuASMFITIWFx4BFx4BFx4BFREUBgcOAQcOAQcOASMhIiYnLgEnLgEnLgE1ETQ2Nz4BNz4BNz4BMxMzFRQWMzI2PQEzMjY1NCYrATU0JiMiBh0BIyIGFRQWM9UNGAwLFQkJDgUFBQUFBQ4JCRULDBgNAlYNGAwLFQkJDgUFBQUFBQ4JCRULDBgN/aoCVgQIBAQHAwMFAQIBAQIBBQMDBwQECAT9qgQIBAQHAwMFAQIBAQIBBQMDBwQECASAgBkSEhmAERkZEYAZEhIZgBEZGREDVQUEBQ4JCRUMCxkN/asNGQsMFQkIDgUFBQUFBQ4JCBUMCxkNAlUNGQsMFQkJDgUEBVUCAQIFAwIHBAQIBf2rBAkDBAcDAwUBAgICAgEFAwMHBAMJBAJVBQgEBAcCAwUCAQL+gIASGRkSgBkSERmAEhkZEoAZERIZAAABAOIAjQMeAskAIAAAExcHBhQXFjI/ARcWMjc2NC8BNzY0JyYiDwEnJiIHBhQX4uLiDQ0MJAzi4gwkDA0N4uINDQwkDOLiDCQMDQ0CjeLiDSMMDQ3h4Q0NDCMN4uIMIw0MDOLiDAwNIwwAAAABAAAAAQAAa5n0y18PPPUACwQAAAAAANivOVsAAAAA2K85WwAAAAADqwNVAAAACAACAAAAAAAAAAEAAAPA/8AAAAQAAAAAAAOrAAEAAAAAAAAAAAAAAAAAAAALBAAAAAAAAAAAAAAAAgAAAAQAAWIEAAFiBAAA4gQAAOIEAABVBAAAVQQAAOIAAAAAAAoAFAAeAEQAagCqAOoBngJkApoAAQAAAAsAigADAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA4ArgABAAAAAAABAAcAAAABAAAAAAACAAcAYAABAAAAAAADAAcANgABAAAAAAAEAAcAdQABAAAAAAAFAAsAFQABAAAAAAAGAAcASwABAAAAAAAKABoAigADAAEECQABAA4ABwADAAEECQACAA4AZwADAAEECQADAA4APQADAAEECQAEAA4AfAADAAEECQAFABYAIAADAAEECQAGAA4AUgADAAEECQAKADQApGZjaWNvbnMAZgBjAGkAYwBvAG4Ac1ZlcnNpb24gMS4wAFYAZQByAHMAaQBvAG4AIAAxAC4AMGZjaWNvbnMAZgBjAGkAYwBvAG4Ac2ZjaWNvbnMAZgBjAGkAYwBvAG4Ac1JlZ3VsYXIAUgBlAGcAdQBsAGEAcmZjaWNvbnMAZgBjAGkAYwBvAG4Ac0ZvbnQgZ2VuZXJhdGVkIGJ5IEljb01vb24uAEYAbwBuAHQAIABnAGUAbgBlAHIAYQB0AGUAZAAgAGIAeQAgAEkAYwBvAE0AbwBvAG4ALgAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=") format(\'truetype\');\n  font-weight: normal;\n  font-style: normal;\n}\n.fc-icon {\n  /* added for fc */\n  display: inline-block;\n  width: 1em;\n  height: 1em;\n  text-align: center;\n  -webkit-user-select: none;\n          user-select: none;\n\n  /* use !important to prevent issues with browser extensions that change fonts */\n  font-family: \'fcicons\' !important;\n  speak: none;\n  font-style: normal;\n  font-weight: normal;\n  font-feature-settings: normal;\n  font-variant: normal;\n  text-transform: none;\n  line-height: 1;\n\n  /* Better Font Rendering =========== */\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n}\n.fc-icon-chevron-left:before {\n  content: "\\e900";\n}\n.fc-icon-chevron-right:before {\n  content: "\\e901";\n}\n.fc-icon-chevrons-left:before {\n  content: "\\e902";\n}\n.fc-icon-chevrons-right:before {\n  content: "\\e903";\n}\n.fc-icon-minus-square:before {\n  content: "\\e904";\n}\n.fc-icon-plus-square:before {\n  content: "\\e905";\n}\n.fc-icon-x:before {\n  content: "\\e906";\n}\n/*\nLots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css\n\nThese styles only apply when the standard-theme is activated.\nWhen it\'s NOT activated, the fc-button classes won\'t even be in the DOM.\n*/\n.fc {\n\n  /* reset */\n\n}\n.fc .fc-button {\n    border-radius: 0;\n    overflow: visible;\n    text-transform: none;\n    margin: 0;\n    font-family: inherit;\n    font-size: inherit;\n    line-height: inherit;\n  }\n.fc .fc-button:focus {\n    outline: 1px dotted;\n    outline: 5px auto -webkit-focus-ring-color;\n  }\n.fc .fc-button {\n    -webkit-appearance: button;\n  }\n.fc .fc-button:not(:disabled) {\n    cursor: pointer;\n  }\n.fc .fc-button::-moz-focus-inner {\n    padding: 0;\n    border-style: none;\n  }\n.fc {\n\n  /* theme */\n\n}\n.fc .fc-button {\n    display: inline-block;\n    font-weight: 400;\n    text-align: center;\n    vertical-align: middle;\n    -webkit-user-select: none;\n            user-select: none;\n    background-color: transparent;\n    border: 1px solid transparent;\n    padding: 0.4em 0.65em;\n    font-size: 1em;\n    line-height: 1.5;\n    border-radius: 0.25em;\n  }\n.fc .fc-button:hover {\n    text-decoration: none;\n  }\n.fc .fc-button:focus {\n    outline: 0;\n    box-shadow: 0 0 0 0.2rem rgba(44, 62, 80, 0.25);\n  }\n.fc .fc-button:disabled {\n    opacity: 0.65;\n  }\n.fc {\n\n  /* "primary" coloring */\n\n}\n.fc .fc-button-primary {\n    color: #fff;\n    color: var(--fc-button-text-color, #fff);\n    background-color: #2C3E50;\n    background-color: var(--fc-button-bg-color, #2C3E50);\n    border-color: #2C3E50;\n    border-color: var(--fc-button-border-color, #2C3E50);\n  }\n.fc .fc-button-primary:hover {\n    color: #fff;\n    color: var(--fc-button-text-color, #fff);\n    background-color: #1e2b37;\n    background-color: var(--fc-button-hover-bg-color, #1e2b37);\n    border-color: #1a252f;\n    border-color: var(--fc-button-hover-border-color, #1a252f);\n  }\n.fc .fc-button-primary:disabled { /* not DRY */\n    color: #fff;\n    color: var(--fc-button-text-color, #fff);\n    background-color: #2C3E50;\n    background-color: var(--fc-button-bg-color, #2C3E50);\n    border-color: #2C3E50;\n    border-color: var(--fc-button-border-color, #2C3E50); /* overrides :hover */\n  }\n.fc .fc-button-primary:focus {\n    box-shadow: 0 0 0 0.2rem rgba(76, 91, 106, 0.5);\n  }\n.fc .fc-button-primary:not(:disabled):active,\n  .fc .fc-button-primary:not(:disabled).fc-button-active {\n    color: #fff;\n    color: var(--fc-button-text-color, #fff);\n    background-color: #1a252f;\n    background-color: var(--fc-button-active-bg-color, #1a252f);\n    border-color: #151e27;\n    border-color: var(--fc-button-active-border-color, #151e27);\n  }\n.fc .fc-button-primary:not(:disabled):active:focus,\n  .fc .fc-button-primary:not(:disabled).fc-button-active:focus {\n    box-shadow: 0 0 0 0.2rem rgba(76, 91, 106, 0.5);\n  }\n.fc {\n\n  /* icons within buttons */\n\n}\n.fc .fc-button .fc-icon {\n    vertical-align: middle;\n    font-size: 1.5em; /* bump up the size (but don\'t make it bigger than line-height of button, which is 1.5em also) */\n  }\n.fc .fc-button-group {\n    position: relative;\n    display: inline-flex;\n    vertical-align: middle;\n  }\n.fc .fc-button-group > .fc-button {\n    position: relative;\n    flex: 1 1 auto;\n  }\n.fc .fc-button-group > .fc-button:hover {\n    z-index: 1;\n  }\n.fc .fc-button-group > .fc-button:focus,\n  .fc .fc-button-group > .fc-button:active,\n  .fc .fc-button-group > .fc-button.fc-button-active {\n    z-index: 1;\n  }\n.fc-direction-ltr .fc-button-group > .fc-button:not(:first-child) {\n    margin-left: -1px;\n    border-top-left-radius: 0;\n    border-bottom-left-radius: 0;\n  }\n.fc-direction-ltr .fc-button-group > .fc-button:not(:last-child) {\n    border-top-right-radius: 0;\n    border-bottom-right-radius: 0;\n  }\n.fc-direction-rtl .fc-button-group > .fc-button:not(:first-child) {\n    margin-right: -1px;\n    border-top-right-radius: 0;\n    border-bottom-right-radius: 0;\n  }\n.fc-direction-rtl .fc-button-group > .fc-button:not(:last-child) {\n    border-top-left-radius: 0;\n    border-bottom-left-radius: 0;\n  }\n.fc .fc-toolbar {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n  }\n.fc .fc-toolbar.fc-header-toolbar {\n    margin-bottom: 1.5em;\n  }\n.fc .fc-toolbar.fc-footer-toolbar {\n    margin-top: 1.5em;\n  }\n.fc .fc-toolbar-title {\n    font-size: 1.75em;\n    margin: 0;\n  }\n.fc-direction-ltr .fc-toolbar > * > :not(:first-child) {\n    margin-left: .75em; /* space between */\n  }\n.fc-direction-rtl .fc-toolbar > * > :not(:first-child) {\n    margin-right: .75em; /* space between */\n  }\n.fc-direction-rtl .fc-toolbar-ltr { /* when the toolbar-chunk positioning system is explicitly left-to-right */\n    flex-direction: row-reverse;\n  }\n.fc .fc-scroller {\n    -webkit-overflow-scrolling: touch;\n    position: relative; /* for abs-positioned elements within */\n  }\n.fc .fc-scroller-liquid {\n    height: 100%;\n  }\n.fc .fc-scroller-liquid-absolute {\n    position: absolute;\n    top: 0;\n    right: 0;\n    left: 0;\n    bottom: 0;\n  }\n.fc .fc-scroller-harness {\n    position: relative;\n    overflow: hidden;\n    direction: ltr;\n      /* hack for chrome computing the scroller\'s right/left wrong for rtl. undone below... */\n      /* TODO: demonstrate in codepen */\n  }\n.fc .fc-scroller-harness-liquid {\n    height: 100%;\n  }\n.fc-direction-rtl .fc-scroller-harness > .fc-scroller { /* undo above hack */\n    direction: rtl;\n  }\n.fc-theme-standard .fc-scrollgrid {\n    border: 1px solid #ddd;\n    border: 1px solid var(--fc-border-color, #ddd); /* bootstrap does this. match */\n  }\n.fc .fc-scrollgrid,\n    .fc .fc-scrollgrid table { /* all tables (self included) */\n      width: 100%; /* because tables don\'t normally do this */\n      table-layout: fixed;\n    }\n.fc .fc-scrollgrid table { /* inner tables */\n      border-top-style: hidden;\n      border-left-style: hidden;\n      border-right-style: hidden;\n    }\n.fc .fc-scrollgrid {\n\n    border-collapse: separate;\n    border-right-width: 0;\n    border-bottom-width: 0;\n\n  }\n.fc .fc-scrollgrid-liquid {\n    height: 100%;\n  }\n.fc .fc-scrollgrid-section { /* a <tr> */\n    height: 1px /* better than 0, for firefox */\n\n  }\n.fc .fc-scrollgrid-section > td {\n      height: 1px; /* needs a height so inner div within grow. better than 0, for firefox */\n    }\n.fc .fc-scrollgrid-section table {\n      height: 1px;\n        /* for most browsers, if a height isn\'t set on the table, can\'t do liquid-height within cells */\n        /* serves as a min-height. harmless */\n    }\n.fc .fc-scrollgrid-section-liquid > td {\n      height: 100%; /* better than `auto`, for firefox */\n    }\n.fc .fc-scrollgrid-section > * {\n    border-top-width: 0;\n    border-left-width: 0;\n  }\n.fc .fc-scrollgrid-section-header > *,\n  .fc .fc-scrollgrid-section-footer > * {\n    border-bottom-width: 0;\n  }\n.fc .fc-scrollgrid-section-body table,\n  .fc .fc-scrollgrid-section-footer table {\n    border-bottom-style: hidden; /* head keeps its bottom border tho */\n  }\n.fc {\n\n  /* stickiness */\n\n}\n.fc .fc-scrollgrid-section-sticky > * {\n    background: #fff;\n    background: var(--fc-page-bg-color, #fff);\n    position: sticky;\n    z-index: 3; /* TODO: var */\n    /* TODO: box-shadow when sticking */\n  }\n.fc .fc-scrollgrid-section-header.fc-scrollgrid-section-sticky > * {\n    top: 0; /* because border-sharing causes a gap at the top */\n      /* TODO: give safari -1. has bug */\n  }\n.fc .fc-scrollgrid-section-footer.fc-scrollgrid-section-sticky > * {\n    bottom: 0; /* known bug: bottom-stickiness doesn\'t work in safari */\n  }\n.fc .fc-scrollgrid-sticky-shim { /* for horizontal scrollbar */\n    height: 1px; /* needs height to create scrollbars */\n    margin-bottom: -1px;\n  }\n.fc-sticky { /* no .fc wrap because used as child of body */\n  position: sticky;\n}\n.fc .fc-view-harness {\n    flex-grow: 1; /* because this harness is WITHIN the .fc\'s flexbox */\n    position: relative;\n  }\n.fc {\n\n  /* when the harness controls the height, make the view liquid */\n\n}\n.fc .fc-view-harness-active > .fc-view {\n    position: absolute;\n    top: 0;\n    right: 0;\n    bottom: 0;\n    left: 0;\n  }\n.fc .fc-col-header-cell-cushion {\n    display: inline-block; /* x-browser for when sticky (when multi-tier header) */\n    padding: 2px 4px;\n  }\n.fc .fc-bg-event,\n  .fc .fc-non-business,\n  .fc .fc-highlight {\n    /* will always have a harness with position:relative/absolute, so absolutely expand */\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n  }\n.fc .fc-non-business {\n    background: rgba(215, 215, 215, 0.3);\n    background: var(--fc-non-business-color, rgba(215, 215, 215, 0.3));\n  }\n.fc .fc-bg-event {\n    background: rgb(143, 223, 130);\n    background: var(--fc-bg-event-color, rgb(143, 223, 130));\n    opacity: 0.3;\n    opacity: var(--fc-bg-event-opacity, 0.3)\n  }\n.fc .fc-bg-event .fc-event-title {\n      margin: .5em;\n      font-size: .85em;\n      font-size: var(--fc-small-font-size, .85em);\n      font-style: italic;\n    }\n.fc .fc-highlight {\n    background: rgba(188, 232, 241, 0.3);\n    background: var(--fc-highlight-color, rgba(188, 232, 241, 0.3));\n  }\n.fc .fc-cell-shaded,\n  .fc .fc-day-disabled {\n    background: rgba(208, 208, 208, 0.3);\n    background: var(--fc-neutral-bg-color, rgba(208, 208, 208, 0.3));\n  }\n/* link resets */\n/* ---------------------------------------------------------------------------------------------------- */\na.fc-event,\na.fc-event:hover {\n  text-decoration: none;\n}\n/* cursor */\n.fc-event[href],\n.fc-event.fc-event-draggable {\n  cursor: pointer;\n}\n/* event text content */\n/* ---------------------------------------------------------------------------------------------------- */\n.fc-event .fc-event-main {\n    position: relative;\n    z-index: 2;\n  }\n/* dragging */\n/* ---------------------------------------------------------------------------------------------------- */\n.fc-event-dragging:not(.fc-event-selected) { /* MOUSE */\n    opacity: 0.75;\n  }\n.fc-event-dragging.fc-event-selected { /* TOUCH */\n    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);\n  }\n/* resizing */\n/* ---------------------------------------------------------------------------------------------------- */\n/* (subclasses should hone positioning for touch and non-touch) */\n.fc-event .fc-event-resizer {\n    display: none;\n    position: absolute;\n    z-index: 4;\n  }\n.fc-event:hover, /* MOUSE */\n.fc-event-selected { /* TOUCH */\n\n}\n.fc-event:hover .fc-event-resizer, .fc-event-selected .fc-event-resizer {\n    display: block;\n  }\n.fc-event-selected .fc-event-resizer {\n    border-radius: 4px;\n    border-radius: calc(var(--fc-event-resizer-dot-total-width, 8px) / 2);\n    border-width: 1px;\n    border-width: var(--fc-event-resizer-dot-border-width, 1px);\n    width: 8px;\n    width: var(--fc-event-resizer-dot-total-width, 8px);\n    height: 8px;\n    height: var(--fc-event-resizer-dot-total-width, 8px);\n    border-style: solid;\n    border-color: inherit;\n    background: #fff;\n    background: var(--fc-page-bg-color, #fff)\n\n    /* expand hit area */\n\n  }\n.fc-event-selected .fc-event-resizer:before {\n      content: \'\';\n      position: absolute;\n      top: -20px;\n      left: -20px;\n      right: -20px;\n      bottom: -20px;\n    }\n/* selecting (always TOUCH) */\n/* OR, focused by tab-index */\n/* (TODO: maybe not the best focus-styling for .fc-daygrid-dot-event) */\n/* ---------------------------------------------------------------------------------------------------- */\n.fc-event-selected,\n.fc-event:focus {\n  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2)\n\n  /* expand hit area (subclasses should expand) */\n\n}\n.fc-event-selected:before, .fc-event:focus:before {\n    content: "";\n    position: absolute;\n    z-index: 3;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0;\n  }\n.fc-event-selected,\n.fc-event:focus {\n\n  /* dimmer effect */\n\n}\n.fc-event-selected:after, .fc-event:focus:after {\n    content: "";\n    background: rgba(0, 0, 0, 0.25);\n    background: var(--fc-event-selected-overlay-color, rgba(0, 0, 0, 0.25));\n    position: absolute;\n    z-index: 1;\n\n    /* assume there\'s a border on all sides. overcome it. */\n    /* sometimes there\'s NOT a border, in which case the dimmer will go over */\n    /* an adjacent border, which looks fine. */\n    top: -1px;\n    left: -1px;\n    right: -1px;\n    bottom: -1px;\n  }\n/*\nA HORIZONTAL event\n*/\n.fc-h-event { /* allowed to be top-level */\n  display: block;\n  border: 1px solid #3788d8;\n  border: 1px solid var(--fc-event-border-color, #3788d8);\n  background-color: #3788d8;\n  background-color: var(--fc-event-bg-color, #3788d8)\n\n}\n.fc-h-event .fc-event-main {\n    color: #fff;\n    color: var(--fc-event-text-color, #fff);\n  }\n.fc-h-event .fc-event-main-frame {\n    display: flex; /* for make fc-event-title-container expand */\n  }\n.fc-h-event .fc-event-time {\n    max-width: 100%; /* clip overflow on this element */\n    overflow: hidden;\n  }\n.fc-h-event .fc-event-title-container { /* serves as a container for the sticky cushion */\n    flex-grow: 1;\n    flex-shrink: 1;\n    min-width: 0; /* important for allowing to shrink all the way */\n  }\n.fc-h-event .fc-event-title {\n    display: inline-block; /* need this to be sticky cross-browser */\n    vertical-align: top; /* for not messing up line-height */\n    left: 0;  /* for sticky */\n    right: 0; /* for sticky */\n    max-width: 100%; /* clip overflow on this element */\n    overflow: hidden;\n  }\n.fc-h-event.fc-event-selected:before {\n    /* expand hit area */\n    top: -10px;\n    bottom: -10px;\n  }\n/* adjust border and border-radius (if there is any) for non-start/end */\n.fc-direction-ltr .fc-daygrid-block-event:not(.fc-event-start),\n.fc-direction-rtl .fc-daygrid-block-event:not(.fc-event-end) {\n  border-top-left-radius: 0;\n  border-bottom-left-radius: 0;\n  border-left-width: 0;\n}\n.fc-direction-ltr .fc-daygrid-block-event:not(.fc-event-end),\n.fc-direction-rtl .fc-daygrid-block-event:not(.fc-event-start) {\n  border-top-right-radius: 0;\n  border-bottom-right-radius: 0;\n  border-right-width: 0;\n}\n/* resizers */\n.fc-h-event:not(.fc-event-selected) .fc-event-resizer {\n  top: 0;\n  bottom: 0;\n  width: 8px;\n  width: var(--fc-event-resizer-thickness, 8px);\n}\n.fc-direction-ltr .fc-h-event:not(.fc-event-selected) .fc-event-resizer-start,\n.fc-direction-rtl .fc-h-event:not(.fc-event-selected) .fc-event-resizer-end {\n  cursor: w-resize;\n  left: -4px;\n  left: calc(-0.5 * var(--fc-event-resizer-thickness, 8px));\n}\n.fc-direction-ltr .fc-h-event:not(.fc-event-selected) .fc-event-resizer-end,\n.fc-direction-rtl .fc-h-event:not(.fc-event-selected) .fc-event-resizer-start {\n  cursor: e-resize;\n  right: -4px;\n  right: calc(-0.5 * var(--fc-event-resizer-thickness, 8px));\n}\n/* resizers for TOUCH */\n.fc-h-event.fc-event-selected .fc-event-resizer {\n  top: 50%;\n  margin-top: -4px;\n  margin-top: calc(-0.5 * var(--fc-event-resizer-dot-total-width, 8px));\n}\n.fc-direction-ltr .fc-h-event.fc-event-selected .fc-event-resizer-start,\n.fc-direction-rtl .fc-h-event.fc-event-selected .fc-event-resizer-end {\n  left: -4px;\n  left: calc(-0.5 * var(--fc-event-resizer-dot-total-width, 8px));\n}\n.fc-direction-ltr .fc-h-event.fc-event-selected .fc-event-resizer-end,\n.fc-direction-rtl .fc-h-event.fc-event-selected .fc-event-resizer-start {\n  right: -4px;\n  right: calc(-0.5 * var(--fc-event-resizer-dot-total-width, 8px));\n}\n.fc .fc-popover {\n    position: absolute;\n    z-index: 9999;\n    box-shadow: 0 2px 6px rgba(0,0,0,.15);\n  }\n.fc .fc-popover-header {\n    display: flex;\n    flex-direction: row;\n    justify-content: space-between;\n    align-items: center;\n    padding: 3px 4px;\n  }\n.fc .fc-popover-title {\n    margin: 0 2px;\n  }\n.fc .fc-popover-close {\n    cursor: pointer;\n    opacity: 0.65;\n    font-size: 1.1em;\n  }\n.fc-theme-standard .fc-popover {\n    border: 1px solid #ddd;\n    border: 1px solid var(--fc-border-color, #ddd);\n    background: #fff;\n    background: var(--fc-page-bg-color, #fff);\n  }\n.fc-theme-standard .fc-popover-header {\n    background: rgba(208, 208, 208, 0.3);\n    background: var(--fc-neutral-bg-color, rgba(208, 208, 208, 0.3));\n  }\n';
         },
-        4516: (pe) => {
-            pe.exports =
+        4516: (ne) => {
+            ne.exports =
                 '\n:root {\n  --fc-daygrid-event-dot-width: 8px;\n}\n/* help things clear margins of inner content */\n.fc-daygrid-day-frame,\n.fc-daygrid-day-events,\n.fc-daygrid-event-harness { /* for event top/bottom margins */\n}\n.fc-daygrid-day-frame:before, .fc-daygrid-day-events:before, .fc-daygrid-event-harness:before {\n  content: "";\n  clear: both;\n  display: table; }\n.fc-daygrid-day-frame:after, .fc-daygrid-day-events:after, .fc-daygrid-event-harness:after {\n  content: "";\n  clear: both;\n  display: table; }\n.fc .fc-daygrid-body { /* a <div> that wraps the table */\n    position: relative;\n    z-index: 1; /* container inner z-index\'s because <tr>s can\'t do it */\n  }\n.fc .fc-daygrid-day.fc-day-today {\n      background-color: rgba(255, 220, 40, 0.15);\n      background-color: var(--fc-today-bg-color, rgba(255, 220, 40, 0.15));\n    }\n.fc .fc-daygrid-day-frame {\n    position: relative;\n    min-height: 100%; /* seems to work better than `height` because sets height after rows/cells naturally do it */\n  }\n.fc {\n\n  /* cell top */\n\n}\n.fc .fc-daygrid-day-top {\n    display: flex;\n    flex-direction: row-reverse;\n  }\n.fc .fc-day-other .fc-daygrid-day-top {\n    opacity: 0.3;\n  }\n.fc {\n\n  /* day number (within cell top) */\n\n}\n.fc .fc-daygrid-day-number {\n    position: relative;\n    z-index: 4;\n    padding: 4px;\n  }\n.fc {\n\n  /* event container */\n\n}\n.fc .fc-daygrid-day-events {\n    margin-top: 1px; /* needs to be margin, not padding, so that available cell height can be computed */\n  }\n.fc {\n\n  /* positioning for balanced vs natural */\n\n}\n.fc .fc-daygrid-body-balanced .fc-daygrid-day-events {\n      position: absolute;\n      left: 0;\n      right: 0;\n    }\n.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {\n      position: relative; /* for containing abs positioned event harnesses */\n      min-height: 2em; /* in addition to being a min-height during natural height, equalizes the heights a little bit */\n    }\n.fc .fc-daygrid-body-natural { /* can coexist with -unbalanced */\n  }\n.fc .fc-daygrid-body-natural .fc-daygrid-day-events {\n      margin-bottom: 1em;\n    }\n.fc {\n\n  /* event harness */\n\n}\n.fc .fc-daygrid-event-harness {\n    position: relative;\n  }\n.fc .fc-daygrid-event-harness-abs {\n    position: absolute;\n    top: 0; /* fallback coords for when cannot yet be computed */\n    left: 0; /* */\n    right: 0; /* */\n  }\n.fc .fc-daygrid-bg-harness {\n    position: absolute;\n    top: 0;\n    bottom: 0;\n  }\n.fc {\n\n  /* bg content */\n\n}\n.fc .fc-daygrid-day-bg .fc-non-business { z-index: 1 }\n.fc .fc-daygrid-day-bg .fc-bg-event { z-index: 2 }\n.fc .fc-daygrid-day-bg .fc-highlight { z-index: 3 }\n.fc {\n\n  /* events */\n\n}\n.fc .fc-daygrid-event {\n    z-index: 6;\n    margin-top: 1px;\n  }\n.fc .fc-daygrid-event.fc-event-mirror {\n    z-index: 7;\n  }\n.fc {\n\n  /* cell bottom (within day-events) */\n\n}\n.fc .fc-daygrid-day-bottom {\n    font-size: .85em;\n    padding: 2px 3px 0\n  }\n.fc .fc-daygrid-day-bottom:before {\n  content: "";\n  clear: both;\n  display: table; }\n.fc .fc-daygrid-more-link {\n    position: relative;\n    z-index: 4;\n    cursor: pointer;\n  }\n.fc {\n\n  /* week number (within frame) */\n\n}\n.fc .fc-daygrid-week-number {\n    position: absolute;\n    z-index: 5;\n    top: 0;\n    padding: 2px;\n    min-width: 1.5em;\n    text-align: center;\n    background-color: rgba(208, 208, 208, 0.3);\n    background-color: var(--fc-neutral-bg-color, rgba(208, 208, 208, 0.3));\n    color: #808080;\n    color: var(--fc-neutral-text-color, #808080);\n  }\n.fc {\n\n  /* popover */\n\n}\n.fc .fc-more-popover .fc-popover-body {\n    min-width: 220px;\n    padding: 10px;\n  }\n.fc-direction-ltr .fc-daygrid-event.fc-event-start,\n.fc-direction-rtl .fc-daygrid-event.fc-event-end {\n  margin-left: 2px;\n}\n.fc-direction-ltr .fc-daygrid-event.fc-event-end,\n.fc-direction-rtl .fc-daygrid-event.fc-event-start {\n  margin-right: 2px;\n}\n.fc-direction-ltr .fc-daygrid-week-number {\n    left: 0;\n    border-radius: 0 0 3px 0;\n  }\n.fc-direction-rtl .fc-daygrid-week-number {\n    right: 0;\n    border-radius: 0 0 0 3px;\n  }\n.fc-liquid-hack .fc-daygrid-day-frame {\n    position: static; /* will cause inner absolute stuff to expand to <td> */\n  }\n.fc-daygrid-event { /* make root-level, because will be dragged-and-dropped outside of a component root */\n  position: relative; /* for z-indexes assigned later */\n  white-space: nowrap;\n  border-radius: 3px; /* dot event needs this to when selected */\n  font-size: .85em;\n  font-size: var(--fc-small-font-size, .85em);\n}\n/* --- the rectangle ("block") style of event --- */\n.fc-daygrid-block-event .fc-event-time {\n    font-weight: bold;\n  }\n.fc-daygrid-block-event .fc-event-time,\n  .fc-daygrid-block-event .fc-event-title {\n    padding: 1px;\n  }\n/* --- the dot style of event --- */\n.fc-daygrid-dot-event {\n  display: flex;\n  align-items: center;\n  padding: 2px 0\n\n}\n.fc-daygrid-dot-event .fc-event-title {\n    flex-grow: 1;\n    flex-shrink: 1;\n    min-width: 0; /* important for allowing to shrink all the way */\n    overflow: hidden;\n    font-weight: bold;\n  }\n.fc-daygrid-dot-event:hover,\n  .fc-daygrid-dot-event.fc-event-mirror {\n    background: rgba(0, 0, 0, 0.1);\n  }\n.fc-daygrid-dot-event.fc-event-selected:before {\n    /* expand hit area */\n    top: -10px;\n    bottom: -10px;\n  }\n.fc-daygrid-event-dot { /* the actual dot */\n  margin: 0 4px;\n  box-sizing: content-box;\n  width: 0;\n  height: 0;\n  border: 4px solid #3788d8;\n  border: calc(var(--fc-daygrid-event-dot-width, 8px) / 2) solid var(--fc-event-border-color, #3788d8);\n  border-radius: 4px;\n  border-radius: calc(var(--fc-daygrid-event-dot-width, 8px) / 2);\n}\n/* --- spacing between time and title --- */\n.fc-direction-ltr .fc-daygrid-event .fc-event-time {\n    margin-right: 3px;\n  }\n.fc-direction-rtl .fc-daygrid-event .fc-event-time {\n    margin-left: 3px;\n  }\n';
         },
-        8537: (pe) => {
-            pe.exports =
+        8537: (ne) => {
+            ne.exports =
                 '\n/*\nA VERTICAL event\n*/\n\n.fc-v-event { /* allowed to be top-level */\n  display: block;\n  border: 1px solid #3788d8;\n  border: 1px solid var(--fc-event-border-color, #3788d8);\n  background-color: #3788d8;\n  background-color: var(--fc-event-bg-color, #3788d8)\n\n}\n\n.fc-v-event .fc-event-main {\n    color: #fff;\n    color: var(--fc-event-text-color, #fff);\n    height: 100%;\n  }\n\n.fc-v-event .fc-event-main-frame {\n    height: 100%;\n    display: flex;\n    flex-direction: column;\n  }\n\n.fc-v-event .fc-event-time {\n    flex-grow: 0;\n    flex-shrink: 0;\n    max-height: 100%;\n    overflow: hidden;\n  }\n\n.fc-v-event .fc-event-title-container { /* a container for the sticky cushion */\n    flex-grow: 1;\n    flex-shrink: 1;\n    min-height: 0; /* important for allowing to shrink all the way */\n  }\n\n.fc-v-event .fc-event-title { /* will have fc-sticky on it */\n    top: 0;\n    bottom: 0;\n    max-height: 100%; /* clip overflow */\n    overflow: hidden;\n  }\n\n.fc-v-event:not(.fc-event-start) {\n    border-top-width: 0;\n    border-top-left-radius: 0;\n    border-top-right-radius: 0;\n  }\n\n.fc-v-event:not(.fc-event-end) {\n    border-bottom-width: 0;\n    border-bottom-left-radius: 0;\n    border-bottom-right-radius: 0;\n  }\n\n.fc-v-event.fc-event-selected:before {\n    /* expand hit area */\n    left: -10px;\n    right: -10px;\n  }\n\n.fc-v-event {\n\n  /* resizer (mouse AND touch) */\n\n}\n\n.fc-v-event .fc-event-resizer-start {\n    cursor: n-resize;\n  }\n\n.fc-v-event .fc-event-resizer-end {\n    cursor: s-resize;\n  }\n\n.fc-v-event {\n\n  /* resizer for MOUSE */\n\n}\n\n.fc-v-event:not(.fc-event-selected) .fc-event-resizer {\n      height: 8px;\n      height: var(--fc-event-resizer-thickness, 8px);\n      left: 0;\n      right: 0;\n    }\n\n.fc-v-event:not(.fc-event-selected) .fc-event-resizer-start {\n      top: -4px;\n      top: calc(var(--fc-event-resizer-thickness, 8px) / -2);\n    }\n\n.fc-v-event:not(.fc-event-selected) .fc-event-resizer-end {\n      bottom: -4px;\n      bottom: calc(var(--fc-event-resizer-thickness, 8px) / -2);\n    }\n\n.fc-v-event {\n\n  /* resizer for TOUCH (when event is "selected") */\n\n}\n\n.fc-v-event.fc-event-selected .fc-event-resizer {\n      left: 50%;\n      margin-left: -4px;\n      margin-left: calc(var(--fc-event-resizer-dot-total-width, 8px) / -2);\n    }\n\n.fc-v-event.fc-event-selected .fc-event-resizer-start {\n      top: -4px;\n      top: calc(var(--fc-event-resizer-dot-total-width, 8px) / -2);\n    }\n\n.fc-v-event.fc-event-selected .fc-event-resizer-end {\n      bottom: -4px;\n      bottom: calc(var(--fc-event-resizer-dot-total-width, 8px) / -2);\n    }\n\n.fc .fc-timegrid .fc-daygrid-body { /* the all-day daygrid within the timegrid view */\n    z-index: 2; /* put above the timegrid-body so that more-popover is above everything. TODO: better solution */\n  }\n\n.fc .fc-timegrid-divider {\n    padding: 0 0 2px; /* browsers get confused when you set height. use padding instead */\n  }\n\n.fc .fc-timegrid-body {\n    position: relative;\n    z-index: 1; /* scope the z-indexes of slots and cols */\n    min-height: 100%; /* fill height always, even when slat table doesn\'t grow */\n  }\n\n.fc .fc-timegrid-axis-chunk { /* for advanced ScrollGrid */\n    position: relative /* offset parent for now-indicator-container */\n\n  }\n\n.fc .fc-timegrid-axis-chunk > table {\n      position: relative;\n      z-index: 1; /* above the now-indicator-container */\n    }\n\n.fc .fc-timegrid-slots {\n    position: relative;\n    z-index: 1;\n  }\n\n.fc .fc-timegrid-slot { /* a <td> */\n    height: 1.5em;\n    border-bottom: 0 /* each cell owns its top border */\n  }\n\n.fc .fc-timegrid-slot:empty:before {\n      content: \'\\00a0\'; /* make sure there\'s at least an empty space to create height for height syncing */\n    }\n\n.fc .fc-timegrid-slot-minor {\n    border-top-style: dotted;\n  }\n\n.fc .fc-timegrid-slot-label-cushion {\n    display: inline-block;\n    white-space: nowrap;\n  }\n\n.fc .fc-timegrid-slot-label {\n    vertical-align: middle; /* vertical align the slots */\n  }\n\n.fc {\n\n\n  /* slots AND axis cells (top-left corner of view including the "all-day" text) */\n\n}\n\n.fc .fc-timegrid-axis-cushion,\n  .fc .fc-timegrid-slot-label-cushion {\n    padding: 0 4px;\n  }\n\n.fc {\n\n\n  /* axis cells (top-left corner of view including the "all-day" text) */\n  /* vertical align is more complicated, uses flexbox */\n\n}\n\n.fc .fc-timegrid-axis-frame-liquid {\n    height: 100%; /* will need liquid-hack in FF */\n  }\n\n.fc .fc-timegrid-axis-frame {\n    overflow: hidden;\n    display: flex;\n    align-items: center; /* vertical align */\n    justify-content: flex-end; /* horizontal align. matches text-align below */\n  }\n\n.fc .fc-timegrid-axis-cushion {\n    max-width: 60px; /* limits the width of the "all-day" text */\n    flex-shrink: 0; /* allows text to expand how it normally would, regardless of constrained width */\n  }\n\n.fc-direction-ltr .fc-timegrid-slot-label-frame {\n    text-align: right;\n  }\n\n.fc-direction-rtl .fc-timegrid-slot-label-frame {\n    text-align: left;\n  }\n\n.fc-liquid-hack .fc-timegrid-axis-frame-liquid {\n  height: auto;\n  position: absolute;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  }\n\n.fc .fc-timegrid-col.fc-day-today {\n      background-color: rgba(255, 220, 40, 0.15);\n      background-color: var(--fc-today-bg-color, rgba(255, 220, 40, 0.15));\n    }\n\n.fc .fc-timegrid-col-frame {\n    min-height: 100%; /* liquid-hack is below */\n    position: relative;\n  }\n\n.fc-media-screen.fc-liquid-hack .fc-timegrid-col-frame {\n  height: auto;\n  position: absolute;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n    }\n\n.fc-media-screen .fc-timegrid-cols {\n    position: absolute; /* no z-index. children will decide and go above slots */\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0\n  }\n\n.fc-media-screen .fc-timegrid-cols > table {\n      height: 100%;\n    }\n\n.fc-media-screen .fc-timegrid-col-bg,\n  .fc-media-screen .fc-timegrid-col-events,\n  .fc-media-screen .fc-timegrid-now-indicator-container {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n  }\n\n.fc {\n\n  /* bg */\n\n}\n\n.fc .fc-timegrid-col-bg {\n    z-index: 2; /* TODO: kill */\n  }\n\n.fc .fc-timegrid-col-bg .fc-non-business { z-index: 1 }\n\n.fc .fc-timegrid-col-bg .fc-bg-event { z-index: 2 }\n\n.fc .fc-timegrid-col-bg .fc-highlight { z-index: 3 }\n\n.fc .fc-timegrid-bg-harness {\n    position: absolute; /* top/bottom will be set by JS */\n    left: 0;\n    right: 0;\n  }\n\n.fc {\n\n  /* fg events */\n  /* (the mirror segs are put into a separate container with same classname, */\n  /* and they must be after the normal seg container to appear at a higher z-index) */\n\n}\n\n.fc .fc-timegrid-col-events {\n    z-index: 3;\n    /* child event segs have z-indexes that are scoped within this div */\n  }\n\n.fc {\n\n  /* now indicator */\n\n}\n\n.fc .fc-timegrid-now-indicator-container {\n    bottom: 0;\n    overflow: hidden; /* don\'t let overflow of lines/arrows cause unnecessary scrolling */\n    /* z-index is set on the individual elements */\n  }\n\n.fc-direction-ltr .fc-timegrid-col-events {\n    margin: 0 2.5% 0 2px;\n  }\n\n.fc-direction-rtl .fc-timegrid-col-events {\n    margin: 0 2px 0 2.5%;\n  }\n\n.fc-timegrid-event-harness {\n  position: absolute /* top/left/right/bottom will all be set by JS */\n}\n\n.fc-timegrid-event-harness > .fc-timegrid-event {\n    position: absolute; /* absolute WITHIN the harness */\n    top: 0; /* for when not yet positioned */\n    bottom: 0; /* " */\n    left: 0;\n    right: 0;\n  }\n\n.fc-timegrid-event-harness-inset .fc-timegrid-event,\n.fc-timegrid-event.fc-event-mirror,\n.fc-timegrid-more-link {\n  box-shadow: 0px 0px 0px 1px #fff;\n  box-shadow: 0px 0px 0px 1px var(--fc-page-bg-color, #fff);\n}\n\n.fc-timegrid-event,\n.fc-timegrid-more-link { /* events need to be root */\n  font-size: .85em;\n  font-size: var(--fc-small-font-size, .85em);\n  border-radius: 3px;\n}\n\n.fc-timegrid-event { /* events need to be root */\n  margin-bottom: 1px /* give some space from bottom */\n}\n\n.fc-timegrid-event .fc-event-main {\n    padding: 1px 1px 0;\n  }\n\n.fc-timegrid-event .fc-event-time {\n    white-space: nowrap;\n    font-size: .85em;\n    font-size: var(--fc-small-font-size, .85em);\n    margin-bottom: 1px;\n  }\n\n.fc-timegrid-event-short .fc-event-main-frame {\n    flex-direction: row;\n    overflow: hidden;\n  }\n\n.fc-timegrid-event-short .fc-event-time:after {\n    content: \'\\00a0-\\00a0\'; /* dash surrounded by non-breaking spaces */\n  }\n\n.fc-timegrid-event-short .fc-event-title {\n    font-size: .85em;\n    font-size: var(--fc-small-font-size, .85em)\n  }\n\n.fc-timegrid-more-link { /* does NOT inherit from fc-timegrid-event */\n  position: absolute;\n  z-index: 9999; /* hack */\n  color: inherit;\n  color: var(--fc-more-link-text-color, inherit);\n  background: #d0d0d0;\n  background: var(--fc-more-link-bg-color, #d0d0d0);\n  cursor: pointer;\n  margin-bottom: 1px; /* match space below fc-timegrid-event */\n}\n\n.fc-timegrid-more-link-inner { /* has fc-sticky */\n  padding: 3px 2px;\n  top: 0;\n}\n\n.fc-direction-ltr .fc-timegrid-more-link {\n    right: 0;\n  }\n\n.fc-direction-rtl .fc-timegrid-more-link {\n    left: 0;\n  }\n\n.fc {\n\n  /* line */\n\n}\n\n.fc .fc-timegrid-now-indicator-line {\n    position: absolute;\n    z-index: 4;\n    left: 0;\n    right: 0;\n    border-style: solid;\n    border-color: red;\n    border-color: var(--fc-now-indicator-color, red);\n    border-width: 1px 0 0;\n  }\n\n.fc {\n\n  /* arrow */\n\n}\n\n.fc .fc-timegrid-now-indicator-arrow {\n    position: absolute;\n    z-index: 4;\n    margin-top: -5px; /* vertically center on top coordinate */\n    border-style: solid;\n    border-color: red;\n    border-color: var(--fc-now-indicator-color, red);\n  }\n\n.fc-direction-ltr .fc-timegrid-now-indicator-arrow {\n    left: 0;\n\n    /* triangle pointing right. TODO: mixin */\n    border-width: 5px 0 5px 6px;\n    border-top-color: transparent;\n    border-bottom-color: transparent;\n  }\n\n.fc-direction-rtl .fc-timegrid-now-indicator-arrow {\n    right: 0;\n\n    /* triangle pointing left. TODO: mixin */\n    border-width: 5px 6px 5px 0;\n    border-top-color: transparent;\n    border-bottom-color: transparent;\n  }\n';
         },
     },

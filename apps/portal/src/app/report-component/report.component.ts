@@ -59,7 +59,7 @@ export class ReportComponent implements OnInit {
 
     classes$ = this.functionsApi
         .call<{
-            classes: Array<{ title: string; enrollmentCount: string }>;
+            classes: Array<{ title: string; enrolledCount: string }>;
         }>('classes')
         .pipe(shareReplay(1));
 

@@ -64,9 +64,11 @@ export class TableHtml {
         return `
         ${this.tableStyle}
         <table>
-            <tr>
-              ${headers.map((h) => '<th>' + h.title + '</th>').join('')}
-            </tr>
+            <thead>
+                <tr>
+                ${headers.map((h) => '<th>' + h.title + '</th>').join('')}
+                </tr>
+            </thead>
             ${rows
                 .map(
                     (r) =>

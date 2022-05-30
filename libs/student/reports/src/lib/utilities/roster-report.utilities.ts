@@ -49,7 +49,7 @@ export class RosterReportGenerator {
         });
     }
 
-    private buildStudentRecordStyle(
+    public buildStudentRecordStyle(
         propertyName: StudentRecordPropertyNames,
         value: string,
         metadata: { isImportant: boolean } | undefined
@@ -62,7 +62,7 @@ export class RosterReportGenerator {
 
     /* Sign In/Out Sheet */
 
-    private signInRowHeaders: readonly TableHeader<StudentSignInRecordPropertyNames>[] =
+    public signInRowHeaders: readonly TableHeader<StudentSignInRecordPropertyNames>[] =
         [
             {
                 title: 'Last Name',
@@ -90,7 +90,7 @@ export class RosterReportGenerator {
             },
         ];
 
-    private transformStudentEntriesIntoSignInSheet(
+    public transformStudentEntriesIntoSignInSheet(
         students: Array<StudentDbEntry>
     ): Array<FlatRecord<StudentSignInRecordPropertyNames>> {
         return students
@@ -114,7 +114,7 @@ export class RosterReportGenerator {
 
     /* Records = Doom Sheet = Roster */
 
-    private studentRowHeaders: readonly TableHeader<StudentRecordPropertyNames>[] =
+    public studentRowHeaders: readonly TableHeader<StudentRecordPropertyNames>[] =
         [
             {
                 title: 'Last Name',
@@ -162,7 +162,7 @@ export class RosterReportGenerator {
             },
         ] as const;
 
-    private transformStudentEntriesIntoRosterRecords(
+    public transformStudentEntriesIntoRosterRecords(
         students: Array<StudentDbEntry>
     ): Array<StudentRecord> {
         return students

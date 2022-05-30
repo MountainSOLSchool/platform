@@ -1,0 +1,25 @@
+<h1>Dashboard</h1>
+<div style="display: flex; flex-wrap: wrap">
+    <div style="margin-right: 200px">
+        <h2>Quick Navigation</h2>
+        <ul style="font-size: 16px">
+            <li>
+                <a routerLink="/report">Class Forms and Contacts</a>
+            </li>
+            <li>
+                <a routerLink="/import">Import Summer 2022 Enrollmeent</a>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <h2>Summer 2022 Enrollment</h2>
+        <div style="width: 500px; margin-top: 10px">
+            <p-chart
+                type="doughnut"
+                [data]="data$ | async"
+                [options]="chartOptions"
+                [style]="{ height: '200px' }"
+            ></p-chart>
+        </div>
+    </div>
+</div>
