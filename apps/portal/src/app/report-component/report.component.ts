@@ -1,31 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
-import {
-    BehaviorSubject,
-    delay,
-    filter,
-    forkJoin,
-    from,
-    map,
-    mapTo,
-    merge,
-    Observable,
-    of,
-    pairwise,
-    repeatWhen,
-    shareReplay,
-    startWith,
-    Subject,
-    switchMap,
-    tap,
-    withLatestFrom,
-} from 'rxjs';
-import { Clipboard } from '@angular/cdk/clipboard';
-import * as Papa from 'papaparse';
-import {
-    StudentEnrollmentCsvHeaderMap,
-    StudentEnrollmentEntry,
-} from '@sol/student/import';
+import { BehaviorSubject, Observable, shareReplay, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { reportComponentActions } from './store/report.actions';
 import { reportComponentFeature } from './store/report.feature';
@@ -62,62 +37,6 @@ export class ReportComponent implements OnInit {
             classes: Array<{ title: string; enrolledCount: string }>;
         }>('classes')
         .pipe(shareReplay(1));
-
-    isUploading$ = this.uploadClick$.pipe(
-        switchMap(({ files }) => {
-            return forkJoin(
-                files.map((file) => {
-                    return from(file.text()).pipe(
-                        map((text) => {
-                            const repeatedHeaderCount = new Map<
-                                string,
-                                number
-                            >();
-                            const enrollmentRecords =
-                                Papa.parse<StudentEnrollmentEntry>(text, {
-                                    header: true,
-                                    transform: (value) => value?.trim() ?? '',
-                                    transformHeader: (h) => {
-                                        const transformConfig =
-                                            StudentEnrollmentCsvHeaderMap[h];
-                                        const repeatedCount =
-                                            repeatedHeaderCount.get(h) ?? 0;
-                                        const transformed =
-                                            typeof transformConfig === 'string'
-                                                ? transformConfig
-                                                : transformConfig[
-                                                      repeatedCount
-                                                  ];
-                                        repeatedHeaderCount.set(
-                                            h,
-                                            repeatedCount + 1
-                                        );
-                                        return transformed;
-                                    },
-                                });
-                            return enrollmentRecords.data;
-                        })
-                    );
-                })
-            ).pipe(
-                map((enrollmentGroups) =>
-                    enrollmentGroups.reduce(
-                        (agg, group) => [...agg, ...group],
-                        []
-                    )
-                ),
-                switchMap((enrollmentEntries) =>
-                    this.functionsApi
-                        .call(
-                            'importStudentEnrollmentSummer2022',
-                            enrollmentEntries
-                        )
-                        .pipe(mapTo(false))
-                ),
-                startWith(true)
-            );
-        })
-    );
 
     ngOnInit(): void {
         this.isClassFormDownloadInProgress$ = this.store.select(

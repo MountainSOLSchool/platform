@@ -16,7 +16,7 @@ window.appConfig = {
     defaultProjectGraph: 'local',
 };
 window.projectGraphResponse = {
-    hash: '3abf75b3144b0616d6a1a6f8e2c1164b887613715925e91c0f16fe634f2c19ae',
+    hash: '398f5277b73e3dc79909e64a8485f6bae4e9b4763520b421c2644cae5f07d404',
     projects: [
         {
             name: 'classes-class-enrollment',
@@ -739,7 +739,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'libs/student/import/src/lib/models/student-enrollment-csv-header-map.ts',
-                        hash: 'e09317985e5f8a8cf60f4751aefe24618285a28a',
+                        hash: '2dd03aab2b8eb218260c07f38eae0325c92d56e2',
                     },
                     {
                         file: 'libs/student/import/src/lib/models/student-enrollment-entry.interface.ts',
@@ -803,7 +803,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'libs/firebase/auth/src/lib/services/auth.service.ts',
-                        hash: '4a6ac8f2626bb66ad0ee79962507413d6370d867',
+                        hash: '44910a5391684c6e571d7f65306660f7bc9479c0',
                         deps: [
                             'npm:@angular/core',
                             'npm:@angular/router',
@@ -1124,12 +1124,13 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'libs/auth/login/src/lib/components/login.component.ts',
-                        hash: '8685068264ef320cd33972ae8ed05918c2730145',
+                        hash: 'd08b3011e0847356a013c070cebb1f87b9252aec',
                         deps: [
                             'npm:@angular/core',
                             'npm:@angular/forms',
                             'npm:@ngrx/store',
                             'npm:rxjs',
+                            'npm:@ngrx/effects',
                         ],
                     },
                     {
@@ -1161,12 +1162,12 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'libs/auth/login/src/lib/store/login.actions.ts',
-                        hash: '17aec08fac7a98146b8c360836c5c9053c36bfcf',
+                        hash: '012cb88a2b32d0fc47c945429bfedec535560a3f',
                         deps: ['npm:@ngrx/store'],
                     },
                     {
                         file: 'libs/auth/login/src/lib/store/login.effects.ts',
-                        hash: 'ce7850f978969172ea437a4cf773f68cfe33083e',
+                        hash: 'dab810a7a50dd84516b7616927a012a242842b01',
                         deps: [
                             'npm:@angular/core',
                             'npm:@ngrx/effects',
@@ -1412,10 +1413,9 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'apps/functions/src/main.ts',
-                        hash: '89f74543d6de153fff9e1640da899ef2577a5c6b',
+                        hash: '1cbbf401ec38732b557a1373f01e092d90d7523f',
                         deps: [
                             'firebase-functions',
-                            'pdf-firebase',
                             'firebase-database',
                             'student-reports',
                             'student-import',
@@ -1592,7 +1592,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'apps/portal/src/app/app-routing.module.ts',
-                        hash: 'b6cb3f744a46a66f03b8727ccc00e7d5365b13ac',
+                        hash: '7646528b54182724c29128b4706358a2af815f2c',
                         deps: [
                             'npm:@angular/core',
                             'npm:@angular/router',
@@ -1712,14 +1712,11 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'apps/portal/src/app/report-component/report.component.ts',
-                        hash: '0c171433ce01070dcbe00d9d2fd93412c28bbdd9',
+                        hash: '341bcefb499e9f449fcc1e2674f2523b9f8bfe9c',
                         deps: [
                             'npm:@angular/core',
                             'firebase-functions-api',
                             'npm:rxjs',
-                            'npm:@angular/cdk',
-                            'npm:papaparse',
-                            'student-import',
                             'npm:@ngrx/store',
                         ],
                     },
@@ -1730,7 +1727,7 @@ window.projectGraphResponse = {
                     },
                     {
                         file: 'apps/portal/src/app/report-component/store/report.effects.ts',
-                        hash: '54b99801595d1e580b948cee2ddcb982806dc5c1',
+                        hash: '937d69890f9270aea3183131c8f952682ef36403',
                         deps: [
                             'npm:@angular/cdk',
                             'npm:@angular/core',
@@ -1815,6 +1812,16 @@ window.projectGraphResponse = {
                     {
                         file: 'apps/portal/tsconfig.spec.json',
                         hash: 'b1cdf859c8d4b7a43a5c7ff905462b98c8dca9ad',
+                    },
+                    {
+                        file: 'apps/portal/src/app/user.guard.ts',
+                        hash: '75b732e810ff88c8829f714bbf30d9538586eea6',
+                        deps: [
+                            'npm:@angular/core',
+                            'npm:@angular/fire',
+                            'npm:@angular/router',
+                            'npm:rxjs',
+                        ],
                     },
                 ],
             },
@@ -1998,7 +2005,6 @@ window.projectGraphResponse = {
                 target: 'firebase-functions',
                 type: 'static',
             },
-            { source: 'functions', target: 'pdf-firebase', type: 'static' },
             {
                 source: 'functions',
                 target: 'firebase-database',

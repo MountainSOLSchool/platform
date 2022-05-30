@@ -71,7 +71,7 @@ export const StudentEnrollmentCsvHeaderMap: Record<
     'Medical Insurance Company': 'medicalInsuranceCompany',
     'Medical ID Number': 'medicalIdNumber',
     "Primary Insured Individual's name": 'primaryInsuredIndividualName',
-    'No Label': 'medicationDosageFrequencyEntries',
+    'Infinite List': 'medicationDosageFrequencyEntries',
     'Medical Authorization': 'medicalAuthorization',
     'Sunscreen and Insect Repellent': 'canUseSunscreenAndInsectRepellant',
     'Special health considerations:': 'specialHealthConsiderations',
