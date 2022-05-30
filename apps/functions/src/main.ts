@@ -45,7 +45,6 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
 });
 
 export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
-    await AuthUtility.validateFirebaseIdToken(request, response);
     await AuthUtility.validateIsAdmin(request, response);
     const db = DatabaseUtility.getDatabase();
     const classEmailGenerator = new ClassEmailGenerator(db);
@@ -58,6 +57,7 @@ export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
 
 export const importEnrollment = HttpUtility.aGetEndpoint(
     async (request, response) => {
+        await AuthUtility.validateIsAdmin(request, response);
         const { data: entries } = request.body as {
             data: Array<StudentEnrollmentEntry>;
         };
