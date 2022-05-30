@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { ReportComponent } from './report.component';
+import { ImportComponent } from './import.component';
 import { FunctionsApiModule } from '@sol/firebase/functions-api';
 import { CommonModule } from '@angular/common';
-import { ReportRoutingModule } from './report-routing.module';
+import { ImportRoutingModule } from './import-routing.module';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -18,7 +18,7 @@ import { ReportComponentEffects } from './store/report.effects';
     imports: [
         CommonModule,
         FunctionsApiModule,
-        ReportRoutingModule,
+        ImportRoutingModule,
         ButtonModule,
         InputTextModule,
         AutoCompleteModule,
@@ -28,6 +28,6 @@ import { ReportComponentEffects } from './store/report.effects';
         StoreModule.forFeature(reportComponentFeature),
         EffectsModule.forFeature([ReportComponentEffects]),
     ],
-    declarations: [ReportComponent],
+    declarations: [ImportComponent],
 })
-export class ReportComponentModule {}
+export class ImportComponentModule {}

@@ -21,6 +21,13 @@ const routes: Routes = [
                     ),
             },
             {
+                path: 'import',
+                loadChildren: () =>
+                    import('./import-component/import.component.module').then(
+                        (m) => m.ImportComponentModule
+                    ),
+            },
+            {
                 path: 'calendar',
                 loadChildren: () =>
                     import('@sol/classes/calendar').then(

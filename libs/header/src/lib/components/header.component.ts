@@ -10,7 +10,7 @@ import { UserService } from '@sol/auth/user';
             }
         `,
     ],
-    template: `<header class="toolbarz">
+    template: ` <header class="toolbarz">
             <p-toolbar styleClass="toolbar">
                 <div class="p-toolbar-group-left">
                     <div>
@@ -27,28 +27,33 @@ import { UserService } from '@sol/auth/user';
                 </div>
                 <div class="p-toolbar-group-right">
                     <ng-container *ngIf="isLoggedIn$ | async">
-                        <div style="margin-right: 1rem">
+                        <div style="margin-right: 2rem">
                             <p-button
-                                routerLink="/calendar/classes"
-                                label="Calendar Demo"
-                                styleClass="p-button-success p-button-md"
-                            ></p-button>
-                        </div>
-                        <div style="margin-right: 3rem">
-                            <p-button
-                                routerLink="/report"
-                                label="Report Demo"
-                                styleClass="p-button-help p-button-md"
+                                type="text"
+                                (click)="display = true"
+                                icon="pi pi-bars"
+                                label="Menu"
                             ></p-button></div
                     ></ng-container>
                     <sol-user-button></sol-user-button>
                 </div>
             </p-toolbar>
         </header>
-        <div style="padding: 1rem"><router-outlet></router-outlet></div>`,
+        <div style="padding: 1rem"><router-outlet></router-outlet></div>
+        <p-sidebar [(visible)]="display" position="right">
+            <a routerLink="/report" (click)="display = false"
+                >Class Forms and Contacts</a
+            >
+            <br />
+            <a routerLink="/import" (click)="display = false"
+                >Import Summer 2022 Enrollmeent</a
+            >
+        </p-sidebar>`,
 })
 export class HeaderComponent {
     constructor(private readonly userService: UserService) {}
+
+    display = false;
 
     isLoggedIn$ = this.userService.isLoggedIn();
 }

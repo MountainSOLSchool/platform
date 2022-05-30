@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { ToolbarModule } from 'primeng/toolbar';
 import { AuthUserModule } from '@sol/auth/user';
+import { SidebarModule } from 'primeng/sidebar';
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import { AuthUserModule } from '@sol/auth/user';
         ButtonModule,
         ToolbarModule,
         AuthUserModule,
+        SidebarModule,
     ],
     declarations: [HeaderComponent],
     exports: [HeaderComponent],

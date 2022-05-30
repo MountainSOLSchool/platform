@@ -17,7 +17,7 @@ import { map, Observable } from 'rxjs';
                     (click)="menu.toggle($event)"
                     styleClass="mr-2"
                     [style]="{
-                        'background-color': '#3B82F6',
+                        'background-color': '#aaa',
                         color: '#ffffff'
                     }"
                 ></p-avatar>

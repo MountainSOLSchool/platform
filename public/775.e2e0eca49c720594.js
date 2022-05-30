@@ -2,16 +2,16 @@
 (self.webpackChunkportal = self.webpackChunkportal || []).push([
     [775],
     {
-        8775: (yu, ki, x) => {
-            x.r(ki);
-            var o = x(5861),
-                Ze = x(3942),
-                c = x(2090),
-                M = x(9681),
-                Ve = x(655),
-                tr = x(1877),
-                We = x(4859);
-            const Si = function Ai() {
+        8775: (xi, et, Z) => {
+            Z.r(et);
+            var o = Z(5861),
+                _e = Z(3942),
+                d = Z(2090),
+                V = Z(9681),
+                De = Z(655),
+                tt = Z(1877),
+                xe = Z(4859);
+            const Ir = function rt() {
                     return {
                         'admin-restricted-operation':
                             'This operation is restricted to administrators only.',
@@ -199,46 +199,46 @@
                             'initializeAuth() has already been called with different options. To avoid this error, call initializeAuth() with the same options as when it was originally called, or call getAuth() to return the already initialized instance.',
                     };
                 },
-                Ni = function nr() {
+                st = function it() {
                     return {
                         'dependent-sdk-initialized-before-auth':
                             'Another Firebase SDK was initialized and is trying to use Auth before Auth is initialized. Please be sure to call `initializeAuth` or `getAuth` before starting any other Firebase SDK.',
                     };
                 },
-                rr = new c.LL('auth', 'Firebase', {
+                X = new d.LL('auth', 'Firebase', {
                     'dependent-sdk-initialized-before-auth':
                         'Another Firebase SDK was initialized and is trying to use Auth before Auth is initialized. Please be sure to call `initializeAuth` or `getAuth` before starting any other Firebase SDK.',
                 }),
-                ir = new tr.Yd('@firebase/auth');
-            function ye(n, ...e) {
-                ir.logLevel <= tr.in.ERROR &&
-                    ir.error(`Auth (${M.SDK_VERSION}): ${n}`, ...e);
+                ot = new tt.Yd('@firebase/auth');
+            function ge(n, ...e) {
+                ot.logLevel <= tt.in.ERROR &&
+                    ot.error(`Auth (${V.SDK_VERSION}): ${n}`, ...e);
             }
-            function v(n, ...e) {
-                throw He(n, ...e);
+            function k(n, ...e) {
+                throw ve(n, ...e);
             }
-            function E(n, ...e) {
-                return He(n, ...e);
+            function b(n, ...e) {
+                return ve(n, ...e);
             }
-            function sr(n, e, t) {
-                const r = Object.assign(Object.assign({}, Ni()), { [e]: t });
-                return new c.LL('auth', 'Firebase', r).create(e, {
+            function at(n, e, t) {
+                const r = Object.assign(Object.assign({}, st()), { [e]: t });
+                return new d.LL('auth', 'Firebase', r).create(e, {
                     appName: n.name,
                 });
             }
-            function $(n, e, t) {
+            function Q(n, e, t) {
                 if (!(e instanceof t))
                     throw (
                         (t.name !== e.constructor.name &&
-                            v(n, 'argument-error'),
-                        sr(
+                            k(n, 'argument-error'),
+                        at(
                             n,
                             'argument-error',
                             `Type of ${e.constructor.name} does not match expected instance.Did you pass a reference from a different Auth SDK?`
                         ))
                     );
             }
-            function He(n, ...e) {
+            function ve(n, ...e) {
                 if ('string' != typeof n) {
                     const t = e[0],
                         r = [...e.slice(1)];
@@ -247,31 +247,31 @@
                         n._errorFactory.create(t, ...r)
                     );
                 }
-                return rr.create(n, ...e);
+                return X.create(n, ...e);
             }
-            function l(n, e, ...t) {
-                if (!n) throw He(e, ...t);
+            function p(n, e, ...t) {
+                if (!n) throw ve(e, ...t);
             }
-            function P(n) {
+            function c(n) {
                 const e = 'INTERNAL ASSERTION FAILED: ' + n;
-                throw (ye(e), new Error(e));
+                throw (ge(e), new Error(e));
             }
-            function S(n, e) {
-                n || P(e);
+            function l(n, e) {
+                n || c(e);
             }
-            const or = new Map();
-            function R(n) {
-                S(n instanceof Function, 'Expected a class definition');
-                let e = or.get(n);
+            const f = new Map();
+            function h(n) {
+                l(n instanceof Function, 'Expected a class definition');
+                let e = f.get(n);
                 return e
-                    ? (S(
+                    ? (l(
                           e instanceof n,
                           'Instance stored in cache mismatched with class'
                       ),
                       e)
-                    : ((e = new n()), or.set(n, e), e);
+                    : ((e = new n()), f.set(n, e), e);
             }
-            function ie() {
+            function E() {
                 var n;
                 return (
                     ('undefined' != typeof self &&
@@ -281,10 +281,10 @@
                     ''
                 );
             }
-            function ze() {
-                return 'http:' === ar() || 'https:' === ar();
+            function R() {
+                return 'http:' === x() || 'https:' === x();
             }
-            function ar() {
+            function x() {
                 var n;
                 return (
                     ('undefined' != typeof self &&
@@ -294,23 +294,23 @@
                     null
                 );
             }
-            class se {
+            class M {
                 constructor(e, t) {
                     (this.shortDelay = e),
                         (this.longDelay = t),
-                        S(t > e, 'Short delay should be less than long delay!'),
-                        (this.isMobile = (0, c.uI)() || (0, c.b$)());
+                        l(t > e, 'Short delay should be less than long delay!'),
+                        (this.isMobile = (0, d.uI)() || (0, d.b$)());
                 }
                 get() {
-                    return (function wi() {
+                    return (function T() {
                         return (
                             !(
                                 'undefined' != typeof navigator &&
                                 navigator &&
                                 'onLine' in navigator &&
                                 'boolean' == typeof navigator.onLine &&
-                                (ze() ||
-                                    (0, c.ru)() ||
+                                (R() ||
+                                    (0, d.ru)() ||
                                     'connection' in navigator)
                             ) || navigator.onLine
                         );
@@ -321,12 +321,12 @@
                         : Math.min(5e3, this.shortDelay);
                 }
             }
-            function Ge(n, e) {
-                S(n.emulator, 'Emulator should always be set here');
+            function A(n, e) {
+                l(n.emulator, 'Emulator should always be set here');
                 const { url: t } = n.emulator;
                 return e ? `${t}${e.startsWith('/') ? e.slice(1) : e}` : t;
             }
-            class ur {
+            class z {
                 static initialize(e, t, r) {
                     (this.fetchImpl = e),
                         t && (this.headersImpl = t),
@@ -337,7 +337,7 @@
                         ? this.fetchImpl
                         : 'undefined' != typeof self && 'fetch' in self
                         ? self.fetch
-                        : void P(
+                        : void c(
                               'Could not find fetch implementation, make sure you call FetchProvider.initialize() with an appropriate polyfill'
                           );
                 }
@@ -346,7 +346,7 @@
                         ? this.headersImpl
                         : 'undefined' != typeof self && 'Headers' in self
                         ? self.Headers
-                        : void P(
+                        : void c(
                               'Could not find Headers implementation, make sure you call FetchProvider.initialize() with an appropriate polyfill'
                           );
                 }
@@ -355,12 +355,12 @@
                         ? this.responseImpl
                         : 'undefined' != typeof self && 'Response' in self
                         ? self.Response
-                        : void P(
+                        : void c(
                               'Could not find Response implementation, make sure you call FetchProvider.initialize() with an appropriate polyfill'
                           );
                 }
             }
-            const Ci = {
+            const Ie = {
                     CREDENTIAL_MISMATCH: 'custom-token-mismatch',
                     MISSING_CUSTOM_TOKEN: 'internal-error',
                     INVALID_IDENTIFIER: 'invalid-email',
@@ -404,20 +404,20 @@
                         'maximum-second-factor-count-exceeded',
                     BLOCKING_FUNCTION_ERROR_RESPONSE: 'internal-error',
                 },
-                Li = new se(3e4, 6e4);
-            function m(n, e) {
+                ut = new M(3e4, 6e4);
+            function S(n, e) {
                 return n.tenantId && !e.tenantId
                     ? Object.assign(Object.assign({}, e), {
                           tenantId: n.tenantId,
                       })
                     : e;
             }
-            function I(n, e, t, r) {
-                return qe.apply(this, arguments);
+            function N(n, e, t, r) {
+                return ct.apply(this, arguments);
             }
-            function qe() {
-                return (qe = (0, o.Z)(function* (n, e, t, r, i = {}) {
-                    return cr(
+            function ct() {
+                return (ct = (0, o.Z)(function* (n, e, t, r, i = {}) {
+                    return yr(
                         n,
                         i,
                         (0, o.Z)(function* () {
@@ -427,20 +427,20 @@
                                 ('GET' === e
                                     ? (a = r)
                                     : (s = { body: JSON.stringify(r) }));
-                            const u = (0, c.xO)(
+                            const u = (0, d.xO)(
                                     Object.assign({ key: n.config.apiKey }, a)
                                 ).slice(1),
-                                d = yield n._getAdditionalHeaders();
+                                m = yield n._getAdditionalHeaders();
                             return (
-                                (d['Content-Type'] = 'application/json'),
+                                (m['Content-Type'] = 'application/json'),
                                 n.languageCode &&
-                                    (d['X-Firebase-Locale'] = n.languageCode),
-                                ur.fetch()(
-                                    lr(n, n.config.apiHost, t, u),
+                                    (m['X-Firebase-Locale'] = n.languageCode),
+                                z.fetch()(
+                                    Er(n, n.config.apiHost, t, u),
                                     Object.assign(
                                         {
                                             method: e,
-                                            headers: d,
+                                            headers: m,
                                             referrerPolicy: 'no-referrer',
                                         },
                                         s
@@ -451,20 +451,20 @@
                     );
                 })).apply(this, arguments);
             }
-            function cr(n, e, t) {
-                return Be.apply(this, arguments);
+            function yr(n, e, t) {
+                return lt.apply(this, arguments);
             }
-            function Be() {
-                return (Be = (0, o.Z)(function* (n, e, t) {
+            function lt() {
+                return (lt = (0, o.Z)(function* (n, e, t) {
                     n._canInitEmulator = !1;
-                    const r = Object.assign(Object.assign({}, Ci), e);
+                    const r = Object.assign(Object.assign({}, Ie), e);
                     try {
-                        const i = new Di(n),
+                        const i = new Zi(n),
                             s = yield Promise.race([t(), i.promise]);
                         i.clearNetworkTimeout();
                         const a = yield s.json();
                         if ('needConfirmation' in a)
-                            throw oe(
+                            throw ye(
                                 n,
                                 'account-exists-with-different-credential',
                                 a
@@ -472,53 +472,53 @@
                         if (s.ok && !('errorMessage' in a)) return a;
                         {
                             const u = s.ok ? a.errorMessage : a.error.message,
-                                [d, h] = u.split(' : ');
-                            if ('FEDERATED_USER_ID_ALREADY_LINKED' === d)
-                                throw oe(n, 'credential-already-in-use', a);
-                            if ('EMAIL_EXISTS' === d)
-                                throw oe(n, 'email-already-in-use', a);
-                            if ('USER_DISABLED' === d)
-                                throw oe(n, 'user-disabled', a);
-                            const p =
-                                r[d] || d.toLowerCase().replace(/[_\s]+/g, '-');
-                            if (h) throw sr(n, p, h);
-                            v(n, p);
+                                [m, g] = u.split(' : ');
+                            if ('FEDERATED_USER_ID_ALREADY_LINKED' === m)
+                                throw ye(n, 'credential-already-in-use', a);
+                            if ('EMAIL_EXISTS' === m)
+                                throw ye(n, 'email-already-in-use', a);
+                            if ('USER_DISABLED' === m)
+                                throw ye(n, 'user-disabled', a);
+                            const y =
+                                r[m] || m.toLowerCase().replace(/[_\s]+/g, '-');
+                            if (g) throw at(n, y, g);
+                            k(n, y);
                         }
                     } catch (i) {
-                        if (i instanceof c.ZR) throw i;
-                        v(n, 'network-request-failed');
+                        if (i instanceof d.ZR) throw i;
+                        k(n, 'network-request-failed');
                     }
                 })).apply(this, arguments);
             }
-            function w(n, e, t, r) {
-                return $e.apply(this, arguments);
+            function G(n, e, t, r) {
+                return dt.apply(this, arguments);
             }
-            function $e() {
-                return ($e = (0, o.Z)(function* (n, e, t, r, i = {}) {
-                    const s = yield I(n, e, t, r, i);
+            function dt() {
+                return (dt = (0, o.Z)(function* (n, e, t, r, i = {}) {
+                    const s = yield N(n, e, t, r, i);
                     return (
                         'mfaPendingCredential' in s &&
-                            v(n, 'multi-factor-auth-required', {
+                            k(n, 'multi-factor-auth-required', {
                                 _serverResponse: s,
                             }),
                         s
                     );
                 })).apply(this, arguments);
             }
-            function lr(n, e, t, r) {
+            function Er(n, e, t, r) {
                 const i = `${e}${t}?${r}`;
                 return n.config.emulator
-                    ? Ge(n.config, i)
+                    ? A(n.config, i)
                     : `${n.config.apiScheme}://${i}`;
             }
-            class Di {
+            class Zi {
                 constructor(e) {
                     (this.auth = e),
                         (this.timer = null),
                         (this.promise = new Promise((t, r) => {
                             this.timer = setTimeout(
-                                () => r(E(this.auth, 'network-request-failed')),
-                                Li.get()
+                                () => r(b(this.auth, 'network-request-failed')),
+                                ut.get()
                             );
                         }));
                 }
@@ -526,47 +526,47 @@
                     clearTimeout(this.timer);
                 }
             }
-            function oe(n, e, t) {
+            function ye(n, e, t) {
                 const r = { appName: n.name };
                 t.email && (r.email = t.email),
                     t.phoneNumber && (r.phoneNumber = t.phoneNumber);
-                const i = E(n, e, r);
+                const i = b(n, e, r);
                 return (i.customData._tokenResponse = t), i;
             }
-            function Ke() {
-                return (Ke = (0, o.Z)(function* (n, e) {
-                    return I(n, 'POST', '/v1/accounts:delete', e);
+            function ht() {
+                return (ht = (0, o.Z)(function* (n, e) {
+                    return N(n, 'POST', '/v1/accounts:delete', e);
                 })).apply(this, arguments);
             }
-            function Mi(n, e) {
-                return je.apply(this, arguments);
+            function Wi(n, e) {
+                return ft.apply(this, arguments);
             }
-            function je() {
-                return (je = (0, o.Z)(function* (n, e) {
-                    return I(n, 'POST', '/v1/accounts:update', e);
+            function ft() {
+                return (ft = (0, o.Z)(function* (n, e) {
+                    return N(n, 'POST', '/v1/accounts:update', e);
                 })).apply(this, arguments);
             }
-            function Ui(n, e) {
-                return Je.apply(this, arguments);
+            function Hi(n, e) {
+                return pt.apply(this, arguments);
             }
-            function Je() {
-                return (Je = (0, o.Z)(function* (n, e) {
-                    return I(n, 'POST', '/v1/accounts:lookup', e);
+            function pt() {
+                return (pt = (0, o.Z)(function* (n, e) {
+                    return N(n, 'POST', '/v1/accounts:lookup', e);
                 })).apply(this, arguments);
             }
-            function ae(n) {
+            function Ee(n) {
                 if (n)
                     try {
                         const e = new Date(Number(n));
                         if (!isNaN(e.getTime())) return e.toUTCString();
                     } catch (e) {}
             }
-            function Ye() {
-                return (Ye = (0, o.Z)(function* (n, e = !1) {
-                    const t = (0, c.m9)(n),
+            function mt() {
+                return (mt = (0, o.Z)(function* (n, e = !1) {
+                    const t = (0, d.m9)(n),
                         r = yield t.getIdToken(e),
-                        i = Ee(r);
-                    l(
+                        i = Me(r);
+                    p(
                         i && i.exp && i.auth_time && i.iat,
                         t.auth,
                         'internal-error'
@@ -577,9 +577,9 @@
                     return {
                         claims: i,
                         token: r,
-                        authTime: ae(Xe(i.auth_time)),
-                        issuedAtTime: ae(Xe(i.iat)),
-                        expirationTime: ae(Xe(i.exp)),
+                        authTime: Ee(_t(i.auth_time)),
+                        issuedAtTime: Ee(_t(i.iat)),
+                        expirationTime: Ee(_t(i.exp)),
                         signInProvider: a || null,
                         signInSecondFactor:
                             (null == s ? void 0 : s.sign_in_second_factor) ||
@@ -587,39 +587,39 @@
                     };
                 })).apply(this, arguments);
             }
-            function Xe(n) {
+            function _t(n) {
                 return 1e3 * Number(n);
             }
-            function Ee(n) {
+            function Me(n) {
                 const [e, t, r] = n.split('.');
                 if (void 0 === e || void 0 === t || void 0 === r)
                     return (
-                        ye('JWT malformed, contained fewer than 3 sections'),
+                        ge('JWT malformed, contained fewer than 3 sections'),
                         null
                     );
                 try {
-                    const i = (0, c.tV)(t);
+                    const i = (0, d.tV)(t);
                     return i
                         ? JSON.parse(i)
-                        : (ye('Failed to decode base64 JWT payload'), null);
+                        : (ge('Failed to decode base64 JWT payload'), null);
                 } catch (i) {
                     return (
-                        ye('Caught error parsing JWT payload as JSON', i), null
+                        ge('Caught error parsing JWT payload as JSON', i), null
                     );
                 }
             }
-            function O(n, e) {
-                return Qe.apply(this, arguments);
+            function q(n, e) {
+                return gt.apply(this, arguments);
             }
-            function Qe() {
-                return (Qe = (0, o.Z)(function* (n, e, t = !1) {
+            function gt() {
+                return (gt = (0, o.Z)(function* (n, e, t = !1) {
                     if (t) return e;
                     try {
                         return yield e;
                     } catch (r) {
                         throw (
-                            (r instanceof c.ZR &&
-                                Vi(r) &&
+                            (r instanceof d.ZR &&
+                                qi(r) &&
                                 n.auth.currentUser === n &&
                                 (yield n.auth.signOut()),
                             r)
@@ -627,13 +627,13 @@
                     }
                 })).apply(this, arguments);
             }
-            function Vi({ code: n }) {
+            function qi({ code: n }) {
                 return (
                     'auth/user-disabled' === n ||
                     'auth/user-token-expired' === n
                 );
             }
-            class Wi {
+            class ji {
                 constructor(e) {
                     (this.user = e),
                         (this.isRunning = !1),
@@ -700,15 +700,15 @@
                     })();
                 }
             }
-            class dr {
+            class Tr {
                 constructor(e, t) {
                     (this.createdAt = e),
                         (this.lastLoginAt = t),
                         this._initializeTime();
                 }
                 _initializeTime() {
-                    (this.lastSignInTime = ae(this.lastLoginAt)),
-                        (this.creationTime = ae(this.createdAt));
+                    (this.lastSignInTime = Ee(this.lastLoginAt)),
+                        (this.creationTime = Ee(this.createdAt));
                 }
                 _copy(e) {
                     (this.createdAt = e.createdAt),
@@ -722,16 +722,16 @@
                     };
                 }
             }
-            function ue(n) {
-                return et.apply(this, arguments);
+            function Te(n) {
+                return vt.apply(this, arguments);
             }
-            function et() {
-                return (et = (0, o.Z)(function* (n) {
+            function vt() {
+                return (vt = (0, o.Z)(function* (n) {
                     var e;
                     const t = n.auth,
                         r = yield n.getIdToken(),
-                        i = yield O(n, Ui(t, { idToken: r }));
-                    l(null == i ? void 0 : i.users.length, t, 'internal-error');
+                        i = yield q(n, Hi(t, { idToken: r }));
+                    p(null == i ? void 0 : i.users.length, t, 'internal-error');
                     const s = i.users[0];
                     n._notifyReloadListener(s);
                     const a = (
@@ -739,16 +739,16 @@
                                 ? void 0
                                 : e.length
                         )
-                            ? Gi(s.providerUserInfo)
+                            ? Ki(s.providerUserInfo)
                             : [],
-                        u = zi(n.providerData, a),
-                        p =
+                        u = $i(n.providerData, a),
+                        y =
                             !!n.isAnonymous &&
                             !(
                                 (n.email && s.passwordHash) ||
                                 (null == u ? void 0 : u.length)
                             ),
-                        f = {
+                        I = {
                             uid: s.localId,
                             displayName: s.displayName || null,
                             photoURL: s.photoUrl || null,
@@ -757,21 +757,21 @@
                             phoneNumber: s.phoneNumber || null,
                             tenantId: s.tenantId || null,
                             providerData: u,
-                            metadata: new dr(s.createdAt, s.lastLoginAt),
-                            isAnonymous: p,
+                            metadata: new Tr(s.createdAt, s.lastLoginAt),
+                            isAnonymous: y,
                         };
-                    Object.assign(n, f);
+                    Object.assign(n, I);
                 })).apply(this, arguments);
             }
-            function tt() {
-                return (tt = (0, o.Z)(function* (n) {
-                    const e = (0, c.m9)(n);
-                    yield ue(e),
+            function It() {
+                return (It = (0, o.Z)(function* (n) {
+                    const e = (0, d.m9)(n);
+                    yield Te(e),
                         yield e.auth._persistUserIfCurrent(e),
                         e.auth._notifyListenersIfCurrent(e);
                 })).apply(this, arguments);
             }
-            function zi(n, e) {
+            function $i(n, e) {
                 return [
                     ...n.filter(
                         (r) => !e.some((i) => i.providerId === r.providerId)
@@ -779,10 +779,10 @@
                     ...e,
                 ];
             }
-            function Gi(n) {
+            function Ki(n) {
                 return n.map((e) => {
                     var { providerId: t } = e,
-                        r = (0, Ve._T)(e, ['providerId']);
+                        r = (0, De._T)(e, ['providerId']);
                     return {
                         providerId: t,
                         uid: r.rawId || '',
@@ -793,23 +793,23 @@
                     };
                 });
             }
-            function nt() {
-                return (nt = (0, o.Z)(function* (n, e) {
-                    const t = yield cr(
+            function yt() {
+                return (yt = (0, o.Z)(function* (n, e) {
+                    const t = yield yr(
                         n,
                         {},
                         (0, o.Z)(function* () {
-                            const r = (0, c.xO)({
+                            const r = (0, d.xO)({
                                     grant_type: 'refresh_token',
                                     refresh_token: e,
                                 }).slice(1),
                                 { tokenApiHost: i, apiKey: s } = n.config,
-                                a = lr(n, i, '/v1/token', `key=${s}`),
+                                a = Er(n, i, '/v1/token', `key=${s}`),
                                 u = yield n._getAdditionalHeaders();
                             return (
                                 (u['Content-Type'] =
                                     'application/x-www-form-urlencoded'),
-                                ur.fetch()(a, {
+                                z.fetch()(a, {
                                     method: 'POST',
                                     headers: u,
                                     body: r,
@@ -824,7 +824,7 @@
                     };
                 })).apply(this, arguments);
             }
-            class ce {
+            class Re {
                 constructor() {
                     (this.refreshToken = null),
                         (this.accessToken = null),
@@ -837,18 +837,18 @@
                     );
                 }
                 updateFromServerResponse(e) {
-                    l(e.idToken, 'internal-error'),
-                        l(void 0 !== e.idToken, 'internal-error'),
-                        l(void 0 !== e.refreshToken, 'internal-error');
+                    p(e.idToken, 'internal-error'),
+                        p(void 0 !== e.idToken, 'internal-error'),
+                        p(void 0 !== e.refreshToken, 'internal-error');
                     const t =
                         'expiresIn' in e && void 0 !== e.expiresIn
                             ? Number(e.expiresIn)
-                            : (function Zi(n) {
-                                  const e = Ee(n);
+                            : (function Gi(n) {
+                                  const e = Me(n);
                                   return (
-                                      l(e, 'internal-error'),
-                                      l(void 0 !== e.exp, 'internal-error'),
-                                      l(void 0 !== e.iat, 'internal-error'),
+                                      p(e, 'internal-error'),
+                                      p(void 0 !== e.exp, 'internal-error'),
+                                      p(void 0 !== e.iat, 'internal-error'),
                                       Number(e.exp) - Number(e.iat)
                                   );
                               })(e.idToken);
@@ -862,7 +862,7 @@
                     var r = this;
                     return (0, o.Z)(function* () {
                         return (
-                            l(
+                            p(
                                 !r.accessToken || r.refreshToken,
                                 e,
                                 'user-token-expired'
@@ -886,8 +886,8 @@
                             accessToken: i,
                             refreshToken: s,
                             expiresIn: a,
-                        } = yield (function qi(n, e) {
-                            return nt.apply(this, arguments);
+                        } = yield (function Ji(n, e) {
+                            return yt.apply(this, arguments);
                         })(e, t);
                         r.updateTokensAndExpiration(i, s, Number(a));
                     })();
@@ -903,20 +903,20 @@
                             accessToken: i,
                             expirationTime: s,
                         } = t,
-                        a = new ce();
+                        a = new Re();
                     return (
                         r &&
-                            (l('string' == typeof r, 'internal-error', {
+                            (p('string' == typeof r, 'internal-error', {
                                 appName: e,
                             }),
                             (a.refreshToken = r)),
                         i &&
-                            (l('string' == typeof i, 'internal-error', {
+                            (p('string' == typeof i, 'internal-error', {
                                 appName: e,
                             }),
                             (a.accessToken = i)),
                         s &&
-                            (l('number' == typeof s, 'internal-error', {
+                            (p('number' == typeof s, 'internal-error', {
                                 appName: e,
                             }),
                             (a.expirationTime = s)),
@@ -936,23 +936,23 @@
                         (this.expirationTime = e.expirationTime);
                 }
                 _clone() {
-                    return Object.assign(new ce(), this.toJSON());
+                    return Object.assign(new Re(), this.toJSON());
                 }
                 _performRefresh() {
-                    return P('not implemented');
+                    return c('not implemented');
                 }
             }
-            function U(n, e) {
-                l('string' == typeof n || void 0 === n, 'internal-error', {
+            function K(n, e) {
+                p('string' == typeof n || void 0 === n, 'internal-error', {
                     appName: e,
                 });
             }
-            class V {
+            class ee {
                 constructor(e) {
                     var { uid: t, auth: r, stsTokenManager: i } = e,
-                        s = (0, Ve._T)(e, ['uid', 'auth', 'stsTokenManager']);
+                        s = (0, De._T)(e, ['uid', 'auth', 'stsTokenManager']);
                     (this.providerId = 'firebase'),
-                        (this.proactiveRefresh = new Wi(this)),
+                        (this.proactiveRefresh = new ji(this)),
                         (this.reloadUserInfo = null),
                         (this.reloadListener = null),
                         (this.uid = t),
@@ -969,7 +969,7 @@
                         (this.providerData = s.providerData
                             ? [...s.providerData]
                             : []),
-                        (this.metadata = new dr(
+                        (this.metadata = new Tr(
                             s.createdAt || void 0,
                             s.lastLoginAt || void 0
                         ));
@@ -977,12 +977,12 @@
                 getIdToken(e) {
                     var t = this;
                     return (0, o.Z)(function* () {
-                        const r = yield O(
+                        const r = yield q(
                             t,
                             t.stsTokenManager.getToken(t.auth, e)
                         );
                         return (
-                            l(r, t.auth, 'internal-error'),
+                            p(r, t.auth, 'internal-error'),
                             t.accessToken !== r &&
                                 ((t.accessToken = r),
                                 yield t.auth._persistUserIfCurrent(t),
@@ -992,18 +992,18 @@
                     })();
                 }
                 getIdTokenResult(e) {
-                    return (function Fi(n) {
-                        return Ye.apply(this, arguments);
+                    return (function zi(n) {
+                        return mt.apply(this, arguments);
                     })(this, e);
                 }
                 reload() {
-                    return (function Hi(n) {
-                        return tt.apply(this, arguments);
+                    return (function Bi(n) {
+                        return It.apply(this, arguments);
                     })(this);
                 }
                 _assign(e) {
                     this !== e &&
-                        (l(this.uid === e.uid, this.auth, 'internal-error'),
+                        (p(this.uid === e.uid, this.auth, 'internal-error'),
                         (this.displayName = e.displayName),
                         (this.photoURL = e.photoURL),
                         (this.email = e.email),
@@ -1018,7 +1018,7 @@
                         this.stsTokenManager._assign(e.stsTokenManager));
                 }
                 _clone(e) {
-                    return new V(
+                    return new ee(
                         Object.assign(Object.assign({}, this), {
                             auth: e,
                             stsTokenManager: this.stsTokenManager._clone(),
@@ -1026,7 +1026,7 @@
                     );
                 }
                 _onReload(e) {
-                    l(!this.reloadListener, this.auth, 'internal-error'),
+                    p(!this.reloadListener, this.auth, 'internal-error'),
                         (this.reloadListener = e),
                         this.reloadUserInfo &&
                             (this._notifyReloadListener(this.reloadUserInfo),
@@ -1051,7 +1051,7 @@
                             e.idToken !== r.stsTokenManager.accessToken &&
                             (r.stsTokenManager.updateFromServerResponse(e),
                             (i = !0)),
-                            t && (yield ue(r)),
+                            t && (yield Te(r)),
                             yield r.auth._persistUserIfCurrent(r),
                             i && r.auth._notifyListenersIfCurrent(r);
                     })();
@@ -1061,10 +1061,10 @@
                     return (0, o.Z)(function* () {
                         const t = yield e.getIdToken();
                         return (
-                            yield O(
+                            yield q(
                                 e,
-                                (function xi(n, e) {
-                                    return Ke.apply(this, arguments);
+                                (function Vi(n, e) {
+                                    return ht.apply(this, arguments);
                                 })(e.auth, { idToken: t })
                             ),
                             e.stsTokenManager.clearRefreshToken(),
@@ -1102,95 +1102,95 @@
                     return this.stsTokenManager.refreshToken || '';
                 }
                 static _fromJSON(e, t) {
-                    var r, i, s, a, u, d, h, p;
-                    const f =
+                    var r, i, s, a, u, m, g, y;
+                    const I =
                             null !== (r = t.displayName) && void 0 !== r
                                 ? r
                                 : void 0,
-                        g = null !== (i = t.email) && void 0 !== i ? i : void 0,
-                        N =
+                        P = null !== (i = t.email) && void 0 !== i ? i : void 0,
+                        F =
                             null !== (s = t.phoneNumber) && void 0 !== s
                                 ? s
                                 : void 0,
-                        Fe =
+                        Qe =
                             null !== (a = t.photoURL) && void 0 !== a
                                 ? a
                                 : void 0,
-                        vi =
+                        Pi =
                             null !== (u = t.tenantId) && void 0 !== u
                                 ? u
                                 : void 0,
-                        Yn =
-                            null !== (d = t._redirectEventId) && void 0 !== d
-                                ? d
+                        mr =
+                            null !== (m = t._redirectEventId) && void 0 !== m
+                                ? m
                                 : void 0,
-                        Ii =
-                            null !== (h = t.createdAt) && void 0 !== h
-                                ? h
+                        Ni =
+                            null !== (g = t.createdAt) && void 0 !== g
+                                ? g
                                 : void 0,
-                        yi =
-                            null !== (p = t.lastLoginAt) && void 0 !== p
-                                ? p
+                        Oi =
+                            null !== (y = t.lastLoginAt) && void 0 !== y
+                                ? y
                                 : void 0,
                         {
-                            uid: Xn,
-                            emailVerified: Ei,
-                            isAnonymous: Ti,
-                            providerData: Qn,
-                            stsTokenManager: Ri,
+                            uid: _r,
+                            emailVerified: Ci,
+                            isAnonymous: Li,
+                            providerData: gr,
+                            stsTokenManager: Di,
                         } = t;
-                    l(Xn && Ri, e, 'internal-error');
-                    const vu = ce.fromJSON(this.name, Ri);
-                    l('string' == typeof Xn, e, 'internal-error'),
-                        U(f, e.name),
-                        U(g, e.name),
-                        l('boolean' == typeof Ei, e, 'internal-error'),
-                        l('boolean' == typeof Ti, e, 'internal-error'),
-                        U(N, e.name),
-                        U(Fe, e.name),
-                        U(vi, e.name),
-                        U(Yn, e.name),
-                        U(Ii, e.name),
-                        U(yi, e.name);
-                    const er = new V({
-                        uid: Xn,
+                    p(_r && Di, e, 'internal-error');
+                    const Ru = Re.fromJSON(this.name, Di);
+                    p('string' == typeof _r, e, 'internal-error'),
+                        K(I, e.name),
+                        K(P, e.name),
+                        p('boolean' == typeof Ci, e, 'internal-error'),
+                        p('boolean' == typeof Li, e, 'internal-error'),
+                        K(F, e.name),
+                        K(Qe, e.name),
+                        K(Pi, e.name),
+                        K(mr, e.name),
+                        K(Ni, e.name),
+                        K(Oi, e.name);
+                    const vr = new ee({
+                        uid: _r,
                         auth: e,
-                        email: g,
-                        emailVerified: Ei,
-                        displayName: f,
-                        isAnonymous: Ti,
-                        photoURL: Fe,
-                        phoneNumber: N,
-                        tenantId: vi,
-                        stsTokenManager: vu,
-                        createdAt: Ii,
-                        lastLoginAt: yi,
+                        email: P,
+                        emailVerified: Ci,
+                        displayName: I,
+                        isAnonymous: Li,
+                        photoURL: Qe,
+                        phoneNumber: F,
+                        tenantId: Pi,
+                        stsTokenManager: Ru,
+                        createdAt: Ni,
+                        lastLoginAt: Oi,
                     });
                     return (
-                        Qn &&
-                            Array.isArray(Qn) &&
-                            (er.providerData = Qn.map((Iu) =>
-                                Object.assign({}, Iu)
+                        gr &&
+                            Array.isArray(gr) &&
+                            (vr.providerData = gr.map((Au) =>
+                                Object.assign({}, Au)
                             )),
-                        Yn && (er._redirectEventId = Yn),
-                        er
+                        mr && (vr._redirectEventId = mr),
+                        vr
                     );
                 }
                 static _fromIdTokenResponse(e, t, r = !1) {
                     return (0, o.Z)(function* () {
-                        const i = new ce();
+                        const i = new Re();
                         i.updateFromServerResponse(t);
-                        const s = new V({
+                        const s = new ee({
                             uid: t.localId,
                             auth: e,
                             stsTokenManager: i,
                             isAnonymous: r,
                         });
-                        return yield ue(s), s;
+                        return yield Te(s), s;
                     })();
                 }
             }
-            const K = (() => {
+            const ae = (() => {
                 class n {
                     constructor() {
                         (this.type = 'NONE'), (this.storage = {});
@@ -1224,15 +1224,15 @@
                 }
                 return (n.type = 'NONE'), n;
             })();
-            function W(n, e, t) {
+            function te(n, e, t) {
                 return `firebase:${n}:${e}:${t}`;
             }
-            class j {
+            class ue {
                 constructor(e, t, r) {
                     (this.persistence = e), (this.auth = t), (this.userKey = r);
                     const { config: i, name: s } = this.auth;
-                    (this.fullUserKey = W(this.userKey, i.apiKey, s)),
-                        (this.fullPersistenceKey = W(
+                    (this.fullUserKey = te(this.userKey, i.apiKey, s)),
+                        (this.fullPersistenceKey = te(
                             'persistence',
                             i.apiKey,
                             s
@@ -1250,7 +1250,7 @@
                     var e = this;
                     return (0, o.Z)(function* () {
                         const t = yield e.persistence._get(e.fullUserKey);
-                        return t ? V._fromJSON(e.auth, t) : null;
+                        return t ? ee._fromJSON(e.auth, t) : null;
                     })();
                 }
                 removeCurrentUser() {
@@ -1282,56 +1282,56 @@
                 }
                 static create(e, t, r = 'authUser') {
                     return (0, o.Z)(function* () {
-                        if (!t.length) return new j(R(K), e, r);
+                        if (!t.length) return new ue(h(ae), e, r);
                         const i = (yield Promise.all(
                             t.map(
                                 (function () {
-                                    var h = (0, o.Z)(function* (p) {
-                                        if (yield p._isAvailable()) return p;
+                                    var g = (0, o.Z)(function* (y) {
+                                        if (yield y._isAvailable()) return y;
                                     });
-                                    return function (p) {
-                                        return h.apply(this, arguments);
+                                    return function (y) {
+                                        return g.apply(this, arguments);
                                     };
                                 })()
                             )
-                        )).filter((h) => h);
-                        let s = i[0] || R(K);
-                        const a = W(r, e.config.apiKey, e.name);
+                        )).filter((g) => g);
+                        let s = i[0] || h(ae);
+                        const a = te(r, e.config.apiKey, e.name);
                         let u = null;
-                        for (const h of t)
+                        for (const g of t)
                             try {
-                                const p = yield h._get(a);
-                                if (p) {
-                                    const f = V._fromJSON(e, p);
-                                    h !== s && (u = f), (s = h);
+                                const y = yield g._get(a);
+                                if (y) {
+                                    const I = ee._fromJSON(e, y);
+                                    g !== s && (u = I), (s = g);
                                     break;
                                 }
-                            } catch (p) {}
-                        const d = i.filter((h) => h._shouldAllowMigration);
-                        return s._shouldAllowMigration && d.length
-                            ? ((s = d[0]),
+                            } catch (y) {}
+                        const m = i.filter((g) => g._shouldAllowMigration);
+                        return s._shouldAllowMigration && m.length
+                            ? ((s = m[0]),
                               u && (yield s._set(a, u.toJSON())),
                               yield Promise.all(
                                   t.map(
                                       (function () {
-                                          var h = (0, o.Z)(function* (p) {
-                                              if (p !== s)
+                                          var g = (0, o.Z)(function* (y) {
+                                              if (y !== s)
                                                   try {
-                                                      yield p._remove(a);
-                                                  } catch (f) {}
+                                                      yield y._remove(a);
+                                                  } catch (I) {}
                                           });
-                                          return function (p) {
-                                              return h.apply(this, arguments);
+                                          return function (y) {
+                                              return g.apply(this, arguments);
                                           };
                                       })()
                                   )
                               ),
-                              new j(s, e, r))
-                            : new j(s, e, r);
+                              new ue(s, e, r))
+                            : new ue(s, e, r);
                     })();
                 }
             }
-            function hr(n) {
+            function Rr(n) {
                 const e = n.toLowerCase();
                 if (
                     e.includes('opera/') ||
@@ -1339,27 +1339,27 @@
                     e.includes('opios/')
                 )
                     return 'Opera';
-                if (mr(e)) return 'IEMobile';
+                if (br(e)) return 'IEMobile';
                 if (e.includes('msie') || e.includes('trident/')) return 'IE';
                 if (e.includes('edge/')) return 'Edge';
-                if (fr(e)) return 'Firefox';
+                if (Ar(e)) return 'Firefox';
                 if (e.includes('silk/')) return 'Silk';
-                if (_r(e)) return 'Blackberry';
-                if (gr(e)) return 'Webos';
-                if (rt(e)) return 'Safari';
-                if ((e.includes('chrome/') || pr(e)) && !e.includes('edge/'))
+                if (Sr(e)) return 'Blackberry';
+                if (wr(e)) return 'Webos';
+                if (Et(e)) return 'Safari';
+                if ((e.includes('chrome/') || kr(e)) && !e.includes('edge/'))
                     return 'Chrome';
-                if (le(e)) return 'Android';
+                if (Ae(e)) return 'Android';
                 {
                     const r = n.match(/([a-zA-Z\d\.]+)\/[a-zA-Z\d\.]*$/);
                     if (2 === (null == r ? void 0 : r.length)) return r[1];
                 }
                 return 'Other';
             }
-            function fr(n = (0, c.z$)()) {
+            function Ar(n = (0, d.z$)()) {
                 return /firefox\//i.test(n);
             }
-            function rt(n = (0, c.z$)()) {
+            function Et(n = (0, d.z$)()) {
                 const e = n.toLowerCase();
                 return (
                     e.includes('safari/') &&
@@ -1368,50 +1368,50 @@
                     !e.includes('android')
                 );
             }
-            function pr(n = (0, c.z$)()) {
+            function kr(n = (0, d.z$)()) {
                 return /crios\//i.test(n);
             }
-            function mr(n = (0, c.z$)()) {
+            function br(n = (0, d.z$)()) {
                 return /iemobile/i.test(n);
             }
-            function le(n = (0, c.z$)()) {
+            function Ae(n = (0, d.z$)()) {
                 return /android/i.test(n);
             }
-            function _r(n = (0, c.z$)()) {
+            function Sr(n = (0, d.z$)()) {
                 return /blackberry/i.test(n);
             }
-            function gr(n = (0, c.z$)()) {
+            function wr(n = (0, d.z$)()) {
                 return /webos/i.test(n);
             }
-            function J(n = (0, c.z$)()) {
+            function ce(n = (0, d.z$)()) {
                 return /iphone|ipad|ipod/i.test(n);
             }
-            function vr(n = (0, c.z$)()) {
+            function Pr(n = (0, d.z$)()) {
                 return (
-                    J(n) ||
-                    le(n) ||
-                    gr(n) ||
-                    _r(n) ||
+                    ce(n) ||
+                    Ae(n) ||
+                    wr(n) ||
+                    Sr(n) ||
                     /windows phone/i.test(n) ||
-                    mr(n)
+                    br(n)
                 );
             }
-            function Ir(n, e = []) {
+            function Nr(n, e = []) {
                 let t;
                 switch (n) {
                     case 'Browser':
-                        t = hr((0, c.z$)());
+                        t = Rr((0, d.z$)());
                         break;
                     case 'Worker':
-                        t = `${hr((0, c.z$)())}-${n}`;
+                        t = `${Rr((0, d.z$)())}-${n}`;
                         break;
                     default:
                         t = n;
                 }
                 const r = e.length ? e.join(',') : 'FirebaseCore-web';
-                return `${t}/JsCore/${M.SDK_VERSION}/${r}`;
+                return `${t}/JsCore/${V.SDK_VERSION}/${r}`;
             }
-            class Ji {
+            class ts {
                 constructor(e) {
                     (this.auth = e), (this.queue = []);
                 }
@@ -1420,8 +1420,8 @@
                         new Promise((a, u) => {
                             try {
                                 a(e(s));
-                            } catch (d) {
-                                u(d);
+                            } catch (m) {
+                                u(m);
                             }
                         });
                     (r.onAbort = t), this.queue.push(r);
@@ -1451,7 +1451,7 @@
                     })();
                 }
             }
-            class Yi {
+            class ns {
                 constructor(e, t, r) {
                     (this.app = e),
                         (this.heartbeatServiceProvider = t),
@@ -1459,9 +1459,9 @@
                         (this.currentUser = null),
                         (this.emulatorConfig = null),
                         (this.operations = Promise.resolve()),
-                        (this.authStateSubscription = new yr(this)),
-                        (this.idTokenSubscription = new yr(this)),
-                        (this.beforeStateQueue = new Ji(this)),
+                        (this.authStateSubscription = new Or(this)),
+                        (this.idTokenSubscription = new Or(this)),
+                        (this.beforeStateQueue = new ts(this)),
                         (this.redirectUser = null),
                         (this.isProactiveRefreshEnabled = !1),
                         (this._canInitEmulator = !0),
@@ -1469,7 +1469,7 @@
                         (this._deleted = !1),
                         (this._initializationPromise = null),
                         (this._popupRedirectResolver = null),
-                        (this._errorFactory = rr),
+                        (this._errorFactory = X),
                         (this.lastNotifiedUid = void 0),
                         (this.languageCode = null),
                         (this.tenantId = null),
@@ -1483,13 +1483,13 @@
                 _initializeWithPersistence(e, t) {
                     var r = this;
                     return (
-                        t && (this._popupRedirectResolver = R(t)),
+                        t && (this._popupRedirectResolver = h(t)),
                         (this._initializationPromise = this.queue(
                             (0, o.Z)(function* () {
                                 var i, s;
                                 if (
                                     !r._deleted &&
-                                    ((r.persistenceManager = yield j.create(
+                                    ((r.persistenceManager = yield ue.create(
                                         r,
                                         e
                                     )),
@@ -1553,11 +1553,11 @@
                                     void 0 === r
                                         ? void 0
                                         : r._redirectEventId,
-                                d = null == s ? void 0 : s._redirectEventId,
-                                h = yield t.tryRedirectSignIn(e);
-                            (!u || u === d) &&
-                                (null == h ? void 0 : h.user) &&
-                                ((s = h.user), (a = !0));
+                                m = null == s ? void 0 : s._redirectEventId,
+                                g = yield t.tryRedirectSignIn(e);
+                            (!u || u === m) &&
+                                (null == g ? void 0 : g.user) &&
+                                ((s = g.user), (a = !0));
                         }
                         if (!s) return t.directlySetCurrentUser(null);
                         if (!s._redirectEventId) {
@@ -1576,7 +1576,7 @@
                                 : t.directlySetCurrentUser(null);
                         }
                         return (
-                            l(t._popupRedirectResolver, t, 'argument-error'),
+                            p(t._popupRedirectResolver, t, 'argument-error'),
                             yield t.getOrInitRedirectPersistenceManager(),
                             t.redirectUser &&
                             t.redirectUser._redirectEventId ===
@@ -1607,7 +1607,7 @@
                     var t = this;
                     return (0, o.Z)(function* () {
                         try {
-                            yield ue(e);
+                            yield Te(e);
                         } catch (r) {
                             if ('auth/network-request-failed' !== r.code)
                                 return t.directlySetCurrentUser(null);
@@ -1616,7 +1616,7 @@
                     })();
                 }
                 useDeviceLanguage() {
-                    this.languageCode = (function Oi() {
+                    this.languageCode = (function C() {
                         if ('undefined' == typeof navigator) return null;
                         const n = navigator;
                         return (
@@ -1635,10 +1635,10 @@
                 updateCurrentUser(e) {
                     var t = this;
                     return (0, o.Z)(function* () {
-                        const r = e ? (0, c.m9)(e) : null;
+                        const r = e ? (0, d.m9)(e) : null;
                         return (
                             r &&
-                                l(
+                                p(
                                     r.auth.config.apiKey === t.config.apiKey,
                                     t,
                                     'invalid-user-token'
@@ -1653,7 +1653,7 @@
                         if (!r._deleted)
                             return (
                                 e &&
-                                    l(
+                                    p(
                                         r.tenantId === e.tenantId,
                                         r,
                                         'tenant-id-mismatch'
@@ -1685,7 +1685,7 @@
                     var t = this;
                     return this.queue(
                         (0, o.Z)(function* () {
-                            yield t.assertedPersistence.setPersistence(R(e));
+                            yield t.assertedPersistence.setPersistence(h(e));
                         })
                     );
                 }
@@ -1693,7 +1693,7 @@
                     return this.assertedPersistence.persistence.type;
                 }
                 _updateErrorMap(e) {
-                    this._errorFactory = new c.LL('auth', 'Firebase', e());
+                    this._errorFactory = new d.LL('auth', 'Firebase', e());
                 }
                 onAuthStateChanged(e, t, r) {
                     return this.registerStateListener(
@@ -1741,11 +1741,11 @@
                     var t = this;
                     return (0, o.Z)(function* () {
                         if (!t.redirectPersistenceManager) {
-                            const r = (e && R(e)) || t._popupRedirectResolver;
-                            l(r, t, 'argument-error'),
-                                (t.redirectPersistenceManager = yield j.create(
+                            const r = (e && h(e)) || t._popupRedirectResolver;
+                            p(r, t, 'argument-error'),
+                                (t.redirectPersistenceManager = yield ue.create(
                                     t,
-                                    [R(r._redirectPersistence)],
+                                    [h(r._redirectPersistence)],
                                     'redirectUser'
                                 )),
                                 (t.redirectUser =
@@ -1826,7 +1826,7 @@
                             ? Promise.resolve()
                             : this._initializationPromise;
                     return (
-                        l(a, this, 'internal-error'),
+                        p(a, this, 'internal-error'),
                         a.then(() => s(this.currentUser)),
                         'function' == typeof t
                             ? e.addObserver(t, r, i)
@@ -1856,7 +1856,7 @@
                 }
                 get assertedPersistence() {
                     return (
-                        l(this.persistenceManager, this, 'internal-error'),
+                        p(this.persistenceManager, this, 'internal-error'),
                         this.persistenceManager
                     );
                 }
@@ -1865,7 +1865,7 @@
                         this.frameworks.includes(e) ||
                         (this.frameworks.push(e),
                         this.frameworks.sort(),
-                        (this.clientVersion = Ir(
+                        (this.clientVersion = Nr(
                             this.config.clientPlatform,
                             this._getFrameworks()
                         )));
@@ -1890,145 +1890,145 @@
                     })();
                 }
             }
-            function y(n) {
-                return (0, c.m9)(n);
+            function O(n) {
+                return (0, d.m9)(n);
             }
-            class yr {
+            class Or {
                 constructor(e) {
                     (this.auth = e),
                         (this.observer = null),
-                        (this.addObserver = (0, c.ne)(
+                        (this.addObserver = (0, d.ne)(
                             (t) => (this.observer = t)
                         ));
                 }
                 get next() {
                     return (
-                        l(this.observer, this.auth, 'internal-error'),
+                        p(this.observer, this.auth, 'internal-error'),
                         this.observer.next.bind(this.observer)
                     );
                 }
             }
-            function Er(n) {
+            function Cr(n) {
                 const e = n.indexOf(':');
                 return e < 0 ? '' : n.substr(0, e + 1);
             }
-            function Tr(n) {
+            function Lr(n) {
                 if (!n) return null;
                 const e = Number(n);
                 return isNaN(e) ? null : e;
             }
-            class Y {
+            class le {
                 constructor(e, t) {
                     (this.providerId = e), (this.signInMethod = t);
                 }
                 toJSON() {
-                    return P('not implemented');
+                    return c('not implemented');
                 }
                 _getIdTokenResponse(e) {
-                    return P('not implemented');
+                    return c('not implemented');
                 }
                 _linkToIdToken(e, t) {
-                    return P('not implemented');
+                    return c('not implemented');
                 }
                 _getReauthenticationResolver(e) {
-                    return P('not implemented');
+                    return c('not implemented');
                 }
             }
-            function Rr(n, e) {
-                return it.apply(this, arguments);
+            function Dr(n, e) {
+                return Tt.apply(this, arguments);
             }
-            function it() {
-                return (it = (0, o.Z)(function* (n, e) {
-                    return I(n, 'POST', '/v1/accounts:resetPassword', m(n, e));
+            function Tt() {
+                return (Tt = (0, o.Z)(function* (n, e) {
+                    return N(n, 'POST', '/v1/accounts:resetPassword', S(n, e));
                 })).apply(this, arguments);
             }
-            function kr(n, e) {
-                return st.apply(this, arguments);
+            function xr(n, e) {
+                return Rt.apply(this, arguments);
             }
-            function st() {
-                return (st = (0, o.Z)(function* (n, e) {
-                    return I(n, 'POST', '/v1/accounts:update', e);
-                })).apply(this, arguments);
-            }
-            function ts(n, e) {
-                return ot.apply(this, arguments);
-            }
-            function ot() {
-                return (ot = (0, o.Z)(function* (n, e) {
-                    return I(n, 'POST', '/v1/accounts:update', m(n, e));
-                })).apply(this, arguments);
-            }
-            function at() {
-                return (at = (0, o.Z)(function* (n, e) {
-                    return w(
-                        n,
-                        'POST',
-                        '/v1/accounts:signInWithPassword',
-                        m(n, e)
-                    );
-                })).apply(this, arguments);
-            }
-            function Te(n, e) {
-                return ut.apply(this, arguments);
-            }
-            function ut() {
-                return (ut = (0, o.Z)(function* (n, e) {
-                    return I(n, 'POST', '/v1/accounts:sendOobCode', m(n, e));
-                })).apply(this, arguments);
-            }
-            function rs(n, e) {
-                return ct.apply(this, arguments);
-            }
-            function ct() {
-                return (ct = (0, o.Z)(function* (n, e) {
-                    return Te(n, e);
-                })).apply(this, arguments);
-            }
-            function is(n, e) {
-                return lt.apply(this, arguments);
-            }
-            function lt() {
-                return (lt = (0, o.Z)(function* (n, e) {
-                    return Te(n, e);
-                })).apply(this, arguments);
-            }
-            function ss(n, e) {
-                return dt.apply(this, arguments);
-            }
-            function dt() {
-                return (dt = (0, o.Z)(function* (n, e) {
-                    return Te(n, e);
+            function Rt() {
+                return (Rt = (0, o.Z)(function* (n, e) {
+                    return N(n, 'POST', '/v1/accounts:update', e);
                 })).apply(this, arguments);
             }
             function os(n, e) {
-                return ht.apply(this, arguments);
+                return At.apply(this, arguments);
             }
-            function ht() {
-                return (ht = (0, o.Z)(function* (n, e) {
-                    return Te(n, e);
+            function At() {
+                return (At = (0, o.Z)(function* (n, e) {
+                    return N(n, 'POST', '/v1/accounts:update', S(n, e));
                 })).apply(this, arguments);
             }
-            function ft() {
-                return (ft = (0, o.Z)(function* (n, e) {
-                    return w(
+            function kt() {
+                return (kt = (0, o.Z)(function* (n, e) {
+                    return G(
                         n,
                         'POST',
-                        '/v1/accounts:signInWithEmailLink',
-                        m(n, e)
+                        '/v1/accounts:signInWithPassword',
+                        S(n, e)
                     );
                 })).apply(this, arguments);
             }
-            function pt() {
-                return (pt = (0, o.Z)(function* (n, e) {
-                    return w(
+            function Ue(n, e) {
+                return bt.apply(this, arguments);
+            }
+            function bt() {
+                return (bt = (0, o.Z)(function* (n, e) {
+                    return N(n, 'POST', '/v1/accounts:sendOobCode', S(n, e));
+                })).apply(this, arguments);
+            }
+            function us(n, e) {
+                return St.apply(this, arguments);
+            }
+            function St() {
+                return (St = (0, o.Z)(function* (n, e) {
+                    return Ue(n, e);
+                })).apply(this, arguments);
+            }
+            function cs(n, e) {
+                return wt.apply(this, arguments);
+            }
+            function wt() {
+                return (wt = (0, o.Z)(function* (n, e) {
+                    return Ue(n, e);
+                })).apply(this, arguments);
+            }
+            function ls(n, e) {
+                return Pt.apply(this, arguments);
+            }
+            function Pt() {
+                return (Pt = (0, o.Z)(function* (n, e) {
+                    return Ue(n, e);
+                })).apply(this, arguments);
+            }
+            function ds(n, e) {
+                return Nt.apply(this, arguments);
+            }
+            function Nt() {
+                return (Nt = (0, o.Z)(function* (n, e) {
+                    return Ue(n, e);
+                })).apply(this, arguments);
+            }
+            function Ot() {
+                return (Ot = (0, o.Z)(function* (n, e) {
+                    return G(
                         n,
                         'POST',
                         '/v1/accounts:signInWithEmailLink',
-                        m(n, e)
+                        S(n, e)
                     );
                 })).apply(this, arguments);
             }
-            class de extends Y {
+            function Ct() {
+                return (Ct = (0, o.Z)(function* (n, e) {
+                    return G(
+                        n,
+                        'POST',
+                        '/v1/accounts:signInWithEmailLink',
+                        S(n, e)
+                    );
+                })).apply(this, arguments);
+            }
+            class ke extends le {
                 constructor(e, t, r, i = null) {
                     super('password', r),
                         (this._email = e),
@@ -2036,10 +2036,10 @@
                         (this._tenantId = i);
                 }
                 static _fromEmailAndPassword(e, t) {
-                    return new de(e, t, 'password');
+                    return new ke(e, t, 'password');
                 }
                 static _fromEmailAndCode(e, t, r = null) {
-                    return new de(e, t, 'emailLink', r);
+                    return new ke(e, t, 'emailLink', r);
                 }
                 toJSON() {
                     return {
@@ -2074,22 +2074,22 @@
                     return (0, o.Z)(function* () {
                         switch (t.signInMethod) {
                             case 'password':
-                                return (function ns(n, e) {
-                                    return at.apply(this, arguments);
+                                return (function as(n, e) {
+                                    return kt.apply(this, arguments);
                                 })(e, {
                                     returnSecureToken: !0,
                                     email: t._email,
                                     password: t._password,
                                 });
                             case 'emailLink':
-                                return (function as(n, e) {
-                                    return ft.apply(this, arguments);
+                                return (function hs(n, e) {
+                                    return Ot.apply(this, arguments);
                                 })(e, {
                                     email: t._email,
                                     oobCode: t._password,
                                 });
                             default:
-                                v(e, 'internal-error');
+                                k(e, 'internal-error');
                         }
                     })();
                 }
@@ -2098,22 +2098,22 @@
                     return (0, o.Z)(function* () {
                         switch (r.signInMethod) {
                             case 'password':
-                                return kr(e, {
+                                return xr(e, {
                                     idToken: t,
                                     returnSecureToken: !0,
                                     email: r._email,
                                     password: r._password,
                                 });
                             case 'emailLink':
-                                return (function us(n, e) {
-                                    return pt.apply(this, arguments);
+                                return (function fs(n, e) {
+                                    return Ct.apply(this, arguments);
                                 })(e, {
                                     idToken: t,
                                     email: r._email,
                                     oobCode: r._password,
                                 });
                             default:
-                                v(e, 'internal-error');
+                                k(e, 'internal-error');
                         }
                     })();
                 }
@@ -2121,20 +2121,20 @@
                     return this._getIdTokenResponse(e);
                 }
             }
-            function C(n, e) {
-                return mt.apply(this, arguments);
+            function j(n, e) {
+                return Lt.apply(this, arguments);
             }
-            function mt() {
-                return (mt = (0, o.Z)(function* (n, e) {
-                    return w(n, 'POST', '/v1/accounts:signInWithIdp', m(n, e));
+            function Lt() {
+                return (Lt = (0, o.Z)(function* (n, e) {
+                    return G(n, 'POST', '/v1/accounts:signInWithIdp', S(n, e));
                 })).apply(this, arguments);
             }
-            class b extends Y {
+            class W extends le {
                 constructor() {
                     super(...arguments), (this.pendingToken = null);
                 }
                 static _fromParams(e) {
-                    const t = new b(e.providerId, e.signInMethod);
+                    const t = new W(e.providerId, e.signInMethod);
                     return (
                         e.idToken || e.accessToken
                             ? (e.idToken && (t.idToken = e.idToken),
@@ -2145,7 +2145,7 @@
                             : e.oauthToken && e.oauthTokenSecret
                             ? ((t.accessToken = e.oauthToken),
                               (t.secret = e.oauthTokenSecret))
-                            : v('argument-error'),
+                            : k('argument-error'),
                         t
                     );
                 }
@@ -2163,9 +2163,9 @@
                 static fromJSON(e) {
                     const t = 'string' == typeof e ? JSON.parse(e) : e,
                         { providerId: r, signInMethod: i } = t,
-                        s = (0, Ve._T)(t, ['providerId', 'signInMethod']);
+                        s = (0, De._T)(t, ['providerId', 'signInMethod']);
                     if (!r || !i) return null;
-                    const a = new b(r, i);
+                    const a = new W(r, i);
                     return (
                         (a.idToken = s.idToken || void 0),
                         (a.accessToken = s.accessToken || void 0),
@@ -2176,15 +2176,15 @@
                     );
                 }
                 _getIdTokenResponse(e) {
-                    return C(e, this.buildRequest());
+                    return j(e, this.buildRequest());
                 }
                 _linkToIdToken(e, t) {
                     const r = this.buildRequest();
-                    return (r.idToken = t), C(e, r);
+                    return (r.idToken = t), j(e, r);
                 }
                 _getReauthenticationResolver(e) {
                     const t = this.buildRequest();
-                    return (t.autoCreate = !1), C(e, t);
+                    return (t.autoCreate = !1), j(e, t);
                 }
                 buildRequest() {
                     const e = {
@@ -2202,44 +2202,44 @@
                             this.nonce &&
                                 !this.pendingToken &&
                                 (t.nonce = this.nonce),
-                            (e.postBody = (0, c.xO)(t));
+                            (e.postBody = (0, d.xO)(t));
                     }
                     return e;
                 }
             }
-            function ls(n, e) {
-                return _t.apply(this, arguments);
+            function ms(n, e) {
+                return Dt.apply(this, arguments);
             }
-            function _t() {
-                return (_t = (0, o.Z)(function* (n, e) {
-                    return I(
+            function Dt() {
+                return (Dt = (0, o.Z)(function* (n, e) {
+                    return N(
                         n,
                         'POST',
                         '/v1/accounts:sendVerificationCode',
-                        m(n, e)
+                        S(n, e)
                     );
                 })).apply(this, arguments);
             }
-            function gt() {
-                return (gt = (0, o.Z)(function* (n, e) {
-                    return w(
+            function xt() {
+                return (xt = (0, o.Z)(function* (n, e) {
+                    return G(
                         n,
                         'POST',
                         '/v1/accounts:signInWithPhoneNumber',
-                        m(n, e)
+                        S(n, e)
                     );
                 })).apply(this, arguments);
             }
-            function vt() {
-                return (vt = (0, o.Z)(function* (n, e) {
-                    const t = yield w(
+            function Mt() {
+                return (Mt = (0, o.Z)(function* (n, e) {
+                    const t = yield G(
                         n,
                         'POST',
                         '/v1/accounts:signInWithPhoneNumber',
-                        m(n, e)
+                        S(n, e)
                     );
                     if (t.temporaryProof)
-                        throw oe(
+                        throw ye(
                             n,
                             'account-exists-with-different-credential',
                             t
@@ -2247,41 +2247,41 @@
                     return t;
                 })).apply(this, arguments);
             }
-            const fs = { USER_NOT_FOUND: 'user-not-found' };
-            function It() {
-                return (It = (0, o.Z)(function* (n, e) {
-                    return w(
+            const vs = { USER_NOT_FOUND: 'user-not-found' };
+            function Ut() {
+                return (Ut = (0, o.Z)(function* (n, e) {
+                    return G(
                         n,
                         'POST',
                         '/v1/accounts:signInWithPhoneNumber',
-                        m(
+                        S(
                             n,
                             Object.assign(Object.assign({}, e), {
                                 operation: 'REAUTH',
                             })
                         ),
-                        fs
+                        vs
                     );
                 })).apply(this, arguments);
             }
-            class H extends Y {
+            class ne extends le {
                 constructor(e) {
                     super('phone', 'phone'), (this.params = e);
                 }
                 static _fromVerification(e, t) {
-                    return new H({ verificationId: e, verificationCode: t });
+                    return new ne({ verificationId: e, verificationCode: t });
                 }
                 static _fromTokenResponse(e, t) {
-                    return new H({ phoneNumber: e, temporaryProof: t });
+                    return new ne({ phoneNumber: e, temporaryProof: t });
                 }
                 _getIdTokenResponse(e) {
-                    return (function ds(n, e) {
-                        return gt.apply(this, arguments);
+                    return (function _s(n, e) {
+                        return xt.apply(this, arguments);
                     })(e, this._makeVerificationRequest());
                 }
                 _linkToIdToken(e, t) {
-                    return (function hs(n, e) {
-                        return vt.apply(this, arguments);
+                    return (function gs(n, e) {
+                        return Mt.apply(this, arguments);
                     })(
                         e,
                         Object.assign(
@@ -2291,8 +2291,8 @@
                     );
                 }
                 _getReauthenticationResolver(e) {
-                    return (function ps(n, e) {
-                        return It.apply(this, arguments);
+                    return (function Is(n, e) {
+                        return Ut.apply(this, arguments);
                     })(e, this._makeVerificationRequest());
                 }
                 _makeVerificationRequest() {
@@ -2329,7 +2329,7 @@
                         temporaryProof: s,
                     } = e;
                     return r || t || i || s
-                        ? new H({
+                        ? new ne({
                               verificationId: t,
                               verificationCode: r,
                               phoneNumber: i,
@@ -2338,13 +2338,13 @@
                         : null;
                 }
             }
-            class he {
+            class be {
                 constructor(e) {
                     var t, r, i, s, a, u;
-                    const d = (0, c.zd)((0, c.pd)(e)),
-                        h = null !== (t = d.apiKey) && void 0 !== t ? t : null,
-                        p = null !== (r = d.oobCode) && void 0 !== r ? r : null,
-                        f = (function ms(n) {
+                    const m = (0, d.zd)((0, d.pd)(e)),
+                        g = null !== (t = m.apiKey) && void 0 !== t ? t : null,
+                        y = null !== (r = m.oobCode) && void 0 !== r ? r : null,
+                        I = (function ys(n) {
                             switch (n) {
                                 case 'recoverEmail':
                                     return 'RECOVER_EMAIL';
@@ -2361,31 +2361,31 @@
                                 default:
                                     return null;
                             }
-                        })(null !== (i = d.mode) && void 0 !== i ? i : null);
-                    l(h && p && f, 'argument-error'),
-                        (this.apiKey = h),
-                        (this.operation = f),
-                        (this.code = p),
+                        })(null !== (i = m.mode) && void 0 !== i ? i : null);
+                    p(g && y && I, 'argument-error'),
+                        (this.apiKey = g),
+                        (this.operation = I),
+                        (this.code = y),
                         (this.continueUrl =
-                            null !== (s = d.continueUrl) && void 0 !== s
+                            null !== (s = m.continueUrl) && void 0 !== s
                                 ? s
                                 : null),
                         (this.languageCode =
-                            null !== (a = d.languageCode) && void 0 !== a
+                            null !== (a = m.languageCode) && void 0 !== a
                                 ? a
                                 : null),
                         (this.tenantId =
-                            null !== (u = d.tenantId) && void 0 !== u
+                            null !== (u = m.tenantId) && void 0 !== u
                                 ? u
                                 : null);
                 }
                 static parseLink(e) {
-                    const t = (function _s(n) {
-                        const e = (0, c.zd)((0, c.pd)(n)).link,
-                            t = e ? (0, c.zd)((0, c.pd)(e)).deep_link_id : null,
-                            r = (0, c.zd)((0, c.pd)(n)).deep_link_id;
+                    const t = (function Es(n) {
+                        const e = (0, d.zd)((0, d.pd)(n)).link,
+                            t = e ? (0, d.zd)((0, d.pd)(e)).deep_link_id : null,
+                            r = (0, d.zd)((0, d.pd)(n)).deep_link_id;
                         return (
-                            (r ? (0, c.zd)((0, c.pd)(r)).link : null) ||
+                            (r ? (0, d.zd)((0, d.pd)(r)).link : null) ||
                             r ||
                             t ||
                             e ||
@@ -2393,25 +2393,25 @@
                         );
                     })(e);
                     try {
-                        return new he(t);
+                        return new be(t);
                     } catch (r) {
                         return null;
                     }
                 }
             }
-            let yt = (() => {
+            let Ft = (() => {
                 class n {
                     constructor() {
                         this.providerId = n.PROVIDER_ID;
                     }
                     static credential(t, r) {
-                        return de._fromEmailAndPassword(t, r);
+                        return ke._fromEmailAndPassword(t, r);
                     }
                     static credentialWithLink(t, r) {
-                        const i = he.parseLink(r);
+                        const i = be.parseLink(r);
                         return (
-                            l(i, 'argument-error'),
-                            de._fromEmailAndCode(t, i.code, i.tenantId)
+                            p(i, 'argument-error'),
+                            ke._fromEmailAndCode(t, i.code, i.tenantId)
                         );
                     }
                 }
@@ -2422,7 +2422,7 @@
                     n
                 );
             })();
-            class L {
+            class B {
                 constructor(e) {
                     (this.providerId = e),
                         (this.defaultLanguageCode = null),
@@ -2438,7 +2438,7 @@
                     return this.customParameters;
                 }
             }
-            class X extends L {
+            class de extends B {
                 constructor() {
                     super(...arguments), (this.scopes = []);
                 }
@@ -2449,15 +2449,15 @@
                     return [...this.scopes];
                 }
             }
-            class Q extends X {
+            class he extends de {
                 static credentialFromJSON(e) {
                     const t = 'string' == typeof e ? JSON.parse(e) : e;
                     return (
-                        l(
+                        p(
                             'providerId' in t && 'signInMethod' in t,
                             'argument-error'
                         ),
-                        b._fromParams(t)
+                        W._fromParams(t)
                     );
                 }
                 credential(e) {
@@ -2469,8 +2469,8 @@
                 }
                 _credential(e) {
                     return (
-                        l(e.idToken || e.accessToken, 'argument-error'),
-                        b._fromParams(
+                        p(e.idToken || e.accessToken, 'argument-error'),
+                        W._fromParams(
                             Object.assign(Object.assign({}, e), {
                                 providerId: this.providerId,
                                 signInMethod: this.providerId,
@@ -2479,10 +2479,10 @@
                     );
                 }
                 static credentialFromResult(e) {
-                    return Q.oauthCredentialFromTaggedObject(e);
+                    return he.oauthCredentialFromTaggedObject(e);
                 }
                 static credentialFromError(e) {
-                    return Q.oauthCredentialFromTaggedObject(
+                    return he.oauthCredentialFromTaggedObject(
                         e.customData || {}
                     );
                 }
@@ -2498,24 +2498,24 @@
                     } = e;
                     if ((!r && !i && !t && !s) || !u) return null;
                     try {
-                        return new Q(u)._credential({
+                        return new he(u)._credential({
                             idToken: t,
                             accessToken: r,
                             nonce: a,
                             pendingToken: s,
                         });
-                    } catch (d) {
+                    } catch (m) {
                         return null;
                     }
                 }
             }
-            let Ar = (() => {
-                    class n extends X {
+            let Mr = (() => {
+                    class n extends de {
                         constructor() {
                             super('facebook.com');
                         }
                         static credential(t) {
-                            return b._fromParams({
+                            return W._fromParams({
                                 providerId: n.PROVIDER_ID,
                                 signInMethod: n.FACEBOOK_SIGN_IN_METHOD,
                                 accessToken: t,
@@ -2551,13 +2551,13 @@
                         n
                     );
                 })(),
-                Sr = (() => {
-                    class n extends X {
+                Ur = (() => {
+                    class n extends de {
                         constructor() {
                             super('google.com'), this.addScope('profile');
                         }
                         static credential(t, r) {
-                            return b._fromParams({
+                            return W._fromParams({
                                 providerId: n.PROVIDER_ID,
                                 signInMethod: n.GOOGLE_SIGN_IN_METHOD,
                                 idToken: t,
@@ -2591,13 +2591,13 @@
                         n
                     );
                 })(),
-                Nr = (() => {
-                    class n extends X {
+                Fr = (() => {
+                    class n extends de {
                         constructor() {
                             super('github.com');
                         }
                         static credential(t) {
-                            return b._fromParams({
+                            return W._fromParams({
                                 providerId: n.PROVIDER_ID,
                                 signInMethod: n.GITHUB_SIGN_IN_METHOD,
                                 accessToken: t,
@@ -2633,20 +2633,20 @@
                         n
                     );
                 })();
-            class ee extends Y {
+            class fe extends le {
                 constructor(e, t) {
                     super(e, e), (this.pendingToken = t);
                 }
                 _getIdTokenResponse(e) {
-                    return C(e, this.buildRequest());
+                    return j(e, this.buildRequest());
                 }
                 _linkToIdToken(e, t) {
                     const r = this.buildRequest();
-                    return (r.idToken = t), C(e, r);
+                    return (r.idToken = t), j(e, r);
                 }
                 _getReauthenticationResolver(e) {
                     const t = this.buildRequest();
-                    return (t.autoCreate = !1), C(e, t);
+                    return (t.autoCreate = !1), j(e, t);
                 }
                 toJSON() {
                     return {
@@ -2658,10 +2658,10 @@
                 static fromJSON(e) {
                     const t = 'string' == typeof e ? JSON.parse(e) : e,
                         { providerId: r, signInMethod: i, pendingToken: s } = t;
-                    return r && i && s && r === i ? new ee(r, s) : null;
+                    return r && i && s && r === i ? new fe(r, s) : null;
                 }
                 static _create(e, t) {
-                    return new ee(e, t);
+                    return new fe(e, t);
                 }
                 buildRequest() {
                     return {
@@ -2671,40 +2671,40 @@
                     };
                 }
             }
-            class Re extends L {
+            class Fe extends B {
                 constructor(e) {
-                    l(e.startsWith('saml.'), 'argument-error'), super(e);
+                    p(e.startsWith('saml.'), 'argument-error'), super(e);
                 }
                 static credentialFromResult(e) {
-                    return Re.samlCredentialFromTaggedObject(e);
+                    return Fe.samlCredentialFromTaggedObject(e);
                 }
                 static credentialFromError(e) {
-                    return Re.samlCredentialFromTaggedObject(
+                    return Fe.samlCredentialFromTaggedObject(
                         e.customData || {}
                     );
                 }
                 static credentialFromJSON(e) {
-                    const t = ee.fromJSON(e);
-                    return l(t, 'argument-error'), t;
+                    const t = fe.fromJSON(e);
+                    return p(t, 'argument-error'), t;
                 }
                 static samlCredentialFromTaggedObject({ _tokenResponse: e }) {
                     if (!e) return null;
                     const { pendingToken: t, providerId: r } = e;
                     if (!t || !r) return null;
                     try {
-                        return ee._create(r, t);
+                        return fe._create(r, t);
                     } catch (i) {
                         return null;
                     }
                 }
             }
-            let Pr = (() => {
-                class n extends X {
+            let Zr = (() => {
+                class n extends de {
                     constructor() {
                         super('twitter.com');
                     }
                     static credential(t, r) {
-                        return b._fromParams({
+                        return W._fromParams({
                             providerId: n.PROVIDER_ID,
                             signInMethod: n.TWITTER_SIGN_IN_METHOD,
                             oauthToken: t,
@@ -2734,15 +2734,15 @@
                     n
                 );
             })();
-            function br(n, e) {
-                return Et.apply(this, arguments);
+            function Vr(n, e) {
+                return Zt.apply(this, arguments);
             }
-            function Et() {
-                return (Et = (0, o.Z)(function* (n, e) {
-                    return w(n, 'POST', '/v1/accounts:signUp', m(n, e));
+            function Zt() {
+                return (Zt = (0, o.Z)(function* (n, e) {
+                    return G(n, 'POST', '/v1/accounts:signUp', S(n, e));
                 })).apply(this, arguments);
             }
-            class A {
+            class U {
                 constructor(e) {
                     (this.user = e.user),
                         (this.providerId = e.providerId),
@@ -2751,9 +2751,9 @@
                 }
                 static _fromIdTokenResponse(e, t, r, i = !1) {
                     return (0, o.Z)(function* () {
-                        const s = yield V._fromIdTokenResponse(e, r, i),
-                            a = wr(r);
-                        return new A({
+                        const s = yield ee._fromIdTokenResponse(e, r, i),
+                            a = Wr(r);
+                        return new U({
                             user: s,
                             providerId: a,
                             _tokenResponse: r,
@@ -2764,8 +2764,8 @@
                 static _forOperation(e, t, r) {
                     return (0, o.Z)(function* () {
                         yield e._updateTokensIfNecessary(r, !0);
-                        const i = wr(r);
-                        return new A({
+                        const i = Wr(r);
+                        return new U({
                             user: e,
                             providerId: i,
                             _tokenResponse: r,
@@ -2774,40 +2774,40 @@
                     })();
                 }
             }
-            function wr(n) {
+            function Wr(n) {
                 return n.providerId
                     ? n.providerId
                     : 'phoneNumber' in n
                     ? 'phone'
                     : null;
             }
-            function Tt() {
-                return (Tt = (0, o.Z)(function* (n) {
+            function Vt() {
+                return (Vt = (0, o.Z)(function* (n) {
                     var e;
-                    const t = y(n);
+                    const t = O(n);
                     if (
                         (yield t._initializationPromise,
                         null === (e = t.currentUser) || void 0 === e
                             ? void 0
                             : e.isAnonymous)
                     )
-                        return new A({
+                        return new U({
                             user: t.currentUser,
                             providerId: null,
                             operationType: 'signIn',
                         });
-                    const r = yield br(t, { returnSecureToken: !0 }),
-                        i = yield A._fromIdTokenResponse(t, 'signIn', r, !0);
+                    const r = yield Vr(t, { returnSecureToken: !0 }),
+                        i = yield U._fromIdTokenResponse(t, 'signIn', r, !0);
                     return yield t._updateCurrentUser(i.user), i;
                 })).apply(this, arguments);
             }
-            class ke extends c.ZR {
+            class Ze extends d.ZR {
                 constructor(e, t, r, i) {
                     var s;
                     super(t.code, t.message),
                         (this.operationType = r),
                         (this.user = i),
-                        Object.setPrototypeOf(this, ke.prototype),
+                        Object.setPrototypeOf(this, Ze.prototype),
                         (this.customData = {
                             appName: e.name,
                             tenantId:
@@ -2819,34 +2819,34 @@
                         });
                 }
                 static _fromErrorAndOperation(e, t, r, i) {
-                    return new ke(e, t, r, i);
+                    return new Ze(e, t, r, i);
                 }
             }
-            function Or(n, e, t, r) {
+            function Hr(n, e, t, r) {
                 return (
                     'reauthenticate' === e
                         ? t._getReauthenticationResolver(n)
                         : t._getIdTokenResponse(n)
                 ).catch((s) => {
                     throw 'auth/multi-factor-auth-required' === s.code
-                        ? ke._fromErrorAndOperation(n, s, e, r)
+                        ? Ze._fromErrorAndOperation(n, s, e, r)
                         : s;
                 });
             }
-            function Cr(n) {
+            function zr(n) {
                 return new Set(
                     n.map(({ providerId: e }) => e).filter((e) => !!e)
                 );
             }
-            function Rt() {
-                return (Rt = (0, o.Z)(function* (n, e) {
-                    const t = (0, c.m9)(n);
-                    yield Ae(!0, t, e);
-                    const { providerUserInfo: r } = yield Mi(t.auth, {
+            function Wt() {
+                return (Wt = (0, o.Z)(function* (n, e) {
+                    const t = (0, d.m9)(n);
+                    yield Ve(!0, t, e);
+                    const { providerUserInfo: r } = yield Wi(t.auth, {
                             idToken: yield t.getIdToken(),
                             deleteProvider: [e],
                         }),
-                        i = Cr(r || []);
+                        i = zr(r || []);
                     return (
                         (t.providerData = t.providerData.filter((s) =>
                             i.has(s.providerId)
@@ -2857,117 +2857,117 @@
                     );
                 })).apply(this, arguments);
             }
-            function kt(n, e) {
-                return At.apply(this, arguments);
+            function Ht(n, e) {
+                return zt.apply(this, arguments);
             }
-            function At() {
-                return (At = (0, o.Z)(function* (n, e, t = !1) {
-                    const r = yield O(
+            function zt() {
+                return (zt = (0, o.Z)(function* (n, e, t = !1) {
+                    const r = yield q(
                         n,
                         e._linkToIdToken(n.auth, yield n.getIdToken()),
                         t
                     );
-                    return A._forOperation(n, 'link', r);
+                    return U._forOperation(n, 'link', r);
                 })).apply(this, arguments);
             }
-            function Ae(n, e, t) {
-                return St.apply(this, arguments);
+            function Ve(n, e, t) {
+                return Gt.apply(this, arguments);
             }
-            function St() {
-                return (St = (0, o.Z)(function* (n, e, t) {
-                    yield ue(e);
+            function Gt() {
+                return (Gt = (0, o.Z)(function* (n, e, t) {
+                    yield Te(e);
                     const i =
                         !1 === n
                             ? 'provider-already-linked'
                             : 'no-such-provider';
-                    l(Cr(e.providerData).has(t) === n, e.auth, i);
+                    p(zr(e.providerData).has(t) === n, e.auth, i);
                 })).apply(this, arguments);
             }
-            function Lr(n, e) {
-                return Nt.apply(this, arguments);
+            function Gr(n, e) {
+                return qt.apply(this, arguments);
             }
-            function Nt() {
-                return (Nt = (0, o.Z)(function* (n, e, t = !1) {
+            function qt() {
+                return (qt = (0, o.Z)(function* (n, e, t = !1) {
                     const { auth: r } = n,
                         i = 'reauthenticate';
                     try {
-                        const s = yield O(n, Or(r, i, e, n), t);
-                        l(s.idToken, r, 'internal-error');
-                        const a = Ee(s.idToken);
-                        l(a, r, 'internal-error');
+                        const s = yield q(n, Hr(r, i, e, n), t);
+                        p(s.idToken, r, 'internal-error');
+                        const a = Me(s.idToken);
+                        p(a, r, 'internal-error');
                         const { sub: u } = a;
                         return (
-                            l(n.uid === u, r, 'user-mismatch'),
-                            A._forOperation(n, i, s)
+                            p(n.uid === u, r, 'user-mismatch'),
+                            U._forOperation(n, i, s)
                         );
                     } catch (s) {
                         throw (
                             ('auth/user-not-found' ===
                                 (null == s ? void 0 : s.code) &&
-                                v(r, 'user-mismatch'),
+                                k(r, 'user-mismatch'),
                             s)
                         );
                     }
                 })).apply(this, arguments);
             }
-            function Dr(n, e) {
-                return Pt.apply(this, arguments);
+            function qr(n, e) {
+                return jt.apply(this, arguments);
             }
-            function Pt() {
-                return (Pt = (0, o.Z)(function* (n, e, t = !1) {
+            function jt() {
+                return (jt = (0, o.Z)(function* (n, e, t = !1) {
                     const r = 'signIn',
-                        i = yield Or(n, r, e),
-                        s = yield A._fromIdTokenResponse(n, r, i);
+                        i = yield Hr(n, r, e),
+                        s = yield U._fromIdTokenResponse(n, r, i);
                     return t || (yield n._updateCurrentUser(s.user)), s;
                 })).apply(this, arguments);
             }
-            function Se(n, e) {
-                return bt.apply(this, arguments);
+            function We(n, e) {
+                return Bt.apply(this, arguments);
             }
-            function bt() {
-                return (bt = (0, o.Z)(function* (n, e) {
-                    return Dr(y(n), e);
+            function Bt() {
+                return (Bt = (0, o.Z)(function* (n, e) {
+                    return qr(O(n), e);
                 })).apply(this, arguments);
             }
-            function xr(n, e) {
-                return wt.apply(this, arguments);
+            function jr(n, e) {
+                return $t.apply(this, arguments);
             }
-            function wt() {
-                return (wt = (0, o.Z)(function* (n, e) {
-                    const t = (0, c.m9)(n);
-                    return yield Ae(!1, t, e.providerId), kt(t, e);
+            function $t() {
+                return ($t = (0, o.Z)(function* (n, e) {
+                    const t = (0, d.m9)(n);
+                    return yield Ve(!1, t, e.providerId), Ht(t, e);
                 })).apply(this, arguments);
             }
-            function Mr(n, e) {
-                return Ot.apply(this, arguments);
+            function Br(n, e) {
+                return Kt.apply(this, arguments);
             }
-            function Ot() {
-                return (Ot = (0, o.Z)(function* (n, e) {
-                    return Lr((0, c.m9)(n), e);
+            function Kt() {
+                return (Kt = (0, o.Z)(function* (n, e) {
+                    return Gr((0, d.m9)(n), e);
                 })).apply(this, arguments);
             }
-            function Es(n, e) {
-                return Ct.apply(this, arguments);
+            function bs(n, e) {
+                return Jt.apply(this, arguments);
             }
-            function Ct() {
-                return (Ct = (0, o.Z)(function* (n, e) {
-                    return w(
+            function Jt() {
+                return (Jt = (0, o.Z)(function* (n, e) {
+                    return G(
                         n,
                         'POST',
                         '/v1/accounts:signInWithCustomToken',
-                        m(n, e)
+                        S(n, e)
                     );
                 })).apply(this, arguments);
             }
-            function Lt() {
-                return (Lt = (0, o.Z)(function* (n, e) {
-                    const t = y(n),
-                        r = yield Es(t, { token: e, returnSecureToken: !0 }),
-                        i = yield A._fromIdTokenResponse(t, 'signIn', r);
+            function Yt() {
+                return (Yt = (0, o.Z)(function* (n, e) {
+                    const t = O(n),
+                        r = yield bs(t, { token: e, returnSecureToken: !0 }),
+                        i = yield U._fromIdTokenResponse(t, 'signIn', r);
                     return yield t._updateCurrentUser(i.user), i;
                 })).apply(this, arguments);
             }
-            class Ne {
+            class He {
                 constructor(e, t) {
                     (this.factorId = e),
                         (this.uid = t.mfaEnrollmentId),
@@ -2978,27 +2978,27 @@
                 }
                 static _fromServerResponse(e, t) {
                     return 'phoneInfo' in t
-                        ? Dt._fromServerResponse(e, t)
-                        : v(e, 'internal-error');
+                        ? Xt._fromServerResponse(e, t)
+                        : k(e, 'internal-error');
                 }
             }
-            class Dt extends Ne {
+            class Xt extends He {
                 constructor(e) {
                     super('phone', e), (this.phoneNumber = e.phoneInfo);
                 }
                 static _fromServerResponse(e, t) {
-                    return new Dt(t);
+                    return new Xt(t);
                 }
             }
-            function Pe(n, e, t) {
+            function ze(n, e, t) {
                 var r;
-                l(
+                p(
                     (null === (r = t.url) || void 0 === r ? void 0 : r.length) >
                         0,
                     n,
                     'invalid-continue-uri'
                 ),
-                    l(
+                    p(
                         void 0 === t.dynamicLinkDomain ||
                             t.dynamicLinkDomain.length > 0,
                         n,
@@ -3008,14 +3008,14 @@
                     (e.dynamicLinkDomain = t.dynamicLinkDomain),
                     (e.canHandleCodeInApp = t.handleCodeInApp),
                     t.iOS &&
-                        (l(
+                        (p(
                             t.iOS.bundleId.length > 0,
                             n,
                             'missing-ios-bundle-id'
                         ),
                         (e.iOSBundleId = t.iOS.bundleId)),
                     t.android &&
-                        (l(
+                        (p(
                             t.android.packageName.length > 0,
                             n,
                             'missing-android-pkg-name'
@@ -3025,46 +3025,46 @@
                             t.android.minimumVersion),
                         (e.androidPackageName = t.android.packageName));
             }
-            function xt() {
-                return (xt = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n),
+            function Qt() {
+                return (Qt = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n),
                         i = { requestType: 'PASSWORD_RESET', email: e };
-                    t && Pe(r, i, t), yield is(r, i);
+                    t && ze(r, i, t), yield cs(r, i);
                 })).apply(this, arguments);
             }
-            function Mt() {
-                return (Mt = (0, o.Z)(function* (n, e, t) {
-                    yield Rr((0, c.m9)(n), { oobCode: e, newPassword: t });
+            function en() {
+                return (en = (0, o.Z)(function* (n, e, t) {
+                    yield Dr((0, d.m9)(n), { oobCode: e, newPassword: t });
                 })).apply(this, arguments);
             }
-            function Ut() {
-                return (Ut = (0, o.Z)(function* (n, e) {
-                    yield ts((0, c.m9)(n), { oobCode: e });
+            function tn() {
+                return (tn = (0, o.Z)(function* (n, e) {
+                    yield os((0, d.m9)(n), { oobCode: e });
                 })).apply(this, arguments);
             }
-            function Ur(n, e) {
-                return Ft.apply(this, arguments);
+            function $r(n, e) {
+                return nn.apply(this, arguments);
             }
-            function Ft() {
-                return (Ft = (0, o.Z)(function* (n, e) {
-                    const t = (0, c.m9)(n),
-                        r = yield Rr(t, { oobCode: e }),
+            function nn() {
+                return (nn = (0, o.Z)(function* (n, e) {
+                    const t = (0, d.m9)(n),
+                        r = yield Dr(t, { oobCode: e }),
                         i = r.requestType;
-                    switch ((l(i, t, 'internal-error'), i)) {
+                    switch ((p(i, t, 'internal-error'), i)) {
                         case 'EMAIL_SIGNIN':
                             break;
                         case 'VERIFY_AND_CHANGE_EMAIL':
-                            l(r.newEmail, t, 'internal-error');
+                            p(r.newEmail, t, 'internal-error');
                             break;
                         case 'REVERT_SECOND_FACTOR_ADDITION':
-                            l(r.mfaInfo, t, 'internal-error');
+                            p(r.mfaInfo, t, 'internal-error');
                         default:
-                            l(r.email, t, 'internal-error');
+                            p(r.email, t, 'internal-error');
                     }
                     let s = null;
                     return (
                         r.mfaInfo &&
-                            (s = Ne._fromServerResponse(y(t), r.mfaInfo)),
+                            (s = He._fromServerResponse(O(t), r.mfaInfo)),
                         {
                             data: {
                                 email:
@@ -3082,116 +3082,116 @@
                     );
                 })).apply(this, arguments);
             }
-            function Zt() {
-                return (Zt = (0, o.Z)(function* (n, e) {
-                    const { data: t } = yield Ur((0, c.m9)(n), e);
+            function rn() {
+                return (rn = (0, o.Z)(function* (n, e) {
+                    const { data: t } = yield $r((0, d.m9)(n), e);
                     return t.email;
                 })).apply(this, arguments);
             }
-            function Vt() {
-                return (Vt = (0, o.Z)(function* (n, e, t) {
-                    const r = y(n),
-                        i = yield br(r, {
+            function sn() {
+                return (sn = (0, o.Z)(function* (n, e, t) {
+                    const r = O(n),
+                        i = yield Vr(r, {
                             returnSecureToken: !0,
                             email: e,
                             password: t,
                         }),
-                        s = yield A._fromIdTokenResponse(r, 'signIn', i);
+                        s = yield U._fromIdTokenResponse(r, 'signIn', i);
                     return yield r._updateCurrentUser(s.user), s;
                 })).apply(this, arguments);
             }
-            function Wt() {
-                return (Wt = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n),
+            function on() {
+                return (on = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n),
                         i = { requestType: 'EMAIL_SIGNIN', email: e };
-                    l(t.handleCodeInApp, r, 'argument-error'),
-                        t && Pe(r, i, t),
-                        yield ss(r, i);
+                    p(t.handleCodeInApp, r, 'argument-error'),
+                        t && ze(r, i, t),
+                        yield ls(r, i);
                 })).apply(this, arguments);
             }
-            function Ht() {
-                return (Ht = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n),
-                        i = yt.credentialWithLink(e, t || ie());
+            function an() {
+                return (an = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n),
+                        i = Ft.credentialWithLink(e, t || E());
                     return (
-                        l(
+                        p(
                             i._tenantId === (r.tenantId || null),
                             r,
                             'tenant-id-mismatch'
                         ),
-                        Se(r, i)
+                        We(r, i)
                     );
                 })).apply(this, arguments);
             }
-            function Cs(n, e) {
-                return zt.apply(this, arguments);
+            function Us(n, e) {
+                return un.apply(this, arguments);
             }
-            function zt() {
-                return (zt = (0, o.Z)(function* (n, e) {
-                    return I(n, 'POST', '/v1/accounts:createAuthUri', m(n, e));
+            function un() {
+                return (un = (0, o.Z)(function* (n, e) {
+                    return N(n, 'POST', '/v1/accounts:createAuthUri', S(n, e));
                 })).apply(this, arguments);
             }
-            function Gt() {
-                return (Gt = (0, o.Z)(function* (n, e) {
+            function cn() {
+                return (cn = (0, o.Z)(function* (n, e) {
                     const r = {
                             identifier: e,
-                            continueUri: ze() ? ie() : 'http://localhost',
+                            continueUri: R() ? E() : 'http://localhost',
                         },
-                        { signinMethods: i } = yield Cs((0, c.m9)(n), r);
+                        { signinMethods: i } = yield Us((0, d.m9)(n), r);
                     return i || [];
                 })).apply(this, arguments);
             }
-            function qt() {
-                return (qt = (0, o.Z)(function* (n, e) {
-                    const t = (0, c.m9)(n),
+            function ln() {
+                return (ln = (0, o.Z)(function* (n, e) {
+                    const t = (0, d.m9)(n),
                         i = {
                             requestType: 'VERIFY_EMAIL',
                             idToken: yield n.getIdToken(),
                         };
-                    e && Pe(t.auth, i, e);
-                    const { email: s } = yield rs(t.auth, i);
+                    e && ze(t.auth, i, e);
+                    const { email: s } = yield us(t.auth, i);
                     s !== n.email && (yield n.reload());
                 })).apply(this, arguments);
             }
-            function Bt() {
-                return (Bt = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n),
+            function dn() {
+                return (dn = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n),
                         s = {
                             requestType: 'VERIFY_AND_CHANGE_EMAIL',
                             idToken: yield n.getIdToken(),
                             newEmail: e,
                         };
-                    t && Pe(r.auth, s, t);
-                    const { email: a } = yield os(r.auth, s);
+                    t && ze(r.auth, s, t);
+                    const { email: a } = yield ds(r.auth, s);
                     a !== n.email && (yield n.reload());
                 })).apply(this, arguments);
             }
-            function Ms(n, e) {
-                return $t.apply(this, arguments);
+            function Ws(n, e) {
+                return hn.apply(this, arguments);
             }
-            function $t() {
-                return ($t = (0, o.Z)(function* (n, e) {
-                    return I(n, 'POST', '/v1/accounts:update', e);
+            function hn() {
+                return (hn = (0, o.Z)(function* (n, e) {
+                    return N(n, 'POST', '/v1/accounts:update', e);
                 })).apply(this, arguments);
             }
-            function Kt() {
-                return (Kt = (0, o.Z)(function* (
+            function fn() {
+                return (fn = (0, o.Z)(function* (
                     n,
                     { displayName: e, photoURL: t }
                 ) {
                     if (void 0 === e && void 0 === t) return;
-                    const r = (0, c.m9)(n),
+                    const r = (0, d.m9)(n),
                         s = {
                             idToken: yield r.getIdToken(),
                             displayName: e,
                             photoUrl: t,
                             returnSecureToken: !0,
                         },
-                        a = yield O(r, Ms(r.auth, s));
+                        a = yield q(r, Ws(r.auth, s));
                     (r.displayName = a.displayName || null),
                         (r.photoURL = a.photoUrl || null);
                     const u = r.providerData.find(
-                        ({ providerId: d }) => 'password' === d
+                        ({ providerId: m }) => 'password' === m
                     );
                     u &&
                         ((u.displayName = r.displayName),
@@ -3199,39 +3199,39 @@
                         yield r._updateTokensIfNecessary(a);
                 })).apply(this, arguments);
             }
-            function Fr(n, e, t) {
-                return jt.apply(this, arguments);
+            function Kr(n, e, t) {
+                return pn.apply(this, arguments);
             }
-            function jt() {
-                return (jt = (0, o.Z)(function* (n, e, t) {
+            function pn() {
+                return (pn = (0, o.Z)(function* (n, e, t) {
                     const { auth: r } = n,
                         s = {
                             idToken: yield n.getIdToken(),
                             returnSecureToken: !0,
                         };
                     e && (s.email = e), t && (s.password = t);
-                    const a = yield O(n, kr(r, s));
+                    const a = yield q(n, xr(r, s));
                     yield n._updateTokensIfNecessary(a, !0);
                 })).apply(this, arguments);
             }
-            class te {
+            class pe {
                 constructor(e, t, r = {}) {
                     (this.isNewUser = e),
                         (this.providerId = t),
                         (this.profile = r);
                 }
             }
-            class Zr extends te {
+            class Jr extends pe {
                 constructor(e, t, r, i) {
                     super(e, t, r), (this.username = i);
                 }
             }
-            class Ws extends te {
+            class js extends pe {
                 constructor(e, t) {
                     super(e, 'facebook.com', t);
                 }
             }
-            class Hs extends Zr {
+            class Bs extends Jr {
                 constructor(e, t) {
                     super(
                         e,
@@ -3245,21 +3245,21 @@
                     );
                 }
             }
-            class zs extends te {
+            class $s extends pe {
                 constructor(e, t) {
                     super(e, 'google.com', t);
                 }
             }
-            class Gs extends Zr {
+            class Ks extends Jr {
                 constructor(e, t, r) {
                     super(e, 'twitter.com', t, r);
                 }
             }
-            function qs(n) {
+            function Js(n) {
                 const { user: e, _tokenResponse: t } = n;
                 return e.isAnonymous && !t
                     ? { providerId: null, isNewUser: !1, profile: null }
-                    : (function Vs(n) {
+                    : (function qs(n) {
                           var e, t;
                           if (!n) return null;
                           const { providerId: r } = n,
@@ -3274,14 +3274,14 @@
                               const a =
                                   null ===
                                       (t =
-                                          null === (e = Ee(n.idToken)) ||
+                                          null === (e = Me(n.idToken)) ||
                                           void 0 === e
                                               ? void 0
                                               : e.firebase) || void 0 === t
                                       ? void 0
                                       : t.sign_in_provider;
                               if (a)
-                                  return new te(
+                                  return new pe(
                                       s,
                                       'anonymous' !== a && 'custom' !== a
                                           ? a
@@ -3291,30 +3291,30 @@
                           if (!r) return null;
                           switch (r) {
                               case 'facebook.com':
-                                  return new Ws(s, i);
+                                  return new js(s, i);
                               case 'github.com':
-                                  return new Hs(s, i);
+                                  return new Bs(s, i);
                               case 'google.com':
-                                  return new zs(s, i);
+                                  return new $s(s, i);
                               case 'twitter.com':
-                                  return new Gs(s, i, n.screenName || null);
+                                  return new Ks(s, i, n.screenName || null);
                               case 'custom':
                               case 'anonymous':
-                                  return new te(s, null);
+                                  return new pe(s, null);
                               default:
-                                  return new te(s, r, i);
+                                  return new pe(s, r, i);
                           }
                       })(t);
             }
-            class z {
+            class re {
                 constructor(e, t) {
                     (this.type = e), (this.credential = t);
                 }
                 static _fromIdtoken(e) {
-                    return new z('enroll', e);
+                    return new re('enroll', e);
                 }
                 static _fromMfaPendingCredential(e) {
-                    return new z('signin', e);
+                    return new re('signin', e);
                 }
                 toJSON() {
                     return {
@@ -3333,7 +3333,7 @@
                                 ? void 0
                                 : t.pendingCredential
                         )
-                            return z._fromMfaPendingCredential(
+                            return re._fromMfaPendingCredential(
                                 e.multiFactorSession.pendingCredential
                             );
                         if (
@@ -3341,63 +3341,65 @@
                                 ? void 0
                                 : r.idToken
                         )
-                            return z._fromIdtoken(e.multiFactorSession.idToken);
+                            return re._fromIdtoken(
+                                e.multiFactorSession.idToken
+                            );
                     }
                     return null;
                 }
             }
-            class Yt {
+            class _n {
                 constructor(e, t, r) {
                     (this.session = e),
                         (this.hints = t),
                         (this.signInResolver = r);
                 }
                 static _fromError(e, t) {
-                    const r = y(e),
+                    const r = O(e),
                         i = t.customData._serverResponse,
                         s = (i.mfaInfo || []).map((u) =>
-                            Ne._fromServerResponse(r, u)
+                            He._fromServerResponse(r, u)
                         );
-                    l(i.mfaPendingCredential, r, 'internal-error');
-                    const a = z._fromMfaPendingCredential(
+                    p(i.mfaPendingCredential, r, 'internal-error');
+                    const a = re._fromMfaPendingCredential(
                         i.mfaPendingCredential
                     );
-                    return new Yt(
+                    return new _n(
                         a,
                         s,
                         (function () {
-                            var u = (0, o.Z)(function* (d) {
-                                const h = yield d._process(r, a);
+                            var u = (0, o.Z)(function* (m) {
+                                const g = yield m._process(r, a);
                                 delete i.mfaInfo, delete i.mfaPendingCredential;
-                                const p = Object.assign(Object.assign({}, i), {
-                                    idToken: h.idToken,
-                                    refreshToken: h.refreshToken,
+                                const y = Object.assign(Object.assign({}, i), {
+                                    idToken: g.idToken,
+                                    refreshToken: g.refreshToken,
                                 });
                                 switch (t.operationType) {
                                     case 'signIn':
-                                        const f = yield A._fromIdTokenResponse(
+                                        const I = yield U._fromIdTokenResponse(
                                             r,
                                             t.operationType,
-                                            p
+                                            y
                                         );
                                         return (
-                                            yield r._updateCurrentUser(f.user),
-                                            f
+                                            yield r._updateCurrentUser(I.user),
+                                            I
                                         );
                                     case 'reauthenticate':
                                         return (
-                                            l(t.user, r, 'internal-error'),
-                                            A._forOperation(
+                                            p(t.user, r, 'internal-error'),
+                                            U._forOperation(
                                                 t.user,
                                                 t.operationType,
-                                                p
+                                                y
                                             )
                                         );
                                     default:
-                                        v(r, 'internal-error');
+                                        k(r, 'internal-error');
                                 }
                             });
-                            return function (d) {
+                            return function (m) {
                                 return u.apply(this, arguments);
                             };
                         })()
@@ -3410,32 +3412,32 @@
                     })();
                 }
             }
-            function $s(n, e) {
-                return I(
+            function Xs(n, e) {
+                return N(
                     n,
                     'POST',
                     '/v2/accounts/mfaEnrollment:start',
-                    m(n, e)
+                    S(n, e)
                 );
             }
-            class Xt {
+            class gn {
                 constructor(e) {
                     (this.user = e),
                         (this.enrolledFactors = []),
                         e._onReload((t) => {
                             t.mfaInfo &&
                                 (this.enrolledFactors = t.mfaInfo.map((r) =>
-                                    Ne._fromServerResponse(e.auth, r)
+                                    He._fromServerResponse(e.auth, r)
                                 ));
                         });
                 }
                 static _fromUser(e) {
-                    return new Xt(e);
+                    return new gn(e);
                 }
                 getSession() {
                     var e = this;
                     return (0, o.Z)(function* () {
-                        return z._fromIdtoken(yield e.user.getIdToken());
+                        return re._fromIdtoken(yield e.user.getIdToken());
                     })();
                 }
                 enroll(e, t) {
@@ -3443,7 +3445,7 @@
                     return (0, o.Z)(function* () {
                         const i = e,
                             s = yield r.getSession(),
-                            a = yield O(r.user, i._process(r.user.auth, s, t));
+                            a = yield q(r.user, i._process(r.user.auth, s, t));
                         return (
                             yield r.user._updateTokensIfNecessary(a),
                             r.user.reload()
@@ -3455,14 +3457,14 @@
                     return (0, o.Z)(function* () {
                         const r = 'string' == typeof e ? e : e.uid,
                             i = yield t.user.getIdToken(),
-                            s = yield O(
+                            s = yield q(
                                 t.user,
-                                (function js(n, e) {
-                                    return I(
+                                (function eo(n, e) {
+                                    return N(
                                         n,
                                         'POST',
                                         '/v2/accounts/mfaEnrollment:withdraw',
-                                        m(n, e)
+                                        S(n, e)
                                     );
                                 })(t.user.auth, {
                                     idToken: i,
@@ -3481,17 +3483,17 @@
                     })();
                 }
             }
-            const Qt = new WeakMap(),
-                be = '__sak';
-            class Vr {
+            const vn = new WeakMap(),
+                Ge = '__sak';
+            class Yr {
                 constructor(e, t) {
                     (this.storageRetriever = e), (this.type = t);
                 }
                 _isAvailable() {
                     try {
                         return this.storage
-                            ? (this.storage.setItem(be, '1'),
-                              this.storage.removeItem(be),
+                            ? (this.storage.setItem(Ge, '1'),
+                              this.storage.removeItem(Ge),
                               Promise.resolve(!0))
                             : Promise.resolve(!1);
                     } catch (e) {
@@ -3515,8 +3517,8 @@
                     return this.storageRetriever();
                 }
             }
-            const we = (() => {
-                    class n extends Vr {
+            const qe = (() => {
+                    class n extends Yr {
                         constructor() {
                             super(() => window.localStorage, 'LOCAL'),
                                 (this.boundEventHandler = (t, r) =>
@@ -3525,11 +3527,11 @@
                                 (this.localCache = {}),
                                 (this.pollTimer = null),
                                 (this.safariLocalStorageNotSynced =
-                                    (function Ys() {
-                                        const n = (0, c.z$)();
-                                        return rt(n) || J(n);
+                                    (function no() {
+                                        const n = (0, d.z$)();
+                                        return Et(n) || ce(n);
                                     })() &&
-                                    (function ji() {
+                                    (function es() {
                                         try {
                                             return !(
                                                 !window || window === window.top
@@ -3538,7 +3540,7 @@
                                             return !1;
                                         }
                                     })()),
-                                (this.fallbackToPolling = vr()),
+                                (this.fallbackToPolling = Pr()),
                                 (this._shouldAllowMigration = !0);
                         }
                         forAllChangedKeys(t) {
@@ -3551,8 +3553,8 @@
                         onStorageEvent(t, r = !1) {
                             if (!t.key)
                                 return void this.forAllChangedKeys(
-                                    (u, d, h) => {
-                                        this.notifyListeners(u, h);
+                                    (u, m, g) => {
+                                        this.notifyListeners(u, g);
                                     }
                                 );
                             const i = t.key;
@@ -3577,9 +3579,9 @@
                                         this.notifyListeners(i, u);
                                 },
                                 a = this.storage.getItem(i);
-                            !(function Ki() {
+                            !(function Qi() {
                                 return (
-                                    (0, c.w1)() && 10 === document.documentMode
+                                    (0, d.w1)() && 10 === document.documentMode
                                 );
                             })() ||
                             a === t.newValue ||
@@ -3671,8 +3673,8 @@
                     }
                     return (n.type = 'LOCAL'), n;
                 })(),
-                F = (() => {
-                    class n extends Vr {
+                J = (() => {
+                    class n extends Yr {
                         constructor() {
                             super(() => window.sessionStorage, 'SESSION');
                         }
@@ -3681,7 +3683,7 @@
                     }
                     return (n.type = 'SESSION'), n;
                 })();
-            let to = (() => {
+            let oo = (() => {
                 class n {
                     constructor(t) {
                         (this.eventTarget = t),
@@ -3705,24 +3707,24 @@
                         return (0, o.Z)(function* () {
                             const i = t,
                                 { eventId: s, eventType: a, data: u } = i.data,
-                                d = r.handlersMap[a];
-                            if (!(null == d ? void 0 : d.size)) return;
+                                m = r.handlersMap[a];
+                            if (!(null == m ? void 0 : m.size)) return;
                             i.ports[0].postMessage({
                                 status: 'ack',
                                 eventId: s,
                                 eventType: a,
                             });
-                            const h = Array.from(d).map(
+                            const g = Array.from(m).map(
                                     (function () {
-                                        var f = (0, o.Z)(function* (g) {
-                                            return g(i.origin, u);
+                                        var I = (0, o.Z)(function* (P) {
+                                            return P(i.origin, u);
                                         });
-                                        return function (g) {
-                                            return f.apply(this, arguments);
+                                        return function (P) {
+                                            return I.apply(this, arguments);
                                         };
                                     })()
                                 ),
-                                p = yield (function eo(n) {
+                                y = yield (function so(n) {
                                     return Promise.all(
                                         n.map(
                                             (function () {
@@ -3748,12 +3750,12 @@
                                             })()
                                         )
                                     );
-                                })(h);
+                                })(g);
                             i.ports[0].postMessage({
                                 status: 'done',
                                 eventId: s,
                                 eventType: a,
-                                response: p,
+                                response: y,
                             });
                         })();
                     }
@@ -3782,12 +3784,12 @@
                 }
                 return (n.receivers = []), n;
             })();
-            function fe(n = '', e = 10) {
+            function Se(n = '', e = 10) {
                 let t = '';
                 for (let r = 0; r < e; r++) t += Math.floor(10 * Math.random());
                 return n + t;
             }
-            class no {
+            class ao {
                 constructor(e) {
                     (this.target = e), (this.handlers = new Set());
                 }
@@ -3809,32 +3811,32 @@
                                 : null;
                         if (!s) throw new Error('connection_unavailable');
                         let a, u;
-                        return new Promise((d, h) => {
-                            const p = fe('', 20);
+                        return new Promise((m, g) => {
+                            const y = Se('', 20);
                             s.port1.start();
-                            const f = setTimeout(() => {
-                                h(new Error('unsupported_event'));
+                            const I = setTimeout(() => {
+                                g(new Error('unsupported_event'));
                             }, r);
                             (u = {
                                 messageChannel: s,
-                                onMessage(g) {
-                                    const N = g;
-                                    if (N.data.eventId === p)
-                                        switch (N.data.status) {
+                                onMessage(P) {
+                                    const F = P;
+                                    if (F.data.eventId === y)
+                                        switch (F.data.status) {
                                             case 'ack':
-                                                clearTimeout(f),
+                                                clearTimeout(I),
                                                     (a = setTimeout(() => {
-                                                        h(new Error('timeout'));
+                                                        g(new Error('timeout'));
                                                     }, 3e3));
                                                 break;
                                             case 'done':
                                                 clearTimeout(a),
-                                                    d(N.data.response);
+                                                    m(F.data.response);
                                                 break;
                                             default:
-                                                clearTimeout(f),
+                                                clearTimeout(I),
                                                     clearTimeout(a),
-                                                    h(
+                                                    g(
                                                         new Error(
                                                             'invalid_response'
                                                         )
@@ -3848,7 +3850,7 @@
                                     u.onMessage
                                 ),
                                 i.target.postMessage(
-                                    { eventType: e, eventId: p, data: t },
+                                    { eventType: e, eventId: y, data: t },
                                     [s.port2]
                                 );
                         }).finally(() => {
@@ -3857,17 +3859,17 @@
                     })();
                 }
             }
-            function _() {
+            function w() {
                 return window;
             }
-            function en() {
+            function In() {
                 return (
-                    void 0 !== _().WorkerGlobalScope &&
-                    'function' == typeof _().importScripts
+                    void 0 !== w().WorkerGlobalScope &&
+                    'function' == typeof w().importScripts
                 );
             }
-            function tn() {
-                return (tn = (0, o.Z)(function* () {
+            function yn() {
+                return (yn = (0, o.Z)(function* () {
                     if (!(null == navigator ? void 0 : navigator.serviceWorker))
                         return null;
                     try {
@@ -3877,10 +3879,10 @@
                     }
                 })).apply(this, arguments);
             }
-            const Wr = 'firebaseLocalStorageDb',
-                Oe = 'firebaseLocalStorage',
-                Hr = 'fbase_key';
-            class pe {
+            const Xr = 'firebaseLocalStorageDb',
+                je = 'firebaseLocalStorage',
+                Qr = 'fbase_key';
+            class we {
                 constructor(e) {
                     this.request = e;
                 }
@@ -3895,13 +3897,13 @@
                     });
                 }
             }
-            function Ce(n, e) {
+            function Be(n, e) {
                 return n
-                    .transaction([Oe], e ? 'readwrite' : 'readonly')
-                    .objectStore(Oe);
+                    .transaction([je], e ? 'readwrite' : 'readonly')
+                    .objectStore(je);
             }
-            function nn() {
-                const n = indexedDB.open(Wr, 1);
+            function En() {
+                const n = indexedDB.open(Xr, 1);
                 return new Promise((e, t) => {
                     n.addEventListener('error', () => {
                         t(n.error);
@@ -3909,7 +3911,7 @@
                         n.addEventListener('upgradeneeded', () => {
                             const r = n.result;
                             try {
-                                r.createObjectStore(Oe, { keyPath: Hr });
+                                r.createObjectStore(je, { keyPath: Qr });
                             } catch (i) {
                                 t(i);
                             }
@@ -3918,40 +3920,40 @@
                             'success',
                             (0, o.Z)(function* () {
                                 const r = n.result;
-                                r.objectStoreNames.contains(Oe)
+                                r.objectStoreNames.contains(je)
                                     ? e(r)
                                     : (r.close(),
-                                      yield (function uo() {
+                                      yield (function po() {
                                           const n =
-                                              indexedDB.deleteDatabase(Wr);
-                                          return new pe(n).toPromise();
+                                              indexedDB.deleteDatabase(Xr);
+                                          return new we(n).toPromise();
                                       })(),
-                                      e(yield nn()));
+                                      e(yield En()));
                             })
                         );
                 });
             }
-            function zr(n, e, t) {
-                return rn.apply(this, arguments);
+            function ei(n, e, t) {
+                return Tn.apply(this, arguments);
             }
-            function rn() {
-                return (rn = (0, o.Z)(function* (n, e, t) {
-                    const r = Ce(n, !0).put({ [Hr]: e, value: t });
-                    return new pe(r).toPromise();
+            function Tn() {
+                return (Tn = (0, o.Z)(function* (n, e, t) {
+                    const r = Be(n, !0).put({ [Qr]: e, value: t });
+                    return new we(r).toPromise();
                 })).apply(this, arguments);
             }
-            function sn() {
-                return (sn = (0, o.Z)(function* (n, e) {
-                    const t = Ce(n, !1).get(e),
-                        r = yield new pe(t).toPromise();
+            function Rn() {
+                return (Rn = (0, o.Z)(function* (n, e) {
+                    const t = Be(n, !1).get(e),
+                        r = yield new we(t).toPromise();
                     return void 0 === r ? null : r.value;
                 })).apply(this, arguments);
             }
-            function Gr(n, e) {
-                const t = Ce(n, !0).delete(e);
-                return new pe(t).toPromise();
+            function ti(n, e) {
+                const t = Be(n, !0).delete(e);
+                return new we(t).toPromise();
             }
-            const ne = (() => {
+            const me = (() => {
                 class n {
                     constructor() {
                         (this.type = 'LOCAL'),
@@ -3973,7 +3975,7 @@
                     _openDb() {
                         var t = this;
                         return (0, o.Z)(function* () {
-                            return t.db || (t.db = yield nn()), t.db;
+                            return t.db || (t.db = yield En()), t.db;
                         })();
                     }
                     _withRetries(t) {
@@ -3993,7 +3995,7 @@
                     initializeServiceWorkerMessaging() {
                         var t = this;
                         return (0, o.Z)(function* () {
-                            return en()
+                            return In()
                                 ? t.initializeReceiver()
                                 : t.initializeSender();
                         })();
@@ -4001,9 +4003,9 @@
                     initializeReceiver() {
                         var t = this;
                         return (0, o.Z)(function* () {
-                            (t.receiver = to._getInstance(
-                                (function oo() {
-                                    return en() ? self : null;
+                            (t.receiver = oo._getInstance(
+                                (function ho() {
+                                    return In() ? self : null;
                                 })()
                             )),
                                 t.receiver._subscribe(
@@ -4040,13 +4042,13 @@
                         return (0, o.Z)(function* () {
                             var r, i;
                             if (
-                                ((t.activeServiceWorker = yield (function io() {
-                                    return tn.apply(this, arguments);
+                                ((t.activeServiceWorker = yield (function co() {
+                                    return yn.apply(this, arguments);
                                 })()),
                                 !t.activeServiceWorker)
                             )
                                 return;
-                            t.sender = new no(t.activeServiceWorker);
+                            t.sender = new ao(t.activeServiceWorker);
                             const s = yield t.sender._send('ping', {}, 800);
                             !s ||
                                 ((null === (r = s[0]) || void 0 === r
@@ -4064,7 +4066,7 @@
                             if (
                                 r.sender &&
                                 r.activeServiceWorker &&
-                                (function so() {
+                                (function lo() {
                                     var n;
                                     return (
                                         (null ===
@@ -4093,9 +4095,9 @@
                         return (0, o.Z)(function* () {
                             try {
                                 if (!indexedDB) return !1;
-                                const t = yield nn();
+                                const t = yield En();
                                 return (
-                                    yield zr(t, be, '1'), yield Gr(t, be), !0
+                                    yield ei(t, Ge, '1'), yield ti(t, Ge), !0
                                 );
                             } catch (t) {}
                             return !1;
@@ -4119,7 +4121,7 @@
                                 (0, o.Z)(function* () {
                                     return (
                                         yield i._withRetries((s) =>
-                                            zr(s, t, r)
+                                            ei(s, t, r)
                                         ),
                                         (i.localCache[t] = r),
                                         i.notifyServiceWorker(t)
@@ -4132,8 +4134,8 @@
                         var r = this;
                         return (0, o.Z)(function* () {
                             const i = yield r._withRetries((s) =>
-                                (function co(n, e) {
-                                    return sn.apply(this, arguments);
+                                (function mo(n, e) {
+                                    return Rn.apply(this, arguments);
                                 })(s, t)
                             );
                             return (r.localCache[t] = i), i;
@@ -4145,7 +4147,7 @@
                             return r._withPendingWrite(
                                 (0, o.Z)(function* () {
                                     return (
-                                        yield r._withRetries((i) => Gr(i, t)),
+                                        yield r._withRetries((i) => ti(i, t)),
                                         delete r.localCache[t],
                                         r.notifyServiceWorker(t)
                                     );
@@ -4157,8 +4159,8 @@
                         var t = this;
                         return (0, o.Z)(function* () {
                             const r = yield t._withRetries((a) => {
-                                const u = Ce(a, !1).getAll();
-                                return new pe(u).toPromise();
+                                const u = Be(a, !1).getAll();
+                                return new we(u).toPromise();
                             });
                             if (!r) return [];
                             if (0 !== t.pendingWrites) return [];
@@ -4214,29 +4216,29 @@
                 }
                 return (n.type = 'LOCAL'), n;
             })();
-            function fo(n, e) {
-                return I(n, 'POST', '/v2/accounts/mfaSignIn:start', m(n, e));
+            function vo(n, e) {
+                return N(n, 'POST', '/v2/accounts/mfaSignIn:start', S(n, e));
             }
-            function on() {
-                return (on = (0, o.Z)(function* (n) {
+            function An() {
+                return (An = (0, o.Z)(function* (n) {
                     return (
-                        (yield I(n, 'GET', '/v1/recaptchaParams'))
+                        (yield N(n, 'GET', '/v1/recaptchaParams'))
                             .recaptchaSiteKey || ''
                     );
                 })).apply(this, arguments);
             }
-            function qr(n) {
+            function ni(n) {
                 return new Promise((e, t) => {
                     const r = document.createElement('script');
                     r.setAttribute('src', n),
                         (r.onload = e),
                         (r.onerror = (i) => {
-                            const s = E('internal-error');
+                            const s = b('internal-error');
                             (s.customData = i), t(s);
                         }),
                         (r.type = 'text/javascript'),
                         (r.charset = 'UTF-8'),
-                        (function _o() {
+                        (function Eo() {
                             var n, e;
                             return null !==
                                 (e =
@@ -4252,14 +4254,14 @@
                         })().appendChild(r);
                 });
             }
-            function Br(n) {
+            function ri(n) {
                 return `__${n}${Math.floor(1e6 * Math.random())}`;
             }
-            const Le = 1e12;
-            class Io {
+            const $e = 1e12;
+            class Ao {
                 constructor(e) {
                     (this.auth = e),
-                        (this.counter = Le),
+                        (this.counter = $e),
                         (this._widgets = new Map());
                 }
                 render(e, t) {
@@ -4267,7 +4269,7 @@
                     return (
                         this._widgets.set(
                             r,
-                            new yo(e, this.auth.name, t || {})
+                            new ko(e, this.auth.name, t || {})
                         ),
                         this.counter++,
                         r
@@ -4275,7 +4277,7 @@
                 }
                 reset(e) {
                     var t;
-                    const r = e || Le;
+                    const r = e || $e;
                     null === (t = this._widgets.get(r)) ||
                         void 0 === t ||
                         t.delete(),
@@ -4284,7 +4286,7 @@
                 getResponse(e) {
                     var t;
                     return (
-                        (null === (t = this._widgets.get(e || Le)) ||
+                        (null === (t = this._widgets.get(e || $e)) ||
                         void 0 === t
                             ? void 0
                             : t.getResponse()) || ''
@@ -4295,7 +4297,7 @@
                     return (0, o.Z)(function* () {
                         var r;
                         return (
-                            null === (r = t._widgets.get(e || Le)) ||
+                            null === (r = t._widgets.get(e || $e)) ||
                                 void 0 === r ||
                                 r.execute(),
                             ''
@@ -4303,7 +4305,7 @@
                     })();
                 }
             }
-            class yo {
+            class ko {
                 constructor(e, t, r) {
                     (this.params = r),
                         (this.timerId = null),
@@ -4314,7 +4316,7 @@
                         });
                     const i =
                         'string' == typeof e ? document.getElementById(e) : e;
-                    l(i, 'argument-error', { appName: t }),
+                    p(i, 'argument-error', { appName: t }),
                         (this.container = i),
                         (this.isVisible = 'invisible' !== this.params.size),
                         this.isVisible
@@ -4341,7 +4343,7 @@
                     this.checkIfDeleted(),
                         !this.timerId &&
                             (this.timerId = window.setTimeout(() => {
-                                this.responseToken = (function Eo(n) {
+                                this.responseToken = (function bo(n) {
                                     const e = [],
                                         t =
                                             '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -4379,18 +4381,18 @@
                         throw new Error('reCAPTCHA mock was already deleted!');
                 }
             }
-            const an = Br('rcb'),
-                To = new se(3e4, 6e4);
-            class ko {
+            const kn = ri('rcb'),
+                So = new M(3e4, 6e4);
+            class Po {
                 constructor() {
                     (this.hostLanguage = ''),
                         (this.counter = 0),
-                        (this.librarySeparatelyLoaded = !!_().grecaptcha);
+                        (this.librarySeparatelyLoaded = !!w().grecaptcha);
                 }
                 load(e, t = '') {
                     return (
-                        l(
-                            (function Ao(n) {
+                        p(
+                            (function No(n) {
                                 return (
                                     n.length <= 6 &&
                                     /^\s*[a-zA-Z0-9\-]*\s*$/.test(n)
@@ -4400,34 +4402,34 @@
                             'argument-error'
                         ),
                         this.shouldResolveImmediately(t)
-                            ? Promise.resolve(_().grecaptcha)
+                            ? Promise.resolve(w().grecaptcha)
                             : new Promise((r, i) => {
-                                  const s = _().setTimeout(() => {
-                                      i(E(e, 'network-request-failed'));
-                                  }, To.get());
-                                  (_()[an] = () => {
-                                      _().clearTimeout(s), delete _()[an];
-                                      const u = _().grecaptcha;
+                                  const s = w().setTimeout(() => {
+                                      i(b(e, 'network-request-failed'));
+                                  }, So.get());
+                                  (w()[kn] = () => {
+                                      w().clearTimeout(s), delete w()[kn];
+                                      const u = w().grecaptcha;
                                       if (!u)
-                                          return void i(E(e, 'internal-error'));
-                                      const d = u.render;
-                                      (u.render = (h, p) => {
-                                          const f = d(h, p);
-                                          return this.counter++, f;
+                                          return void i(b(e, 'internal-error'));
+                                      const m = u.render;
+                                      (u.render = (g, y) => {
+                                          const I = m(g, y);
+                                          return this.counter++, I;
                                       }),
                                           (this.hostLanguage = t),
                                           r(u);
                                   }),
-                                      qr(
+                                      ni(
                                           `https://www.google.com/recaptcha/api.js??${(0,
-                                          c.xO)({
-                                              onload: an,
+                                          d.xO)({
+                                              onload: kn,
                                               render: 'explicit',
                                               hl: t,
                                           })}`
                                       ).catch(() => {
                                           clearTimeout(s),
-                                              i(E(e, 'internal-error'));
+                                              i(b(e, 'internal-error'));
                                       });
                               })
                     );
@@ -4437,51 +4439,51 @@
                 }
                 shouldResolveImmediately(e) {
                     return (
-                        !!_().grecaptcha &&
+                        !!w().grecaptcha &&
                         (e === this.hostLanguage ||
                             this.counter > 0 ||
                             this.librarySeparatelyLoaded)
                     );
                 }
             }
-            class So {
+            class Oo {
                 load(e) {
                     return (0, o.Z)(function* () {
-                        return new Io(e);
+                        return new Ao(e);
                     })();
                 }
                 clearedOneInstance() {}
             }
-            const $r = 'recaptcha',
-                No = { theme: 'light', type: 'image' };
-            class Po {
-                constructor(e, t = Object.assign({}, No), r) {
+            const ii = 'recaptcha',
+                Co = { theme: 'light', type: 'image' };
+            class Lo {
+                constructor(e, t = Object.assign({}, Co), r) {
                     (this.parameters = t),
-                        (this.type = $r),
+                        (this.type = ii),
                         (this.destroyed = !1),
                         (this.widgetId = null),
                         (this.tokenChangeListeners = new Set()),
                         (this.renderPromise = null),
                         (this.recaptcha = null),
-                        (this.auth = y(r)),
+                        (this.auth = O(r)),
                         (this.isInvisible =
                             'invisible' === this.parameters.size),
-                        l(
+                        p(
                             'undefined' != typeof document,
                             this.auth,
                             'operation-not-supported-in-this-environment'
                         );
                     const i =
                         'string' == typeof e ? document.getElementById(e) : e;
-                    l(i, this.auth, 'argument-error'),
+                    p(i, this.auth, 'argument-error'),
                         (this.container = i),
                         (this.parameters.callback = this.makeTokenCallback(
                             this.parameters.callback
                         )),
                         (this._recaptchaLoader = this.auth.settings
                             .appVerificationDisabledForTesting
-                            ? new So()
-                            : new ko()),
+                            ? new Oo()
+                            : new Po()),
                         this.validateStartingState();
                 }
                 verify() {
@@ -4534,13 +4536,13 @@
                             });
                 }
                 validateStartingState() {
-                    l(!this.parameters.sitekey, this.auth, 'argument-error'),
-                        l(
+                    p(!this.parameters.sitekey, this.auth, 'argument-error'),
+                        p(
                             this.isInvisible || !this.container.hasChildNodes(),
                             this.auth,
                             'argument-error'
                         ),
-                        l(
+                        p(
                             'undefined' != typeof document,
                             this.auth,
                             'operation-not-supported-in-this-environment'
@@ -4554,13 +4556,13 @@
                         )
                             e(t);
                         else if ('string' == typeof e) {
-                            const r = _()[e];
+                            const r = w()[e];
                             'function' == typeof r && r(t);
                         }
                     };
                 }
                 assertNotDestroyed() {
-                    l(!this.destroyed, this.auth, 'internal-error');
+                    p(!this.destroyed, this.auth, 'internal-error');
                 }
                 makeRenderPromise() {
                     var e = this;
@@ -4581,8 +4583,8 @@
                 init() {
                     var e = this;
                     return (0, o.Z)(function* () {
-                        l(ze() && !en(), e.auth, 'internal-error'),
-                            yield (function bo() {
+                        p(R() && !In(), e.auth, 'internal-error'),
+                            yield (function Do() {
                                 let n = null;
                                 return new Promise((e) => {
                                     'complete' !== document.readyState
@@ -4604,71 +4606,71 @@
                                 e.auth,
                                 e.auth.languageCode || void 0
                             ));
-                        const t = yield (function mo(n) {
-                            return on.apply(this, arguments);
+                        const t = yield (function yo(n) {
+                            return An.apply(this, arguments);
                         })(e.auth);
-                        l(t, e.auth, 'internal-error'),
+                        p(t, e.auth, 'internal-error'),
                             (e.parameters.sitekey = t);
                     })();
                 }
                 getAssertedRecaptcha() {
                     return (
-                        l(this.recaptcha, this.auth, 'internal-error'),
+                        p(this.recaptcha, this.auth, 'internal-error'),
                         this.recaptcha
                     );
                 }
             }
-            class un {
+            class bn {
                 constructor(e, t) {
                     (this.verificationId = e), (this.onConfirmation = t);
                 }
                 confirm(e) {
-                    const t = H._fromVerification(this.verificationId, e);
+                    const t = ne._fromVerification(this.verificationId, e);
                     return this.onConfirmation(t);
                 }
             }
-            function cn() {
-                return (cn = (0, o.Z)(function* (n, e, t) {
-                    const r = y(n),
-                        i = yield De(r, e, (0, c.m9)(t));
-                    return new un(i, (s) => Se(r, s));
+            function Sn() {
+                return (Sn = (0, o.Z)(function* (n, e, t) {
+                    const r = O(n),
+                        i = yield Ke(r, e, (0, d.m9)(t));
+                    return new bn(i, (s) => We(r, s));
                 })).apply(this, arguments);
             }
-            function ln() {
-                return (ln = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n);
-                    yield Ae(!1, r, 'phone');
-                    const i = yield De(r.auth, e, (0, c.m9)(t));
-                    return new un(i, (s) => xr(r, s));
+            function wn() {
+                return (wn = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n);
+                    yield Ve(!1, r, 'phone');
+                    const i = yield Ke(r.auth, e, (0, d.m9)(t));
+                    return new bn(i, (s) => jr(r, s));
                 })).apply(this, arguments);
             }
-            function dn() {
-                return (dn = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n),
-                        i = yield De(r.auth, e, (0, c.m9)(t));
-                    return new un(i, (s) => Mr(r, s));
+            function Pn() {
+                return (Pn = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n),
+                        i = yield Ke(r.auth, e, (0, d.m9)(t));
+                    return new bn(i, (s) => Br(r, s));
                 })).apply(this, arguments);
             }
-            function De(n, e, t) {
-                return hn.apply(this, arguments);
+            function Ke(n, e, t) {
+                return Nn.apply(this, arguments);
             }
-            function hn() {
-                return (hn = (0, o.Z)(function* (n, e, t) {
+            function Nn() {
+                return (Nn = (0, o.Z)(function* (n, e, t) {
                     var r;
                     const i = yield t.verify();
                     try {
                         let s;
                         if (
-                            (l('string' == typeof i, n, 'argument-error'),
-                            l(t.type === $r, n, 'argument-error'),
+                            (p('string' == typeof i, n, 'argument-error'),
+                            p(t.type === ii, n, 'argument-error'),
                             (s = 'string' == typeof e ? { phoneNumber: e } : e),
                             'session' in s)
                         ) {
                             const a = s.session;
                             if ('phoneNumber' in s)
                                 return (
-                                    l('enroll' === a.type, n, 'internal-error'),
-                                    (yield $s(n, {
+                                    p('enroll' === a.type, n, 'internal-error'),
+                                    (yield Xs(n, {
                                         idToken: a.credential,
                                         phoneEnrollmentInfo: {
                                             phoneNumber: s.phoneNumber,
@@ -4677,15 +4679,15 @@
                                     })).phoneSessionInfo.sessionInfo
                                 );
                             {
-                                l('signin' === a.type, n, 'internal-error');
+                                p('signin' === a.type, n, 'internal-error');
                                 const u =
                                     (null === (r = s.multiFactorHint) ||
                                     void 0 === r
                                         ? void 0
                                         : r.uid) || s.multiFactorUid;
                                 return (
-                                    l(u, n, 'missing-multi-factor-info'),
-                                    (yield fo(n, {
+                                    p(u, n, 'missing-multi-factor-info'),
+                                    (yield vo(n, {
                                         mfaPendingCredential: a.credential,
                                         mfaEnrollmentId: u,
                                         phoneSignInInfo: { recaptchaToken: i },
@@ -4694,7 +4696,7 @@
                             }
                         }
                         {
-                            const { sessionInfo: a } = yield ls(n, {
+                            const { sessionInfo: a } = yield ms(n, {
                                 phoneNumber: s.phoneNumber,
                                 recaptchaToken: i,
                             });
@@ -4705,21 +4707,21 @@
                     }
                 })).apply(this, arguments);
             }
-            function fn() {
-                return (fn = (0, o.Z)(function* (n, e) {
-                    yield kt((0, c.m9)(n), e);
+            function On() {
+                return (On = (0, o.Z)(function* (n, e) {
+                    yield Ht((0, d.m9)(n), e);
                 })).apply(this, arguments);
             }
-            let me = (() => {
+            let Pe = (() => {
                 class n {
                     constructor(t) {
-                        (this.providerId = n.PROVIDER_ID), (this.auth = y(t));
+                        (this.providerId = n.PROVIDER_ID), (this.auth = O(t));
                     }
                     verifyPhoneNumber(t, r) {
-                        return De(this.auth, t, (0, c.m9)(r));
+                        return Ke(this.auth, t, (0, d.m9)(r));
                     }
                     static credential(t, r) {
-                        return H._fromVerification(t, r);
+                        return ne._fromVerification(t, r);
                     }
                     static credentialFromResult(t) {
                         return n.credentialFromTaggedObject(t);
@@ -4730,7 +4732,7 @@
                     static credentialFromTaggedObject({ _tokenResponse: t }) {
                         if (!t) return null;
                         const { phoneNumber: r, temporaryProof: i } = t;
-                        return r && i ? H._fromTokenResponse(r, i) : null;
+                        return r && i ? ne._fromTokenResponse(r, i) : null;
                     }
                 }
                 return (
@@ -4739,24 +4741,24 @@
                     n
                 );
             })();
-            function G(n, e) {
+            function ie(n, e) {
                 return e
-                    ? R(e)
-                    : (l(n._popupRedirectResolver, n, 'argument-error'),
+                    ? h(e)
+                    : (p(n._popupRedirectResolver, n, 'argument-error'),
                       n._popupRedirectResolver);
             }
-            class pn extends Y {
+            class Cn extends le {
                 constructor(e) {
                     super('custom', 'custom'), (this.params = e);
                 }
                 _getIdTokenResponse(e) {
-                    return C(e, this._buildIdpRequest());
+                    return j(e, this._buildIdpRequest());
                 }
                 _linkToIdToken(e, t) {
-                    return C(e, this._buildIdpRequest(t));
+                    return j(e, this._buildIdpRequest(t));
                 }
                 _getReauthenticationResolver(e) {
-                    return C(e, this._buildIdpRequest());
+                    return j(e, this._buildIdpRequest());
                 }
                 _buildIdpRequest(e) {
                     const t = {
@@ -4771,29 +4773,29 @@
                     return e && (t.idToken = e), t;
                 }
             }
-            function Do(n) {
-                return Dr(n.auth, new pn(n), n.bypassAuthState);
+            function Zo(n) {
+                return qr(n.auth, new Cn(n), n.bypassAuthState);
             }
-            function xo(n) {
+            function Vo(n) {
                 const { auth: e, user: t } = n;
                 return (
-                    l(t, e, 'internal-error'),
-                    Lr(t, new pn(n), n.bypassAuthState)
+                    p(t, e, 'internal-error'),
+                    Gr(t, new Cn(n), n.bypassAuthState)
                 );
             }
-            function Mo(n) {
-                return mn.apply(this, arguments);
+            function Wo(n) {
+                return Ln.apply(this, arguments);
             }
-            function mn() {
-                return (mn = (0, o.Z)(function* (n) {
+            function Ln() {
+                return (Ln = (0, o.Z)(function* (n) {
                     const { auth: e, user: t } = n;
                     return (
-                        l(t, e, 'internal-error'),
-                        kt(t, new pn(n), n.bypassAuthState)
+                        p(t, e, 'internal-error'),
+                        Ht(t, new Cn(n), n.bypassAuthState)
                     );
                 })).apply(this, arguments);
             }
-            class Kr {
+            class si {
                 constructor(e, t, r, i, s = !1) {
                     (this.auth = e),
                         (this.resolver = r),
@@ -4833,10 +4835,10 @@
                             postBody: s,
                             tenantId: a,
                             error: u,
-                            type: d,
+                            type: m,
                         } = e;
                         if (u) return void t.reject(u);
-                        const h = {
+                        const g = {
                             auth: t.auth,
                             requestUri: r,
                             sessionId: i,
@@ -4846,9 +4848,9 @@
                             bypassAuthState: t.bypassAuthState,
                         };
                         try {
-                            t.resolve(yield t.getIdpTask(d)(h));
-                        } catch (p) {
-                            t.reject(p);
+                            t.resolve(yield t.getIdpTask(m)(g));
+                        } catch (y) {
+                            t.reject(y);
                         }
                     })();
                 }
@@ -4859,24 +4861,24 @@
                     switch (e) {
                         case 'signInViaPopup':
                         case 'signInViaRedirect':
-                            return Do;
+                            return Zo;
                         case 'linkViaPopup':
                         case 'linkViaRedirect':
-                            return Mo;
+                            return Wo;
                         case 'reauthViaPopup':
                         case 'reauthViaRedirect':
-                            return xo;
+                            return Vo;
                         default:
-                            v(this.auth, 'internal-error');
+                            k(this.auth, 'internal-error');
                     }
                 }
                 resolve(e) {
-                    S(this.pendingPromise, 'Pending promise was never set'),
+                    l(this.pendingPromise, 'Pending promise was never set'),
                         this.pendingPromise.resolve(e),
                         this.unregisterAndCleanUp();
                 }
                 reject(e) {
-                    S(this.pendingPromise, 'Pending promise was never set'),
+                    l(this.pendingPromise, 'Pending promise was never set'),
                         this.pendingPromise.reject(e),
                         this.unregisterAndCleanUp();
                 }
@@ -4887,21 +4889,21 @@
                         this.cleanUp();
                 }
             }
-            const Uo = new se(2e3, 1e4);
-            function _n() {
-                return (_n = (0, o.Z)(function* (n, e, t) {
-                    const r = y(n);
-                    $(n, e, L);
-                    const i = G(r, t);
-                    return new In(r, 'signInViaPopup', e, i).executeNotNull();
+            const Ho = new M(2e3, 1e4);
+            function Dn() {
+                return (Dn = (0, o.Z)(function* (n, e, t) {
+                    const r = O(n);
+                    Q(n, e, B);
+                    const i = ie(r, t);
+                    return new Un(r, 'signInViaPopup', e, i).executeNotNull();
                 })).apply(this, arguments);
             }
-            function gn() {
-                return (gn = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n);
-                    $(r.auth, e, L);
-                    const i = G(r.auth, t);
-                    return new In(
+            function xn() {
+                return (xn = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n);
+                    Q(r.auth, e, B);
+                    const i = ie(r.auth, t);
+                    return new Un(
                         r.auth,
                         'reauthViaPopup',
                         e,
@@ -4910,12 +4912,12 @@
                     ).executeNotNull();
                 })).apply(this, arguments);
             }
-            function vn() {
-                return (vn = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n);
-                    $(r.auth, e, L);
-                    const i = G(r.auth, t);
-                    return new In(
+            function Mn() {
+                return (Mn = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n);
+                    Q(r.auth, e, B);
+                    const i = ie(r.auth, t);
+                    return new Un(
                         r.auth,
                         'linkViaPopup',
                         e,
@@ -4924,8 +4926,8 @@
                     ).executeNotNull();
                 })).apply(this, arguments);
             }
-            let In = (() => {
-                class n extends Kr {
+            let Un = (() => {
+                class n extends si {
                     constructor(t, r, i, s, a) {
                         super(t, r, s, a),
                             (this.provider = i),
@@ -4939,17 +4941,17 @@
                         var t = this;
                         return (0, o.Z)(function* () {
                             const r = yield t.execute();
-                            return l(r, t.auth, 'internal-error'), r;
+                            return p(r, t.auth, 'internal-error'), r;
                         })();
                     }
                     onExecution() {
                         var t = this;
                         return (0, o.Z)(function* () {
-                            S(
+                            l(
                                 1 === t.filter.length,
                                 'Popup operations only handle one event'
                             );
-                            const r = fe();
+                            const r = Se();
                             (t.authWindow = yield t.resolver._openPopup(
                                 t.auth,
                                 t.provider,
@@ -4967,7 +4969,7 @@
                                     (i) => {
                                         i ||
                                             t.reject(
-                                                E(
+                                                b(
                                                     t.auth,
                                                     'web-storage-unsupported'
                                                 )
@@ -4986,7 +4988,7 @@
                         );
                     }
                     cancel() {
-                        this.reject(E(this.auth, 'cancelled-popup-request'));
+                        this.reject(b(this.auth, 'cancelled-popup-request'));
                     }
                     cleanUp() {
                         this.authWindow && this.authWindow.close(),
@@ -5011,21 +5013,21 @@
                                 ? window.setTimeout(() => {
                                       (this.pollId = null),
                                           this.reject(
-                                              E(
+                                              b(
                                                   this.auth,
                                                   'popup-closed-by-user'
                                               )
                                           );
                                   }, 2e3)
-                                : window.setTimeout(t, Uo.get());
+                                : window.setTimeout(t, Ho.get());
                         };
                         t();
                     }
                 }
                 return (n.currentPopupAction = null), n;
             })();
-            const _e = new Map();
-            class Ho extends Kr {
+            const Ne = new Map();
+            class Bo extends si {
                 constructor(e, t, r = !1) {
                     super(
                         e,
@@ -5045,11 +5047,11 @@
                     var e = () => super.execute,
                         t = this;
                     return (0, o.Z)(function* () {
-                        let r = _e.get(t.auth._key());
+                        let r = Ne.get(t.auth._key());
                         if (!r) {
                             try {
-                                const s = (yield (function zo(n, e) {
-                                    return yn.apply(this, arguments);
+                                const s = (yield (function $o(n, e) {
+                                    return Fn.apply(this, arguments);
                                 })(t.resolver, t.auth))
                                     ? yield e().call(t)
                                     : null;
@@ -5057,11 +5059,11 @@
                             } catch (i) {
                                 r = () => Promise.reject(i);
                             }
-                            _e.set(t.auth._key(), r);
+                            Ne.set(t.auth._key(), r);
                         }
                         return (
                             t.bypassAuthState ||
-                                _e.set(t.auth._key(), () =>
+                                Ne.set(t.auth._key(), () =>
                                     Promise.resolve(null)
                                 ),
                             r()
@@ -5090,76 +5092,76 @@
                 }
                 cleanUp() {}
             }
-            function yn() {
-                return (yn = (0, o.Z)(function* (n, e) {
-                    const t = Jr(e),
-                        r = jr(n);
+            function Fn() {
+                return (Fn = (0, o.Z)(function* (n, e) {
+                    const t = ai(e),
+                        r = oi(n);
                     if (!(yield r._isAvailable())) return !1;
                     const i = 'true' === (yield r._get(t));
                     return yield r._remove(t), i;
                 })).apply(this, arguments);
             }
-            function En(n, e) {
-                return Tn.apply(this, arguments);
+            function Zn(n, e) {
+                return Vn.apply(this, arguments);
             }
-            function Tn() {
-                return (Tn = (0, o.Z)(function* (n, e) {
-                    return jr(n)._set(Jr(e), 'true');
+            function Vn() {
+                return (Vn = (0, o.Z)(function* (n, e) {
+                    return oi(n)._set(ai(e), 'true');
                 })).apply(this, arguments);
             }
-            function Rn(n, e) {
-                _e.set(n._key(), e);
+            function Wn(n, e) {
+                Ne.set(n._key(), e);
             }
-            function jr(n) {
-                return R(n._redirectPersistence);
+            function oi(n) {
+                return h(n._redirectPersistence);
             }
-            function Jr(n) {
-                return W('pendingRedirect', n.config.apiKey, n.name);
+            function ai(n) {
+                return te('pendingRedirect', n.config.apiKey, n.name);
             }
-            function kn() {
-                return (kn = (0, o.Z)(function* (n, e, t) {
-                    const r = y(n);
-                    $(n, e, L);
-                    const i = G(r, t);
+            function Hn() {
+                return (Hn = (0, o.Z)(function* (n, e, t) {
+                    const r = O(n);
+                    Q(n, e, B);
+                    const i = ie(r, t);
                     return (
-                        yield En(i, r),
+                        yield Zn(i, r),
                         i._openRedirect(r, e, 'signInViaRedirect')
                     );
                 })).apply(this, arguments);
             }
-            function An() {
-                return (An = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n);
-                    $(r.auth, e, L);
-                    const i = G(r.auth, t);
-                    yield En(i, r.auth);
-                    const s = yield Yr(r);
+            function zn() {
+                return (zn = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n);
+                    Q(r.auth, e, B);
+                    const i = ie(r.auth, t);
+                    yield Zn(i, r.auth);
+                    const s = yield ui(r);
                     return i._openRedirect(r.auth, e, 'reauthViaRedirect', s);
                 })).apply(this, arguments);
             }
-            function Sn() {
-                return (Sn = (0, o.Z)(function* (n, e, t) {
-                    const r = (0, c.m9)(n);
-                    $(r.auth, e, L);
-                    const i = G(r.auth, t);
-                    yield Ae(!1, r, e.providerId), yield En(i, r.auth);
-                    const s = yield Yr(r);
+            function Gn() {
+                return (Gn = (0, o.Z)(function* (n, e, t) {
+                    const r = (0, d.m9)(n);
+                    Q(r.auth, e, B);
+                    const i = ie(r.auth, t);
+                    yield Ve(!1, r, e.providerId), yield Zn(i, r.auth);
+                    const s = yield ui(r);
                     return i._openRedirect(r.auth, e, 'linkViaRedirect', s);
                 })).apply(this, arguments);
             }
-            function Nn() {
-                return (Nn = (0, o.Z)(function* (n, e) {
-                    return yield y(n)._initializationPromise, xe(n, e, !1);
+            function qn() {
+                return (qn = (0, o.Z)(function* (n, e) {
+                    return yield O(n)._initializationPromise, Je(n, e, !1);
                 })).apply(this, arguments);
             }
-            function xe(n, e) {
-                return Pn.apply(this, arguments);
+            function Je(n, e) {
+                return jn.apply(this, arguments);
             }
-            function Pn() {
-                return (Pn = (0, o.Z)(function* (n, e, t = !1) {
-                    const r = y(n),
-                        i = G(r, e),
-                        a = yield new Ho(r, i, t).execute();
+            function jn() {
+                return (jn = (0, o.Z)(function* (n, e, t = !1) {
+                    const r = O(n),
+                        i = ie(r, e),
+                        a = yield new Bo(r, i, t).execute();
                     return (
                         a &&
                             !t &&
@@ -5170,12 +5172,12 @@
                     );
                 })).apply(this, arguments);
             }
-            function Yr(n) {
-                return bn.apply(this, arguments);
+            function ui(n) {
+                return Bn.apply(this, arguments);
             }
-            function bn() {
-                return (bn = (0, o.Z)(function* (n) {
-                    const e = fe(`${n.uid}:::`);
+            function Bn() {
+                return (Bn = (0, o.Z)(function* (n) {
+                    const e = Se(`${n.uid}:::`);
                     return (
                         (n._redirectEventId = e),
                         yield n.auth._setRedirectUser(n),
@@ -5184,7 +5186,7 @@
                     );
                 })).apply(this, arguments);
             }
-            class Xr {
+            class ci {
                 constructor(e) {
                     (this.auth = e),
                         (this.cachedEventUids = new Set()),
@@ -5218,14 +5220,14 @@
                                 this.saveEventToCache(e));
                         }),
                         this.hasHandledPotentialRedirect ||
-                            !(function Qo(n) {
+                            !(function ia(n) {
                                 switch (n.type) {
                                     case 'signInViaRedirect':
                                     case 'linkViaRedirect':
                                     case 'reauthViaRedirect':
                                         return !0;
                                     case 'unknown':
-                                        return ei(n);
+                                        return di(n);
                                     default:
                                         return !1;
                                 }
@@ -5237,12 +5239,12 @@
                 }
                 sendToConsumer(e, t) {
                     var r;
-                    if (e.error && !ei(e)) {
+                    if (e.error && !di(e)) {
                         const i =
                             (null === (r = e.error.code) || void 0 === r
                                 ? void 0
                                 : r.split('auth/')[1]) || 'internal-error';
-                        t.onError(E(this.auth, i));
+                        t.onError(b(this.auth, i));
                     } else t.onAuthEvent(e);
                 }
                 isEventForConsumer(e, t) {
@@ -5255,48 +5257,48 @@
                     return (
                         Date.now() - this.lastProcessedEventTime >= 6e5 &&
                             this.cachedEventUids.clear(),
-                        this.cachedEventUids.has(Qr(e))
+                        this.cachedEventUids.has(li(e))
                     );
                 }
                 saveEventToCache(e) {
-                    this.cachedEventUids.add(Qr(e)),
+                    this.cachedEventUids.add(li(e)),
                         (this.lastProcessedEventTime = Date.now());
                 }
             }
-            function Qr(n) {
+            function li(n) {
                 return [n.type, n.eventId, n.sessionId, n.tenantId]
                     .filter((e) => e)
                     .join('-');
             }
-            function ei({ type: n, error: e }) {
+            function di({ type: n, error: e }) {
                 return (
                     'unknown' === n &&
                     'auth/no-auth-event' === (null == e ? void 0 : e.code)
                 );
             }
-            function ti(n) {
-                return wn.apply(this, arguments);
+            function hi(n) {
+                return $n.apply(this, arguments);
             }
-            function wn() {
-                return (wn = (0, o.Z)(function* (n, e = {}) {
-                    return I(n, 'GET', '/v1/projects', e);
+            function $n() {
+                return ($n = (0, o.Z)(function* (n, e = {}) {
+                    return N(n, 'GET', '/v1/projects', e);
                 })).apply(this, arguments);
             }
-            const ea = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
-                ta = /^https?/;
-            function On() {
-                return (On = (0, o.Z)(function* (n) {
+            const sa = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/,
+                oa = /^https?/;
+            function Kn() {
+                return (Kn = (0, o.Z)(function* (n) {
                     if (n.config.emulator) return;
-                    const { authorizedDomains: e } = yield ti(n);
+                    const { authorizedDomains: e } = yield hi(n);
                     for (const t of e)
                         try {
-                            if (ra(t)) return;
+                            if (ua(t)) return;
                         } catch (r) {}
-                    v(n, 'unauthorized-domain');
+                    k(n, 'unauthorized-domain');
                 })).apply(this, arguments);
             }
-            function ra(n) {
-                const e = ie(),
+            function ua(n) {
+                const e = E(),
                     { protocol: t, hostname: r } = new URL(e);
                 if (n.startsWith('chrome-extension://')) {
                     const a = new URL(n);
@@ -5306,14 +5308,14 @@
                                   e.replace('chrome-extension://', '')
                         : 'chrome-extension:' === t && a.hostname === r;
                 }
-                if (!ta.test(t)) return !1;
-                if (ea.test(n)) return r === n;
+                if (!oa.test(t)) return !1;
+                if (sa.test(n)) return r === n;
                 const i = n.replace(/\./g, '\\.');
                 return new RegExp('^(.+\\.' + i + '|' + i + ')$', 'i').test(r);
             }
-            const ia = new se(3e4, 6e4);
-            function ni() {
-                const n = _().___jsl;
+            const ca = new M(3e4, 6e4);
+            function fi() {
+                const n = w().___jsl;
                 if (null == n ? void 0 : n.H)
                     for (const e of Object.keys(n.H))
                         if (
@@ -5325,36 +5327,36 @@
                             for (let t = 0; t < n.CP.length; t++)
                                 n.CP[t] = null;
             }
-            let Me = null;
-            function oa(n) {
+            let Ye = null;
+            function da(n) {
                 return (
-                    (Me =
-                        Me ||
-                        (function sa(n) {
+                    (Ye =
+                        Ye ||
+                        (function la(n) {
                             return new Promise((e, t) => {
                                 var r, i, s;
                                 function a() {
-                                    ni(),
+                                    fi(),
                                         gapi.load('gapi.iframes', {
                                             callback: () => {
                                                 e(gapi.iframes.getContext());
                                             },
                                             ontimeout: () => {
-                                                ni(),
+                                                fi(),
                                                     t(
-                                                        E(
+                                                        b(
                                                             n,
                                                             'network-request-failed'
                                                         )
                                                     );
                                             },
-                                            timeout: ia.get(),
+                                            timeout: ca.get(),
                                         });
                                 }
                                 if (
                                     null ===
                                         (i =
-                                            null === (r = _().gapi) ||
+                                            null === (r = w().gapi) ||
                                             void 0 === r
                                                 ? void 0
                                                 : r.iframes) || void 0 === i
@@ -5364,39 +5366,39 @@
                                     e(gapi.iframes.getContext());
                                 else {
                                     if (
-                                        !(null === (s = _().gapi) ||
+                                        !(null === (s = w().gapi) ||
                                         void 0 === s
                                             ? void 0
                                             : s.load)
                                     ) {
-                                        const u = Br('iframefcb');
+                                        const u = ri('iframefcb');
                                         return (
-                                            (_()[u] = () => {
+                                            (w()[u] = () => {
                                                 gapi.load
                                                     ? a()
                                                     : t(
-                                                          E(
+                                                          b(
                                                               n,
                                                               'network-request-failed'
                                                           )
                                                       );
                                             }),
-                                            qr(
+                                            ni(
                                                 `https://apis.google.com/js/api.js?onload=${u}`
-                                            ).catch((d) => t(d))
+                                            ).catch((m) => t(m))
                                         );
                                     }
                                     a();
                                 }
                             }).catch((e) => {
-                                throw ((Me = null), e);
+                                throw ((Ye = null), e);
                             });
                         })(n)),
-                    Me
+                    Ye
                 );
             }
-            const aa = new se(5e3, 15e3),
-                la = {
+            const ha = new M(5e3, 15e3),
+                ma = {
                     style: {
                         position: 'absolute',
                         top: '-100px',
@@ -5406,40 +5408,40 @@
                     'aria-hidden': 'true',
                     tabindex: '-1',
                 },
-                da = new Map([
+                _a = new Map([
                     ['identitytoolkit.googleapis.com', 'p'],
                     ['staging-identitytoolkit.sandbox.googleapis.com', 's'],
                     ['test-identitytoolkit.sandbox.googleapis.com', 't'],
                 ]);
-            function ha(n) {
+            function ga(n) {
                 const e = n.config;
-                l(e.authDomain, n, 'auth-domain-config-required');
+                p(e.authDomain, n, 'auth-domain-config-required');
                 const t = e.emulator
-                        ? Ge(e, 'emulator/auth/iframe')
+                        ? A(e, 'emulator/auth/iframe')
                         : `https://${n.config.authDomain}/__/auth/iframe`,
-                    r = { apiKey: e.apiKey, appName: n.name, v: M.SDK_VERSION },
-                    i = da.get(n.config.apiHost);
+                    r = { apiKey: e.apiKey, appName: n.name, v: V.SDK_VERSION },
+                    i = _a.get(n.config.apiHost);
                 i && (r.eid = i);
                 const s = n._getFrameworks();
                 return (
                     s.length && (r.fw = s.join(',')),
-                    `${t}?${(0, c.xO)(r).slice(1)}`
+                    `${t}?${(0, d.xO)(r).slice(1)}`
                 );
             }
-            function Cn() {
+            function Jn() {
                 return (
-                    (Cn = (0, o.Z)(function* (n) {
-                        const e = yield oa(n),
-                            t = _().gapi;
+                    (Jn = (0, o.Z)(function* (n) {
+                        const e = yield da(n),
+                            t = w().gapi;
                         return (
-                            l(t, n, 'internal-error'),
+                            p(t, n, 'internal-error'),
                             e.open(
                                 {
                                     where: document.body,
-                                    url: ha(n),
+                                    url: ga(n),
                                     messageHandlersFilter:
                                         t.iframes.CROSS_ORIGIN_IFRAMES_FILTER,
-                                    attributes: la,
+                                    attributes: ma,
                                     dontclear: !0,
                                 },
                                 (r) =>
@@ -5449,17 +5451,17 @@
                                                 yield r.restyle({
                                                     setHideOnLeave: !1,
                                                 });
-                                                const u = E(
+                                                const u = b(
                                                         n,
                                                         'network-request-failed'
                                                     ),
-                                                    d = _().setTimeout(() => {
+                                                    m = w().setTimeout(() => {
                                                         a(u);
-                                                    }, aa.get());
-                                                function h() {
-                                                    _().clearTimeout(d), s(r);
+                                                    }, ha.get());
+                                                function g() {
+                                                    w().clearTimeout(m), s(r);
                                                 }
-                                                r.ping(h).then(h, () => {
+                                                r.ping(g).then(g, () => {
                                                     a(u);
                                                 });
                                             });
@@ -5471,16 +5473,16 @@
                             )
                         );
                     })),
-                    Cn.apply(this, arguments)
+                    Jn.apply(this, arguments)
                 );
             }
-            const pa = {
+            const Ia = {
                 location: 'yes',
                 resizable: 'yes',
                 statusbar: 'yes',
                 toolbar: 'no',
             };
-            class ri {
+            class pi {
                 constructor(e) {
                     (this.window = e), (this.associatedEvent = null);
                 }
@@ -5491,41 +5493,41 @@
                         } catch (e) {}
                 }
             }
-            function Ln(n, e, t, r, i, s) {
-                l(n.config.authDomain, n, 'auth-domain-config-required'),
-                    l(n.config.apiKey, n, 'invalid-api-key');
+            function Yn(n, e, t, r, i, s) {
+                p(n.config.authDomain, n, 'auth-domain-config-required'),
+                    p(n.config.apiKey, n, 'invalid-api-key');
                 const a = {
                     apiKey: n.config.apiKey,
                     appName: n.name,
                     authType: t,
                     redirectUrl: r,
-                    v: M.SDK_VERSION,
+                    v: V.SDK_VERSION,
                     eventId: i,
                 };
-                if (e instanceof L) {
+                if (e instanceof B) {
                     e.setDefaultLanguage(n.languageCode),
                         (a.providerId = e.providerId || ''),
-                        (0, c.xb)(e.getCustomParameters()) ||
+                        (0, d.xb)(e.getCustomParameters()) ||
                             (a.customParameters = JSON.stringify(
                                 e.getCustomParameters()
                             ));
-                    for (const [d, h] of Object.entries(s || {})) a[d] = h;
+                    for (const [m, g] of Object.entries(s || {})) a[m] = g;
                 }
-                if (e instanceof X) {
-                    const d = e.getScopes().filter((h) => '' !== h);
-                    d.length > 0 && (a.scopes = d.join(','));
+                if (e instanceof de) {
+                    const m = e.getScopes().filter((g) => '' !== g);
+                    m.length > 0 && (a.scopes = m.join(','));
                 }
                 n.tenantId && (a.tid = n.tenantId);
                 const u = a;
-                for (const d of Object.keys(u)) void 0 === u[d] && delete u[d];
-                return `${(function Ra({ config: n }) {
+                for (const m of Object.keys(u)) void 0 === u[m] && delete u[m];
+                return `${(function wa({ config: n }) {
                     return n.emulator
-                        ? Ge(n, 'emulator/auth/handler')
+                        ? A(n, 'emulator/auth/handler')
                         : `https://${n.authDomain}/__/auth/handler`;
-                })(n)}?${(0, c.xO)(u).slice(1)}`;
+                })(n)}?${(0, d.xO)(u).slice(1)}`;
             }
-            const Dn = 'webStorageSupport';
-            class xn extends class Aa {
+            const Xn = 'webStorageSupport';
+            class Qn extends class Na {
                 constructor(e) {
                     this.factorId = e;
                 }
@@ -5536,7 +5538,7 @@
                         case 'signin':
                             return this._finalizeSignIn(e, t.credential);
                         default:
-                            return P('unexpected MultiFactorSessionType');
+                            return c('unexpected MultiFactorSessionType');
                     }
                 }
             } {
@@ -5544,15 +5546,15 @@
                     super('phone'), (this.credential = e);
                 }
                 static _fromCredential(e) {
-                    return new xn(e);
+                    return new Qn(e);
                 }
                 _finalizeEnroll(e, t, r) {
-                    return (function Ks(n, e) {
-                        return I(
+                    return (function Qs(n, e) {
+                        return N(
                             n,
                             'POST',
                             '/v2/accounts/mfaEnrollment:finalize',
-                            m(n, e)
+                            S(n, e)
                         );
                     })(e, {
                         idToken: t,
@@ -5562,12 +5564,12 @@
                     });
                 }
                 _finalizeSignIn(e, t) {
-                    return (function po(n, e) {
-                        return I(
+                    return (function Io(n, e) {
+                        return N(
                             n,
                             'POST',
                             '/v2/accounts/mfaSignIn:finalize',
-                            m(n, e)
+                            S(n, e)
                         );
                     })(e, {
                         mfaPendingCredential: t,
@@ -5576,17 +5578,17 @@
                     });
                 }
             }
-            let Sa = (() => {
+            let Oa = (() => {
                 class n {
                     constructor() {}
                     static assertion(t) {
-                        return xn._fromCredential(t);
+                        return Qn._fromCredential(t);
                     }
                 }
                 return (n.FACTOR_ID = 'phone'), n;
             })();
-            var si = '@firebase/auth';
-            class Na {
+            var _i = '@firebase/auth';
+            class Ca {
                 constructor(e) {
                     (this.auth = e), (this.internalListeners = new Map());
                 }
@@ -5642,7 +5644,7 @@
                         this.updateProactiveRefresh());
                 }
                 assertAuthConfigured() {
-                    l(
+                    p(
                         this.auth._initializationPromise,
                         'dependent-sdk-initialized-before-auth'
                     );
@@ -5653,28 +5655,28 @@
                         : this.auth._stopProactiveRefresh();
                 }
             }
-            function q() {
+            function se() {
                 return window;
             }
-            function Mn() {
-                return (Mn = (0, o.Z)(function* (n, e, t) {
+            function er() {
+                return (er = (0, o.Z)(function* (n, e, t) {
                     var r;
-                    const { BuildInfo: i } = q();
-                    S(e.sessionId, 'AuthEvent did not contain a session ID');
-                    const s = yield Ma(e.sessionId),
+                    const { BuildInfo: i } = se();
+                    l(e.sessionId, 'AuthEvent did not contain a session ID');
+                    const s = yield Wa(e.sessionId),
                         a = {};
                     return (
-                        J()
+                        ce()
                             ? (a.ibi = i.packageName)
-                            : le()
+                            : Ae()
                             ? (a.apn = i.packageName)
-                            : v(
+                            : k(
                                   n,
                                   'operation-not-supported-in-this-environment'
                               ),
                         i.displayName && (a.appDisplayName = i.displayName),
                         (a.sessionId = s),
-                        Ln(
+                        Yn(
                             n,
                             t,
                             e.type,
@@ -5687,68 +5689,68 @@
                     );
                 })).apply(this, arguments);
             }
-            function Un() {
-                return (Un = (0, o.Z)(function* (n) {
-                    const { BuildInfo: e } = q(),
+            function tr() {
+                return (tr = (0, o.Z)(function* (n) {
+                    const { BuildInfo: e } = se(),
                         t = {};
-                    J()
+                    ce()
                         ? (t.iosBundleId = e.packageName)
-                        : le()
+                        : Ae()
                         ? (t.androidPackageName = e.packageName)
-                        : v(n, 'operation-not-supported-in-this-environment'),
-                        yield ti(n, t);
+                        : k(n, 'operation-not-supported-in-this-environment'),
+                        yield hi(n, t);
                 })).apply(this, arguments);
             }
-            function Fn() {
-                return (Fn = (0, o.Z)(function* (n, e, t) {
-                    const { cordova: r } = q();
+            function nr() {
+                return (nr = (0, o.Z)(function* (n, e, t) {
+                    const { cordova: r } = se();
                     let i = () => {};
                     try {
                         yield new Promise((s, a) => {
                             let u = null;
-                            function d() {
-                                var f;
+                            function m() {
+                                var I;
                                 s();
-                                const g =
-                                    null === (f = r.plugins.browsertab) ||
-                                    void 0 === f
+                                const P =
+                                    null === (I = r.plugins.browsertab) ||
+                                    void 0 === I
                                         ? void 0
-                                        : f.close;
-                                'function' == typeof g && g(),
+                                        : I.close;
+                                'function' == typeof P && P(),
                                     'function' ==
                                         typeof (null == t ? void 0 : t.close) &&
                                         t.close();
                             }
-                            function h() {
+                            function g() {
                                 u ||
                                     (u = window.setTimeout(() => {
-                                        a(E(n, 'redirect-cancelled-by-user'));
+                                        a(b(n, 'redirect-cancelled-by-user'));
                                     }, 2e3));
                             }
-                            function p() {
+                            function y() {
                                 'visible' ===
                                     (null == document
                                         ? void 0
-                                        : document.visibilityState) && h();
+                                        : document.visibilityState) && g();
                             }
-                            e.addPassiveListener(d),
-                                document.addEventListener('resume', h, !1),
-                                le() &&
+                            e.addPassiveListener(m),
+                                document.addEventListener('resume', g, !1),
+                                Ae() &&
                                     document.addEventListener(
                                         'visibilitychange',
-                                        p,
+                                        y,
                                         !1
                                     ),
                                 (i = () => {
-                                    e.removePassiveListener(d),
+                                    e.removePassiveListener(m),
                                         document.removeEventListener(
                                             'resume',
-                                            h,
+                                            g,
                                             !1
                                         ),
                                         document.removeEventListener(
                                             'visibilitychange',
-                                            p,
+                                            y,
                                             !1
                                         ),
                                         u && window.clearTimeout(u);
@@ -5759,21 +5761,21 @@
                     }
                 })).apply(this, arguments);
             }
-            function Ma(n) {
-                return Zn.apply(this, arguments);
+            function Wa(n) {
+                return rr.apply(this, arguments);
             }
-            function Zn() {
-                return (Zn = (0, o.Z)(function* (n) {
-                    const e = Ua(n),
+            function rr() {
+                return (rr = (0, o.Z)(function* (n) {
+                    const e = Ha(n),
                         t = yield crypto.subtle.digest('SHA-256', e);
                     return Array.from(new Uint8Array(t))
                         .map((i) => i.toString(16).padStart(2, '0'))
                         .join('');
                 })).apply(this, arguments);
             }
-            function Ua(n) {
+            function Ha(n) {
                 if (
-                    (S(
+                    (l(
                         /[0-9a-zA-Z]+/.test(n),
                         'Can only convert alpha-numeric strings'
                     ),
@@ -5785,24 +5787,24 @@
                 for (let r = 0; r < n.length; r++) t[r] = n.charCodeAt(r);
                 return t;
             }
-            !(function ba(n) {
-                (0, M._registerComponent)(
-                    new We.wA(
+            !(function Da(n) {
+                (0, V._registerComponent)(
+                    new xe.wA(
                         'auth',
                         (e, { options: t }) => {
                             const r = e.getProvider('app').getImmediate(),
                                 i = e.getProvider('heartbeat'),
                                 { apiKey: s, authDomain: a } = r.options;
-                            return ((u, d) => {
-                                l(s && !s.includes(':'), 'invalid-api-key', {
+                            return ((u, m) => {
+                                p(s && !s.includes(':'), 'invalid-api-key', {
                                     appName: u.name,
                                 }),
-                                    l(
+                                    p(
                                         !(null == a ? void 0 : a.includes(':')),
                                         'argument-error',
                                         { appName: u.name }
                                     );
-                                const h = {
+                                const g = {
                                         apiKey: s,
                                         authDomain: a,
                                         clientPlatform: n,
@@ -5811,18 +5813,18 @@
                                         tokenApiHost:
                                             'securetoken.googleapis.com',
                                         apiScheme: 'https',
-                                        sdkClientVersion: Ir(n),
+                                        sdkClientVersion: Nr(n),
                                     },
-                                    p = new Yi(u, d, h);
+                                    y = new ns(u, m, g);
                                 return (
-                                    (function bi(n, e) {
+                                    (function _(n, e) {
                                         const t =
                                                 (null == e
                                                     ? void 0
                                                     : e.persistence) || [],
                                             r = (
                                                 Array.isArray(t) ? t : [t]
-                                            ).map(R);
+                                            ).map(h);
                                         (null == e ? void 0 : e.errorMap) &&
                                             n._updateErrorMap(e.errorMap),
                                             n._initializeWithPersistence(
@@ -5831,8 +5833,8 @@
                                                     ? void 0
                                                     : e.popupRedirectResolver
                                             );
-                                    })(p, t),
-                                    p
+                                    })(y, t),
+                                    y
                                 );
                             })(r, i);
                         },
@@ -5843,22 +5845,22 @@
                             e.getProvider('auth-internal').initialize();
                         })
                 ),
-                    (0, M._registerComponent)(
-                        new We.wA(
+                    (0, V._registerComponent)(
+                        new xe.wA(
                             'auth-internal',
                             (e) => {
-                                const t = y(
+                                const t = O(
                                     e.getProvider('auth').getImmediate()
                                 );
-                                return new Na(t);
+                                return new Ca(t);
                             },
                             'PRIVATE'
                         ).setInstantiationMode('EXPLICIT')
                     ),
-                    (0, M.registerVersion)(
-                        si,
+                    (0, V.registerVersion)(
+                        _i,
                         '0.20.2',
-                        (function Pa(n) {
+                        (function La(n) {
                             switch (n) {
                                 case 'Node':
                                     return 'node';
@@ -5873,9 +5875,9 @@
                             }
                         })(n)
                     ),
-                    (0, M.registerVersion)(si, '0.20.2', 'esm2017');
+                    (0, V.registerVersion)(_i, '0.20.2', 'esm2017');
             })('Browser');
-            class Za extends Xr {
+            class Ga extends ci {
                 constructor() {
                     super(...arguments),
                         (this.passiveListeners = new Set()),
@@ -5907,16 +5909,16 @@
                     })();
                 }
             }
-            function ai(n) {
-                return Vn.apply(this, arguments);
+            function vi(n) {
+                return ir.apply(this, arguments);
             }
-            function Vn() {
-                return (Vn = (0, o.Z)(function* (n) {
-                    const e = yield Wn()._get(Hn(n));
-                    return e && (yield Wn()._remove(Hn(n))), e;
+            function ir() {
+                return (ir = (0, o.Z)(function* (n) {
+                    const e = yield sr()._get(or(n));
+                    return e && (yield sr()._remove(or(n))), e;
                 })).apply(this, arguments);
             }
-            function za() {
+            function $a() {
                 const n = [],
                     e =
                         '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -5926,18 +5928,18 @@
                 }
                 return n.join('');
             }
-            function Wn() {
-                return R(we);
+            function sr() {
+                return h(qe);
             }
-            function Hn(n) {
-                return W('authEvent', n.config.apiKey, n.name);
+            function or(n) {
+                return te('authEvent', n.config.apiKey, n.name);
             }
-            function Ue(n) {
+            function Xe(n) {
                 if (!(null == n ? void 0 : n.includes('?'))) return {};
                 const [e, ...t] = n.split('?');
-                return (0, c.zd)(t.join('?'));
+                return (0, d.zd)(t.join('?'));
             }
-            function ui() {
+            function Ii() {
                 return {
                     type: 'unknown',
                     eventId: null,
@@ -5945,10 +5947,10 @@
                     urlResponse: null,
                     postBody: null,
                     tenantId: null,
-                    error: E('no-auth-event'),
+                    error: b('no-auth-event'),
                 };
             }
-            function ge() {
+            function Oe() {
                 var n;
                 return (
                     (null === (n = null == self ? void 0 : self.location) ||
@@ -5957,72 +5959,72 @@
                         : n.protocol) || null
                 );
             }
-            function ci(n = (0, c.z$)()) {
+            function yi(n = (0, d.z$)()) {
                 return !(
-                    ('file:' !== ge() &&
-                        'ionic:' !== ge() &&
-                        'capacitor:' !== ge()) ||
+                    ('file:' !== Oe() &&
+                        'ionic:' !== Oe() &&
+                        'capacitor:' !== Oe()) ||
                     !n.toLowerCase().match(/iphone|ipad|ipod|android/)
                 );
             }
-            function li() {
+            function Ei() {
                 try {
                     const n = self.localStorage,
-                        e = fe();
+                        e = Se();
                     if (n)
                         return (
                             n.setItem(e, '1'),
                             n.removeItem(e),
-                            !(function ru(n = (0, c.z$)()) {
+                            !(function uu(n = (0, d.z$)()) {
                                 return (
-                                    (function tu() {
+                                    (function ou() {
                                         return (
-                                            (0, c.w1)() &&
+                                            (0, d.w1)() &&
                                             11 ===
                                                 (null == document
                                                     ? void 0
                                                     : document.documentMode)
                                         );
                                     })() ||
-                                    (function nu(n = (0, c.z$)()) {
+                                    (function au(n = (0, d.z$)()) {
                                         return /Edge\/\d+/.test(n);
                                     })(n)
                                 );
-                            })() || (0, c.hl)()
+                            })() || (0, d.hl)()
                         );
                 } catch (n) {
-                    return zn() && (0, c.hl)();
+                    return ar() && (0, d.hl)();
                 }
                 return !1;
             }
-            function zn() {
+            function ar() {
                 return (
                     'undefined' != typeof global &&
                     'WorkerGlobalScope' in global &&
                     'importScripts' in global
                 );
             }
-            function Gn() {
+            function ur() {
                 return (
-                    ((function Qa() {
-                        return 'http:' === ge() || 'https:' === ge();
+                    ((function iu() {
+                        return 'http:' === Oe() || 'https:' === Oe();
                     })() ||
-                        (0, c.ru)() ||
-                        ci()) &&
-                    !(function eu() {
-                        return (0, c.b$)() || (0, c.UG)();
+                        (0, d.ru)() ||
+                        yi()) &&
+                    !(function su() {
+                        return (0, d.b$)() || (0, d.UG)();
                     })() &&
-                    li() &&
-                    !zn()
+                    Ei() &&
+                    !ar()
                 );
             }
-            function di() {
-                return ci() && 'undefined' != typeof document;
+            function Ti() {
+                return yi() && 'undefined' != typeof document;
             }
-            function qn() {
-                return (qn = (0, o.Z)(function* () {
+            function cr() {
+                return (cr = (0, o.Z)(function* () {
                     return (
-                        !!di() &&
+                        !!Ti() &&
                         new Promise((n) => {
                             const e = setTimeout(() => {
                                 n(!1);
@@ -6034,26 +6036,26 @@
                     );
                 })).apply(this, arguments);
             }
-            const k = { LOCAL: 'local', NONE: 'none', SESSION: 'session' },
-                ve = l,
-                hi = 'persistence';
-            function Bn(n) {
-                return $n.apply(this, arguments);
+            const D = { LOCAL: 'local', NONE: 'none', SESSION: 'session' },
+                Ce = p,
+                Ri = 'persistence';
+            function lr(n) {
+                return dr.apply(this, arguments);
             }
-            function $n() {
-                return ($n = (0, o.Z)(function* (n) {
+            function dr() {
+                return (dr = (0, o.Z)(function* (n) {
                     yield n._initializationPromise;
-                    const e = fi(),
-                        t = W(hi, n.config.apiKey, n.name);
+                    const e = Ai(),
+                        t = te(Ri, n.config.apiKey, n.name);
                     e && e.setItem(t, n._getPersistence());
                 })).apply(this, arguments);
             }
-            function fi() {
+            function Ai() {
                 var n;
                 try {
                     return (
                         (null ===
-                            (n = (function su() {
+                            (n = (function lu() {
                                 return 'undefined' != typeof window
                                     ? window
                                     : null;
@@ -6065,24 +6067,24 @@
                     return null;
                 }
             }
-            const uu = l;
-            class Z {
+            const fu = p;
+            class Y {
                 constructor() {
-                    (this.browserResolver = R(
-                        class ka {
+                    (this.browserResolver = h(
+                        class Pa {
                             constructor() {
                                 (this.eventManagers = {}),
                                     (this.iframes = {}),
                                     (this.originValidationPromises = {}),
-                                    (this._redirectPersistence = F),
-                                    (this._completeRedirectFn = xe),
-                                    (this._overrideRedirectResult = Rn);
+                                    (this._redirectPersistence = J),
+                                    (this._completeRedirectFn = Je),
+                                    (this._overrideRedirectResult = Wn);
                             }
                             _openPopup(e, t, r, i) {
                                 var s = this;
                                 return (0, o.Z)(function* () {
                                     var a;
-                                    S(
+                                    l(
                                         null ===
                                             (a = s.eventManagers[e._key()]) ||
                                             void 0 === a
@@ -6090,8 +6092,8 @@
                                             : a.manager,
                                         '_initialize() not called before _openPopup()'
                                     );
-                                    const u = Ln(e, t, r, ie(), i);
-                                    return (function Ia(
+                                    const u = Yn(e, t, r, E(), i);
+                                    return (function Aa(
                                         n,
                                         e,
                                         t,
@@ -6110,8 +6112,8 @@
                                                 0
                                             ).toString();
                                         let u = '';
-                                        const d = Object.assign(
-                                                Object.assign({}, pa),
+                                        const m = Object.assign(
+                                                Object.assign({}, Ia),
                                                 {
                                                     width: r.toString(),
                                                     height: i.toString(),
@@ -6119,20 +6121,20 @@
                                                     left: a,
                                                 }
                                             ),
-                                            h = (0, c.z$)().toLowerCase();
-                                        t && (u = pr(h) ? '_blank' : t),
-                                            fr(h) &&
+                                            g = (0, d.z$)().toLowerCase();
+                                        t && (u = kr(g) ? '_blank' : t),
+                                            Ar(g) &&
                                                 ((e = e || 'http://localhost'),
-                                                (d.scrollbars = 'yes'));
-                                        const p = Object.entries(d).reduce(
-                                            (g, [N, Fe]) => `${g}${N}=${Fe},`,
+                                                (m.scrollbars = 'yes'));
+                                        const y = Object.entries(m).reduce(
+                                            (P, [F, Qe]) => `${P}${F}=${Qe},`,
                                             ''
                                         );
                                         if (
-                                            (function $i(n = (0, c.z$)()) {
+                                            (function Xi(n = (0, d.z$)()) {
                                                 var e;
                                                 return (
-                                                    J(n) &&
+                                                    ce(n) &&
                                                     !!(null ===
                                                         (e =
                                                             window.navigator) ||
@@ -6140,11 +6142,11 @@
                                                         ? void 0
                                                         : e.standalone)
                                                 );
-                                            })(h) &&
+                                            })(g) &&
                                             '_self' !== u
                                         )
                                             return (
-                                                (function ya(n, e) {
+                                                (function ka(n, e) {
                                                     const t =
                                                         document.createElement(
                                                             'a'
@@ -6174,15 +6176,15 @@
                                                     ),
                                                         t.dispatchEvent(r);
                                                 })(e || '', u),
-                                                new ri(null)
+                                                new pi(null)
                                             );
-                                        const f = window.open(e || '', u, p);
-                                        l(f, n, 'popup-blocked');
+                                        const I = window.open(e || '', u, y);
+                                        p(I, n, 'popup-blocked');
                                         try {
-                                            f.focus();
-                                        } catch (g) {}
-                                        return new ri(f);
-                                    })(e, u, fe());
+                                            I.focus();
+                                        } catch (P) {}
+                                        return new pi(I);
+                                    })(e, u, Se());
                                 })();
                             }
                             _openRedirect(e, t, r, i) {
@@ -6190,9 +6192,9 @@
                                 return (0, o.Z)(function* () {
                                     return (
                                         yield s._originValidation(e),
-                                        (function ro(n) {
-                                            _().location.href = n;
-                                        })(Ln(e, t, r, ie(), i)),
+                                        (function uo(n) {
+                                            w().location.href = n;
+                                        })(Yn(e, t, r, E(), i)),
                                         new Promise(() => {})
                                     );
                                 })();
@@ -6204,7 +6206,7 @@
                                         this.eventManagers[t];
                                     return i
                                         ? Promise.resolve(i)
-                                        : (S(
+                                        : (l(
                                               s,
                                               'If manager is not set, promise should be'
                                           ),
@@ -6222,15 +6224,15 @@
                             initAndGetManager(e) {
                                 var t = this;
                                 return (0, o.Z)(function* () {
-                                    const r = yield (function fa(n) {
-                                            return Cn.apply(this, arguments);
+                                    const r = yield (function va(n) {
+                                            return Jn.apply(this, arguments);
                                         })(e),
-                                        i = new Xr(e);
+                                        i = new ci(e);
                                     return (
                                         r.register(
                                             'authEvent',
                                             (s) => (
-                                                l(
+                                                p(
                                                     null == s
                                                         ? void 0
                                                         : s.authEvent,
@@ -6258,8 +6260,8 @@
                             }
                             _isIframeWebStorageSupported(e, t) {
                                 this.iframes[e._key()].send(
-                                    Dn,
-                                    { type: Dn },
+                                    Xn,
+                                    { type: Xn },
                                     (i) => {
                                         var s;
                                         const a =
@@ -6269,9 +6271,9 @@
                                                         ? void 0
                                                         : i[0]) || void 0 === s
                                                 ? void 0
-                                                : s[Dn];
+                                                : s[Xn];
                                         void 0 !== a && t(!!a),
-                                            v(e, 'internal-error');
+                                            k(e, 'internal-error');
                                     },
                                     gapi.iframes.CROSS_ORIGIN_IFRAMES_FILTER
                                 );
@@ -6281,8 +6283,8 @@
                                 return (
                                     this.originValidationPromises[t] ||
                                         (this.originValidationPromises[t] =
-                                            (function na(n) {
-                                                return On.apply(
+                                            (function aa(n) {
+                                                return Kn.apply(
                                                     this,
                                                     arguments
                                                 );
@@ -6291,19 +6293,19 @@
                                 );
                             }
                             get _shouldInitProactively() {
-                                return vr() || rt() || J();
+                                return Pr() || Et() || ce();
                             }
                         }
                     )),
-                        (this.cordovaResolver = R(
-                            class $a {
+                        (this.cordovaResolver = h(
+                            class Xa {
                                 constructor() {
-                                    (this._redirectPersistence = F),
+                                    (this._redirectPersistence = J),
                                         (this._shouldInitProactively = !0),
                                         (this.eventManagers = new Map()),
                                         (this.originValidationPromises = {}),
-                                        (this._completeRedirectFn = xe),
-                                        (this._overrideRedirectResult = Rn);
+                                        (this._completeRedirectFn = Je),
+                                        (this._overrideRedirectResult = Wn);
                                 }
                                 _initialize(e) {
                                     var t = this;
@@ -6312,7 +6314,7 @@
                                         let i = t.eventManagers.get(r);
                                         return (
                                             i ||
-                                                ((i = new Za(e)),
+                                                ((i = new Ga(e)),
                                                 t.eventManagers.set(r, i),
                                                 t.attachCallbackListeners(
                                                     e,
@@ -6323,7 +6325,7 @@
                                     })();
                                 }
                                 _openPopup(e) {
-                                    v(
+                                    k(
                                         e,
                                         'operation-not-supported-in-this-environment'
                                     );
@@ -6331,16 +6333,16 @@
                                 _openRedirect(e, t, r, i) {
                                     var s = this;
                                     return (0, o.Z)(function* () {
-                                        !(function xa(n) {
-                                            var e, t, r, i, s, a, u, d, h, p;
-                                            const f = q();
-                                            l(
+                                        !(function Va(n) {
+                                            var e, t, r, i, s, a, u, m, g, y;
+                                            const I = se();
+                                            p(
                                                 'function' ==
                                                     typeof (null ===
                                                         (e =
-                                                            null == f
+                                                            null == I
                                                                 ? void 0
-                                                                : f.universalLinks) ||
+                                                                : I.universalLinks) ||
                                                     void 0 === e
                                                         ? void 0
                                                         : e.subscribe),
@@ -6351,13 +6353,13 @@
                                                         'cordova-universal-links-plugin-fix',
                                                 }
                                             ),
-                                                l(
+                                                p(
                                                     void 0 !==
                                                         (null ===
                                                             (t =
-                                                                null == f
+                                                                null == I
                                                                     ? void 0
-                                                                    : f.BuildInfo) ||
+                                                                    : I.BuildInfo) ||
                                                         void 0 === t
                                                             ? void 0
                                                             : t.packageName),
@@ -6368,7 +6370,7 @@
                                                             'cordova-plugin-buildInfo',
                                                     }
                                                 ),
-                                                l(
+                                                p(
                                                     'function' ==
                                                         typeof (null ===
                                                             (s =
@@ -6377,9 +6379,9 @@
                                                                         null ===
                                                                             (r =
                                                                                 null ==
-                                                                                f
+                                                                                I
                                                                                     ? void 0
-                                                                                    : f.cordova) ||
+                                                                                    : I.cordova) ||
                                                                         void 0 ===
                                                                             r
                                                                             ? void 0
@@ -6397,18 +6399,18 @@
                                                             'cordova-plugin-browsertab',
                                                     }
                                                 ),
-                                                l(
+                                                p(
                                                     'function' ==
                                                         typeof (null ===
-                                                            (d =
+                                                            (m =
                                                                 null ===
                                                                     (u =
                                                                         null ===
                                                                             (a =
                                                                                 null ==
-                                                                                f
+                                                                                I
                                                                                     ? void 0
-                                                                                    : f.cordova) ||
+                                                                                    : I.cordova) ||
                                                                         void 0 ===
                                                                             a
                                                                             ? void 0
@@ -6416,9 +6418,9 @@
                                                                 void 0 === u
                                                                     ? void 0
                                                                     : u.browsertab) ||
-                                                        void 0 === d
+                                                        void 0 === m
                                                             ? void 0
-                                                            : d.isAvailable),
+                                                            : m.isAvailable),
                                                     n,
                                                     'invalid-cordova-configuration',
                                                     {
@@ -6426,22 +6428,22 @@
                                                             'cordova-plugin-browsertab',
                                                     }
                                                 ),
-                                                l(
+                                                p(
                                                     'function' ==
                                                         typeof (null ===
-                                                            (p =
+                                                            (y =
                                                                 null ===
-                                                                    (h =
+                                                                    (g =
                                                                         null ==
-                                                                        f
+                                                                        I
                                                                             ? void 0
-                                                                            : f.cordova) ||
-                                                                void 0 === h
+                                                                            : I.cordova) ||
+                                                                void 0 === g
                                                                     ? void 0
-                                                                    : h.InAppBrowser) ||
-                                                        void 0 === p
+                                                                    : g.InAppBrowser) ||
+                                                        void 0 === y
                                                             ? void 0
-                                                            : p.open),
+                                                            : y.open),
                                                     n,
                                                     'invalid-cordova-configuration',
                                                     {
@@ -6453,32 +6455,32 @@
                                         const a = yield s._initialize(e);
                                         yield a.initialized(),
                                             a.resetRedirect(),
-                                            (function Go() {
-                                                _e.clear();
+                                            (function Ko() {
+                                                Ne.clear();
                                             })(),
                                             yield s._originValidation(e);
-                                        const u = (function Va(n, e, t = null) {
+                                        const u = (function qa(n, e, t = null) {
                                             return {
                                                 type: e,
                                                 eventId: t,
                                                 urlResponse: null,
-                                                sessionId: za(),
+                                                sessionId: $a(),
                                                 postBody: null,
                                                 tenantId: n.tenantId,
-                                                error: E(n, 'no-auth-event'),
+                                                error: b(n, 'no-auth-event'),
                                             };
                                         })(e, r, i);
-                                        yield (function Wa(n, e) {
-                                            return Wn()._set(Hn(n), e);
+                                        yield (function ja(n, e) {
+                                            return sr()._set(or(n), e);
                                         })(e, u);
-                                        const d = yield (function Oa(n, e, t) {
-                                                return Mn.apply(
+                                        const m = yield (function Ma(n, e, t) {
+                                                return er.apply(
                                                     this,
                                                     arguments
                                                 );
                                             })(e, u, t),
-                                            h = yield (function La(n) {
-                                                const { cordova: e } = q();
+                                            g = yield (function Fa(n) {
+                                                const { cordova: e } = se();
                                                 return new Promise((t) => {
                                                     e.plugins.browsertab.isAvailable(
                                                         (r) => {
@@ -6490,9 +6492,9 @@
                                                                 : (i =
                                                                       e.InAppBrowser.open(
                                                                           n,
-                                                                          (function Bi(
+                                                                          (function Yi(
                                                                               n = (0,
-                                                                              c.z$)()
+                                                                              d.z$)()
                                                                           ) {
                                                                               return (
                                                                                   /(iPad|iPhone|iPod).*OS 7_\d/i.test(
@@ -6511,10 +6513,10 @@
                                                         }
                                                     );
                                                 });
-                                            })(d);
-                                        return (function Da(n, e, t) {
-                                            return Fn.apply(this, arguments);
-                                        })(e, a, h);
+                                            })(m);
+                                        return (function Za(n, e, t) {
+                                            return nr.apply(this, arguments);
+                                        })(e, a, g);
                                     })();
                                 }
                                 _isIframeWebStorageSupported(e, t) {
@@ -6525,8 +6527,8 @@
                                     return (
                                         this.originValidationPromises[t] ||
                                             (this.originValidationPromises[t] =
-                                                (function Ca(n) {
-                                                    return Un.apply(
+                                                (function Ua(n) {
+                                                    return tr.apply(
                                                         this,
                                                         arguments
                                                     );
@@ -6539,34 +6541,34 @@
                                             universalLinks: r,
                                             handleOpenURL: i,
                                             BuildInfo: s,
-                                        } = q(),
+                                        } = se(),
                                         a = setTimeout(
                                             (0, o.Z)(function* () {
-                                                yield ai(e), t.onEvent(ui());
+                                                yield vi(e), t.onEvent(Ii());
                                             }),
                                             500
                                         ),
                                         u = (function () {
-                                            var p = (0, o.Z)(function* (f) {
+                                            var y = (0, o.Z)(function* (I) {
                                                 clearTimeout(a);
-                                                const g = yield ai(e);
-                                                let N = null;
-                                                g &&
-                                                    (null == f
+                                                const P = yield vi(e);
+                                                let F = null;
+                                                P &&
+                                                    (null == I
                                                         ? void 0
-                                                        : f.url) &&
-                                                    (N = (function Ha(n, e) {
+                                                        : I.url) &&
+                                                    (F = (function Ba(n, e) {
                                                         var t, r;
-                                                        const i = (function qa(
+                                                        const i = (function Ja(
                                                             n
                                                         ) {
-                                                            const e = Ue(n),
+                                                            const e = Xe(n),
                                                                 t = e.link
                                                                     ? decodeURIComponent(
                                                                           e.link
                                                                       )
                                                                     : void 0,
-                                                                r = Ue(t).link,
+                                                                r = Xe(t).link,
                                                                 i =
                                                                     e.deep_link_id
                                                                         ? decodeURIComponent(
@@ -6574,7 +6576,7 @@
                                                                           )
                                                                         : void 0;
                                                             return (
-                                                                Ue(i).link ||
+                                                                Xe(i).link ||
                                                                 i ||
                                                                 r ||
                                                                 t ||
@@ -6586,10 +6588,10 @@
                                                                 '/__/auth/callback'
                                                             )
                                                         ) {
-                                                            const s = Ue(i),
+                                                            const s = Xe(i),
                                                                 a =
                                                                     s.firebaseError
-                                                                        ? (function Ga(
+                                                                        ? (function Ka(
                                                                               n
                                                                           ) {
                                                                               try {
@@ -6623,17 +6625,17 @@
                                                                     void 0 === r
                                                                         ? void 0
                                                                         : r[1],
-                                                                d = u
-                                                                    ? E(u)
+                                                                m = u
+                                                                    ? b(u)
                                                                     : null;
-                                                            return d
+                                                            return m
                                                                 ? {
                                                                       type: n.type,
                                                                       eventId:
                                                                           n.eventId,
                                                                       tenantId:
                                                                           n.tenantId,
-                                                                      error: d,
+                                                                      error: m,
                                                                       urlResponse:
                                                                           null,
                                                                       sessionId:
@@ -6656,44 +6658,43 @@
                                                                   };
                                                         }
                                                         return null;
-                                                    })(g, f.url)),
-                                                    t.onEvent(N || ui());
+                                                    })(P, I.url)),
+                                                    t.onEvent(F || Ii());
                                             });
-                                            return function (g) {
-                                                return p.apply(this, arguments);
+                                            return function (P) {
+                                                return y.apply(this, arguments);
                                             };
                                         })();
                                     void 0 !== r &&
                                         'function' == typeof r.subscribe &&
                                         r.subscribe(null, u);
-                                    const d = i,
-                                        h = `${s.packageName.toLowerCase()}://`;
-                                    q().handleOpenURL = (function () {
-                                        var p = (0, o.Z)(function* (f) {
+                                    const m = i,
+                                        g = `${s.packageName.toLowerCase()}://`;
+                                    se().handleOpenURL = (function () {
+                                        var y = (0, o.Z)(function* (I) {
                                             if (
-                                                (f
-                                                    .toLowerCase()
-                                                    .startsWith(h) &&
-                                                    u({ url: f }),
-                                                'function' == typeof d)
+                                                (I.toLowerCase().startsWith(
+                                                    g
+                                                ) && u({ url: I }),
+                                                'function' == typeof m)
                                             )
                                                 try {
-                                                    d(f);
-                                                } catch (g) {
-                                                    console.error(g);
+                                                    m(I);
+                                                } catch (P) {
+                                                    console.error(P);
                                                 }
                                         });
-                                        return function (f) {
-                                            return p.apply(this, arguments);
+                                        return function (I) {
+                                            return y.apply(this, arguments);
                                         };
                                     })();
                                 }
                             }
                         )),
                         (this.underlyingResolver = null),
-                        (this._redirectPersistence = F),
-                        (this._completeRedirectFn = xe),
-                        (this._overrideRedirectResult = Rn);
+                        (this._redirectPersistence = J),
+                        (this._completeRedirectFn = Je),
+                        (this._overrideRedirectResult = Wn);
                 }
                 _initialize(e) {
                     var t = this;
@@ -6737,11 +6738,11 @@
                     return this.assertedUnderlyingResolver._originValidation(e);
                 }
                 get _shouldInitProactively() {
-                    return di() || this.browserResolver._shouldInitProactively;
+                    return Ti() || this.browserResolver._shouldInitProactively;
                 }
                 get assertedUnderlyingResolver() {
                     return (
-                        uu(this.underlyingResolver, 'internal-error'),
+                        fu(this.underlyingResolver, 'internal-error'),
                         this.underlyingResolver
                     );
                 }
@@ -6749,8 +6750,8 @@
                     var e = this;
                     return (0, o.Z)(function* () {
                         if (e.underlyingResolver) return;
-                        const t = yield (function iu() {
-                            return qn.apply(this, arguments);
+                        const t = yield (function cu() {
+                            return cr.apply(this, arguments);
                         })();
                         e.underlyingResolver = t
                             ? e.cordovaResolver
@@ -6758,37 +6759,37 @@
                     })();
                 }
             }
-            function pi(n) {
+            function ki(n) {
                 return n.unwrap();
             }
-            function lu(n) {
-                return mi(n);
+            function mu(n) {
+                return bi(n);
             }
-            function mi(n) {
+            function bi(n) {
                 const { _tokenResponse: e } =
-                    n instanceof c.ZR ? n.customData : n;
+                    n instanceof d.ZR ? n.customData : n;
                 if (!e) return null;
                 if (
-                    !(n instanceof c.ZR) &&
+                    !(n instanceof d.ZR) &&
                     'temporaryProof' in e &&
                     'phoneNumber' in e
                 )
-                    return me.credentialFromResult(n);
+                    return Pe.credentialFromResult(n);
                 const t = e.providerId;
                 if (!t || 'password' === t) return null;
                 let r;
                 switch (t) {
                     case 'google.com':
-                        r = Sr;
+                        r = Ur;
                         break;
                     case 'facebook.com':
-                        r = Ar;
+                        r = Mr;
                         break;
                     case 'github.com':
-                        r = Nr;
+                        r = Fr;
                         break;
                     case 'twitter.com':
-                        r = Pr;
+                        r = Zr;
                         break;
                     default:
                         const {
@@ -6796,36 +6797,36 @@
                             oauthAccessToken: s,
                             oauthTokenSecret: a,
                             pendingToken: u,
-                            nonce: d,
+                            nonce: m,
                         } = e;
                         return s || a || i || u
                             ? u
                                 ? t.startsWith('saml.')
-                                    ? ee._create(t, u)
-                                    : b._fromParams({
+                                    ? fe._create(t, u)
+                                    : W._fromParams({
                                           providerId: t,
                                           signInMethod: t,
                                           pendingToken: u,
                                           idToken: i,
                                           accessToken: s,
                                       })
-                                : new Q(t).credential({
+                                : new he(t).credential({
                                       idToken: i,
                                       accessToken: s,
-                                      rawNonce: d,
+                                      rawNonce: m,
                                   })
                             : null;
                 }
-                return n instanceof c.ZR
+                return n instanceof d.ZR
                     ? r.credentialFromError(n)
                     : r.credentialFromResult(n);
             }
-            function T(n, e) {
+            function L(n, e) {
                 return e
                     .catch((t) => {
                         throw (
-                            (t instanceof c.ZR &&
-                                (function du(n, e) {
+                            (t instanceof d.ZR &&
+                                (function _u(n, e) {
                                     var t;
                                     const r =
                                         null === (t = e.customData) ||
@@ -6836,20 +6837,20 @@
                                         'auth/multi-factor-auth-required' ===
                                         e.code
                                     )
-                                        e.resolver = new hu(
+                                        e.resolver = new gu(
                                             n,
-                                            (function Bs(n, e) {
+                                            (function Ys(n, e) {
                                                 var t;
-                                                const r = (0, c.m9)(n),
+                                                const r = (0, d.m9)(n),
                                                     i = e;
                                                 return (
-                                                    l(
+                                                    p(
                                                         e.customData
                                                             .operationType,
                                                         r,
                                                         'argument-error'
                                                     ),
-                                                    l(
+                                                    p(
                                                         null ===
                                                             (t =
                                                                 i.customData
@@ -6860,12 +6861,12 @@
                                                         r,
                                                         'argument-error'
                                                     ),
-                                                    Yt._fromError(r, i)
+                                                    _n._fromError(r, i)
                                                 );
                                             })(n, e)
                                         );
                                     else if (r) {
-                                        const i = mi(e),
+                                        const i = bi(e),
                                             s = e;
                                         i &&
                                             ((s.credential = i),
@@ -6882,28 +6883,28 @@
                         const i = t.user;
                         return {
                             operationType: t.operationType,
-                            credential: lu(t),
-                            additionalUserInfo: qs(t),
-                            user: D.getOrCreate(i),
+                            credential: mu(t),
+                            additionalUserInfo: Js(t),
+                            user: $.getOrCreate(i),
                         };
                     });
             }
-            function Kn(n, e) {
-                return jn.apply(this, arguments);
+            function hr(n, e) {
+                return fr.apply(this, arguments);
             }
-            function jn() {
-                return (jn = (0, o.Z)(function* (n, e) {
+            function fr() {
+                return (fr = (0, o.Z)(function* (n, e) {
                     const t = yield e;
                     return {
                         verificationId: t.verificationId,
-                        confirm: (r) => T(n, t.confirm(r)),
+                        confirm: (r) => L(n, t.confirm(r)),
                     };
                 })).apply(this, arguments);
             }
-            class hu {
+            class gu {
                 constructor(e, t) {
                     (this.resolver = t),
-                        (this.auth = (function cu(n) {
+                        (this.auth = (function pu(n) {
                             return n.wrapped();
                         })(e));
                 }
@@ -6914,24 +6915,24 @@
                     return this.resolver.hints;
                 }
                 resolveSignIn(e) {
-                    return T(pi(this.auth), this.resolver.resolveSignIn(e));
+                    return L(ki(this.auth), this.resolver.resolveSignIn(e));
                 }
             }
-            class D {
+            class $ {
                 constructor(e) {
                     (this._delegate = e),
-                        (this.multiFactor = (function Js(n) {
-                            const e = (0, c.m9)(n);
+                        (this.multiFactor = (function to(n) {
+                            const e = (0, d.m9)(n);
                             return (
-                                Qt.has(e) || Qt.set(e, Xt._fromUser(e)),
-                                Qt.get(e)
+                                vn.has(e) || vn.set(e, gn._fromUser(e)),
+                                vn.get(e)
                             );
                         })(e));
                 }
                 static getOrCreate(e) {
                     return (
-                        D.USER_MAP.has(e) || D.USER_MAP.set(e, new D(e)),
-                        D.USER_MAP.get(e)
+                        $.USER_MAP.has(e) || $.USER_MAP.set(e, new $(e)),
+                        $.USER_MAP.get(e)
                     );
                 }
                 delete() {
@@ -6955,16 +6956,16 @@
                 linkWithCredential(e) {
                     var t = this;
                     return (0, o.Z)(function* () {
-                        return T(t.auth, xr(t._delegate, e));
+                        return L(t.auth, jr(t._delegate, e));
                     })();
                 }
                 linkWithPhoneNumber(e, t) {
                     var r = this;
                     return (0, o.Z)(function* () {
-                        return Kn(
+                        return hr(
                             r.auth,
-                            (function Oo(n, e, t) {
-                                return ln.apply(this, arguments);
+                            (function Mo(n, e, t) {
+                                return wn.apply(this, arguments);
                             })(r._delegate, e, t)
                         );
                     })();
@@ -6972,11 +6973,11 @@
                 linkWithPopup(e) {
                     var t = this;
                     return (0, o.Z)(function* () {
-                        return T(
+                        return L(
                             t.auth,
-                            (function Vo(n, e, t) {
-                                return vn.apply(this, arguments);
-                            })(t._delegate, e, Z)
+                            (function qo(n, e, t) {
+                                return Mn.apply(this, arguments);
+                            })(t._delegate, e, Y)
                         );
                     })();
                 }
@@ -6984,12 +6985,12 @@
                     var t = this;
                     return (0, o.Z)(function* () {
                         return (
-                            yield Bn(y(t.auth)),
-                            (function jo(n, e, t) {
-                                return (function Jo(n, e, t) {
-                                    return Sn.apply(this, arguments);
+                            yield lr(O(t.auth)),
+                            (function ea(n, e, t) {
+                                return (function ta(n, e, t) {
+                                    return Gn.apply(this, arguments);
                                 })(n, e, t);
-                            })(t._delegate, e, Z)
+                            })(t._delegate, e, Y)
                         );
                     })();
                 }
@@ -6999,77 +7000,77 @@
                 reauthenticateWithCredential(e) {
                     var t = this;
                     return (0, o.Z)(function* () {
-                        return T(t.auth, Mr(t._delegate, e));
+                        return L(t.auth, Br(t._delegate, e));
                     })();
                 }
                 reauthenticateWithPhoneNumber(e, t) {
-                    return Kn(
+                    return hr(
                         this.auth,
-                        (function Co(n, e, t) {
-                            return dn.apply(this, arguments);
+                        (function Uo(n, e, t) {
+                            return Pn.apply(this, arguments);
                         })(this._delegate, e, t)
                     );
                 }
                 reauthenticateWithPopup(e) {
-                    return T(
+                    return L(
                         this.auth,
-                        (function Zo(n, e, t) {
-                            return gn.apply(this, arguments);
-                        })(this._delegate, e, Z)
+                        (function Go(n, e, t) {
+                            return xn.apply(this, arguments);
+                        })(this._delegate, e, Y)
                     );
                 }
                 reauthenticateWithRedirect(e) {
                     var t = this;
                     return (0, o.Z)(function* () {
                         return (
-                            yield Bn(y(t.auth)),
-                            (function $o(n, e, t) {
-                                return (function Ko(n, e, t) {
-                                    return An.apply(this, arguments);
+                            yield lr(O(t.auth)),
+                            (function Xo(n, e, t) {
+                                return (function Qo(n, e, t) {
+                                    return zn.apply(this, arguments);
                                 })(n, e, t);
-                            })(t._delegate, e, Z)
+                            })(t._delegate, e, Y)
                         );
                     })();
                 }
                 sendEmailVerification(e) {
-                    return (function Ds(n, e) {
-                        return qt.apply(this, arguments);
+                    return (function Zs(n, e) {
+                        return ln.apply(this, arguments);
                     })(this._delegate, e);
                 }
                 unlink(e) {
                     var t = this;
                     return (0, o.Z)(function* () {
                         return (
-                            yield (function ys(n, e) {
-                                return Rt.apply(this, arguments);
+                            yield (function ks(n, e) {
+                                return Wt.apply(this, arguments);
                             })(t._delegate, e),
                             t
                         );
                     })();
                 }
                 updateEmail(e) {
-                    return (function Fs(n, e) {
-                        return Fr((0, c.m9)(n), e, null);
+                    return (function zs(n, e) {
+                        return Kr((0, d.m9)(n), e, null);
                     })(this._delegate, e);
                 }
                 updatePassword(e) {
-                    return (function Zs(n, e) {
-                        return Fr((0, c.m9)(n), null, e);
+                    return (function Gs(n, e) {
+                        return Kr((0, d.m9)(n), null, e);
                     })(this._delegate, e);
                 }
                 updatePhoneNumber(e) {
-                    return (function Lo(n, e) {
-                        return fn.apply(this, arguments);
+                    return (function Fo(n, e) {
+                        return On.apply(this, arguments);
                     })(this._delegate, e);
                 }
                 updateProfile(e) {
-                    return (function Us(n, e) {
-                        return Kt.apply(this, arguments);
+                    return (function Hs(n, e) {
+                        return fn.apply(this, arguments);
                     })(this._delegate, e);
                 }
                 verifyBeforeUpdateEmail(e, t) {
-                    return (function xs(n, e, t) {
-                        return Bt.apply(this, arguments);
+                    return (function Vs(n, e, t) {
+                        return dn.apply(this, arguments);
                     })(this._delegate, e, t);
                 }
                 get emailVerified() {
@@ -7112,9 +7113,9 @@
                     return this._delegate.auth;
                 }
             }
-            D.USER_MAP = new WeakMap();
-            const Ie = l;
-            let _i = (() => {
+            $.USER_MAP = new WeakMap();
+            const Le = p;
+            let Si = (() => {
                 class n {
                     constructor(t, r) {
                         if (((this.app = t), r.isInitialized()))
@@ -7123,16 +7124,16 @@
                                 void this.linkUnderlyingAuth()
                             );
                         const { apiKey: i } = t.options;
-                        Ie(i, 'invalid-api-key', { appName: t.name }),
-                            Ie(i, 'invalid-api-key', { appName: t.name });
-                        const s = 'undefined' != typeof window ? Z : void 0;
+                        Le(i, 'invalid-api-key', { appName: t.name }),
+                            Le(i, 'invalid-api-key', { appName: t.name });
+                        const s = 'undefined' != typeof window ? Y : void 0;
                         (this._delegate = r.initialize({
                             options: {
-                                persistence: fu(i, t.name),
+                                persistence: vu(i, t.name),
                                 popupRedirectResolver: s,
                             },
                         })),
-                            this._delegate._updateErrorMap(Si),
+                            this._delegate._updateErrorMap(Ir),
                             this.linkUnderlyingAuth();
                     }
                     get emulatorConfig() {
@@ -7140,7 +7141,7 @@
                     }
                     get currentUser() {
                         return this._delegate.currentUser
-                            ? D.getOrCreate(this._delegate.currentUser)
+                            ? $.getOrCreate(this._delegate.currentUser)
                             : null;
                     }
                     get languageCode() {
@@ -7165,10 +7166,10 @@
                         return this._delegate.signOut();
                     }
                     useEmulator(t, r) {
-                        !(function Xi(n, e, t) {
-                            const r = y(n);
-                            l(r._canInitEmulator, r, 'emulator-config-failed'),
-                                l(
+                        !(function rs(n, e, t) {
+                            const r = O(n);
+                            p(r._canInitEmulator, r, 'emulator-config-failed'),
+                                p(
                                     /^https?:\/\//.test(e),
                                     r,
                                     'invalid-emulator-scheme'
@@ -7176,9 +7177,9 @@
                             const i = !!(null == t
                                     ? void 0
                                     : t.disableWarnings),
-                                s = Er(e),
-                                { host: a, port: u } = (function Qi(n) {
-                                    const e = Er(n),
+                                s = Cr(e),
+                                { host: a, port: u } = (function is(n) {
+                                    const e = Cr(n),
                                         t = /(\/\/)?([^?#/]+)/.exec(
                                             n.substr(e.length)
                                         );
@@ -7189,12 +7190,12 @@
                                         const s = i[1];
                                         return {
                                             host: s,
-                                            port: Tr(r.substr(s.length + 1)),
+                                            port: Lr(r.substr(s.length + 1)),
                                         };
                                     }
                                     {
                                         const [s, a] = r.split(':');
-                                        return { host: s, port: Tr(a) };
+                                        return { host: s, port: Lr(a) };
                                     }
                                 })(e);
                             (r.config.emulator = {
@@ -7211,7 +7212,7 @@
                                     }),
                                 })),
                                 i ||
-                                    (function es() {
+                                    (function ss() {
                                         function n() {
                                             const e =
                                                     document.createElement('p'),
@@ -7253,25 +7254,25 @@
                         })(this._delegate, t, r);
                     }
                     applyActionCode(t) {
-                        return (function As(n, e) {
-                            return Ut.apply(this, arguments);
+                        return (function Ns(n, e) {
+                            return tn.apply(this, arguments);
                         })(this._delegate, t);
                     }
                     checkActionCode(t) {
-                        return Ur(this._delegate, t);
+                        return $r(this._delegate, t);
                     }
                     confirmPasswordReset(t, r) {
-                        return (function ks(n, e, t) {
-                            return Mt.apply(this, arguments);
+                        return (function Ps(n, e, t) {
+                            return en.apply(this, arguments);
                         })(this._delegate, t, r);
                     }
                     createUserWithEmailAndPassword(t, r) {
                         var i = this;
                         return (0, o.Z)(function* () {
-                            return T(
+                            return L(
                                 i._delegate,
-                                (function Ns(n, e, t) {
-                                    return Vt.apply(this, arguments);
+                                (function Cs(n, e, t) {
+                                    return sn.apply(this, arguments);
                                 })(i._delegate, t, r)
                             );
                         })();
@@ -7280,13 +7281,13 @@
                         return this.fetchSignInMethodsForEmail(t);
                     }
                     fetchSignInMethodsForEmail(t) {
-                        return (function Ls(n, e) {
-                            return Gt.apply(this, arguments);
+                        return (function Fs(n, e) {
+                            return cn.apply(this, arguments);
                         })(this._delegate, t);
                     }
                     isSignInWithEmailLink(t) {
-                        return (function ws(n, e) {
-                            const t = he.parseLink(e);
+                        return (function xs(n, e) {
+                            const t = be.parseLink(e);
                             return (
                                 'EMAIL_SIGNIN' ===
                                 (null == t ? void 0 : t.operation)
@@ -7296,40 +7297,40 @@
                     getRedirectResult() {
                         var t = this;
                         return (0, o.Z)(function* () {
-                            Ie(
-                                Gn(),
+                            Le(
+                                ur(),
                                 t._delegate,
                                 'operation-not-supported-in-this-environment'
                             );
-                            const r = yield (function Yo(n, e) {
-                                return Nn.apply(this, arguments);
-                            })(t._delegate, Z);
+                            const r = yield (function na(n, e) {
+                                return qn.apply(this, arguments);
+                            })(t._delegate, Y);
                             return r
-                                ? T(t._delegate, Promise.resolve(r))
+                                ? L(t._delegate, Promise.resolve(r))
                                 : { credential: null, user: null };
                         })();
                     }
                     addFrameworkForLogging(t) {
-                        !(function ja(n, e) {
-                            y(n)._logFramework(e);
+                        !(function eu(n, e) {
+                            O(n)._logFramework(e);
                         })(this._delegate, t);
                     }
                     onAuthStateChanged(t, r, i) {
-                        const { next: s, error: a, complete: u } = gi(t, r, i);
+                        const { next: s, error: a, complete: u } = wi(t, r, i);
                         return this._delegate.onAuthStateChanged(s, a, u);
                     }
                     onIdTokenChanged(t, r, i) {
-                        const { next: s, error: a, complete: u } = gi(t, r, i);
+                        const { next: s, error: a, complete: u } = wi(t, r, i);
                         return this._delegate.onIdTokenChanged(s, a, u);
                     }
                     sendSignInLinkToEmail(t, r) {
-                        return (function bs(n, e, t) {
-                            return Wt.apply(this, arguments);
+                        return (function Ds(n, e, t) {
+                            return on.apply(this, arguments);
                         })(this._delegate, t, r);
                     }
                     sendPasswordResetEmail(t, r) {
-                        return (function Rs(n, e, t) {
-                            return xt.apply(this, arguments);
+                        return (function ws(n, e, t) {
+                            return Qt.apply(this, arguments);
                         })(this._delegate, t, r || void 0);
                     }
                     setPersistence(t) {
@@ -7337,51 +7338,51 @@
                         return (0, o.Z)(function* () {
                             let i;
                             switch (
-                                ((function ou(n, e) {
-                                    ve(
-                                        Object.values(k).includes(e),
+                                ((function du(n, e) {
+                                    Ce(
+                                        Object.values(D).includes(e),
                                         n,
                                         'invalid-persistence-type'
                                     ),
-                                        (0, c.b$)()
-                                            ? ve(
-                                                  e !== k.SESSION,
+                                        (0, d.b$)()
+                                            ? Ce(
+                                                  e !== D.SESSION,
                                                   n,
                                                   'unsupported-persistence-type'
                                               )
-                                            : (0, c.UG)()
-                                            ? ve(
-                                                  e === k.NONE,
+                                            : (0, d.UG)()
+                                            ? Ce(
+                                                  e === D.NONE,
                                                   n,
                                                   'unsupported-persistence-type'
                                               )
-                                            : zn()
-                                            ? ve(
-                                                  e === k.NONE ||
-                                                      (e === k.LOCAL &&
-                                                          (0, c.hl)()),
+                                            : ar()
+                                            ? Ce(
+                                                  e === D.NONE ||
+                                                      (e === D.LOCAL &&
+                                                          (0, d.hl)()),
                                                   n,
                                                   'unsupported-persistence-type'
                                               )
-                                            : ve(
-                                                  e === k.NONE || li(),
+                                            : Ce(
+                                                  e === D.NONE || Ei(),
                                                   n,
                                                   'unsupported-persistence-type'
                                               );
                                 })(r._delegate, t),
                                 t)
                             ) {
-                                case k.SESSION:
-                                    i = F;
+                                case D.SESSION:
+                                    i = J;
                                     break;
-                                case k.LOCAL:
-                                    i = (yield R(ne)._isAvailable()) ? ne : we;
+                                case D.LOCAL:
+                                    i = (yield h(me)._isAvailable()) ? me : qe;
                                     break;
-                                case k.NONE:
-                                    i = K;
+                                case D.NONE:
+                                    i = ae;
                                     break;
                                 default:
-                                    return v('argument-error', {
+                                    return k('argument-error', {
                                         appName: r._delegate.name,
                                     });
                             }
@@ -7392,45 +7393,45 @@
                         return this.signInWithCredential(t);
                     }
                     signInAnonymously() {
-                        return T(
+                        return L(
                             this._delegate,
-                            (function Is(n) {
-                                return Tt.apply(this, arguments);
+                            (function As(n) {
+                                return Vt.apply(this, arguments);
                             })(this._delegate)
                         );
                     }
                     signInWithCredential(t) {
-                        return T(this._delegate, Se(this._delegate, t));
+                        return L(this._delegate, We(this._delegate, t));
                     }
                     signInWithCustomToken(t) {
-                        return T(
+                        return L(
                             this._delegate,
-                            (function Ts(n, e) {
-                                return Lt.apply(this, arguments);
+                            (function Ss(n, e) {
+                                return Yt.apply(this, arguments);
                             })(this._delegate, t)
                         );
                     }
                     signInWithEmailAndPassword(t, r) {
-                        return T(
+                        return L(
                             this._delegate,
-                            (function Ps(n, e, t) {
-                                return Se((0, c.m9)(n), yt.credential(e, t));
+                            (function Ls(n, e, t) {
+                                return We((0, d.m9)(n), Ft.credential(e, t));
                             })(this._delegate, t, r)
                         );
                     }
                     signInWithEmailLink(t, r) {
-                        return T(
+                        return L(
                             this._delegate,
-                            (function Os(n, e, t) {
-                                return Ht.apply(this, arguments);
+                            (function Ms(n, e, t) {
+                                return an.apply(this, arguments);
                             })(this._delegate, t, r)
                         );
                     }
                     signInWithPhoneNumber(t, r) {
-                        return Kn(
+                        return hr(
                             this._delegate,
-                            (function wo(n, e, t) {
-                                return cn.apply(this, arguments);
+                            (function xo(n, e, t) {
+                                return Sn.apply(this, arguments);
                             })(this._delegate, t, r)
                         );
                     }
@@ -7438,16 +7439,16 @@
                         var r = this;
                         return (0, o.Z)(function* () {
                             return (
-                                Ie(
-                                    Gn(),
+                                Le(
+                                    ur(),
                                     r._delegate,
                                     'operation-not-supported-in-this-environment'
                                 ),
-                                T(
+                                L(
                                     r._delegate,
-                                    (function Fo(n, e, t) {
-                                        return _n.apply(this, arguments);
-                                    })(r._delegate, t, Z)
+                                    (function zo(n, e, t) {
+                                        return Dn.apply(this, arguments);
+                                    })(r._delegate, t, Y)
                                 )
                             );
                         })();
@@ -7456,17 +7457,17 @@
                         var r = this;
                         return (0, o.Z)(function* () {
                             return (
-                                Ie(
-                                    Gn(),
+                                Le(
+                                    ur(),
                                     r._delegate,
                                     'operation-not-supported-in-this-environment'
                                 ),
-                                yield Bn(r._delegate),
-                                (function qo(n, e, t) {
-                                    return (function Bo(n, e, t) {
-                                        return kn.apply(this, arguments);
+                                yield lr(r._delegate),
+                                (function Jo(n, e, t) {
+                                    return (function Yo(n, e, t) {
+                                        return Hn.apply(this, arguments);
                                     })(n, e, t);
-                                })(r._delegate, t, Z)
+                                })(r._delegate, t, Y)
                             );
                         })();
                     }
@@ -7474,8 +7475,8 @@
                         return this._delegate.updateCurrentUser(t);
                     }
                     verifyPasswordResetCode(t) {
-                        return (function Ss(n, e) {
-                            return Zt.apply(this, arguments);
+                        return (function Os(n, e) {
+                            return rn.apply(this, arguments);
                         })(this._delegate, t);
                     }
                     unwrap() {
@@ -7488,51 +7489,51 @@
                         this._delegate.wrapped = () => this;
                     }
                 }
-                return (n.Persistence = k), n;
+                return (n.Persistence = D), n;
             })();
-            function gi(n, e, t) {
+            function wi(n, e, t) {
                 let r = n;
                 'function' != typeof n &&
                     ({ next: r, error: e, complete: t } = n);
                 const i = r;
                 return {
-                    next: (a) => i(a && D.getOrCreate(a)),
+                    next: (a) => i(a && $.getOrCreate(a)),
                     error: e,
                     complete: t,
                 };
             }
-            function fu(n, e) {
-                const t = (function au(n, e) {
-                    const t = fi();
+            function vu(n, e) {
+                const t = (function hu(n, e) {
+                    const t = Ai();
                     if (!t) return [];
-                    const r = W(hi, n, e);
+                    const r = te(Ri, n, e);
                     switch (t.getItem(r)) {
-                        case k.NONE:
-                            return [K];
-                        case k.LOCAL:
-                            return [ne, F];
-                        case k.SESSION:
-                            return [F];
+                        case D.NONE:
+                            return [ae];
+                        case D.LOCAL:
+                            return [me, J];
+                        case D.SESSION:
+                            return [J];
                         default:
                             return [];
                     }
                 })(n, e);
                 if (
                     ('undefined' != typeof self &&
-                        !t.includes(ne) &&
-                        t.push(ne),
+                        !t.includes(me) &&
+                        t.push(me),
                     'undefined' != typeof window)
                 )
-                    for (const r of [we, F]) t.includes(r) || t.push(r);
-                return t.includes(K) || t.push(K), t;
+                    for (const r of [qe, J]) t.includes(r) || t.push(r);
+                return t.includes(ae) || t.push(ae), t;
             }
-            class Jn {
+            class pr {
                 constructor() {
                     (this.providerId = 'phone'),
-                        (this._delegate = new me(pi(Ze.Z.auth())));
+                        (this._delegate = new Pe(ki(_e.Z.auth())));
                 }
                 static credential(e, t) {
-                    return me.credential(e, t);
+                    return Pe.credential(e, t);
                 }
                 verifyPhoneNumber(e, t) {
                     return this._delegate.verifyPhoneNumber(e, t);
@@ -7541,20 +7542,20 @@
                     return this._delegate;
                 }
             }
-            (Jn.PHONE_SIGN_IN_METHOD = me.PHONE_SIGN_IN_METHOD),
-                (Jn.PROVIDER_ID = me.PROVIDER_ID);
-            const pu = l;
-            class mu {
-                constructor(e, t, r = Ze.Z.app()) {
+            (pr.PHONE_SIGN_IN_METHOD = Pe.PHONE_SIGN_IN_METHOD),
+                (pr.PROVIDER_ID = Pe.PROVIDER_ID);
+            const Iu = p;
+            class yu {
+                constructor(e, t, r = _e.Z.app()) {
                     var i;
-                    pu(
+                    Iu(
                         null === (i = r.options) || void 0 === i
                             ? void 0
                             : i.apiKey,
                         'invalid-api-key',
                         { appName: r.name }
                     ),
-                        (this._delegate = new Po(e, t, r.auth())),
+                        (this._delegate = new Lo(e, t, r.auth())),
                         (this.type = this._delegate.type);
                 }
                 clear() {
@@ -7567,16 +7568,16 @@
                     return this._delegate.verify();
                 }
             }
-            !(function gu(n) {
+            !(function Tu(n) {
                 n.INTERNAL.registerComponent(
-                    new We.wA(
+                    new xe.wA(
                         'auth-compat',
                         (e) => {
                             const t = e
                                     .getProvider('app-compat')
                                     .getImmediate(),
                                 r = e.getProvider('auth');
-                            return new _i(t, r);
+                            return new Si(t, r);
                         },
                         'PUBLIC'
                     )
@@ -7593,25 +7594,125 @@
                                     VERIFY_EMAIL: 'VERIFY_EMAIL',
                                 },
                             },
-                            EmailAuthProvider: yt,
-                            FacebookAuthProvider: Ar,
-                            GithubAuthProvider: Nr,
-                            GoogleAuthProvider: Sr,
-                            OAuthProvider: Q,
-                            SAMLAuthProvider: Re,
-                            PhoneAuthProvider: Jn,
-                            PhoneMultiFactorGenerator: Sa,
-                            RecaptchaVerifier: mu,
-                            TwitterAuthProvider: Pr,
-                            Auth: _i,
-                            AuthCredential: Y,
-                            Error: c.ZR,
+                            EmailAuthProvider: Ft,
+                            FacebookAuthProvider: Mr,
+                            GithubAuthProvider: Fr,
+                            GoogleAuthProvider: Ur,
+                            OAuthProvider: he,
+                            SAMLAuthProvider: Fe,
+                            PhoneAuthProvider: pr,
+                            PhoneMultiFactorGenerator: Oa,
+                            RecaptchaVerifier: yu,
+                            TwitterAuthProvider: Zr,
+                            Auth: Si,
+                            AuthCredential: le,
+                            Error: d.ZR,
                         })
                         .setInstantiationMode('LAZY')
                         .setMultipleInstances(!1)
                 ),
                     n.registerVersion('@firebase/auth-compat', '0.2.15');
-            })(Ze.Z);
+            })(_e.Z);
+        },
+        655: (xi, et, Z) => {
+            Z.d(et, {
+                Q_: () => ve,
+                ZT: () => _e,
+                _T: () => V,
+                ev: () => st,
+                pi: () => d,
+            });
+            var o = function (c, l) {
+                return (o =
+                    Object.setPrototypeOf ||
+                    ({ __proto__: [] } instanceof Array &&
+                        function (f, h) {
+                            f.__proto__ = h;
+                        }) ||
+                    function (f, h) {
+                        for (var v in h)
+                            Object.prototype.hasOwnProperty.call(h, v) &&
+                                (f[v] = h[v]);
+                    })(c, l);
+            };
+            function _e(c, l) {
+                if ('function' != typeof l && null !== l)
+                    throw new TypeError(
+                        'Class extends value ' +
+                            String(l) +
+                            ' is not a constructor or null'
+                    );
+                function f() {
+                    this.constructor = c;
+                }
+                o(c, l),
+                    (c.prototype =
+                        null === l
+                            ? Object.create(l)
+                            : ((f.prototype = l.prototype), new f()));
+            }
+            var d = function () {
+                return (
+                    (d =
+                        Object.assign ||
+                        function (l) {
+                            for (var f, h = 1, v = arguments.length; h < v; h++)
+                                for (var _ in (f = arguments[h]))
+                                    Object.prototype.hasOwnProperty.call(
+                                        f,
+                                        _
+                                    ) && (l[_] = f[_]);
+                            return l;
+                        }),
+                    d.apply(this, arguments)
+                );
+            };
+            function V(c, l) {
+                var f = {};
+                for (var h in c)
+                    Object.prototype.hasOwnProperty.call(c, h) &&
+                        l.indexOf(h) < 0 &&
+                        (f[h] = c[h]);
+                if (
+                    null != c &&
+                    'function' == typeof Object.getOwnPropertySymbols
+                ) {
+                    var v = 0;
+                    for (h = Object.getOwnPropertySymbols(c); v < h.length; v++)
+                        l.indexOf(h[v]) < 0 &&
+                            Object.prototype.propertyIsEnumerable.call(
+                                c,
+                                h[v]
+                            ) &&
+                            (f[h[v]] = c[h[v]]);
+                }
+                return f;
+            }
+            function st(c, l, f) {
+                if (f || 2 === arguments.length)
+                    for (var _, h = 0, v = l.length; h < v; h++)
+                        (_ || !(h in l)) &&
+                            (_ || (_ = Array.prototype.slice.call(l, 0, h)),
+                            (_[h] = l[h]));
+                return c.concat(_ || Array.prototype.slice.call(l));
+            }
+            function ve(c, l, f, h) {
+                if ('a' === f && !h)
+                    throw new TypeError(
+                        'Private accessor was defined without a getter'
+                    );
+                if ('function' == typeof l ? c !== l || !h : !l.has(c))
+                    throw new TypeError(
+                        'Cannot read private member from an object whose class did not declare it'
+                    );
+                return 'm' === f
+                    ? h
+                    : 'a' === f
+                    ? h.call(c)
+                    : h
+                    ? h.value
+                    : l.get(c);
+            }
         },
     },
 ]);

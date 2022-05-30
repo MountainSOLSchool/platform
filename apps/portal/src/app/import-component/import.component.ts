@@ -1,67 +1,35 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import {
-    BehaviorSubject,
-    delay,
-    filter,
     forkJoin,
     from,
     map,
     mapTo,
-    merge,
-    Observable,
-    of,
-    pairwise,
-    repeatWhen,
-    shareReplay,
     startWith,
     Subject,
     switchMap,
     tap,
-    withLatestFrom,
 } from 'rxjs';
-import { Clipboard } from '@angular/cdk/clipboard';
 import * as Papa from 'papaparse';
 import {
     StudentEnrollmentCsvHeaderMap,
     StudentEnrollmentEntry,
 } from '@sol/student/import';
 import { Store } from '@ngrx/store';
-import { reportComponentActions } from './store/report.actions';
-import { reportComponentFeature } from './store/report.feature';
+import { MessageService } from 'primeng/api';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './report.component.html',
+    templateUrl: './import.component.html',
 })
-export class ReportComponent implements OnInit {
+export class ImportComponent implements OnInit {
     constructor(
         private readonly functionsApi: FunctionsApi,
-        private readonly store: Store
+        private readonly store: Store,
+        private readonly messageService: MessageService
     ) {}
 
-    isClassFormDownloadInProgress$:
-        | Observable<Record<string, boolean>>
-        | undefined;
-    isClassSignInFormDownloadsInProgress$:
-        | Observable<Record<string, boolean>>
-        | undefined;
-    copyEmailsButtonLabel$: Observable<Record<string, string>> | undefined;
-    copyEmailButtonStyleClass$: Observable<string> | undefined;
-
     uploadClick$ = new Subject<{ files: Array<File> }>();
-    selectedClass$ = new BehaviorSubject<{ name: string } | undefined>(
-        undefined
-    );
-    classNameInput$ = new Subject<{ query: string }>();
-    reportNameKeydown$ = new Subject<KeyboardEvent>();
-    emailClick$ = new Subject<string | undefined>();
-
-    classes$ = this.functionsApi
-        .call<{
-            classes: Array<{ title: string; enrollmentCount: string }>;
-        }>('classes')
-        .pipe(shareReplay(1));
 
     isUploading$ = this.uploadClick$.pipe(
         switchMap(({ files }) => {
@@ -107,44 +75,25 @@ export class ReportComponent implements OnInit {
                     )
                 ),
                 switchMap((enrollmentEntries) =>
-                    this.functionsApi
-                        .call(
-                            'importStudentEnrollmentSummer2022',
-                            enrollmentEntries
-                        )
-                        .pipe(mapTo(false))
+                    this.functionsApi.call<{
+                        result: { enrolled: Array<unknown> };
+                    }>('importEnrollment', enrollmentEntries)
                 ),
+                tap((response: { result: { enrolled: Array<unknown> } }) =>
+                    this.messageService.add({
+                        detail: `Successfully imported ${
+                            response.result.enrolled?.length ?? 0
+                        } enrollments!`,
+                        severity: 'success',
+                    })
+                ),
+                mapTo(false),
                 startWith(true)
             );
         })
     );
 
     ngOnInit(): void {
-        this.isClassFormDownloadInProgress$ = this.store.select(
-            reportComponentFeature.selectInProgressClassFormDownloads
-        );
-        this.isClassSignInFormDownloadsInProgress$ = this.store.select(
-            reportComponentFeature.selectInProgressCopyClassEmails
-        );
-        // this.copyEmailsButtonLabel$ = this.store.select(
-        //     reportComponentFeature.selectInProgressCopyClassEmails
-        // ).pipe(
-        //     pairwise(),
-        //     filter(([prev, cur])=> Object.assign({}, Object.entries(cur).map))
-        //     startWith('Copy emails'),
-        //     repeatWhen()
-        // );
-    }
-
-    copyEmailsClick(className: string) {
-        this.store.dispatch(
-            reportComponentActions.copyEmailsIntent({ className })
-        );
-    }
-
-    downloadClick(className: string) {
-        this.store.dispatch(
-            reportComponentActions.downloadFormsIntent({ className })
-        );
+        console.log('opened');
     }
 }
