@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HeaderComponent } from '@sol/header';
+import { UserGuard, UserGuardModule } from './user.guard';
 
 const routes: Routes = [
     {
@@ -9,6 +10,7 @@ const routes: Routes = [
         children: [
             {
                 path: '',
+                canActivate: [UserGuard],
                 loadChildren: () =>
                     import(
                         './dashboard-component/dashboard.component.module'
@@ -21,6 +23,7 @@ const routes: Routes = [
             },
             {
                 path: 'report',
+                canActivate: [UserGuard],
                 loadChildren: () =>
                     import('./report-component/report.component.module').then(
                         (m) => m.ReportComponentModule
@@ -28,6 +31,7 @@ const routes: Routes = [
             },
             {
                 path: 'import',
+                canActivate: [UserGuard],
                 loadChildren: () =>
                     import('./import-component/import.component.module').then(
                         (m) => m.ImportComponentModule
@@ -35,6 +39,7 @@ const routes: Routes = [
             },
             {
                 path: 'calendar',
+                canActivate: [UserGuard],
                 loadChildren: () =>
                     import('@sol/classes/calendar').then(
                         (m) => m.ClassesCalendarModule
@@ -42,6 +47,7 @@ const routes: Routes = [
             },
             {
                 path: 'classes',
+                canActivate: [UserGuard],
                 children: [
                     {
                         path: 'management',
@@ -57,7 +63,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes), UserGuardModule],
     exports: [RouterModule],
 })
 export class AppRoutingModule {}

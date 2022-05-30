@@ -21,9 +21,13 @@ export class AuthService {
     public logout(): void {
         from(this.afAuth.signOut())
             .pipe(
-                tap(() => this.router.navigate(['/'])),
+                tap(() => this.router.navigate(['/user/login'])),
                 take(1)
             )
             .subscribe();
+    }
+
+    public resetPassword(email: string): void {
+        from(this.afAuth.sendPasswordResetEmail(email));
     }
 }
