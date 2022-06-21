@@ -48,7 +48,7 @@ import { UserService } from '@sol/auth/user';
                     >
                 </li>
                 <li>
-                    <a routerLink="/tshirts" (click)="display = false"
+                    <a routerLink="/t-shirts" (click)="display = false"
                         >Tshirt Sizes</a
                     >
                 </li>

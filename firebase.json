@@ -24,6 +24,10 @@
                 "function": "emails"
             },
             {
+                "source": "/tshirts",
+                "function": "tshirts"
+            },
+            {
                 "source": "/signIn",
                 "function": "signIn"
             },

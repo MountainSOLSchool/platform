@@ -30,7 +30,7 @@ const routes: Routes = [
                     ),
             },
             {
-                path: 'tshirts',
+                path: 't-shirts',
                 canActivate: [UserGuard],
                 loadChildren: () =>
                     import('./tshirts-component/tshirts.component.module').then(
