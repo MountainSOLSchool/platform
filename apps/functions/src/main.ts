@@ -2,7 +2,10 @@
 
 import { AuthUtility, HttpUtility } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
-import { RosterReportGenerator } from '@sol/student/reports';
+import {
+    RosterReportGenerator,
+    StudentTshirtsGenerator,
+} from '@sol/student/reports';
 import { ClassEmailGenerator } from '@sol/student/reports';
 import {
     EnrollmentClassesMap,
@@ -80,6 +83,16 @@ export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
     });
 });
 
+export const tshirts = HttpUtility.aGetEndpoint(async (request, response) => {
+    await AuthUtility.validateIsAdmin(request, response);
+    const db = DatabaseUtility.getDatabase();
+    const tshirtGenerator = new StudentTshirtsGenerator(db);
+    const tshirtList = await tshirtGenerator.createTshirtList();
+    response.send({
+        list: tshirtList,
+    });
+});
+
 export const importEnrollment = HttpUtility.aGetEndpoint(
     async (request, response) => {
         await AuthUtility.validateIsAdmin(request, response);
@@ -146,6 +159,19 @@ export const importEnrollment = HttpUtility.aGetEndpoint(
                             important: false,
                         },
                     ],
+                    tshirt_size: entry.classes.includes(
+                        '(adult sizing): XLarge'
+                    )
+                        ? 'XLarge'
+                        : entry.classes.includes('(adult sizing): Large')
+                        ? 'Large'
+                        : entry.classes.includes('(adult sizing): Medium')
+                        ? 'Medium'
+                        : entry.classes.includes('(adult sizing): Small')
+                        ? 'Small'
+                        : entry.classes.includes('(adult sizing): XSmall')
+                        ? 'XSmall'
+                        : '',
                     medications: entry.medicationDosageFrequencyEntries
                         .split('\n')
                         .map((med) =>

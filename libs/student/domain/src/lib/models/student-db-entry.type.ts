@@ -24,4 +24,5 @@ export type StudentDbEntry = {
         doctor: string;
         important: boolean;
     }>;
+    tshirt_size: string;
 };

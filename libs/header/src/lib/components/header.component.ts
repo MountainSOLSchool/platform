@@ -48,6 +48,11 @@ import { UserService } from '@sol/auth/user';
                     >
                 </li>
                 <li>
+                    <a routerLink="/tshirts" (click)="display = false"
+                        >Tshirt Sizes</a
+                    >
+                </li>
+                <li>
                     <a routerLink="/import" (click)="display = false"
                         >Import Summer 2022 Enrollment</a
                     >

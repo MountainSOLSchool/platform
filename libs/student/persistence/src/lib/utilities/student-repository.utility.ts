@@ -54,22 +54,35 @@ export class StudentRepositoryUtility {
     }
 
     public async fetchStudents(
-        className: string
+        className?: string
     ): Promise<Array<StudentDbEntry>> {
-        const classes = this.database.collection('classes');
+        let students: Array<StudentDbEntry>;
+        if (className) {
+            const classes = this.database.collection('classes');
 
-        const classDocument = await DatabaseUtility.fetchFirstMatchingDocument(
-            classes,
-            ['name', '==', className]
-        );
+            const classDocument =
+                await DatabaseUtility.fetchFirstMatchingDocument(classes, [
+                    'name',
+                    '==',
+                    className,
+                ]);
 
-        const classStudentRefs: Array<FirebaseFirestore.DocumentReference> =
-            classDocument?.get('students') ?? [];
+            const classStudentRefs: Array<FirebaseFirestore.DocumentReference> =
+                classDocument?.get('students') ?? [];
 
-        const students =
-            await DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
-                classStudentRefs
+            students =
+                await DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
+                    classStudentRefs
+                );
+        } else {
+            const studentsCollection =
+                await DatabaseUtility.getHydratedCollection(
+                    this.database.collection('students')
+                );
+            students = studentsCollection['students'].map(
+                (doc) => doc as unknown as StudentDbEntry
             );
+        }
 
         return students;
     }

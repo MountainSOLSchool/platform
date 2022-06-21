@@ -30,6 +30,14 @@ const routes: Routes = [
                     ),
             },
             {
+                path: 'tshirts',
+                canActivate: [UserGuard],
+                loadChildren: () =>
+                    import('./tshirts-component/tshirts.component.module').then(
+                        (m) => m.TshirtsComponentModule
+                    ),
+            },
+            {
                 path: 'import',
                 canActivate: [UserGuard],
                 loadChildren: () =>
