@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import {
     LoginFailed,
     LoginIntent,
@@ -76,7 +76,7 @@ import { Actions, ofType } from '@ngrx/effects';
 })
 export class LoginComponent {
     constructor(
-        private readonly formBuilder: FormBuilder,
+        private readonly formBuilder: UntypedFormBuilder,
         private readonly store: Store,
         private readonly actions$: Actions
     ) {
@@ -88,7 +88,7 @@ export class LoginComponent {
 
     isLoggingIn$ = new BehaviorSubject(false);
 
-    public loginForm: FormGroup;
+    public loginForm: UntypedFormGroup;
 
     shouldShowResetSuggestion$ = this.actions$.pipe(
         ofType(LoginFailed),

@@ -4,12 +4,6 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import {
-    CalendarOptions,
-    EventApi,
-    EventClickArg,
-    EventInput,
-} from '@fullcalendar/angular';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import {
     mergeMap,
@@ -20,6 +14,11 @@ import {
     startWith,
     ReplaySubject,
 } from 'rxjs';
+import { CalendarOptions } from '@fullcalendar/web-component';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import { EventApi, EventInput, EventClickArg } from '@fullcalendar/core';
 
 @Component({
     selector: 'sol-calendar',
@@ -63,6 +62,7 @@ export class CalendarComponent {
     @Output() eventClick = new Subject<EventApi>();
 
     private _options: CalendarOptions = {
+        plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
         initialDate: new Date(),
         headerToolbar: {
             left: 'prev,next today',

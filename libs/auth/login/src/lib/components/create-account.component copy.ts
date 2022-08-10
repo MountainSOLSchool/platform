@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { CreateAccountIntent } from '../store/login.actions';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject } from 'rxjs';
@@ -47,7 +47,7 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class CreateAccountComponent {
     constructor(
-        private readonly formBuilder: FormBuilder,
+        private readonly formBuilder: UntypedFormBuilder,
         private readonly store: Store
     ) {
         this.loginForm = this.formBuilder.group({
@@ -58,7 +58,7 @@ export class CreateAccountComponent {
 
     isLoggingIn$ = new BehaviorSubject(false);
 
-    public loginForm: FormGroup;
+    public loginForm: UntypedFormGroup;
 
     signUpClick() {
         this.store.dispatch(

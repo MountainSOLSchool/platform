@@ -1,4 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { defineFullCalendarElement } from '@fullcalendar/web-component';
+
+defineFullCalendarElement();
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

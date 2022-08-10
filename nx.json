@@ -19,17 +19,6 @@
             }
         }
     },
-    "targetDependencies": {
-        "build": [
-            {
-                "target": "build",
-                "projects": "dependencies"
-            }
-        ]
-    },
-    "cli": {
-        "defaultCollection": "@nrwl/angular"
-    },
     "defaultProject": "portal",
     "generators": {
         "@nrwl/angular": {
@@ -53,5 +42,11 @@
             "unitTestRunner": "jest"
         },
         "@nrwl/angular:component": {}
+    },
+    "$schema": "./node_modules/nx/schemas/nx-schema.json",
+    "targetDefaults": {
+        "build": {
+            "dependsOn": ["^build"]
+        }
     }
 }

@@ -2,6 +2,7 @@
     "version": 1,
     "projects": {
         "auth-login": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/auth/login",
             "sourceRoot": "libs/auth/login/src",
@@ -28,6 +29,7 @@
             "tags": ["scope:auth"]
         },
         "auth-user": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/auth/user",
             "sourceRoot": "libs/auth/user/src",
@@ -54,6 +56,7 @@
             "tags": ["scope:auth", "type:api"]
         },
         "calendar": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/calendar/calendar",
             "sourceRoot": "libs/calendar/calendar/src",
@@ -80,6 +83,7 @@
             "tags": []
         },
         "classes-calendar": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/classes/class-calendar",
             "sourceRoot": "libs/classes/class-calendar/src",
@@ -106,6 +110,7 @@
             "tags": ["scope:classes"]
         },
         "classes-class-enrollment": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/classes/class-enrollment",
             "sourceRoot": "libs/classes/class-enrollment/src",
@@ -132,6 +137,7 @@
             "tags": ["classes"]
         },
         "classes-class-management": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/classes/class-management",
             "sourceRoot": "libs/classes/class-management/src",
@@ -158,6 +164,7 @@
             "tags": ["scope:classes"]
         },
         "classeses-domain": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/classes/classes-domain",
             "sourceRoot": "libs/classes/classes-domain/src",
@@ -184,6 +191,7 @@
             "tags": ["scope:classes"]
         },
         "firebase-auth": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/firebase/auth",
             "sourceRoot": "libs/firebase/auth/src",
@@ -210,6 +218,7 @@
             "tags": ["scope:firebase"]
         },
         "firebase-database": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/firebase/database",
             "sourceRoot": "libs/firebase/database/src",
             "projectType": "library",
@@ -233,6 +242,7 @@
             "tags": ["scope:firebase", "type:api"]
         },
         "firebase-functions": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/firebase/functions",
             "sourceRoot": "libs/firebase/functions/src",
             "projectType": "library",
@@ -256,6 +266,7 @@
             "tags": ["scope:firebase", "type:api"]
         },
         "firebase-functions-api": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/firebase/functions-api",
             "sourceRoot": "libs/firebase/functions-api/src",
@@ -282,6 +293,7 @@
             "tags": []
         },
         "functions": {
+            "$schema": "../../node_modules/nx/schemas/project-schema.json",
             "root": "apps/functions",
             "sourceRoot": "apps/functions/src",
             "projectType": "application",
@@ -334,6 +346,7 @@
             "tags": []
         },
         "header": {
+            "$schema": "../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/header",
             "sourceRoot": "libs/header/src",
@@ -360,6 +373,7 @@
             "tags": ["scope:header"]
         },
         "paths": {
+            "$schema": "../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/paths",
             "sourceRoot": "libs/paths/src",
@@ -387,6 +401,7 @@
             "tags": ["scope:libs/paths"]
         },
         "pdf-firebase": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/pdf/firebase",
             "sourceRoot": "libs/pdf/firebase/src",
             "projectType": "library",
@@ -410,6 +425,7 @@
             "tags": ["scope:pdf", "type:api"]
         },
         "pdf-generate": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/pdf/generate",
             "sourceRoot": "libs/pdf/generate/src",
             "projectType": "library",
@@ -433,6 +449,7 @@
             "tags": ["scope:pdf", "type:api"]
         },
         "portal": {
+            "$schema": "../../node_modules/nx/schemas/project-schema.json",
             "projectType": "application",
             "root": "apps/portal",
             "sourceRoot": "apps/portal/src",
@@ -555,6 +572,7 @@
             "tags": []
         },
         "portal-e2e": {
+            "$schema": "../../node_modules/nx/schemas/project-schema.json",
             "root": "apps/portal-e2e",
             "sourceRoot": "apps/portal-e2e/src",
             "projectType": "application",
@@ -584,6 +602,7 @@
             "implicitDependencies": ["portal"]
         },
         "record-domain": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/record/domain",
             "sourceRoot": "libs/record/domain/src",
             "projectType": "library",
@@ -607,6 +626,7 @@
             "tags": ["scope:record", "type:api"]
         },
         "student-domain": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/student/domain",
             "sourceRoot": "libs/student/domain/src",
             "projectType": "library",
@@ -630,6 +650,7 @@
             "tags": ["scope:student"]
         },
         "student-import": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/student/import",
             "sourceRoot": "libs/student/import/src",
@@ -656,6 +677,7 @@
             "tags": ["scope:student"]
         },
         "student-persistence": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
             "root": "libs/student/persistence",
             "sourceRoot": "libs/student/persistence/src",
@@ -682,6 +704,7 @@
             "tags": ["scope:student"]
         },
         "student-reports": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/student/reports",
             "sourceRoot": "libs/student/reports/src",
             "projectType": "library",
@@ -705,6 +728,7 @@
             "tags": ["scope:student"]
         },
         "table-domain": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/table/domain",
             "sourceRoot": "libs/table/domain/src",
             "projectType": "library",
@@ -728,6 +752,7 @@
             "tags": ["scope:table", "type:api"]
         },
         "table-html": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/table/html",
             "sourceRoot": "libs/table/html/src",
             "projectType": "library",
@@ -751,6 +776,7 @@
             "tags": ["scope:table", "type:api"]
         },
         "table-pdf": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/table/pdf",
             "sourceRoot": "libs/table/pdf/src",
             "projectType": "library",
