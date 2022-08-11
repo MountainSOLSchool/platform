@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import {
     LoginFailed,
     LoginIntent,
@@ -76,19 +76,22 @@ import { Actions, ofType } from '@ngrx/effects';
 })
 export class LoginComponent {
     constructor(
-        private readonly formBuilder: UntypedFormBuilder,
+        private readonly formBuilder: FormBuilder,
         private readonly store: Store,
         private readonly actions$: Actions
     ) {
         this.loginForm = this.formBuilder.group({
-            email: [],
-            password: [],
+            email: [''],
+            password: [''],
         });
     }
 
     isLoggingIn$ = new BehaviorSubject(false);
 
-    public loginForm: UntypedFormGroup;
+    public loginForm: FormGroup<{
+        email: FormControl<string | null>;
+        password: FormControl<string | null>;
+    }>;
 
     shouldShowResetSuggestion$ = this.actions$.pipe(
         ofType(LoginFailed),
@@ -98,13 +101,17 @@ export class LoginComponent {
     );
 
     loginClick() {
-        this.store.dispatch(
-            LoginIntent({
-                email: this.loginForm?.value.email,
-                password: this.loginForm?.value.password,
-            })
-        );
-        this.isLoggingIn$.next(true);
+        const email = this.loginForm.value.email;
+        const password = this.loginForm.value.password;
+        if (email && password) {
+            this.store.dispatch(
+                LoginIntent({
+                    email,
+                    password,
+                })
+            );
+            this.isLoggingIn$.next(true);
+        }
     }
 
     passwordKeydown(event: KeyboardEvent) {
@@ -114,8 +121,9 @@ export class LoginComponent {
     }
 
     passwordReset() {
-        this.store.dispatch(
-            ResetPasswordIntent({ email: this.loginForm.value.email })
-        );
+        const email = this.loginForm.value.email;
+        if (email) {
+            this.store.dispatch(ResetPasswordIntent({ email }));
+        }
     }
 }
