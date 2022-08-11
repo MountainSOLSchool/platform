@@ -56,6 +56,8 @@ import { Actions, ofType } from '@ngrx/effects';
                 [loading]="(isLoggingIn$ | async) ?? false"
                 (click)="loginClick()"
                 label="Submit"
+                class="w-full"
+                icon="pi pi-user"
             ></p-button>
         </div>
         <div
