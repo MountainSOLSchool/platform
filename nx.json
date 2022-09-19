@@ -33,6 +33,7 @@
             }
         },
         "@nrwl/angular:application": {
+            "style": "css",
             "linter": "eslint",
             "unitTestRunner": "jest",
             "e2eTestRunner": "cypress"
@@ -41,7 +42,9 @@
             "linter": "eslint",
             "unitTestRunner": "jest"
         },
-        "@nrwl/angular:component": {}
+        "@nrwl/angular:component": {
+            "style": "css"
+        }
     },
     "$schema": "./node_modules/nx/schemas/nx-schema.json",
     "targetDefaults": {

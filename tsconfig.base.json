@@ -15,6 +15,7 @@
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
         "paths": {
+            "@rex/mutable": ["libs/rex-mutable/src/index.ts"],
             "@sol/auth/login": ["libs/auth/login/src/index.ts"],
             "@sol/auth/user": ["libs/auth/user/src/index.ts"],
             "@sol/calendar": ["libs/calendar/calendar/src/index.ts"],

@@ -625,6 +625,48 @@
             },
             "tags": ["scope:record", "type:api"]
         },
+        "rex-mutable": {
+            "projectType": "library",
+            "root": "libs/rex-mutable",
+            "sourceRoot": "libs/rex-mutable/src",
+            "prefix": "sol",
+            "architect": {
+                "build": {
+                    "builder": "@nrwl/angular:ng-packagr-lite",
+                    "outputs": ["dist/libs/rex-mutable"],
+                    "options": {
+                        "project": "libs/rex-mutable/ng-package.json"
+                    },
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "libs/rex-mutable/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "libs/rex-mutable/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/rex-mutable"],
+                    "options": {
+                        "jestConfig": "libs/rex-mutable/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/rex-mutable/**/*.ts",
+                            "libs/rex-mutable/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": []
+        },
         "student-domain": {
             "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/student/domain",
