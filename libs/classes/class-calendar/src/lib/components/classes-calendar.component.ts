@@ -68,7 +68,6 @@ export class SelectClassesCalendarComponent {
             })
         ),
         mergeMap((initialClassEvents) => {
-            console.log(initialClassEvents);
             return this.classSelected$.pipe(
                 scan(
                     (classEvents, selectedClass) =>

@@ -45,3 +45,5 @@ firebase-debug.log
 .angular
 public/
 static/
+
+migrations.json
