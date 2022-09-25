@@ -66,6 +66,13 @@ const routes: Routes = [
                                 (m) => m.ClassManagementModule
                             ),
                     },
+                    {
+                        path: 'enrollment',
+                        loadChildren: () =>
+                            import('@sol/classes/enrollment').then(
+                                (m) => m.ClassEnrollmentModule
+                            ),
+                    },
                 ],
             },
         ],

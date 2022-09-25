@@ -62,6 +62,13 @@ import { UserService } from '@sol/auth/user';
                         >Class Calendar</a
                     >
                 </li>
+                <li>
+                    <a
+                        routerLink="/classes/enrollment"
+                        (click)="display = false"
+                        >Class Registration</a
+                    >
+                </li>
             </ul>
         </p-sidebar>`,
 })
