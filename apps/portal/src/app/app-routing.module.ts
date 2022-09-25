@@ -19,7 +19,9 @@ const routes: Routes = [
             {
                 path: 'user',
                 loadChildren: () =>
-                    import('@sol/auth/login').then((m) => m.AuthLoginModule),
+                    import('@sol/auth/login').then(
+                        (m) => m.AuthLoginRoutingModule
+                    ),
             },
             {
                 path: 'report',

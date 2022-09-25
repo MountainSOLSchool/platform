@@ -16,7 +16,8 @@ import { MessageModule } from 'primeng/message';
 import { concatLatestFrom } from '@ngrx/effects';
 import { loginSuite } from './login.suite';
 
-type Login = { email: string; password: string; isCreatingNewAccount: boolean };
+export type Login = { email: string; password: string };
+type LoginState = Login & { isCreatingNewAccount: boolean };
 
 enum RequestState {
     Idle,
@@ -31,7 +32,7 @@ enum RequestState {
     providers: [LoginStore],
 })
 @Injectable({ providedIn: 'root' })
-export class LoginStore extends ComponentStore<Login> {
+export class LoginStore extends ComponentStore<LoginState> {
     private readonly authService = inject(AuthService);
     private readonly router = inject(Router);
     private readonly messageService = inject(MessageService);
@@ -152,6 +153,12 @@ export class LoginStore extends ComponentStore<Login> {
                     ? validation.getErrors()
                     : {};
             })
+        );
+    }
+
+    selectLoginModel() {
+        return this.state$.pipe(
+            map(({ email, password }) => ({ email, password }))
         );
     }
 }

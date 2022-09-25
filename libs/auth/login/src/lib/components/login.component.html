@@ -32,6 +32,7 @@
                                 : 'current-password'
                         "
                         [(ngModel)]="login.email"
+                        (ngModelChange)="onUpdated(login)"
                         placeholder="somebody@email.com"
                     />
                 </div>
@@ -55,11 +56,12 @@
                                 : 'current-password'
                         "
                         [(ngModel)]="login.password"
+                        (ngModelChange)="onUpdated(login)"
                         (keydown)="onPasswordKeydown($event)"
                     />
                 </div>
                 <p *ngIf="errors['password'] as e" style="color: red">
-                    {{ errors['password'].join('🤨') }}
+                    {{ errors['password'].join(', ') }}
                 </p>
             </div>
         </form>

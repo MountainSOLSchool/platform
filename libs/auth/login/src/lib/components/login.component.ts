@@ -4,9 +4,7 @@ import {
     inject,
     OnInit,
 } from '@angular/core';
-import { map } from 'rxjs';
-import { mutable } from '@rex/mutable';
-import { LoginStore } from './login.store';
+import { Login, LoginStore } from './login.store';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -36,14 +34,7 @@ export class LoginComponent implements OnInit {
     readonly loginStore = inject(LoginStore);
     readonly route = inject(ActivatedRoute);
 
-    readonly login$ = this.loginStore.state$.pipe(
-        map((login) =>
-            mutable(login, {
-                onChange: (prop, updated) =>
-                    this.loginStore.patchState({ [prop]: updated }),
-            })
-        )
-    );
+    readonly login$ = this.loginStore.selectLoginModel();
 
     readonly isLoggingIn$ = this.loginStore.selectIsLoggingIn();
     readonly shouldShowResetSuggestion$ =
@@ -58,6 +49,10 @@ export class LoginComponent implements OnInit {
             password: '',
             isCreatingNewAccount: this.route.snapshot.data['create'],
         });
+    }
+
+    onUpdated(login: Login): void {
+        this.loginStore.patchState({ ...login });
     }
 
     onSubmit() {
