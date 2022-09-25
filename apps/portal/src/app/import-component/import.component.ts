@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import {
     forkJoin,
@@ -21,7 +21,7 @@ import { MessageService } from 'primeng/api';
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './import.component.html',
 })
-export class ImportComponent implements OnInit {
+export class ImportComponent {
     constructor(
         private readonly functionsApi: FunctionsApi,
         private readonly messageService: MessageService
