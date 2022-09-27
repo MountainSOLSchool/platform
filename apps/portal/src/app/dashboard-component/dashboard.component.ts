@@ -1,14 +1,24 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+} from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { ChartData } from 'chart.js';
+import { ChartModule } from 'primeng/chart';
 import { map, Observable } from 'rxjs';
 
 @Component({
+    standalone: true,
+    imports: [CommonModule, ChartModule, FunctionsApi, RouterModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {
-    constructor(private readonly functionsApi: FunctionsApi) {}
+    private readonly functionsApi = inject(FunctionsApi);
 
     data$: Observable<ChartData> | undefined;
 

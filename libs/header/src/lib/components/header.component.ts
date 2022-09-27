@@ -1,7 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { UserButtonComponent } from '@sol/auth/login';
 import { UserService } from '@sol/auth/user';
+import { ButtonModule } from 'primeng/button';
+import { SidebarModule } from 'primeng/sidebar';
+import { ToolbarModule } from 'primeng/toolbar';
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        ButtonModule,
+        SidebarModule,
+        ToolbarModule,
+        RouterModule,
+        UserButtonComponent,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: [
         `

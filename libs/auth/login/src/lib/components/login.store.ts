@@ -12,7 +12,6 @@ import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { AuthService, FirebaseAuthModule } from '@sol/firebase/auth';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { MessageModule } from 'primeng/message';
 import { concatLatestFrom } from '@ngrx/effects';
 import { loginSuite } from './login.suite';
 
@@ -28,8 +27,8 @@ enum RequestState {
 }
 
 @NgModule({
-    imports: [FirebaseAuthModule, MessageModule],
-    providers: [LoginStore],
+    imports: [FirebaseAuthModule],
+    providers: [LoginStore, MessageService],
 })
 @Injectable({ providedIn: 'root' })
 export class LoginStore extends ComponentStore<LoginState> {

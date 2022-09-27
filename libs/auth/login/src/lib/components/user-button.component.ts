@@ -1,12 +1,28 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+} from '@angular/core';
 import { UserService } from '@sol/auth/user';
 import { AuthService } from '@sol/firebase/auth';
 import { MenuItem } from 'primeng/api';
+import { AvatarModule } from 'primeng/avatar';
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
 import { map, Observable } from 'rxjs';
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        MenuModule,
+        AvatarModule,
+        ButtonModule,
+        UserService,
+        AuthService,
+    ],
     selector: 'sol-user-button',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: ` <ng-container *ngIf="email$ | async as email; else login">
@@ -33,10 +49,8 @@ import { map, Observable } from 'rxjs';
         ></ng-template>`,
 })
 export class UserButtonComponent implements OnInit {
-    constructor(
-        private readonly auth: AuthService,
-        private readonly userService: UserService
-    ) {}
+    private readonly auth = inject(AuthService);
+    private readonly userService = inject(UserService);
 
     public email$: Observable<string | null | undefined> | undefined;
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgModule } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
     CreateAccountIntent,
@@ -11,7 +11,12 @@ import { catchError, filter, map, of, switchMap, tap } from 'rxjs';
 import { AuthService } from '@sol/firebase/auth';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { MessageModule } from 'primeng/message';
 
+@NgModule({
+    imports: [MessageModule],
+    providers: [MessageService],
+})
 @Injectable({
     providedIn: 'root',
 })
