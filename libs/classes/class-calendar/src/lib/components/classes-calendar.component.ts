@@ -1,25 +1,20 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { EventApi, EventInput } from '@fullcalendar/core';
 import { Class } from '@sol/classes/domain';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { mergeMap, Observable, scan, Subject, map, startWith } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { CalendarComponent } from '@sol/calendar';
+import { CardModule } from 'primeng/card';
 
 @Component({
+    standalone: true,
+    imports: [CommonModule, CalendarComponent, CardModule, FunctionsApi],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `<sol-calendar
-            [events]="classEvents$ | async"
-            (eventClick)="classSelected$.next($event)"
-        ></sol-calendar>
-        <p-card
-            *ngFor="let class of selectedClasses$ | async"
-            [header]="class.name"
-            [style]="{ width: '25rem', 'margin-bottom': '2em' }"
-        >
-            <p>Hey I'm the details.</p>
-        </p-card>`,
+    templateUrl: './classes-calendar.component.html',
 })
 export class SelectClassesCalendarComponent {
-    constructor(private readonly functionsApi: FunctionsApi) {}
+    private readonly functionsApi = inject(FunctionsApi);
 
     public classSelected$ = new Subject<EventApi>();
 

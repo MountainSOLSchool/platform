@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    CUSTOM_ELEMENTS_SCHEMA,
     Input,
     Output,
 } from '@angular/core';
@@ -19,31 +20,16 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { EventApi, EventInput, EventClickArg } from '@fullcalendar/core';
+import { CommonModule } from '@angular/common';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
+    standalone: true,
+    imports: [CommonModule, SkeletonModule],
     selector: 'sol-calendar',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template: `
-        <ng-container *ngIf="areEventsLoaded$ | async; else skeleton"
-            ><full-calendar
-                [options]="(options$ | async) ?? undefined"
-            ></full-calendar
-        ></ng-container>
-        <ng-template #skeleton>
-            <h2 style="text-align: center">Loading Calendar...</h2>
-            <table
-                style="margin-top: 2rem; padding: 0 10px"
-                width="100%"
-                height="400px"
-            >
-                <tr *ngFor="let r of calendarRows">
-                    <td style="padding: 5px" *ngFor="let c of calendarColumns">
-                        <p-skeleton height="75px" width="95%"></p-skeleton>
-                    </td>
-                </tr>
-            </table>
-        </ng-template>
-    `,
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
+    templateUrl: './calendar.component.html',
 })
 export class CalendarComponent {
     constructor(private readonly firebaseApi: FunctionsApi) {}

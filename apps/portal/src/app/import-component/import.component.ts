@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import {
     forkJoin,
@@ -16,16 +16,26 @@ import {
     StudentEnrollmentEntry,
 } from '@sol/student/import';
 import { MessageService } from 'primeng/api';
+import { CommonModule } from '@angular/common';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { MessageModule } from 'primeng/message';
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        FunctionsApi,
+        FileUploadModule,
+        ProgressBarModule,
+        MessageModule,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './import.component.html',
 })
 export class ImportComponent {
-    constructor(
-        private readonly functionsApi: FunctionsApi,
-        private readonly messageService: MessageService
-    ) {}
+    private readonly functionsApi = inject(FunctionsApi);
+    private readonly messageService = inject(MessageService);
 
     uploadClick$ = new Subject<{ files: Array<File> }>();
 

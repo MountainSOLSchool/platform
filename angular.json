@@ -299,13 +299,15 @@
             "projectType": "application",
             "architect": {
                 "build": {
-                    "builder": "@nrwl/node:webpack",
+                    "builder": "@nrwl/webpack:webpack",
                     "outputs": ["{options.outputPath}"],
                     "options": {
                         "outputPath": "dist/apps/functions",
                         "main": "apps/functions/src/main.ts",
                         "tsConfig": "apps/functions/tsconfig.app.json",
-                        "assets": ["apps/functions/src/assets"]
+                        "assets": ["apps/functions/src/assets"],
+                        "target": "node",
+                        "compiler": "tsc"
                     },
                     "configurations": {
                         "production": {

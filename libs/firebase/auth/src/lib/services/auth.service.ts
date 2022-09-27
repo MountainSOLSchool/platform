@@ -1,9 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { Injectable, NgModule } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import {
+    AngularFireAuth,
+    AngularFireAuthModule,
+} from '@angular/fire/compat/auth';
 import { from } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 
+@NgModule({
+    imports: [AngularFireAuthModule, RouterModule],
+})
 @Injectable()
 export class AuthService {
     constructor(private afAuth: AngularFireAuth, private router: Router) {}
