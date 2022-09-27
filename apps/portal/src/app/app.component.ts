@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { defineFullCalendarElement } from '@fullcalendar/web-component';
-
-defineFullCalendarElement();
+import { RouterModule } from '@angular/router';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
+    standalone: true,
+    imports: [ToastModule, RouterModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-root',
     template: ` <div>

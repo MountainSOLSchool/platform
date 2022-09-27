@@ -1,1 +1,1 @@
-export * from './lib/sol-calendar.module';
+export * from './lib/components/calendar.component';

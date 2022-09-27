@@ -1,1 +1,1 @@
-export * from './lib/class-enrollment.module';
+export * from './lib/class-enrollment';

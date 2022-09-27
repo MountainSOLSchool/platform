@@ -1,13 +1,18 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { map, shareReplay } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { TableModule } from 'primeng/table';
 
 @Component({
+    standalone: true,
+    imports: [CommonModule, ProgressBarModule, TableModule, FunctionsApi],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './tshirts.component.html',
 })
 export class TshirtsComponent {
-    constructor(private readonly functionsApi: FunctionsApi) {}
+    private readonly functionsApi = inject(FunctionsApi);
 
     students$ = this.functionsApi
         .call<{
