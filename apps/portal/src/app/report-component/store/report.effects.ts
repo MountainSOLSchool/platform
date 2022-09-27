@@ -1,21 +1,22 @@
-import { Clipboard } from '@angular/cdk/clipboard';
-import { Injectable } from '@angular/core';
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
+import { inject, Injectable, NgModule } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { MessageService } from 'primeng/api';
+import { MessageModule } from 'primeng/message';
 import { forkJoin, map, mapTo, startWith, switchMap, tap } from 'rxjs';
 import { reportComponentActions, reportEffectsActions } from './report.actions';
 
+@NgModule({
+    imports: [FunctionsApi, ClipboardModule, MessageModule],
+    providers: [MessageService],
+})
 @Injectable({ providedIn: 'root' })
 export class ReportComponentEffects {
-    constructor(
-        private readonly actions$: Actions,
-        private readonly store: Store,
-        private readonly functionsApi: FunctionsApi,
-        private readonly clipboard: Clipboard,
-        private readonly messageService: MessageService
-    ) {}
+    private readonly actions$ = inject(Actions);
+    private readonly functionsApi = inject(FunctionsApi);
+    private readonly clipboard = inject(Clipboard);
+    private readonly messageService = inject(MessageService);
 
     downloadClassForms$ = createEffect(() => {
         return this.actions$.pipe(

@@ -35,7 +35,8 @@
         "serve:playground": "cd apps/functions/src && http-server",
         "format:everything": "prettier --write .",
         "install:all": "npm ci && husky install && node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
-        "postinstall": "ngcc --properties es2020 browser module main"
+        "postinstall": "ngcc --properties es2020 browser module main",
+        "analyze": "webpack-bundle-analyzer public/stats.json"
     },
     "main": "dist/apps/functions/main.js",
     "engines": {
@@ -63,7 +64,7 @@
         "@ngrx/effects": "14.0.2",
         "@ngrx/store": "14.0.2",
         "@ngrx/store-devtools": "14.0.2",
-        "@nrwl/angular": "14.6.4",
+        "@nrwl/angular": "14.7.13",
         "chart.js": "^3.8.0",
         "cors": "^2.8.5",
         "firebase": "^9.8.2",
@@ -73,7 +74,7 @@
         "papaparse": "^5.3.2",
         "primeflex": "^3.2.1",
         "primeicons": "^5.0.0",
-        "primeng": "^14.0.0",
+        "primeng": "^14.1.1",
         "rxjs": "~7.5.0",
         "tslib": "^2.3.1",
         "vest": "^4.6.7",
@@ -88,13 +89,13 @@
         "@angular/cli": "~14.2.0",
         "@angular/compiler-cli": "14.2.0",
         "@angular/language-service": "14.2.0",
-        "@nrwl/cli": "14.6.4",
-        "@nrwl/cypress": "14.6.4",
-        "@nrwl/eslint-plugin-nx": "14.6.4",
-        "@nrwl/jest": "14.6.4",
-        "@nrwl/linter": "14.6.4",
-        "@nrwl/node": "14.6.4",
-        "@nrwl/workspace": "14.6.4",
+        "@nrwl/cli": "14.7.13",
+        "@nrwl/cypress": "14.7.13",
+        "@nrwl/eslint-plugin-nx": "14.7.13",
+        "@nrwl/jest": "14.7.13",
+        "@nrwl/linter": "14.7.13",
+        "@nrwl/node": "14.7.13",
+        "@nrwl/workspace": "14.7.13",
         "@types/cors": "^2.8.12",
         "@types/html-pdf": "^2.2.1",
         "@types/jest": "28.1.8",
@@ -116,7 +117,7 @@
         "jest-environment-jsdom": "28.1.1",
         "jest-preset-angular": "12.2.2",
         "ng-packagr": "~14.2.0",
-        "nx": "14.6.4",
+        "nx": "14.7.13",
         "postcss": "^8.3.9",
         "postcss-import": "14.1.0",
         "postcss-preset-env": "7.5.0",
@@ -125,6 +126,7 @@
         "pretty-quick": "^3.1.2",
         "ts-jest": "28.0.8",
         "ts-node": "10.9.1",
-        "typescript": "4.7.4"
+        "typescript": "4.7.4",
+        "webpack-bundle-analyzer": "^4.4.2"
     }
 }

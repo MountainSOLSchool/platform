@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable, NgModule } from '@angular/core';
 import {
     HttpEvent,
     HttpInterceptor,
@@ -7,11 +7,17 @@ import {
 } from '@angular/common/http';
 
 import { from, map, Observable, switchMap } from 'rxjs';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import {
+    AngularFireAuth,
+    AngularFireAuthModule,
+} from '@angular/fire/compat/auth';
 
+@NgModule({
+    imports: [AngularFireAuthModule],
+})
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-    constructor(private readonly afAuth: AngularFireAuth) {}
+    private readonly afAuth = inject(AngularFireAuth);
 
     intercept<T>(
         req: HttpRequest<T>,

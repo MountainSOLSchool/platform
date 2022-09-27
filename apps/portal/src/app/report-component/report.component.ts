@@ -1,19 +1,40 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnInit,
+} from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { BehaviorSubject, map, Observable, shareReplay, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { reportComponentActions } from './store/report.actions';
 import { reportComponentFeature } from './store/report.feature';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { TableModule } from 'primeng/table';
+import { CommonModule } from '@angular/common';
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        FunctionsApi,
+        ButtonModule,
+        InputTextModule,
+        AutoCompleteModule,
+        FileUploadModule,
+        ProgressBarModule,
+        TableModule,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './report.component.html',
 })
 export class ReportComponent implements OnInit {
-    constructor(
-        private readonly functionsApi: FunctionsApi,
-        private readonly store: Store
-    ) {}
+    private readonly functionsApi = inject(FunctionsApi);
+    private readonly store = inject(Store);
 
     isClassFormDownloadInProgress$:
         | Observable<Record<string, boolean>>
