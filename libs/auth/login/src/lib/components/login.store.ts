@@ -28,7 +28,7 @@ enum RequestState {
 
 @NgModule({
     imports: [FirebaseAuthModule],
-    providers: [LoginStore],
+    providers: [LoginStore, MessageService],
 })
 @Injectable({ providedIn: 'root' })
 export class LoginStore extends ComponentStore<LoginState> {

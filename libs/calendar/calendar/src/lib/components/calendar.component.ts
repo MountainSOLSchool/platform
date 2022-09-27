@@ -15,13 +15,18 @@ import {
     startWith,
     ReplaySubject,
 } from 'rxjs';
-import { CalendarOptions } from '@fullcalendar/web-component';
+import {
+    CalendarOptions,
+    defineFullCalendarElement,
+} from '@fullcalendar/web-component';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import { EventApi, EventInput, EventClickArg } from '@fullcalendar/core';
 import { CommonModule } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
+
+defineFullCalendarElement();
 
 @Component({
     standalone: true,

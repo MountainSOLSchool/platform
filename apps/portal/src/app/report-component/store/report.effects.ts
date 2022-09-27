@@ -9,6 +9,7 @@ import { reportComponentActions, reportEffectsActions } from './report.actions';
 
 @NgModule({
     imports: [FunctionsApi, ClipboardModule, MessageModule],
+    providers: [MessageService],
 })
 @Injectable({ providedIn: 'root' })
 export class ReportComponentEffects {

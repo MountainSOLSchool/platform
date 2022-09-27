@@ -1,4 +1,3 @@
-import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { AngularFireModule } from '@angular/fire/compat';
@@ -12,10 +11,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { AuthInterceptor } from '@sol/auth/login';
-import { MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
+import { AuthInterceptor } from '@sol/auth/interceptor';
 import { appRoutes } from './app/app-routes';
 import { AppComponent } from './app/app.component';
 
@@ -40,17 +36,9 @@ bootstrapApplication(AppComponent, {
     providers: [
         importProvidersFrom(BrowserModule),
         importProvidersFrom(BrowserAnimationsModule),
-        importProvidersFrom(ToastModule),
-        importProvidersFrom(ClipboardModule),
         importProvidersFrom(RouterModule.forRoot(appRoutes)),
         importProvidersFrom(StoreModule.forRoot({}, {})),
         importProvidersFrom(EffectsModule.forRoot([])),
-        importProvidersFrom(
-            StoreDevtoolsModule.instrument({
-                maxAge: 25, // Retains last 25 states
-                autoPause: true,
-            })
-        ),
         importProvidersFrom(
             AngularFireModule.initializeApp({
                 apiKey: 'AIzaSyBxv66X_Ye4MXI5lt8Sjc1xz88rdWJJ0ho',
@@ -64,7 +52,6 @@ bootstrapApplication(AppComponent, {
         ),
         importProvidersFrom(AngularFireFunctionsModule),
         importProvidersFrom(HttpClientModule),
-        MessageService,
         httpInterceptorProviders,
         functionsProvider,
     ],

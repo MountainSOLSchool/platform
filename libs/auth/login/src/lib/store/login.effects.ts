@@ -15,6 +15,7 @@ import { MessageModule } from 'primeng/message';
 
 @NgModule({
     imports: [MessageModule],
+    providers: [MessageService],
 })
 @Injectable({
     providedIn: 'root',

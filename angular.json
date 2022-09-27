@@ -1,6 +1,32 @@
 {
     "version": 1,
     "projects": {
+        "auth-interceptor": {
+            "projectType": "library",
+            "root": "libs/auth/interceptor",
+            "sourceRoot": "libs/auth/interceptor/src",
+            "prefix": "sol",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/auth/interceptor"],
+                    "options": {
+                        "jestConfig": "libs/auth/interceptor/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                },
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": [
+                            "libs/auth/interceptor/**/*.ts",
+                            "libs/auth/interceptor/**/*.html"
+                        ]
+                    }
+                }
+            },
+            "tags": []
+        },
         "auth-login": {
             "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
@@ -489,8 +515,8 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "500kb",
-                                    "maximumError": "1mb"
+                                    "maximumWarning": "1mb",
+                                    "maximumError": "2mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",

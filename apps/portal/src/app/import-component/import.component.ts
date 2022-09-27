@@ -30,6 +30,7 @@ import { MessageModule } from 'primeng/message';
         ProgressBarModule,
         MessageModule,
     ],
+    providers: [MessageService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './import.component.html',
 })
