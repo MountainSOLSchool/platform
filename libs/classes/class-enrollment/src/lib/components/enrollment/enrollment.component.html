@@ -1,5 +1,135 @@
-<h2>
-    Registration
-</h2>
+<head>
+    <title id="title">student-registration</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=screen-width, initial-scale=1.0" />
+</head>
 
-Hello, world!
+<body>
+    <form id="reg-form">
+        <!--STUDENT PERSONAL INFO SECTION-->
+        <section id="personal">
+            <div id="demographics">
+                <h2>Student Information</h2>
+                <span><label for="birthday">Birthday<span class="sr-only">
+                            Enter student's birthday.</span></label></span>
+                <input required type="date" id="birthday" name="birthday" /><br />
+                <span><label for="student-name">Name</label></span>
+                <input required type="text" id="name" name="student-name" /><br />
+                <span><label for="gender">Gender</label></span>
+                <input type="text" id="gender" name="gender" placeholder="(optional)" /><br />
+                <span><label for="school">School</label></span>
+                <input type="text" id="school" name="school" placeholder="(optional)" /><br />
+            </div>
+            <div id="notes">
+                <label for="bio">student bio (optional)</label><br />
+                <textarea id="bio" name="bio"></textarea><br />
+                <label for="notes">notes about student (optional)</label><br />
+                <textarea id="notes" name="notes"></textarea>
+            </div>
+        </section>
+        <!--CONTACT INFO SECTION-->
+        <section id="contact-info">
+            <h2>Contact Info</h2>
+            <div id="email">
+                <label for="email">primary e-mail</label>
+                <input required type="email" id="email" name="email" /><br />
+                <label for="email-alt">student e-mail</label>
+                <input type="email" id="email-alt" name="email-alt" /><br />
+            </div>
+            <div id="phone">
+                <label for="phone">primary phone number</label>
+                <input type="tel" id="phone" name="phone" /><br />
+                <label for="phone-alt">student phone number</label>
+                <input type="tel" id="phone-alt" name="phone-alt" /><br />
+            </div>
+        </section>
+        <section id="address-section">
+            <div id="address">
+                <label for="add-line1">Address Line 1</label>
+                <input required type="text" id="add-line1" name="add-line1" />
+                <label for="add-line2">Address Line 2</label>
+                <input type="text" id="add-line2" name="add-line2" />
+                <label for="add-city">City</label>
+                <input type="text" id="add-city" name="add-city" />
+                <label for="add-state">State</label>
+                <input type="text" id="add-state" name="add-state" />
+                <label for="add-zip">ZIP code</label>
+                <input maxlength="5" id="add-zip" name="add-zip" />
+            </div>
+        </section>
+        <!--PRIVACY SECTION-->
+        <section>
+            <h2>Section 3</h2>
+            <div id="bug-spray-etc">
+                <ul id="chemicals">
+                    <li>
+                        <h3>Bug Spray</h3>
+                        <input type="radio" id="bug-spray" name="bug-spray" value="yes-bug" />
+                        <label for="yes-bug">Yes</label>
+                        <input type="radio" id="bug-spray" name="bug-spray" value="no-bug" />
+                        <label for="no-bug">No</label>
+                    </li>
+                    <li>
+                        <h3>DEET</h3>
+                        <input type="radio" id="DEET" name="deet" value="yes-deet" />
+                        <label for="yes-deet">Yes</label>
+                        <input type="radio" id="DEET" name="deet" value="no-deet" />
+                        <label for="no-deet">No</label>
+                    </li>
+                    <li>
+                        <h3>Sun Screen</h3>
+                        <input type="radio" id="sun-screen" name="sun-screen" value="yes-sun" />
+                        <label for="yes-sun">Yes</label>
+                        <input type="radio" id="sun-screen" name="sun-screen" value="no-sun" />
+                        <label for="no-sun">No</label>
+                    </li>
+                </ul>
+            </div>
+            <div id="privacy">
+                <h3>photos</h3>
+                <p>can we use photos of student for promotional material?</p>
+                <input type="radio" id="photos" name="photo-permission" value="yes-photo" />
+                <label for="yes-photo">Yes</label>
+                <input type="radio" id="photos" name="photo-permission" value="no-photo" />
+                <label for="no-photo">No</label>
+                <input type="radio" id="photos" name="photo-permission" value="yes-noname" />
+                <label for="yes-noname">Yes, but no name</label>
+            </div>
+        </section>
+        <!--PICKUP INFO SECTION-->
+        <section id="pickup">
+            <h2>Student Pickup</h2>
+            <div id="code-word-div">
+                <label id="code-word" for="code-word">Student pick-up code word</label>
+                <input required type="text" maxlength="30" id="code-word" />
+            </div>
+            <section id="auth-pickup">
+                <div class="pickup-tile" id="pickup-tile1">
+                    <h3>authorized pickup</h3>
+                    <table class="pickup-table">
+                        <tr>
+                            <th><label for="pickup-name1"><span>Name</span></label></th>
+                            <td><input required type="text" id="pickup-name1" /></td>
+                        </tr>
+                        <tr>
+                            <th><label for="pickup-relationship0">Relationship</label></th>
+                            <td><input type="text" id="pickup-relation0" name="pickup-relation0" /></td>
+                        </tr>
+                        <tr>
+                            <th><label for="pickup-phone0">Phone Number</label></th>
+                            <td><input type="tel" id="pickup-phone1" /></td>
+                        </tr>
+                    </table>
+                    <div class="add-auth">
+                        <button>Add auth pickup</button>
+                    </div>
+                </div>
+
+            </section>
+        </section>
+        <!--SUBMIT-->
+        <section id="submit">
+            <input type="submit" name="submit" />
+        </section>
+    </form>
+</body>
