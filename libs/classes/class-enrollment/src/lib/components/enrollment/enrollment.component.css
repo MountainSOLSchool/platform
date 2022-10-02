@@ -1,7 +1,7 @@
 :root {
     --text-color: #495057;
     --text-color-secondary: #6c757d;
-    --primary-color: #3B82F6;
+    --primary-color: #3b82f6;
     --primary-color-text: #ffffff;
 }
 
@@ -35,7 +35,6 @@ div#demographics {
     width: 60vw;
     margin-right: auto;
     margin-left: auto;
-
 }
 
 #demographics input {
@@ -63,7 +62,6 @@ div#demographics {
     text-align: center;
 }
 
-
 textarea {
     width: 70vw;
     height: 60px;
@@ -81,7 +79,7 @@ textarea {
 
 #contact-info label,
 #contact-info input {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
 }
 
 #email label,
@@ -114,7 +112,7 @@ input#code-word {
 
 #address label,
 #address input {
-    margin-top: .5rem;
+    margin-top: 0.5rem;
 }
 
 #address label {
@@ -214,7 +212,7 @@ input#code-word {
 .pickup-tile h3 {
     width: fit-content;
     text-align: center;
-    margin: .5rem auto;
+    margin: 0.5rem auto;
 }
 
 table {
@@ -226,10 +224,11 @@ table {
     font-weight: normal;
     border: none;
     text-align: right;
-    padding-right: .5rem;
+    padding-right: 0.5rem;
 }
 
-.pickup-table span {}
+.pickup-table span {
+}
 
 .pickup-table td {
     border: none;

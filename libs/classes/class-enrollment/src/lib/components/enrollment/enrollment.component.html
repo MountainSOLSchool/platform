@@ -10,15 +10,44 @@
         <section id="personal">
             <div id="demographics">
                 <h2>Student Information</h2>
-                <span><label for="birthday">Birthday<span class="sr-only">
-                            Enter student's birthday.</span></label></span>
-                <input required type="date" id="birthday" name="birthday" /><br />
-                <span><label for="student-name">Name</label></span>
-                <input required type="text" id="name" name="student-name" /><br />
+                <span
+                    ><label for="birthday"
+                        >Birthday<span class="sr-only">
+                            Enter student's birthday.</span
+                        ></label
+                    ></span
+                >
+                <p-calendar
+                    [required]="true"
+                    type="date"
+                    id="birthday"
+                    name="birthday"
+                ></p-calendar
+                ><br />
+                <span><label for="name">Name</label></span>
+                <input
+                    required
+                    type="text"
+                    id="name"
+                    name="name"
+                    pInputText
+                /><br />
                 <span><label for="gender">Gender</label></span>
-                <input type="text" id="gender" name="gender" placeholder="(optional)" /><br />
+                <input
+                    type="text"
+                    id="gender"
+                    name="gender"
+                    placeholder="(optional)"
+                    pInputText
+                /><br />
                 <span><label for="school">School</label></span>
-                <input type="text" id="school" name="school" placeholder="(optional)" /><br />
+                <input
+                    type="text"
+                    id="school"
+                    name="school"
+                    placeholder="(optional)"
+                    pInputText
+                /><br />
             </div>
             <div id="notes">
                 <label for="bio">student bio (optional)</label><br />
@@ -64,23 +93,53 @@
                 <ul id="chemicals">
                     <li>
                         <h3>Bug Spray</h3>
-                        <input type="radio" id="bug-spray" name="bug-spray" value="yes-bug" />
+                        <input
+                            type="radio"
+                            id="bug-spray"
+                            name="bug-spray"
+                            value="yes-bug"
+                        />
                         <label for="yes-bug">Yes</label>
-                        <input type="radio" id="bug-spray" name="bug-spray" value="no-bug" />
+                        <input
+                            type="radio"
+                            id="bug-spray"
+                            name="bug-spray"
+                            value="no-bug"
+                        />
                         <label for="no-bug">No</label>
                     </li>
                     <li>
                         <h3>DEET</h3>
-                        <input type="radio" id="DEET" name="deet" value="yes-deet" />
+                        <input
+                            type="radio"
+                            id="DEET"
+                            name="deet"
+                            value="yes-deet"
+                        />
                         <label for="yes-deet">Yes</label>
-                        <input type="radio" id="DEET" name="deet" value="no-deet" />
+                        <input
+                            type="radio"
+                            id="DEET"
+                            name="deet"
+                            value="no-deet"
+                        />
                         <label for="no-deet">No</label>
                     </li>
                     <li>
                         <h3>Sun Screen</h3>
-                        <input type="radio" id="sun-screen" name="sun-screen" value="yes-sun" />
+                        <input
+                            type="radio"
+                            id="sun-screen"
+                            name="sun-screen"
+                            value="yes-sun"
+                        />
                         <label for="yes-sun">Yes</label>
-                        <input type="radio" id="sun-screen" name="sun-screen" value="no-sun" />
+                        <input
+                            type="radio"
+                            id="sun-screen"
+                            name="sun-screen"
+                            value="no-sun"
+                        />
                         <label for="no-sun">No</label>
                     </li>
                 </ul>
@@ -88,11 +147,26 @@
             <div id="privacy">
                 <h3>photos</h3>
                 <p>can we use photos of student for promotional material?</p>
-                <input type="radio" id="photos" name="photo-permission" value="yes-photo" />
+                <input
+                    type="radio"
+                    id="photos"
+                    name="photo-permission"
+                    value="yes-photo"
+                />
                 <label for="yes-photo">Yes</label>
-                <input type="radio" id="photos" name="photo-permission" value="no-photo" />
+                <input
+                    type="radio"
+                    id="photos"
+                    name="photo-permission"
+                    value="no-photo"
+                />
                 <label for="no-photo">No</label>
-                <input type="radio" id="photos" name="photo-permission" value="yes-noname" />
+                <input
+                    type="radio"
+                    id="photos"
+                    name="photo-permission"
+                    value="yes-noname"
+                />
                 <label for="yes-noname">Yes, but no name</label>
             </div>
         </section>
@@ -100,23 +174,55 @@
         <section id="pickup">
             <h2>Student Pickup</h2>
             <div id="code-word-div">
-                <label id="code-word" for="code-word">Student pick-up code word</label>
-                <input required type="text" maxlength="30" id="code-word" />
+                <label id="code-word" for="code-word"
+                    >Student pick-up code word</label
+                >
+                <input
+                    required
+                    type="text"
+                    maxlength="30"
+                    id="code-word"
+                    pInputText
+                />
             </div>
             <section id="auth-pickup">
                 <div class="pickup-tile" id="pickup-tile1">
                     <h3>authorized pickup</h3>
                     <table class="pickup-table">
                         <tr>
-                            <th><label for="pickup-name1"><span>Name</span></label></th>
-                            <td><input required type="text" id="pickup-name1" /></td>
+                            <th>
+                                <label for="pickup-name1"
+                                    ><span>Name</span></label
+                                >
+                            </th>
+                            <td>
+                                <input
+                                    required
+                                    type="text"
+                                    id="pickup-name1"
+                                    pInputText
+                                />
+                            </td>
                         </tr>
                         <tr>
-                            <th><label for="pickup-relationship0">Relationship</label></th>
-                            <td><input type="text" id="pickup-relation0" name="pickup-relation0" /></td>
+                            <th>
+                                <label for="pickup-relationship0"
+                                    >Relationship</label
+                                >
+                            </th>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="pickup-relation0"
+                                    name="pickup-relation0"
+                                    pInputText
+                                />
+                            </td>
                         </tr>
                         <tr>
-                            <th><label for="pickup-phone0">Phone Number</label></th>
+                            <th>
+                                <label for="pickup-phone0">Phone Number</label>
+                            </th>
                             <td><input type="tel" id="pickup-phone1" /></td>
                         </tr>
                     </table>
@@ -124,12 +230,11 @@
                         <button>Add auth pickup</button>
                     </div>
                 </div>
-
             </section>
         </section>
         <!--SUBMIT-->
         <section id="submit">
-            <input type="submit" name="submit" />
+            <button pButton type="submit" name="submit">SUBMIT</button>
         </section>
     </form>
 </body>
