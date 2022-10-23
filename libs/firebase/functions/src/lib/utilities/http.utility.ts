@@ -29,16 +29,22 @@ export class HttpUtility {
             .runWith({ secrets })
             .https.onRequest(async (request, response) => {
                 cors(request, response, async () => {
-                    await AuthUtility.validateFirebaseIdToken(
-                        request,
-                        response
-                    );
+                    // await AuthUtility.validateFirebaseIdToken(
+                    //     request,
+                    //     response
+                    // );
                     handler(
                         request,
                         {
                             ...response,
                             status: (code: number) => response.status(code),
-                            send: (data: unknown) => response.send({ data }),
+                            send: (data: unknown) => {
+                                // response.set(
+                                //     'Access-Control-Allow-Origin',
+                                //     '*'
+                                // );
+                                response.send({ data });
+                            },
                         } as functions.Response,
                         Object.fromEntries(
                             secrets.map((secret) => [

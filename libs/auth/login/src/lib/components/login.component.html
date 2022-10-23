@@ -1,3 +1,4 @@
+<div id="dropin-container"></div>
 <ng-container *ngIf="login$ | async as login">
     <div style="width: 400px; margin: auto">
         <ng-container *ngIf="isCreatingNewAccount$ | async; else default">
@@ -55,7 +56,6 @@
                                 ? 'new-password'
                                 : 'current-password'
                         "
-                        [pT]="true"
                         [(ngModel)]="login.password"
                         (ngModelChange)="onUpdated(login)"
                         (keydown)="onPasswordKeydown($event)"
