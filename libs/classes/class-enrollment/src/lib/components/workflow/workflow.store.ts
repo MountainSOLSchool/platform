@@ -30,6 +30,7 @@ export class WorkflowStore extends ComponentStore<{
     private readonly router = inject(Router);
 
     private readonly steps = [
+        { label: 'Classes', routerLink: 'classes' },
         { label: 'Info', routerLink: 'info' },
         { label: 'Checkout', routerLink: 'checkout' },
         {
