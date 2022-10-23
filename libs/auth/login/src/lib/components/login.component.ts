@@ -14,9 +14,7 @@ import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { PasswordModule } from 'primeng/password';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import * as braintree from 'braintree-web';
-import * as btDropin from 'braintree-web-drop-in';
-import { HttpClient } from '@angular/common/http';
+import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 
 @Component({
     standalone: true,
@@ -32,13 +30,13 @@ import { HttpClient } from '@angular/common/http';
         ToastModule,
         RouterModule,
         PasswordModule,
+        PaymentCollectorComponent,
     ],
     templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {
     readonly loginStore = inject(LoginStore);
     readonly route = inject(ActivatedRoute);
-    readonly http = inject(HttpClient);
 
     readonly login$ = this.loginStore.selectLoginModel();
 
@@ -55,51 +53,6 @@ export class LoginComponent implements OnInit {
             password: '',
             isCreatingNewAccount: this.route.snapshot.data['create'],
         });
-        this.http
-            .get<{ data: string }>(
-                'http://localhost:5001/mountain-sol-platform/us-central1/paymentToken'
-            )
-            .subscribe(({ data: token }) => {
-                console.log(token);
-                braintree.client.create(
-                    {
-                        authorization: token,
-                    },
-                    (err, instance) => {
-                        braintree.dataCollector.create(
-                            {
-                                client: instance,
-                                kount: true,
-                            },
-                            (err, collector) => {
-                                // At this point, you should access the dataCollectorInstance.deviceData value and provide it
-                                // to your server, e.g. by injecting it into your form as a hidden input.
-                                // TODO dispatch action
-                                const deviceData = collector?.deviceData;
-                            }
-                        );
-                    }
-                );
-                btDropin.create(
-                    {
-                        authorization: token,
-                        container: '#dropin-container',
-                        dataCollector: {
-                            kount: true,
-                        },
-                    },
-                    function (err, instance) {
-                        if (err) {
-                            // Handle any errors that might've occurred when creating Drop-in
-                            console.error(err);
-                            return;
-                        }
-                        // instance?.requestPaymentMethod((err, payload) => {
-                        //     payload?.nonce;
-                        // });
-                    }
-                );
-            });
     }
 
     onUpdated(login: Login): void {

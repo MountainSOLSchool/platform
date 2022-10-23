@@ -1,6 +1,6 @@
 // © 2021 developed by Katie and David with ❤️❤️❤️
 
-import { AuthUtility, HttpUtility } from '@sol/firebase/functions';
+import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
 import {
     RosterReportGenerator,
@@ -16,7 +16,7 @@ import { StudentDbEntry } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
 
-export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
+export const roster = Functions.anEndpoint(async (request, response) => {
     AuthUtility.validateIsAdmin(request, response);
 
     const className = request.query.class as string;
@@ -41,7 +41,7 @@ export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
     response.send({ html: htmlTable });
 });
 
-export const signIn = HttpUtility.aGetEndpoint(async (request, response) => {
+export const signIn = Functions.anEndpoint(async (request, response) => {
     AuthUtility.validateIsAdmin(request, response);
 
     const className = request.query.class as string;
@@ -65,7 +65,7 @@ export const signIn = HttpUtility.aGetEndpoint(async (request, response) => {
     response.send({ html: htmlTable });
 });
 
-export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
+export const classes = Functions.anEndpoint(async (request, response) => {
     const db = DatabaseUtility.getDatabase();
 
     const classes = await _fetchClasses(db);
@@ -73,7 +73,7 @@ export const classes = HttpUtility.aGetEndpoint(async (request, response) => {
     response.send({ classes });
 });
 
-export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
+export const emails = Functions.anEndpoint(async (request, response) => {
     await AuthUtility.validateIsAdmin(request, response);
     const db = DatabaseUtility.getDatabase();
     const classEmailGenerator = new ClassEmailGenerator(db);
@@ -84,7 +84,7 @@ export const emails = HttpUtility.aGetEndpoint(async (request, response) => {
     });
 });
 
-export const tshirts = HttpUtility.aGetEndpoint(async (request, response) => {
+export const tshirts = Functions.anEndpoint(async (request, response) => {
     await AuthUtility.validateIsAdmin(request, response);
     const db = DatabaseUtility.getDatabase();
     const tshirtGenerator = new StudentTshirtsGenerator(db);
@@ -94,7 +94,7 @@ export const tshirts = HttpUtility.aGetEndpoint(async (request, response) => {
     });
 });
 
-export const importEnrollment = HttpUtility.aGetEndpoint(
+export const importEnrollment = Functions.anEndpoint(
     async (request, response) => {
         await AuthUtility.validateIsAdmin(request, response);
         const { data: entries } = request.body as {
@@ -359,10 +359,27 @@ const _fetchClasses = async (
     return mappedClasses;
 };
 
-export const paymentToken = HttpUtility.get
+export const paymentToken = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle(async (request, response, secrets) => {
         const braintree = new Braintree(secrets);
         const clientToken = await braintree.getClientToken();
         response.send(clientToken);
+    });
+
+export const enroll = Functions.endpoint
+    .usingSecrets(...Braintree.SECRET_NAMES)
+    .handle(async (request, response, secrets) => {
+        const nonce = request.body.data.nonce;
+        const braintree = new Braintree(secrets);
+        const deviceData = request.body.data.deviceData;
+        console.log(request.body.data);
+        const transaction = await braintree.transact({
+            amount: 10,
+            nonce,
+            customer: { email: 'test@email.com' },
+            deviceData,
+        });
+        console.log(transaction);
+        response.send({ success: true, transaction: transaction });
     });

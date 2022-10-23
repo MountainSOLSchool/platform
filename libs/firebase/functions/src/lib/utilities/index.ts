@@ -1,2 +1,2 @@
-export { HttpUtility } from './http.utility';
+export { Functions } from './functions.utility';
 export { AuthUtility } from './auth.utility';

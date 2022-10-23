@@ -1,0 +1,18 @@
+<h1>Summer 2023 Enrollment</h1>
+<div style="margin-top: 10px">
+    <p-steps [model]="(steps$ | async) ?? []" [readonly]="false"></p-steps>
+</div>
+
+<div style="margin-top: 40px">
+    <router-outlet></router-outlet>
+</div>
+
+<div style="margin-top: 40px; display: flex; justify-content: flex-end">
+    <button
+        pButton
+        *ngIf="nextStepLink$ | async as nextStepLink"
+        [routerLink]="nextStepLink"
+    >
+        Next
+    </button>
+</div>

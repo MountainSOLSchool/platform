@@ -1,0 +1,6 @@
+<h1>Checkout</h1>
+<sol-payment-collector
+    [prepare]="testTransaction$ | async"
+    (uncommittedTransaction)="handleUncommittedTransaction($event)"
+></sol-payment-collector>
+<button pButton (click)="pay()">Pay Now</button>

@@ -1,0 +1,33 @@
+{
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/payments/transactions/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nrwl/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/libs/payments/transactions",
+                "main": "libs/payments/transactions/src/index.ts",
+                "tsConfig": "libs/payments/transactions/tsconfig.lib.json",
+                "assets": ["libs/payments/transactions/*.md"]
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["libs/payments/transactions/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["coverage/libs/payments/transactions"],
+            "options": {
+                "jestConfig": "libs/payments/transactions/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}

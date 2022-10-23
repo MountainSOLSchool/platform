@@ -1,4 +1,5 @@
-<div id="dropin-container"></div>
+<sol-payment-collector></sol-payment-collector>
+
 <ng-container *ngIf="login$ | async as login">
     <div style="width: 400px; margin: auto">
         <ng-container *ngIf="isCreatingNewAccount$ | async; else default">

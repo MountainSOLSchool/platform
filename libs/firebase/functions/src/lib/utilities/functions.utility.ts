@@ -1,11 +1,10 @@
 import * as functions from 'firebase-functions';
 import * as CORS from 'cors';
-import { AuthUtility } from './auth.utility';
 
 const cors = CORS({ origin: true });
 
-export class HttpUtility {
-    public static get = {
+export class Functions {
+    public static endpoint = {
         usingSecrets: <S extends Array<string>>(...secrets: S) => ({
             handle: (
                 handler: (
@@ -13,11 +12,11 @@ export class HttpUtility {
                     response: functions.Response,
                     secrets: Record<S[number], string>
                 ) => void
-            ) => this.aGetEndpoint(handler, secrets),
+            ) => this.anEndpoint(handler, secrets),
         }),
-        handle: this.aGetEndpoint,
+        handle: this.anEndpoint,
     };
-    public static aGetEndpoint(
+    public static anEndpoint(
         handler: (
             request: functions.https.Request,
             response: functions.Response,
@@ -47,10 +46,10 @@ export class HttpUtility {
                             },
                         } as functions.Response,
                         Object.fromEntries(
-                            secrets.map((secret) => [
+                            secrets?.map((secret) => [
                                 secret,
                                 process.env[secret],
-                            ])
+                            ]) ?? []
                         )
                     );
                 });
