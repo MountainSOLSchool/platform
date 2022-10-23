@@ -47,14 +47,15 @@
                         ><i class="pi pi-lock"></i
                     ></span>
                     <input
+                        pPassword
                         name="password"
                         type="password"
-                        pInputText
                         [autocomplete]="
                             (isCreatingNewAccount$ | async)
                                 ? 'new-password'
                                 : 'current-password'
                         "
+                        [pT]="true"
                         [(ngModel)]="login.password"
                         (ngModelChange)="onUpdated(login)"
                         (keydown)="onPasswordKeydown($event)"

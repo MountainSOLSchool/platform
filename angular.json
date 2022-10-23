@@ -428,6 +428,29 @@
             },
             "tags": ["scope:libs/paths"]
         },
+        "payments-braintree": {
+            "root": "libs/payments/braintree",
+            "sourceRoot": "libs/payments/braintree/src",
+            "projectType": "library",
+            "architect": {
+                "lint": {
+                    "builder": "@nrwl/linter:eslint",
+                    "outputs": ["{options.outputFile}"],
+                    "options": {
+                        "lintFilePatterns": ["libs/payments/braintree/**/*.ts"]
+                    }
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/payments/braintree"],
+                    "options": {
+                        "jestConfig": "libs/payments/braintree/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": []
+        },
         "pdf-firebase": {
             "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "root": "libs/pdf/firebase",

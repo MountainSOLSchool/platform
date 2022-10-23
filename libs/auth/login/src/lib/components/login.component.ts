@@ -12,6 +12,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
+import { PasswordModule } from 'primeng/password';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
@@ -27,6 +28,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
         MessageModule,
         ToastModule,
         RouterModule,
+        PasswordModule,
     ],
     templateUrl: './login.component.html',
 })

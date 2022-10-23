@@ -14,6 +14,7 @@ import {
 import { StudentRepositoryUtility } from '@sol/student/persistence';
 import { StudentDbEntry } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
+import { Braintree } from '@sol/payments/braintree';
 
 export const roster = HttpUtility.aGetEndpoint(async (request, response) => {
     AuthUtility.validateIsAdmin(request, response);
@@ -357,3 +358,11 @@ const _fetchClasses = async (
 
     return mappedClasses;
 };
+
+export const paymentToken = HttpUtility.get
+    .usingSecrets(...Braintree.SECRET_NAMES)
+    .handle(async (request, response, secrets) => {
+        const braintree = new Braintree(secrets);
+        const clientToken = await braintree.getClientToken();
+        response.send(clientToken);
+    });

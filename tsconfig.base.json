@@ -37,6 +37,7 @@
             ],
             "@sol/header": ["libs/header/src/index.ts"],
             "@sol/paths": ["libs/paths/src/index.ts"],
+            "@sol/payments/braintree": ["libs/payments/braintree/src/index.ts"],
             "@sol/pdf/firebase": ["libs/pdf/firebase/src/index.ts"],
             "@sol/pdf/generate": ["libs/pdf/generate/src/index.ts"],
             "@sol/record/domain": ["libs/record/domain/src/index.ts"],
