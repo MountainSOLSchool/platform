@@ -1,18 +1,22 @@
-<h1>Summer 2023 Enrollment</h1>
+<h1>{{ title }}</h1>
+
 <div style="margin-top: 10px">
     <p-steps [model]="(steps$ | async) ?? []" [readonly]="false"></p-steps>
 </div>
 
 <div style="margin-top: 40px">
-    <router-outlet></router-outlet>
+    <ng-content></ng-content>
 </div>
 
 <div style="margin-top: 40px; display: flex; justify-content: flex-end">
     <button
         pButton
-        *ngIf="nextStepLink$ | async as nextStepLink"
-        [routerLink]="nextStepLink"
+        *ngIf="nextStepLink$ | async as nextStepLink; else lastStep"
+        (click)="nextClick.emit()"
     >
         Next
     </button>
+    <ng-template #lastStep>
+        <button pButton (click)="completed.next()">Submit</button>
+    </ng-template>
 </div>

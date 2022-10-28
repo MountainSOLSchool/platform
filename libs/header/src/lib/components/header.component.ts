@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UserButtonComponent } from '@sol/auth/login';
 import { UserService } from '@sol/auth/user';
@@ -88,7 +88,7 @@ import { ToolbarModule } from 'primeng/toolbar';
         </p-sidebar>`,
 })
 export class HeaderComponent {
-    constructor(private readonly userService: UserService) {}
+    private readonly userService = inject(UserService);
 
     display = false;
 

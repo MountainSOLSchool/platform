@@ -20,7 +20,6 @@ import { map, Observable } from 'rxjs';
         MenuModule,
         AvatarModule,
         ButtonModule,
-        UserService,
         AuthService,
     ],
     selector: 'sol-user-button',

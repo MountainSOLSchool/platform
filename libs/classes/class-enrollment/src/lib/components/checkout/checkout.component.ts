@@ -1,14 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
 import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 import {
-    QualifiedTransaction,
-    UnqualifiedTransaction,
+    PreparedTransaction,
+    UnpreparedTransaction,
 } from '@sol/payments/transactions';
-import { PaymentMethodPayload } from 'braintree-web-drop-in';
 import { ButtonModule } from 'primeng/button';
-import { map, Observable, Subject } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
+import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 
 @Component({
     standalone: true,
@@ -16,20 +15,19 @@ import { map, Observable, Subject } from 'rxjs';
     templateUrl: './checkout.component.html',
 })
 export class CheckoutComponent {
-    private _payClick = new Subject<void>();
-    public readonly testTransaction$: Observable<UnqualifiedTransaction> =
-        this._payClick.pipe(
+    private readonly workflow = inject(EnrollmentWorkflowStore);
+
+    public readonly testTransaction$: Observable<UnpreparedTransaction> =
+        this.workflow.nextClick$.pipe(
+            tap(() => console.log('nexty')),
             map(() => ({
                 amount: 10,
                 customer: { email: 'test@email.com' },
             }))
         );
 
-    pay() {
-        this._payClick.next();
-    }
-
-    handleUncommittedTransaction(transaction: QualifiedTransaction) {
-        console.log(transaction);
+    handleUncommittedTransaction(transaction: PreparedTransaction) {
+        console.log('handled');
+        this.workflow.completeCheckout(transaction);
     }
 }

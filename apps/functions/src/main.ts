@@ -232,7 +232,7 @@ export const importEnrollment = Functions.anEndpoint(
                 update: await DatabaseUtility.getDatabase()
                     .collection('students')
                     .doc(id)
-                    .update(update),
+                    .update({ ...update }),
                 data: { id: id, ...update },
             });
         }
@@ -362,9 +362,10 @@ const _fetchClasses = async (
 export const paymentToken = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle(async (request, response, secrets) => {
+        const user = await AuthUtility.getUserFromRequest(request, response);
         const braintree = new Braintree(secrets);
-        const clientToken = await braintree.getClientToken();
-        response.send(clientToken);
+        const token = await braintree.getClientToken(user);
+        response.send(token);
     });
 
 export const enroll = Functions.endpoint

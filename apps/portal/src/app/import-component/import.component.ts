@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
 import {
     forkJoin,
     from,
@@ -20,16 +19,11 @@ import { CommonModule } from '@angular/common';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { MessageModule } from 'primeng/message';
+import { FunctionsApi } from '@sol/firebase/functions-api';
 
 @Component({
     standalone: true,
-    imports: [
-        CommonModule,
-        FunctionsApi,
-        FileUploadModule,
-        ProgressBarModule,
-        MessageModule,
-    ],
+    imports: [CommonModule, FileUploadModule, ProgressBarModule, MessageModule],
     providers: [MessageService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './import.component.html',

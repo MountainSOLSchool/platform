@@ -25,7 +25,7 @@ export class Functions {
         secrets?: Array<string>
     ) {
         return functions
-            .runWith({ secrets })
+            .runWith({ secrets: secrets ?? [] })
             .https.onRequest(async (request, response) => {
                 cors(request, response, async () => {
                     // await AuthUtility.validateFirebaseIdToken(

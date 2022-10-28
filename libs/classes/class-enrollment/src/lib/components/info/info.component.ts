@@ -1,10 +1,10 @@
 import { Component, inject, Injectable } from '@angular/core';
-import { ComponentStore, provideComponentStore } from '@ngrx/component-store';
+import { ComponentStore } from '@ngrx/component-store';
 import { tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 
 @Injectable()
-class ClassesStore extends ComponentStore<{ nil: null }> {
+class InfoStore extends ComponentStore<{ nil: null }> {
     readonly workflow = inject(EnrollmentWorkflowStore);
 
     constructor() {
@@ -21,11 +21,10 @@ class ClassesStore extends ComponentStore<{ nil: null }> {
 @Component({
     standalone: true,
     imports: [],
-    selector: 'sol-class-picker',
-    templateUrl: './classes.component.html',
-    styleUrls: ['./classes.component.css'],
-    providers: [provideComponentStore(ClassesStore)],
+    templateUrl: './info.component.html',
+    styleUrls: ['./info.component.css'],
+    providers: [InfoStore],
 })
-export class ClassesComponent {
-    readonly store = inject(ClassesStore);
+export class InfoComponent {
+    store = inject(InfoStore);
 }

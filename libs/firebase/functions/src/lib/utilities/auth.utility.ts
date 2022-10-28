@@ -25,6 +25,14 @@ export class AuthUtility {
         }
     }
 
+    public static async getUserFromRequest(
+        req: functions.https.Request,
+        res: functions.Response
+    ): Promise<admin.auth.UserRecord> {
+        const { uid } = await AuthUtility.validateFirebaseIdToken(req, res);
+        return await admin.auth().getUser(uid);
+    }
+
     public static async validateFirebaseIdToken(
         req: functions.https.Request,
         res: functions.Response

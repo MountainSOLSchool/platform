@@ -55,7 +55,8 @@
             "@sol/student/reports": ["libs/student/reports/src/index.ts"],
             "@sol/table/domain": ["libs/table/domain/src/index.ts"],
             "@sol/table/html": ["libs/table/html/src/index.ts"],
-            "@sol/table/pdf": ["libs/table/pdf/src/index.ts"]
+            "@sol/table/pdf": ["libs/table/pdf/src/index.ts"],
+            "@sol/workflow": ["libs/workflow/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]
