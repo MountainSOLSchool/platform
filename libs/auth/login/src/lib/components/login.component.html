@@ -1,5 +1,3 @@
-<sol-payment-collector></sol-payment-collector>
-
 <ng-container *ngIf="login$ | async as login">
     <div style="width: 400px; margin: auto">
         <ng-container *ngIf="isCreatingNewAccount$ | async; else default">
@@ -49,7 +47,7 @@
                         ><i class="pi pi-lock"></i
                     ></span>
                     <input
-                        pPassword
+                        pInputText
                         name="password"
                         type="password"
                         [autocomplete]="

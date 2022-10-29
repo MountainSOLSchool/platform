@@ -382,5 +382,6 @@ export const enroll = Functions.endpoint
             deviceData,
         });
         console.log(transaction);
+        // TODO: record enrollment in our DB
         response.send({ success: true, transaction: transaction });
     });

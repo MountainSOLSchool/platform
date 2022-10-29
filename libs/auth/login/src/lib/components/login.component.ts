@@ -12,9 +12,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
-import { PasswordModule } from 'primeng/password';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 
 @Component({
     standalone: true,
@@ -29,8 +27,6 @@ import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
         MessageModule,
         ToastModule,
         RouterModule,
-        PasswordModule,
-        PaymentCollectorComponent,
     ],
     templateUrl: './login.component.html',
 })
