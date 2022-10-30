@@ -11,7 +11,6 @@ import { RippleModule } from 'primeng/ripple';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 
-
 @Injectable()
 class InfoStore extends ComponentStore<{ nil: null }> {
     readonly workflow = inject(EnrollmentWorkflowStore);
@@ -37,7 +36,7 @@ class InfoStore extends ComponentStore<{ nil: null }> {
         FieldsetModule,
         RippleModule,
         InputTextareaModule,
-        InputNumberModule
+        InputNumberModule,
     ],
     templateUrl: './info.component.html',
     styleUrls: ['./info.component.css'],

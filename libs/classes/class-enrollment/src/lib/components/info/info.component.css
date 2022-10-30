@@ -6,7 +6,6 @@
     --light-blue-gray: #afe1f0;
 }
 
-
 /*
 * {
     border: 1px solid green;
@@ -26,7 +25,6 @@ p-fieldset {
     width: 75vw;
     margin: auto;
 }
-
 
 /*--NEW PERSONAL INFO SECTION--*/
 
@@ -125,7 +123,6 @@ section#pickup {
 
 /*PICKUP*/
 
-
 .pickup-tile {
     border: 1px solid black;
     width: fit-content;
@@ -152,7 +149,8 @@ table {
     padding-right: 0.5rem;
 }
 
-.pickup-table span {}
+.pickup-table span {
+}
 
 .pickup-table td {
     border: none;
