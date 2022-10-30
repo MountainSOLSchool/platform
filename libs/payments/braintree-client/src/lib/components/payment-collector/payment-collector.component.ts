@@ -36,9 +36,7 @@ export class PaymentCollectorComponent implements OnInit {
 
     readonly COLLECTOR_ELEMENT_SELECTOR = 'payment-collector';
 
-    readonly loading$ = this.store.select(
-        ({ dropInInstance }) => !dropInInstance
-    );
+    readonly loading$ = this.store.select(({ token }) => !token);
 
     ngOnInit(): void {
         this.store.initialize(this.COLLECTOR_ELEMENT_SELECTOR);

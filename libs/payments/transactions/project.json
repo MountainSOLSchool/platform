@@ -22,7 +22,7 @@
         },
         "test": {
             "executor": "@nrwl/jest:jest",
-            "outputs": ["coverage/libs/payments/transactions"],
+            "outputs": ["{workspaceRoot}/coverage/libs/payments/transactions"],
             "options": {
                 "jestConfig": "libs/payments/transactions/jest.config.ts",
                 "passWithNoTests": true

@@ -75,19 +75,12 @@ export class PaymentCollectorStore extends ComponentStore<{
     );
 
     readonly loadToken$ = this.effect(() => {
-        return this.user.getUser().pipe(
-            filter((user): user is firebase.User => !!user),
-            take(1),
-            switchMap((user) => {
-                console.log('getting token');
-                return this.functions.call<string>('paymentToken').pipe(
-                    tap((token) => {
-                        console.log('got ', token);
-                        this.patchState({
-                            token,
-                        });
-                    })
-                );
+        return this.functions.call<string>('paymentToken').pipe(
+            tap((token) => {
+                console.log('got ', token);
+                this.patchState({
+                    token,
+                });
             })
         );
     });

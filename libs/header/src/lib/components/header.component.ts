@@ -27,21 +27,23 @@ import { ToolbarModule } from 'primeng/toolbar';
     ],
     template: ` <header class="toolbarz">
             <p-toolbar styleClass="toolbar">
-                <div class="p-toolbar-group-left">
+                <div routerLink="/" class="p-toolbar-group-left">
                     <div>
                         <img
-                            src="assets/header/sol-logo.png"
+                            src="https://www.mountainsol.org/wp-content/uploads/2020/03/SOL-horizontal-large-1024x234-1.jpg"
                             alt="sol-logo"
                             height="50px"
                             style="margin-right:10px"
                         />
                     </div>
-                    <h2 routerLink="/" style="margin: 0; cursor: pointer">
-                        Mountain SOL School Portal
+                    <h2 style="margin: 0; cursor: pointer">
+                        Registration Portal
                     </h2>
                 </div>
                 <div class="p-toolbar-group-right">
-                    <ng-container *ngIf="isLoggedIn$ | async">
+                    <ng-container
+                        *ngIf="(isLoggedIn$ | async) && (isAdmin$ | async)"
+                    >
                         <div style="margin-right: 2rem">
                             <p-button
                                 type="text"
@@ -58,17 +60,17 @@ import { ToolbarModule } from 'primeng/toolbar';
         <p-sidebar [(visible)]="display" position="right">
             <ul style="font-size:16px">
                 <li>
-                    <a routerLink="/report" (click)="display = false"
+                    <a routerLink="/admin/report" (click)="display = false"
                         >Class Forms and Contacts</a
                     >
                 </li>
                 <li>
-                    <a routerLink="/t-shirts" (click)="display = false"
+                    <a routerLink="/admin/t-shirts" (click)="display = false"
                         >Tshirt Sizes</a
                     >
                 </li>
                 <li>
-                    <a routerLink="/import" (click)="display = false"
+                    <a routerLink="/admin/import" (click)="display = false"
                         >Import Summer 2022 Enrollment</a
                     >
                 </li>
@@ -93,4 +95,5 @@ export class HeaderComponent {
     display = false;
 
     isLoggedIn$ = this.userService.isLoggedIn();
+    isAdmin$ = this.userService.isAdmin();
 }

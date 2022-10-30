@@ -36,7 +36,11 @@ import { map, Observable } from 'rxjs';
                         color: '#ffffff'
                     }"
                 ></p-avatar>
-                <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
+                <p-menu
+                    #menu
+                    [popup]="true"
+                    [model]="(menuItems$ | async) ?? []"
+                ></p-menu>
             </div>
         </ng-container>
         <ng-template #login>
@@ -53,13 +57,20 @@ export class UserButtonComponent implements OnInit {
 
     public email$: Observable<string | null | undefined> | undefined;
 
-    public menuItems: Array<MenuItem> = [
-        {
-            label: 'Sign Out',
-            icon: 'pi pi-sign-out',
-            command: () => this.signOut(),
-        },
-    ];
+    public menuItems$: Observable<Array<MenuItem>> = this.userService
+        .getUser()
+        .pipe(
+            map((user) => [
+                {
+                    label: user?.email ?? 'User email',
+                },
+                {
+                    label: 'Sign Out',
+                    icon: 'pi pi-sign-out',
+                    command: () => this.signOut(),
+                },
+            ])
+        );
 
     ngOnInit() {
         this.email$ = this.userService

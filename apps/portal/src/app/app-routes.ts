@@ -12,37 +12,58 @@ export const appRoutes: Routes = [
                 loadChildren: () =>
                     import('@sol/auth/login').then((m) => m.authRoutes),
             },
+            { path: '', redirectTo: 'classes', pathMatch: 'full' },
             {
                 path: '',
                 canActivate: [UserGuard],
                 children: [
                     {
-                        path: '',
-                        loadChildren: () =>
-                            import(
-                                './dashboard-component/dashboard-routes'
-                            ).then((m) => m.dashboardRoutes),
-                    },
-                    {
-                        path: 'report',
-                        loadChildren: () =>
-                            import('./report-component/report-routes').then(
-                                (m) => m.reportRoutes
-                            ),
-                    },
-                    {
-                        path: 't-shirts',
-                        loadChildren: () =>
-                            import('./tshirts-component/tshirt-routes').then(
-                                (m) => m.tshirtRoutes
-                            ),
-                    },
-                    {
-                        path: 'import',
-                        loadChildren: () =>
-                            import('./import-component/import-routes').then(
-                                (m) => m.importRoutes
-                            ),
+                        path: 'admin',
+                        canActivate: [],
+                        children: [
+                            {
+                                path: '',
+                                loadChildren: () =>
+                                    import(
+                                        './dashboard-component/dashboard-routes'
+                                    ).then((m) => m.dashboardRoutes),
+                            },
+                            {
+                                path: 'report',
+                                loadChildren: () =>
+                                    import(
+                                        './report-component/report-routes'
+                                    ).then((m) => m.reportRoutes),
+                            },
+                            {
+                                path: 't-shirts',
+                                loadChildren: () =>
+                                    import(
+                                        './tshirts-component/tshirt-routes'
+                                    ).then((m) => m.tshirtRoutes),
+                            },
+                            {
+                                path: 'import',
+                                loadChildren: () =>
+                                    import(
+                                        './import-component/import-routes'
+                                    ).then((m) => m.importRoutes),
+                            },
+                            {
+                                path: 'classes',
+                                children: [
+                                    {
+                                        path: 'management',
+                                        loadChildren: () =>
+                                            import(
+                                                '@sol/classes/class-management'
+                                            ).then(
+                                                (m) => m.classManagementRoutes
+                                            ),
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
                         path: 'calendar',
@@ -55,11 +76,9 @@ export const appRoutes: Routes = [
                         path: 'classes',
                         children: [
                             {
-                                path: 'management',
-                                loadChildren: () =>
-                                    import(
-                                        '@sol/classes/class-management'
-                                    ).then((m) => m.classManagementRoutes),
+                                path: '',
+                                redirectTo: 'enrollment',
+                                pathMatch: 'full',
                             },
                             {
                                 path: 'enrollment',

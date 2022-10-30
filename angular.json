@@ -9,7 +9,9 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/auth/interceptor"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/auth/interceptor"
+                    ],
                     "options": {
                         "jestConfig": "libs/auth/interceptor/jest.config.ts",
                         "passWithNoTests": true
@@ -36,7 +38,7 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/auth/login"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/auth/login"],
                     "options": {
                         "jestConfig": "libs/auth/login/jest.config.ts",
                         "passWithNoTests": true
@@ -63,7 +65,7 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/auth/user"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/auth/user"],
                     "options": {
                         "jestConfig": "libs/auth/user/jest.config.ts",
                         "passWithNoTests": true
@@ -90,7 +92,9 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/calendar/calendar"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/calendar/calendar"
+                    ],
                     "options": {
                         "jestConfig": "libs/calendar/calendar/jest.config.ts",
                         "passWithNoTests": true
@@ -117,7 +121,9 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/classes/class-calendar"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/classes/class-calendar"
+                    ],
                     "options": {
                         "jestConfig": "libs/classes/class-calendar/jest.config.ts",
                         "passWithNoTests": true
@@ -144,7 +150,9 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/classes/class-enrollment"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/classes/class-enrollment"
+                    ],
                     "options": {
                         "jestConfig": "libs/classes/class-enrollment/jest.config.ts",
                         "passWithNoTests": true
@@ -171,7 +179,9 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/classes/class-management"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/classes/class-management"
+                    ],
                     "options": {
                         "jestConfig": "libs/classes/class-management/jest.config.ts",
                         "passWithNoTests": true
@@ -198,7 +208,9 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/classes/classes-domain"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/classes/classes-domain"
+                    ],
                     "options": {
                         "jestConfig": "libs/classes/classes-domain/jest.config.ts",
                         "passWithNoTests": true
@@ -225,7 +237,7 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/firebase/auth"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/firebase/auth"],
                     "options": {
                         "jestConfig": "libs/firebase/auth/jest.config.ts",
                         "passWithNoTests": true
@@ -258,7 +270,9 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/firebase/database"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/firebase/database"
+                    ],
                     "options": {
                         "jestConfig": "libs/firebase/database/jest.config.ts",
                         "passWithNoTests": true
@@ -282,7 +296,9 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/firebase/functions"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/firebase/functions"
+                    ],
                     "options": {
                         "jestConfig": "libs/firebase/functions/jest.config.ts",
                         "passWithNoTests": true
@@ -300,7 +316,9 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/firebase/functions-api"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/firebase/functions-api"
+                    ],
                     "options": {
                         "jestConfig": "libs/firebase/functions-api/jest.config.ts",
                         "passWithNoTests": true
@@ -364,7 +382,7 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/apps/functions"],
+                    "outputs": ["{workspaceRoot}/coverage/apps/functions"],
                     "options": {
                         "jestConfig": "apps/functions/jest.config.ts",
                         "passWithNoTests": true
@@ -382,7 +400,7 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/header"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/header"],
                     "options": {
                         "jestConfig": "libs/header/jest.config.ts",
                         "passWithNoTests": true
@@ -409,7 +427,7 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/paths"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/paths"],
                     "options": {
                         "jestConfig": "libs/paths/jest.config.ts",
                         "passWithNoTests": true
@@ -442,7 +460,9 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/payments/braintree"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/payments/braintree"
+                    ],
                     "options": {
                         "jestConfig": "libs/payments/braintree/jest.config.ts",
                         "passWithNoTests": true
@@ -459,7 +479,9 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/payments/braintree-client"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/payments/braintree-client"
+                    ],
                     "options": {
                         "jestConfig": "libs/payments/braintree-client/jest.config.ts",
                         "passWithNoTests": true
@@ -493,7 +515,7 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/pdf/firebase"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/pdf/firebase"],
                     "options": {
                         "jestConfig": "libs/pdf/firebase/jest.config.ts",
                         "passWithNoTests": true
@@ -517,7 +539,7 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/pdf/generate"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/pdf/generate"],
                     "options": {
                         "jestConfig": "libs/pdf/generate/jest.config.ts",
                         "passWithNoTests": true
@@ -640,7 +662,7 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/apps/portal"],
+                    "outputs": ["{workspaceRoot}/coverage/apps/portal"],
                     "options": {
                         "jestConfig": "apps/portal/jest.config.ts",
                         "passWithNoTests": true
@@ -694,7 +716,7 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/record/domain"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/record/domain"],
                     "options": {
                         "jestConfig": "libs/record/domain/jest.config.ts",
                         "passWithNoTests": true
@@ -718,7 +740,7 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/student/domain"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/student/domain"],
                     "options": {
                         "jestConfig": "libs/student/domain/jest.config.ts",
                         "passWithNoTests": true
@@ -736,7 +758,7 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/student/import"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/student/import"],
                     "options": {
                         "jestConfig": "libs/student/import/jest.config.ts",
                         "passWithNoTests": true
@@ -763,7 +785,9 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/student/persistence"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/student/persistence"
+                    ],
                     "options": {
                         "jestConfig": "libs/student/persistence/jest.config.ts",
                         "passWithNoTests": true
@@ -796,7 +820,9 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/student/reports"],
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/student/reports"
+                    ],
                     "options": {
                         "jestConfig": "libs/student/reports/jest.config.ts",
                         "passWithNoTests": true
@@ -820,7 +846,7 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/table/domain"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/table/domain"],
                     "options": {
                         "jestConfig": "libs/table/domain/jest.config.ts",
                         "passWithNoTests": true
@@ -844,7 +870,7 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/table/html"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/table/html"],
                     "options": {
                         "jestConfig": "libs/table/html/jest.config.ts",
                         "passWithNoTests": true
@@ -868,7 +894,7 @@
                 },
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/table/pdf"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/table/pdf"],
                     "options": {
                         "jestConfig": "libs/table/pdf/jest.config.ts",
                         "passWithNoTests": true
@@ -885,7 +911,7 @@
             "targets": {
                 "test": {
                     "executor": "@nrwl/jest:jest",
-                    "outputs": ["coverage/libs/workflow"],
+                    "outputs": ["{workspaceRoot}/coverage/libs/workflow"],
                     "options": {
                         "jestConfig": "libs/workflow/jest.config.ts",
                         "passWithNoTests": true

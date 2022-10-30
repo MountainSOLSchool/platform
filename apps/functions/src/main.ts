@@ -1,6 +1,6 @@
 // © 2021 developed by Katie and David with ❤️❤️❤️
 
-import { AuthUtility, Functions } from '@sol/firebase/functions';
+import { AuthUtility, Functions, Role } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
 import {
     RosterReportGenerator,
@@ -16,56 +16,56 @@ import { StudentDbEntry } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
 
-export const roster = Functions.anEndpoint(async (request, response) => {
-    AuthUtility.validateIsAdmin(request, response);
+export const roster = Functions.endpoint
+    .restrictedToRoles(Role.Admin)
+    .handle(async (request, response) => {
+        const className = request.query.class as string;
 
-    const className = request.query.class as string;
+        const db = DatabaseUtility.getDatabase();
+        const reportGenerator = new RosterReportGenerator(db);
 
-    const db = DatabaseUtility.getDatabase();
-    const reportGenerator = new RosterReportGenerator(db);
+        const students = await new StudentRepositoryUtility(db).fetchStudents(
+            className
+        );
 
-    const students = await new StudentRepositoryUtility(db).fetchStudents(
-        className
-    );
+        const studentRecords =
+            reportGenerator.transformStudentEntriesIntoRosterRecords(students);
 
-    const studentRecords =
-        reportGenerator.transformStudentEntriesIntoRosterRecords(students);
+        const htmlTable = TableHtml.generateHtmlTableFromRecords({
+            records: studentRecords,
+            headers: reportGenerator.studentRowHeaders,
+            title: `Class Roster for ${className}`,
+            styleBuilder: reportGenerator.buildStudentRecordStyle,
+        });
 
-    const htmlTable = TableHtml.generateHtmlTableFromRecords({
-        records: studentRecords,
-        headers: reportGenerator.studentRowHeaders,
-        title: `Class Roster for ${className}`,
-        styleBuilder: reportGenerator.buildStudentRecordStyle,
+        response.send({ html: htmlTable });
     });
 
-    response.send({ html: htmlTable });
-});
+export const signIn = Functions.endpoint
+    .restrictedToRoles(Role.Admin)
+    .handle(async (request, response) => {
+        const className = request.query.class as string;
 
-export const signIn = Functions.anEndpoint(async (request, response) => {
-    AuthUtility.validateIsAdmin(request, response);
+        const db = DatabaseUtility.getDatabase();
+        const reportGenerator = new RosterReportGenerator(db);
 
-    const className = request.query.class as string;
+        const students = await new StudentRepositoryUtility(db).fetchStudents(
+            className
+        );
 
-    const db = DatabaseUtility.getDatabase();
-    const reportGenerator = new RosterReportGenerator(db);
+        const studentRecords =
+            reportGenerator.transformStudentEntriesIntoSignInSheet(students);
 
-    const students = await new StudentRepositoryUtility(db).fetchStudents(
-        className
-    );
+        const htmlTable = TableHtml.generateHtmlTableFromRecords({
+            records: studentRecords,
+            headers: reportGenerator.signInRowHeaders,
+            title: `Sign In/Out for ${className}`,
+        });
 
-    const studentRecords =
-        reportGenerator.transformStudentEntriesIntoSignInSheet(students);
-
-    const htmlTable = TableHtml.generateHtmlTableFromRecords({
-        records: studentRecords,
-        headers: reportGenerator.signInRowHeaders,
-        title: `Sign In/Out for ${className}`,
+        response.send({ html: htmlTable });
     });
 
-    response.send({ html: htmlTable });
-});
-
-export const classes = Functions.anEndpoint(async (request, response) => {
+export const classes = Functions.endpoint.handle(async (request, response) => {
     const db = DatabaseUtility.getDatabase();
 
     const classes = await _fetchClasses(db);
@@ -73,30 +73,32 @@ export const classes = Functions.anEndpoint(async (request, response) => {
     response.send({ classes });
 });
 
-export const emails = Functions.anEndpoint(async (request, response) => {
-    await AuthUtility.validateIsAdmin(request, response);
-    const db = DatabaseUtility.getDatabase();
-    const classEmailGenerator = new ClassEmailGenerator(db);
-    const className = request.query.class as string;
-    const emailList = await classEmailGenerator.createEmailList(className);
-    response.send({
-        list: emailList,
+export const emails = Functions.endpoint
+    .restrictedToRoles(Role.Admin)
+    .handle(async (request, response) => {
+        const db = DatabaseUtility.getDatabase();
+        const classEmailGenerator = new ClassEmailGenerator(db);
+        const className = request.query.class as string;
+        const emailList = await classEmailGenerator.createEmailList(className);
+        response.send({
+            list: emailList,
+        });
     });
-});
 
-export const tshirts = Functions.anEndpoint(async (request, response) => {
-    await AuthUtility.validateIsAdmin(request, response);
-    const db = DatabaseUtility.getDatabase();
-    const tshirtGenerator = new StudentTshirtsGenerator(db);
-    const tshirtList = await tshirtGenerator.createTshirtList();
-    response.send({
-        list: tshirtList,
+export const tshirts = Functions.endpoint
+    .restrictedToRoles(Role.Admin)
+    .handle(async (request, response) => {
+        const db = DatabaseUtility.getDatabase();
+        const tshirtGenerator = new StudentTshirtsGenerator(db);
+        const tshirtList = await tshirtGenerator.createTshirtList();
+        response.send({
+            list: tshirtList,
+        });
     });
-});
 
-export const importEnrollment = Functions.anEndpoint(
-    async (request, response) => {
-        await AuthUtility.validateIsAdmin(request, response);
+export const importEnrollment = Functions.endpoint
+    .restrictedToRoles(Role.Admin)
+    .handle(async (request, response) => {
         const { data: entries } = request.body as {
             data: Array<StudentEnrollmentEntry>;
         };
@@ -313,8 +315,7 @@ export const importEnrollment = Functions.anEndpoint(
                 enrolled,
             },
         });
-    }
-);
+    });
 
 async function fetchMatchingClassRef({
     name,
@@ -385,3 +386,10 @@ export const enroll = Functions.endpoint
         // TODO: record enrollment in our DB
         response.send({ success: true, transaction: transaction });
     });
+
+export const roles = Functions.endpoint.handle(async (request, response) => {
+    const user = await AuthUtility.getUserFromRequest(request, response);
+    const roles = await AuthUtility.getUserRoles(user);
+    console.log('Roles', roles);
+    response.send(roles);
+});
