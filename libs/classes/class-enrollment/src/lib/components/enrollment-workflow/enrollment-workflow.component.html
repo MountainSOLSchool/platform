@@ -1,0 +1,9 @@
+<sol-workflow
+    title="Summer 2023 Enrollment"
+    [steps]="steps"
+    [completeCurrentStep]="completeCurrentStep$ | async"
+    (nextClick)="nextClicked()"
+    (completed)="submit()"
+>
+    <router-outlet></router-outlet>
+</sol-workflow>

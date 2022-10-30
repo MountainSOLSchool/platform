@@ -9,7 +9,7 @@ import { CardModule } from 'primeng/card';
 
 @Component({
     standalone: true,
-    imports: [CommonModule, CalendarComponent, CardModule, FunctionsApi],
+    imports: [CommonModule, CalendarComponent, CardModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './classes-calendar.component.html',
 })

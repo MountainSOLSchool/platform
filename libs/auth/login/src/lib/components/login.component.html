@@ -47,9 +47,9 @@
                         ><i class="pi pi-lock"></i
                     ></span>
                     <input
+                        pInputText
                         name="password"
                         type="password"
-                        pInputText
                         [autocomplete]="
                             (isCreatingNewAccount$ | async)
                                 ? 'new-password'

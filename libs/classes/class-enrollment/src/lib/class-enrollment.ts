@@ -1,6 +1,20 @@
 import { Route } from '@angular/router';
-import { EnrollmentComponent } from './components/enrollment/enrollment.component';
+import { CheckoutComponent } from './components/checkout/checkout.component';
+import { ClassesComponent } from './components/classes/classes.component';
+import { ConfirmationComponent } from './components/confirmation/confirmation.component';
+import { InfoComponent } from './components/info/info.component';
+import { ClassEnrollmentComponent } from './components/enrollment-workflow/enrollment-workflow.component';
 
 export const enrollmentRoutes: Route[] = [
-    { path: '', pathMatch: 'full', component: EnrollmentComponent },
+    {
+        path: '',
+        component: ClassEnrollmentComponent,
+        children: [
+            { path: '', redirectTo: 'classes', pathMatch: 'full' },
+            { path: 'classes', component: ClassesComponent },
+            { path: 'info', component: InfoComponent },
+            { path: 'checkout', component: CheckoutComponent },
+            { path: 'confirmation', component: ConfirmationComponent },
+        ],
+    },
 ];

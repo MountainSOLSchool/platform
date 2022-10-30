@@ -7,7 +7,7 @@ import { TableModule } from 'primeng/table';
 
 @Component({
     standalone: true,
-    imports: [CommonModule, ProgressBarModule, TableModule, FunctionsApi],
+    imports: [CommonModule, ProgressBarModule, TableModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './tshirts.component.html',
 })

@@ -8,7 +8,7 @@ import {
 } from '@angular/fire/compat/functions';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
+import { provideRouter, RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { AuthInterceptor } from '@sol/auth/interceptor';
@@ -36,7 +36,7 @@ bootstrapApplication(AppComponent, {
     providers: [
         importProvidersFrom(BrowserModule),
         importProvidersFrom(BrowserAnimationsModule),
-        importProvidersFrom(RouterModule.forRoot(appRoutes)),
+        provideRouter(appRoutes),
         importProvidersFrom(StoreModule.forRoot({}, {})),
         importProvidersFrom(EffectsModule.forRoot([])),
         importProvidersFrom(

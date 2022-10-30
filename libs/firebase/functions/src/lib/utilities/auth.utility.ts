@@ -3,7 +3,22 @@ import * as admin from 'firebase-admin';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import * as functions from 'firebase-functions';
 
+export enum Role {
+    Admin = 'admin',
+}
+
 export class AuthUtility {
+    static validateRole(
+        request: functions.https.Request,
+        response: functions.Response,
+        role: Role
+    ) {
+        switch (role) {
+            case Role.Admin:
+                AuthUtility.validateIsAdmin(request, response);
+                break;
+        }
+    }
     public static async validateIsAdmin(
         req: functions.https.Request,
         res: functions.Response
@@ -13,16 +28,39 @@ export class AuthUtility {
             res
         );
 
-        const db = DatabaseUtility.getDatabase();
-
-        const isAdmin = !!(await DatabaseUtility.fetchFirstMatchingDocument(
-            db.collection('admins'),
-            ['userId', '==', userId]
-        ));
+        const isAdmin = await AuthUtility.isAdmin(userId);
 
         if (!isAdmin) {
             res.status(403).send();
         }
+    }
+
+    private static async isAdmin(userId: string): Promise<boolean> {
+        const db = DatabaseUtility.getDatabase();
+        const admin = await DatabaseUtility.fetchFirstMatchingDocument(
+            db.collection('admins'),
+            ['userId', '==', userId]
+        );
+        console.log('found admin', admin);
+        return !!admin;
+    }
+
+    public static async getUserRoles(
+        user: admin.auth.UserRecord
+    ): Promise<Array<Role>> {
+        const roles = new Array<Role>();
+        if (await AuthUtility.isAdmin(user.uid)) {
+            roles.push(Role.Admin);
+        }
+        return roles;
+    }
+
+    public static async getUserFromRequest(
+        req: functions.https.Request,
+        res: functions.Response
+    ): Promise<admin.auth.UserRecord> {
+        const { uid } = await AuthUtility.validateFirebaseIdToken(req, res);
+        return await admin.auth().getUser(uid);
     }
 
     public static async validateFirebaseIdToken(

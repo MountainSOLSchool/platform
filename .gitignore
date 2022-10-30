@@ -47,3 +47,4 @@ public/
 static/
 
 migrations.json
+.secret.local

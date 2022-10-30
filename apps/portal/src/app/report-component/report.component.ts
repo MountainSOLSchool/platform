@@ -21,7 +21,6 @@ import { CommonModule } from '@angular/common';
     standalone: true,
     imports: [
         CommonModule,
-        FunctionsApi,
         ButtonModule,
         InputTextModule,
         AutoCompleteModule,

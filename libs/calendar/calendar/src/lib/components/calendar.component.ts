@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     CUSTOM_ELEMENTS_SCHEMA,
+    inject,
     Input,
     Output,
 } from '@angular/core';
@@ -37,7 +38,7 @@ defineFullCalendarElement();
     templateUrl: './calendar.component.html',
 })
 export class CalendarComponent {
-    constructor(private readonly firebaseApi: FunctionsApi) {}
+    private readonly firebaseApi = inject(FunctionsApi);
 
     @Input() set events(events: Array<EventInput> | null) {
         this.#events$.next(events);

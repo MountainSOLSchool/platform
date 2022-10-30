@@ -1,13 +1,7 @@
-import {
-    AngularFireFunctions,
-    AngularFireFunctionsModule,
-} from '@angular/fire/compat/functions';
+import { AngularFireFunctions } from '@angular/fire/compat/functions';
 import { inject, Injectable, NgModule } from '@angular/core';
 import { Observable } from 'rxjs';
 
-@NgModule({
-    imports: [AngularFireFunctionsModule],
-})
 @Injectable({
     providedIn: 'root',
 })

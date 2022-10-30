@@ -8,7 +8,7 @@ import { forkJoin, map, mapTo, startWith, switchMap, tap } from 'rxjs';
 import { reportComponentActions, reportEffectsActions } from './report.actions';
 
 @NgModule({
-    imports: [FunctionsApi, ClipboardModule, MessageModule],
+    imports: [ClipboardModule, MessageModule],
     providers: [MessageService],
 })
 @Injectable({ providedIn: 'root' })

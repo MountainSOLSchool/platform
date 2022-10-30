@@ -13,7 +13,7 @@ import { map, Observable } from 'rxjs';
 
 @Component({
     standalone: true,
-    imports: [CommonModule, ChartModule, FunctionsApi, RouterModule],
+    imports: [CommonModule, ChartModule, RouterModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './dashboard.component.html',
 })

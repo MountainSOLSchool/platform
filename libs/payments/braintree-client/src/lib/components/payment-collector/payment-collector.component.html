@@ -1,0 +1,8 @@
+<ng-container *ngIf="loading$ | async">
+    <p-skeleton styleClass="mb-2"></p-skeleton>
+    <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
+    <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
+    <p-skeleton height="2rem" styleClass="mb-2"></p-skeleton>
+    <p-skeleton width="10rem" height="4rem"></p-skeleton>
+</ng-container>
+<div [id]="COLLECTOR_ELEMENT_SELECTOR"></div>
