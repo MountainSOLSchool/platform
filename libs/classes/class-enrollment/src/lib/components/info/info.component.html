@@ -1,1 +1,178 @@
-This is where student info will be collected.
+<head>
+    <title id="title">student-registration</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=screen-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <form id="reg-form">
+        <!--STUDENT PERSONAL INFO SECTION-->
+        <section id="personal">
+            <h2>Student Information</h2>
+            <p-fieldset legend="Student Information" [toggleable]="true">
+                <div class="p-field p-col-12 p-md-4">
+                    <span class="p-float-label">
+                        <p-inputMask inputId="birthday" mask="99/99/9999"></p-inputMask>
+                        <label for="birthday">Birthday</label>
+                    </span>
+                </div>
+
+                <div class="p-field p-col-12 p-md-4">
+                    <span class="p-float-label">
+                        <input required type="text" id="name" name="name" pInputText />
+                        <label for="name">Name</label>
+                    </span>
+                </div>
+
+                <div class="p-field p-col-12 p-md-4">
+                    <span class="p-float-label">
+                        <input type="text" id="gender" name="gender" pInputText />
+                        <label for="gender">Gender (optional)</label>
+                    </span>
+                </div>
+
+
+                <div class="p-field p-col-12 p-md-4">
+                    <span class="p-float-label">
+                        <input type="text" id="school" name="school" pInputText />
+                        <label for="school">School (optional)</label>
+                    </span>
+                </div>
+
+                <div id="notes">
+                    <label for="bio">student bio (optional)</label><br />
+                    <textarea id="bio" name="bio" [rows]="5" [cols]="50" pInputTextarea
+                        [autoResize]="true"></textarea><br />
+                    <label for="notes">notes about student (optional)</label><br />
+                    <textarea id="notes" name="notes" [rows]="5" [cols]="50" pInputTextarea
+                        [autoResize]="true"></textarea>
+                </div>
+            </p-fieldset>
+        </section>
+        <!--CONTACT INFO SECTION-->
+        <section id="contact-info">
+            <h2>Contact Info</h2>
+            <p-fieldset legend="Contact Info" [toggleable]="true">
+                <div class="p-fluid grid">
+                    <span class="p-float-label">
+                        <input required type="email" id="email" name="email" pInputText>
+                        <label for="email">primary e-mail</label>
+                    </span>
+                    <span class="p-float-label">
+                        <input type="email" id="emailAlt" name="emailAlt" pInputText>
+                        <label for="emailAlt">student's e-mail (optional)</label>
+                    </span>
+                    <span class="p-float-label">
+                        <p-inputMask mask="(999) 999-9999" name="phone" id="phone"></p-inputMask>
+                        <label for="phone">primary phone number</label>
+                    </span>
+                    <span class="p-float-label">
+                        <p-inputMask mask="(999) 999-9999" name="phoneAlt"></p-inputMask>
+                        <label for="phoneAlt">student's phone number (optional)</label>
+                    </span>
+                    <div id="address">
+                        <label for="add-line1">Address Line 1</label>
+                        <input pInputText required type="text" id="add-line1" name="add-line1" />
+                        <label for="add-line2">Address Line 2</label>
+                        <input pInputText type="text" id="add-line2" name="add-line2" />
+                        <label for="add-city">City</label>
+                        <input pInputText type="text" id="add-city" name="add-city" />
+                        <label for="add-state">State</label>
+                        <input pInputText type="text" id="add-state" name="add-state" />
+                        <label for="add-zip" max-length="5">ZIP code</label>
+                        <input pInputText name="add-zip" />
+                    </div>
+                </div>
+            </p-fieldset>
+        </section>
+        <!--PRIVACY SECTION-->
+        <section>
+            <h2>Privacy and Chemicals</h2>
+            <p-fieldset legend="Privacy and Chemicals" [toggleable]="true">
+                <div id="bug-spray-etc">
+                    <ul id="chemicals">
+                        <li>
+                            <h3>Bug Spray</h3>
+                            <input type="radio" id="bug-spray" name="bug-spray" value="yes-bug" />
+                            <label for="yes-bug">Yes</label>
+                            <input type="radio" id="bug-spray" name="bug-spray" value="no-bug" />
+                            <label for="no-bug">No</label>
+                        </li>
+                        <li>
+                            <h3>DEET</h3>
+                            <input type="radio" id="DEET" name="deet" value="yes-deet" />
+                            <label for="yes-deet">Yes</label>
+                            <input type="radio" id="DEET" name="deet" value="no-deet" />
+                            <label for="no-deet">No</label>
+                        </li>
+                        <li>
+                            <h3>Sun Screen</h3>
+                            <input type="radio" id="sun-screen" name="sun-screen" value="yes-sun" />
+                            <label for="yes-sun">Yes</label>
+                            <input type="radio" id="sun-screen" name="sun-screen" value="no-sun" />
+                            <label for="no-sun">No</label>
+                        </li>
+                    </ul>
+                </div>
+                <div id="privacy">
+                    <h3>photos</h3>
+                    <p>can we use photos of student for promotional material?</p>
+                    <input type="radio" id="photos" name="photo-permission" value="yes-photo" />
+                    <label for="yes-photo">Yes</label>
+                    <input type="radio" id="photos" name="photo-permission" value="no-photo" />
+                    <label for="no-photo">No</label>
+                    <input type="radio" id="photos" name="photo-permission" value="yes-noname" />
+                    <label for="yes-noname">Yes, but no name</label>
+                </div>
+            </p-fieldset>
+        </section>
+        <!--PICKUP INFO SECTION-->
+        <section id="pickup">
+            <h2>Student Pickup</h2>
+            <p-fieldset legend="Student Pickup" [toggleable]="true">
+                <div id="code-word-div">
+                    <label id="code-word" for="code-word">Student pick-up code word</label>
+                    <input required type="text" maxlength="30" id="code-word" pInputText />
+                </div>
+                <section id="auth-pickup">
+                    <div class="pickup-tile" id="pickup-tile1">
+                        <h3>authorized pickup</h3>
+                        <table class="pickup-table">
+                            <tr>
+                                <th>
+                                    <label for="pickup-name1"><span>Name</span></label>
+                                </th>
+                                <td>
+                                    <input required type="text" id="pickup-name1" pInputText />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label for="pickup-relationship0">Relationship</label>
+                                </th>
+                                <td>
+                                    <input type="text" id="pickup-relation0" name="pickup-relation0" pInputText />
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <label for="pickup-phone0">Phone Number</label>
+                                </th>
+                                <td>
+                                    <input type="tel" id="pickup-phone1" />
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="add-auth">
+                            <button>Add auth pickup</button>
+                        </div>
+                    </div>
+                </section>
+            </p-fieldset>
+        </section>
+        <!--SUBMIT-->
+        <section id="submit">
+            <button pButton type="submit" name="submit">SUBMIT</button>
+        </section>
+    </form>
+</body>
