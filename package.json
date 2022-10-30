@@ -25,7 +25,7 @@
         "dep-graph": "nx dep-graph",
         "help": "nx help",
         "lint:functions": "npm run lint --project=functions",
-        "build:functions": "nx dep-graph --file=output.html && rm -rf dist && npm run build functions",
+        "build:functions": "nx dep-graph --file=output.html && rm -rf dist && npm run nx build functions",
         "build:functions:watch": "nx dep-graph --file=output.html && rm -rf dist && nx build functions --watch",
         "build:portal": "nx build portal --outputPath=\"public\"",
         "serve:functions": "npm run build:functions:watch & (sleep 5 && firebase serve --only functions --port=5001) && fg",
