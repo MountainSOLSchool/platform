@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HeaderComponent } from '@sol/header';
+import { AdminGuard } from './admin.guard';
 import { UserGuard } from './user.guard';
 
 export const appRoutes: Routes = [
@@ -19,7 +20,8 @@ export const appRoutes: Routes = [
                 children: [
                     {
                         path: 'admin',
-                        canActivate: [],
+                        providers: [AdminGuard],
+                        canActivate: [AdminGuard],
                         children: [
                             {
                                 path: '',
