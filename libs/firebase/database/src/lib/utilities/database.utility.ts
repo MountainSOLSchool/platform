@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin';
+import { DocumentReference } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 
 admin.initializeApp();
@@ -13,6 +14,12 @@ type Document = {
 export class DatabaseUtility {
     public static getDatabase() {
         return db;
+    }
+
+    public static async getDocumentRef(
+        path: string
+    ): Promise<DocumentReference> {
+        return await db.doc(path);
     }
 
     public static async getHydratedCollection(

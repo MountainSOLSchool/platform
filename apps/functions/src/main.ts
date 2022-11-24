@@ -15,6 +15,7 @@ import { StudentRepositoryUtility } from '@sol/student/persistence';
 import { StudentDbEntry } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
+import { ClassRepository, DiscountRepository } from '@sol/classes/repository';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -372,18 +373,42 @@ export const paymentToken = Functions.endpoint
 export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle(async (request, response, secrets) => {
-        const nonce = request.body.data.nonce;
+        const {
+            classIds,
+            couponCodes,
+            transaction: { nonce },
+        } = request.body.data as {
+            classIds: Array<string>;
+            couponCodes: Array<string>;
+            transaction: { nonce: string };
+        };
+        // 1. Get prices of the classes
+        const classes = await Promise.all(
+            classIds.map(async (id) => await ClassRepository.get(id))
+        );
+        console.log(classes);
+        // 2. Get discount for coupon codes
+        const discounts = await Promise.all(
+            couponCodes.map(async (code) => await DiscountRepository.get(code))
+        );
+        console.log(discounts);
+        // 3. Calculate the total price
+        // 4. Add a "pending" student enrollment transaction to the database
+        // 5. Transact with Braintree
         const braintree = new Braintree(secrets);
         const deviceData = request.body.data.deviceData;
-        console.log(request.body.data);
+        // console.log(request.body.data);
         const transaction = await braintree.transact({
             amount: 10,
             nonce,
             customer: { email: 'test@email.com' },
             deviceData,
         });
-        console.log(transaction);
-        // TODO: record enrollment in our DB
+        // console.log(transaction);
+        // 6. Add a "successful" student enrollment transaction to the database
+        // 7. Create a student record
+        // 8. Add student to the class
+
         response.send({ success: true, transaction: transaction });
     });
 

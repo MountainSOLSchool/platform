@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, inject, Injectable, NgModule } from '@angular/core';
-import { ComponentStore } from '@ngrx/component-store';
+import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { Observable, switchMap, take, tap } from 'rxjs';
 import { PreparedTransaction } from '@sol/payments/transactions';
@@ -56,11 +56,25 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
 
     readonly submit = this.effect((submit$) => {
         return submit$.pipe(
+            tap(() => console.log('submitted')),
             switchMap(() => {
                 return this.select(({ transaction }) => transaction).pipe(
                     take(1),
                     switchMap((transaction) => {
-                        return this.functions.call('enroll', transaction);
+                        return this.functions
+                            .call('enroll', {
+                                classIds: ['9fr11z6ODR8odaXX7d1D'],
+                                couponCodes: ['TESTCODE'],
+                                transaction,
+                            })
+                            .pipe(
+                                tapResponse(
+                                    (reseponse) => {
+                                        console.log(reseponse);
+                                    },
+                                    (error) => console.log(error)
+                                )
+                            );
                     })
                 );
             })
