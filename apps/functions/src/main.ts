@@ -15,7 +15,6 @@ import { StudentRepositoryUtility } from '@sol/student/persistence';
 import { StudentDbEntry } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
-import { stringify } from 'querystring';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
