@@ -7,7 +7,15 @@ const db = admin.firestore(functions.config().firebase);
 type Collection = Array<Document>;
 
 type Document = {
-    [x: string]: Document | Collection | string;
+    [x: string]:
+        | Document
+        | Collection
+        | string
+        | FirebaseFirestore.DocumentReference
+        | FirebaseFirestore.Timestamp
+        | number
+        | boolean
+        | null;
 };
 
 export class DatabaseUtility {
