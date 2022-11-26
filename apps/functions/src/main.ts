@@ -16,6 +16,13 @@ import { StudentDbEntry } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
 import { ClassRepository, DiscountRepository } from '@sol/classes/repository';
+import {
+    Discount,
+    isClassesDiscount,
+    isBasketDiscount,
+    ClassesDiscount,
+    BasketDiscount,
+} from '@sol/classes/domain';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -382,31 +389,61 @@ export const enroll = Functions.endpoint
             couponCodes: Array<string>;
             transaction: { nonce: string };
         };
-        // 1. Get prices of the classes
+
+        // 1. Get classes with costs
         const classes = await Promise.all(
             classIds.map(async (id) => await ClassRepository.get(id))
         );
-        console.log(classes);
-        // 2. Get discount for coupon codes
-        const discounts = await Promise.all(
-            couponCodes.map(async (code) => await DiscountRepository.get(code))
-        );
-        console.log(discounts);
+
+        // 2. Get discounts for coupon codes
+        const discounts = (
+            await Promise.all(
+                couponCodes.map(
+                    async (code) => await DiscountRepository.get(code)
+                )
+            )
+        ).filter((d): d is Discount<unknown> => !!d);
+
         // 3. Calculate the total price
+        const classesDiscounts = discounts.filter((d): d is ClassesDiscount =>
+            isClassesDiscount(d)
+        );
+
+        const classesUpdatedByClassDiscounts = classesDiscounts.reduce(
+            (updatedClasses, discount) => discount.apply(updatedClasses),
+            classes
+        );
+
+        const basketDiscounts = discounts.filter((d): d is BasketDiscount =>
+            isBasketDiscount(d)
+        );
+
+        const basketTotal = classesUpdatedByClassDiscounts.reduce(
+            (total, c) => total + c.cost,
+            0
+        );
+
+        const finalTotal = basketDiscounts.reduce(
+            (total, discount) => discount.apply(total),
+            basketTotal
+        );
+
         // 4. Add a "pending" student enrollment transaction to the database
+
         // 5. Transact with Braintree
         const braintree = new Braintree(secrets);
         const deviceData = request.body.data.deviceData;
-        // console.log(request.body.data);
+
         const transaction = await braintree.transact({
             amount: 10,
             nonce,
             customer: { email: 'test@email.com' },
             deviceData,
         });
-        // console.log(transaction);
+
         // 6. Add a "successful" student enrollment transaction to the database
         // 7. Create a student record
+
         // 8. Add student to the class
 
         response.send({ success: true, transaction: transaction });

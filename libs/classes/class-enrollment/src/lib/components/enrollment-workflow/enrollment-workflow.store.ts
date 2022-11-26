@@ -64,7 +64,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
                         return this.functions
                             .call('enroll', {
                                 classIds: ['9fr11z6ODR8odaXX7d1D'],
-                                couponCodes: ['TESTCODE'],
+                                couponCodes: ['CLASSFREETEST', 'AMOUNTTEST'],
                                 transaction,
                             })
                             .pipe(

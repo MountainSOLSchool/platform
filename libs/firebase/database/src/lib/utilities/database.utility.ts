@@ -2,7 +2,9 @@ import * as admin from 'firebase-admin';
 import { DocumentReference } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 
-admin.initializeApp();
+if (admin.apps.length === 0) {
+    admin.initializeApp();
+}
 const db = admin.firestore(functions.config().firebase);
 
 type Collection = Array<Document>;
