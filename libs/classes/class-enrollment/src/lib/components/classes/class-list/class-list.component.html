@@ -1,0 +1,28 @@
+<p-card
+    *ngFor="let class of classes$ | async"
+    [header]="class.title"
+    [subheader]="class.classDateTimes"
+    [style]="{
+        width: '35rem',
+        'margin-bottom': '2em',
+        background: '#dff2d8'
+    }"
+    [styleClass]="'gradient'"
+>
+    <p>
+        <b>Class Type:</b> {{ class.classType }}<br />
+        <b>Grades:</b>
+        {{ class.gradeRangeStart }} - {{ class.gradeRangeEnd }}<br />
+        <b>Location:</b> {{ class.location }}<br />
+        <b>Cost:</b> ${{ class.cost }}<br />
+        <b>Instructors:</b>
+        <span *ngFor="let instructor of class.instructors; let isLast = last">
+            {{ instructor.first_name }} {{ instructor.last_name
+            }}{{ isLast ? '' : ', ' }}
+        </span>
+        <br />
+        <br />
+        <b>Description:</b> <br />
+        {{ class.description }}<br />
+    </p>
+</p-card>

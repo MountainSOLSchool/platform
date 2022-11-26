@@ -15,6 +15,7 @@ import { StudentRepositoryUtility } from '@sol/student/persistence';
 import { StudentDbEntry } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
+import { stringify } from 'querystring';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -347,15 +348,39 @@ const _fetchClasses = async (
         classes
     );
 
-    const mappedClasses = hydratedClasses.classes.map((c, i) => {
-        return {
-            title: c.name,
-            start: c.start,
-            end: c.end,
-            enrolledCount: c.students?.length ?? 0,
-            id: String(i),
-        };
-    });
+    const mappedClasses = await Promise.all(
+        hydratedClasses.classes.map(async (c, i) => {
+            return {
+                title: c.name,
+                startMs:
+                    typeof c !== 'string' &&
+                    typeof c.start === 'object' &&
+                    '_seconds' in c.start
+                        ? Number(c.start._seconds) * 1000
+                        : undefined,
+                endMs:
+                    typeof c !== 'string' &&
+                    typeof c.end === 'object' &&
+                    '_seconds' in c.end
+                        ? Number(c.end._seconds) * 1000
+                        : undefined,
+                enrolledCount: c.students?.length ?? 0,
+                id: String(i),
+                classType: c.class_type,
+                gradeRangeStart: c.grade_range_start,
+                gradeRangeEnd: c.grade_range_end,
+                description: c.description,
+                live: c.live,
+                cost: c.cost,
+                location: c.location,
+                instructors: await DatabaseUtility.getHydratedDocuments(
+                    c.instructors as unknown as Array<FirebaseFirestore.DocumentReference>
+                ),
+                dailyTimes: c.daily_times,
+                weekday: c.weekday,
+            };
+        })
+    );
 
     return mappedClasses;
 };

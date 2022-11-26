@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 import { CheckoutComponent } from './components/checkout/checkout.component';
-import { ClassesComponent } from './components/classes/classes.component';
+import { ClassesComponent } from './components/classes/class-list/class-list.component';
 import { ConfirmationComponent } from './components/confirmation/confirmation.component';
 import { InfoComponent } from './components/info/info.component';
 import { ClassEnrollmentComponent } from './components/enrollment-workflow/enrollment-workflow.component';
