@@ -1,0 +1,16 @@
+<ng-container *ngIf="user$ | async as user; else login">
+    Thank you for creating an account with the email
+    <b>{{ user.email }}</b
+    >! For future enrollments, you will be able re-use the student information
+    and payment methods you've entered.
+</ng-container>
+<ng-template #login>
+    Please create an account or log into an existing account so that you can
+    save your student and payment information for future enrollment.
+    <div style="margin-top: 3rem">
+        <sol-login
+            [isCreatingNewAccount]="true"
+            [standalone]="true"
+        ></sol-login>
+    </div>
+</ng-template>

@@ -20,7 +20,6 @@ export class WorkflowComponent {
         this.store.setState((s) => ({ ...s, steps }));
     }
     @Input() set completeCurrentStep(completed: null | void) {
-        console.log('completed', completed);
         if (completed !== null) {
             this.store.goToNextStep();
         }
@@ -32,4 +31,5 @@ export class WorkflowComponent {
 
     readonly steps$ = this.store.selectSteps();
     readonly nextStepLink$ = this.store.selectNextStepLink();
+    readonly currentStepLabel$ = this.store.selectCurrentStepLabel();
 }

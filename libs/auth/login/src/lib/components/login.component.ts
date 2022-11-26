@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     inject,
+    Input,
     OnInit,
 } from '@angular/core';
 import { Login, LoginStore } from './login.store';
@@ -13,9 +14,11 @@ import { MessageModule } from 'primeng/message';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { CardModule } from 'primeng/card';
 
 @Component({
     standalone: true,
+    selector: 'sol-login',
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
@@ -27,10 +30,14 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
         MessageModule,
         ToastModule,
         RouterModule,
+        CardModule,
     ],
     templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {
+    @Input() isCreatingNewAccount = false;
+    @Input() standalone = false;
+
     readonly loginStore = inject(LoginStore);
     readonly route = inject(ActivatedRoute);
 
@@ -47,7 +54,14 @@ export class LoginComponent implements OnInit {
         this.loginStore.setState({
             email: '',
             password: '',
-            isCreatingNewAccount: this.route.snapshot.data['create'],
+            isCreatingNewAccount:
+                this.route.snapshot.data['create'] || this.isCreatingNewAccount,
+        });
+    }
+
+    useSignIn(): void {
+        this.loginStore.patchState({
+            isCreatingNewAccount: false,
         });
     }
 

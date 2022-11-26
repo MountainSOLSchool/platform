@@ -5,7 +5,10 @@ import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-wo
 import { CardModule } from 'primeng/card';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { CommonModule, DatePipe } from '@angular/common';
-import { format } from 'path';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { ChipModule } from 'primeng/chip';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Injectable()
 class ClassesStore extends ComponentStore<{ nil: null }> {
@@ -24,7 +27,14 @@ class ClassesStore extends ComponentStore<{ nil: null }> {
 
 @Component({
     standalone: true,
-    imports: [CardModule, CommonModule],
+    imports: [
+        CardModule,
+        CommonModule,
+        CheckboxModule,
+        InputTextModule,
+        ChipModule,
+        SkeletonModule,
+    ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
     styleUrls: ['./class-list.component.css'],
@@ -72,11 +82,7 @@ export class ClassesComponent {
                                       this.datePipe.transform(
                                           new Date(c.endMs),
                                           'shortDate'
-                                      ) +
-                                      ', ' +
-                                      c.weekday +
-                                      ', ' +
-                                      c.dailyTimes
+                                      )
                                     : '',
                         };
                     })

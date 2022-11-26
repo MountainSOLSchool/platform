@@ -133,8 +133,19 @@ export class WorkflowStore extends ComponentStore<{
         );
     }
 
-    selectCurrentStep() {
+    selectCurrentStepRoute() {
         return this.select(({ currentStep }) => currentStep);
+    }
+
+    selectCurrentStepLabel() {
+        return this.selectCurrentStepRoute().pipe(
+            switchMap((currentStep) => {
+                return this.select(({ steps }) => {
+                    return steps.find((step) => step.routerLink === currentStep)
+                        ?.label;
+                });
+            })
+        );
     }
 
     selectNextStepLink() {

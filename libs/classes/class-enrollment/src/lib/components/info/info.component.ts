@@ -10,6 +10,8 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { RippleModule } from 'primeng/ripple';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { AccordionModule } from 'primeng/accordion';
+import { FormsModule } from '@angular/forms';
 
 @Injectable()
 class InfoStore extends ComponentStore<{ nil: null }> {
@@ -37,6 +39,8 @@ class InfoStore extends ComponentStore<{ nil: null }> {
         RippleModule,
         InputTextareaModule,
         InputNumberModule,
+        AccordionModule,
+        FormsModule,
     ],
     templateUrl: './info.component.html',
     styleUrls: ['./info.component.css'],
@@ -44,4 +48,21 @@ class InfoStore extends ComponentStore<{ nil: null }> {
 })
 export class InfoComponent {
     store = inject(InfoStore);
+
+    student = {
+        birthdate: undefined,
+        age: '',
+    };
+
+    updateAge(birthdate: Date | undefined): void {
+        if (birthdate) {
+            const ageDiffMs = Date.now() - birthdate.getTime();
+            const ageDate = new Date(ageDiffMs);
+            this.student.age = Math.abs(
+                ageDate.getUTCFullYear() - 1970
+            ).toString();
+        } else {
+            this.student.age = '';
+        }
+    }
 }

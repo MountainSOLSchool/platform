@@ -12,6 +12,7 @@ import { provideRouter, RouterModule } from '@angular/router';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { AuthInterceptor } from '@sol/auth/interceptor';
+import { MessageService } from 'primeng/api';
 import { appRoutes } from './app/app-routes';
 import { AppComponent } from './app/app.component';
 
@@ -36,6 +37,7 @@ bootstrapApplication(AppComponent, {
     providers: [
         importProvidersFrom(BrowserModule),
         importProvidersFrom(BrowserAnimationsModule),
+        MessageService,
         provideRouter(appRoutes),
         importProvidersFrom(StoreModule.forRoot({}, {})),
         importProvidersFrom(EffectsModule.forRoot([])),

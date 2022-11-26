@@ -24,18 +24,17 @@ export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);
 
     readonly steps = [
-        { label: 'Classes', routerLink: 'classes' },
-        { label: 'Info', routerLink: 'info' },
-        { label: 'Checkout', routerLink: 'checkout' },
+        { label: 'Class Selection', routerLink: 'classes' },
+        { label: 'Student Info', routerLink: 'info' },
+        { label: 'Account', routerLink: 'account' },
+        { label: 'Payment', routerLink: 'checkout' },
         {
-            label: 'Confirmation',
+            label: 'Confirm Enrollment',
             routerLink: 'confirmation',
         },
     ];
 
-    readonly completeCurrentStep$ = this.store.readyForNext$.pipe(
-        tap((v) => console.log('ok', v))
-    );
+    readonly completeCurrentStep$ = this.store.readyForNext$.pipe();
 
     submit() {
         this.store.submit();

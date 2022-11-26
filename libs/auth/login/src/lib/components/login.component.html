@@ -1,92 +1,104 @@
 <ng-container *ngIf="login$ | async as login">
-    <div style="width: 400px; margin: auto">
-        <ng-container *ngIf="isCreatingNewAccount$ | async; else default">
-            <h2>Create Account</h2>
-        </ng-container>
-        <ng-template #default>
-            <p-messages severity="info" [enableService]="false">
+    <p-card
+        [header]="
+            (isCreatingNewAccount$ | async) === true
+                ? 'Create Account'
+                : 'Sign In'
+        "
+        [style]="{ width: '25rem', margin: '2rem auto' }"
+    >
+        <div style="margin-top: -10px">
+            <p-messages
+                *ngIf="isCreatingNewAccount$ | async"
+                severity="info"
+                [enableService]="false"
+            >
                 <ng-template pTemplate>
                     <div class="ml-2">
-                        First time here?
-                        <a routerLink="/user/create">Create an account.</a>
+                        Already registered?
+                        <ng-container *ngIf="standalone; else useRouter">
+                            <a href="javascript:void(0)" (click)="useSignIn()"
+                                >Sign in</a
+                            >.</ng-container
+                        >
+                        <ng-template #useRouter
+                            ><a routerLink="/user/login">Sign in</a
+                            >.</ng-template
+                        >
                     </div>
                 </ng-template>
             </p-messages>
-            <h2>Sign In</h2>
-        </ng-template>
 
-        <form class="p-fluid" *ngIf="errors$ | async as errors">
-            <div class="field">
-                <label for="email">Email</label>
-                <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"
-                        ><i class="pi pi-user"></i
-                    ></span>
-                    <input
-                        name="email"
-                        type="text"
-                        pInputText
-                        [autocomplete]="
-                            (isCreatingNewAccount$ | async)
-                                ? 'new-password'
-                                : 'current-password'
-                        "
-                        [(ngModel)]="login.email"
-                        (ngModelChange)="onUpdated(login)"
-                        placeholder="somebody@email.com"
-                    />
+            <form class="p-fluid" *ngIf="errors$ | async as errors">
+                <div class="field">
+                    <label for="email">Email</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"
+                            ><i class="pi pi-user"></i
+                        ></span>
+                        <input
+                            name="email"
+                            type="text"
+                            pInputText
+                            [autocomplete]="
+                                (isCreatingNewAccount$ | async)
+                                    ? 'new-password'
+                                    : 'current-password'
+                            "
+                            [(ngModel)]="login.email"
+                            (ngModelChange)="onUpdated(login)"
+                            placeholder="somebody@email.com"
+                        />
+                    </div>
+                    <p *ngIf="errors['email']" style="color: red">
+                        {{ errors['email'].join(', ') }}
+                    </p>
                 </div>
-                <p *ngIf="errors['email']" style="color: red">
-                    {{ errors['email'].join(', ') }}
-                </p>
-            </div>
-            <div class="field">
-                <label for="email">Password</label>
-                <div class="p-inputgroup">
-                    <span class="p-inputgroup-addon"
-                        ><i class="pi pi-lock"></i
-                    ></span>
-                    <input
-                        pInputText
-                        name="password"
-                        type="password"
-                        [autocomplete]="
-                            (isCreatingNewAccount$ | async)
-                                ? 'new-password'
-                                : 'current-password'
-                        "
-                        [(ngModel)]="login.password"
-                        (ngModelChange)="onUpdated(login)"
-                        (keydown)="onPasswordKeydown($event)"
-                    />
+                <div class="field">
+                    <label for="email">Password</label>
+                    <div class="p-inputgroup">
+                        <span class="p-inputgroup-addon"
+                            ><i class="pi pi-lock"></i
+                        ></span>
+                        <input
+                            pInputText
+                            name="password"
+                            type="password"
+                            [autocomplete]="
+                                (isCreatingNewAccount$ | async)
+                                    ? 'new-password'
+                                    : 'current-password'
+                            "
+                            [(ngModel)]="login.password"
+                            (ngModelChange)="onUpdated(login)"
+                            (keydown)="onPasswordKeydown($event)"
+                        />
+                    </div>
+                    <p *ngIf="errors['password'] as e" style="color: red">
+                        {{ errors['password'].join(', ') }}
+                    </p>
                 </div>
-                <p *ngIf="errors['password'] as e" style="color: red">
-                    {{ errors['password'].join(', ') }}
-                </p>
-            </div>
-        </form>
-        <button
-            pButton
-            [loading]="(isLoggingIn$ | async) ?? false"
-            (click)="onSubmit()"
-            label="Submit"
-            class="w-full"
-            icon="pi pi-user"
-        ></button>
-    </div>
-    <div
-        *ngIf="shouldShowResetSuggestion$ | async"
-        style="width: 400px; margin: auto"
-    >
-        <p-messages [enableService]="false" severity="warn">
-            <ng-template pTemplate>
-                <div class="ml-2">
-                    Forgot your password?
-                    <a href="javascript:void(0)" (click)="onResetPassword()"
-                        >Send a password reset email.</a
-                    >
-                </div>
-            </ng-template>
-        </p-messages>
-    </div>
+            </form>
+            <button
+                pButton
+                [loading]="(isLoggingIn$ | async) ?? false"
+                (click)="onSubmit()"
+                label="Submit"
+                class="w-full"
+                icon="pi pi-user"
+            ></button>
+        </div>
+        <div *ngIf="shouldShowResetSuggestion$ | async">
+            <p-messages [enableService]="false" severity="warn">
+                <ng-template pTemplate>
+                    <div class="ml-2">
+                        Forgot your password?
+                        <a href="javascript:void(0)" (click)="onResetPassword()"
+                            >Send a password reset email.</a
+                        >
+                    </div>
+                </ng-template>
+            </p-messages>
+        </div>
+    </p-card>
 </ng-container>

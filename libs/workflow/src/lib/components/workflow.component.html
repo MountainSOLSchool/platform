@@ -4,19 +4,19 @@
     <p-steps [model]="(steps$ | async) ?? []" [readonly]="false"></p-steps>
 </div>
 
-<div style="margin-top: 40px">
+<div style="margin-top: 40px; margin-left: 2rem; margin-right: 2rem">
+    <h2>{{ currentStepLabel$ | async | titlecase }}</h2>
     <ng-content></ng-content>
-</div>
-
-<div style="margin-top: 40px; display: flex; justify-content: flex-end">
-    <button
-        pButton
-        *ngIf="nextStepLink$ | async as nextStepLink; else lastStep"
-        (click)="nextClick.emit()"
-    >
-        Next
-    </button>
-    <ng-template #lastStep>
-        <button pButton (click)="completed.next()">Submit</button>
-    </ng-template>
+    <div style="margin-top: 40px; display: flex; justify-content: flex-end">
+        <button
+            pButton
+            *ngIf="nextStepLink$ | async as nextStepLink; else lastStep"
+            (click)="nextClick.emit()"
+        >
+            Next
+        </button>
+        <ng-template #lastStep>
+            <button pButton (click)="completed.next()">Submit</button>
+        </ng-template>
+    </div>
 </div>
