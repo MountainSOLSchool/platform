@@ -29,7 +29,6 @@ export class SelectClassesCalendarComponent {
                       {
                           id: classThatToggledSelection.id,
                           name: classThatToggledSelection.title,
-                          cost: 0,
                       },
                   ]
                 : selectedClasses.filter(
@@ -42,8 +41,8 @@ export class SelectClassesCalendarComponent {
         .call<{
             classes: Array<{
                 title: string;
-                startMs: number;
-                endMs: number;
+                start: { _seconds: number };
+                end: { _seconds: number };
                 id: string;
             }>;
         }>('classes')
@@ -52,8 +51,8 @@ export class SelectClassesCalendarComponent {
     classEvents$: Observable<Array<EventInput>> = this.#serverClassEvents$.pipe(
         map((classes) =>
             classes.map((c) => {
-                const start = new Date(c.startMs ?? 0);
-                const end = new Date(c.endMs ?? 0);
+                const start = new Date((c.start?._seconds ?? 0) * 1000);
+                const end = new Date((c.start?._seconds ?? 0) * 1000);
                 const event: EventInput = {
                     id: c.id,
                     title: c.title,
