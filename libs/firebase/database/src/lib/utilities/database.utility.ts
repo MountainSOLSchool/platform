@@ -7,14 +7,15 @@ if (admin.apps.length === 0) {
 }
 const db = admin.firestore(functions.config().firebase);
 
-type Collection = Array<Document>;
+type Collection = Array<DocumentProperty>;
 
-type Document = {
+type DocumentProperty = {
     [x: string]:
-        | Document
+        | DocumentProperty
         | Collection
         | string
         | FirebaseFirestore.DocumentReference
+        | Array<FirebaseFirestore.DocumentReference>
         | FirebaseFirestore.Timestamp
         | number
         | boolean

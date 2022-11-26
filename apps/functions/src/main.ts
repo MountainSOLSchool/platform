@@ -371,7 +371,9 @@ const _fetchClasses = async (
                     '_seconds' in c.end
                         ? Number(c.end._seconds) * 1000
                         : undefined,
-                enrolledCount: c.students?.length ?? 0,
+                enrolledCount: Array.isArray(c.students)
+                    ? c.students?.length ?? 0
+                    : 0,
                 id: String(i),
                 classType: c.class_type,
                 gradeRangeStart: c.grade_range_start,
@@ -476,6 +478,5 @@ export const enroll = Functions.endpoint
 export const roles = Functions.endpoint.handle(async (request, response) => {
     const user = await AuthUtility.getUserFromRequest(request, response);
     const roles = await AuthUtility.getUserRoles(user);
-    console.log('Roles', roles);
     response.send(roles);
 });

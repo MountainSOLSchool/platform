@@ -41,7 +41,6 @@ export class AuthUtility {
             db.collection('admins'),
             ['userId', '==', userId]
         );
-        console.log('found admin', admin);
         return !!admin;
     }
 

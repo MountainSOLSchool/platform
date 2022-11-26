@@ -11,7 +11,6 @@ export class AmountDiscount extends BasketDiscount {
     amount!: number;
 
     apply(total: number): number {
-        console.log(`${total} - ${this.amount}`);
         return this.atLeastZero(total - this.amount);
     }
 }
