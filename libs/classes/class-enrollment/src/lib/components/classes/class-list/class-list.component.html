@@ -1,4 +1,4 @@
-<span class="p-input-icon-left">
+<div class="p-input-icon-left" style="margin-left: auto; margin-right: auto">
     <i class="pi pi-search"></i>
     <input
         type="text"
@@ -6,24 +6,30 @@
         placeholder="Search by name"
         style="width: 400px"
     />
-</span>
-<ng-container *ngIf="selectedClasses$ | async as selectedClasses">
+</div>
+<div *ngIf="selectedClasses$ | async as selectedClasses">
     <p-card
         *ngFor="let class of classes$ | async; trackBy: trackByClass"
         [header]="class.title"
         [style]="
             selectedClasses.includes(class.id)
                 ? {
-                      width: '35rem',
+                      width: '50rem',
                       'margin-top': '2rem',
                       'margin-bottom': '2em',
+                      'margin-left': 'auto',
+                      'margin-right': 'auto',
+                      display: 'block',
                       border: '2px solid #3c82f7',
                       'box-sizing': 'border-box'
                   }
                 : {
-                      width: '35rem',
+                      width: '50rem',
                       'margin-top': '2rem',
-                      'margin-bottom': '2em'
+                      'margin-bottom': '2em',
+                      'margin-left': 'auto',
+                      'margin-right': 'auto',
+                      display: 'block'
                   }
         "
         [styleClass]="'gradient'"
@@ -77,4 +83,4 @@
             {{ class.description }}<br />
         </p>
     </p-card>
-</ng-container>
+</div>
