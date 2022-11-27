@@ -27,7 +27,7 @@ export class ClassEnrollmentComponent {
         { label: 'Class Selection', routerLink: 'classes' },
         { label: 'Student Info', routerLink: 'info' },
         { label: 'Account', routerLink: 'account' },
-        { label: 'Payment', routerLink: 'checkout' },
+        { label: 'Payment Method', routerLink: 'checkout' },
         {
             label: 'Confirm Enrollment',
             routerLink: 'confirmation',

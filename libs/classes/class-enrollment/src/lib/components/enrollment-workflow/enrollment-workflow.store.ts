@@ -36,7 +36,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         );
     });
 
-    readonly readyForNext = this.effect((ready$) => {
+    readonly completeStep = this.effect((ready$) => {
         return ready$.pipe(tap(() => this._ready$.emit(Math.random())));
     });
 
@@ -49,7 +49,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
                         transaction,
                     }))
                 ),
-                tap(() => this.readyForNext())
+                tap(() => this.completeStep())
             );
         }
     );

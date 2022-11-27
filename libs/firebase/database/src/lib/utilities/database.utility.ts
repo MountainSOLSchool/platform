@@ -55,6 +55,7 @@ export class DatabaseUtility {
                     ]: Array<FirebaseFirestore.DocumentData>;
                 } = Object.assign({}, ...hydratedCollections);
                 return {
+                    id: doc.id,
                     ...fields,
                     ...mergedCollections,
                 };

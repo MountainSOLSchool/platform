@@ -19,7 +19,7 @@ class AccountStore extends ComponentStore<{ nil: null }> {
 
     readonly next = this.effect(() => {
         return this.workflow.nextClick$.pipe(
-            tap(() => this.workflow.readyForNext())
+            tap(() => this.workflow.completeStep())
         );
     });
 }

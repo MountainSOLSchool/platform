@@ -6,12 +6,20 @@ import {
     UnpreparedTransaction,
 } from '@sol/payments/transactions';
 import { ButtonModule } from 'primeng/button';
+import { ChipModule } from 'primeng/chip';
+import { InputTextModule } from 'primeng/inputtext';
 import { map, Observable, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 
 @Component({
     standalone: true,
-    imports: [CommonModule, PaymentCollectorComponent, ButtonModule],
+    imports: [
+        CommonModule,
+        PaymentCollectorComponent,
+        ButtonModule,
+        InputTextModule,
+        ChipModule,
+    ],
     templateUrl: './checkout.component.html',
 })
 export class CheckoutComponent {

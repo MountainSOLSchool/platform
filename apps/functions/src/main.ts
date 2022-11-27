@@ -374,7 +374,7 @@ const _fetchClasses = async (
                 enrolledCount: Array.isArray(c.students)
                     ? c.students?.length ?? 0
                     : 0,
-                id: String(i),
+                id: c.id,
                 classType: c.class_type,
                 gradeRangeStart: c.grade_range_start,
                 gradeRangeEnd: c.grade_range_end,

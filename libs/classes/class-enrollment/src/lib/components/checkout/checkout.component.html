@@ -2,3 +2,21 @@
     [prepare]="testTransaction$ | async"
     (uncommittedTransaction)="handleUncommittedTransaction($event)"
 ></sol-payment-collector>
+
+<h2>Discount Codes</h2>
+<div class="field">
+    <span class="p-float-label">
+        <input name="discountCode" pInputText />
+        <label for="discountCode">Enter a Code</label>
+        <button
+            pButton
+            type="button"
+            label="Apply"
+            style="margin-left: 0.5rem"
+        ></button>
+    </span>
+</div>
+<div class="flex align-items-center" style="margin-top: 2rem">
+    <p-chip label="HOTCLASSBUNDLE" styleClass="mr-2"></p-chip>
+    <p-chip label="10OFFFISHING" styleClass="mr-2"></p-chip>
+</div>

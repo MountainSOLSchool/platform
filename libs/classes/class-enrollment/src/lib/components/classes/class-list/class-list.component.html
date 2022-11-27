@@ -7,58 +7,74 @@
         style="width: 400px"
     />
 </span>
-<p-card
-    *ngFor="let class of classes$ | async"
-    [header]="class.title"
-    [style]="{
-        width: '35rem',
-        'margin-top': '2rem',
-        'margin-bottom': '2em',
-        background: '#dff2d8'
-    }"
-    [styleClass]="'gradient'"
->
-    <div
-        class="flex align-items-center"
-        style="margin-bottom: 1.5rem; margin-top: -1rem"
+<ng-container *ngIf="selectedClasses$ | async as selectedClasses">
+    <p-card
+        *ngFor="let class of classes$ | async; trackBy: trackByClass"
+        [header]="class.title"
+        [style]="
+            selectedClasses.includes(class.id)
+                ? {
+                      width: '35rem',
+                      'margin-top': '2rem',
+                      'margin-bottom': '2em',
+                      border: '2px solid #3c82f7',
+                      'box-sizing': 'border-box'
+                  }
+                : {
+                      width: '35rem',
+                      'margin-top': '2rem',
+                      'margin-bottom': '2em'
+                  }
+        "
+        [styleClass]="'gradient'"
     >
-        <p-chip
-            [label]="class.classDateTimes"
-            icon="pi pi-calendar"
-            styleClass="mr-2"
-        ></p-chip>
-        <p-chip [label]="class.weekday" styleClass="mr-2"></p-chip>
-        <p-chip
-            [label]="class.dailyTimes"
-            icon="pi pi-clock"
-            styleClass="mr-2"
-        ></p-chip>
-    </div>
-    <div class="field-checkbox">
-        <p-checkbox
-            [binary]="true"
-            [inputId]="'select' + class.id"
-        ></p-checkbox>
-        <label
-            [for]="'select' + class.id"
-            style="font-size: 1.2rem; font-weight: bold"
-            >Enroll</label
+        <div
+            class="flex align-items-center"
+            style="margin-bottom: 1.5rem; margin-top: -1rem"
         >
-    </div>
-    <p>
-        <b>Class Type:</b> {{ class.classType }}<br />
-        <b>Grades:</b>
-        {{ class.gradeRangeStart }} - {{ class.gradeRangeEnd }}<br />
-        <b>Location:</b> {{ class.location }}<br />
-        <b>Cost:</b> ${{ class.cost }}<br />
-        <b>Instructors:</b>
-        <span *ngFor="let instructor of class.instructors; let isLast = last">
-            {{ instructor.first_name }} {{ instructor.last_name
-            }}{{ isLast ? '' : ', ' }}
-        </span>
-        <br />
-        <br />
-        <b>Description:</b> <br />
-        {{ class.description }}<br />
-    </p>
-</p-card>
+            <p-chip
+                [label]="class.classDateTimes"
+                icon="pi pi-calendar"
+                styleClass="mr-2"
+            ></p-chip>
+            <p-chip [label]="class.weekday" styleClass="mr-2"></p-chip>
+            <p-chip
+                [label]="class.dailyTimes"
+                icon="pi pi-clock"
+                styleClass="mr-2"
+            ></p-chip>
+        </div>
+        <div class="field-checkbox">
+            <p-checkbox
+                [binary]="true"
+                [inputId]="'select' + class.id"
+                [value]="class.id"
+                [(ngModel)]="class.selected"
+                (ngModelChange)="selectionChanged(class)"
+            ></p-checkbox>
+            <label
+                [for]="'select' + class.id"
+                style="font-size: 1.2rem; font-weight: bold"
+                >{{ class.selected ? 'Enrolled' : 'Enroll' }}</label
+            >
+        </div>
+        <p>
+            <b>Class Type:</b> {{ class.classType }}<br />
+            <b>Grades:</b>
+            {{ class.gradeRangeStart }} - {{ class.gradeRangeEnd }}<br />
+            <b>Location:</b> {{ class.location }}<br />
+            <b>Cost:</b> ${{ class.cost }}<br />
+            <b>Instructors:</b>
+            <span
+                *ngFor="let instructor of class.instructors; let isLast = last"
+            >
+                {{ instructor.first_name }} {{ instructor.last_name
+                }}{{ isLast ? '' : ', ' }}
+            </span>
+            <br />
+            <br />
+            <b>Description:</b> <br />
+            {{ class.description }}<br />
+        </p>
+    </p-card>
+</ng-container>

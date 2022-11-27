@@ -1,6 +1,6 @@
 import { Component, inject, Injectable } from '@angular/core';
 import { ComponentStore, provideComponentStore } from '@ngrx/component-store';
-import { map, tap } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
 import { CardModule } from 'primeng/card';
 import { FunctionsApi } from '@sol/firebase/functions-api';
@@ -9,18 +9,20 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip';
 import { SkeletonModule } from 'primeng/skeleton';
+import { FormsModule } from '@angular/forms';
 
 @Injectable()
-class ClassesStore extends ComponentStore<{ nil: null }> {
+class ClassesStore extends ComponentStore<{ selectedClasses: Array<string> }> {
     readonly workflow = inject(EnrollmentWorkflowStore);
 
     constructor() {
-        super({ nil: null });
+        super({ selectedClasses: ['apc2zggoBoOZpTkUHDDb'] });
     }
 
     readonly next = this.effect(() => {
         return this.workflow.nextClick$.pipe(
-            tap(() => this.workflow.readyForNext())
+            filter(() => this.get().selectedClasses.length > 0),
+            tap(() => this.workflow.completeStep())
         );
     });
 }
@@ -34,6 +36,7 @@ class ClassesStore extends ComponentStore<{ nil: null }> {
         InputTextModule,
         ChipModule,
         SkeletonModule,
+        FormsModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -47,6 +50,11 @@ export class ClassesComponent {
 
     private today = Date.now();
 
+    selectedClasses$ = this.store
+        .select((state) => state.selectedClasses)
+        .pipe(tap(console.log));
+
+    // TODO: cache this
     classes$ = this.functionsApi
         .call<{
             classes: Array<{
@@ -86,6 +94,39 @@ export class ClassesComponent {
                                     : '',
                         };
                     })
+            ),
+            switchMap((classes) =>
+                this.selectedClasses$.pipe(
+                    map((selectedClasses) => {
+                        return classes.map((c) => {
+                            return {
+                                ...c,
+                                selected: selectedClasses.includes(c.id),
+                            };
+                        });
+                    })
+                )
             )
         );
+
+    selectionChanged({
+        id: classId,
+        selected,
+    }: {
+        id: string;
+        selected: boolean;
+    }) {
+        this.store.patchState((s) => ({
+            selectedClasses: selected
+                ? Array.from(new Set([...s.selectedClasses, classId]))
+                : s.selectedClasses.filter((id) => id !== classId),
+        }));
+    }
+
+    trackByClass(
+        index: number,
+        { id: classId, selected }: { id: string; selected: boolean }
+    ) {
+        return `${classId}${selected}`;
+    }
 }
