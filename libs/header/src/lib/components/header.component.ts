@@ -52,7 +52,14 @@ import { ToolbarModule } from 'primeng/toolbar';
                                 label="Menu"
                             ></p-button></div
                     ></ng-container>
-                    <sol-user-button></sol-user-button>
+                    <sol-user-button
+                        *ngIf="
+                            (isLoggedIn$ | async) ||
+                            !window.location.pathname.startsWith(
+                                '/classes/enrollment'
+                            )
+                        "
+                    ></sol-user-button>
                 </div>
             </p-toolbar>
         </header>
@@ -93,6 +100,8 @@ export class HeaderComponent {
     private readonly userService = inject(UserService);
 
     display = false;
+
+    window = window;
 
     isLoggedIn$ = this.userService.isLoggedIn();
     isAdmin$ = this.userService.isAdmin();

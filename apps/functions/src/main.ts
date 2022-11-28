@@ -407,24 +407,24 @@ export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle(async (request, response, secrets) => {
         const {
-            classIds,
-            couponCodes,
-            transaction: { nonce },
+            selectedClasses,
+            discountCodes,
+            paymentMethod: { nonce, deviceData },
         } = request.body.data as {
-            classIds: Array<string>;
-            couponCodes: Array<string>;
-            transaction: { nonce: string };
+            selectedClasses: Array<string>;
+            discountCodes: Array<string>;
+            paymentMethod: { nonce: string; deviceData: string };
         };
 
         // 1. Get classes with costs
         const classes = await Promise.all(
-            classIds.map(async (id) => await ClassRepository.get(id))
+            selectedClasses.map(async (id) => await ClassRepository.get(id))
         );
 
         // 2. Get discounts for coupon codes
         const discounts = (
             await Promise.all(
-                couponCodes.map(
+                discountCodes.map(
                     async (code) => await DiscountRepository.get(code)
                 )
             )
@@ -458,7 +458,6 @@ export const enroll = Functions.endpoint
 
         // 5. Transact with Braintree
         const braintree = new Braintree(secrets);
-        const deviceData = request.body.data.deviceData;
 
         const transaction = await braintree.transact({
             amount: 10,

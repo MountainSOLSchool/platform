@@ -40,7 +40,7 @@ export class WorkflowStore extends ComponentStore<{
                 return fromEvent(window, 'beforeunload').pipe(
                     tap((event: BeforeUnloadEvent) => {
                         // Warns the user if they try to refresh the page
-                        // event.returnValue = true;
+                        event.returnValue = 'Please dont refresh the page';
                     })
                 );
             })

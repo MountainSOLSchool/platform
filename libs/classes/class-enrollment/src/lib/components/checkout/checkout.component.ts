@@ -1,15 +1,47 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
+import { Component, inject, Injectable } from '@angular/core';
+import { ComponentStore, provideComponentStore } from '@ngrx/component-store';
 import {
-    PreparedTransaction,
-    UnpreparedTransaction,
-} from '@sol/payments/transactions';
+    PaymentCollector,
+    PaymentCollectorComponent,
+} from '@sol/payments/braintree-client';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { InputTextModule } from 'primeng/inputtext';
-import { map, Observable, tap } from 'rxjs';
+import { of, switchMap, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
+
+@Injectable()
+class CheckoutStore extends ComponentStore<{
+    collector: PaymentCollector | undefined;
+    nonce: string | undefined;
+    discountCodes: Array<string>;
+}> {
+    readonly workflow = inject(EnrollmentWorkflowStore);
+
+    constructor() {
+        super({ nonce: undefined, collector: undefined, discountCodes: [] });
+    }
+
+    readonly next = this.effect(() => {
+        return this.workflow.nextClick$.pipe(
+            tap(() => console.log('handling')),
+            switchMap(
+                () =>
+                    this.get()
+                        .collector?.collectPaymentMethod()
+                        .pipe(
+                            tap((paymentMethod) =>
+                                this.workflow.completeStep({
+                                    paymentMethod,
+                                    discountCodes: this.get().discountCodes,
+                                })
+                            )
+                        ) ?? of()
+            )
+        );
+    });
+}
 
 @Component({
     standalone: true,
@@ -21,21 +53,23 @@ import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workf
         ChipModule,
     ],
     templateUrl: './checkout.component.html',
+    providers: [provideComponentStore(CheckoutStore)],
 })
 export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
+    private readonly store = inject(CheckoutStore);
 
-    public readonly testTransaction$: Observable<UnpreparedTransaction> =
-        this.workflow.nextClick$.pipe(
-            tap(() => console.log('nexty')),
-            map(() => ({
-                amount: 10,
-                customer: { email: 'test@email.com' },
-            }))
-        );
+    discountCodes$ = this.store.select((s) => s.discountCodes);
 
-    handleUncommittedTransaction(transaction: PreparedTransaction) {
-        console.log('handled');
-        this.workflow.completeCheckout(transaction);
+    // TODO: preserve payment method selection when returning
+
+    setPaymentCollector(collector: PaymentCollector) {
+        this.store.patchState({ collector });
+    }
+
+    applyDiscountCode(code: string) {
+        this.store.patchState((s) => ({
+            discountCodes: Array.from(new Set([...s.discountCodes, code])),
+        }));
     }
 }

@@ -5,7 +5,6 @@ import { EnrollmentWorkflowStore } from './enrollment-workflow.store';
 import { StepsModule } from 'primeng/steps';
 import { ButtonModule } from 'primeng/button';
 import { WorkflowComponent } from '@sol/workflow';
-import { tap } from 'rxjs';
 import { provideComponentStore } from '@ngrx/component-store';
 
 @Component({
@@ -35,6 +34,7 @@ export class ClassEnrollmentComponent {
     ];
 
     readonly completeCurrentStep$ = this.store.readyForNext$.pipe();
+    readonly data$ = this.store.select((s) => s.enrollment);
 
     submit() {
         this.store.submit();

@@ -22,7 +22,11 @@ class ClassesStore extends ComponentStore<{ selectedClasses: Array<string> }> {
     readonly next = this.effect(() => {
         return this.workflow.nextClick$.pipe(
             filter(() => this.get().selectedClasses.length > 0),
-            tap(() => this.workflow.completeStep())
+            tap(() =>
+                this.workflow.completeStep({
+                    selectedClasses: this.get().selectedClasses,
+                })
+            )
         );
     });
 }
