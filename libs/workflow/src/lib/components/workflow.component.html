@@ -4,7 +4,7 @@
     <p-steps [model]="(steps$ | async) ?? []" [readonly]="false"></p-steps>
 </div>
 
-<div style="margin-top: 40px; margin-left: 2rem; margin-right: 2rem">
+<div style="margin-top: 40px; margin-left: 12rem; margin-right: 12rem">
     <h2>{{ currentStepLabel$ | async | titlecase }}</h2>
     <ng-content></ng-content>
     <div style="margin-top: 40px; display: flex; justify-content: flex-end">

@@ -11,6 +11,8 @@ import { RippleModule } from 'primeng/ripple';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { AccordionModule } from 'primeng/accordion';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 
 @Injectable()
@@ -40,6 +42,8 @@ class InfoStore extends ComponentStore<{ nil: null }> {
         InputTextareaModule,
         InputNumberModule,
         AccordionModule,
+        ToggleButtonModule,
+        SelectButtonModule,
         FormsModule,
     ],
     templateUrl: './info.component.html',
@@ -53,6 +57,12 @@ export class InfoComponent {
         birthdate: undefined,
         age: '',
     };
+
+    chemicalPreferences = [
+        { name: 'Yes', value: 'yes' },
+        { name: 'No', value: 'no' },
+        { name: 'Yes, but no name', value: 'yesNoName' },
+    ];
 
     updateAge(birthdate: Date | undefined): void {
         if (birthdate) {
