@@ -6,12 +6,14 @@ import {
 } from '@angular/fire/compat/auth';
 import { ComponentStore } from '@ngrx/component-store';
 import { LoginComponent } from '@sol/auth/login';
-import { tap } from 'rxjs';
+import { CardModule } from 'primeng/card';
+import { filter, switchMap, tap, withLatestFrom } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 
 @Injectable()
 class AccountStore extends ComponentStore<{ nil: null }> {
     readonly workflow = inject(EnrollmentWorkflowStore);
+    private user$ = inject(AngularFireAuth).user;
 
     constructor() {
         super({ nil: null });
@@ -19,6 +21,8 @@ class AccountStore extends ComponentStore<{ nil: null }> {
 
     readonly next = this.effect(() => {
         return this.workflow.nextClick$.pipe(
+            withLatestFrom(this.user$),
+            filter(([, user]) => !!user),
             tap(() => this.workflow.completeStep())
         );
     });
@@ -26,7 +30,7 @@ class AccountStore extends ComponentStore<{ nil: null }> {
 
 @Component({
     standalone: true,
-    imports: [CommonModule, LoginComponent],
+    imports: [CommonModule, LoginComponent, CardModule],
     providers: [AccountStore],
     selector: 'sol-class-account',
     templateUrl: './account.component.html',

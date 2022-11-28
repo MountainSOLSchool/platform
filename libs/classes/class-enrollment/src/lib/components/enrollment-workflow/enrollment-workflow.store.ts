@@ -4,17 +4,34 @@ import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { Observable, switchMap, take, tap } from 'rxjs';
 import { PreparedTransaction } from '@sol/payments/transactions';
+import { PaymentMethodPayload } from 'braintree-web-drop-in';
+
+type Enrollment = {
+    selectedClasses: Array<string>;
+    paymentMethod:
+        | {
+              nonce: string;
+              deviceData: string;
+              paymentDetails: PaymentMethodPayload['details'];
+          }
+        | undefined;
+    discountCodes: Array<string>;
+};
 
 @Injectable()
 export class EnrollmentWorkflowStore extends ComponentStore<{
-    transaction: PreparedTransaction | undefined;
+    enrollment: Enrollment;
 }> {
     private readonly http = inject(HttpClient);
     private readonly functions = inject(FunctionsApi);
 
     constructor() {
         super({
-            transaction: undefined,
+            enrollment: {
+                selectedClasses: [],
+                paymentMethod: undefined,
+                discountCodes: [],
+            },
         });
     }
 
@@ -36,9 +53,24 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         );
     });
 
-    readonly completeStep = this.effect((ready$) => {
-        return ready$.pipe(tap(() => this._ready$.emit(Math.random())));
-    });
+    readonly completeStep = this.effect(
+        (
+            ready$: Observable<
+                { [K in keyof Enrollment]?: Enrollment[K] } | void
+            >
+        ) => {
+            return ready$.pipe(
+                tap((enrollment) =>
+                    enrollment
+                        ? this.patchState((s) => ({
+                              enrollment: { ...s.enrollment, ...enrollment },
+                          }))
+                        : undefined
+                ),
+                tap(() => this._ready$.emit(Math.random()))
+            );
+        }
+    );
 
     readonly completeCheckout = this.effect(
         (transaction$: Observable<PreparedTransaction>) => {
@@ -58,23 +90,17 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         return submit$.pipe(
             tap(() => console.log('submitted')),
             switchMap(() => {
-                return this.select(({ transaction }) => transaction).pipe(
+                return this.select(({ enrollment }) => enrollment).pipe(
                     take(1),
-                    switchMap((transaction) => {
-                        return this.functions
-                            .call('enroll', {
-                                classIds: ['9fr11z6ODR8odaXX7d1D'],
-                                couponCodes: ['CLASSFREETEST', 'AMOUNTTEST'],
-                                transaction,
-                            })
-                            .pipe(
-                                tapResponse(
-                                    (reseponse) => {
-                                        console.log(reseponse);
-                                    },
-                                    (error) => console.log(error)
-                                )
-                            );
+                    switchMap((enrollment) => {
+                        return this.functions.call('enroll', enrollment).pipe(
+                            tapResponse(
+                                (reseponse) => {
+                                    console.log(reseponse);
+                                },
+                                (error) => console.log(error)
+                            )
+                        );
                     })
                 );
             })

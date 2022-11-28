@@ -1,38 +1,41 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, Output } from '@angular/core';
-import {
-    PreparedTransaction,
-    UnpreparedTransaction,
-} from '@sol/payments/transactions';
+import { Component, inject, OnInit, Output } from '@angular/core';
+import { provideComponentStore } from '@ngrx/component-store';
+import { PaymentMethodPayload } from 'braintree-web-drop-in';
 import { SkeletonModule } from 'primeng/skeleton';
-import { Observable, tap } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { PaymentCollectorStore } from './payment-collector.store';
+
+export type PaymentCollector = {
+    collectPaymentMethod: () => Observable<{
+        nonce: string;
+        deviceData: string;
+        paymentDetails: PaymentMethodPayload['details'];
+    }>;
+};
 
 @Component({
     standalone: true,
     imports: [CommonModule, SkeletonModule],
     selector: 'sol-payment-collector',
     templateUrl: './payment-collector.component.html',
+    providers: [provideComponentStore(PaymentCollectorStore)],
 })
 export class PaymentCollectorComponent implements OnInit {
     store = inject(PaymentCollectorStore);
 
-    @Input() set prepare(
-        transaction: UnpreparedTransaction | null | undefined
-    ) {
-        if (transaction) {
-            this.store.prepareTransaction(transaction);
-        }
-    }
+    @Output() collector: Observable<PaymentCollector> = of({
+        collectPaymentMethod: () => {
+            this.store.prepare();
+            return this.store.selectPaymentMethod();
+        },
+    });
 
-    @Output() uncommittedTransaction: Observable<PreparedTransaction> =
-        this.store
-            .selectUncommittedTransaction()
-            .pipe(
-                tap(() =>
-                    this.store.patchState({ uncommittedTransaction: undefined })
-                )
-            );
+    @Output() paymentMethod: Observable<{
+        nonce: string;
+        deviceData: string;
+        paymentDetails: PaymentMethodPayload['details'];
+    }> = this.store.selectPaymentMethod();
 
     readonly COLLECTOR_ELEMENT_SELECTOR = 'payment-collector';
 
