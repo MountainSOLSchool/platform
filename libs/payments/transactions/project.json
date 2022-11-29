@@ -1,4 +1,5 @@
 {
+    "name": "payments-transactions",
     "$schema": "../../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/payments/transactions/src",
     "projectType": "library",
@@ -29,6 +30,5 @@
             }
         }
     },
-    "tags": [],
-    "name": "payments-transactions"
+    "tags": []
 }

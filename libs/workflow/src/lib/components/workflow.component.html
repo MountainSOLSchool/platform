@@ -4,14 +4,51 @@
     <p-steps [model]="(steps$ | async) ?? []" [readonly]="false"></p-steps>
 </div>
 
-<div style="margin-top: 40px; margin-left: 12rem; margin-right: 12rem">
+<mat-stepper [linear]="true" orientation="vertical" #stepper>
+    <mat-step>
+        <ng-template matStepLabel>{{
+            currentStepLabel$ | async | titlecase
+        }}</ng-template>
+        <ng-template matStepContent="">
+            <h2>{{ currentStepLabel$ | async | titlecase }}</h2>
+            <ng-content></ng-content>
+            <div
+                style="
+                    margin-top: 40px;
+                    display: flex;
+                    justify-content: flex-end;
+                "
+            >
+                <button
+                    pButton
+                    *ngIf="nextStepLink$ | async as nextStepLink; else lastStep"
+                    (click)="emitNextClick()"
+                >
+                    Next
+                </button>
+                <ng-template #lastStep>
+                    <button pButton (click)="completed.next()">Submit</button>
+                </ng-template>
+            </div>
+        </ng-template>
+    </mat-step>
+    <mat-step *ngFor="let step of steps$ | async">
+        <ng-template matStepLabel>{{ step.label }}</ng-template>
+        <ng-template matStepContent>
+            <h2>{{ step.label }}</h2>
+            <!-- <ng-container *ngTemplateOutlet="step.component"></ng-container> -->
+        </ng-template>
+    </mat-step>
+</mat-stepper>
+
+<!-- <div style="margin-top: 40px; margin-left: 12rem; margin-right: 12rem">
     <h2>{{ currentStepLabel$ | async | titlecase }}</h2>
     <ng-content></ng-content>
     <div style="margin-top: 40px; display: flex; justify-content: flex-end">
         <button
             pButton
             *ngIf="nextStepLink$ | async as nextStepLink; else lastStep"
-            (click)="nextClick.emit()"
+            (click)="emitNextClick()"
         >
             Next
         </button>
@@ -19,4 +56,4 @@
             <button pButton (click)="completed.next()">Submit</button>
         </ng-template>
     </div>
-</div>
+</div> -->

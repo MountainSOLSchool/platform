@@ -1,5 +1,6 @@
+import { CdkStepper } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
-import { Component, inject, Injectable } from '@angular/core';
+import { Component, inject, Injectable, Output } from '@angular/core';
 import { ComponentStore, provideComponentStore } from '@ngrx/component-store';
 import {
     PaymentCollector,
@@ -8,23 +9,34 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { InputTextModule } from 'primeng/inputtext';
-import { of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, map, of, Subject, switchMap, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
+import { PaymentMethodPayload } from 'braintree-web-drop-in';
 
 @Injectable()
 class CheckoutStore extends ComponentStore<{
     collector: PaymentCollector | undefined;
-    nonce: string | undefined;
     discountCodes: Array<string>;
+    paymentMethod:
+        | {
+              nonce: string;
+              deviceData: string;
+              paymentDetails: PaymentMethodPayload['details'];
+          }
+        | undefined;
 }> {
     readonly workflow = inject(EnrollmentWorkflowStore);
 
     constructor() {
-        super({ nonce: undefined, collector: undefined, discountCodes: [] });
+        super({
+            collector: undefined,
+            discountCodes: [],
+            paymentMethod: undefined,
+        });
     }
 
-    readonly next = this.effect(() => {
-        return this.workflow.nextClick$.pipe(
+    readonly collect = this.effect((collect$) => {
+        return collect$.pipe(
             tap(() => console.log('handling')),
             switchMap(
                 () =>
@@ -34,7 +46,6 @@ class CheckoutStore extends ComponentStore<{
                             tap((paymentMethod) =>
                                 this.workflow.completeStep({
                                     paymentMethod,
-                                    discountCodes: this.get().discountCodes,
                                 })
                             )
                         ) ?? of()
@@ -52,6 +63,7 @@ class CheckoutStore extends ComponentStore<{
         InputTextModule,
         ChipModule,
     ],
+    selector: 'sol-checkout',
     templateUrl: './checkout.component.html',
     providers: [provideComponentStore(CheckoutStore)],
 })
@@ -61,10 +73,32 @@ export class CheckoutComponent {
 
     discountCodes$ = this.store.select((s) => s.discountCodes);
 
-    // TODO: preserve payment method selection when returning
+    // @Output() collector = this.store
+    //     .select(({ collector }) => collector)
+    //     .pipe(
+    //         map(() => ({
+    //             validatePaymentMethod: () => {
+    //                 console.log('hmmm');
+    //                 this.store.collect();
+    //                 return true;
+    //             },
+    //         }))
+    //     );
+    @Output() validityChange = this.workflow.select(
+        (s) => !!s.enrollment.paymentMethod
+    );
+
+    paymentCollector: PaymentCollector | undefined;
+
+    validatePaymentMethod = () => {
+        console.log('hmmm');
+        this.store.collect();
+        return true;
+    };
 
     setPaymentCollector(collector: PaymentCollector) {
         this.store.patchState({ collector });
+        this.paymentCollector = collector;
     }
 
     applyDiscountCode(code: string) {

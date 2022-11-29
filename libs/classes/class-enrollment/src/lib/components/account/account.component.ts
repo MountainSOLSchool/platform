@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Injectable } from '@angular/core';
+import { Component, inject, Injectable, Output } from '@angular/core';
 import {
     AngularFireAuth,
     AngularFireAuthModule,
@@ -7,7 +7,7 @@ import {
 import { ComponentStore } from '@ngrx/component-store';
 import { LoginComponent } from '@sol/auth/login';
 import { CardModule } from 'primeng/card';
-import { filter, switchMap, tap, withLatestFrom } from 'rxjs';
+import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 
 @Injectable()
@@ -39,4 +39,9 @@ class AccountStore extends ComponentStore<{ nil: null }> {
 export class AccountComponent {
     store = inject(AccountStore);
     user$ = inject(AngularFireAuth).user;
+
+    @Output() validityChange = this.user$.pipe(
+        tap(() => console.log('user exists')),
+        map((user) => !!user)
+    );
 }

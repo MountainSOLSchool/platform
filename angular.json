@@ -599,6 +599,7 @@
                             }
                         ],
                         "styles": [
+                            "apps/portal/src/custom-theme.scss",
                             "apps/portal/src/styles.css",
                             "node_modules/primeflex/primeflex.css",
                             "node_modules/primeicons/primeicons.css",

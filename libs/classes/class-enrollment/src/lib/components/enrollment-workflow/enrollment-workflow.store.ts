@@ -5,6 +5,7 @@ import { FunctionsApi } from '@sol/firebase/functions-api';
 import { Observable, switchMap, take, tap } from 'rxjs';
 import { PreparedTransaction } from '@sol/payments/transactions';
 import { PaymentMethodPayload } from 'braintree-web-drop-in';
+import { Completeable } from '@sol/workflow';
 
 type Enrollment = {
     selectedClasses: Array<string>;
@@ -35,7 +36,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         });
     }
 
-    private readonly _next$ = new EventEmitter();
+    private readonly _next$ = new EventEmitter<Completeable>();
     get nextClick$() {
         return this._next$.asObservable();
     }
@@ -45,10 +46,10 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         return this._ready$.asObservable();
     }
 
-    readonly nextClick = this.effect((next$: Observable<void>) => {
+    readonly nextClick = this.effect((next$: Observable<Completeable>) => {
         return next$.pipe(
-            tap(() => {
-                this._next$.emit();
+            tap((completeable) => {
+                this._next$.emit(completeable);
             })
         );
     });
@@ -106,4 +107,6 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
             })
         );
     });
+
+    readonly selectEnrollment = this.select(({ enrollment }) => enrollment);
 }

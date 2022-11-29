@@ -35,7 +35,7 @@ const functionsProvider = environment.remoteFunctions
 
 bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(BrowserModule),
+        importProvidersFrom(BrowserModule, BrowserAnimationsModule),
         importProvidersFrom(BrowserAnimationsModule),
         MessageService,
         provideRouter(appRoutes),

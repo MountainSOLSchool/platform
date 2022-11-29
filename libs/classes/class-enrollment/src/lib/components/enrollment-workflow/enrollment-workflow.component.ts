@@ -6,21 +6,40 @@ import { StepsModule } from 'primeng/steps';
 import { ButtonModule } from 'primeng/button';
 import { WorkflowComponent } from '@sol/workflow';
 import { provideComponentStore } from '@ngrx/component-store';
+import { MatStepperModule } from '@angular/material/stepper';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map, Subject } from 'rxjs';
+import { ClassesComponent } from '../classes/class-list/class-list.component';
+import { InfoComponent } from '../info/info.component';
+import { AccountComponent } from '../account/account.component';
+import { CheckoutComponent } from '../checkout/checkout.component';
+import { ConfirmationComponent } from '../confirmation/confirmation.component';
+import { CdkStepper } from '@angular/cdk/stepper';
 
 @Component({
     standalone: true,
+    providers: [provideComponentStore(EnrollmentWorkflowStore)],
+    templateUrl: './enrollment-workflow.component.html',
     imports: [
         CommonModule,
         RouterModule,
         StepsModule,
         ButtonModule,
         WorkflowComponent,
+        MatStepperModule,
+        ClassesComponent,
+        InfoComponent,
+        AccountComponent,
+        CheckoutComponent,
+        ConfirmationComponent,
     ],
-    providers: [provideComponentStore(EnrollmentWorkflowStore)],
-    templateUrl: './enrollment-workflow.component.html',
 })
 export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);
+
+    readonly stepperOrientation = inject(BreakpointObserver)
+        .observe('(min-width: 800px)')
+        .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
     readonly steps = [
         { label: 'Class Selection', routerLink: 'classes' },
@@ -34,13 +53,21 @@ export class ClassEnrollmentComponent {
     ];
 
     readonly completeCurrentStep$ = this.store.readyForNext$.pipe();
-    readonly data$ = this.store.select((s) => s.enrollment);
+
+    hit() {
+        console.log('hit');
+    }
 
     submit() {
         this.store.submit();
     }
 
-    nextClicked() {
-        this.store.nextClick();
+    nextClicked(completeable: { complete: () => void }) {
+        this.store.nextClick(completeable);
+    }
+
+    next(stepper: CdkStepper) {
+        console.log('nexty');
+        stepper.next();
     }
 }

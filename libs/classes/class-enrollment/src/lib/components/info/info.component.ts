@@ -1,6 +1,6 @@
-import { Component, inject, Injectable } from '@angular/core';
+import { Component, inject, Injectable, Output } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { tap } from 'rxjs';
+import { map, of, tap, timer } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
@@ -46,12 +46,15 @@ class InfoStore extends ComponentStore<{ nil: null }> {
         SelectButtonModule,
         FormsModule,
     ],
+    selector: 'sol-student-info',
     templateUrl: './info.component.html',
     styleUrls: ['./info.component.css'],
     providers: [InfoStore],
 })
 export class InfoComponent {
     store = inject(InfoStore);
+
+    @Output() validityChange = timer(500).pipe(map(() => true));
 
     student = {
         birthdate: undefined,
