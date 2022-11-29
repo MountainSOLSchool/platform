@@ -81,6 +81,15 @@
                     </span>
                 </div>
 
+                <div style="padding-top: 1%">
+                    <h3>Notes About Student</h3>
+                    <p>
+                        Is there anything you would like us to know about your
+                        child? Likes/dislikes, change in family circumstances,
+                        fears, etc.
+                    </p>
+                </div>
+
                 <div id="notes" class="field" style="padding-top: 1%">
                     <span class="p-float-label">
                         <textarea
@@ -241,6 +250,80 @@
             ></p-selectButton>
         </div>
     </p-accordionTab>
+    <p-accordionTab header="Parents and Guardians">
+        <form>
+            <div class="p-fluid">
+                <h3>Parent/Guardian</h3>
+                <div class="field" style="width: 49.35%">
+                    <p-toggleButton
+                        id="studentLivesWith"
+                        name="studentLivesWith"
+                        default="on"
+                        onLabel="Student lives with this parent/guardian"
+                        offLabel="Student does not live with this parent/guardian"
+                        onIcon="pi pi-check"
+                        offIcon="pi pi-times"
+                    ></p-toggleButton>
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="parentName"
+                                name="parentName"
+                                pInputText
+                            />
+                            <label for="parentName">Name</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="parentRelationship"
+                                name="parentRelationship"
+                                pInputText
+                            />
+                            <label for="relationship"
+                                >Relationship to Student</label
+                            >
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="parentPhone"
+                                name="parentPhone"
+                                pInputText
+                            />
+                            <label for="parentPhone">Phone Number</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="parentEmail"
+                                name="parentEmail"
+                                pInputText
+                            />
+                            <label for="parentEmail">Email</label>
+                        </span>
+                    </div>
+                </div>
+                <div style="width: 20%; padding-bottom: 20px">
+                    <button
+                        pButton
+                        type="button"
+                        label="Add Parent or Guardian"
+                        class="p-button-outlined"
+                    ></button>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
     <p-accordionTab header="Pickup">
         <form>
             <div class="p-fluid">
@@ -260,6 +343,12 @@
                 </div>
 
                 <h3>Authorized For Student Pickup</h3>
+                <p>
+                    These include any people who may pick up your child. Usually
+                    it includes the guardians from the previous section, and if
+                    you would like you can add additional people who can pick up
+                    your child.
+                </p>
 
                 <div class="formgrid grid">
                     <div class="field col">

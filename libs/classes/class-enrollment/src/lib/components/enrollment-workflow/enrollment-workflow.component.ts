@@ -44,6 +44,7 @@ export class ClassEnrollmentComponent {
     readonly steps = [
         { label: 'Class Selection', routerLink: 'classes' },
         { label: 'Student Info', routerLink: 'info' },
+        { label: 'Medical Info', routerLink: 'medical' },
         { label: 'Account', routerLink: 'account' },
         { label: 'Payment Method', routerLink: 'checkout' },
         {
