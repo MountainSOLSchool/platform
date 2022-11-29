@@ -244,7 +244,18 @@
     <p-accordionTab header="Parents and Guardians">
         <form>
             <div class="p-fluid">
-                <h3>Parents and Guardians</h3>
+                <h3>Parent/Guardian</h3>
+                <div class="field" style="width: 49.35%">
+                    <p-toggleButton
+                        id="studentLivesWith"
+                        name="studentLivesWith"
+                        default="on"
+                        onLabel="Student lives with this parent/guardian"
+                        offLabel="Student does not live with this parent/guardian"
+                        onIcon="pi pi-check"
+                        offIcon="pi pi-times"
+                    ></p-toggleButton>
+                </div>
                 <div class="formgrid grid">
                     <div class="field col">
                         <span class="p-float-label">
@@ -281,6 +292,17 @@
                             <label for="parentPhone">Phone Number</label>
                         </span>
                     </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="parentEmail"
+                                name="parentEmail"
+                                pInputText
+                            />
+                            <label for="parentEmail">Email</label>
+                        </span>
+                    </div>
                 </div>
                 <div style="width: 20%; padding-bottom: 20px">
                     <button
@@ -312,6 +334,12 @@
                 </div>
 
                 <h3>Authorized For Student Pickup</h3>
+                <p>
+                    These include any people who may pick up your child. Usually
+                    it includes the guardians from the previous section, and if
+                    you would like you can add additional people who can pick up
+                    your child.
+                </p>
 
                 <div class="formgrid grid">
                     <div class="field col">

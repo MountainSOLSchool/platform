@@ -58,10 +58,15 @@ export class MedicalComponent {
         age: '',
     };
 
-    chemicalPreferences = [
-        { name: 'Yes', value: 'yes' },
-        { name: 'No', value: 'no' },
-        { name: 'Yes, but no name', value: 'yesNoName' },
+    medicationAuth = [
+        {
+            name: 'Yes, I authorize staff to administer the listed medications to my child.',
+            value: 'Yes',
+        },
+        {
+            name: 'My child does not need medication.',
+            value: 'No',
+        },
     ];
 
     updateAge(birthdate: Date | undefined): void {
