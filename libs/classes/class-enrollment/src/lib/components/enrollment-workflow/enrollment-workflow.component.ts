@@ -15,6 +15,7 @@ import { AccountComponent } from '../account/account.component';
 import { CheckoutComponent } from '../checkout/checkout.component';
 import { ConfirmationComponent } from '../confirmation/confirmation.component';
 import { CdkStepper } from '@angular/cdk/stepper';
+import { MedicalComponent } from '../medical/medical.component';
 
 @Component({
     standalone: true,
@@ -32,6 +33,7 @@ import { CdkStepper } from '@angular/cdk/stepper';
         AccountComponent,
         CheckoutComponent,
         ConfirmationComponent,
+        MedicalComponent,
     ],
 })
 export class ClassEnrollmentComponent {

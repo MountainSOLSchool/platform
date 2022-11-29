@@ -21,6 +21,18 @@
             <ng-container *ngTemplateOutlet="navigation"></ng-container>
         </ng-template>
     </mat-step>
+    <mat-step
+        #medicalInfo
+        label="Medical Info and Releases"
+        [completed]="false"
+    >
+        <ng-template matStepContent>
+            <sol-medical-n-releases
+                (validityChange)="medicalInfo.completed = $event"
+            ></sol-medical-n-releases>
+            <ng-container *ngTemplateOutlet="navigation"></ng-container>
+        </ng-template>
+    </mat-step>
     <mat-step #account label="Account" [completed]="false">
         <ng-template matStepContent>
             <sol-class-account
