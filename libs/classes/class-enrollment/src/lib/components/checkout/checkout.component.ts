@@ -16,7 +16,6 @@ import { PaymentMethodPayload } from 'braintree-web-drop-in';
 @Injectable()
 class CheckoutStore extends ComponentStore<{
     collector: PaymentCollector | undefined;
-    discountCodes: Array<string>;
     paymentMethod:
         | {
               nonce: string;
@@ -30,7 +29,6 @@ class CheckoutStore extends ComponentStore<{
     constructor() {
         super({
             collector: undefined,
-            discountCodes: [],
             paymentMethod: undefined,
         });
     }
@@ -71,19 +69,8 @@ export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly store = inject(CheckoutStore);
 
-    discountCodes$ = this.store.select((s) => s.discountCodes);
+    discountCodes$ = this.workflow.select((s) => s.enrollment.discountCodes);
 
-    // @Output() collector = this.store
-    //     .select(({ collector }) => collector)
-    //     .pipe(
-    //         map(() => ({
-    //             validatePaymentMethod: () => {
-    //                 console.log('hmmm');
-    //                 this.store.collect();
-    //                 return true;
-    //             },
-    //         }))
-    //     );
     @Output() validityChange = this.workflow.select(
         (s) => !!s.enrollment.paymentMethod
     );
@@ -91,7 +78,6 @@ export class CheckoutComponent {
     paymentCollector: PaymentCollector | undefined;
 
     validatePaymentMethod = () => {
-        console.log('hmmm');
         this.store.collect();
         return true;
     };
@@ -102,8 +88,13 @@ export class CheckoutComponent {
     }
 
     applyDiscountCode(code: string) {
-        this.store.patchState((s) => ({
-            discountCodes: Array.from(new Set([...s.discountCodes, code])),
+        this.workflow.patchState((s) => ({
+            enrollment: {
+                ...s.enrollment,
+                discountCodes: Array.from(
+                    new Set([...s.enrollment.discountCodes, code])
+                ),
+            },
         }));
     }
 }

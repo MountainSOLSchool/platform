@@ -73,20 +73,6 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         }
     );
 
-    readonly completeCheckout = this.effect(
-        (transaction$: Observable<PreparedTransaction>) => {
-            return transaction$.pipe(
-                tap((transaction) =>
-                    this.patchState((s) => ({
-                        ...s,
-                        transaction,
-                    }))
-                ),
-                tap(() => this.completeStep())
-            );
-        }
-    );
-
     readonly submit = this.effect((submit$) => {
         return submit$.pipe(
             tap(() => console.log('submitted')),

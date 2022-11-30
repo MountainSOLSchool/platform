@@ -65,6 +65,7 @@
         "@ngrx/store": "^15.0.0-rc.0",
         "@ngrx/store-devtools": "^15.0.0-rc.0",
         "@nrwl/angular": "^15.2.1",
+        "@rx-angular/template": "^1.0.0-rc.4",
         "@types/braintree": "^3.3.3",
         "@types/braintree-web": "^3.75.22",
         "@types/braintree-web-drop-in": "^1.33.0",

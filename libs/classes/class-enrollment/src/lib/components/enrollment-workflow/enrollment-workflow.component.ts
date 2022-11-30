@@ -61,7 +61,7 @@ export class ClassEnrollmentComponent {
         console.log('hit');
     }
 
-    submit() {
+    complete() {
         this.store.submit();
     }
 

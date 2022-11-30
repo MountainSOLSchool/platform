@@ -10,40 +10,7 @@ import { ChipModule } from 'primeng/chip';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormsModule } from '@angular/forms';
 import { ClassListService } from '../../../services/class-list.service';
-
-@Injectable()
-class ClassesStore extends ComponentStore<{ selectedClasses: Array<string> }> {
-    readonly workflow = inject(EnrollmentWorkflowStore);
-
-    constructor() {
-        super({ selectedClasses: [] });
-    }
-
-    readonly reloadSelections = this.effect(() => {
-        return this.workflow
-            .select(({ enrollment }) => enrollment)
-            .pipe(
-                filter((enrollment) => !!enrollment),
-                take(1),
-                tap((enrollment) => {
-                    this.patchState({
-                        selectedClasses: enrollment.selectedClasses,
-                    });
-                })
-            );
-    });
-
-    readonly next = this.effect(() => {
-        return this.workflow.nextClick$.pipe(
-            filter(() => this.get().selectedClasses.length > 0),
-            tap(() =>
-                this.workflow.completeStep({
-                    selectedClasses: this.get().selectedClasses,
-                })
-            )
-        );
-    });
-}
+import { LetModule } from '@rx-angular/template/let';
 
 @Component({
     standalone: true,
@@ -55,29 +22,29 @@ class ClassesStore extends ComponentStore<{ selectedClasses: Array<string> }> {
         ChipModule,
         SkeletonModule,
         FormsModule,
+        LetModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
     styleUrls: ['./class-list.component.css'],
-    providers: [provideComponentStore(ClassesStore), DatePipe],
+    providers: [DatePipe],
 })
 export class ClassesComponent {
-    readonly store = inject(ClassesStore);
     private readonly classListService = inject(ClassListService);
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
 
-    selectedClasses$ = this.store
-        .select((state) => state.selectedClasses)
-        .pipe(tap(console.log));
+    selectedClasses$ = this.workflow.select(
+        (state) => state.enrollment.selectedClasses
+    );
 
     @Output() validityChange = this.selectedClasses$.pipe(
         map((selectedClasses) => selectedClasses.length > 0)
     );
 
-    private today = Date.now();
-
     classes$ = this.classListService.getFutureClasses().pipe(
+        filter(() => false),
+        tap(() => console.log()),
         map((classes) =>
             classes.map((c) => {
                 return {
@@ -118,10 +85,17 @@ export class ClassesComponent {
         id: string;
         selected: boolean;
     }) {
-        this.store.patchState((s) => ({
-            selectedClasses: selected
-                ? Array.from(new Set([...s.selectedClasses, classId]))
-                : s.selectedClasses.filter((id) => id !== classId),
+        this.workflow.patchState((s) => ({
+            enrollment: {
+                ...s.enrollment,
+                selectedClasses: selected
+                    ? Array.from(
+                          new Set([...s.enrollment.selectedClasses, classId])
+                      )
+                    : s.enrollment.selectedClasses.filter(
+                          (id) => id !== classId
+                      ),
+            },
         }));
     }
 

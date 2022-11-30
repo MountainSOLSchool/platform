@@ -142,13 +142,19 @@
                 <div class="formgrid grid">
                     <div class="field col">
                         <span class="p-float-label">
-                            <input
+                            <p-inputMask
+                                id="phone"
+                                type="phone"
+                                name="phone"
+                                mask="999-999-9999"
+                            ></p-inputMask>
+                            <!-- <input
                                 required
                                 type="phone"
                                 id="phone"
                                 name="phone"
                                 pInputText
-                            />
+                            /> -->
                             <label for="phone">Primary Phone Number</label>
                         </span>
                     </div>
@@ -188,18 +194,25 @@
                 <div class="grid-wrapper">
                     <div class="field area-quarter-left">
                         <span class="p-float-label">
-                            <input
-                                type="text"
+                            <p-inputMask
                                 id="state"
+                                type="text"
                                 name="state"
-                                pInputText
-                            />
+                                mask="aa"
+                                slotChar=" "
+                            ></p-inputMask>
                             <label for="state">State</label>
                         </span>
                     </div>
                     <div class="field area-quarter-left-center">
                         <span class="p-float-label">
-                            <input type="text" id="zip" name="zip" pInputText />
+                            <p-inputMask
+                                id="zip"
+                                type="text"
+                                name="zip"
+                                mask="99999"
+                                slotChar=" "
+                            ></p-inputMask>
                             <label for="zip">Zip Code</label>
                         </span>
                     </div>

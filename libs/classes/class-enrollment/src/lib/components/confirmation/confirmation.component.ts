@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Output } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
 import { ChipModule } from 'primeng/chip';
 import { of } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
@@ -14,7 +13,6 @@ import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workf
 })
 export class ConfirmationComponent {
     workflow = inject(EnrollmentWorkflowStore);
-    functions = inject(FunctionsApi);
 
     @Output() validityChange = of(true);
 
