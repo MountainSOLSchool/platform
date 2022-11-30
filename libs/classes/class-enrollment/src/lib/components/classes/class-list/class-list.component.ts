@@ -1,6 +1,6 @@
 import { Component, inject, Injectable, Output } from '@angular/core';
 import { ComponentStore, provideComponentStore } from '@ngrx/component-store';
-import { filter, map, switchMap, take, tap } from 'rxjs';
+import { filter, map, switchMap, take, tap, timer } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
 import { CardModule } from 'primeng/card';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -11,6 +11,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { FormsModule } from '@angular/forms';
 import { ClassListService } from '../../../services/class-list.service';
 import { LetModule } from '@rx-angular/template/let';
+import { Class } from '@sol/classes/domain';
 
 @Component({
     standalone: true,
@@ -34,17 +35,13 @@ export class ClassesComponent {
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
 
-    selectedClasses$ = this.workflow.select(
-        (state) => state.enrollment.selectedClasses
-    );
+    selectedClasses$ = this.workflow.select((state) => state.selectedClasses);
 
     @Output() validityChange = this.selectedClasses$.pipe(
         map((selectedClasses) => selectedClasses.length > 0)
     );
 
     classes$ = this.classListService.getFutureClasses().pipe(
-        filter(() => false),
-        tap(() => console.log()),
         map((classes) =>
             classes.map((c) => {
                 return {
@@ -86,16 +83,10 @@ export class ClassesComponent {
         selected: boolean;
     }) {
         this.workflow.patchState((s) => ({
-            enrollment: {
-                ...s.enrollment,
-                selectedClasses: selected
-                    ? Array.from(
-                          new Set([...s.enrollment.selectedClasses, classId])
-                      )
-                    : s.enrollment.selectedClasses.filter(
-                          (id) => id !== classId
-                      ),
-            },
+            ...s,
+            selectedClasses: selected
+                ? Array.from(new Set([...s.selectedClasses, classId]))
+                : s.selectedClasses.filter((id) => id !== classId),
         }));
     }
 

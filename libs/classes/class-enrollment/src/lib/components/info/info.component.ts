@@ -1,7 +1,5 @@
-import { Component, inject, Injectable, Output } from '@angular/core';
-import { ComponentStore } from '@ngrx/component-store';
-import { map, of, tap, timer } from 'rxjs';
-import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
+import { Component, Output } from '@angular/core';
+import { map, timer } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -14,21 +12,6 @@ import { AccordionModule } from 'primeng/accordion';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
-
-@Injectable()
-class InfoStore extends ComponentStore<{ nil: null }> {
-    readonly workflow = inject(EnrollmentWorkflowStore);
-
-    constructor() {
-        super({ nil: null });
-    }
-
-    readonly next = this.effect(() => {
-        return this.workflow.nextClick$.pipe(
-            tap(() => this.workflow.completeStep())
-        );
-    });
-}
 
 @Component({
     standalone: true,
@@ -49,11 +32,8 @@ class InfoStore extends ComponentStore<{ nil: null }> {
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
     styleUrls: ['./info.component.css'],
-    providers: [InfoStore],
 })
 export class InfoComponent {
-    store = inject(InfoStore);
-
     @Output() validityChange = timer(500).pipe(map(() => true));
 
     student = {

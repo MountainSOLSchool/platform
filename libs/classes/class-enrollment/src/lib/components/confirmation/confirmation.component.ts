@@ -16,7 +16,7 @@ export class ConfirmationComponent {
 
     @Output() validityChange = of(true);
 
-    enrollment$ = this.workflow.select(({ enrollment }) => enrollment);
+    enrollment$ = this.workflow.select((enrollment) => enrollment);
 
     submit() {
         this.workflow.submit();

@@ -1,4 +1,3 @@
-import { CdkStepper } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { Component, inject, Injectable, Output } from '@angular/core';
 import { ComponentStore, provideComponentStore } from '@ngrx/component-store';
@@ -9,40 +8,30 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { InputTextModule } from 'primeng/inputtext';
-import { BehaviorSubject, map, of, Subject, switchMap, tap } from 'rxjs';
+import { of, switchMap, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { PaymentMethodPayload } from 'braintree-web-drop-in';
 
 @Injectable()
 class CheckoutStore extends ComponentStore<{
     collector: PaymentCollector | undefined;
-    paymentMethod:
-        | {
-              nonce: string;
-              deviceData: string;
-              paymentDetails: PaymentMethodPayload['details'];
-          }
-        | undefined;
 }> {
     readonly workflow = inject(EnrollmentWorkflowStore);
 
     constructor() {
         super({
             collector: undefined,
-            paymentMethod: undefined,
         });
     }
 
     readonly collect = this.effect((collect$) => {
         return collect$.pipe(
-            tap(() => console.log('handling')),
             switchMap(
                 () =>
                     this.get()
                         .collector?.collectPaymentMethod()
                         .pipe(
                             tap((paymentMethod) =>
-                                this.workflow.completeStep({
+                                this.workflow.patchState({
                                     paymentMethod,
                                 })
                             )
@@ -69,11 +58,9 @@ export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly store = inject(CheckoutStore);
 
-    discountCodes$ = this.workflow.select((s) => s.enrollment.discountCodes);
+    discountCodes$ = this.workflow.select((s) => s.discountCodes);
 
-    @Output() validityChange = this.workflow.select(
-        (s) => !!s.enrollment.paymentMethod
-    );
+    @Output() validityChange = this.workflow.select((s) => !!s.paymentMethod);
 
     paymentCollector: PaymentCollector | undefined;
 
@@ -83,18 +70,13 @@ export class CheckoutComponent {
     };
 
     setPaymentCollector(collector: PaymentCollector) {
-        this.store.patchState({ collector });
         this.paymentCollector = collector;
     }
 
     applyDiscountCode(code: string) {
         this.workflow.patchState((s) => ({
-            enrollment: {
-                ...s.enrollment,
-                discountCodes: Array.from(
-                    new Set([...s.enrollment.discountCodes, code])
-                ),
-            },
+            ...s,
+            discountCodes: Array.from(new Set([...s.discountCodes, code])),
         }));
     }
 }

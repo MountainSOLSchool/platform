@@ -15,21 +15,6 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 
-@Injectable()
-class InfoStore extends ComponentStore<{ nil: null }> {
-    readonly workflow = inject(EnrollmentWorkflowStore);
-
-    constructor() {
-        super({ nil: null });
-    }
-
-    readonly next = this.effect(() => {
-        return this.workflow.nextClick$.pipe(
-            tap(() => this.workflow.completeStep())
-        );
-    });
-}
-
 @Component({
     standalone: true,
     imports: [
@@ -49,11 +34,8 @@ class InfoStore extends ComponentStore<{ nil: null }> {
     selector: 'sol-medical-n-releases',
     templateUrl: './medical.component.html',
     styleUrls: ['./medical.component.css'],
-    providers: [InfoStore],
 })
 export class MedicalComponent {
-    store = inject(InfoStore);
-
     @Output() validityChange = timer(500).pipe(map(() => true));
 
     student = {

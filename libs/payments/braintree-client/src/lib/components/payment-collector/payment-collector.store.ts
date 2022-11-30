@@ -57,13 +57,12 @@ export class PaymentCollectorStore extends ComponentStore<{
                     switchMap((instance) =>
                         from(instance.requestPaymentMethod()).pipe(
                             tap((paymentMethod) => {
-                                console.log(paymentMethod);
                                 this.patchState({
                                     nonce: paymentMethod.nonce,
                                     paymentDetails: paymentMethod.details,
                                 });
                             }),
-                            catchError(() => of(console.log('error caught')))
+                            catchError((e) => of(console.error(e)))
                         )
                     )
                 );

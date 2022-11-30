@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
-import { EventEmitter, inject, Injectable, NgModule } from '@angular/core';
+import { EventEmitter, inject, Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { Observable, switchMap, take, tap } from 'rxjs';
-import { PreparedTransaction } from '@sol/payments/transactions';
 import { PaymentMethodPayload } from 'braintree-web-drop-in';
 import { Completeable } from '@sol/workflow';
 
@@ -20,19 +19,15 @@ type Enrollment = {
 };
 
 @Injectable()
-export class EnrollmentWorkflowStore extends ComponentStore<{
-    enrollment: Enrollment;
-}> {
+export class EnrollmentWorkflowStore extends ComponentStore<Enrollment> {
     private readonly http = inject(HttpClient);
     private readonly functions = inject(FunctionsApi);
 
     constructor() {
         super({
-            enrollment: {
-                selectedClasses: [],
-                paymentMethod: undefined,
-                discountCodes: [],
-            },
+            selectedClasses: [],
+            paymentMethod: undefined,
+            discountCodes: [],
         });
     }
 
@@ -54,30 +49,11 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         );
     });
 
-    readonly completeStep = this.effect(
-        (
-            ready$: Observable<
-                { [K in keyof Enrollment]?: Enrollment[K] } | void
-            >
-        ) => {
-            return ready$.pipe(
-                tap((enrollment) =>
-                    enrollment
-                        ? this.patchState((s) => ({
-                              enrollment: { ...s.enrollment, ...enrollment },
-                          }))
-                        : undefined
-                ),
-                tap(() => this._ready$.emit(Math.random()))
-            );
-        }
-    );
-
     readonly submit = this.effect((submit$) => {
         return submit$.pipe(
             tap(() => console.log('submitted')),
             switchMap(() => {
-                return this.select(({ enrollment }) => enrollment).pipe(
+                return this.select((enrollment) => enrollment).pipe(
                     take(1),
                     switchMap((enrollment) => {
                         return this.functions.call('enroll', enrollment).pipe(
@@ -94,5 +70,5 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         );
     });
 
-    readonly selectEnrollment = this.select(({ enrollment }) => enrollment);
+    readonly selectEnrollment = this.select((enrollment) => enrollment);
 }

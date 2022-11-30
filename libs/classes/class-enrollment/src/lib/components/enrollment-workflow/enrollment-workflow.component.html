@@ -5,6 +5,7 @@
 >
     <mat-step #classSelection label="Class Selection" [completed]="false">
         <ng-template matStepContent>
+            <h2>Class Selection</h2>
             <sol-class-picker
                 (validityChange)="classSelection.completed = $event"
             ></sol-class-picker>
@@ -15,6 +16,7 @@
     </mat-step>
     <mat-step #studentInfo label="Student Info" [completed]="false">
         <ng-template matStepContent>
+            <h2>Student Info</h2>
             <sol-student-info
                 (validityChange)="studentInfo.completed = $event"
             ></sol-student-info>
@@ -27,14 +29,16 @@
         [completed]="false"
     >
         <ng-template matStepContent>
+            <h2>Medical Info and Releases</h2>
             <sol-medical-n-releases
                 (validityChange)="medicalInfo.completed = $event"
             ></sol-medical-n-releases>
             <ng-container *ngTemplateOutlet="navigation"></ng-container>
         </ng-template>
     </mat-step>
-    <mat-step #account label="Account" [completed]="false">
+    <mat-step #account label="Account Registration" [completed]="false">
         <ng-template matStepContent>
+            <h2>Account Registration</h2>
             <sol-class-account
                 (validityChange)="account.completed = $event"
             ></sol-class-account>
@@ -44,6 +48,7 @@
     </mat-step>
     <mat-step #paymentMethod label="Payment Method" [completed]="false">
         <ng-template matStepContent>
+            <h2>Payment Method</h2>
             <sol-checkout
                 #checkout
                 (validityChange)="paymentMethod.completed = $event"
@@ -58,6 +63,7 @@
     </mat-step>
     <mat-step #confirmation label="Confirm Enrollment" [completed]="false">
         <ng-template matStepContent>
+            <h2>Confirmation</h2>
             <sol-class-confirmation
                 (validityChange)="confirmation.completed = $event"
             ></sol-class-confirmation>

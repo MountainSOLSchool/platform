@@ -1,4 +1,4 @@
-<h2 style="margin-top: 4rem; margin-bottom: 2rem">Discount Codes</h2>
+<h3 style="margin-top: 2rem">Discount Codes</h3>
 <div class="field">
     <span class="p-float-label">
         <input name="discountCode" pInputText #discountCode />
@@ -21,15 +21,7 @@
     ></p-chip>
 </div>
 
-<h2 style="margin-top: 4rem; margin-bottom: 2rem">Payment Method</h2>
+<h3 style="margin-top: 4rem; margin-bottom: 2rem">Payment Method</h3>
 <sol-payment-collector
     (collector)="setPaymentCollector($event)"
 ></sol-payment-collector>
-<button
-    pButton
-    class="p-button-outlined"
-    style="margin-top: 1rem"
-    (click)="paymentCollector?.collectPaymentMethod()"
->
-    Confirm Payment Method
-</button>
