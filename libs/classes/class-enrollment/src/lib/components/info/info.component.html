@@ -148,25 +148,18 @@
                                 name="phone"
                                 mask="999-999-9999"
                             ></p-inputMask>
-                            <!-- <input
-                                required
-                                type="phone"
-                                id="phone"
-                                name="phone"
-                                pInputText
-                            /> -->
                             <label for="phone">Primary Phone Number</label>
                         </span>
                     </div>
 
                     <div class="field col">
                         <span class="p-float-label">
-                            <input
+                            <p-inputMask
                                 type="studentPhone"
                                 id="studentPhone"
                                 name="studentPhone"
-                                pInputText
-                            />
+                                mask="999-999-9999"
+                            ></p-inputMask>
                             <label for="studentPhone"
                                 >Student Phone (Optional)</label
                             >
@@ -267,7 +260,7 @@
         <form>
             <div class="p-fluid">
                 <h3>Parent/Guardian</h3>
-                <div class="field" style="width: 49.35%">
+                <div class="field" style="width: 35%">
                     <p-toggleButton
                         id="studentLivesWith"
                         name="studentLivesWith"
@@ -305,12 +298,12 @@
                     </div>
                     <div class="field col">
                         <span class="p-float-label">
-                            <input
+                            <p-inputMask
                                 type="text"
                                 id="parentPhone"
                                 name="parentPhone"
-                                pInputText
-                            />
+                                mask="999-999-9999"
+                            ></p-inputMask>
                             <label for="parentPhone">Phone Number</label>
                         </span>
                     </div>
@@ -390,12 +383,12 @@
                     </div>
                     <div class="field col">
                         <span class="p-float-label">
-                            <input
+                            <p-inputMask
                                 type="text"
                                 id="pickupPhone"
                                 name="pickupPhone"
-                                pInputText
-                            />
+                                mask="999-999-9999"
+                            ></p-inputMask>
                             <label for="pickupPhone">Phone Number</label>
                         </span>
                     </div>
