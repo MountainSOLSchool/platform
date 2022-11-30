@@ -43,8 +43,6 @@ export class ClassesComponent {
     );
 
     classes$ = this.classListService.getFutureClasses().pipe(
-        filter(() => false),
-        tap(() => console.log()),
         map((classes) =>
             classes.map((c) => {
                 return {
