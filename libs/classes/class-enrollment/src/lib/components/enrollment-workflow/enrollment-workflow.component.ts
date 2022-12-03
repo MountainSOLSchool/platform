@@ -40,7 +40,7 @@ export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);
 
     readonly stepperOrientation = inject(BreakpointObserver)
-        .observe('(min-width: 850px)')
+        .observe('(min-width: 800px)')
         .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
     readonly steps = [
