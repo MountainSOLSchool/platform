@@ -24,7 +24,7 @@
         "workspace-generator": "nx workspace-generator",
         "dep-graph": "nx dep-graph",
         "help": "nx help",
-        "lint:functions": "npm run lint --project=functions",
+        "lint:functions": "nx lint functions",
         "build:functions": "nx dep-graph --file=output.html && rm -rf dist && npm run nx build functions",
         "build:functions:watch": "nx dep-graph --file=output.html && rm -rf dist && nx build functions --watch",
         "build:portal": "nx build portal --outputPath=\"public\"",
