@@ -14,4 +14,4 @@ jobs:
               with:
                   args: deploy --only functions
               env:
-                  FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MOUNTAIN_SOL_PLATFORM_FUNCTIONS }}
+                  GCP_SA_KEY: ${{ secrets.FIREBASE_GCP_SA_KEY }}
