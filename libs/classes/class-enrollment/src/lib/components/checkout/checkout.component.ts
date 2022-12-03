@@ -8,7 +8,7 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { InputTextModule } from 'primeng/inputtext';
-import { of, switchMap, tap } from 'rxjs';
+import { Observable, of, switchMap, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 
 @Injectable()
@@ -30,11 +30,11 @@ class CheckoutStore extends ComponentStore<{
                     this.get()
                         .collector?.collectPaymentMethod()
                         .pipe(
-                            tap((paymentMethod) =>
+                            tap((paymentMethod) => {
                                 this.workflow.patchState({
                                     paymentMethod,
-                                })
-                            )
+                                });
+                            })
                         ) ?? of()
             )
         );
@@ -66,7 +66,6 @@ export class CheckoutComponent {
 
     validatePaymentMethod = () => {
         this.store.collect();
-        return true;
     };
 
     setPaymentCollector(collector: PaymentCollector) {

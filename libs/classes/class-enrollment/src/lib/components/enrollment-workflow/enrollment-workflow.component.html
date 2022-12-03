@@ -3,6 +3,21 @@
     [orientation]="(stepperOrientation | async)!"
     #workflowStepper
 >
+    <mat-step #paymentMethod label="Payment Method" [completed]="false">
+        <ng-template matStepContent>
+            <h2>Payment Method</h2>
+            <sol-checkout
+                #checkout
+                (validityChange)="paymentMethod.completed = $event"
+            ></sol-checkout>
+            <ng-container
+                *ngTemplateOutlet="
+                    navigation;
+                    context: { readyForNext: checkout.validatePaymentMethod }
+                "
+            ></ng-container
+        ></ng-template>
+    </mat-step>
     <mat-step #classSelection label="Class Selection" [completed]="false">
         <ng-template matStepContent>
             <h2>Class Selection</h2>
@@ -44,21 +59,6 @@
             ></sol-class-account>
 
             <ng-container *ngTemplateOutlet="navigation"></ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step #paymentMethod label="Payment Method" [completed]="false">
-        <ng-template matStepContent>
-            <h2>Payment Method</h2>
-            <sol-checkout
-                #checkout
-                (validityChange)="paymentMethod.completed = $event"
-            ></sol-checkout>
-            <ng-container
-                *ngTemplateOutlet="
-                    navigation;
-                    context: { readyForNext: checkout.validatePaymentMethod }
-                "
-            ></ng-container
         ></ng-template>
     </mat-step>
     <mat-step #confirmation label="Confirm Enrollment" [completed]="false">

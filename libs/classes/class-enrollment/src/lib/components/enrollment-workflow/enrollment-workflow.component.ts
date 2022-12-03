@@ -70,7 +70,6 @@ export class ClassEnrollmentComponent {
     }
 
     next(stepper: CdkStepper) {
-        console.log('nexty');
         stepper.next();
     }
 }

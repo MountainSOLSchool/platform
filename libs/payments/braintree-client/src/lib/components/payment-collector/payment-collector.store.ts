@@ -73,7 +73,6 @@ export class PaymentCollectorStore extends ComponentStore<{
     readonly loadToken$ = this.effect(() => {
         return this.paymentService.getToken().pipe(
             tap((token) => {
-                console.log('got ', token);
                 this.patchState({
                     token,
                 });
@@ -108,7 +107,6 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     );
                                 }
                             );
-                            console.log('creating');
                             createDropIn(
                                 {
                                     authorization: token,
