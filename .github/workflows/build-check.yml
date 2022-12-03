@@ -2,10 +2,10 @@
 # https://github.com/firebase/firebase-tools
 
 name: Check builds on PR
-'on':
-    pull_request:
-        types: [opened, reopened, edited]
-
+on:
+    push:
+        branches:
+            - '**/merge'
 jobs:
     build:
         runs-on: ubuntu-latest
