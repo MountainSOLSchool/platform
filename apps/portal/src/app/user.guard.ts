@@ -15,7 +15,7 @@ export class UserGuard implements CanActivate {
 
     canActivate(): Observable<boolean | UrlTree> {
         return this.afAuth.user.pipe(
-            map((u) => (u ? true : this.router.parseUrl('/user/login')))
+            map((u) => (u ? true : this.router.parseUrl('/user/create')))
         );
     }
 }

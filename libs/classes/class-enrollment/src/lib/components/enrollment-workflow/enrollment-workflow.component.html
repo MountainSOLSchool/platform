@@ -1,9 +1,119 @@
-<sol-workflow
-    title="Summer 2023 Enrollment"
-    [steps]="steps"
-    [completeCurrentStep]="completeCurrentStep$ | async"
-    (nextClick)="nextClicked()"
-    (completed)="submit()"
+<mat-stepper
+    [linear]="true"
+    [orientation]="(stepperOrientation | async)!"
+    #workflowStepper
 >
-    <router-outlet></router-outlet>
-</sol-workflow>
+    <mat-step #paymentMethod label="Payment Method" [completed]="false">
+        <ng-template matStepContent>
+            <h2>Payment Method</h2>
+            <sol-checkout
+                #checkout
+                (validityChange)="paymentMethod.completed = $event"
+            ></sol-checkout>
+            <ng-container
+                *ngTemplateOutlet="
+                    navigation;
+                    context: { readyForNext: checkout.validatePaymentMethod }
+                "
+            ></ng-container
+        ></ng-template>
+    </mat-step>
+    <mat-step #classSelection label="Class Selection" [completed]="false">
+        <ng-template matStepContent>
+            <h2>Class Selection</h2>
+            <sol-class-picker
+                (validityChange)="classSelection.completed = $event"
+            ></sol-class-picker>
+            <ng-container
+                *ngTemplateOutlet="navigation; context: { first: true }"
+            ></ng-container
+        ></ng-template>
+    </mat-step>
+    <mat-step #studentInfo label="Student Info" [completed]="false">
+        <ng-template matStepContent>
+            <h2>Student Info</h2>
+            <sol-student-info
+                (validityChange)="studentInfo.completed = $event"
+            ></sol-student-info>
+            <ng-container *ngTemplateOutlet="navigation"></ng-container>
+        </ng-template>
+    </mat-step>
+    <mat-step
+        #medicalInfo
+        label="Medical Info and Releases"
+        [completed]="false"
+    >
+        <ng-template matStepContent>
+            <h2>Medical Info and Releases</h2>
+            <sol-medical-n-releases
+                (validityChange)="medicalInfo.completed = $event"
+            ></sol-medical-n-releases>
+            <ng-container *ngTemplateOutlet="navigation"></ng-container>
+        </ng-template>
+    </mat-step>
+    <mat-step #account label="Account Registration" [completed]="false">
+        <ng-template matStepContent>
+            <h2>Account Registration</h2>
+            <sol-class-account
+                (validityChange)="account.completed = $event"
+            ></sol-class-account>
+
+            <ng-container *ngTemplateOutlet="navigation"></ng-container
+        ></ng-template>
+    </mat-step>
+    <mat-step #confirmation label="Confirm Enrollment" [completed]="false">
+        <ng-template matStepContent>
+            <h2>Confirmation</h2>
+            <sol-class-confirmation
+                (validityChange)="confirmation.completed = $event"
+            ></sol-class-confirmation>
+            <ng-container
+                *ngTemplateOutlet="navigation; context: { last: true }"
+            ></ng-container
+        ></ng-template>
+    </mat-step>
+
+    <ng-template
+        #navigation
+        let-first="first"
+        let-last="last"
+        let-readyForNext="readyForNext"
+    >
+        <div style="margin-top: 2rem">
+            <button
+                *ngIf="!first"
+                pButton
+                matStepperPrevious
+                class="p-button-outlined"
+            >
+                Previous
+            </button>
+            <ng-container *ngIf="!last; else submit">
+                <button
+                    *ngIf="!readyForNext; else handleReadyForNext"
+                    pButton
+                    matStepperNext
+                    style="margin-left: 1rem"
+                >
+                    Next
+                </button>
+                <ng-template #handleReadyForNext>
+                    <button
+                        pButton
+                        style="margin-left: 1rem"
+                        (click)="
+                            readyForNext() ? next(workflowStepper) : undefined
+                        "
+                    >
+                        Next
+                    </button></ng-template
+                >
+            </ng-container>
+            <ng-template #submit>
+                <button pButton style="margin-left: 1rem" (click)="complete()">
+                    Submit
+                </button></ng-template
+            >
+        </div>
+    </ng-template>
+</mat-stepper>

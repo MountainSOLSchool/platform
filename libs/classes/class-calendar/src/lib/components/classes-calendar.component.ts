@@ -29,6 +29,7 @@ export class SelectClassesCalendarComponent {
                       {
                           id: classThatToggledSelection.id,
                           name: classThatToggledSelection.title,
+                          cost: 0,
                       },
                   ]
                 : selectedClasses.filter(

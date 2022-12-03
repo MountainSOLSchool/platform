@@ -24,7 +24,6 @@ import { FunctionsApi } from '@sol/firebase/functions-api';
 @Component({
     standalone: true,
     imports: [CommonModule, FileUploadModule, ProgressBarModule, MessageModule],
-    providers: [MessageService],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './import.component.html',
 })

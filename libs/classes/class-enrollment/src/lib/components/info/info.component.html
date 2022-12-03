@@ -1,324 +1,407 @@
-<head>
-    <title id="title">student-registration</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=screen-width, initial-scale=1.0" />
-</head>
+<p-accordion>
+    <p-accordionTab header="Student" [selected]="true">
+        <form>
+            <div class="p-fluid">
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <p-calendar
+                                name="birthdate"
+                                [showIcon]="true"
+                                [(ngModel)]="student.birthdate"
+                                (ngModelChange)="updateAge(student.birthdate)"
+                            ></p-calendar>
+                            <label for="birthday">Birth Date</label>
+                        </span>
+                    </div>
 
-<body>
-    <form id="reg-form">
-        <!--STUDENT PERSONAL INFO SECTION-->
-        <section id="personal">
-            <h2>Student Information</h2>
-            <p-fieldset legend="Student Information" [toggleable]="true">
-                <div class="p-field p-col-12 p-md-4">
-                    <span class="p-float-label">
-                        <p-inputMask
-                            inputId="birthday"
-                            mask="99/99/9999"
-                        ></p-inputMask>
-                        <label for="birthday">Birthday</label>
-                    </span>
+                    <div class="field col">
+                        <span class="p-float-label" width="20rem">
+                            <input
+                                name="age"
+                                disabled
+                                pInputText
+                                [value]="student.age"
+                            />
+                            <label for="birthday">Age</label>
+                        </span>
+                    </div>
                 </div>
 
-                <div class="p-field p-col-12 p-md-4">
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                required
+                                type="text"
+                                id="firstName"
+                                name="firstName"
+                                pInputText
+                            />
+                            <label for="firstName">First Name</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                required
+                                type="text"
+                                id="lastName"
+                                name="lastName"
+                                pInputText
+                            />
+                            <label for="lastName">Last Name</label>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="field" style="width: 49.35%">
                     <span class="p-float-label">
                         <input
                             required
                             type="text"
-                            id="name"
-                            name="name"
+                            id="pronouns"
+                            name="pronouns"
                             pInputText
                         />
-                        <label for="name">Name</label>
+                        <label for="pronouns">Pronouns</label>
                     </span>
                 </div>
 
-                <div class="p-field p-col-12 p-md-4">
+                <div class="field" style="width: 49.35%; padding-top: 1%">
                     <span class="p-float-label">
                         <input
-                            type="text"
-                            id="gender"
-                            name="gender"
-                            pInputText
-                        />
-                        <label for="gender">Gender (optional)</label>
-                    </span>
-                </div>
-
-                <div class="p-field p-col-12 p-md-4">
-                    <span class="p-float-label">
-                        <input
+                            required
                             type="text"
                             id="school"
                             name="school"
                             pInputText
                         />
-                        <label for="school">School (optional)</label>
+                        <label for="school">School</label>
                     </span>
                 </div>
 
-                <div id="notes">
-                    <label for="bio">student bio (optional)</label><br />
-                    <textarea
-                        id="bio"
-                        name="bio"
-                        [rows]="5"
-                        [cols]="50"
-                        pInputTextarea
-                        [autoResize]="true"
-                    ></textarea
-                    ><br />
-                    <label for="notes">notes about student (optional)</label
-                    ><br />
-                    <textarea
-                        id="notes"
-                        name="notes"
-                        [rows]="5"
-                        [cols]="50"
-                        pInputTextarea
-                        [autoResize]="true"
-                    ></textarea>
-                </div>
-            </p-fieldset>
-        </section>
-        <!--CONTACT INFO SECTION-->
-        <section id="contact-info">
-            <h2>Contact Info</h2>
-            <p-fieldset legend="Contact Info" [toggleable]="true">
-                <div class="p-fluid grid">
-                    <span class="p-float-label">
-                        <input
-                            required
-                            type="email"
-                            id="email"
-                            name="email"
-                            pInputText
-                        />
-                        <label for="email">primary e-mail</label>
-                    </span>
-                    <span class="p-float-label">
-                        <input
-                            type="email"
-                            id="emailAlt"
-                            name="emailAlt"
-                            pInputText
-                        />
-                        <label for="emailAlt"
-                            >student's e-mail (optional)</label
-                        >
-                    </span>
-                    <span class="p-float-label">
-                        <p-inputMask
-                            mask="(999) 999-9999"
-                            name="phone"
-                            id="phone"
-                        ></p-inputMask>
-                        <label for="phone">primary phone number</label>
-                    </span>
-                    <span class="p-float-label">
-                        <p-inputMask
-                            mask="(999) 999-9999"
-                            name="phoneAlt"
-                        ></p-inputMask>
-                        <label for="phoneAlt"
-                            >student's phone number (optional)</label
-                        >
-                    </span>
-                    <div id="address">
-                        <label for="add-line1">Address Line 1</label>
-                        <input
-                            pInputText
-                            required
-                            type="text"
-                            id="add-line1"
-                            name="add-line1"
-                        />
-                        <label for="add-line2">Address Line 2</label>
-                        <input
-                            pInputText
-                            type="text"
-                            id="add-line2"
-                            name="add-line2"
-                        />
-                        <label for="add-city">City</label>
-                        <input
-                            pInputText
-                            type="text"
-                            id="add-city"
-                            name="add-city"
-                        />
-                        <label for="add-state">State</label>
-                        <input
-                            pInputText
-                            type="text"
-                            id="add-state"
-                            name="add-state"
-                        />
-                        <label for="add-zip" max-length="5">ZIP code</label>
-                        <input pInputText name="add-zip" />
-                    </div>
-                </div>
-            </p-fieldset>
-        </section>
-        <!--PRIVACY SECTION-->
-        <section>
-            <h2>Privacy and Chemicals</h2>
-            <p-fieldset legend="Privacy and Chemicals" [toggleable]="true">
-                <div id="bug-spray-etc">
-                    <ul id="chemicals">
-                        <li>
-                            <h3>Bug Spray</h3>
-                            <input
-                                type="radio"
-                                id="bug-spray"
-                                name="bug-spray"
-                                value="yes-bug"
-                            />
-                            <label for="yes-bug">Yes</label>
-                            <input
-                                type="radio"
-                                id="bug-spray"
-                                name="bug-spray"
-                                value="no-bug"
-                            />
-                            <label for="no-bug">No</label>
-                        </li>
-                        <li>
-                            <h3>DEET</h3>
-                            <input
-                                type="radio"
-                                id="DEET"
-                                name="deet"
-                                value="yes-deet"
-                            />
-                            <label for="yes-deet">Yes</label>
-                            <input
-                                type="radio"
-                                id="DEET"
-                                name="deet"
-                                value="no-deet"
-                            />
-                            <label for="no-deet">No</label>
-                        </li>
-                        <li>
-                            <h3>Sun Screen</h3>
-                            <input
-                                type="radio"
-                                id="sun-screen"
-                                name="sun-screen"
-                                value="yes-sun"
-                            />
-                            <label for="yes-sun">Yes</label>
-                            <input
-                                type="radio"
-                                id="sun-screen"
-                                name="sun-screen"
-                                value="no-sun"
-                            />
-                            <label for="no-sun">No</label>
-                        </li>
-                    </ul>
-                </div>
-                <div id="privacy">
-                    <h3>photos</h3>
+                <div style="padding-top: 1%">
+                    <h3>Notes About Student</h3>
                     <p>
-                        can we use photos of student for promotional material?
+                        Is there anything you would like us to know about your
+                        child? Likes/dislikes, change in family circumstances,
+                        fears, etc.
                     </p>
-                    <input
-                        type="radio"
-                        id="photos"
-                        name="photo-permission"
-                        value="yes-photo"
-                    />
-                    <label for="yes-photo">Yes</label>
-                    <input
-                        type="radio"
-                        id="photos"
-                        name="photo-permission"
-                        value="no-photo"
-                    />
-                    <label for="no-photo">No</label>
-                    <input
-                        type="radio"
-                        id="photos"
-                        name="photo-permission"
-                        value="yes-noname"
-                    />
-                    <label for="yes-noname">Yes, but no name</label>
                 </div>
-            </p-fieldset>
-        </section>
-        <!--PICKUP INFO SECTION-->
-        <section id="pickup">
-            <h2>Student Pickup</h2>
-            <p-fieldset legend="Student Pickup" [toggleable]="true">
-                <div id="code-word-div">
-                    <label id="code-word" for="code-word"
-                        >Student pick-up code word</label
-                    >
-                    <input
-                        required
-                        type="text"
-                        maxlength="30"
-                        id="code-word"
-                        pInputText
-                    />
+
+                <div id="notes" class="field" style="padding-top: 1%">
+                    <span class="p-float-label">
+                        <textarea
+                            id="bio"
+                            name="bio"
+                            [rows]="5"
+                            [cols]="50"
+                            pInputTextarea
+                            [autoResize]="true"
+                        ></textarea>
+                        <label for="bio">Notes (Optional)</label><br /><br />
+                    </span>
                 </div>
-                <section id="auth-pickup">
-                    <div class="pickup-tile" id="pickup-tile1">
-                        <h3>authorized pickup</h3>
-                        <table class="pickup-table">
-                            <tr>
-                                <th>
-                                    <label for="pickup-name1"
-                                        ><span>Name</span></label
-                                    >
-                                </th>
-                                <td>
-                                    <input
-                                        required
-                                        type="text"
-                                        id="pickup-name1"
-                                        pInputText
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <label for="pickup-relationship0"
-                                        >Relationship</label
-                                    >
-                                </th>
-                                <td>
-                                    <input
-                                        type="text"
-                                        id="pickup-relation0"
-                                        name="pickup-relation0"
-                                        pInputText
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <label for="pickup-phone0"
-                                        >Phone Number</label
-                                    >
-                                </th>
-                                <td>
-                                    <input type="tel" id="pickup-phone1" />
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="add-auth">
-                            <button>Add auth pickup</button>
-                        </div>
+            </div>
+        </form>
+    </p-accordionTab>
+
+    <p-accordionTab header="Contact">
+        <form>
+            <div class="p-fluid">
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                required
+                                type="email"
+                                id="email"
+                                name="email"
+                                pInputText
+                            />
+                            <label for="email">Primary Email</label>
+                        </span>
                     </div>
-                </section>
-            </p-fieldset>
-        </section>
-        <!--SUBMIT-->
-        <section id="submit">
-            <button pButton type="submit" name="submit">SUBMIT</button>
-        </section>
-    </form>
-</body>
+
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="email"
+                                id="studentEmail"
+                                name="studentEmail"
+                                pInputText
+                            />
+                            <label for="studentEmail"
+                                >Student Email (Optional)</label
+                            >
+                        </span>
+                    </div>
+                </div>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                id="phone"
+                                type="phone"
+                                name="phone"
+                                mask="999-999-9999"
+                            ></p-inputMask>
+                            <label for="phone">Primary Phone Number</label>
+                        </span>
+                    </div>
+
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                type="studentPhone"
+                                id="studentPhone"
+                                name="studentPhone"
+                                mask="999-999-9999"
+                            ></p-inputMask>
+                            <label for="studentPhone"
+                                >Student Phone (Optional)</label
+                            >
+                        </span>
+                    </div>
+                </div>
+
+                <div class="field" style="width: 49.35%">
+                    <span class="p-float-label">
+                        <input
+                            type="text"
+                            id="address"
+                            name="address"
+                            pInputText
+                        />
+                        <label for="address">Street Address</label>
+                    </span>
+                </div>
+                <div class="field" style="width: 49.35%; padding-top: 1%">
+                    <span class="p-float-label">
+                        <input type="text" id="city" name="city" pInputText />
+                        <label for="city">City</label>
+                    </span>
+                </div>
+                <div class="grid-wrapper">
+                    <div class="field area-quarter-left">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                id="state"
+                                type="text"
+                                name="state"
+                                mask="aa"
+                                slotChar=" "
+                            ></p-inputMask>
+                            <label for="state">State</label>
+                        </span>
+                    </div>
+                    <div class="field area-quarter-left-center">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                id="zip"
+                                type="text"
+                                name="zip"
+                                mask="99999"
+                                slotChar=" "
+                            ></p-inputMask>
+                            <label for="zip">Zip Code</label>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+    <p-accordionTab header="Privacy and Chemicals">
+        <h3>Chemicals</h3>
+        <p>
+            May Mountain SOL Staff apply these chemicals to your child,
+            depending on outdoor conditions?
+        </p>
+        <div class="flexbox" style="width: 50%">
+            <div class="field">
+                <p-toggleButton
+                    onLabel="Bug Spray OK"
+                    offLabel="No Bug Spray"
+                    onIcon="pi pi-check"
+                    offIcon="pi pi-times"
+                ></p-toggleButton>
+            </div>
+            <div class="field">
+                <p-toggleButton
+                    onLabel="DEET Bug Spray OK"
+                    offLabel="No DEET Bug Spray"
+                    onIcon="pi pi-check"
+                    offIcon="pi pi-times"
+                ></p-toggleButton>
+            </div>
+            <div class="field">
+                <p-toggleButton
+                    onLabel="Sunscreen OK"
+                    offLabel="No Sunscreen"
+                    onIcon="pi pi-check"
+                    offIcon="pi pi-times"
+                ></p-toggleButton>
+            </div>
+        </div>
+
+        <div id="Privacy" style="padding-bottom: 20px">
+            <h3>Photos</h3>
+            <p>Can we use photos of the student for promotional material?</p>
+            <p-selectButton
+                [options]="chemicalPreferences"
+                optionLabel="name"
+                optionValue="value"
+            ></p-selectButton>
+        </div>
+    </p-accordionTab>
+    <p-accordionTab header="Parents and Guardians">
+        <form>
+            <div class="p-fluid">
+                <h3>Parent/Guardian</h3>
+                <div class="field" style="width: 35%">
+                    <p-toggleButton
+                        id="studentLivesWith"
+                        name="studentLivesWith"
+                        default="on"
+                        onLabel="Student lives with this parent/guardian"
+                        offLabel="Student does not live with this parent/guardian"
+                        onIcon="pi pi-check"
+                        offIcon="pi pi-times"
+                    ></p-toggleButton>
+                </div>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="parentName"
+                                name="parentName"
+                                pInputText
+                            />
+                            <label for="parentName">Name</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="parentRelationship"
+                                name="parentRelationship"
+                                pInputText
+                            />
+                            <label for="relationship"
+                                >Relationship to Student</label
+                            >
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                type="text"
+                                id="parentPhone"
+                                name="parentPhone"
+                                mask="999-999-9999"
+                            ></p-inputMask>
+                            <label for="parentPhone">Phone Number</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="parentEmail"
+                                name="parentEmail"
+                                pInputText
+                            />
+                            <label for="parentEmail">Email</label>
+                        </span>
+                    </div>
+                </div>
+                <div style="width: 20%; padding-bottom: 20px">
+                    <button
+                        pButton
+                        type="button"
+                        label="Add Parent or Guardian"
+                        class="p-button-outlined"
+                    ></button>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+    <p-accordionTab header="Pickup">
+        <form>
+            <div class="p-fluid">
+                <p>
+                    What code word should we ask for when picking up your child?
+                </p>
+                <div class="field" style="width: 49.35%; padding-bottom: 20px">
+                    <span class="p-float-label">
+                        <input
+                            type="text"
+                            id="codeWord"
+                            name="codeWord"
+                            pInputText
+                        />
+                        <label for="codeWord">Code Word</label>
+                    </span>
+                </div>
+
+                <h3>Authorized For Student Pickup</h3>
+                <p>
+                    These include any people who may pick up your child. Usually
+                    it includes the guardians from the previous section, and if
+                    you would like you can add additional people who can pick up
+                    your child.
+                </p>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                pInputText
+                            />
+                            <label for="name">Name</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="relationship"
+                                name="relationship"
+                                pInputText
+                            />
+                            <label for="relationship"
+                                >Relationship to Student</label
+                            >
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                type="text"
+                                id="pickupPhone"
+                                name="pickupPhone"
+                                mask="999-999-9999"
+                            ></p-inputMask>
+                            <label for="pickupPhone">Phone Number</label>
+                        </span>
+                    </div>
+                </div>
+                <div style="width: 20%; padding-bottom: 20px">
+                    <button
+                        pButton
+                        type="button"
+                        label="Add Authorized to Pickup"
+                        class="p-button-outlined"
+                    ></button>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+</p-accordion>

@@ -1,17 +1,21 @@
 import * as admin from 'firebase-admin';
+import { DocumentReference } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 
-admin.initializeApp();
+if (admin.apps.length === 0) {
+    admin.initializeApp();
+}
 const db = admin.firestore(functions.config().firebase);
 
-type Collection = Array<Document>;
+type Collection = Array<DocumentProperty>;
 
-type Document = {
+type DocumentProperty = {
     [x: string]:
-        | Document
+        | DocumentProperty
         | Collection
         | string
         | FirebaseFirestore.DocumentReference
+        | Array<FirebaseFirestore.DocumentReference>
         | FirebaseFirestore.Timestamp
         | number
         | boolean
@@ -21,6 +25,12 @@ type Document = {
 export class DatabaseUtility {
     public static getDatabase() {
         return db;
+    }
+
+    public static async getDocumentRef(
+        path: string
+    ): Promise<DocumentReference> {
+        return await db.doc(path);
     }
 
     public static async getHydratedCollection(
@@ -45,6 +55,7 @@ export class DatabaseUtility {
                     ]: Array<FirebaseFirestore.DocumentData>;
                 } = Object.assign({}, ...hydratedCollections);
                 return {
+                    id: doc.id,
                     ...fields,
                     ...mergedCollections,
                 };

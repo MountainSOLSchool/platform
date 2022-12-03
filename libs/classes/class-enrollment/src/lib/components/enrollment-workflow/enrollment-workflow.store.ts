@@ -1,24 +1,37 @@
 import { HttpClient } from '@angular/common/http';
-import { EventEmitter, inject, Injectable, NgModule } from '@angular/core';
-import { ComponentStore } from '@ngrx/component-store';
+import { EventEmitter, inject, Injectable } from '@angular/core';
+import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { Observable, switchMap, take, tap } from 'rxjs';
-import { PreparedTransaction } from '@sol/payments/transactions';
+import { PaymentMethodPayload } from 'braintree-web-drop-in';
+import { Completeable } from '@sol/workflow';
+
+type Enrollment = {
+    selectedClasses: Array<string>;
+    paymentMethod:
+        | {
+              nonce: string;
+              deviceData: string;
+              paymentDetails: PaymentMethodPayload['details'];
+          }
+        | undefined;
+    discountCodes: Array<string>;
+};
 
 @Injectable()
-export class EnrollmentWorkflowStore extends ComponentStore<{
-    transaction: PreparedTransaction | undefined;
-}> {
+export class EnrollmentWorkflowStore extends ComponentStore<Enrollment> {
     private readonly http = inject(HttpClient);
     private readonly functions = inject(FunctionsApi);
 
     constructor() {
         super({
-            transaction: undefined,
+            selectedClasses: [],
+            paymentMethod: undefined,
+            discountCodes: [],
         });
     }
 
-    private readonly _next$ = new EventEmitter();
+    private readonly _next$ = new EventEmitter<Completeable>();
     get nextClick$() {
         return this._next$.asObservable();
     }
@@ -28,42 +41,34 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         return this._ready$.asObservable();
     }
 
-    readonly nextClick = this.effect((next$: Observable<void>) => {
+    readonly nextClick = this.effect((next$: Observable<Completeable>) => {
         return next$.pipe(
-            tap(() => {
-                this._next$.emit();
+            tap((completeable) => {
+                this._next$.emit(completeable);
             })
         );
     });
 
-    readonly readyForNext = this.effect((ready$) => {
-        return ready$.pipe(tap(() => this._ready$.emit(Math.random())));
-    });
-
-    readonly completeCheckout = this.effect(
-        (transaction$: Observable<PreparedTransaction>) => {
-            return transaction$.pipe(
-                tap((transaction) =>
-                    this.patchState((s) => ({
-                        ...s,
-                        transaction,
-                    }))
-                ),
-                tap(() => this.readyForNext())
-            );
-        }
-    );
-
     readonly submit = this.effect((submit$) => {
         return submit$.pipe(
+            tap(() => console.log('submitted')),
             switchMap(() => {
-                return this.select(({ transaction }) => transaction).pipe(
+                return this.select((enrollment) => enrollment).pipe(
                     take(1),
-                    switchMap((transaction) => {
-                        return this.functions.call('enroll', transaction);
+                    switchMap((enrollment) => {
+                        return this.functions.call('enroll', enrollment).pipe(
+                            tapResponse(
+                                (reseponse) => {
+                                    console.log(reseponse);
+                                },
+                                (error) => console.log(error)
+                            )
+                        );
                     })
                 );
             })
         );
     });
+
+    readonly selectEnrollment = this.select((enrollment) => enrollment);
 }

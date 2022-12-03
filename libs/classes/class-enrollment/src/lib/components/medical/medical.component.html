@@ -1,0 +1,378 @@
+<p-accordion>
+    <p-accordionTab header="Emergency Contacts" [selected]="true">
+        <form>
+            <div class="p-fluid">
+                <h3>Emergency Contacts</h3>
+                <p>
+                    Please list two relatives, friends or neighbors that you
+                    have notified and who have agreed to assume temporary care
+                    of your child if you cannot be reached.
+                </p>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="ECname"
+                                name="ECname"
+                                pInputText
+                            />
+                            <label for="ECname">Name</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="ECrelationship"
+                                name="ECrelationship"
+                                pInputText
+                            />
+                            <label for="ECrelationship"
+                                >Relationship to Student</label
+                            >
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                type="text"
+                                id="ECPhone"
+                                name="ECPhone"
+                                mask="999-999-9999"
+                            ></p-inputMask>
+                            <label for="ECPhone">Phone Number</label>
+                        </span>
+                    </div>
+                </div>
+                <div style="width: 20%; padding-bottom: 20px">
+                    <button
+                        pButton
+                        type="button"
+                        label="Add Emergency Contact"
+                        class="p-button-outlined"
+                    ></button>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+
+    <p-accordionTab header="Student Health Information">
+        <form>
+            <div class="p-fluid">
+                <h3>Student Information</h3>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                required
+                                type="text"
+                                id="weight"
+                                name="weight"
+                                pInputText
+                            />
+                            <label for="weight">Child's Weight</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                required
+                                type="text"
+                                id="height"
+                                name="height"
+                                pInputText
+                            />
+                            <label for="height">Child's Height</label>
+                        </span>
+                    </div>
+                </div>
+
+                <h3>Primary Physician</h3>
+
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                required
+                                type="text"
+                                id="docName"
+                                name="docName"
+                                pInputText
+                            />
+                            <label for="docName">Doctor's Name</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                type="text"
+                                id="docPhone"
+                                name="docPhone"
+                                mask="999-999-9999"
+                            ></p-inputMask>
+                            <label for="docPhone">Doctor's Phone</label>
+                        </span>
+                    </div>
+                </div>
+
+                <h3>Insurance Information</h3>
+                <p>If you have insurance, please add it here.</p>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                required
+                                type="text"
+                                id="insuranceCo"
+                                name="insuranceCo"
+                                pInputText
+                            />
+                            <label for="insuranceCo">Insurance Company</label>
+                        </span>
+                    </div>
+
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="insuranceNo"
+                                name="insuranceNo"
+                                pInputText
+                            />
+                            <label for="insuranceNo"
+                                >Medical Insurance ID Number</label
+                            >
+                        </span>
+                    </div>
+                </div>
+
+                <h3>Allergies</h3>
+                <p>
+                    Please be specific about any allergies the child has and
+                    list the protocols for each allergy, especially if the
+                    allergy requires an Epi-Pen (or similar). Be sure to check
+                    the box below if the student has any allergies that are
+                    life-threatening.
+                </p>
+                <div style="width: 40%">
+                    <p-toggleButton
+                        id="studentLivesWith"
+                        name="studentLivesWith"
+                        default="on"
+                        onLabel="My child has a life-threatening allergy"
+                        offLabel="My child does not have a life-threatening allergy"
+                        onIcon="pi pi-check"
+                        offIcon="pi pi-times"
+                    ></p-toggleButton>
+                </div>
+                <div id="allergies" class="field">
+                    <span class="p-float-label">
+                        <textarea
+                            id="allergies"
+                            name="allergies"
+                            [rows]="5"
+                            [cols]="50"
+                            pInputTextarea
+                            [autoResize]="true"
+                        ></textarea>
+                        <label for="allergies">Allergies (Optional)</label
+                        ><br /><br />
+                    </span>
+                </div>
+
+                <h3>Medications</h3>
+                <p>
+                    If your child routinely takes medication, please fill out
+                    the following, even if the medication is not dispensed
+                    during Mountain SOL programs. Any medication needed during
+                    the program should be given to a designated staff member and
+                    will be dispensed by the designated staff member. Please
+                    list the following information for each medication.
+                </p>
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="medication"
+                                name="medication"
+                                pInputText
+                            />
+                            <label for="medication">Medication</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="dosage"
+                                name="dosage"
+                                pInputText
+                            />
+                            <label for="dosage">Dosage</label>
+                        </span>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="text"
+                                id="prescribingDoctor"
+                                name="prescribingDoctor"
+                                pInputText
+                            />
+                            <label for="prescribingDoctor"
+                                >Prescribing Doctor</label
+                            >
+                        </span>
+                    </div>
+                </div>
+                <div style="width: 20%; padding-bottom: 20px">
+                    <button
+                        pButton
+                        type="button"
+                        label="Add Medication"
+                        class="p-button-outlined"
+                    ></button>
+                </div>
+
+                <div id="Privacy" style="padding-bottom: 20px">
+                    <h3>Medical Authorization</h3>
+                    <p>
+                        Do you authorize Mountain SOL Staff to assist in the
+                        dispensing of medication including epi-pen and inhalers,
+                        as prescribed above?
+                    </p>
+                    <p-selectButton
+                        [options]="medicationAuth"
+                        optionLabel="name"
+                        optionValue="value"
+                    ></p-selectButton>
+                </div>
+
+                <h3>Additional Notes about the Student</h3>
+                <p>
+                    Please list any other physical conditions that may affect
+                    your child's participation in our programs. Please also
+                    describe any behavioral or circumstantial conditions that
+                    staff should be aware of, especially if they might affect
+                    their participation in the program. Are there certain things
+                    that would be helpful to know about your child?
+                </p>
+                <div id="healthNotes" class="field">
+                    <span class="p-float-label">
+                        <textarea
+                            id="healthNotes"
+                            name="healthNotes"
+                            [rows]="5"
+                            [cols]="50"
+                            pInputTextarea
+                            [autoResize]="true"
+                        ></textarea>
+                        <label for="healthNotes"
+                            >Additional Health or Medical Notes
+                            (Optional)</label
+                        ><br /><br />
+                    </span>
+                </div>
+            </div>
+        </form>
+    </p-accordionTab>
+    <p-accordionTab header="Medical Release and Permission to Treat">
+        <form>
+            <div class="p-fluid">
+                <p>
+                    My child is in good physical and mental health. I have
+                    listed any special health considerations. I acknowledge that
+                    acceptance of my child to the program with my child's
+                    special health considerations is at the discretion of
+                    Mountain SOL School. In case of emergency, I understand that
+                    every effort will be made to contact parents or guardians of
+                    children. In the event I cannot be reached within a
+                    reasonable time, I grant permission to the physician
+                    selected by Mountain SOL staff to hospitalize, secure
+                    treatment for and to order injection, anesthesia or surgery
+                    for the child as named herein.
+                </p>
+            </div>
+            <div style="width: 60%">
+                <p-toggleButton
+                    id="studentLivesWith"
+                    name="studentLivesWith"
+                    onLabel="I hereby certify that the above information is correct."
+                    offLabel="I do not agree"
+                    onIcon="pi pi-check"
+                    offIcon="pi pi-times"
+                ></p-toggleButton>
+            </div>
+        </form>
+    </p-accordionTab>
+    <p-accordionTab header="Release of Liability and Hold Harmless">
+        <form>
+            <div class="p-fluid">
+                <p>
+                    I authorize my child to participate in the program and any
+                    associated transportation services provided by Mountain SOL
+                    School or its agents. I acknowledge that I am the only one
+                    who can determine if I or my child is physically fit enough
+                    or adequately skilled enough to participate in the program.
+                    I acknowledge the inherent risks that may result from by
+                    child’s participation in the program including falls,
+                    fractures, contraction of infectious diseases, misbehavior
+                    of other children, etc., all of which may result in injury
+                    or death to my child or damage to his/her/our property. I
+                    further acknowledge that Mountain SOL School is neither a
+                    common carrier nor in the business of providing
+                    transportation services to the public. I expressly assume
+                    these risks and any associated costs, damages or losses,
+                    including those caused by simple negligence of Mountain SOL
+                    School, and waive and fully release all claims held by me,
+                    my spouse/partner, my child or any of our estates from and
+                    against Mountain SOL School and its agency partners,
+                    officers, board members, agents, employees, volunteers and
+                    representatives, arising from my child’s attendance and
+                    participation in the program and accept full responsibility
+                    for the cost of all medical treatment to my child as a
+                    result of any injuries caused by or through such other
+                    risks. This waiver and release will apply to any and all
+                    actions, causes, damages, claims or demands of any kind,
+                    whether known or unknown, arising out of or otherwise
+                    incidental to participation in the program. I further agree,
+                    on behalf of myself and/or my child, to indemnify, defend
+                    and hold harmless Mountain SOL School and its agency
+                    partners, officers, board members, agents, employees,
+                    volunteers and representatives from any injuries,
+                    liabilities, claims, damages and expenses, including
+                    attorney fees, incurred by Mountain SOL School, me, my child
+                    or on behalf of my child, arising from my child’s attendance
+                    and participation in the program, with the exception of
+                    gross negligence or reckless misconduct of Mountain SOL
+                    School. While participating in the program, I and my child
+                    will obey all rules, regulations and laws of the State of
+                    West Virginia and the United States. I and my child will
+                    further obey all rules, regulations and policies of Mountain
+                    SOL School associated with the program. I acknowledge that
+                    my or my child’s failure to comply with these rules,
+                    regulations, policies and laws may result in my or my
+                    child’s expulsion from the program. I agree that this
+                    release will be governed by the laws of the State of West
+                    Virginia. If any provision of this release is found to be
+                    invalid or unenforceable, then the remainder of this release
+                    will have full force and effect, and the invalid provision
+                    will be modified, or partially enforced, to the maximum
+                    extent permitted by West Virginia State law.
+                </p>
+            </div>
+            <div style="width: 60%">
+                <p-toggleButton
+                    id="studentLivesWith"
+                    name="studentLivesWith"
+                    onLabel="I hereby certify that this information is correct. I have read all of the above terms and conditions, and I understand and agree to be bound by them."
+                    offLabel="I do not agree"
+                    onIcon="pi pi-check"
+                    offIcon="pi pi-times"
+                ></p-toggleButton>
+            </div>
+        </form>
+    </p-accordionTab>
+</p-accordion>

@@ -15,6 +15,14 @@ import { StudentRepositoryUtility } from '@sol/student/persistence';
 import { StudentDbEntry } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
+import { ClassRepository, DiscountRepository } from '@sol/classes/repository';
+import {
+    Discount,
+    isClassesDiscount,
+    isBasketDiscount,
+    ClassesDiscount,
+    BasketDiscount,
+} from '@sol/classes/domain';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -363,8 +371,10 @@ const _fetchClasses = async (
                     '_seconds' in c.end
                         ? Number(c.end._seconds) * 1000
                         : undefined,
-                enrolledCount: c.students?.length ?? 0,
-                id: String(i),
+                enrolledCount: Array.isArray(c.students)
+                    ? c.students?.length ?? 0
+                    : 0,
+                id: c.id,
                 classType: c.class_type,
                 gradeRangeStart: c.grade_range_start,
                 gradeRangeEnd: c.grade_range_end,
@@ -396,24 +406,76 @@ export const paymentToken = Functions.endpoint
 export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle(async (request, response, secrets) => {
-        const nonce = request.body.data.nonce;
+        const {
+            selectedClasses,
+            discountCodes,
+            paymentMethod: { nonce, deviceData },
+        } = request.body.data as {
+            selectedClasses: Array<string>;
+            discountCodes: Array<string>;
+            paymentMethod: { nonce: string; deviceData: string };
+        };
+
+        // 1. Get classes with costs
+        const classes = await Promise.all(
+            selectedClasses.map(async (id) => await ClassRepository.get(id))
+        );
+
+        // 2. Get discounts for coupon codes
+        const discounts = (
+            await Promise.all(
+                discountCodes.map(
+                    async (code) => await DiscountRepository.get(code)
+                )
+            )
+        ).filter((d): d is Discount<unknown> => !!d);
+
+        // 3. Calculate the total price
+        const classesDiscounts = discounts.filter((d): d is ClassesDiscount =>
+            isClassesDiscount(d)
+        );
+
+        const classesUpdatedByClassDiscounts = classesDiscounts.reduce(
+            (updatedClasses, discount) => discount.apply(updatedClasses),
+            classes
+        );
+
+        const basketDiscounts = discounts.filter((d): d is BasketDiscount =>
+            isBasketDiscount(d)
+        );
+
+        const basketTotal = classesUpdatedByClassDiscounts.reduce(
+            (total, c) => total + c.cost,
+            0
+        );
+
+        const finalTotal = basketDiscounts.reduce(
+            (total, discount) => discount.apply(total),
+            basketTotal
+        );
+
+        // 4. Add a "pending" student enrollment transaction to the database
+
+        // 5. Transact with Braintree
         const braintree = new Braintree(secrets);
-        const deviceData = request.body.data.deviceData;
-        console.log(request.body.data);
+
         const transaction = await braintree.transact({
             amount: 10,
             nonce,
             customer: { email: 'test@email.com' },
             deviceData,
         });
-        console.log(transaction);
-        // TODO: record enrollment in our DB
+
+        // 6. Add a "successful" student enrollment transaction to the database
+        // 7. Create a student record
+
+        // 8. Add student to the class
+
         response.send({ success: true, transaction: transaction });
     });
 
 export const roles = Functions.endpoint.handle(async (request, response) => {
     const user = await AuthUtility.getUserFromRequest(request, response);
     const roles = await AuthUtility.getUserRoles(user);
-    console.log('Roles', roles);
     response.send(roles);
 });

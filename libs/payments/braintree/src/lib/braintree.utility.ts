@@ -30,7 +30,7 @@ export class Braintree {
         try {
             customer = await this.gateway.customer.find(user.uid);
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
         if (!customer) {
             const { customer: created } = await this.gateway.customer.create({

@@ -40,7 +40,7 @@ export class WorkflowStore extends ComponentStore<{
                 return fromEvent(window, 'beforeunload').pipe(
                     tap((event: BeforeUnloadEvent) => {
                         // Warns the user if they try to refresh the page
-                        // event.returnValue = true;
+                        event.returnValue = 'Please dont refresh the page';
                     })
                 );
             })
@@ -133,8 +133,19 @@ export class WorkflowStore extends ComponentStore<{
         );
     }
 
-    selectCurrentStep() {
+    selectCurrentStepRoute() {
         return this.select(({ currentStep }) => currentStep);
+    }
+
+    selectCurrentStepLabel() {
+        return this.selectCurrentStepRoute().pipe(
+            switchMap((currentStep) => {
+                return this.select(({ steps }) => {
+                    return steps.find((step) => step.routerLink === currentStep)
+                        ?.label;
+                });
+            })
+        );
     }
 
     selectNextStepLink() {

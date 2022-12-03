@@ -1,3 +1,28 @@
-This is the enrollment confirmation.
-
-<div>{{ transaction$ | async | json }}</div>
+<ng-container *ngIf="enrollment$ | async as enrollment">
+    {{ enrollment | json }}
+    <h3>Selected Classes</h3>
+    <div class="flex align-items-center">
+        <p-chip
+            *ngFor="let classId of enrollment.selectedClasses"
+            [label]="classId"
+            styleClass="mr-2"
+            [removable]="true"
+        ></p-chip>
+    </div>
+    <h3>Payment Method</h3>
+    <div>
+        <p>
+            Details:
+            {{ enrollment.paymentMethod?.paymentDetails | json }}
+        </p>
+    </div>
+    <h3>Discounts</h3>
+    <div class="flex align-items-center">
+        <p-chip
+            *ngFor="let code of enrollment.discountCodes"
+            [label]="code"
+            styleClass="mr-2"
+            [removable]="true"
+        ></p-chip>
+    </div>
+</ng-container>

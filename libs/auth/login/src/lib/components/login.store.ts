@@ -28,7 +28,7 @@ enum RequestState {
 
 @NgModule({
     imports: [FirebaseAuthModule],
-    providers: [LoginStore, MessageService],
+    providers: [LoginStore],
 })
 @Injectable({ providedIn: 'root' })
 export class LoginStore extends ComponentStore<LoginState> {
@@ -80,7 +80,7 @@ export class LoginStore extends ComponentStore<LoginState> {
                 ).pipe(
                     tapResponse(
                         () => {
-                            this.router.navigate(['/']);
+                            // this.router.navigate(['/']);
                             this.messageService.add({
                                 detail: isCreatingNewAccount
                                     ? 'Created account!'

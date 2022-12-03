@@ -1,28 +1,112 @@
-<p-card
-    *ngFor="let class of classes$ | async"
-    [header]="class.title"
-    [subheader]="class.classDateTimes"
-    [style]="{
-        width: '35rem',
-        'margin-bottom': '2em',
-        background: '#dff2d8'
-    }"
-    [styleClass]="'gradient'"
+<div
+    class="p-input-icon-left"
+    style="margin-left: auto; margin-right: auto; margin-bottom: 2rem"
 >
-    <p>
-        <b>Class Type:</b> {{ class.classType }}<br />
-        <b>Grades:</b>
-        {{ class.gradeRangeStart }} - {{ class.gradeRangeEnd }}<br />
-        <b>Location:</b> {{ class.location }}<br />
-        <b>Cost:</b> ${{ class.cost }}<br />
-        <b>Instructors:</b>
-        <span *ngFor="let instructor of class.instructors; let isLast = last">
-            {{ instructor.first_name }} {{ instructor.last_name
-            }}{{ isLast ? '' : ', ' }}
-        </span>
-        <br />
-        <br />
-        <b>Description:</b> <br />
-        {{ class.description }}<br />
-    </p>
-</p-card>
+    <i class="pi pi-search"></i>
+    <input
+        type="text"
+        pInputText
+        placeholder="Search by name"
+        style="width: 400px"
+    />
+</div>
+<div *rxLet="selectedClasses$; let selectedClasses">
+    <ng-container *rxLet="classes$; let classes; suspense: skeleton">
+        <p-card
+            *ngFor="let class of classes; trackBy: trackByClass"
+            [header]="class.title"
+            [style]="
+                selectedClasses.includes(class.id)
+                    ? {
+                          width: '50rem',
+                          'margin-bottom': '2em',
+                          'margin-left': 'auto',
+                          'margin-right': 'auto',
+                          display: 'block',
+                          border: '2px solid #3c82f7',
+                          'box-sizing': 'border-box'
+                      }
+                    : {
+                          width: '50rem',
+                          'margin-bottom': '2em',
+                          'margin-left': 'auto',
+                          'margin-right': 'auto',
+                          display: 'block'
+                      }
+            "
+            [styleClass]="'gradient'"
+        >
+            <div
+                class="flex align-items-center"
+                style="margin-bottom: 1.5rem; margin-top: -1rem"
+            >
+                <p-chip
+                    [label]="class.classDateTimes"
+                    icon="pi pi-calendar"
+                    styleClass="mr-2"
+                ></p-chip>
+                <p-chip [label]="class.weekday" styleClass="mr-2"></p-chip>
+                <p-chip
+                    [label]="class.dailyTimes"
+                    icon="pi pi-clock"
+                    styleClass="mr-2"
+                ></p-chip>
+            </div>
+            <div class="field-checkbox">
+                <p-checkbox
+                    [binary]="true"
+                    [inputId]="'select' + class.id"
+                    [value]="class.id"
+                    [(ngModel)]="class.selected"
+                    (ngModelChange)="selectionChanged(class)"
+                ></p-checkbox>
+                <label
+                    [for]="'select' + class.id"
+                    style="font-size: 1.2rem; font-weight: bold"
+                    >{{ class.selected ? 'Enrolled' : 'Enroll' }}</label
+                >
+            </div>
+            <p>
+                <b>Class Type:</b> {{ class.classType }}<br />
+                <b>Grades:</b>
+                {{ class.gradeRangeStart }} - {{ class.gradeRangeEnd }}<br />
+                <b>Location:</b> {{ class.location }}<br />
+                <b>Cost:</b> ${{ class.cost }}<br />
+                <b>Instructors:</b>
+                <span
+                    *ngFor="
+                        let instructor of class.instructors;
+                        let isLast = last
+                    "
+                >
+                    {{ instructor.first_name }} {{ instructor.last_name
+                    }}{{ isLast ? '' : ', ' }}
+                </span>
+                <br />
+                <br />
+                <b>Description:</b> <br />
+                {{ class.description }}<br />
+            </p> </p-card
+    ></ng-container>
+</div>
+<ng-template #skeleton>
+    <div *ngFor="let i of [1, 2, 3]" class="custom-skeleton p-4">
+        <div class="flex mb-3">
+            <p-skeleton
+                shape="circle"
+                size="4rem"
+                styleClass="mr-2"
+            ></p-skeleton>
+            <div>
+                <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
+                <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
+                <p-skeleton height=".5rem"></p-skeleton>
+            </div>
+        </div>
+        <p-skeleton width="100%" height="150px"></p-skeleton>
+        <div class="flex justify-content-between mt-3">
+            <p-skeleton width="4rem" height="2rem"></p-skeleton>
+            <p-skeleton width="4rem" height="2rem"></p-skeleton>
+        </div>
+    </div>
+</ng-template>

@@ -1,17 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
     standalone: true,
-    imports: [ToastModule, RouterModule],
-    providers: [MessageService],
+    imports: [ToastModule, MessageModule, RouterModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-root',
     template: ` <div>
         <router-outlet></router-outlet>
-        <p-toast position="top-center"></p-toast>
+        <p-toast position="top-right"></p-toast>
     </div>`,
     styles: [``],
 })

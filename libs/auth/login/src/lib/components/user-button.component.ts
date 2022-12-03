@@ -45,8 +45,8 @@ import { map, Observable } from 'rxjs';
         </ng-container>
         <ng-template #login>
             <p-button
-                routerLink="/user/login"
-                label="Sign In"
+                routerLink="/user/create"
+                label="Register / Sign In"
                 styleClass="p-button-md"
             ></p-button
         ></ng-template>`,

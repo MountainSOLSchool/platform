@@ -6,7 +6,7 @@ import {
     HttpRequest,
 } from '@angular/common/http';
 
-import { from, map, Observable, switchMap } from 'rxjs';
+import { filter, from, map, Observable, switchMap, take } from 'rxjs';
 import {
     AngularFireAuth,
     AngularFireAuthModule,
@@ -24,21 +24,20 @@ export class AuthInterceptor implements HttpInterceptor {
         next: HttpHandler
     ): Observable<HttpEvent<T>> {
         return this.afAuth.user.pipe(
+            filter(<T>(user: T): user is NonNullable<T> => !!user),
+            take(1),
             switchMap((user) => {
-                if (user) {
-                    return from(user.getIdToken()).pipe(
-                        map((idToken) =>
-                            req.clone({
-                                headers: req.headers.append(
-                                    'Authorization',
-                                    `Bearer ${idToken}`
-                                ),
-                            })
-                        ),
-                        switchMap((authorizedReq) => next.handle(authorizedReq))
-                    );
-                }
-                return next.handle(req);
+                return from(user.getIdToken()).pipe(
+                    map((idToken) =>
+                        req.clone({
+                            headers: req.headers.append(
+                                'Authorization',
+                                `Bearer ${idToken}`
+                            ),
+                        })
+                    ),
+                    switchMap((authorizedReq) => next.handle(authorizedReq))
+                );
             })
         );
     }

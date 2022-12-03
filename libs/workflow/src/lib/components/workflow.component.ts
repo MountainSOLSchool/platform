@@ -6,11 +6,20 @@ import { StepsModule } from 'primeng/steps';
 import { ButtonModule } from 'primeng/button';
 import { Step } from '../models/step';
 import { provideComponentStore } from '@ngrx/component-store';
+import { MatStepperModule } from '@angular/material/stepper';
+
+export type Completeable = { complete: () => void };
 
 @Component({
     standalone: true,
     selector: 'sol-workflow',
-    imports: [CommonModule, RouterModule, StepsModule, ButtonModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        StepsModule,
+        ButtonModule,
+        MatStepperModule,
+    ],
     templateUrl: './workflow.component.html',
     providers: [provideComponentStore(WorkflowStore)],
 })
@@ -19,17 +28,19 @@ export class WorkflowComponent {
     @Input() set steps(steps: Step[]) {
         this.store.setState((s) => ({ ...s, steps }));
     }
-    @Input() set completeCurrentStep(completed: null | void) {
-        console.log('completed', completed);
-        if (completed !== null) {
-            this.store.goToNextStep();
-        }
-    }
-    @Output() nextClick = new EventEmitter<void>();
+
+    @Output() nextClick = new EventEmitter<Completeable>();
     @Output() completed = new EventEmitter<void>();
 
     private readonly store = inject(WorkflowStore);
 
     readonly steps$ = this.store.selectSteps();
     readonly nextStepLink$ = this.store.selectNextStepLink();
+    readonly currentStepLabel$ = this.store.selectCurrentStepLabel();
+
+    emitNextClick() {
+        this.nextClick.emit({
+            complete: () => this.store.goToNextStep(),
+        });
+    }
 }

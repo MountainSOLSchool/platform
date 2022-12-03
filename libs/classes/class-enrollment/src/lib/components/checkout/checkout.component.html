@@ -1,5 +1,27 @@
-<h1>Checkout</h1>
+<h3 style="margin-top: 2rem">Discount Codes</h3>
+<div class="field">
+    <span class="p-float-label">
+        <input name="discountCode" pInputText #discountCode />
+        <label for="discountCode">Discount Code</label>
+        <button
+            pButton
+            type="button"
+            label="Apply"
+            style="margin-left: 0.5rem"
+            (click)="applyDiscountCode(discountCode.value)"
+        ></button>
+    </span>
+</div>
+<div class="flex align-items-center" style="margin-top: 2rem">
+    <p-chip
+        *ngFor="let code of discountCodes$ | async"
+        [label]="code"
+        styleClass="mr-2"
+        [removable]="true"
+    ></p-chip>
+</div>
+
+<h3 style="margin-top: 4rem; margin-bottom: 2rem">Payment Method</h3>
 <sol-payment-collector
-    [prepare]="testTransaction$ | async"
-    (uncommittedTransaction)="handleUncommittedTransaction($event)"
+    (collector)="setPaymentCollector($event)"
 ></sol-payment-collector>

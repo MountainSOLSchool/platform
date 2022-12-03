@@ -1,6 +1,8 @@
+import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { HeaderComponent } from '@sol/header';
 import { AdminGuard } from './admin.guard';
+import { LoginEffectModule } from './login.effects';
 import { UserGuard } from './user.guard';
 
 export const appRoutes: Routes = [
@@ -10,58 +12,66 @@ export const appRoutes: Routes = [
         children: [
             {
                 path: 'user',
+                providers: [importProvidersFrom(LoginEffectModule)],
                 loadChildren: () =>
                     import('@sol/auth/login').then((m) => m.authRoutes),
             },
             { path: '', redirectTo: 'classes', pathMatch: 'full' },
             {
                 path: '',
-                canActivate: [UserGuard],
                 children: [
                     {
-                        path: 'admin',
-                        providers: [AdminGuard],
-                        canActivate: [AdminGuard],
+                        path: '',
+
+                        canActivate: [UserGuard],
                         children: [
                             {
-                                path: '',
-                                loadChildren: () =>
-                                    import(
-                                        './dashboard-component/dashboard-routes'
-                                    ).then((m) => m.dashboardRoutes),
-                            },
-                            {
-                                path: 'report',
-                                loadChildren: () =>
-                                    import(
-                                        './report-component/report-routes'
-                                    ).then((m) => m.reportRoutes),
-                            },
-                            {
-                                path: 't-shirts',
-                                loadChildren: () =>
-                                    import(
-                                        './tshirts-component/tshirt-routes'
-                                    ).then((m) => m.tshirtRoutes),
-                            },
-                            {
-                                path: 'import',
-                                loadChildren: () =>
-                                    import(
-                                        './import-component/import-routes'
-                                    ).then((m) => m.importRoutes),
-                            },
-                            {
-                                path: 'classes',
+                                path: 'admin',
+                                providers: [AdminGuard],
+                                canActivate: [AdminGuard],
                                 children: [
                                     {
-                                        path: 'management',
+                                        path: '',
                                         loadChildren: () =>
                                             import(
-                                                '@sol/classes/class-management'
-                                            ).then(
-                                                (m) => m.classManagementRoutes
-                                            ),
+                                                './dashboard-component/dashboard-routes'
+                                            ).then((m) => m.dashboardRoutes),
+                                    },
+                                    {
+                                        path: 'report',
+                                        loadChildren: () =>
+                                            import(
+                                                './report-component/report-routes'
+                                            ).then((m) => m.reportRoutes),
+                                    },
+                                    {
+                                        path: 't-shirts',
+                                        loadChildren: () =>
+                                            import(
+                                                './tshirts-component/tshirt-routes'
+                                            ).then((m) => m.tshirtRoutes),
+                                    },
+                                    {
+                                        path: 'import',
+                                        loadChildren: () =>
+                                            import(
+                                                './import-component/import-routes'
+                                            ).then((m) => m.importRoutes),
+                                    },
+                                    {
+                                        path: 'classes',
+                                        children: [
+                                            {
+                                                path: 'management',
+                                                loadChildren: () =>
+                                                    import(
+                                                        '@sol/classes/class-management'
+                                                    ).then(
+                                                        (m) =>
+                                                            m.classManagementRoutes
+                                                    ),
+                                            },
+                                        ],
                                     },
                                 ],
                             },

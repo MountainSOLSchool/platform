@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, NgModule } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { FunctionsApi } from '@sol/firebase/functions-api';
-import firebase from 'firebase/compat/app';
 import {
     catchError,
     filter,
@@ -14,70 +13,66 @@ import {
     take,
     tap,
 } from 'rxjs';
-import { create as createDropIn, Dropin } from 'braintree-web-drop-in';
+import {
+    create as createDropIn,
+    Dropin,
+    PaymentMethodPayload,
+} from 'braintree-web-drop-in';
 import { dataCollector, client } from 'braintree-web';
 import {
     PreparedTransaction,
     UnpreparedTransaction,
 } from '@sol/payments/transactions';
 import { UserService } from '@sol/auth/user';
+import { PaymentService } from '../../services/payment.service';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class PaymentCollectorStore extends ComponentStore<{
     deviceData: string | undefined;
     token: string | undefined;
-    uncommittedTransaction: PreparedTransaction | undefined;
     dropInInstance: Dropin | undefined;
+    nonce: string | undefined;
+    paymentDetails: PaymentMethodPayload['details'] | undefined;
 }> {
     private readonly http = inject(HttpClient);
     private readonly functions = inject(FunctionsApi);
     private readonly user = inject(UserService);
+    private readonly paymentService = inject(PaymentService);
 
     constructor() {
         super({
             deviceData: undefined,
             token: undefined,
-            uncommittedTransaction: undefined,
             dropInInstance: undefined,
+            nonce: undefined,
+            paymentDetails: undefined,
         });
     }
 
-    readonly prepareTransaction = this.effect(
-        (transaction$: Observable<UnpreparedTransaction>) => {
-            return transaction$.pipe(
-                switchMap((transaction) => {
-                    return this.selectDropInInstance().pipe(
-                        take(1),
-                        switchMap((instance) =>
-                            from(instance.requestPaymentMethod()).pipe(
-                                tap((paymentMethod) => {
-                                    console.log(paymentMethod);
-                                    this.patchState({
-                                        uncommittedTransaction: {
-                                            nonce: paymentMethod.nonce,
-                                            deviceData:
-                                                paymentMethod.deviceData ?? '',
-                                            ...transaction,
-                                        },
-                                    });
-                                }),
-                                catchError(() =>
-                                    of(console.log('error caught'))
-                                )
-                            )
+    readonly prepare = this.effect((prepare$) => {
+        return prepare$.pipe(
+            switchMap(() => {
+                return this.selectDropInInstance().pipe(
+                    take(1),
+                    switchMap((instance) =>
+                        from(instance.requestPaymentMethod()).pipe(
+                            tap((paymentMethod) => {
+                                this.patchState({
+                                    nonce: paymentMethod.nonce,
+                                    paymentDetails: paymentMethod.details,
+                                });
+                            }),
+                            catchError((e) => of(console.error(e)))
                         )
-                    );
-                })
-            );
-        }
-    );
+                    )
+                );
+            })
+        );
+    });
 
     readonly loadToken$ = this.effect(() => {
-        return this.functions.call<string>('paymentToken').pipe(
+        return this.paymentService.getToken().pipe(
             tap((token) => {
-                console.log('got ', token);
                 this.patchState({
                     token,
                 });
@@ -112,7 +107,6 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     );
                                 }
                             );
-                            console.log('creating');
                             createDropIn(
                                 {
                                     authorization: token,
@@ -144,12 +138,28 @@ export class PaymentCollectorStore extends ComponentStore<{
         );
     }
 
-    selectUncommittedTransaction(): Observable<PreparedTransaction> {
+    selectPaymentMethod(): Observable<{
+        nonce: string;
+        deviceData: string;
+        paymentDetails: PaymentMethodPayload['details'];
+    }> {
         return this.state$.pipe(
-            map(({ uncommittedTransaction }) => uncommittedTransaction),
+            map(({ nonce, deviceData, paymentDetails }) => ({
+                nonce,
+                deviceData,
+                paymentDetails,
+            })),
             filter(
-                (transaction): transaction is PreparedTransaction =>
-                    !!transaction
+                (
+                    paymentMethod
+                ): paymentMethod is {
+                    nonce: string;
+                    deviceData: string;
+                    paymentDetails: PaymentMethodPayload['details'];
+                } =>
+                    !!paymentMethod.nonce &&
+                    !!paymentMethod.deviceData &&
+                    !!paymentMethod.paymentDetails
             )
         );
     }
