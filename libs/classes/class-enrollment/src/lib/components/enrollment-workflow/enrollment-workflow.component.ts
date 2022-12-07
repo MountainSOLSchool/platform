@@ -16,6 +16,7 @@ import { CheckoutComponent } from '../checkout/checkout.component';
 import { ConfirmationComponent } from '../confirmation/confirmation.component';
 import { CdkStepper } from '@angular/cdk/stepper';
 import { MedicalComponent } from '../medical/medical.component';
+import { LetModule } from '@rx-angular/template/let';
 
 @Component({
     standalone: true,
@@ -34,10 +35,13 @@ import { MedicalComponent } from '../medical/medical.component';
         CheckoutComponent,
         ConfirmationComponent,
         MedicalComponent,
+        LetModule,
     ],
 })
 export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);
+
+    readonly data$ = this.store.select((state) => state);
 
     readonly stepperOrientation = inject(BreakpointObserver)
         .observe('(min-width: 800px)')

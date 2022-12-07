@@ -16,6 +16,13 @@ type Enrollment = {
           }
         | undefined;
     discountCodes: Array<string>;
+    student:
+        | Partial<{
+              firstName: string;
+              lastName: string;
+              birthdate: Date;
+          }>
+        | undefined;
 };
 
 @Injectable()
@@ -28,6 +35,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<Enrollment> {
             selectedClasses: [],
             paymentMethod: undefined,
             discountCodes: [],
+            student: undefined,
         });
     }
 

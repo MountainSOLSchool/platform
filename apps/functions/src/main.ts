@@ -397,9 +397,11 @@ const _fetchClasses = async (
 export const paymentToken = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle(async (request, response, secrets) => {
+        console.log('Requesting payment token');
         const user = await AuthUtility.getUserFromRequest(request, response);
         const braintree = new Braintree(secrets);
         const token = await braintree.getClientToken(user);
+        console.log('Got payment token', token);
         response.send(token);
     });
 
@@ -460,7 +462,7 @@ export const enroll = Functions.endpoint
         const braintree = new Braintree(secrets);
 
         const transaction = await braintree.transact({
-            amount: 10,
+            amount: finalTotal,
             nonce,
             customer: { email: 'test@email.com' },
             deviceData,

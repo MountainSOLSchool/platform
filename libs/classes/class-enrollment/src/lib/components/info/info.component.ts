@@ -1,5 +1,5 @@
-import { Component, Output } from '@angular/core';
-import { map, timer } from 'rxjs';
+import { Component, inject, Output } from '@angular/core';
+import { combineLatest, map, tap, timer } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -12,10 +12,15 @@ import { AccordionModule } from 'primeng/accordion';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
+import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
+import { LetModule } from '@rx-angular/template/let';
+import { create, test, enforce } from 'vest';
+import { CommonModule } from '@angular/common';
 
 @Component({
     standalone: true,
     imports: [
+        CommonModule,
         InputTextModule,
         CalendarModule,
         ButtonModule,
@@ -28,34 +33,82 @@ import { FormsModule } from '@angular/forms';
         ToggleButtonModule,
         SelectButtonModule,
         FormsModule,
+        LetModule,
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
     styleUrls: ['./info.component.css'],
 })
 export class InfoComponent {
-    @Output() validityChange = timer(500).pipe(map(() => true));
+    private readonly workflow = inject(EnrollmentWorkflowStore);
 
-    student = {
-        birthdate: undefined,
-        age: '',
-    };
+    private readonly validationSuite = create((student) => {
+        test('firstName', 'First name is required', () => {
+            enforce(student.firstName).isNotEmpty();
+        });
 
-    chemicalPreferences = [
+        test('lastName', 'Last name is required', () => {
+            enforce(student.lastName).isNotEmpty();
+        });
+
+        test('birthdate', 'Birthdate is required', () => {
+            console.log(student);
+            enforce(student.birthdate).isNotUndefined();
+        });
+    });
+
+    readonly student$ = this.workflow
+        .select((state) => state.student)
+        .pipe(
+            map((student) => {
+                let age: string;
+                if (student?.birthdate) {
+                    const ageDiffMs = Date.now() - student.birthdate.getTime();
+                    const ageDate = new Date(ageDiffMs);
+                    age = Math.abs(ageDate.getUTCFullYear() - 1970).toString();
+                } else {
+                    age = '';
+                }
+                return {
+                    ...student,
+                    age,
+                };
+            })
+        );
+
+    readonly errors$ = this.student$.pipe(
+        map((student) => {
+            return this.validationSuite(student).getErrors();
+        })
+    );
+
+    readonly viewModel$ = combineLatest([this.student$, this.errors$]).pipe(
+        map(([student, errors]) => {
+            return {
+                student,
+                errors,
+            };
+        })
+    );
+
+    @Output() validityChange = this.errors$.pipe(
+        tap((errors) => console.log(errors)),
+        map((errors) => Object.keys(errors).length === 0)
+    );
+
+    readonly chemicalPreferences = [
         { name: 'Yes', value: 'yes' },
         { name: 'No', value: 'no' },
         { name: 'Yes, but no name', value: 'yesNoName' },
     ];
 
-    updateAge(birthdate: Date | undefined): void {
-        if (birthdate) {
-            const ageDiffMs = Date.now() - birthdate.getTime();
-            const ageDate = new Date(ageDiffMs);
-            this.student.age = Math.abs(
-                ageDate.getUTCFullYear() - 1970
-            ).toString();
-        } else {
-            this.student.age = '';
-        }
+    updateStudentInfo(info: any): void {
+        this.workflow.patchState((s) => ({
+            ...s,
+            student: {
+                ...s.student,
+                ...info,
+            },
+        }));
     }
 }
