@@ -43,27 +43,33 @@ class FunctionBuilder<SecretNames extends string> {
             .runWith({ secrets: Object.values(this.secrets) })
             .https.onRequest(async (request, response) => {
                 cors(request, response, async () => {
+                    console.log('Running a function', request.path);
                     this.roles.forEach((role) => {
                         AuthUtility.validateRole(request, response, role);
                     });
-                    handler(
-                        request,
-                        {
-                            ...response,
-                            status: (code: number) => response.status(code),
-                            send: (data: unknown) => {
-                                response.send({ data });
-                            },
-                        } as functions.Response,
-                        Object.fromEntries(
-                            Object.entries(this.secrets).map(
-                                ([key, secret]: [string, SecretParam]) => [
-                                    key,
-                                    secret.value(),
-                                ]
+                    try {
+                        handler(
+                            request,
+                            {
+                                ...response,
+                                status: (code: number) => response.status(code),
+                                send: (data: unknown) => {
+                                    response.send({ data });
+                                },
+                            } as functions.Response,
+                            Object.fromEntries(
+                                Object.entries(this.secrets).map(
+                                    ([key, secret]: [string, SecretParam]) => [
+                                        key,
+                                        secret.value(),
+                                    ]
+                                )
                             )
-                        )
-                    );
+                        );
+                    } catch (error) {
+                        console.error(error);
+                        response.status(500).send({ error });
+                    }
                 });
             });
     }
