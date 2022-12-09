@@ -397,13 +397,9 @@ const _fetchClasses = async (
 export const paymentToken = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle(async (request, response, secrets) => {
-        console.log('Hit payment token endpoint');
         const user = await AuthUtility.getUserFromRequest(request, response);
-        console.log('Grabbed user');
         const braintree = new Braintree(secrets);
-        console.log('Initialized braintree');
         const token = await braintree.getClientToken(user);
-        console.log(`Got token: ${token}`);
         response.send(token);
     });
 
