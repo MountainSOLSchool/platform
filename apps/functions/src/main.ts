@@ -460,7 +460,7 @@ export const enroll = Functions.endpoint
         const braintree = new Braintree(secrets);
 
         const transaction = await braintree.transact({
-            amount: 10,
+            amount: finalTotal,
             nonce,
             customer: { email: 'test@email.com' },
             deviceData,

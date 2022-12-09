@@ -16,6 +16,13 @@ type Enrollment = {
           }
         | undefined;
     discountCodes: Array<string>;
+    student:
+        | Partial<{
+              firstName: string;
+              lastName: string;
+              birthdate: Date;
+          }>
+        | undefined;
 };
 
 @Injectable()
@@ -28,6 +35,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<Enrollment> {
             selectedClasses: [],
             paymentMethod: undefined,
             discountCodes: [],
+            student: undefined,
         });
     }
 
@@ -51,15 +59,14 @@ export class EnrollmentWorkflowStore extends ComponentStore<Enrollment> {
 
     readonly submit = this.effect((submit$) => {
         return submit$.pipe(
-            tap(() => console.log('submitted')),
             switchMap(() => {
                 return this.select((enrollment) => enrollment).pipe(
                     take(1),
                     switchMap((enrollment) => {
                         return this.functions.call('enroll', enrollment).pipe(
                             tapResponse(
-                                (reseponse) => {
-                                    console.log(reseponse);
+                                (response) => {
+                                    console.log(response);
                                 },
                                 (error) => console.log(error)
                             )

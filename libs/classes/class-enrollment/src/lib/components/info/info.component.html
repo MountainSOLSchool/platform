@@ -1,6 +1,6 @@
 <p-accordion>
-    <p-accordionTab header="Student" [selected]="true">
-        <form>
+    <p-accordionTab header="vm.student" [selected]="true">
+        <form *rxLet="viewModel$; let vm">
             <div class="p-fluid">
                 <div class="formgrid grid">
                     <div class="field col">
@@ -8,8 +8,8 @@
                             <p-calendar
                                 name="birthdate"
                                 [showIcon]="true"
-                                [(ngModel)]="student.birthdate"
-                                (ngModelChange)="updateAge(student.birthdate)"
+                                [(ngModel)]="vm.student.birthdate"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
                             ></p-calendar>
                             <label for="birthday">Birth Date</label>
                         </span>
@@ -21,7 +21,7 @@
                                 name="age"
                                 disabled
                                 pInputText
-                                [value]="student.age"
+                                [value]="vm.student.age"
                             />
                             <label for="birthday">Age</label>
                         </span>
@@ -37,8 +37,17 @@
                                 id="firstName"
                                 name="firstName"
                                 pInputText
+                                [(ngModel)]="vm.student.firstName"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                                [ngModelOptions]="{ updateOn: 'blur' }"
                             />
                             <label for="firstName">First Name</label>
+                            <small
+                                *ngIf="vm.errors['firstName'] as error"
+                                id="firstName-help"
+                                class="p-error block"
+                                >{{ error }}</small
+                            >
                         </span>
                     </div>
                     <div class="field col">
@@ -49,6 +58,9 @@
                                 id="lastName"
                                 name="lastName"
                                 pInputText
+                                [(ngModel)]="vm.student.lastName"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                                [ngModelOptions]="{ updateOn: 'blur' }"
                             />
                             <label for="lastName">Last Name</label>
                         </span>
@@ -128,11 +140,11 @@
                         <span class="p-float-label">
                             <input
                                 type="email"
-                                id="studentEmail"
-                                name="studentEmail"
+                                id="vm.studentEmail"
+                                name="vm.studentEmail"
                                 pInputText
                             />
-                            <label for="studentEmail"
+                            <label for="vm.studentEmail"
                                 >Student Email (Optional)</label
                             >
                         </span>
@@ -155,12 +167,12 @@
                     <div class="field col">
                         <span class="p-float-label">
                             <p-inputMask
-                                type="studentPhone"
-                                id="studentPhone"
-                                name="studentPhone"
+                                type="vm.studentPhone"
+                                id="vm.studentPhone"
+                                name="vm.studentPhone"
                                 mask="999-999-9999"
                             ></p-inputMask>
-                            <label for="studentPhone"
+                            <label for="vm.studentPhone"
                                 >Student Phone (Optional)</label
                             >
                         </span>
@@ -262,11 +274,11 @@
                 <h3>Parent/Guardian</h3>
                 <div class="field" style="width: 35%">
                     <p-toggleButton
-                        id="studentLivesWith"
-                        name="studentLivesWith"
+                        id="vm.studentLivesWith"
+                        name="vm.studentLivesWith"
                         default="on"
-                        onLabel="Student lives with this parent/guardian"
-                        offLabel="Student does not live with this parent/guardian"
+                        onLabel="vm.student lives with this parent/guardian"
+                        offLabel="vm.student does not live with this parent/guardian"
                         onIcon="pi pi-check"
                         offIcon="pi pi-times"
                     ></p-toggleButton>
