@@ -1,16 +1,30 @@
 import * as functions from 'firebase-functions';
 import * as CORS from 'cors';
 import { AuthUtility, Role } from './auth.utility';
+import { defineSecret } from 'firebase-functions/params';
+import { SecretParam } from 'firebase-functions/lib/params/types';
 
 const cors = CORS({ origin: true });
 
-class FunctionBuilder<S extends Array<string>> {
+class FunctionBuilder<SecretNames extends string> {
     constructor(
-        private secrets: S = [] as S,
+        private secrets: Record<SecretNames, SecretParam> = {} as Record<
+            SecretNames,
+            SecretParam
+        >,
         private roles: Array<Role> = []
     ) {}
 
-    usingSecrets<S extends Array<string>>(...secrets: S) {
+    usingSecrets<
+        SecretNamesParam extends Array<string>,
+        SecretNames extends string = SecretNamesParam[number]
+    >(...secretNames: SecretNamesParam) {
+        const secrets: Record<SecretNames, SecretParam> = secretNames
+            .map((secret) => defineSecret(secret))
+            .reduce(
+                (all, secret) => ({ ...all, [secret.name]: secret }),
+                {} as Record<SecretNames, SecretParam>
+            );
         return new FunctionBuilder(secrets, this.roles);
     }
 
@@ -26,7 +40,7 @@ class FunctionBuilder<S extends Array<string>> {
         ) => void
     ) {
         return functions
-            .runWith({ secrets: this.secrets })
+            .runWith({ secrets: Object.values(this.secrets) })
             .https.onRequest(async (request, response) => {
                 cors(request, response, async () => {
                     this.roles.forEach((role) => {
@@ -42,10 +56,12 @@ class FunctionBuilder<S extends Array<string>> {
                             },
                         } as functions.Response,
                         Object.fromEntries(
-                            this.secrets.map((secret) => [
-                                secret,
-                                process.env[secret],
-                            ]) ?? []
+                            Object.entries(this.secrets).map(
+                                ([key, secret]: [string, SecretParam]) => [
+                                    key,
+                                    secret.value(),
+                                ]
+                            )
                         )
                     );
                 });

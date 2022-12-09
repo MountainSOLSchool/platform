@@ -36,6 +36,18 @@
                 "function": "importEnrollment"
             },
             {
+                "source": "/paymentToken",
+                "function": "paymentToken"
+            },
+            {
+                "source": "/enroll",
+                "function": "enroll"
+            },
+            {
+                "source": "/roles",
+                "function": "roles"
+            },
+            {
                 "source": "**",
                 "destination": "/index.html"
             }
