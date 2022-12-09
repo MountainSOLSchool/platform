@@ -61,10 +61,6 @@ export class ClassEnrollmentComponent {
 
     readonly completeCurrentStep$ = this.store.readyForNext$.pipe();
 
-    hit() {
-        console.log('hit');
-    }
-
     complete() {
         this.store.submit();
     }

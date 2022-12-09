@@ -52,7 +52,6 @@ export class InfoComponent {
         });
 
         test('birthdate', 'Birthdate is required', () => {
-            console.log(student);
             enforce(student.birthdate).isNotUndefined();
         });
     });
@@ -92,7 +91,6 @@ export class InfoComponent {
     );
 
     @Output() validityChange = this.errors$.pipe(
-        tap((errors) => console.log(errors)),
         map((errors) => Object.keys(errors).length === 0)
     );
 
