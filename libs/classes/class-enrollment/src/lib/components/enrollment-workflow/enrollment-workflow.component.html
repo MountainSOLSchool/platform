@@ -39,7 +39,7 @@
         <ng-template matStepContent>
             <h2>Account Registration</h2>
             <sol-class-account
-                (validityChange)="account.completed = $event"
+                (validityChange)="account.hasError = !$event"
             ></sol-class-account>
 
             <ng-container *ngTemplateOutlet="navigation"></ng-container
@@ -50,14 +50,9 @@
             <h2>Payment Method</h2>
             <sol-checkout
                 #checkout
-                (validityChange)="paymentMethod.completed = $event"
+                (validityChange)="paymentMethod.hasError = !$event"
             ></sol-checkout>
-            <ng-container
-                *ngTemplateOutlet="
-                    navigation;
-                    context: { readyForNext: checkout.validatePaymentMethod }
-                "
-            ></ng-container
+            <ng-container *ngTemplateOutlet="navigation"></ng-container
         ></ng-template>
     </mat-step>
     <mat-step #confirmation label="Confirm Enrollment">
@@ -72,12 +67,7 @@
         ></ng-template>
     </mat-step>
 
-    <ng-template
-        #navigation
-        let-first="first"
-        let-last="last"
-        let-readyForNext="readyForNext"
-    >
+    <ng-template #navigation let-first="first" let-last="last">
         <div style="margin-top: 2rem">
             <button
                 *ngIf="!first"
@@ -88,25 +78,9 @@
                 Previous
             </button>
             <ng-container *ngIf="!last; else submit">
-                <button
-                    *ngIf="!readyForNext; else handleReadyForNext"
-                    pButton
-                    matStepperNext
-                    style="margin-left: 1rem"
-                >
+                <button pButton matStepperNext style="margin-left: 1rem">
                     Next
                 </button>
-                <ng-template #handleReadyForNext>
-                    <button
-                        pButton
-                        style="margin-left: 1rem"
-                        (click)="
-                            readyForNext() ? next(workflowStepper) : undefined
-                        "
-                    >
-                        Next
-                    </button></ng-template
-                >
             </ng-container>
             <ng-template #submit>
                 <button pButton style="margin-left: 1rem" (click)="complete()">

@@ -1,45 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Injectable, Output } from '@angular/core';
-import { ComponentStore, provideComponentStore } from '@ngrx/component-store';
+import { Component, inject, Output } from '@angular/core';
 import {
     PaymentCollector,
     PaymentCollectorComponent,
 } from '@sol/payments/braintree-client';
+import { PaymentMethodPayload } from 'braintree-web-drop-in';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { InputTextModule } from 'primeng/inputtext';
-import { Observable, of, switchMap, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-
-@Injectable()
-class CheckoutStore extends ComponentStore<{
-    collector: PaymentCollector | undefined;
-}> {
-    readonly workflow = inject(EnrollmentWorkflowStore);
-
-    constructor() {
-        super({
-            collector: undefined,
-        });
-    }
-
-    readonly collect = this.effect((collect$) => {
-        return collect$.pipe(
-            switchMap(
-                () =>
-                    this.get()
-                        .collector?.collectPaymentMethod()
-                        .pipe(
-                            tap((paymentMethod) => {
-                                this.workflow.patchState({
-                                    paymentMethod,
-                                });
-                            })
-                        ) ?? of()
-            )
-        );
-    });
-}
 
 @Component({
     standalone: true,
@@ -52,11 +21,9 @@ class CheckoutStore extends ComponentStore<{
     ],
     selector: 'sol-checkout',
     templateUrl: './checkout.component.html',
-    providers: [provideComponentStore(CheckoutStore)],
 })
 export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
-    private readonly store = inject(CheckoutStore);
 
     discountCodes$ = this.workflow.select((s) => s.discountCodes);
 
@@ -64,12 +31,14 @@ export class CheckoutComponent {
 
     paymentCollector: PaymentCollector | undefined;
 
-    validatePaymentMethod = () => {
-        this.store.collect();
-    };
-
-    setPaymentCollector(collector: PaymentCollector) {
-        this.paymentCollector = collector;
+    setPaymentMethod(paymentMethod: {
+        nonce: string;
+        deviceData: string;
+        paymentDetails: PaymentMethodPayload['details'];
+    }) {
+        this.workflow.patchState({
+            paymentMethod,
+        });
     }
 
     applyDiscountCode(code: string) {

@@ -51,6 +51,7 @@ export class PaymentCollectorStore extends ComponentStore<{
 
     readonly prepare = this.effect((prepare$) => {
         return prepare$.pipe(
+            tap(() => console.log('preparing')),
             switchMap(() => {
                 return this.selectDropInInstance().pipe(
                     take(1),
@@ -109,6 +110,7 @@ export class PaymentCollectorStore extends ComponentStore<{
                             );
                             createDropIn(
                                 {
+                                    vaultManager: true,
                                     authorization: token,
                                     container: `#${elementSelector}`,
                                     dataCollector: {
@@ -122,6 +124,22 @@ export class PaymentCollectorStore extends ComponentStore<{
                                         return;
                                     }
                                     this.patchState({ dropInInstance });
+                                    dropInInstance?.on(
+                                        'paymentMethodRequestable',
+                                        (event) => {
+                                            this.prepare();
+                                        }
+                                    );
+                                    dropInInstance?.on(
+                                        'noPaymentMethodRequestable',
+                                        () => {
+                                            this.patchState({
+                                                nonce: undefined,
+                                                paymentDetails: undefined,
+                                            });
+                                        }
+                                    );
+                                    dropInInstance?.clearSelectedPaymentMethod();
                                 }
                             );
                         })

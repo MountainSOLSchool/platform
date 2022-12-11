@@ -24,13 +24,6 @@ export type PaymentCollector = {
 export class PaymentCollectorComponent implements OnInit {
     store = inject(PaymentCollectorStore);
 
-    @Output() collector: Observable<PaymentCollector> = of({
-        collectPaymentMethod: () => {
-            this.store.prepare();
-            return this.store.selectPaymentMethod();
-        },
-    });
-
     @Output() paymentMethod: Observable<{
         nonce: string;
         deviceData: string;

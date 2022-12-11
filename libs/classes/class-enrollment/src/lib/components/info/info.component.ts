@@ -1,5 +1,12 @@
 import { Component, inject, Input, Output } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, tap, timer } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    map,
+    shareReplay,
+    tap,
+    timer,
+} from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -48,56 +55,58 @@ export class InfoComponent {
 
     private readonly validationSuite = create(
         (student: Partial<StudentForm>) => {
-            test('firstName', 'First name is required', () => {
-                enforce(student.firstName).isNotEmpty();
+            group('student', () => {
+                test('firstName', 'First name is required', () => {
+                    enforce(student.firstName).isNotEmpty();
+                });
+
+                test('lastName', 'Last name is required', () => {
+                    enforce(student.lastName).isNotEmpty();
+                });
+
+                test('birthdate', 'Birthdate is required', () => {
+                    enforce(student.birthdate).isNotBlank();
+                });
+
+                test('pronouns', 'Pronouns are required', () => {
+                    enforce(student.pronouns).isNotEmpty();
+                });
+
+                test('school', 'School is required', () => {
+                    enforce(student.school).isNotEmpty();
+                });
             });
 
-            test('lastName', 'Last name is required', () => {
-                enforce(student.lastName).isNotEmpty();
+            group('contact', () => {
+                test('contactEmail', 'Email is required', () => {
+                    enforce(student.contactEmail).isNotEmpty();
+                });
+
+                test('contactPhone', 'Phone is required', () => {
+                    enforce(student.contactPhone).isNotEmpty();
+                });
+
+                test('address', 'Address is required', () => {
+                    enforce(student.address).isNotEmpty();
+                });
+
+                test('city', 'City is required', () => {
+                    enforce(student.city).isNotEmpty();
+                });
+
+                test('state', 'State is required', () => {
+                    enforce(student.state).isNotEmpty();
+                });
+
+                test('zip', 'Zip is required', () => {
+                    enforce(student.zip).isNotEmpty();
+                });
             });
 
-            test('birthdate', 'Birthdate is required', () => {
-                enforce(student.birthdate).isNotUndefined();
-            });
-
-            test('pronouns', 'Pronouns are required', () => {
-                enforce(student.pronouns).isNotUndefined();
-            });
-
-            test('school', 'School is required', () => {
-                enforce(student.school).isNotUndefined();
-            });
-
-            test('contactEmail', 'Email is required', () => {
-                enforce(student.contactEmail).isNotEmpty();
-            });
-
-            test('contactPhone', 'Phone is required', () => {
-                enforce(student.contactPhone).isNotEmpty();
-            });
-
-            test('address', 'Address is required', () => {
-                enforce(student.address).isNotEmpty();
-            });
-
-            test('city', 'City is required', () => {
-                enforce(student.city).isNotEmpty();
-            });
-
-            test('state', 'State is required', () => {
-                enforce(student.state).isNotEmpty();
-            });
-
-            test('zip', 'Zip is required', () => {
-                enforce(student.zip).isNotEmpty();
-            });
-
-            test('photography', 'Photography privacy is required', () => {
-                enforce(student.photography).isNotUndefined();
-            });
-
-            test('guardians', 'Must enter at least one guardian', () => {
-                enforce(student.guardians).longerThanOrEquals(1);
+            group('privacy', () => {
+                test('photography', 'Photography privacy is required', () => {
+                    enforce(student.photography).isNotUndefined();
+                });
             });
 
             group('guardians', () => {
@@ -134,11 +143,32 @@ export class InfoComponent {
                 });
             });
 
-            test('codeword', 'Codeword is required', () => {
-                enforce(student.pickupCodeword).isNotEmpty();
+            group('pickup', () => {
+                test('codeword', 'Codeword is required', () => {
+                    enforce(student.pickupCodeword).isNotEmpty();
+                });
+
+                student.authorizedForPickup?.forEach((pickup, i) => {
+                    test(`pickup_${i}_name`, 'Name is required', () => {
+                        enforce(pickup.name).isNotEmpty();
+                    });
+
+                    test(
+                        `pickup_${i}_relationship`,
+                        'Relationship is required',
+                        () => {
+                            enforce(pickup.relationship).isNotEmpty();
+                        }
+                    );
+                    test(`pickup_${i}_phone`, 'Phone is required', () => {
+                        enforce(pickup.phone).isNotEmpty();
+                    });
+                });
             });
         }
     );
+
+    authorized = true;
 
     readonly student$ = this.workflow
         .select((state) => state.student)
@@ -161,9 +191,34 @@ export class InfoComponent {
 
     private readonly interacted$ = new BehaviorSubject(false);
 
-    readonly errors$ = this.student$.pipe(
+    private readonly validation$ = this.student$.pipe(
         map((student) => {
-            return this.validationSuite(student).getErrors();
+            return this.validationSuite(student);
+        }),
+        shareReplay()
+    );
+
+    readonly errors$ = this.validation$.pipe(
+        map((validation) => {
+            return validation.getErrors();
+        })
+    );
+
+    readonly hasErrorsByGroup$ = combineLatest([
+        this.validation$,
+        this.interacted$,
+    ]).pipe(
+        map(([validation, interacted]) => {
+            return interacted
+                ? Object.assign(
+                      {},
+                      ...Object.keys(validation.groups).map((group) => ({
+                          [group]: !!Object.values(
+                              validation.getErrorsByGroup(group)
+                          ).find((field) => field.length > 0),
+                      }))
+                  )
+                : {};
         })
     );
 
@@ -171,11 +226,13 @@ export class InfoComponent {
         this.student$,
         this.errors$,
         this.interacted$,
+        this.hasErrorsByGroup$,
     ]).pipe(
-        map(([student, errors, interacted]) => {
+        map(([student, errors, interacted, hasErrorsByGroup]) => {
             return {
                 student,
                 errors: interacted ? errors : {},
+                hasErrorsByGroup,
             };
         })
     );
@@ -199,12 +256,26 @@ export class InfoComponent {
         { name: 'Does Not Live With Student', value: false },
     ];
 
+    trackByIndex(index: number) {
+        return index;
+    }
+
     updateStudentInfo(info: any): void {
         this.workflow.patchState((s) => ({
             ...s,
             student: {
                 ...s.student,
                 ...info,
+            },
+        }));
+    }
+
+    removeGuardian(index: number): void {
+        this.workflow.patchState((s) => ({
+            ...s,
+            student: {
+                ...s.student,
+                guardians: s.student?.guardians?.filter((g, i) => i !== index),
             },
         }));
     }
@@ -222,6 +293,35 @@ export class InfoComponent {
                         guardianPhone: '',
                         guardianRelationship: '',
                         guardianResidesWithStudent: false,
+                    },
+                ],
+            },
+        }));
+    }
+
+    removeAuthorized(index: number) {
+        this.workflow.patchState((s) => ({
+            ...s,
+            student: {
+                ...s.student,
+                authorizedForPickup: s.student?.authorizedForPickup?.filter(
+                    (g, i) => i !== index
+                ),
+            },
+        }));
+    }
+
+    addAuthorized() {
+        this.workflow.patchState((s) => ({
+            ...s,
+            student: {
+                ...s.student,
+                authorizedForPickup: [
+                    ...(s.student?.authorizedForPickup ?? []),
+                    {
+                        name: '',
+                        relationship: '',
+                        phone: '',
                     },
                 ],
             },
