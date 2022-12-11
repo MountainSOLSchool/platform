@@ -20,10 +20,10 @@
 <div *rxLet="selectedClasses$; let selectedClasses">
     <ng-container *rxLet="classes$; let classes; suspense: skeleton">
         <p-card
-            *ngFor="let class of classes; trackBy: trackByClass"
+            *ngFor="let class of classes"
             [header]="class.title"
             [style]="
-                selectedClasses.includes(class.id)
+                class.selected
                     ? {
                           width: '50rem',
                           'margin-bottom': '2em',

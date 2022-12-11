@@ -95,11 +95,4 @@ export class ClassesComponent {
                 : s.selectedClasses.filter((id) => id !== classId),
         }));
     }
-
-    trackByClass(
-        index: number,
-        { id: classId, selected }: { id: string; selected: boolean }
-    ) {
-        return `${classId}${selected}`;
-    }
 }

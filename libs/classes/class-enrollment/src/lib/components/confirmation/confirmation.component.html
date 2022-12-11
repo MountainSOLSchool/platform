@@ -1,5 +1,4 @@
-<ng-container *ngIf="enrollment$ | async as enrollment">
-    {{ enrollment | json }}
+<ng-container *rxLet="enrollment$; let enrollment">
     <h3>Selected Classes</h3>
     <div class="flex align-items-center">
         <p-chip
