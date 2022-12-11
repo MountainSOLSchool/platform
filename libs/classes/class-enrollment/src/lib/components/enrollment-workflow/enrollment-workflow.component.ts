@@ -14,18 +14,29 @@ import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
 import { CheckoutComponent } from '../checkout/checkout.component';
 import { ConfirmationComponent } from '../confirmation/confirmation.component';
-import { CdkStepper } from '@angular/cdk/stepper';
+import {
+    CdkStepper,
+    CdkStepperModule,
+    STEPPER_GLOBAL_OPTIONS,
+} from '@angular/cdk/stepper';
 import { MedicalComponent } from '../medical/medical.component';
 import { LetModule } from '@rx-angular/template/let';
 
 @Component({
     standalone: true,
-    providers: [provideComponentStore(EnrollmentWorkflowStore)],
+    providers: [
+        provideComponentStore(EnrollmentWorkflowStore),
+        {
+            provide: STEPPER_GLOBAL_OPTIONS,
+            useValue: { showError: true },
+        },
+    ],
     templateUrl: './enrollment-workflow.component.html',
     imports: [
         CommonModule,
         RouterModule,
         StepsModule,
+        CdkStepperModule,
         ButtonModule,
         WorkflowComponent,
         MatStepperModule,

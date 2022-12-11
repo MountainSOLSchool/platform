@@ -38,6 +38,7 @@
             "@sol/firebase/functions-api": [
                 "libs/firebase/functions-api/src/index.ts"
             ],
+            "@sol/form/validity": ["libs/form/validity/src/index.ts"],
             "@sol/header": ["libs/header/src/index.ts"],
             "@sol/paths": ["libs/paths/src/index.ts"],
             "@sol/payments/braintree": ["libs/payments/braintree/src/index.ts"],

@@ -32,40 +32,49 @@ class FunctionBuilder<SecretNames extends string> {
         return new FunctionBuilder(this.secrets, roles);
     }
 
-    handle(
+    handle<RequestData>(
         handler: (
-            request: functions.https.Request,
+            request: Omit<functions.https.Request, 'body'> & {
+                body: { data: RequestData };
+            },
             response: functions.Response,
             secrets?: Record<string, string>
         ) => void
     ) {
         return functions
             .runWith({ secrets: Object.values(this.secrets) })
-            .https.onRequest(async (request, response) => {
-                cors(request, response, async () => {
-                    this.roles.forEach((role) => {
-                        AuthUtility.validateRole(request, response, role);
-                    });
-                    handler(
-                        request,
-                        {
-                            ...response,
-                            status: (code: number) => response.status(code),
-                            send: (data: unknown) => {
-                                response.send({ data });
-                            },
-                        } as functions.Response,
-                        Object.fromEntries(
-                            Object.entries(this.secrets).map(
-                                ([key, secret]: [string, SecretParam]) => [
-                                    key,
-                                    secret.value(),
-                                ]
+            .https.onRequest(
+                async (
+                    request: Omit<functions.https.Request, 'body'> & {
+                        body: { data: RequestData };
+                    },
+                    response
+                ) => {
+                    cors(request, response, async () => {
+                        this.roles.forEach((role) => {
+                            AuthUtility.validateRole(request, response, role);
+                        });
+                        handler(
+                            request,
+                            {
+                                ...response,
+                                status: (code: number) => response.status(code),
+                                send: (data: unknown) => {
+                                    response.send({ data });
+                                },
+                            } as functions.Response,
+                            Object.fromEntries(
+                                Object.entries(this.secrets).map(
+                                    ([key, secret]: [string, SecretParam]) => [
+                                        key,
+                                        secret.value(),
+                                    ]
+                                )
                             )
-                        )
-                    );
-                });
-            });
+                        );
+                    });
+                }
+            );
     }
 }
 

@@ -1,34 +1,32 @@
 <span *rxLet="data$; let data">{{ data | json }}</span>
-<mat-stepper
-    [linear]="true"
-    [orientation]="(stepperOrientation | async)!"
-    #workflowStepper
->
-    <mat-step #classSelection label="Class Selection" [completed]="false">
+<mat-stepper [orientation]="(stepperOrientation | async)!" #workflowStepper>
+    <mat-step #classSelection label="Class Selection">
         <ng-template matStepContent>
             <h2>Class Selection</h2>
             <sol-class-picker
-                (validityChange)="classSelection.completed = $event"
+                (validityChange)="classSelection.hasError = !$event"
             ></sol-class-picker>
             <ng-container
                 *ngTemplateOutlet="navigation; context: { first: true }"
             ></ng-container
         ></ng-template>
     </mat-step>
-    <mat-step #studentInfo label="Student Info" [completed]="false">
+    <mat-step
+        #studentInfo
+        label="Student Info"
+        *rxLet="{ interacted: false }; let state"
+        (interacted)="state.interacted = true"
+    >
         <ng-template matStepContent>
             <h2>Student Info</h2>
             <sol-student-info
-                (validityChange)="studentInfo.completed = $event"
+                [interacted]="state.interacted"
+                (validityChange)="studentInfo.hasError = !$event"
             ></sol-student-info>
             <ng-container *ngTemplateOutlet="navigation"></ng-container>
         </ng-template>
     </mat-step>
-    <mat-step
-        #medicalInfo
-        label="Medical Info and Releases"
-        [completed]="false"
-    >
+    <mat-step #medicalInfo label="Medical Info and Releases">
         <ng-template matStepContent>
             <h2>Medical Info and Releases</h2>
             <sol-medical-n-releases
@@ -37,7 +35,7 @@
             <ng-container *ngTemplateOutlet="navigation"></ng-container>
         </ng-template>
     </mat-step>
-    <mat-step #account label="Account Registration" [completed]="false">
+    <mat-step #account label="Account Registration">
         <ng-template matStepContent>
             <h2>Account Registration</h2>
             <sol-class-account
@@ -47,7 +45,7 @@
             <ng-container *ngTemplateOutlet="navigation"></ng-container
         ></ng-template>
     </mat-step>
-    <mat-step #paymentMethod label="Payment Method" [completed]="true">
+    <mat-step #paymentMethod label="Payment Method">
         <ng-template matStepContent>
             <h2>Payment Method</h2>
             <sol-checkout
@@ -62,7 +60,7 @@
             ></ng-container
         ></ng-template>
     </mat-step>
-    <mat-step #confirmation label="Confirm Enrollment" [completed]="false">
+    <mat-step #confirmation label="Confirm Enrollment">
         <ng-template matStepContent>
             <h2>Confirmation</h2>
             <sol-class-confirmation

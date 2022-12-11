@@ -1,6 +1,5 @@
-import { Component, inject, Injectable, Output } from '@angular/core';
-import { ComponentStore, provideComponentStore } from '@ngrx/component-store';
-import { filter, map, switchMap, take, tap, timer } from 'rxjs';
+import { Component, inject, Output } from '@angular/core';
+import { map, switchMap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
 import { CardModule } from 'primeng/card';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -11,7 +10,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { FormsModule } from '@angular/forms';
 import { ClassListService } from '../../../services/class-list.service';
 import { LetModule } from '@rx-angular/template/let';
-import { Class } from '@sol/classes/domain';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 @Component({
     standalone: true,
@@ -24,6 +23,7 @@ import { Class } from '@sol/classes/domain';
         SkeletonModule,
         FormsModule,
         LetModule,
+        SelectButtonModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -40,6 +40,12 @@ export class ClassesComponent {
     @Output() validityChange = this.selectedClasses$.pipe(
         map((selectedClasses) => selectedClasses.length > 0)
     );
+
+    readonly filterOptions = [
+        { name: 'All', value: [] },
+        { name: 'Grades 2-5', value: [2, 5] },
+        { name: 'Grades 6-12', value: [6, 12] },
+    ];
 
     classes$ = this.classListService.getFutureClasses().pipe(
         map((classes) =>

@@ -10,6 +10,13 @@
         style="width: 400px"
     />
 </div>
+<div>
+    <p-selectButton
+        [options]="filterOptions"
+        optionLabel="name"
+        optionValue="value"
+    ></p-selectButton>
+</div>
 <div *rxLet="selectedClasses$; let selectedClasses">
     <ng-container *rxLet="classes$; let classes; suspense: skeleton">
         <p-card

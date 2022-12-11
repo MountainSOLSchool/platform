@@ -1,6 +1,6 @@
-<p-accordion>
-    <p-accordionTab header="vm.student" [selected]="true">
-        <form *rxLet="viewModel$; let vm">
+<p-accordion *rxLet="viewModel$; let vm">
+    <p-accordionTab header="Student" [selected]="true">
+        <form>
             <div class="p-fluid">
                 <div class="formgrid grid">
                     <div class="field col">
@@ -8,11 +8,15 @@
                             <p-calendar
                                 name="birthdate"
                                 [showIcon]="true"
+                                [solValid]="!vm.errors['birthdate']"
                                 [(ngModel)]="vm.student.birthdate"
                                 (ngModelChange)="updateStudentInfo(vm.student)"
                             ></p-calendar>
                             <label for="birthday">Birth Date</label>
                         </span>
+                        <sol-messages
+                            [messages]="vm.errors['birthdate']"
+                        ></sol-messages>
                     </div>
 
                     <div class="field col">
@@ -37,18 +41,16 @@
                                 id="firstName"
                                 name="firstName"
                                 pInputText
+                                [solValid]="!vm.errors['firstName']"
                                 [(ngModel)]="vm.student.firstName"
                                 (ngModelChange)="updateStudentInfo(vm.student)"
                                 [ngModelOptions]="{ updateOn: 'blur' }"
                             />
                             <label for="firstName">First Name</label>
-                            <small
-                                *ngIf="vm.errors['firstName'] as error"
-                                id="firstName-help"
-                                class="p-error block"
-                                >{{ error }}</small
-                            >
                         </span>
+                        <sol-messages
+                            [messages]="vm.errors['firstName']"
+                        ></sol-messages>
                     </div>
                     <div class="field col">
                         <span class="p-float-label">
@@ -58,12 +60,16 @@
                                 id="lastName"
                                 name="lastName"
                                 pInputText
+                                [solValid]="!vm.errors['firstName']"
                                 [(ngModel)]="vm.student.lastName"
                                 (ngModelChange)="updateStudentInfo(vm.student)"
                                 [ngModelOptions]="{ updateOn: 'blur' }"
                             />
                             <label for="lastName">Last Name</label>
                         </span>
+                        <sol-messages
+                            [messages]="vm.errors['lastName']"
+                        ></sol-messages>
                     </div>
                 </div>
 
@@ -74,10 +80,16 @@
                             type="text"
                             id="pronouns"
                             name="pronouns"
+                            [solValid]="!vm.errors['pronouns']"
+                            [(ngModel)]="vm.student.pronouns"
+                            (ngModelChange)="updateStudentInfo(vm.student)"
                             pInputText
                         />
                         <label for="pronouns">Pronouns</label>
                     </span>
+                    <sol-messages
+                        [messages]="vm.errors['pronouns']"
+                    ></sol-messages>
                 </div>
 
                 <div class="field" style="width: 49.35%; padding-top: 1%">
@@ -88,9 +100,15 @@
                             id="school"
                             name="school"
                             pInputText
+                            [solValid]="!vm.errors['school']"
+                            [(ngModel)]="vm.student.school"
+                            (ngModelChange)="updateStudentInfo(vm.student)"
                         />
                         <label for="school">School</label>
                     </span>
+                    <sol-messages
+                        [messages]="vm.errors['school']"
+                    ></sol-messages>
                 </div>
 
                 <div style="padding-top: 1%">
@@ -105,14 +123,16 @@
                 <div id="notes" class="field" style="padding-top: 1%">
                     <span class="p-float-label">
                         <textarea
-                            id="bio"
-                            name="bio"
+                            id="notes"
+                            name="notes"
                             [rows]="5"
                             [cols]="50"
                             pInputTextarea
+                            [(ngModel)]="vm.student.notes"
+                            (ngModelChange)="updateStudentInfo(vm.student)"
                             [autoResize]="true"
                         ></textarea>
-                        <label for="bio">Notes (Optional)</label><br /><br />
+                        <label for="notes">Notes (Optional)</label><br /><br />
                     </span>
                 </div>
             </div>
@@ -131,23 +151,35 @@
                                 id="email"
                                 name="email"
                                 pInputText
+                                [solValid]="!vm.errors['contactEmail']"
+                                [(ngModel)]="vm.student.contactEmail"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
                             />
                             <label for="email">Primary Email</label>
                         </span>
+                        <sol-messages
+                            [messages]="vm.errors['contactEmail']"
+                        ></sol-messages>
                     </div>
 
                     <div class="field col">
                         <span class="p-float-label">
                             <input
                                 type="email"
-                                id="vm.studentEmail"
-                                name="vm.studentEmail"
+                                id="studentEmail"
+                                name="studentEmail"
                                 pInputText
+                                [solValid]="!vm.errors['studentEmail']"
+                                [(ngModel)]="vm.student.studentEmail"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
                             />
-                            <label for="vm.studentEmail"
+                            <label for="studentEmail"
                                 >Student Email (Optional)</label
                             >
                         </span>
+                        <sol-messages
+                            [messages]="vm.errors['studentEmail']"
+                        ></sol-messages>
                     </div>
                 </div>
 
@@ -159,23 +191,35 @@
                                 type="phone"
                                 name="phone"
                                 mask="999-999-9999"
+                                [solValid]="!vm.errors['contactPhone']"
+                                [(ngModel)]="vm.student.contactPhone"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
                             ></p-inputMask>
                             <label for="phone">Primary Phone Number</label>
                         </span>
+                        <sol-messages
+                            [messages]="vm.errors['contactPhone']"
+                        ></sol-messages>
                     </div>
 
                     <div class="field col">
                         <span class="p-float-label">
                             <p-inputMask
-                                type="vm.studentPhone"
-                                id="vm.studentPhone"
-                                name="vm.studentPhone"
+                                type="studentPhone"
+                                id="studentPhone"
+                                name="studentPhone"
                                 mask="999-999-9999"
+                                [solValid]="!vm.errors['studentPhone']"
+                                [(ngModel)]="vm.student.studentPhone"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
                             ></p-inputMask>
-                            <label for="vm.studentPhone"
+                            <label for="studentPhone"
                                 >Student Phone (Optional)</label
                             >
                         </span>
+                        <sol-messages
+                            [messages]="vm.errors['studentPhone']"
+                        ></sol-messages>
                     </div>
                 </div>
 
@@ -186,15 +230,30 @@
                             id="address"
                             name="address"
                             pInputText
+                            [solValid]="!vm.errors['address']"
+                            [(ngModel)]="vm.student.address"
+                            (ngModelChange)="updateStudentInfo(vm.student)"
                         />
                         <label for="address">Street Address</label>
                     </span>
+                    <sol-messages
+                        [messages]="vm.errors['address']"
+                    ></sol-messages>
                 </div>
                 <div class="field" style="width: 49.35%; padding-top: 1%">
                     <span class="p-float-label">
-                        <input type="text" id="city" name="city" pInputText />
+                        <input
+                            type="text"
+                            id="city"
+                            name="city"
+                            pInputText
+                            [solValid]="!vm.errors['city']"
+                            [(ngModel)]="vm.student.city"
+                            (ngModelChange)="updateStudentInfo(vm.student)"
+                        />
                         <label for="city">City</label>
                     </span>
+                    <sol-messages [messages]="vm.errors['city']"></sol-messages>
                 </div>
                 <div class="grid-wrapper">
                     <div class="field area-quarter-left">
@@ -205,9 +264,15 @@
                                 name="state"
                                 mask="aa"
                                 slotChar=" "
+                                [solValid]="!vm.errors['state']"
+                                [(ngModel)]="vm.student.state"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
                             ></p-inputMask>
                             <label for="state">State</label>
                         </span>
+                        <sol-messages
+                            [messages]="vm.errors['state']"
+                        ></sol-messages>
                     </div>
                     <div class="field area-quarter-left-center">
                         <span class="p-float-label">
@@ -217,9 +282,15 @@
                                 name="zip"
                                 mask="99999"
                                 slotChar=" "
+                                [solValid]="!vm.errors['zip']"
+                                [(ngModel)]="vm.student.zip"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
                             ></p-inputMask>
                             <label for="zip">Zip Code</label>
                         </span>
+                        <sol-messages
+                            [messages]="vm.errors['zip']"
+                        ></sol-messages>
                     </div>
                 </div>
             </div>
@@ -238,6 +309,8 @@
                     offLabel="No Bug Spray"
                     onIcon="pi pi-check"
                     offIcon="pi pi-times"
+                    [(ngModel)]="vm.student.naturalBugspray"
+                    (ngModelChange)="updateStudentInfo(vm.student)"
                 ></p-toggleButton>
             </div>
             <div class="field">
@@ -246,6 +319,8 @@
                     offLabel="No DEET Bug Spray"
                     onIcon="pi pi-check"
                     offIcon="pi pi-times"
+                    [(ngModel)]="vm.student.deetBugspray"
+                    (ngModelChange)="updateStudentInfo(vm.student)"
                 ></p-toggleButton>
             </div>
             <div class="field">
@@ -254,6 +329,8 @@
                     offLabel="No Sunscreen"
                     onIcon="pi pi-check"
                     offIcon="pi pi-times"
+                    [(ngModel)]="vm.student.sunscreen"
+                    (ngModelChange)="updateStudentInfo(vm.student)"
                 ></p-toggleButton>
             </div>
         </div>
@@ -262,81 +339,158 @@
             <h3>Photos</h3>
             <p>Can we use photos of the student for promotional material?</p>
             <p-selectButton
-                [options]="chemicalPreferences"
+                [options]="photographyPrivacyOptions"
                 optionLabel="name"
                 optionValue="value"
+                [solValid]="!vm.errors['photography']"
+                [(ngModel)]="vm.student.photography"
+                (ngModelChange)="updateStudentInfo(vm.student)"
             ></p-selectButton>
+            <sol-messages [messages]="vm.errors['photography']"></sol-messages>
         </div>
     </p-accordionTab>
     <p-accordionTab header="Parents and Guardians">
         <form>
             <div class="p-fluid">
                 <h3>Parent/Guardian</h3>
-                <div class="field" style="width: 35%">
-                    <p-toggleButton
-                        id="vm.studentLivesWith"
-                        name="vm.studentLivesWith"
-                        default="on"
-                        onLabel="vm.student lives with this parent/guardian"
-                        offLabel="vm.student does not live with this parent/guardian"
-                        onIcon="pi pi-check"
-                        offIcon="pi pi-times"
-                    ></p-toggleButton>
-                </div>
-                <div class="formgrid grid">
-                    <div class="field col">
-                        <span class="p-float-label">
-                            <input
-                                type="text"
-                                id="parentName"
-                                name="parentName"
-                                pInputText
-                            />
-                            <label for="parentName">Name</label>
-                        </span>
+                <ng-container
+                    *ngFor="let guardian of vm.student.guardians; let i = index"
+                >
+                    <div class="formgrid grid">
+                        <div
+                            class="field col"
+                            *rxLet="'guardian_' + i + '_name'; let validation"
+                        >
+                            <span class="p-float-label">
+                                <input
+                                    type="text"
+                                    id="parentName"
+                                    name="parentName"
+                                    pInputText
+                                    [solValid]="!vm.errors[validation]"
+                                    [(ngModel)]="guardian.guardianName"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                                <label for="parentName">Name</label>
+                            </span>
+                            <sol-messages
+                                [messages]="vm.errors[validation]"
+                            ></sol-messages>
+                        </div>
+                        <div
+                            class="field col"
+                            *rxLet="
+                                'guardian_' + i + '_relationship';
+                                let validation
+                            "
+                        >
+                            <span class="p-float-label">
+                                <input
+                                    type="text"
+                                    id="parentRelationship"
+                                    name="parentRelationship"
+                                    pInputText
+                                    [solValid]="!vm.errors[validation]"
+                                    [(ngModel)]="guardian.guardianRelationship"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                                <label for="relationship"
+                                    >Relationship to Student</label
+                                >
+                            </span>
+                            <sol-messages
+                                [messages]="vm.errors[validation]"
+                            ></sol-messages>
+                        </div>
+                        <div
+                            class="field col"
+                            *rxLet="'guardian_' + i + '_phone'; let validation"
+                        >
+                            <span class="p-float-label">
+                                <p-inputMask
+                                    type="text"
+                                    id="parentPhone"
+                                    name="parentPhone"
+                                    mask="999-999-9999"
+                                    [solValid]="!vm.errors[validation]"
+                                    [(ngModel)]="guardian.guardianPhone"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                ></p-inputMask>
+                                <label for="parentPhone">Phone Number</label>
+                            </span>
+                            <sol-messages
+                                [messages]="vm.errors[validation]"
+                            ></sol-messages>
+                        </div>
                     </div>
-                    <div class="field col">
-                        <span class="p-float-label">
-                            <input
-                                type="text"
-                                id="parentRelationship"
-                                name="parentRelationship"
-                                pInputText
-                            />
-                            <label for="relationship"
-                                >Relationship to Student</label
-                            >
-                        </span>
+                    <div
+                        class="formgrid grid"
+                        style="
+                            border-bottom: 1px solid lightgray;
+                            margin-bottom: 1rem;
+                        "
+                    >
+                        <div
+                            class="field col"
+                            *rxLet="'guardian_' + i + '_email'; let validation"
+                        >
+                            <span class="p-float-label">
+                                <input
+                                    type="text"
+                                    id="parentEmail"
+                                    name="parentEmail"
+                                    pInputText
+                                    [solValid]="!vm.errors[validation]"
+                                    [(ngModel)]="guardian.guardianEmail"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                                <label for="parentEmail">Email</label>
+                            </span>
+                            <sol-messages
+                                [messages]="vm.errors[validation]"
+                            ></sol-messages>
+                        </div>
+                        <div
+                            class="field col"
+                            *rxLet="
+                                'guardian_' + i + '_residence';
+                                let validation
+                            "
+                        >
+                            <p-selectButton
+                                [options]="guardianResidesWithStudentOptions"
+                                optionLabel="name"
+                                optionValue="value"
+                                id="studentLivesWith"
+                                name="studentLivesWith"
+                                [solValid]="!vm.errors[validation]"
+                                [(ngModel)]="
+                                    guardian.guardianResidesWithStudent
+                                "
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                            ></p-selectButton>
+                            <sol-messages
+                                [messages]="vm.errors[validation]"
+                            ></sol-messages>
+                        </div>
                     </div>
-                    <div class="field col">
-                        <span class="p-float-label">
-                            <p-inputMask
-                                type="text"
-                                id="parentPhone"
-                                name="parentPhone"
-                                mask="999-999-9999"
-                            ></p-inputMask>
-                            <label for="parentPhone">Phone Number</label>
-                        </span>
-                    </div>
-                    <div class="field col">
-                        <span class="p-float-label">
-                            <input
-                                type="text"
-                                id="parentEmail"
-                                name="parentEmail"
-                                pInputText
-                            />
-                            <label for="parentEmail">Email</label>
-                        </span>
-                    </div>
-                </div>
+                </ng-container>
+
                 <div style="width: 20%; padding-bottom: 20px">
                     <button
                         pButton
                         type="button"
                         label="Add Parent or Guardian"
                         class="p-button-outlined"
+                        (click)="addGuardian()"
                     ></button>
                 </div>
             </div>

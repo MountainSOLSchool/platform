@@ -12,7 +12,7 @@ import {
     StudentEnrollmentEntry,
 } from '@sol/student/import';
 import { StudentRepositoryUtility } from '@sol/student/persistence';
-import { StudentDbEntry } from '@sol/student/domain';
+import { StudentDbEntry, StudentForm } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
 import { ClassRepository, DiscountRepository } from '@sol/classes/repository';
@@ -405,16 +405,18 @@ export const paymentToken = Functions.endpoint
 
 export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
-    .handle(async (request, response, secrets) => {
+    .handle<{
+        selectedClasses: Array<string>;
+        student: StudentForm;
+        discountCodes: Array<string>;
+        paymentMethod: { nonce: string; deviceData: string };
+    }>(async (request, response, secrets) => {
         const {
             selectedClasses,
+            student,
             discountCodes,
             paymentMethod: { nonce, deviceData },
-        } = request.body.data as {
-            selectedClasses: Array<string>;
-            discountCodes: Array<string>;
-            paymentMethod: { nonce: string; deviceData: string };
-        };
+        } = request.body.data;
 
         // 1. Get classes with costs
         const classes = await Promise.all(

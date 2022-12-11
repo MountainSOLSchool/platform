@@ -5,6 +5,7 @@ import { FunctionsApi } from '@sol/firebase/functions-api';
 import { Observable, switchMap, take, tap } from 'rxjs';
 import { PaymentMethodPayload } from 'braintree-web-drop-in';
 import { Completeable } from '@sol/workflow';
+import { StudentForm } from '@sol/student/domain';
 
 type Enrollment = {
     selectedClasses: Array<string>;
@@ -16,13 +17,7 @@ type Enrollment = {
           }
         | undefined;
     discountCodes: Array<string>;
-    student:
-        | Partial<{
-              firstName: string;
-              lastName: string;
-              birthdate: Date;
-          }>
-        | undefined;
+    student: Partial<StudentForm> | undefined;
 };
 
 @Injectable()
@@ -35,7 +30,17 @@ export class EnrollmentWorkflowStore extends ComponentStore<Enrollment> {
             selectedClasses: [],
             paymentMethod: undefined,
             discountCodes: [],
-            student: undefined,
+            student: {
+                guardians: [
+                    {
+                        guardianName: '',
+                        guardianEmail: '',
+                        guardianPhone: '',
+                        guardianRelationship: '',
+                        guardianResidesWithStudent: false,
+                    },
+                ],
+            },
         });
     }
 
