@@ -1,4 +1,4 @@
-<mat-stepper [orientation]="(stepperOrientation | async)!" #workflowStepper>
+<mat-stepper [orientation]="(stepperOrientation | async)!">
     <mat-step #classSelection label="Class Selection">
         <ng-template matStepContent>
             <h2>Class Selection</h2>
@@ -10,16 +10,11 @@
             ></ng-container
         ></ng-template>
     </mat-step>
-    <mat-step
-        #studentInfo
-        label="Student Info"
-        *rxLet="{ interacted: false }; let state"
-        (interacted)="state.interacted = true"
-    >
+    <mat-step #studentInfo label="Student Info">
         <ng-template matStepContent>
             <h2>Student Info</h2>
             <sol-student-info
-                [interacted]="state.interacted"
+                [interacted]="studentInfo.interacted"
                 (validityChange)="studentInfo.hasError = !$event"
             ></sol-student-info>
             <ng-container *ngTemplateOutlet="navigation"></ng-container>
@@ -29,7 +24,8 @@
         <ng-template matStepContent>
             <h2>Medical Info and Releases</h2>
             <sol-medical-n-releases
-                (validityChange)="medicalInfo.completed = $event"
+                [interacted]="medicalInfo.interacted"
+                (validityChange)="medicalInfo.hasError = !$event"
             ></sol-medical-n-releases>
             <ng-container *ngTemplateOutlet="navigation"></ng-container>
         </ng-template>
@@ -48,7 +44,6 @@
         <ng-template matStepContent>
             <h2>Payment Method</h2>
             <sol-checkout
-                #checkout
                 (validityChange)="paymentMethod.hasError = !$event"
             ></sol-checkout>
             <ng-container *ngTemplateOutlet="navigation"></ng-container
@@ -58,6 +53,15 @@
         <ng-template matStepContent>
             <h2>Confirmation</h2>
             <sol-class-confirmation
+                [allStepsComplete]="
+                    allStepsComplete(
+                        classSelection,
+                        studentInfo,
+                        medicalInfo,
+                        account,
+                        paymentMethod
+                    )
+                "
                 (validityChange)="confirmation.completed = $event"
             ></sol-class-confirmation>
             <ng-container

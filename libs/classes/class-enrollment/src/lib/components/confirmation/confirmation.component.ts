@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Output } from '@angular/core';
+import { Component, inject, Input, Output } from '@angular/core';
 import { LetModule } from '@rx-angular/template/let';
 import { ChipModule } from 'primeng/chip';
 import { of } from 'rxjs';
@@ -14,6 +14,8 @@ import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workf
 })
 export class ConfirmationComponent {
     workflow = inject(EnrollmentWorkflowStore);
+
+    @Input() allStepsComplete = false;
 
     @Output() validityChange = of(true);
 

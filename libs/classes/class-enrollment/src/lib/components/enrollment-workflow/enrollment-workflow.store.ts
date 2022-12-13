@@ -40,6 +40,18 @@ export class EnrollmentWorkflowStore extends ComponentStore<Enrollment> {
                         guardianResidesWithStudent: false,
                     },
                 ],
+                emergencyContacts: [
+                    {
+                        name: '',
+                        relationship: '',
+                        phone: '',
+                    },
+                    {
+                        name: '',
+                        relationship: '',
+                        phone: '',
+                    },
+                ],
             },
         });
     }

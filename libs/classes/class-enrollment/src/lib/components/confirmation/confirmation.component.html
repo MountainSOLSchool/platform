@@ -1,27 +1,31 @@
-<ng-container *rxLet="enrollment$; let enrollment">
-    <h3>Selected Classes</h3>
-    <div class="flex align-items-center">
-        <p-chip
-            *ngFor="let classId of enrollment.selectedClasses"
-            [label]="classId"
-            styleClass="mr-2"
-            [removable]="true"
-        ></p-chip>
-    </div>
-    <h3>Payment Method</h3>
-    <div>
-        <p>
-            Details:
-            {{ enrollment.paymentMethod?.paymentDetails | json }}
-        </p>
-    </div>
-    <h3>Discounts</h3>
-    <div class="flex align-items-center">
-        <p-chip
-            *ngFor="let code of enrollment.discountCodes"
-            [label]="code"
-            styleClass="mr-2"
-            [removable]="true"
-        ></p-chip>
-    </div>
-</ng-container>
+<ng-container *ngIf="allStepsComplete; else incomplete"
+    ><ng-container *rxLet="enrollment$; let enrollment">
+        <h3>Selected Classes</h3>
+        <div class="flex align-items-center">
+            <p-chip
+                *ngFor="let classId of enrollment.selectedClasses"
+                [label]="classId"
+                styleClass="mr-2"
+                [removable]="true"
+            ></p-chip>
+        </div>
+        <h3>Payment Method</h3>
+        <div>
+            <p>
+                Details:
+                {{ enrollment.paymentMethod?.paymentDetails | json }}
+            </p>
+        </div>
+        <h3>Discounts</h3>
+        <div class="flex align-items-center">
+            <p-chip
+                *ngFor="let code of enrollment.discountCodes"
+                [label]="code"
+                styleClass="mr-2"
+                [removable]="true"
+            ></p-chip>
+        </div> </ng-container
+></ng-container>
+<ng-template #incomplete>
+    <p>Please complete all steps before submitting.</p>
+</ng-template>

@@ -42,7 +42,7 @@ export interface StudentForm {
     insuranceCompany: string;
     insuranceId: string;
     doesNotHaveInsurance: boolean;
-    doesNotHaveLifeThreateningAllergies: boolean;
+    hasLifeThreateningAllergies: boolean;
     allergies: string;
     medications: Array<{
         name: string;

@@ -394,12 +394,13 @@
                         let guardian of vm.student.guardians;
                         let i = index;
                         let first = first;
+                        let last = last;
                         trackBy: trackByIndex
                     "
-                    style="
-                        border-bottom: 1px solid lightgray;
-                        margin-bottom: 1rem;
-                    "
+                    style="margin-bottom: 1rem"
+                    [ngStyle]="{
+                        'border-bottom': last ? 'none' : '1px solid lightgray'
+                    }"
                 >
                     <div class="formgrid grid">
                         <div
@@ -583,19 +584,19 @@
 
                 <h3>Authorized For Student Pickup</h3>
                 <p>
-                    These include any people who may pick up your child. Usually
-                    it includes the guardians from the previous section, and if
-                    you would like you can add additional people who can pick up
-                    your child.
+                    These include any people who may pick up your child. This
+                    already includes the guardians from the previous section,
+                    and if you would like you can add additional people who can
+                    pick up your child.
                 </p>
-                <div class="formgrid grid">
+                <div class="margin-bottom:2rem">
                     <div
                         *ngFor="
                             let guardian of vm.student.guardians;
                             let i = index;
                             trackBy: trackByIndex
                         "
-                        style="width: 16rem"
+                        style="width: 16rem; margin-bottom: 1rem"
                     >
                         <p-toggleButton
                             *ngIf="guardian.guardianName !== ''"
@@ -613,12 +614,13 @@
                     *ngFor="
                         let authorized of vm.student.authorizedForPickup;
                         let i = index;
+                        let last = last;
                         trackBy: trackByIndex
                     "
-                    style="
-                        border-bottom: 1px solid lightgray;
-                        margin-bottom: 1rem;
-                    "
+                    style="margin-bottom: 1rem"
+                    [ngStyle]="{
+                        'border-bottom': last ? 'none' : '1px solid lightgray'
+                    }"
                 >
                     <div class="formgrid grid">
                         <div
@@ -704,7 +706,7 @@
                         ></button>
                     </div>
                 </div>
-                <div style="width: 20%; padding-bottom: 20px">
+                <div style="margin-top: 2rem; width: 20%; padding-bottom: 20px">
                     <button
                         pButton
                         type="button"

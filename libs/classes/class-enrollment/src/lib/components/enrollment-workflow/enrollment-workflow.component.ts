@@ -6,7 +6,7 @@ import { StepsModule } from 'primeng/steps';
 import { ButtonModule } from 'primeng/button';
 import { WorkflowComponent } from '@sol/workflow';
 import { provideComponentStore } from '@ngrx/component-store';
-import { MatStepperModule } from '@angular/material/stepper';
+import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map, Subject } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
@@ -82,5 +82,9 @@ export class ClassEnrollmentComponent {
 
     next(stepper: CdkStepper) {
         stepper.next();
+    }
+
+    allStepsComplete(...steps: Array<MatStep>): boolean {
+        return steps.every((step) => !step.hasError);
     }
 }
