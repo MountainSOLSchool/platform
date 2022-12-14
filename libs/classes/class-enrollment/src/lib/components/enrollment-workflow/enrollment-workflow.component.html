@@ -44,6 +44,7 @@
         <ng-template matStepContent>
             <h2>Payment Method</h2>
             <sol-checkout
+                [interacted]="paymentMethod.interacted"
                 (validityChange)="paymentMethod.hasError = !$event"
             ></sol-checkout>
             <ng-container *ngTemplateOutlet="navigation"></ng-container

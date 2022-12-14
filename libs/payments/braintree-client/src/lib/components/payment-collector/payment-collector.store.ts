@@ -127,12 +127,14 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     dropInInstance?.on(
                                         'paymentMethodRequestable',
                                         (event) => {
+                                            console.log('requestable');
                                             this.prepare();
                                         }
                                     );
                                     dropInInstance?.on(
                                         'noPaymentMethodRequestable',
                                         () => {
+                                            console.log('not requestable');
                                             this.patchState({
                                                 nonce: undefined,
                                                 paymentDetails: undefined,
@@ -156,28 +158,23 @@ export class PaymentCollectorStore extends ComponentStore<{
         );
     }
 
-    selectPaymentMethod(): Observable<{
-        nonce: string;
-        deviceData: string;
-        paymentDetails: PaymentMethodPayload['details'];
-    }> {
+    selectPaymentMethod(): Observable<
+        | {
+              nonce: string;
+              deviceData: string;
+              paymentDetails: PaymentMethodPayload['details'];
+          }
+        | undefined
+    > {
         return this.state$.pipe(
-            map(({ nonce, deviceData, paymentDetails }) => ({
-                nonce,
-                deviceData,
-                paymentDetails,
-            })),
-            filter(
-                (
-                    paymentMethod
-                ): paymentMethod is {
-                    nonce: string;
-                    deviceData: string;
-                    paymentDetails: PaymentMethodPayload['details'];
-                } =>
-                    !!paymentMethod.nonce &&
-                    !!paymentMethod.deviceData &&
-                    !!paymentMethod.paymentDetails
+            map(({ nonce, deviceData, paymentDetails }) =>
+                nonce && deviceData && paymentDetails
+                    ? {
+                          nonce,
+                          deviceData,
+                          paymentDetails,
+                      }
+                    : undefined
             )
         );
     }

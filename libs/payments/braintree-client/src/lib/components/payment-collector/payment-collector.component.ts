@@ -24,11 +24,14 @@ export type PaymentCollector = {
 export class PaymentCollectorComponent implements OnInit {
     store = inject(PaymentCollectorStore);
 
-    @Output() paymentMethod: Observable<{
-        nonce: string;
-        deviceData: string;
-        paymentDetails: PaymentMethodPayload['details'];
-    }> = this.store.selectPaymentMethod();
+    @Output() paymentMethod: Observable<
+        | {
+              nonce: string;
+              deviceData: string;
+              paymentDetails: PaymentMethodPayload['details'];
+          }
+        | undefined
+    > = this.store.selectPaymentMethod();
 
     readonly COLLECTOR_ELEMENT_SELECTOR = 'payment-collector';
 
