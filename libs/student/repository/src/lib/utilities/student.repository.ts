@@ -1,8 +1,10 @@
 import { DatabaseUtility } from '@sol/firebase/database';
 import * as admin from 'firebase-admin';
-import { StudentDbEntry } from '@sol/student/domain';
+import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
+import { firestore } from 'firebase-admin';
+import DocumentReference = firestore.DocumentReference;
 
-export class StudentRepositoryUtility {
+export class StudentRepository {
     constructor(private readonly database: admin.firestore.Firestore) {}
 
     public async fetchMatchingStudent({
@@ -75,15 +77,19 @@ export class StudentRepositoryUtility {
                     classStudentRefs
                 );
         } else {
-            const studentsCollection =
+            const { students: hydratedStudents } =
                 await DatabaseUtility.getHydratedCollection(
                     this.database.collection('students')
                 );
-            students = studentsCollection['students'].map(
+            students = hydratedStudents.map(
                 (doc) => doc as unknown as StudentDbEntry
             );
         }
 
         return students;
+    }
+
+    async create(student: NewStudentDbEntry): Promise<DocumentReference> {
+        return await this.database.collection('students').add(student);
     }
 }

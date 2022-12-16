@@ -29,6 +29,9 @@
             "@sol/classes/enrollment": [
                 "libs/classes/class-enrollment/src/index.ts"
             ],
+            "@sol/classes/enrollment/repository": [
+                "libs/classes/class-enrollment-repository/src/index.ts"
+            ],
             "@sol/classes/repository": [
                 "libs/classes/class-repository/src/index.ts"
             ],
@@ -53,14 +56,11 @@
             "@sol/record/domain": ["libs/record/domain/src/index.ts"],
             "@sol/student/domain": ["libs/student/domain/src/index.ts"],
             "@sol/student/import": ["libs/student/import/src/index.ts"],
-            "@sol/student/persistence": [
-                "libs/student/persistence/src/index.ts"
-            ],
+            "@sol/student/repository": ["libs/student/repository/src/index.ts"],
             "@sol/student/reports": ["libs/student/reports/src/index.ts"],
             "@sol/table/domain": ["libs/table/domain/src/index.ts"],
             "@sol/table/html": ["libs/table/html/src/index.ts"],
-            "@sol/table/pdf": ["libs/table/pdf/src/index.ts"],
-            "@sol/workflow": ["libs/workflow/src/index.ts"]
+            "@sol/table/pdf": ["libs/table/pdf/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]

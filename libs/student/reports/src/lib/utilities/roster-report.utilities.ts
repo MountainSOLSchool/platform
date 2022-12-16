@@ -9,13 +9,13 @@ import {
 import { CellStyle, TableHeader } from '@sol/table/domain';
 import { TablePdfUtility } from '@sol/table/pdf';
 import { FlatRecord } from '@sol/record/domain';
-import { StudentRepositoryUtility } from '@sol/student/persistence';
+import { StudentRepository } from '@sol/student/repository';
 
 export class RosterReportGenerator {
-    private studentRepositoryUtility: StudentRepositoryUtility;
+    private studentRepositoryUtility: StudentRepository;
 
     constructor(private readonly database: admin.firestore.Firestore) {
-        this.studentRepositoryUtility = new StudentRepositoryUtility(database);
+        this.studentRepositoryUtility = new StudentRepository(database);
     }
 
     public async createRosterPdf(className: string) {

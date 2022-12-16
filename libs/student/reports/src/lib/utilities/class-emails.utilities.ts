@@ -1,11 +1,11 @@
-import { StudentRepositoryUtility } from '@sol/student/persistence';
+import { StudentRepository } from '@sol/student/repository';
 import * as admin from 'firebase-admin';
 
 export class ClassEmailGenerator {
-    private studentRepositoryUtility: StudentRepositoryUtility;
+    private studentRepositoryUtility: StudentRepository;
 
     constructor(private readonly database: admin.firestore.Firestore) {
-        this.studentRepositoryUtility = new StudentRepositoryUtility(database);
+        this.studentRepositoryUtility = new StudentRepository(database);
     }
 
     public async createEmailList(className: string) {

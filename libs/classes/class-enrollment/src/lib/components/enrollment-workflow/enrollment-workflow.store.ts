@@ -2,9 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { EventEmitter, inject, Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { FunctionsApi } from '@sol/firebase/functions-api';
-import { Observable, switchMap, take, tap } from 'rxjs';
+import { fromEvent, switchMap, take, tap } from 'rxjs';
 import { PaymentMethodPayload } from 'braintree-web-drop-in';
-import { Completeable } from '@sol/workflow';
 import { StudentForm } from '@sol/student/domain';
 
 type Enrollment = {
@@ -56,23 +55,10 @@ export class EnrollmentWorkflowStore extends ComponentStore<Enrollment> {
         });
     }
 
-    private readonly _next$ = new EventEmitter<Completeable>();
-    get nextClick$() {
-        return this._next$.asObservable();
-    }
-
     private readonly _ready$ = new EventEmitter();
     get readyForNext$() {
         return this._ready$.asObservable();
     }
-
-    readonly nextClick = this.effect((next$: Observable<Completeable>) => {
-        return next$.pipe(
-            tap((completeable) => {
-                this._next$.emit(completeable);
-            })
-        );
-    });
 
     readonly submit = this.effect((submit$) => {
         return submit$.pipe(
@@ -95,4 +81,12 @@ export class EnrollmentWorkflowStore extends ComponentStore<Enrollment> {
     });
 
     readonly selectEnrollment = this.select((enrollment) => enrollment);
+
+    readonly warnBeforeUnload = this.effect(() => {
+        return fromEvent(window, 'beforeunload').pipe(
+            tap((event: BeforeUnloadEvent) => {
+                event.returnValue = '';
+            })
+        );
+    });
 }

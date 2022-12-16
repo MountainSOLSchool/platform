@@ -56,8 +56,8 @@ export class ReportComponent implements OnInit {
         .call<{
             classes: Array<{
                 title: string;
-                start: { _seconds: number };
-                end: { _seconds: number };
+                startMs: number;
+                endMs: number;
                 id: string;
                 enrolledCount: string;
             }>;
@@ -65,12 +65,8 @@ export class ReportComponent implements OnInit {
         .pipe(
             map(({ classes }) =>
                 classes.map((c) => {
-                    const start = new Date(
-                        (c.start?._seconds ?? 0) * 1000
-                    ).toLocaleDateString();
-                    const end = new Date(
-                        (c.end?._seconds ?? 0) * 1000
-                    ).toLocaleDateString();
+                    const start = new Date(c.startMs).toLocaleDateString();
+                    const end = new Date(c.endMs).toLocaleDateString();
                     return {
                         id: c.id,
                         title: c.title,

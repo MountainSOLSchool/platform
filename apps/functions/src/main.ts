@@ -11,8 +11,12 @@ import {
     EnrollmentClassesMap,
     StudentEnrollmentEntry,
 } from '@sol/student/import';
-import { StudentRepositoryUtility } from '@sol/student/persistence';
-import { StudentDbEntry, StudentForm } from '@sol/student/domain';
+import { StudentRepository } from '@sol/student/repository';
+import {
+    NewStudentDbEntry,
+    StudentDbEntry,
+    StudentForm,
+} from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
 import { ClassRepository, DiscountRepository } from '@sol/classes/repository';
@@ -23,6 +27,7 @@ import {
     ClassesDiscount,
     BasketDiscount,
 } from '@sol/classes/domain';
+// import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -32,7 +37,7 @@ export const roster = Functions.endpoint
         const db = DatabaseUtility.getDatabase();
         const reportGenerator = new RosterReportGenerator(db);
 
-        const students = await new StudentRepositoryUtility(db).fetchStudents(
+        const students = await new StudentRepository(db).fetchStudents(
             className
         );
 
@@ -57,7 +62,7 @@ export const signIn = Functions.endpoint
         const db = DatabaseUtility.getDatabase();
         const reportGenerator = new RosterReportGenerator(db);
 
-        const students = await new StudentRepositoryUtility(db).fetchStudents(
+        const students = await new StudentRepository(db).fetchStudents(
             className
         );
 
@@ -211,7 +216,7 @@ export const importEnrollment = Functions.endpoint
         const matchingStudentResults = await Promise.all(
             updatedStudentEntries.map(async (updatedStudentEntry) => ({
                 update: updatedStudentEntry,
-                match: await new StudentRepositoryUtility(
+                match: await new StudentRepository(
                     DatabaseUtility.getDatabase()
                 ).fetchMatchingStudent({
                     firstName: updatedStudentEntry.first_name ?? '',
@@ -281,7 +286,7 @@ export const importEnrollment = Functions.endpoint
                 .filter(([key]) => studentEnrollment.classSignups.includes(key))
                 .map(([, classEnrollmentName]) => classEnrollmentName)
                 .reduce((agg, classes) => [...agg, ...classes], []);
-            const studentRef = await new StudentRepositoryUtility(
+            const studentRef = await new StudentRepository(
                 DatabaseUtility.getDatabase()
             ).fetchMatchingStudentRef(studentEnrollment.student);
             for (const classToEnroll of classesToEnroll) {
@@ -457,24 +462,92 @@ export const enroll = Functions.endpoint
         );
 
         // 4. Add a "pending" student enrollment transaction to the database
+        // const studentEnrollment = await ClassEnrollmentRepository.create({
+        //     student,
+        //     classes: classesUpdatedByClassDiscounts.map((c) => c.id),
+        //     total: finalTotal,
+        // });
 
         // 5. Transact with Braintree
         const braintree = new Braintree(secrets);
 
-        const transaction = await braintree.transact({
+        const { transaction } = await braintree.transact({
             amount: finalTotal,
             nonce,
-            customer: { email: 'test@email.com' },
+            customer: { email: student.contactEmail },
             deviceData,
         });
 
         // 6. Add a "successful" student enrollment transaction to the database
+        // await ClassEnrollmentRepository.update(studentEnrollment.id, {
+        //     status: 'successful',
+        //     transactionId: transaction.id,
+        // });
+
         // 7. Create a student record
+        const studentRef = await new StudentRepository(
+            DatabaseUtility.getDatabase()
+        ).create(_mapStudentFormToStudentDbEntry(student));
 
         // 8. Add student to the class
+        await Promise.all(
+            classesUpdatedByClassDiscounts.map(async (c) => {
+                await ClassRepository.addStudentToClass(studentRef.id, c.id);
+            })
+        );
 
-        response.send({ success: true, transaction: transaction });
+        response.send({ success: true, classesUpdatedByClassDiscounts });
     });
+
+function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
+    const entry: NewStudentDbEntry = {
+        first_name: form.firstName,
+        last_name: form.lastName,
+        code_word: form.pickupCodeword,
+        primary_email: form.contactEmail,
+        ok_to_photograph:
+            form.photography === 'yes' || form.photography === 'yesNoName',
+        ok_use_name_photographs: form.photography === 'yes',
+        sunscreen_bug_spray:
+            form.sunscreen || form.deetBugspray || form.naturalBugspray
+                ? 'Yes'
+                : 'No',
+        birth_date: String(form.birthdate),
+        emergency_contacts: form.emergencyContacts.map((c) => ({
+            first_name: c.name,
+            last_name: 'string',
+            relationship: c.relationship,
+            phone: c.phone,
+            email: '',
+        })),
+        authorized_pick_up_contacts:
+            form.authorizedForPickup?.map((c) => ({
+                first_name: c.name,
+                last_name: 'string',
+                relationship: c.relationship,
+                phone: c.phone,
+                email: '',
+            })) ?? [],
+        allergies:
+            form.allergies.trim() === ''
+                ? []
+                : [
+                      {
+                          name: '',
+                          description: form.allergies,
+                          response: '',
+                          important: true,
+                      },
+                  ],
+        medications: form.medications.map((m) => ({
+            ...m,
+            important: true,
+        })),
+        // TODO- collect t-shirt size
+        tshirt_size: '',
+    };
+    return entry;
+}
 
 export const roles = Functions.endpoint.handle(async (request, response) => {
     const user = await AuthUtility.getUserFromRequest(request, response);

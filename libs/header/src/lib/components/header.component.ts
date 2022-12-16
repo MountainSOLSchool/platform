@@ -77,11 +77,6 @@ import { ToolbarModule } from 'primeng/toolbar';
                     >
                 </li>
                 <li>
-                    <a routerLink="/admin/import" (click)="display = false"
-                        >Import Summer 2022 Enrollment</a
-                    >
-                </li>
-                <li>
                     <a routerLink="/calendar/classes" (click)="display = false"
                         >Class Calendar</a
                     >

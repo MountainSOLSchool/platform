@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
-    displayName: 'workflow',
-    preset: '../../jest.preset.js',
+    displayName: 'student-repository',
+    preset: '../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
         'ts-jest': {
@@ -9,7 +9,7 @@ export default {
             stringifyContentPathRegex: '\\.(html|svg)$',
         },
     },
-    coverageDirectory: '../../coverage/libs/workflow',
+    coverageDirectory: '../../../coverage/libs/student/repository',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
     },

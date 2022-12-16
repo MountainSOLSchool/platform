@@ -4,11 +4,10 @@ import { RouterModule } from '@angular/router';
 import { EnrollmentWorkflowStore } from './enrollment-workflow.store';
 import { StepsModule } from 'primeng/steps';
 import { ButtonModule } from 'primeng/button';
-import { WorkflowComponent } from '@sol/workflow';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { map, Subject } from 'rxjs';
+import { map } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
@@ -38,7 +37,6 @@ import { LetModule } from '@rx-angular/template/let';
         StepsModule,
         CdkStepperModule,
         ButtonModule,
-        WorkflowComponent,
         MatStepperModule,
         ClassesComponent,
         InfoComponent,
@@ -74,10 +72,6 @@ export class ClassEnrollmentComponent {
 
     complete() {
         this.store.submit();
-    }
-
-    nextClicked(completeable: { complete: () => void }) {
-        this.store.nextClick(completeable);
     }
 
     next(stepper: CdkStepper) {

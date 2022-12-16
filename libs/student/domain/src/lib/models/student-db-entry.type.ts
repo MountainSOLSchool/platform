@@ -26,3 +26,5 @@ export type StudentDbEntry = {
     }>;
     tshirt_size: string;
 };
+
+export type NewStudentDbEntry = Omit<StudentDbEntry, 'id'>;

@@ -52,13 +52,6 @@ export const appRoutes: Routes = [
                                             ).then((m) => m.tshirtRoutes),
                                     },
                                     {
-                                        path: 'import',
-                                        loadChildren: () =>
-                                            import(
-                                                './import-component/import-routes'
-                                            ).then((m) => m.importRoutes),
-                                    },
-                                    {
                                         path: 'classes',
                                         children: [
                                             {
