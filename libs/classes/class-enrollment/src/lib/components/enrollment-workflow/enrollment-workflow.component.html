@@ -1,4 +1,5 @@
-<mat-stepper [orientation]="(stepperOrientation | async)!">
+<button (click)="fillOutForTest()">Fill out form for test</button>
+<mat-stepper #stepper [orientation]="(stepperOrientation | async)!">
     <mat-step #classSelection label="Class Selection">
         <ng-template matStepContent>
             <h2>Class Selection</h2>
@@ -44,6 +45,8 @@
         <ng-template matStepContent>
             <h2>Payment Method</h2>
             <sol-checkout
+                *rxLet="paymentSessionToken$; let sessionToken"
+                [sessionToken]="sessionToken"
                 [interacted]="paymentMethod.interacted"
                 (validityChange)="paymentMethod.hasError = !$event"
             ></sol-checkout>
@@ -52,7 +55,7 @@
     </mat-step>
     <mat-step #confirmation label="Confirm Enrollment">
         <ng-template matStepContent>
-            <h2>Confirmation</h2>
+            <h2>Confirm Enrollment</h2>
             <sol-class-confirmation
                 [allStepsComplete]="
                     allStepsComplete(
@@ -87,10 +90,62 @@
                 </button>
             </ng-container>
             <ng-template #submit>
-                <button pButton style="margin-left: 1rem" (click)="complete()">
+                <button
+                    *ngIf="
+                        allStepsComplete(
+                            classSelection,
+                            studentInfo,
+                            medicalInfo,
+                            account,
+                            paymentMethod
+                        )
+                    "
+                    pButton
+                    style="margin-left: 1rem"
+                    (click)="complete()"
+                >
                     Submit
                 </button></ng-template
             >
         </div>
     </ng-template>
 </mat-stepper>
+<p-dialog
+    header="Submitting..."
+    *rxLet="isSubmitting$; let isSubmitting"
+    [visible]="isSubmitting"
+    [closable]="false"
+    [modal]="true"
+>
+    <p-progressSpinner></p-progressSpinner>
+</p-dialog>
+
+<p-dialog
+    header="Successfully enrolled!"
+    *rxLet="shouldShowSuccess$; let shouldShow"
+    [visible]="shouldShow"
+    [closable]="false"
+    [modal]="true"
+    [draggable]="false"
+>
+    <div style="width: 100%">
+        <div style="text-align: center">
+            <i
+                style="color: green; font-size: 60px"
+                class="pi pi-check-circle"
+            ></i>
+        </div>
+    </div>
+    <div style="margin-top: 1rem" *rxLet="enrollment$; let enrollment">
+        A confirmation email has been sent to
+        <b>{{ enrollment?.student?.contactEmail }}</b
+        >.
+    </div>
+    <div style="margin-top: 1rem">
+        <button
+            pButton
+            label="Enroll Another Student"
+            (click)="enrollAnother(stepper)"
+        ></button>
+    </div>
+</p-dialog>

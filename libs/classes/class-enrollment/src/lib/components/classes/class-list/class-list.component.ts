@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ClassListService } from '../../../services/class-list.service';
 import { LetModule } from '@rx-angular/template/let';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { TagModule } from 'primeng/tag';
 
 @Component({
     standalone: true,
@@ -24,6 +25,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
         FormsModule,
         LetModule,
         SelectButtonModule,
+        TagModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -35,7 +37,9 @@ export class ClassesComponent {
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
 
-    selectedClasses$ = this.workflow.select((state) => state.selectedClasses);
+    selectedClasses$ = this.workflow.select(
+        (state) => state.enrollment.selectedClasses
+    );
 
     @Output() validityChange = this.selectedClasses$.pipe(
         map((selectedClasses) => selectedClasses.length > 0)
@@ -89,10 +93,16 @@ export class ClassesComponent {
         selected: boolean;
     }) {
         this.workflow.patchState((s) => ({
-            ...s,
-            selectedClasses: selected
-                ? Array.from(new Set([...s.selectedClasses, classId]))
-                : s.selectedClasses.filter((id) => id !== classId),
+            enrollment: {
+                ...s.enrollment,
+                selectedClasses: selected
+                    ? Array.from(
+                          new Set([...s.enrollment.selectedClasses, classId])
+                      )
+                    : s.enrollment.selectedClasses.filter(
+                          (id) => id !== classId
+                      ),
+            },
         }));
     }
 }

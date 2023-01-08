@@ -37,6 +37,7 @@ export class DatabaseUtility {
         collectionRef: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
     ): Promise<{ [collectionName: string]: Collection }> {
         const collectionDocs = (await collectionRef.get()).docs;
+        console.log(collectionDocs);
         const docValues = await Promise.all(
             collectionDocs.map(async (doc) => {
                 const fields = doc.data();

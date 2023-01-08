@@ -1,29 +1,53 @@
 <ng-container *ngIf="allStepsComplete; else incomplete"
     ><ng-container *rxLet="enrollment$; let enrollment">
-        <h3>Selected Classes</h3>
-        <div class="flex align-items-center">
-            <p-chip
-                *ngFor="let classId of enrollment.selectedClasses"
-                [label]="classId"
-                styleClass="mr-2"
-                [removable]="true"
-            ></p-chip>
+        <div class="section">
+            <p-fieldset legend="Student" *rxLet="student$; let student">
+                <p>Name: {{ student?.firstName }} {{ student?.lastName }}</p>
+                <p>Birthdate: {{ student?.birthdate | date }}</p>
+            </p-fieldset>
         </div>
-        <h3>Payment Method</h3>
-        <div>
-            <p>
-                Details:
-                {{ enrollment.paymentMethod?.paymentDetails | json }}
-            </p>
+
+        <div class="section">
+            <p-fieldset legend="Selected Classes">
+                <div class="flex align-items-center">
+                    <p-chip
+                        *rxFor="let selectedClass of selectedClasses$"
+                        [label]="selectedClass.title"
+                        styleClass="mr-2"
+                        [removable]="false"
+                    ></p-chip>
+                </div>
+            </p-fieldset>
         </div>
-        <h3>Discounts</h3>
-        <div class="flex align-items-center">
-            <p-chip
-                *ngFor="let code of enrollment.discountCodes"
-                [label]="code"
-                styleClass="mr-2"
-                [removable]="true"
-            ></p-chip>
+
+        <div class="section">
+            <p-fieldset legend="Payment Method">
+                <div>
+                    <p>
+                        Type:
+                        {{ enrollment.paymentMethod?.paymentDetails?.cardType }}
+                    </p>
+                    <p>
+                        Number: **** **** ****
+                        {{ enrollment.paymentMethod?.paymentDetails?.lastFour }}
+                    </p>
+                </div>
+            </p-fieldset>
+        </div>
+        <div class="section">
+            <p-fieldset
+                legend="Discounts"
+                *ngIf="enrollment.discountCodes.length > 0"
+            >
+                <div class="flex align-items-center">
+                    <p-chip
+                        *ngFor="let code of enrollment.discountCodes"
+                        [label]="code"
+                        styleClass="mr-2"
+                        [removable]="true"
+                    ></p-chip>
+                </div>
+            </p-fieldset>
         </div> </ng-container
 ></ng-container>
 <ng-template #incomplete>

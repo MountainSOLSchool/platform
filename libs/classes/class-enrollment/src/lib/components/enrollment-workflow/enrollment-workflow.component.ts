@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { map } from 'rxjs';
+import { map, tap } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
@@ -20,6 +20,8 @@ import {
 } from '@angular/cdk/stepper';
 import { MedicalComponent } from '../medical/medical.component';
 import { LetModule } from '@rx-angular/template/let';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
     standalone: true,
@@ -45,6 +47,8 @@ import { LetModule } from '@rx-angular/template/let';
         ConfirmationComponent,
         MedicalComponent,
         LetModule,
+        ProgressSpinnerModule,
+        DialogModule,
     ],
 })
 export class ClassEnrollmentComponent {
@@ -67,8 +71,16 @@ export class ClassEnrollmentComponent {
             routerLink: 'confirmation',
         },
     ];
+    readonly isSubmitting$ = this.store.submitting$;
 
-    readonly completeCurrentStep$ = this.store.readyForNext$.pipe();
+    readonly shouldShowSuccess$ = this.store.select(
+        (s) => s.status === 'enrolled'
+    );
+
+    readonly enrollment$ = this.store.select((s) => s.enrollment);
+    readonly paymentSessionToken$ = this.store.select(
+        (s) => s.paymentSessionToken
+    );
 
     complete() {
         this.store.submit();
@@ -79,6 +91,97 @@ export class ClassEnrollmentComponent {
     }
 
     allStepsComplete(...steps: Array<MatStep>): boolean {
-        return steps.every((step) => !step.hasError);
+        return steps.every((step) => !step.hasError && step.interacted);
+    }
+
+    fillOutForTest() {
+        this.store.patchState({
+            enrollment: {
+                selectedClasses: ['kzIlBrIIbrnfboPLvgA7'],
+                paymentMethod: {
+                    nonce: 'fake-valid-nonce-NOT',
+                    deviceData: '{}',
+                    paymentDetails: {
+                        cardType: 'Visa',
+                        lastTwo: '11',
+                        lastFour: '1111',
+                        bin: '411111',
+                        expirationMonth: '12',
+                        expirationYear: '2025',
+                        cardholderName: 'Fake Cardholder Name',
+                    },
+                },
+                discountCodes: [],
+                student: {
+                    firstName: 'David',
+                    lastName: 'McCoy',
+                    birthdate: new Date(),
+                    pronouns: 'pronoun',
+                    school: 'school',
+                    notes: 'notes',
+                    contactEmail: 'contactEmail@email.com',
+                    studentEmail: 'contact@email.com',
+                    contactPhone: '1234567890',
+                    studentPhone: '1234567890',
+                    address: 'address',
+                    city: 'some city',
+                    state: 'some state',
+                    zip: '12345',
+                    deetBugspray: true,
+                    naturalBugspray: false,
+                    sunscreen: true,
+                    photography: 'yes',
+                    guardians: [
+                        {
+                            guardianName: 'someone',
+                            guardianRelationship: 'parent',
+                            guardianPhone: '1234567890',
+                            guardianEmail: 'email@mail.com',
+                            guardianResidesWithStudent: true,
+                        },
+                    ],
+                    pickupCodeword: 'code',
+                    authorizedForPickup: [
+                        {
+                            name: 'someone',
+                            relationship: 'parent',
+                            phone: '1234567890',
+                        },
+                    ],
+                    emergencyContacts: [
+                        {
+                            name: 'someone',
+                            relationship: 'parent',
+                            phone: '1234567890',
+                        },
+                    ],
+                    weightImperial: 100,
+                    heightImperial: 100,
+                    doctorName: 'doctor',
+                    doctorPhone: '1234567890',
+                    insuranceCompany: 'insurance',
+                    insuranceId: '1234567890',
+                    doesNotHaveInsurance: false,
+                    hasLifeThreateningAllergies: false,
+                    allergies: 'allergies',
+                    medications: [
+                        {
+                            name: 'medication',
+                            dosage: 'dosage',
+                            doctor: 'doctor',
+                        },
+                    ],
+                    authorizedToAdministerMedication: true,
+                    medicalNotes: 'notes',
+                    signedMedicalRelease: 'true',
+                    signedReleaseOfLiability: 'true',
+                },
+            },
+        });
+    }
+
+    enrollAnother(stepper: CdkStepper) {
+        this.store.startOver();
+        stepper.reset();
     }
 }

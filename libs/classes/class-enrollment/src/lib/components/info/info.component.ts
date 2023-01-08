@@ -171,7 +171,7 @@ export class InfoComponent {
     authorized = true;
 
     readonly student$ = this.workflow
-        .select((state) => state.student)
+        .select((state) => state.enrollment.student)
         .pipe(
             map((student) => {
                 let age: string;
@@ -262,68 +262,81 @@ export class InfoComponent {
 
     updateStudentInfo(info: any): void {
         this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                ...info,
+            enrollment: {
+                ...s.enrollment,
+                student: {
+                    ...s.enrollment.student,
+                    ...info,
+                },
             },
         }));
     }
 
     removeGuardian(index: number): void {
         this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                guardians: s.student?.guardians?.filter((g, i) => i !== index),
+            enrollment: {
+                ...s.enrollment,
+                student: {
+                    ...s.enrollment.student,
+                    guardians: s.enrollment.student?.guardians?.filter(
+                        (g, i) => i !== index
+                    ),
+                },
             },
         }));
     }
 
     addGuardian(): void {
-        this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                guardians: [
-                    ...(s.student?.guardians ?? []),
-                    {
-                        guardianName: '',
-                        guardianEmail: '',
-                        guardianPhone: '',
-                        guardianRelationship: '',
-                        guardianResidesWithStudent: false,
-                    },
-                ],
+        this.workflow.patchState(({ enrollment }) => ({
+            enrollment: {
+                ...enrollment,
+                student: {
+                    ...enrollment.student,
+                    guardians: [
+                        ...(enrollment.student?.guardians ?? []),
+                        {
+                            guardianName: '',
+                            guardianEmail: '',
+                            guardianPhone: '',
+                            guardianRelationship: '',
+                            guardianResidesWithStudent: false,
+                        },
+                    ],
+                },
             },
         }));
     }
 
     removeAuthorized(index: number) {
-        this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                authorizedForPickup: s.student?.authorizedForPickup?.filter(
-                    (g, i) => i !== index
-                ),
+        this.workflow.patchState(({ enrollment }) => ({
+            enrollment: {
+                ...enrollment,
+                student: {
+                    ...enrollment.student,
+                    authorizedForPickup:
+                        enrollment.student?.authorizedForPickup?.filter(
+                            (g, i) => i !== index
+                        ),
+                },
             },
         }));
     }
 
     addAuthorized() {
-        this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                authorizedForPickup: [
-                    ...(s.student?.authorizedForPickup ?? []),
-                    {
-                        name: '',
-                        relationship: '',
-                        phone: '',
-                    },
-                ],
+        this.workflow.patchState(({ enrollment }) => ({
+            enrollment: {
+                ...enrollment,
+                student: {
+                    ...enrollment.student,
+                    authorizedForPickup: [
+                        ...(enrollment.student?.authorizedForPickup ?? []),
+                        {
+                            name: '',
+                            relationship: '',
+                            phone: '',
+                        },
+                    ],
+                },
             },
         }));
     }

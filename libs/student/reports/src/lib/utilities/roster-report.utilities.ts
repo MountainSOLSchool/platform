@@ -1,4 +1,3 @@
-import * as admin from 'firebase-admin';
 import {
     ContactDbEntry,
     StudentDbEntry,
@@ -12,16 +11,8 @@ import { FlatRecord } from '@sol/record/domain';
 import { StudentRepository } from '@sol/student/repository';
 
 export class RosterReportGenerator {
-    private studentRepositoryUtility: StudentRepository;
-
-    constructor(private readonly database: admin.firestore.Firestore) {
-        this.studentRepositoryUtility = new StudentRepository(database);
-    }
-
-    public async createRosterPdf(className: string) {
-        const students = await this.studentRepositoryUtility.fetchStudents(
-            className
-        );
+    static async createRosterPdf(className: string) {
+        const students = await StudentRepository.fetchStudents(className);
 
         const studentRecords =
             this.transformStudentEntriesIntoRosterRecords(students);
@@ -34,10 +25,8 @@ export class RosterReportGenerator {
         });
     }
 
-    public async createSignInOutPdf(className: string) {
-        const students = await this.studentRepositoryUtility.fetchStudents(
-            className
-        );
+    static async createSignInOutPdf(className: string) {
+        const students = await StudentRepository.fetchStudents(className);
 
         const studentSignInSheetRecords =
             this.transformStudentEntriesIntoSignInSheet(students);
@@ -49,7 +38,7 @@ export class RosterReportGenerator {
         });
     }
 
-    public buildStudentRecordStyle(
+    static buildStudentRecordStyle(
         propertyName: StudentRecordPropertyNames,
         value: string,
         metadata: { isImportant: boolean } | undefined
@@ -62,7 +51,7 @@ export class RosterReportGenerator {
 
     /* Sign In/Out Sheet */
 
-    public signInRowHeaders: readonly TableHeader<StudentSignInRecordPropertyNames>[] =
+    static signInRowHeaders: readonly TableHeader<StudentSignInRecordPropertyNames>[] =
         [
             {
                 title: 'Last Name',
@@ -90,7 +79,7 @@ export class RosterReportGenerator {
             },
         ];
 
-    public transformStudentEntriesIntoSignInSheet(
+    static transformStudentEntriesIntoSignInSheet(
         students: Array<StudentDbEntry>
     ): Array<FlatRecord<StudentSignInRecordPropertyNames>> {
         return students
@@ -114,7 +103,7 @@ export class RosterReportGenerator {
 
     /* Records = Doom Sheet = Roster */
 
-    public studentRowHeaders: readonly TableHeader<StudentRecordPropertyNames>[] =
+    static studentRowHeaders: readonly TableHeader<StudentRecordPropertyNames>[] =
         [
             {
                 title: 'Last Name',
@@ -162,7 +151,7 @@ export class RosterReportGenerator {
             },
         ] as const;
 
-    public transformStudentEntriesIntoRosterRecords(
+    static transformStudentEntriesIntoRosterRecords(
         students: Array<StudentDbEntry>
     ): Array<StudentRecord> {
         return students
@@ -245,7 +234,7 @@ export class RosterReportGenerator {
             });
     }
 
-    private allergiesToString({
+    private static allergiesToString({
         name,
         description,
         response,
@@ -259,7 +248,7 @@ export class RosterReportGenerator {
             .join(', ');
     }
 
-    private medicationToString(med: {
+    private static medicationToString(med: {
         name: string;
         doctor: string;
         dosage: string;
@@ -267,7 +256,7 @@ export class RosterReportGenerator {
         return `${med.name} is prescribed by ${med.doctor} and should be taken "${med.dosage}"`;
     }
 
-    private contactToString(contact: ContactDbEntry): string {
+    private static contactToString(contact: ContactDbEntry): string {
         return [
             `${contact.first_name} ${contact.last_name}`,
             contact.relationship,

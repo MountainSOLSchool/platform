@@ -1,9 +1,12 @@
 import { Class } from '@sol/classes/domain';
 import { DatabaseUtility } from '@sol/firebase/database';
+import { CLASSES_SUMMER_2023_COLLECTION } from './constants';
 
 export class ClassRepository {
     static async get(id: string): Promise<Class> {
-        const document = await DatabaseUtility.getDocumentRef(`classes/${id}`);
+        const document = await DatabaseUtility.getDocumentRef(
+            `${CLASSES_SUMMER_2023_COLLECTION}/${id}`
+        );
         const [data] = await DatabaseUtility.getHydratedDocuments([document]);
         return data as Class;
     }
@@ -13,7 +16,7 @@ export class ClassRepository {
         classId: string
     ): Promise<void> {
         const classRef = await DatabaseUtility.getDocumentRef(
-            `classes/${classId}`
+            `${CLASSES_SUMMER_2023_COLLECTION}/${classId}`
         );
         const studentRef = await DatabaseUtility.getDocumentRef(
             `students/${studentId}`

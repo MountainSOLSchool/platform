@@ -161,7 +161,7 @@ export class MedicalComponent {
     authorized = true;
 
     readonly student$ = this.workflow
-        .select((state) => state.student)
+        .select((state) => state.enrollment.student)
         .pipe(map((student) => student ?? {}));
 
     private readonly interacted$ = new BehaviorSubject(false);
@@ -226,69 +226,80 @@ export class MedicalComponent {
     }
 
     updateStudentMedicalInfo(info: any): void {
-        this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                ...info,
+        this.workflow.patchState(({ enrollment }) => ({
+            enrollment: {
+                ...enrollment,
+                student: {
+                    ...enrollment.student,
+                    ...info,
+                },
             },
         }));
     }
 
     removeContact(index: number): void {
-        this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                emergencyContacts: s.student?.emergencyContacts?.filter(
-                    (g, i) => i !== index
-                ),
+        this.workflow.patchState(({ enrollment }) => ({
+            enrollment: {
+                ...enrollment,
+                student: {
+                    ...enrollment.student,
+                    emergencyContacts:
+                        enrollment.student?.emergencyContacts?.filter(
+                            (g, i) => i !== index
+                        ),
+                },
             },
         }));
     }
 
     addContact(): void {
-        this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                emergencyContacts: [
-                    ...(s.student?.emergencyContacts ?? []),
-                    {
-                        name: '',
-                        relationship: '',
-                        phone: '',
-                    },
-                ],
+        this.workflow.patchState(({ enrollment }) => ({
+            enrollment: {
+                ...enrollment,
+                student: {
+                    ...enrollment.student,
+                    emergencyContacts: [
+                        ...(enrollment.student?.emergencyContacts ?? []),
+                        {
+                            name: '',
+                            relationship: '',
+                            phone: '',
+                        },
+                    ],
+                },
             },
         }));
     }
 
     addMedication(): void {
-        this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                medications: [
-                    ...(s.student?.medications ?? []),
-                    {
-                        name: '',
-                        dosage: '',
-                        doctor: '',
-                    },
-                ],
+        this.workflow.patchState(({ enrollment }) => ({
+            enrollment: {
+                ...enrollment,
+                student: {
+                    ...enrollment.student,
+                    medications: [
+                        ...(enrollment.student?.medications ?? []),
+                        {
+                            name: '',
+                            dosage: '',
+                            doctor: '',
+                        },
+                    ],
+                },
             },
         }));
     }
 
     removeMedication(index: number): void {
-        this.workflow.patchState((s) => ({
-            ...s,
-            student: {
-                ...s.student,
-                medications: s.student?.medications?.filter(
-                    (g, i) => i !== index
-                ),
+        this.workflow.patchState(({ enrollment }) => ({
+            enrollment: {
+                ...enrollment,
+                student: {
+                    ...enrollment.student,
+                    medications: enrollment.student?.medications?.filter(
+                        (g, i) => i !== index
+                    ),
+                },
             },
         }));
     }

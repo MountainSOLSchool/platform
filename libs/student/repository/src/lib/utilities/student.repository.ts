@@ -3,11 +3,10 @@ import * as admin from 'firebase-admin';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
 import { firestore } from 'firebase-admin';
 import DocumentReference = firestore.DocumentReference;
+import { CLASSES_SUMMER_2023_COLLECTION } from '@sol/classes/repository';
 
 export class StudentRepository {
-    constructor(private readonly database: admin.firestore.Firestore) {}
-
-    public async fetchMatchingStudent({
+    static async fetchMatchingStudent({
         firstName,
         lastName,
         birthDate,
@@ -31,7 +30,7 @@ export class StudentRepository {
             : undefined;
     }
 
-    public async fetchMatchingStudentRef({
+    static async fetchMatchingStudentRef({
         firstName,
         lastName,
         birthDate,
@@ -55,12 +54,14 @@ export class StudentRepository {
         )?.ref;
     }
 
-    public async fetchStudents(
+    static async fetchStudents(
         className?: string
     ): Promise<Array<StudentDbEntry>> {
         let students: Array<StudentDbEntry>;
         if (className) {
-            const classes = this.database.collection('classes');
+            const classes = this.database.collection(
+                CLASSES_SUMMER_2023_COLLECTION
+            );
 
             const classDocument =
                 await DatabaseUtility.fetchFirstMatchingDocument(classes, [
@@ -89,7 +90,13 @@ export class StudentRepository {
         return students;
     }
 
-    async create(student: NewStudentDbEntry): Promise<DocumentReference> {
+    static async create(
+        student: NewStudentDbEntry
+    ): Promise<DocumentReference> {
         return await this.database.collection('students').add(student);
+    }
+
+    private static get database(): FirebaseFirestore.Firestore {
+        return DatabaseUtility.getDatabase();
     }
 }

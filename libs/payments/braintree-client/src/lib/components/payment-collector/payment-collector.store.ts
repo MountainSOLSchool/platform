@@ -14,15 +14,11 @@ import {
     tap,
 } from 'rxjs';
 import {
+    cardPaymentMethodPayload,
     create as createDropIn,
     Dropin,
-    PaymentMethodPayload,
 } from 'braintree-web-drop-in';
 import { dataCollector, client } from 'braintree-web';
-import {
-    PreparedTransaction,
-    UnpreparedTransaction,
-} from '@sol/payments/transactions';
 import { UserService } from '@sol/auth/user';
 import { PaymentService } from '../../services/payment.service';
 
@@ -32,7 +28,7 @@ export class PaymentCollectorStore extends ComponentStore<{
     token: string | undefined;
     dropInInstance: Dropin | undefined;
     nonce: string | undefined;
-    paymentDetails: PaymentMethodPayload['details'] | undefined;
+    paymentDetails: cardPaymentMethodPayload['details'] | undefined;
 }> {
     private readonly http = inject(HttpClient);
     private readonly functions = inject(FunctionsApi);
@@ -58,9 +54,11 @@ export class PaymentCollectorStore extends ComponentStore<{
                     switchMap((instance) =>
                         from(instance.requestPaymentMethod()).pipe(
                             tap((paymentMethod) => {
+                                const details = paymentMethod.details;
                                 this.patchState({
                                     nonce: paymentMethod.nonce,
-                                    paymentDetails: paymentMethod.details,
+                                    paymentDetails:
+                                        details as cardPaymentMethodPayload['details'],
                                 });
                             }),
                             catchError((e) => of(console.error(e)))
@@ -150,6 +148,11 @@ export class PaymentCollectorStore extends ComponentStore<{
             );
         }
     );
+    readonly resetDropInInstance = this.effect((trigger$) => {
+        return trigger$.pipe(
+            tap(() => this.get().dropInInstance?.clearSelectedPaymentMethod())
+        );
+    });
 
     private selectDropInInstance() {
         return this.state$.pipe(
@@ -162,7 +165,7 @@ export class PaymentCollectorStore extends ComponentStore<{
         | {
               nonce: string;
               deviceData: string;
-              paymentDetails: PaymentMethodPayload['details'];
+              paymentDetails: cardPaymentMethodPayload['details'];
           }
         | undefined
     > {

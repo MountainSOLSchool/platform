@@ -17,7 +17,7 @@
         optionValue="value"
     ></p-selectButton>
 </div>
-<div *rxLet="selectedClasses$; let selectedClasses">
+<div>
     <ng-container *rxLet="classes$; let classes; suspense: skeleton">
         <p-card
             *ngFor="let class of classes"
@@ -47,17 +47,17 @@
                 class="flex align-items-center"
                 style="margin-bottom: 1.5rem; margin-top: -1rem"
             >
-                <p-chip
-                    [label]="class.classDateTimes"
+                <p-tag
+                    [value]="class.classDateTimes"
                     icon="pi pi-calendar"
                     styleClass="mr-2"
-                ></p-chip>
-                <p-chip [label]="class.weekday" styleClass="mr-2"></p-chip>
-                <p-chip
-                    [label]="class.dailyTimes"
+                ></p-tag>
+                <p-tag [value]="class.weekday" styleClass="mr-2"></p-tag>
+                <p-tag
+                    [value]="class.dailyTimes"
                     icon="pi pi-clock"
                     styleClass="mr-2"
-                ></p-chip>
+                ></p-tag>
             </div>
             <div class="field-checkbox">
                 <p-checkbox

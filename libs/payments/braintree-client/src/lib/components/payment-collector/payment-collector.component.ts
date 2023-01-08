@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, Output } from '@angular/core';
+import { Component, inject, Input, OnInit, Output } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
-import { PaymentMethodPayload } from 'braintree-web-drop-in';
+import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
 import { SkeletonModule } from 'primeng/skeleton';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PaymentCollectorStore } from './payment-collector.store';
 
 export type PaymentCollector = {
     collectPaymentMethod: () => Observable<{
         nonce: string;
         deviceData: string;
-        paymentDetails: PaymentMethodPayload['details'];
+        paymentDetails: cardPaymentMethodPayload['details'];
     }>;
 };
 
@@ -24,11 +24,15 @@ export type PaymentCollector = {
 export class PaymentCollectorComponent implements OnInit {
     store = inject(PaymentCollectorStore);
 
+    @Input() set sessionToken(token: string) {
+        this.store.resetDropInInstance();
+    }
+
     @Output() paymentMethod: Observable<
         | {
               nonce: string;
               deviceData: string;
-              paymentDetails: PaymentMethodPayload['details'];
+              paymentDetails: cardPaymentMethodPayload['details'];
           }
         | undefined
     > = this.store.selectPaymentMethod();

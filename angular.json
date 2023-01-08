@@ -175,18 +175,6 @@
             "sourceRoot": "libs/classes/class-enrollment-repository/src",
             "projectType": "library",
             "targets": {
-                "build": {
-                    "executor": "@nrwl/js:tsc",
-                    "outputs": ["{options.outputPath}"],
-                    "options": {
-                        "outputPath": "dist/libs/classes/class-enrollment-repository",
-                        "main": "libs/classes/class-enrollment-repository/src/index.ts",
-                        "tsConfig": "libs/classes/class-enrollment-repository/tsconfig.lib.json",
-                        "assets": [
-                            "libs/classes/class-enrollment-repository/*.md"
-                        ]
-                    }
-                },
                 "lint": {
                     "executor": "@nrwl/linter:eslint",
                     "outputs": ["{options.outputFile}"],
@@ -865,6 +853,32 @@
             },
             "tags": ["scope:student"]
         },
+        "student-reports": {
+            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+            "root": "libs/student/reports",
+            "sourceRoot": "libs/student/reports/src",
+            "projectType": "library",
+            "targets": {
+                "lint": {
+                    "executor": "@nrwl/linter:eslint",
+                    "options": {
+                        "lintFilePatterns": ["libs/student/reports/**/*.ts"]
+                    },
+                    "outputs": ["{options.outputFile}"]
+                },
+                "test": {
+                    "executor": "@nrwl/jest:jest",
+                    "outputs": [
+                        "{workspaceRoot}/coverage/libs/student/reports"
+                    ],
+                    "options": {
+                        "jestConfig": "libs/student/reports/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:student"]
+        },
         "student-repository": {
             "$schema": "../../../node_modules/nx/schemas/project-schema.json",
             "projectType": "library",
@@ -889,32 +903,6 @@
                             "libs/student/repository/src/**/*.ts",
                             "libs/student/repository/src/**/*.html"
                         ]
-                    }
-                }
-            },
-            "tags": ["scope:student"]
-        },
-        "student-reports": {
-            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-            "root": "libs/student/reports",
-            "sourceRoot": "libs/student/reports/src",
-            "projectType": "library",
-            "targets": {
-                "lint": {
-                    "executor": "@nrwl/linter:eslint",
-                    "options": {
-                        "lintFilePatterns": ["libs/student/reports/**/*.ts"]
-                    },
-                    "outputs": ["{options.outputFile}"]
-                },
-                "test": {
-                    "executor": "@nrwl/jest:jest",
-                    "outputs": [
-                        "{workspaceRoot}/coverage/libs/student/reports"
-                    ],
-                    "options": {
-                        "jestConfig": "libs/student/reports/jest.config.ts",
-                        "passWithNoTests": true
                     }
                 }
             },

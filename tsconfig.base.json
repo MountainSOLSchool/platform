@@ -56,8 +56,8 @@
             "@sol/record/domain": ["libs/record/domain/src/index.ts"],
             "@sol/student/domain": ["libs/student/domain/src/index.ts"],
             "@sol/student/import": ["libs/student/import/src/index.ts"],
-            "@sol/student/repository": ["libs/student/repository/src/index.ts"],
             "@sol/student/reports": ["libs/student/reports/src/index.ts"],
+            "@sol/student/repository": ["libs/student/repository/src/index.ts"],
             "@sol/table/domain": ["libs/table/domain/src/index.ts"],
             "@sol/table/html": ["libs/table/html/src/index.ts"],
             "@sol/table/pdf": ["libs/table/pdf/src/index.ts"]

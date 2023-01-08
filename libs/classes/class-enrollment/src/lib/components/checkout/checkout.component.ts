@@ -4,7 +4,7 @@ import {
     PaymentCollector,
     PaymentCollectorComponent,
 } from '@sol/payments/braintree-client';
-import { PaymentMethodPayload } from 'braintree-web-drop-in';
+import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { InputTextModule } from 'primeng/inputtext';
@@ -33,10 +33,11 @@ export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly user$ = inject(AngularFireAuth).user;
 
-    readonly discountCodes$ = this.workflow.select((s) => s.discountCodes);
+    readonly discountCodes$ = this.workflow.select(
+        (s) => s.enrollment.discountCodes
+    );
     readonly hasPaymentMethod$ = this.workflow.select((s) => {
-        console.log(s.paymentMethod);
-        return !!s.paymentMethod;
+        return !!s.enrollment.paymentMethod;
     });
     private readonly interacted$ = new BehaviorSubject(false);
 
@@ -76,6 +77,8 @@ export class CheckoutComponent {
         this.interacted$.next(value);
     }
 
+    @Input() sessionToken = self.crypto.randomUUID();
+
     @Output() validityChange = this.errors$.pipe(
         map((errors) => Object.keys(errors).length === 0)
     );
@@ -87,19 +90,23 @@ export class CheckoutComponent {
             | {
                   nonce: string;
                   deviceData: string;
-                  paymentDetails: PaymentMethodPayload['details'];
+                  paymentDetails: cardPaymentMethodPayload['details'];
               }
             | undefined
     ) {
-        this.workflow.patchState({
-            paymentMethod,
-        });
+        this.workflow.patchState((s) => ({
+            enrollment: { ...s.enrollment, paymentMethod },
+        }));
     }
 
     applyDiscountCode(code: string) {
         this.workflow.patchState((s) => ({
-            ...s,
-            discountCodes: Array.from(new Set([...s.discountCodes, code])),
+            enrollment: {
+                ...s.enrollment,
+                discountCodes: Array.from(
+                    new Set([...s.enrollment.discountCodes, code])
+                ),
+            },
         }));
     }
 }

@@ -1,5 +1,5 @@
 export interface Class {
     name: string;
-    cost: number;
+    cost?: number;
     id: string;
 }

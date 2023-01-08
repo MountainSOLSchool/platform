@@ -21,7 +21,9 @@ export class ClassesPercentDicount extends ClassesDiscount {
             if (this.classIds.includes(c.id)) {
                 return {
                     ...c,
-                    cost: this.atLeastZero(c.cost * (1 - this.percent / 100)),
+                    cost: this.atLeastZero(
+                        (c.cost ?? 0) * (1 - this.percent / 100)
+                    ),
                 };
             } else {
                 return c;
