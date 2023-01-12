@@ -355,3 +355,14 @@ export const roles = Functions.endpoint.handle(async (request, response) => {
     const roles = await AuthUtility.getUserRoles(user);
     response.send(roles);
 });
+
+export const enrollments = Functions.endpoint.handle(
+    async (request, response) => {
+        const enrollments =
+            await ClassEnrollmentRepository.getCurrentUserCompletedEnrollments(
+                request,
+                response
+            );
+        response.send(enrollments);
+    }
+);

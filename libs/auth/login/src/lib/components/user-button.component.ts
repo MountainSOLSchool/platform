@@ -62,7 +62,18 @@ export class UserButtonComponent implements OnInit {
         .pipe(
             map((user) => [
                 {
-                    label: user?.email ?? 'User email',
+                    label:
+                        (user?.email?.substring(0, 15) ?? 'User email') +
+                        (user?.email?.length ?? 0 > 15 ? '...' : ''),
+                    disabled: true,
+                },
+                {
+                    label: 'Enrollments',
+                    routerLink: '/account/enrollments',
+                },
+                {
+                    label: 'Reset Password',
+                    routerLink: '/account/reset-password',
                 },
                 {
                     label: 'Sign Out',

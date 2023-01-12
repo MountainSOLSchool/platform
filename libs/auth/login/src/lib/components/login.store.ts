@@ -14,6 +14,7 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { concatLatestFrom } from '@ngrx/effects';
 import { loginSuite } from './login.suite';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 
 export type Login = { email: string; password: string };
 type LoginState = Login & { isCreatingNewAccount: boolean };
@@ -33,6 +34,7 @@ enum RequestState {
 @Injectable({ providedIn: 'root' })
 export class LoginStore extends ComponentStore<LoginState> {
     private readonly authService = inject(AuthService);
+    private readonly user$ = inject(AngularFireAuth).user;
     private readonly router = inject(Router);
     private readonly messageService = inject(MessageService);
 
@@ -48,10 +50,14 @@ export class LoginStore extends ComponentStore<LoginState> {
         RequestState.Idle
     );
 
-    readonly resetPassword = this.effect((start: Observable<void>) => {
-        return start.pipe(
+    readonly resetPassword = this.effect((start$: Observable<void>) => {
+        return start$.pipe(
+            switchMap(() => this.user$),
             concatLatestFrom(() => this.state$),
-            map(([, { email }]) => email),
+            map(
+                ([currentUserEmail, { email }]) =>
+                    currentUserEmail?.email ?? email
+            ),
             tap((email) => this.authService.resetPassword(email)),
             tap(() =>
                 this.messageService.add({

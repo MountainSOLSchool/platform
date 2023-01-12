@@ -71,6 +71,11 @@ export const appRoutes: Routes = [
                         ],
                     },
                     {
+                        path: 'account',
+                        loadChildren: () =>
+                            import('@sol/account').then((m) => m.accountRoutes),
+                    },
+                    {
                         path: 'calendar',
                         loadChildren: () =>
                             import('@sol/classes/calendar').then(
