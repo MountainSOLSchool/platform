@@ -236,7 +236,10 @@ export const enroll = Functions.endpoint
             basketTotal
         );
 
+        const user = await AuthUtility.getUserFromRequest(request, response);
+
         const enrollmentRecord = {
+            userId: user.uid,
             studentName: `${student.firstName} ${student.lastName}`,
             contactEmail: student.contactEmail,
             finalCost: finalTotal,
@@ -254,7 +257,7 @@ export const enroll = Functions.endpoint
         const { success, transaction, errors } = await braintree.transact({
             amount: finalTotal,
             nonce,
-            customer: { email: student.contactEmail },
+            customer: { email: user.email },
             deviceData,
         });
 

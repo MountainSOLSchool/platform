@@ -1,6 +1,7 @@
 export interface ClassEnrollmentDbo {
     relatedId?: string;
     studentId?: string;
+    userId: string;
 
     studentName: string;
 
