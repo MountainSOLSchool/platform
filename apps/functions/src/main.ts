@@ -128,7 +128,8 @@ async function fetchMatchingClassRef({
 }
 
 const _fetchClasses = async (
-    database: FirebaseFirestore.Firestore
+    database: FirebaseFirestore.Firestore,
+    classIds?: string[]
 ): Promise<unknown> => {
     const classes = database.collection(CLASSES_SUMMER_2023_COLLECTION);
 

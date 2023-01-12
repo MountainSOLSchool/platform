@@ -1,4 +1,6 @@
-<button (click)="fillOutForTest()">Fill out form for test</button>
+<button *ngIf="showSecretAutofill$ | async" (click)="fillOutForTest()">
+    Fill out form for test
+</button>
 <mat-stepper #stepper [orientation]="(stepperOrientation | async)!">
     <mat-step #classSelection label="Class Selection">
         <ng-template matStepContent>

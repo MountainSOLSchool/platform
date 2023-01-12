@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { EnrollmentWorkflowStore } from './enrollment-workflow.store';
 import { StepsModule } from 'primeng/steps';
@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { map, tap } from 'rxjs';
+import { filter, fromEvent, map, skip, take } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
@@ -22,6 +22,7 @@ import { MedicalComponent } from '../medical/medical.component';
 import { LetModule } from '@rx-angular/template/let';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
+import { ComponentCanDeactivate } from './pending-changes.guard';
 
 @Component({
     standalone: true,
@@ -51,7 +52,7 @@ import { DialogModule } from 'primeng/dialog';
         DialogModule,
     ],
 })
-export class ClassEnrollmentComponent {
+export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     private readonly store = inject(EnrollmentWorkflowStore);
 
     readonly data$ = this.store.select((state) => state);
@@ -59,6 +60,16 @@ export class ClassEnrollmentComponent {
     readonly stepperOrientation = inject(BreakpointObserver)
         .observe('(min-width: 800px)')
         .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
+
+    readonly showSecretAutofill$ = fromEvent<KeyboardEvent>(
+        document,
+        'keypress'
+    ).pipe(
+        filter((event) => event.key === 'z'),
+        skip(3),
+        map(() => true),
+        take(1)
+    );
 
     readonly steps = [
         { label: 'Class Selection', routerLink: 'classes' },
@@ -183,5 +194,10 @@ export class ClassEnrollmentComponent {
     enrollAnother(stepper: CdkStepper) {
         this.store.startOver();
         stepper.reset();
+    }
+
+    @HostListener('window:beforeunload')
+    canDeactivate(): boolean {
+        return false;
     }
 }

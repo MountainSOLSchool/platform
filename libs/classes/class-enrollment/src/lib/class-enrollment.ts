@@ -6,10 +6,12 @@ import { InfoComponent } from './components/info/info.component';
 import { ClassEnrollmentComponent } from './components/enrollment-workflow/enrollment-workflow.component';
 import { AccountComponent } from './components/account/account.component';
 import { MedicalComponent } from './components/medical/medical.component';
+import { PendingChangesGuard } from './components/enrollment-workflow/pending-changes.guard';
 
 export const enrollmentRoutes: Route[] = [
     {
         path: '',
+        canDeactivate: [PendingChangesGuard],
         component: ClassEnrollmentComponent,
         children: [
             { path: '', redirectTo: 'classes', pathMatch: 'full' },

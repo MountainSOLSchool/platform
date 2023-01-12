@@ -125,15 +125,6 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
 
     readonly selectEnrollment = this.select((enrollment) => enrollment);
 
-    readonly warnBeforeUnload = this.effect(() => {
-        return fromEvent(window, 'beforeunload').pipe(
-            tap((event: BeforeUnloadEvent) => {
-                event.returnValue =
-                    'Your changes will be lost if you leave this page';
-            })
-        );
-    });
-
     readonly startOver = this.effect((trigger$) => {
         return trigger$.pipe(
             tap(() => {
