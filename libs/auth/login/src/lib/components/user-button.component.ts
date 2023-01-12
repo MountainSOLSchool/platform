@@ -72,8 +72,8 @@ export class UserButtonComponent implements OnInit {
                     routerLink: '/account/enrollments',
                 },
                 {
-                    label: 'Reset Password',
-                    routerLink: '/account/reset-password',
+                    label: 'Manage Account',
+                    routerLink: '/account/manage',
                 },
                 {
                     label: 'Sign Out',

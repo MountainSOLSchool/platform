@@ -26,6 +26,13 @@ export const appRoutes: Routes = [
                         canActivate: [UserGuard],
                         children: [
                             {
+                                path: 'account',
+                                loadChildren: () =>
+                                    import('@sol/account').then(
+                                        (m) => m.accountRoutes
+                                    ),
+                            },
+                            {
                                 path: 'admin',
                                 providers: [AdminGuard],
                                 canActivate: [AdminGuard],
@@ -69,11 +76,6 @@ export const appRoutes: Routes = [
                                 ],
                             },
                         ],
-                    },
-                    {
-                        path: 'account',
-                        loadChildren: () =>
-                            import('@sol/account').then((m) => m.accountRoutes),
                     },
                     {
                         path: 'calendar',

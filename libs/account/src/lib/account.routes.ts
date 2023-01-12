@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AccountEnrollmentsComponent } from './components/enrollments/enrollments.component';
-import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ManageAccountComponent } from './components/reset-password/manage-account.component';
 
 export const accountRoutes: Routes = [
     {
@@ -9,8 +9,8 @@ export const accountRoutes: Routes = [
         children: [],
     },
     {
-        path: 'reset-password',
-        component: ResetPasswordComponent,
+        path: 'manage',
+        component: ManageAccountComponent,
         children: [],
     },
 ];
