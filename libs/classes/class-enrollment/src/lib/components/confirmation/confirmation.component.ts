@@ -5,7 +5,7 @@ import { ChipModule } from 'primeng/chip';
 import { map, of, switchMap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { ClassListService } from '../../services/class-list.service';
-import { ForModule } from '@rx-angular/template';
+import { ForModule } from '@rx-angular/template/for';
 import { FieldsetModule } from 'primeng/fieldset';
 @Component({
     standalone: true,
