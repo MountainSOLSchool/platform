@@ -9,14 +9,18 @@ import { CommonModule } from '@angular/common';
 @Component({
     standalone: true,
     template: ` <h2>Manage Account</h2>
-        <p><b>Email:</b> {{ email$ | async }}</p>
-        <h3>Change Password</h3>
-        <button
-            pButton
-            type="button"
-            label="Email password reset link"
-            (click)="sendResetLink()"
-        ></button>`,
+        <div style="margin-top: 2rem">
+            <p><b>Email:</b> {{ email$ | async }}</p>
+        </div>
+        <div style="margin-top: 2rem">
+            <h3>Change Password</h3>
+            <button
+                pButton
+                type="button"
+                label="Email password reset link"
+                (click)="sendResetLink()"
+            ></button>
+        </div>`,
     imports: [CommonModule, ButtonModule],
     providers: [provideComponentStore(LoginStore)],
 })

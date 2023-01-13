@@ -12,19 +12,28 @@ import { LetModule } from '@rx-angular/template/let';
         <h2>Enrollments</h2>
         <ng-container *rxLet="enrollments$; let enrollments; suspense: skeleton"
             ><ng-container *ngIf="enrollments.length > 0; else none"
-                ><p-card
+                ><div
+                    style="margin-top: 2rem"
                     *ngFor="let enrollment of enrollments$ | async"
-                    [title]="
-                        enrollment.timestamp._seconds * 1000 | date : 'short'
-                    "
                 >
-                    <p><b>Student name:</b> {{ enrollment.studentName }}</p>
-                    <p>
-                        <b>Final cost:</b> {{ enrollment.finalCost | currency }}
-                    </p>
-                    <p><b>Classes:</b> {{ enrollment.classIds | json }}</p>
-                    <p><b>Transaction Id:</b> {{ enrollment.transactionId }}</p>
-                </p-card></ng-container
+                    <p-card
+                        [title]="
+                            enrollment.timestamp._seconds * 1000
+                                | date : 'short'
+                        "
+                    >
+                        <p><b>Student name:</b> {{ enrollment.studentName }}</p>
+                        <p>
+                            <b>Final cost:</b>
+                            {{ enrollment.finalCost | currency }}
+                        </p>
+                        <p><b>Classes:</b> {{ enrollment.classIds | json }}</p>
+                        <p>
+                            <b>Transaction Id:</b>
+                            {{ enrollment.transactionId }}
+                        </p>
+                    </p-card>
+                </div></ng-container
             ><ng-template #none
                 >You have no enrollments.</ng-template
             ></ng-container
