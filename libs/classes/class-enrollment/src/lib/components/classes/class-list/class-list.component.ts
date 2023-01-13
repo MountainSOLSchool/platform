@@ -1,5 +1,11 @@
 import { Component, inject, Output } from '@angular/core';
-import { map, switchMap } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    map,
+    switchMap,
+    withLatestFrom,
+} from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
 import { CardModule } from 'primeng/card';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -12,6 +18,7 @@ import { ClassListService } from '../../../services/class-list.service';
 import { LetModule } from '@rx-angular/template/let';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { TagModule } from 'primeng/tag';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
     standalone: true,
@@ -26,6 +33,7 @@ import { TagModule } from 'primeng/tag';
         LetModule,
         SelectButtonModule,
         TagModule,
+        ToggleButtonModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -37,11 +45,13 @@ export class ClassesComponent {
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
 
-    selectedClasses$ = this.workflow.select(
+    private search$ = new BehaviorSubject('');
+
+    selectedClassIds$ = this.workflow.select(
         (state) => state.enrollment.selectedClasses
     );
 
-    @Output() validityChange = this.selectedClasses$.pipe(
+    @Output() validityChange = this.selectedClassIds$.pipe(
         map((selectedClasses) => selectedClasses.length > 0)
     );
 
@@ -53,26 +63,29 @@ export class ClassesComponent {
 
     classes$ = this.classListService.getFutureClasses().pipe(
         map((classes) =>
-            classes.map((c) => {
-                return {
-                    ...c,
-                    classDateTimes:
-                        c.startMs && c.endMs
-                            ? this.datePipe.transform(
-                                  new Date(c.startMs),
-                                  'shortDate'
-                              ) +
-                              ' - ' +
-                              this.datePipe.transform(
-                                  new Date(c.endMs),
-                                  'shortDate'
-                              )
-                            : '',
-                };
-            })
+            classes
+                .map((c) => {
+                    return {
+                        ...c,
+                        image: 'https://firebasestorage.googleapis.com/v0/b/mountain-sol-platform.appspot.com/o/th.jpeg?alt=media&token=930a83c7-9e29-45be-b192-58e4546c5802',
+                        classDateTimes:
+                            c.startMs && c.endMs
+                                ? this.datePipe.transform(
+                                      new Date(c.startMs),
+                                      'shortDate'
+                                  ) +
+                                  ' - ' +
+                                  this.datePipe.transform(
+                                      new Date(c.endMs),
+                                      'shortDate'
+                                  )
+                                : '',
+                    };
+                })
+                .sort((a, b) => a.startMs - b.startMs)
         ),
         switchMap((classes) =>
-            this.selectedClasses$.pipe(
+            this.selectedClassIds$.pipe(
                 map((selectedClasses) => {
                     return classes.map((c) => {
                         return {
@@ -82,6 +95,21 @@ export class ClassesComponent {
                     });
                 })
             )
+        )
+    );
+
+    classesResult$ = combineLatest([this.classes$, this.search$]).pipe(
+        map(([classes, search]) => {
+            return classes.filter((c) =>
+                c.title.toLowerCase().includes(search.toLowerCase())
+            );
+        })
+    );
+
+    selectedClasses$ = this.selectedClassIds$.pipe(
+        withLatestFrom(this.classes$),
+        map(([selectedIds, classes]) =>
+            classes.filter((c) => selectedIds.includes(c.id))
         )
     );
 
@@ -104,5 +132,9 @@ export class ClassesComponent {
                       ),
             },
         }));
+    }
+
+    searchChange(search: string) {
+        this.search$.next(search);
     }
 }

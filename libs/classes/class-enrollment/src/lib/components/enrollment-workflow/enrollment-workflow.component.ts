@@ -51,6 +51,16 @@ import { ComponentCanDeactivate } from './pending-changes.guard';
         ProgressSpinnerModule,
         DialogModule,
     ],
+    styles: [
+        `
+            ::ng-deep .mat-vertical-stepper-content {
+                overflow: unset !important;
+            }
+            ::ng-deep .mat-horizontal-content-container {
+                overflow: unset !important;
+            }
+        `,
+    ],
 })
 export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     private readonly store = inject(EnrollmentWorkflowStore);
