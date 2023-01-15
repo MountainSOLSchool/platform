@@ -1,4 +1,5 @@
 import { BasketDiscount } from './basket-discount';
+import { Class } from '../class';
 
 export class PercentDicount extends BasketDiscount {
     override type = 'percent';
@@ -10,7 +11,8 @@ export class PercentDicount extends BasketDiscount {
     }
     percent!: number;
 
-    apply(total: number): number {
-        return this.atLeastZero(total * (1 - this.percent / 100));
+    apply(total: number): { updated: number; amount: number } {
+        const updated = this.atLeastZero(total * (1 - this.percent / 100));
+        return { updated, amount: total - updated };
     }
 }

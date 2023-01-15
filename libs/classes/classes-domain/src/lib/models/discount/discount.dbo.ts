@@ -1,5 +1,5 @@
 export interface DiscountDbo {
     id: string;
-    code: number;
+    code: string;
     type: string;
 }

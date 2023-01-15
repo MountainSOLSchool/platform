@@ -1,7 +1,7 @@
 import { Discount } from './discount';
 
 class _BasketDiscount extends Discount<number> {
-    apply(total: number): number {
+    apply(total: number): { updated: number; amount: number } {
         throw new Error('Not implemented in private class');
     }
 }
@@ -13,7 +13,7 @@ export abstract class BasketDiscount extends _BasketDiscount {
         super(discount);
         Object.assign(this, discount);
     }
-    abstract override apply(total: number): number;
+    abstract override apply(total: number): { updated: number; amount: number };
 }
 
 export const isBasketDiscount = (

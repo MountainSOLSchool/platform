@@ -10,7 +10,8 @@ export class AmountDiscount extends BasketDiscount {
     }
     amount!: number;
 
-    apply(total: number): number {
-        return this.atLeastZero(total - this.amount);
+    apply(total: number): { updated: number; amount: number } {
+        const updated = this.atLeastZero(total - this.amount);
+        return { updated, amount: this.amount };
     }
 }

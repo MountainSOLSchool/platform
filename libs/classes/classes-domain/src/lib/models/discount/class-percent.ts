@@ -16,8 +16,8 @@ export class ClassesPercentDicount extends ClassesDiscount {
 
     percent!: number;
 
-    apply(classes: Array<Class>): Array<Class> {
-        return classes.map((c) => {
+    apply(classes: Array<Class>): { updated: Array<Class>; amount: number } {
+        const updated = classes.map((c) => {
             if (this.classIds.includes(c.id)) {
                 return {
                     ...c,
@@ -29,5 +29,9 @@ export class ClassesPercentDicount extends ClassesDiscount {
                 return c;
             }
         });
+        const amount =
+            classes.reduce((acc, c) => acc + (c.cost ?? 0), 0) -
+            updated.reduce((acc, c) => acc + (c.cost ?? 0), 0);
+        return { updated, amount };
     }
 }

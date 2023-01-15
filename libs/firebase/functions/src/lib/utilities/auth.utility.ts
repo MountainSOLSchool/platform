@@ -23,15 +23,16 @@ export class AuthUtility {
         req: functions.https.Request,
         res: functions.Response
     ) {
-        const { uid: userId } = await AuthUtility.validateFirebaseIdToken(
-            req,
-            res
-        );
+        const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
+        if (!decoded) {
+            res.status(403).send('Unauthorized');
+            return;
+        } else {
+            const isAdmin = await AuthUtility.isAdmin(decoded.uid);
 
-        const isAdmin = await AuthUtility.isAdmin(userId);
-
-        if (!isAdmin) {
-            res.status(403).send();
+            if (!isAdmin) {
+                res.status(403).send();
+            }
         }
     }
 
@@ -57,15 +58,20 @@ export class AuthUtility {
     public static async getUserFromRequest(
         req: functions.https.Request,
         res: functions.Response
-    ): Promise<admin.auth.UserRecord> {
-        const { uid } = await AuthUtility.validateFirebaseIdToken(req, res);
-        return await admin.auth().getUser(uid);
+    ): Promise<admin.auth.UserRecord | void> {
+        const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
+        if (!decoded) {
+            res.status(403).send('Unauthorized');
+            return;
+        } else {
+            return await admin.auth().getUser(decoded.uid);
+        }
     }
 
     public static async validateFirebaseIdToken(
         req: functions.https.Request,
         res: functions.Response
-    ): Promise<DecodedIdToken | undefined> {
+    ): Promise<DecodedIdToken | void> {
         if (
             (!req.headers.authorization ||
                 !req.headers.authorization.startsWith('Bearer ')) &&
@@ -78,7 +84,7 @@ export class AuthUtility {
                 'or by passing a "__session" cookie.'
             );
             res.status(403).send('Unauthorized');
-            return undefined;
+            return;
         }
 
         let idToken;
@@ -94,7 +100,7 @@ export class AuthUtility {
         } else {
             // No cookie
             res.status(403).send('Unauthorized');
-            return undefined;
+            return;
         }
 
         try {
@@ -104,7 +110,7 @@ export class AuthUtility {
         } catch (error) {
             console.error('Error while verifying Firebase ID token:', error);
             res.status(403).send('Unauthorized');
-            return undefined;
+            return;
         }
     }
 }

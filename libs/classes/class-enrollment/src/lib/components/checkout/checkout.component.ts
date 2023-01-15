@@ -11,9 +11,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { MessagesComponent } from '@sol/form/validity';
 import { create, enforce, test } from 'vest';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
 import { LetModule } from '@rx-angular/template/let';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { FunctionsApi } from '@sol/firebase/functions-api';
 
 @Component({
     standalone: true,
@@ -32,6 +33,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly user$ = inject(AngularFireAuth).user;
+    private readonly functions = inject(FunctionsApi);
 
     readonly discountCodes$ = this.workflow.select(
         (s) => s.enrollment.discountCodes
@@ -96,17 +98,6 @@ export class CheckoutComponent {
     ) {
         this.workflow.patchState((s) => ({
             enrollment: { ...s.enrollment, paymentMethod },
-        }));
-    }
-
-    applyDiscountCode(code: string) {
-        this.workflow.patchState((s) => ({
-            enrollment: {
-                ...s.enrollment,
-                discountCodes: Array.from(
-                    new Set([...s.enrollment.discountCodes, code])
-                ),
-            },
         }));
     }
 }

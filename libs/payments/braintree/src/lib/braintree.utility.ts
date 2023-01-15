@@ -1,3 +1,4 @@
+import * as braintree from 'braintree';
 import { BraintreeGateway, Environment } from 'braintree';
 import { PreparedTransaction } from '@sol/payments/transactions';
 import { type auth } from 'firebase-admin';
@@ -5,7 +6,7 @@ import { type auth } from 'firebase-admin';
 export class Braintree {
     constructor(
         private readonly secrets: Record<
-            typeof Braintree.SECRET_NAMES[number],
+            (typeof Braintree.SECRET_NAMES)[number],
             string
         >
     ) {

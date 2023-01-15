@@ -30,6 +30,7 @@ import {
     isBasketDiscount,
     ClassesDiscount,
     BasketDiscount,
+    Class,
 } from '@sol/classes/domain';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 // import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
@@ -146,12 +147,14 @@ const _fetchClasses = async (
                 startMs:
                     typeof c !== 'string' &&
                     typeof c.start === 'object' &&
+                    c.start &&
                     '_seconds' in c.start
                         ? Number(c.start._seconds) * 1000
                         : undefined,
                 endMs:
                     typeof c !== 'string' &&
                     typeof c.end === 'object' &&
+                    c.end &&
                     '_seconds' in c.end
                         ? Number(c.end._seconds) * 1000
                         : undefined,
@@ -182,10 +185,75 @@ export const paymentToken = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle(async (request, response, secrets) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
+        if (!user) {
+            response.status(401).send({ error: 'Unauthorized' });
+            return;
+        }
         const braintree = new Braintree(secrets);
         const token = await braintree.getClientToken(user);
         response.send(token);
     });
+
+function _getEnrollmentDiscounts(
+    discounts: Discount<unknown>[],
+    classes: Awaited<Class>[]
+) {
+    const activeDiscounts = discounts.filter((d) => d.active);
+
+    const classesDiscounts = activeDiscounts.filter((d): d is ClassesDiscount =>
+        isClassesDiscount(d)
+    );
+
+    const [updatedClasses, classDiscountAmounts] = classesDiscounts.reduce(
+        ([updated, amounts], discount) => {
+            const appliedDiscount = discount.apply(updated);
+            return [
+                appliedDiscount.updated,
+                [
+                    ...amounts,
+                    { code: discount.code, amount: appliedDiscount.amount },
+                ],
+            ] satisfies [Array<Class>, Array<{ code: string; amount: number }>];
+        },
+        [classes, new Array<{ code: string; amount: number }>()] satisfies [
+            Array<Class>,
+            Array<{ code: string; amount: number }>
+        ]
+    );
+
+    const basketDiscounts = activeDiscounts.filter((d): d is BasketDiscount =>
+        isBasketDiscount(d)
+    );
+
+    const basketTotal = updatedClasses.reduce(
+        (total, c) => total + (c.cost ?? 0),
+        0
+    );
+
+    const [finalTotal, basketDiscountAmounts] = basketDiscounts.reduce(
+        ([updated, amounts], discount) => {
+            const appliedDiscount = discount.apply(updated);
+            return [
+                appliedDiscount.updated,
+                [
+                    ...amounts,
+                    { code: discount.code, amount: appliedDiscount.amount },
+                ],
+            ] satisfies [number, Array<{ code: string; amount: number }>];
+        },
+        [basketTotal, new Array<{ code: string; amount: number }>()] satisfies [
+            number,
+            Array<{ code: string; amount: number }>
+        ]
+    );
+
+    return {
+        updatedClasses,
+        finalTotal,
+        discountAmounts: [...classDiscountAmounts, ...basketDiscountAmounts],
+        originalTotal: classes.reduce((total, c) => total + (c.cost ?? 0), 0),
+    };
+}
 
 export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
@@ -195,6 +263,13 @@ export const enroll = Functions.endpoint
         discountCodes: Array<string>;
         paymentMethod: { nonce: string; deviceData: string };
     }>(async (request, response, secrets) => {
+        const user = await AuthUtility.getUserFromRequest(request, response);
+
+        if (!user) {
+            response.status(401).send({ error: 'User not found' });
+            return;
+        }
+
         const {
             selectedClasses,
             student,
@@ -214,38 +289,17 @@ export const enroll = Functions.endpoint
             )
         ).filter((d): d is Discount<unknown> => !!d);
 
-        const classesDiscounts = discounts.filter((d): d is ClassesDiscount =>
-            isClassesDiscount(d)
-        );
-
-        const classesUpdatedByClassDiscounts = classesDiscounts.reduce(
-            (updatedClasses, discount) => discount.apply(updatedClasses),
-            classes
-        );
-
-        const basketDiscounts = discounts.filter((d): d is BasketDiscount =>
-            isBasketDiscount(d)
-        );
-
-        const basketTotal = classesUpdatedByClassDiscounts.reduce(
-            (total, c) => total + c.cost,
-            0
-        );
-
-        const finalTotal = basketDiscounts.reduce(
-            (total, discount) => discount.apply(total),
-            basketTotal
-        );
-
-        const user = await AuthUtility.getUserFromRequest(request, response);
+        const { finalTotal } = _getEnrollmentDiscounts(discounts, classes);
 
         const enrollmentRecord = {
             userId: user.uid,
             studentName: `${student.firstName} ${student.lastName}`,
             contactEmail: student.contactEmail,
             finalCost: finalTotal,
-            discountIds: discounts.map((d) => d.id),
-            classIds: classesUpdatedByClassDiscounts.map((c) => c.id),
+            discountIds: discounts
+                .map((d) => d.id)
+                .filter((d): d is string => !!d),
+            classIds: classes.map((c) => c.id),
         };
 
         const studentEnrollmentId = await ClassEnrollmentRepository.create({
@@ -258,7 +312,7 @@ export const enroll = Functions.endpoint
         const { success, transaction, errors } = await braintree.transact({
             amount: finalTotal,
             nonce,
-            customer: { email: user.email },
+            customer: { email: enrollmentRecord.contactEmail },
             deviceData,
         });
 
@@ -276,7 +330,7 @@ export const enroll = Functions.endpoint
             });
 
             await Promise.all(
-                classesUpdatedByClassDiscounts.map(async (c) => {
+                classes.map(async (c) => {
                     await ClassRepository.addStudentToClass(
                         studentRef.id,
                         c.id
@@ -286,7 +340,6 @@ export const enroll = Functions.endpoint
 
             response.send({
                 success,
-                classesUpdatedByClassDiscounts,
                 email: student.contactEmail,
             });
         } else {
@@ -335,7 +388,7 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
                 : [
                       {
                           name: '',
-                          description: form.allergies,
+                          description: form.allergies ?? '',
                           response: '',
                           important: true,
                       },
@@ -353,6 +406,10 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
 
 export const roles = Functions.endpoint.handle(async (request, response) => {
     const user = await AuthUtility.getUserFromRequest(request, response);
+    if (!user) {
+        response.send({ roles: [] });
+        return;
+    }
     const roles = await AuthUtility.getUserRoles(user);
     response.send(roles);
 });
@@ -367,3 +424,21 @@ export const enrollments = Functions.endpoint.handle(
         response.send(enrollments);
     }
 );
+
+export const calculateBasket = Functions.endpoint.handle<{
+    codes: Array<string>;
+    classIds: Array<string>;
+}>(async (request, response) => {
+    const { codes, classIds } = request.body.data;
+    const discounts = (
+        await Promise.all(
+            codes.map(async (code) => await DiscountRepository.get(code))
+        )
+    ).filter((code): code is Discount<unknown> => !!code);
+    const classes = await Promise.all(
+        classIds.map(async (id) => await ClassRepository.get(id))
+    );
+    const { discountAmounts, finalTotal, originalTotal } =
+        _getEnrollmentDiscounts(discounts, classes);
+    response.send({ discountAmounts, finalTotal, originalTotal });
+});

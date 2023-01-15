@@ -38,7 +38,7 @@ class FunctionBuilder<SecretNames extends string> {
                 body: { data: RequestData };
             },
             response: functions.Response,
-            secrets?: Record<string, string>
+            secrets: Record<string, string>
         ) => void
     ) {
         return functions
@@ -64,12 +64,14 @@ class FunctionBuilder<SecretNames extends string> {
                                 },
                             } as functions.Response,
                             Object.fromEntries(
-                                Object.entries(this.secrets).map(
-                                    ([key, secret]: [string, SecretParam]) => [
+                                Object.entries(this.secrets)
+                                    .map(
+                                        (pair) => pair as [string, SecretParam]
+                                    )
+                                    .map(([key, secret]) => [
                                         key,
                                         secret.value(),
-                                    ]
-                                )
+                                    ])
                             )
                         );
                     });

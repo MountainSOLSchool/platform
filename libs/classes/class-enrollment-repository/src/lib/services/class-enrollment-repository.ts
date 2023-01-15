@@ -19,11 +19,14 @@ export class ClassEnrollmentRepository {
         request: functions.https.Request,
         response: functions.Response
     ): Promise<Array<ClassEnrollmentDbo>> {
-        const { uid } = await AuthUtility.getUserFromRequest(request, response);
+        const user = await AuthUtility.getUserFromRequest(request, response);
+        if (!user) {
+            return [];
+        }
         // load enrollments from database with userId matching uid
         return await this.database
             .collection('enrollment')
-            .where('userId', '==', uid)
+            .where('userId', '==', user.uid)
             .where('status', '==', 'enrolled')
             .get()
             .then((snapshot) => {

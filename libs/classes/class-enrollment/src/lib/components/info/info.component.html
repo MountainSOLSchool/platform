@@ -20,7 +20,7 @@
                                 [(ngModel)]="vm.student.birthdate"
                                 (ngModelChange)="updateStudentInfo(vm.student)"
                             ></p-calendar>
-                            <label for="birthday">Birth Date</label>
+                            <label for="birthdate">Birth Date</label>
                         </span>
                         <sol-messages
                             [messages]="vm.errors['birthdate']"
@@ -279,6 +279,7 @@
                                 type="text"
                                 name="state"
                                 mask="aa"
+                                [style]="{ 'text-transform': 'uppercase' }"
                                 slotChar=" "
                                 [solValid]="!vm.errors['state']"
                                 [(ngModel)]="vm.student.state"

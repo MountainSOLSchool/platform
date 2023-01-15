@@ -1,5 +1,5 @@
 <ng-container *ngIf="allStepsComplete; else incomplete"
-    ><ng-container *rxLet="enrollment$; let enrollment">
+    ><ng-container *rxLet="viewModel$; let vm">
         <div class="section">
             <p-fieldset legend="Student" *rxLet="student$; let student">
                 <p>Name: {{ student?.firstName }} {{ student?.lastName }}</p>
@@ -8,14 +8,22 @@
         </div>
 
         <div class="section">
-            <p-fieldset legend="Selected Classes">
-                <div class="flex align-items-center">
-                    <p-chip
-                        *rxFor="let selectedClass of selectedClasses$"
-                        [label]="selectedClass.title"
-                        styleClass="mr-2"
-                        [removable]="false"
-                    ></p-chip>
+            <p-fieldset legend="Class Cost Summary">
+                <div
+                    *rxFor="let selectedClass of vm.selectedClasses"
+                    style="width: 20rem; margin-bottom: 1.5rem"
+                >
+                    <p-card [header]="selectedClass.title" styleClass="mr-2">
+                        <p-tag
+                            [value]="selectedClass.classDateTimes"
+                            icon="pi pi-calendar"
+                            styleClass="mr-2"
+                        ></p-tag>
+                        <p>
+                            <span class="font-weight-bold">Cost:</span>
+                            {{ selectedClass.cost | currency }}
+                        </p>
+                    </p-card>
                 </div>
             </p-fieldset>
         </div>
@@ -25,31 +33,124 @@
                 <div>
                     <p>
                         Type:
-                        {{ enrollment.paymentMethod?.paymentDetails?.cardType }}
+                        {{
+                            vm.enrollment.paymentMethod?.paymentDetails
+                                ?.cardType
+                        }}
                     </p>
                     <p>
                         Number: **** **** ****
-                        {{ enrollment.paymentMethod?.paymentDetails?.lastFour }}
+                        {{
+                            vm.enrollment.paymentMethod?.paymentDetails
+                                ?.lastFour
+                        }}
+                    </p>
+                    <p>
+                        Contact Email: {{ vm.enrollment.student?.contactEmail }}
                     </p>
                 </div>
             </p-fieldset>
         </div>
         <div class="section">
-            <p-fieldset
-                legend="Discounts"
-                *ngIf="enrollment.discountCodes.length > 0"
-            >
-                <div class="flex align-items-center">
-                    <p-chip
-                        *ngFor="let code of enrollment.discountCodes"
-                        [label]="code"
-                        styleClass="mr-2"
-                        [removable]="true"
-                    ></p-chip>
+            <p-fieldset legend="Discounts">
+                <h3 style="margin-top: 0.5rem">Apply Discount</h3>
+                <div class="field" style="margin-top: 2rem">
+                    <span class="p-float-label">
+                        <input
+                            id="discountCode"
+                            name="discountCode"
+                            pInputText
+                            [style]="{ 'text-transform': 'uppercase' }"
+                            #discountCode
+                            (keyup.enter)="applyDiscountCode(discountCode)"
+                        />
+                        <label for="discountCode">Code</label>
+                        <button
+                            pButton
+                            type="button"
+                            label="Apply"
+                            [loading]="vm.isLoadingDiscounts"
+                            style="margin-left: 0.5rem"
+                            (click)="applyDiscountCode(discountCode)"
+                        ></button>
+                    </span>
+                </div>
+                <ng-container
+                    *rxIf="!vm.isLoadingDiscounts; else loadingDiscounts"
+                >
+                    <div
+                        class="flex align-items-center"
+                        style="margin-top: 1rem"
+                    >
+                        <p-chip
+                            *rxFor="let discount of vm.validDiscountAmounts"
+                            [label]="
+                                discount.code +
+                                ' (-' +
+                                (discount.amount | currency) +
+                                ')'
+                            "
+                            styleClass="mr-2 valid-chip"
+                            [removable]="true"
+                            (onRemove)="removeDiscountCode(discount.code)"
+                        ></p-chip>
+                    </div>
+                    <div
+                        *ngIf="vm.invalidCodes.length > 0"
+                        style="margin-top: 1rem"
+                    >
+                        <div>
+                            Could not find a discount matching these codes:
+                        </div>
+                        <div
+                            class="flex align-items-center"
+                            style="margin-top: 0.5rem"
+                        >
+                            <p-chip
+                                *rxFor="let code of vm.invalidCodes"
+                                [label]="code"
+                                styleClass="mr-2"
+                                [removable]="true"
+                                (onRemove)="removeDiscountCode(code)"
+                            ></p-chip>
+                        </div>
+                    </div> </ng-container
+                ><ng-template #loadingDiscounts>
+                    <p-progressSpinner
+                        [style]="{ width: '50px', height: '50px' }"
+                        styleClass="custom-spinner"
+                        strokeWidth="8"
+                        fill="var(--surface-ground)"
+                        animationDuration=".5s"
+                    ></p-progressSpinner>
+                </ng-template>
+            </p-fieldset>
+        </div>
+        <div class="section">
+            <p-fieldset legend="Total">
+                <div>
+                    <p>
+                        Subtotal: {{ vm.basketCosts.originalTotal | currency }}
+                    </p>
+                    <p>
+                        Total Discounts:
+                        {{ vm.basketCosts.discountAmounts.length > 0 ? '-' : ''
+                        }}{{
+                            vm.basketCosts.originalTotal -
+                                vm.basketCosts.finalTotal | currency
+                        }}
+                    </p>
+                    <p>
+                        <b>
+                            Final Total:
+                            {{ vm.basketCosts.finalTotal | currency }}
+                        </b>
+                    </p>
                 </div>
             </p-fieldset>
-        </div> </ng-container
-></ng-container>
+        </div>
+    </ng-container></ng-container
+>
 <ng-template #incomplete>
     <p>Please complete all steps before submitting.</p>
 </ng-template>

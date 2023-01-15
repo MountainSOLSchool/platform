@@ -2,7 +2,7 @@ import { Class } from '../class';
 import { Discount } from './discount';
 
 class _ClassesDiscount extends Discount<Array<Class>> {
-    apply(classes: Array<Class>): Array<Class> {
+    apply(classes: Array<Class>): { updated: Array<Class>; amount: number } {
         throw new Error('Not implemented in private class');
     }
 }
@@ -15,7 +15,10 @@ export abstract class ClassesDiscount extends _ClassesDiscount {
         Object.assign(this, discount);
     }
     classIds!: Array<string>;
-    abstract override apply(classes: Array<Class>): Array<Class>;
+    abstract override apply(classes: Array<Class>): {
+        updated: Array<Class>;
+        amount: number;
+    };
 }
 
 export const isClassesDiscount = (
