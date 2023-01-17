@@ -1,31 +1,35 @@
-<div
-    class="p-input-icon-left"
-    style="margin-left: auto; margin-right: auto; margin-bottom: 2rem"
->
-    <i class="pi pi-search"></i>
-    <span class="p-input-icon-right">
-        <i
-            *ngIf="searchInput.value.length > 0"
-            class="pi pi-times-circle"
-            (click)="searchChange((searchInput.value = ''))"
-            style="cursor: pointer"
-        ></i>
-        <input
-            #searchInput
-            type="text"
-            pInputText
-            placeholder="Search by name"
-            style="width: 400px"
-            (input)="searchChange(searchInput.value)"
-        />
-    </span>
-</div>
-<div>
-    <p-selectButton
-        [options]="filterOptions"
-        optionLabel="name"
-        optionValue="value"
-    ></p-selectButton>
+<div style="margin-bottom: 2rem">
+    <div
+        class="p-input-icon-left"
+        style="margin-left: auto; margin-right: auto"
+    >
+        <i class="pi pi-search"></i>
+        <span class="p-input-icon-right">
+            <i
+                *ngIf="searchInput.value.length > 0"
+                class="pi pi-times-circle"
+                (click)="searchChange((searchInput.value = ''))"
+                style="cursor: pointer"
+            ></i>
+            <input
+                #searchInput
+                type="text"
+                pInputText
+                placeholder="Search"
+                style="width: 400px"
+                (input)="searchChange(searchInput.value)"
+            />
+        </span>
+    </div>
+    <div style="display: inline; margin-left: 1rem">
+        <p-dropdown
+            [options]="(filterOptions$ | async) ?? []"
+            placeholder="Select a grade range"
+            optionLabel="name"
+            [showClear]="true"
+            (onChange)="filterChange($event.value?.value ?? [])"
+        ></p-dropdown>
+    </div>
 </div>
 <div
     *rxLet="selectedClasses$; let selected"
@@ -52,98 +56,110 @@
         </div>
     </div>
 </div>
-<div style="margin-top: 1rem">
-    <ng-container *rxLet="classesResult$; let classes; suspense: skeleton">
-        <ng-container *ngIf="classes.length > 0; else noResults"
-            ><div
-                *ngFor="let class of classes"
-                [ngStyle]="{
-                    width: '40rem',
-                    border: class.selected
-                        ? '.2rem solid #3c82f7'
-                        : '.2rem solid transparent',
-                    'box-sizing': 'border-box',
-                    'border-radius': '6px',
-                    'margin-bottom': '2em',
-                    'margin-left': 'auto',
-                    'margin-right': 'auto',
-                    display: 'block'
-                }"
-            >
-                <p-card [styleClass]="'gradient'">
-                    <ng-template pTempalte="header"></ng-template>
-                    <div style="position: relative; margin-top: -2.5rem">
-                        <h2>{{ class.title }}</h2>
-                        <img
-                            alt="Card"
-                            [src]="class.image"
-                            style="
-                                position: absolute;
-                                top: 0px;
-                                right: 0px;
-                                border-radius: 6px;
-                            "
-                            height="150px"
-                            width="150px"
-                        />
-                    </div>
-                    <div
-                        class="flex align-items-center"
-                        style="margin-bottom: 1.5rem; margin-top: 1rem"
-                    >
-                        <p-tag
-                            [value]="class.classDateTimes"
-                            icon="pi pi-calendar"
-                            styleClass="mr-2"
-                        ></p-tag>
-                        <p-tag
-                            [value]="class.weekday"
-                            styleClass="mr-2"
-                        ></p-tag>
-                        <p-tag
-                            [value]="class.dailyTimes"
-                            icon="pi pi-clock"
-                            styleClass="mr-2"
-                        ></p-tag>
-                    </div>
-                    <p>
-                        <b>Class Type:</b> {{ class.classType }}<br />
-                        <b>Grades:</b>
-                        {{ class.gradeRangeStart }} - {{ class.gradeRangeEnd
-                        }}<br />
-                        <b>Location:</b> {{ class.location }}<br />
-                        <b>Cost:</b> ${{ class.cost }}<br />
-                        <b>Instructors:</b>
-                        <span
-                            *ngFor="
-                                let instructor of class.instructors;
-                                let isLast = last
-                            "
-                        >
-                            {{ instructor.first_name }} {{ instructor.last_name
-                            }}{{ isLast ? '' : ', ' }}
-                        </span>
-                        <br />
-                        <br />
-                        <b>Description:</b> <br />
-                        {{ class.description }}<br />
-                    </p>
-                    <div style="margin-top: 2rem; margin-bottom: -1rem">
-                        <p-toggleButton
-                            [inputId]="'select' + class.id"
-                            onIcon="pi pi-check"
-                            onLabel="Selected"
-                            offLabel="Select"
-                            [(ngModel)]="class.selected"
-                            (ngModelChange)="selectionChanged(class)"
-                        ></p-toggleButton>
-                    </div>
-                </p-card></div></ng-container
-        ><ng-template #noResults>
-            There are no classes for the current search.
-        </ng-template></ng-container
-    >
+
+<div
+    *rxIf="isFakeSearchLoading$; else classList"
+    style="width: 100%; margin-top: 1rem"
+>
+    <div style="margin-left: auto; margin-right: auto; width: fit-content">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
 </div>
+<ng-template #classList>
+    <div style="margin-top: 1rem">
+        <ng-container *rxLet="classesResult$; let classes; suspense: skeleton">
+            <ng-container *ngIf="classes.length > 0; else noResults"
+                ><div
+                    *ngFor="let class of classes"
+                    [ngStyle]="{
+                        width: '40rem',
+                        border: class.selected
+                            ? '.2rem solid #3c82f7'
+                            : '.2rem solid transparent',
+                        'box-sizing': 'border-box',
+                        'border-radius': '6px',
+                        'margin-bottom': '2em',
+                        'margin-left': 'auto',
+                        'margin-right': 'auto',
+                        display: 'block'
+                    }"
+                >
+                    <p-card [styleClass]="'gradient'">
+                        <ng-template pTemplate="header"></ng-template>
+                        <div style="position: relative; margin-top: -2.5rem">
+                            <h2>{{ class.title }}</h2>
+                            <img
+                                alt="Card"
+                                [src]="class.image"
+                                style="
+                                    position: absolute;
+                                    top: 0px;
+                                    right: 0px;
+                                    border-radius: 6px;
+                                "
+                                height="150px"
+                                width="150px"
+                            />
+                        </div>
+                        <div
+                            class="flex align-items-center"
+                            style="margin-bottom: 1.5rem; margin-top: 1rem"
+                        >
+                            <p-tag
+                                [value]="class.classDateTimes"
+                                icon="pi pi-calendar"
+                                styleClass="mr-2"
+                            ></p-tag>
+                            <p-tag
+                                [value]="class.weekday"
+                                styleClass="mr-2"
+                            ></p-tag>
+                            <p-tag
+                                [value]="class.dailyTimes"
+                                icon="pi pi-clock"
+                                styleClass="mr-2"
+                            ></p-tag>
+                        </div>
+                        <p>
+                            <b>Class Type:</b> {{ class.classType }}<br />
+                            <b>Grades:</b>
+                            {{ class.gradeRangeStart }} -
+                            {{ class.gradeRangeEnd }}<br />
+                            <b>Location:</b> {{ class.location }}<br />
+                            <b>Cost:</b> ${{ class.cost }}<br />
+                            <b>Instructors:</b>
+                            <span
+                                *ngFor="
+                                    let instructor of class.instructors;
+                                    let isLast = last
+                                "
+                            >
+                                {{ instructor.first_name }}
+                                {{ instructor.last_name
+                                }}{{ isLast ? '' : ', ' }}
+                            </span>
+                            <br />
+                            <br />
+                            <b>Description:</b> <br />
+                            {{ class.description }}<br />
+                        </p>
+                        <div style="margin-top: 2rem; margin-bottom: -1rem">
+                            <p-toggleButton
+                                [inputId]="'select' + class.id"
+                                onIcon="pi pi-check"
+                                onLabel="Selected"
+                                offLabel="Select"
+                                [(ngModel)]="class.selected"
+                                (ngModelChange)="selectionChanged(class)"
+                            ></p-toggleButton>
+                        </div>
+                    </p-card></div></ng-container
+            ><ng-template #noResults>
+                There are no classes for the current search.
+            </ng-template></ng-container
+        >
+    </div>
+</ng-template>
 <ng-template #skeleton>
     <div *ngFor="let i of [1, 2, 3]" class="custom-skeleton p-4">
         <div class="flex mb-3">
