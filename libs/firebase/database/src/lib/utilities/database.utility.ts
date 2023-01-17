@@ -105,18 +105,19 @@ export class DatabaseUtility {
         );
     }
 
-    public static async fetchFirstMatchingDocument(
+    public static async fetchAllMatchingDocuments(
         collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
         ...queries: Array<
             [
                 string | FirebaseFirestore.FieldPath,
                 FirebaseFirestore.WhereFilterOp,
-                string
+                unknown
             ]
         >
     ): Promise<
-        | FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
-        | undefined
+        Array<
+            FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
+        >
     > {
         const queried = queries
             .slice(1)
@@ -124,7 +125,27 @@ export class DatabaseUtility {
                 (agg, q) => agg.where(...q),
                 collection.where(...queries[0])
             );
-        const documents = await queried.get();
-        return documents.docs[0];
+        const snapshot = await queried.get();
+        return snapshot.docs;
+    }
+
+    public static async fetchFirstMatchingDocument(
+        collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
+        ...queries: Array<
+            [
+                string | FirebaseFirestore.FieldPath,
+                FirebaseFirestore.WhereFilterOp,
+                unknown
+            ]
+        >
+    ): Promise<
+        | FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
+        | undefined
+    > {
+        const documents = await DatabaseUtility.fetchAllMatchingDocuments(
+            collection,
+            ...queries
+        );
+        return documents[0];
     }
 }

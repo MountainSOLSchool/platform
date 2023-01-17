@@ -1,11 +1,10 @@
-export abstract class Discount<T> {
-    constructor(discount: {
-        [K in keyof Omit<Discount<T>, 'type'>]: Discount<T>[K];
-    }) {
+import { DiscountConstructor } from './discount.constructor.type';
+
+export abstract class AbstractDiscount<T> {
+    constructor(discount: DiscountConstructor<AbstractDiscount<T>>) {
         Object.assign(this, discount);
     }
     type!: string;
-    code!: string;
     id!: string;
     active = false;
     abstract apply(...dependencies: Array<unknown>): {

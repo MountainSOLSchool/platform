@@ -1,5 +1,6 @@
 export interface Class {
+    id: string;
     name: string;
     cost?: number;
-    id: string;
+    pairId?: string;
 }

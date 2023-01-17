@@ -1,13 +1,10 @@
-import { BasketDiscount } from './basket-discount';
-import { Class } from '../class';
+import { BasketAbstractDiscount } from '../abstract/basket.abstract.discount';
+import { DiscountConstructor } from '../discount.constructor.type';
 
-export class PercentDicount extends BasketDiscount {
+export class PercentDiscount extends BasketAbstractDiscount {
     override type = 'percent';
-    constructor(discount: {
-        [K in keyof Omit<PercentDicount, 'type'>]: PercentDicount[K];
-    }) {
+    constructor(discount: DiscountConstructor<PercentDiscount>) {
         super(discount);
-        Object.assign(this, discount);
     }
     percent!: number;
 

@@ -1,12 +1,10 @@
-import { Class } from '../class';
-import { ClassesDiscount } from './class-discount';
+import { Class } from '../../class';
+import { ClassesAbstractDiscount } from '../abstract/classes.abstract.discount';
+import { DiscountConstructor } from '../discount.constructor.type';
 
-export class FreeClassesDiscount extends ClassesDiscount {
-    constructor(discount: {
-        [K in keyof Omit<FreeClassesDiscount, 'type'>]: FreeClassesDiscount[K];
-    }) {
+export class FreeClassesDiscount extends ClassesAbstractDiscount {
+    constructor(discount: DiscountConstructor<FreeClassesDiscount>) {
         super(discount);
-        Object.assign(this, discount);
     }
     override type = 'free-classes';
     override apply(classes: Array<Class>): {

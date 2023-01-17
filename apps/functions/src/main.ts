@@ -25,11 +25,11 @@ import {
     DiscountRepository,
 } from '@sol/classes/repository';
 import {
-    Discount,
+    AbstractDiscount,
     isClassesDiscount,
     isBasketDiscount,
-    ClassesDiscount,
-    BasketDiscount,
+    ClassesAbstractDiscount,
+    BasketAbstractDiscount,
     Class,
 } from '@sol/classes/domain';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
@@ -195,13 +195,13 @@ export const paymentToken = Functions.endpoint
     });
 
 function _getEnrollmentDiscounts(
-    discounts: Discount<unknown>[],
+    discounts: AbstractDiscount<unknown>[],
     classes: Awaited<Class>[]
 ) {
     const activeDiscounts = discounts.filter((d) => d.active);
 
-    const classesDiscounts = activeDiscounts.filter((d): d is ClassesDiscount =>
-        isClassesDiscount(d)
+    const classesDiscounts = activeDiscounts.filter(
+        (d): d is ClassesAbstractDiscount => isClassesDiscount(d)
     );
 
     const [updatedClasses, classDiscountAmounts] = classesDiscounts.reduce(
@@ -221,8 +221,8 @@ function _getEnrollmentDiscounts(
         ]
     );
 
-    const basketDiscounts = activeDiscounts.filter((d): d is BasketDiscount =>
-        isBasketDiscount(d)
+    const basketDiscounts = activeDiscounts.filter(
+        (d): d is BasketAbstractDiscount => isBasketDiscount(d)
     );
 
     const basketTotal = updatedClasses.reduce(
@@ -281,22 +281,22 @@ export const enroll = Functions.endpoint
             selectedClasses.map(async (id) => await ClassRepository.get(id))
         );
 
-        const discounts = (
-            await Promise.all(
-                discountCodes.map(
-                    async (code) => await DiscountRepository.get(code)
-                )
-            )
-        ).filter((d): d is Discount<unknown> => !!d);
+        const codedDiscounts = await DiscountRepository.getAllValid(
+            discountCodes
+        );
+        const automaticDiscounts = await DiscountRepository.getAllByProperty(
+            'automatic',
+            true
+        );
 
-        const { finalTotal } = _getEnrollmentDiscounts(discounts, classes);
+        const { finalTotal } = _getEnrollmentDiscounts(codedDiscounts, classes);
 
         const enrollmentRecord = {
             userId: user.uid,
             studentName: `${student.firstName} ${student.lastName}`,
             contactEmail: student.contactEmail,
             finalCost: finalTotal,
-            discountIds: discounts
+            discountIds: codedDiscounts
                 .map((d) => d.id)
                 .filter((d): d is string => !!d),
             classIds: classes.map((c) => c.id),
@@ -434,7 +434,7 @@ export const calculateBasket = Functions.endpoint.handle<{
         await Promise.all(
             codes.map(async (code) => await DiscountRepository.get(code))
         )
-    ).filter((code): code is Discount<unknown> => !!code);
+    ).filter((code): code is AbstractDiscount<unknown> => !!code);
     const classes = await Promise.all(
         classIds.map(async (id) => await ClassRepository.get(id))
     );

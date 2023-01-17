@@ -1,17 +1,12 @@
-import { Class } from '../class';
-import { ClassesDiscount } from './class-discount';
+import { Class } from '../../class';
+import { ClassesAbstractDiscount } from '../abstract/classes.abstract.discount';
+import { DiscountConstructor } from '../discount.constructor.type';
 
-export class ClassesPercentDicount extends ClassesDiscount {
+export class ClassesPercentDiscount extends ClassesAbstractDiscount {
     override type = 'classes-percent';
 
-    constructor(discount: {
-        [K in keyof Omit<
-            ClassesPercentDicount,
-            'type'
-        >]: ClassesPercentDicount[K];
-    }) {
+    constructor(discount: DiscountConstructor<ClassesPercentDiscount>) {
         super(discount);
-        Object.assign(this, discount);
     }
 
     percent!: number;
