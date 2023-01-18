@@ -153,7 +153,11 @@
                 *rxLet="!vm.hasErrorsByGroup['contact']; let valid"
                 [solValid]="valid"
             >
-                Contact<ng-container *ngIf="!valid"> ⚠️</ng-container>
+                Primary Contact for Student Registration<ng-container
+                    *ngIf="!valid"
+                >
+                    ⚠️</ng-container
+                >
             </div>
         </ng-template>
         <form>
@@ -328,6 +332,19 @@
         <p>
             May Mountain SOL Staff apply these chemicals to your child,
             depending on outdoor conditions?
+        </p>
+        <p>
+            NOTE: All students are responsible for their own skin care routines
+            and should be aware of their own needs. Mountain SOL Staff would
+            like to assist students in protecting their skin from bugs and the
+            sun, but Mountain SOL does not assume responsibility for general
+            risks from the outdoors, including bug bites or sunburn. If your
+            child has any specific skin care needs, please include it in the
+            "Additional Health or Medical Notes" section on the next page, and
+            we will do our best to assist them. Also, if you prefer to use your
+            own chemicals, please send your student with their own sun screen
+            and/or bug spray, and Mountain SOL Staff will use your products
+            instead of our default chemicals.
         </p>
         <div class="flexbox" style="width: 50%">
             <div class="field">

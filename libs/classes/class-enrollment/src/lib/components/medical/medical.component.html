@@ -162,29 +162,56 @@
                                 "
                                 [ngModelOptions]="{ updateOn: 'blur' }"
                             />
-                            <label for="weight">Child's Weight</label>
+                            <label for="weight">Child's Weight (lb)</label>
                         </span>
                         <sol-messages
                             [messages]="vm.errors['weight']"
                         ></sol-messages>
                     </div>
                     <div class="field col">
-                        <span class="p-float-label">
-                            <input
-                                required
-                                type="text"
-                                id="height"
-                                name="height"
-                                pInputText
-                                [solValid]="!vm.errors['height']"
-                                [(ngModel)]="vm.student.heightImperial"
-                                (ngModelChange)="
-                                    updateStudentMedicalInfo(vm.student)
-                                "
-                                [ngModelOptions]="{ updateOn: 'blur' }"
-                            />
-                            <label for="height">Child's Height</label>
-                        </span>
+                        <div class="field col">
+                            <span class="p-float-label">
+                                <input
+                                    required
+                                    type="text"
+                                    id="heightFeet"
+                                    name="heightFeet"
+                                    pInputText
+                                    [solValid]="!vm.errors['height']"
+                                    [(ngModel)]="vm.student.heightImperial"
+                                    (ngModelChange)="
+                                        updateStudentMedicalInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
+                                />
+                                <label for="heightFeet"
+                                    >Child's Height (feet)</label
+                                >
+                                Feet
+                            </span>
+                        </div>
+                        <div class="field col">
+                            <span class="p-float-label">
+                                <input
+                                    required
+                                    type="text"
+                                    id="heightInches"
+                                    name="heightInches"
+                                    pInputText
+                                    [solValid]="!vm.errors['height']"
+                                    [(ngModel)]="vm.student.heightImperial"
+                                    (ngModelChange)="
+                                        updateStudentMedicalInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
+                                />
+                                <label for="heightInches"
+                                    >Child's Height (inches)</label
+                                >
+                                Inches
+                            </span>
+                        </div>
+
                         <sol-messages
                             [messages]="vm.errors['height']"
                         ></sol-messages>
