@@ -1,7 +1,7 @@
 export interface StudentForm {
     firstName: string;
     lastName: string;
-    birthdate: Date;
+    birthdate: string;
     pronouns: string;
     school: string;
     notes: string;

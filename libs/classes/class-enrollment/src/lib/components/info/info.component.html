@@ -13,14 +13,32 @@
                 <div class="formgrid grid">
                     <div class="field col">
                         <span class="p-float-label">
-                            <p-calendar
+                            <p-inputMask
                                 name="birthdate"
-                                [showIcon]="true"
-                                [solValid]="!vm.errors['birthdate']"
                                 [(ngModel)]="vm.student.birthdate"
                                 (ngModelChange)="updateStudentInfo(vm.student)"
-                            ></p-calendar>
-                            <label for="birthdate">Birth Date</label>
+                                mask="99/99/9999"
+                                (onFocus)="op.show($event)"
+                                (onComplete)="op.hide()"
+                                [solValid]="!vm.errors['birthdate']"
+                                #dateInput
+                            ></p-inputMask>
+                            <p-overlayPanel #op styleClass="date-overlay-panel">
+                                <ng-template pTemplate>
+                                    <p-calendar
+                                        name="birthdate"
+                                        [inline]="true"
+                                        dataType="string"
+                                        [(ngModel)]="vm.student.birthdate"
+                                        (ngModelChange)="
+                                            updateStudentInfo(vm.student)
+                                        "
+                                    ></p-calendar>
+                                </ng-template>
+                            </p-overlayPanel>
+                            <label for="birthdate"
+                                >Birth Date (DD/MM/YYYY)</label
+                            >
                         </span>
                         <sol-messages
                             [messages]="vm.errors['birthdate']"
@@ -323,30 +341,17 @@
                 *rxLet="!vm.hasErrorsByGroup['privacy']; let valid"
                 [solValid]="valid"
             >
-                Privacy and Chemicals<ng-container *ngIf="!valid">
+                Privacy and Protectants<ng-container *ngIf="!valid">
                     ⚠️</ng-container
                 >
             </div>
         </ng-template>
-        <h3>Chemicals</h3>
+        <h3>Protectants</h3>
         <p>
-            May Mountain SOL Staff apply these chemicals to your child,
+            May Mountain SOL Staff apply these protectants to your child,
             depending on outdoor conditions?
         </p>
-        <p>
-            NOTE: All students are responsible for their own skin care routines
-            and should be aware of their own needs. Mountain SOL Staff would
-            like to assist students in protecting their skin from bugs and the
-            sun, but Mountain SOL does not assume responsibility for general
-            risks from the outdoors, including bug bites or sunburn. If your
-            child has any specific skin care needs, please include it in the
-            "Additional Health or Medical Notes" section on the next page, and
-            we will do our best to assist them. Also, if you prefer to use your
-            own chemicals, please send your student with their own sun screen
-            and/or bug spray, and Mountain SOL Staff will use your products
-            instead of our default chemicals.
-        </p>
-        <div class="flexbox" style="width: 50%">
+        <div class="flexbox" style="width: 50%; margin-top: -1rem">
             <div class="field">
                 <p-toggleButton
                     onLabel="Bug Spray OK"
@@ -378,8 +383,24 @@
                 ></p-toggleButton>
             </div>
         </div>
+        <p>
+            <em>
+                All students are responsible for their own skin care routines
+                and should be aware of their own needs.<br /><br />Mountain SOL
+                Staff would like to assist students in protecting their skin
+                from bugs and the sun, but Mountain SOL does not assume
+                responsibility for general risks from the outdoors, including
+                bug bites or sunburn. If your child has any specific skin care
+                needs, please include it in the "Additional Health or Medical
+                Notes" section on the next page, and we will do our best to
+                assist them.<br /><br />If you prefer to use your own
+                protectants, please send your student with their own sun screen
+                and/or bug spray, and Mountain SOL Staff will use your products
+                instead of our default protectants.</em
+            >
+        </p>
 
-        <div id="Privacy" style="padding-bottom: 20px">
+        <div id="Privacy" style="padding-bottom: 20px; margin-top: 2rem">
             <h3>Photos</h3>
             <p>Can we use photos of the student for promotional material?</p>
             <p-selectButton

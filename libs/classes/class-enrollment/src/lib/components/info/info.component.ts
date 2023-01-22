@@ -1,4 +1,4 @@
-import { Component, inject, Input, Output } from '@angular/core';
+import { Component, inject, Input, Output, ViewChild } from '@angular/core';
 import {
     BehaviorSubject,
     combineLatest,
@@ -25,6 +25,7 @@ import { create, test, enforce, group } from 'vest';
 import { CommonModule } from '@angular/common';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { StudentForm } from '@sol/student/domain';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 
 @Component({
     standalone: true,
@@ -45,6 +46,7 @@ import { StudentForm } from '@sol/student/domain';
         LetModule,
         ValidDirective,
         MessagesComponent,
+        OverlayPanelModule,
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
@@ -176,7 +178,8 @@ export class InfoComponent {
             map((student) => {
                 let age: string;
                 if (student?.birthdate) {
-                    const ageDiffMs = Date.now() - student.birthdate.getTime();
+                    const ageDiffMs =
+                        Date.now() - new Date(student.birthdate).getTime();
                     const ageDate = new Date(ageDiffMs);
                     age = Math.abs(ageDate.getUTCFullYear() - 1970).toString();
                 } else {
@@ -260,6 +263,8 @@ export class InfoComponent {
         return index;
     }
 
+    @ViewChild('op') op!: OverlayPanel;
+
     updateStudentInfo(info: any): void {
         this.workflow.patchState((s) => ({
             enrollment: {
@@ -270,6 +275,7 @@ export class InfoComponent {
                 },
             },
         }));
+        this.op?.hide();
     }
 
     removeGuardian(index: number): void {
