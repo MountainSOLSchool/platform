@@ -38,6 +38,7 @@ const initialState = {
         paymentMethod: undefined,
         discountCodes: [],
         student: {
+            birthdate: '',
             guardians: [
                 {
                     guardianName: '',

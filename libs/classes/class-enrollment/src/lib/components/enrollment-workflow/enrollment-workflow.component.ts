@@ -136,7 +136,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
                 student: {
                     firstName: 'David',
                     lastName: 'McCoy',
-                    birthdate: new Date(),
+                    birthdate: '09/24/1980',
                     pronouns: 'pronoun',
                     school: 'school',
                     notes: 'notes',
