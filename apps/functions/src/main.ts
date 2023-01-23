@@ -7,16 +7,8 @@ import {
     StudentTshirtsGenerator,
 } from '@sol/student/reports';
 import { ClassEmailGenerator } from '@sol/student/reports';
-import {
-    EnrollmentClassesMap,
-    StudentEnrollmentEntry,
-} from '@sol/student/import';
 import { StudentRepository } from '@sol/student/repository';
-import {
-    NewStudentDbEntry,
-    StudentDbEntry,
-    StudentForm,
-} from '@sol/student/domain';
+import { NewStudentDbEntry, StudentForm } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
 import {
@@ -32,8 +24,11 @@ import {
     BasketDiscount,
     Class,
 } from '@sol/classes/domain';
-import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
-// import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
+import {
+    ClassEnrollmentDbo,
+    ClassEnrollmentRepository,
+} from '@sol/classes/enrollment/repository';
+import * as functions from 'firebase-functions';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -174,6 +169,7 @@ const _fetchClasses = async (
                 ),
                 dailyTimes: c.daily_times,
                 weekday: c.weekday,
+                thumbnailUrl: c.thumbnailUrl,
             };
         })
     );
@@ -359,6 +355,8 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
         last_name: form.lastName,
         code_word: form.pickupCodeword,
         primary_email: form.contactEmail,
+        primary_first_name: form.contactFirstName,
+        primary_last_name: form.contactLastName,
         ok_to_photograph:
             form.photography === 'yes' || form.photography === 'yesNoName',
         ok_use_name_photographs: form.photography === 'yes',
@@ -398,8 +396,7 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
                 ...m,
                 important: true,
             })) ?? [],
-        // TODO- collect t-shirt size
-        tshirt_size: '',
+        tshirt_size: form.tshirtSize,
     };
     return entry;
 }
@@ -442,3 +439,64 @@ export const calculateBasket = Functions.endpoint.handle<{
         _getEnrollmentDiscounts(discounts, classes);
     response.send({ discountAmounts, finalTotal, originalTotal });
 });
+
+export const createEnrollmentEmail = functions.firestore
+    .document('enrollment/{enrollmentId}')
+    .onCreate(async (documentSnapshot) => {
+        const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
+
+        await DatabaseUtility.getDatabase()
+            .collection('mail')
+            .add({
+                to: enrollmentRecord.contactEmail,
+                message: {
+                    subject: `Receipt for ${enrollmentRecord.studentName} Summer 2023 Enrollment`,
+                    html: `<p>Thank you for enrolling ${enrollmentRecord.studentName} for classes this summer! Below is your receipt for the classes in which they are enrolled.</p>
+                          <table>
+                          <thead>
+                          <th>
+                            Class Name
+                          </th>
+                          <th>
+                            Cost
+                          </th>
+                          </thead>
+                          <tbody>
+                          <tr>
+                            <td>
+                              Class A
+                            </td>
+                            <td>
+                              $100
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              Class B
+                            </td>
+                            <td>
+                              $110
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              Early Bird Discount
+                            </td>
+                            <td>
+                              $-20
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              Total
+                            </td>
+                            <td>
+                              $${enrollmentRecord.finalCost}
+                            </td>
+                          </tr>
+                          </tbody>
+                          </table>
+                          <p>Transaction ID: ${enrollmentRecord.transactionId}</p>`,
+                },
+            });
+    });

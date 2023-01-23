@@ -4,8 +4,11 @@ export interface StudentForm {
     birthdate: string;
     pronouns: string;
     school: string;
+    tshirtSize: string;
     notes: string;
     contactEmail: string;
+    contactFirstName: string;
+    contactLastName: string;
     studentEmail: string;
     contactPhone: string;
     studentPhone: string;

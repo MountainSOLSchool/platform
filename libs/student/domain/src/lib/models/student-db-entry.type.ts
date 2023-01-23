@@ -6,6 +6,8 @@ export type StudentDbEntry = {
     last_name: string;
     code_word: string;
     primary_email: string;
+    primary_first_name: string;
+    primary_last_name: string;
     ok_to_photograph: boolean;
     ok_use_name_photographs: boolean;
     sunscreen_bug_spray: string;

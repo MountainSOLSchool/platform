@@ -19,6 +19,7 @@ type ServerClass = {
     }>;
     dailyTimes: string;
     weekday: string;
+    thumbnailUrl: string;
 };
 
 @Injectable({ providedIn: 'root' })

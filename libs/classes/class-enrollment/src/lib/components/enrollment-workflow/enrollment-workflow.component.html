@@ -47,8 +47,13 @@
         <ng-template matStepContent>
             <h2>Payment Method</h2>
             <sol-checkout
-                *rxLet="paymentSessionToken$; let sessionToken"
-                [sessionToken]="sessionToken"
+                *rxLet="
+                    randomValueThatResetsPaymentCollector$;
+                    let randomValueThatResetsPaymentCollector
+                "
+                [randomValueThatResetsPaymentCollector]="
+                    randomValueThatResetsPaymentCollector
+                "
                 [interacted]="paymentMethod.interacted"
                 (validityChange)="paymentMethod.hasError = !$event"
             ></sol-checkout>

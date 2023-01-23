@@ -15,7 +15,6 @@ import {
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
 import { StudentForm } from '@sol/student/domain';
 import { Router } from '@angular/router';
-import { calculateBasket } from '../../../../../../../apps/functions/src/main';
 
 type Enrollment = {
     selectedClasses: Array<string>;
@@ -32,7 +31,7 @@ type Enrollment = {
 
 const initialState = {
     status: 'draft' as const,
-    paymentSessionToken: self.crypto.randomUUID(),
+    randomValueThatResetsPaymentCollector: Math.random().toString(),
     enrollment: {
         selectedClasses: [],
         paymentMethod: undefined,
@@ -73,7 +72,7 @@ const initialState = {
 @Injectable()
 export class EnrollmentWorkflowStore extends ComponentStore<{
     enrollment: Enrollment;
-    paymentSessionToken: string;
+    randomValueThatResetsPaymentCollector: string;
     status: 'draft' | 'submitted' | 'failed' | 'enrolled';
     basketCosts: {
         discountAmounts: Array<{ code: string; amount: number }>;
@@ -173,7 +172,8 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
             tap(() => {
                 this.setState({
                     ...initialState,
-                    paymentSessionToken: self.crypto.randomUUID(),
+                    randomValueThatResetsPaymentCollector:
+                        Math.random().toString(),
                 });
                 this.router.navigate(['/']);
             })

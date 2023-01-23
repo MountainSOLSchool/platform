@@ -94,7 +94,6 @@ export class ClassesComponent {
                 .map((c) => {
                     return {
                         ...c,
-                        image: 'https://firebasestorage.googleapis.com/v0/b/mountain-sol-platform.appspot.com/o/th.jpeg?alt=media&token=930a83c7-9e29-45be-b192-58e4546c5802',
                         classDateTimes:
                             c.startMs && c.endMs
                                 ? this.datePipe.transform(

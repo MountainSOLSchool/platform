@@ -26,6 +26,7 @@ import { CommonModule } from '@angular/common';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { StudentForm } from '@sol/student/domain';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
     standalone: true,
@@ -47,6 +48,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
         ValidDirective,
         MessagesComponent,
         OverlayPanelModule,
+        DropdownModule,
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
@@ -77,9 +79,21 @@ export class InfoComponent {
                 test('school', 'School is required', () => {
                     enforce(student.school).isNotEmpty();
                 });
+
+                test('tshirtSize', 'T-shirt size is required', () => {
+                    enforce(student.tshirtSize).isNotEmpty();
+                });
             });
 
             group('contact', () => {
+                test('contactFirstName', 'First name is required', () => {
+                    enforce(student.contactFirstName).isNotEmpty();
+                });
+
+                test('contactLastName', 'Last name is required', () => {
+                    enforce(student.contactLastName).isNotEmpty();
+                });
+
                 test('contactEmail', 'Email is required', () => {
                     enforce(student.contactEmail).isNotEmpty();
                 });
@@ -257,6 +271,18 @@ export class InfoComponent {
     readonly guardianResidesWithStudentOptions = [
         { name: 'Lives with Student', value: true },
         { name: 'Does Not Live With Student', value: false },
+    ];
+
+    readonly tshirtSizes = [
+        { name: 'Youth Small', value: 'YS' },
+        { name: 'Youth Medium', value: 'YM' },
+        { name: 'Youth Large', value: 'YL' },
+        { name: 'Youth XL', value: 'YXL' },
+        { name: 'Adult Small', value: 'AS' },
+        { name: 'Adult Medium', value: 'AM' },
+        { name: 'Adult Large', value: 'AL' },
+        { name: 'Adult XL', value: 'AXL' },
+        { name: 'Adult 2XL', value: 'A2XL' },
     ];
 
     trackByIndex(index: number) {

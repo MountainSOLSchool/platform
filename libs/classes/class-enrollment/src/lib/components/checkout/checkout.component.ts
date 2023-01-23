@@ -79,7 +79,7 @@ export class CheckoutComponent {
         this.interacted$.next(value);
     }
 
-    @Input() sessionToken = self.crypto.randomUUID();
+    @Input() randomValueThatResetsPaymentCollector = Math.random().toString();
 
     @Output() validityChange = this.errors$.pipe(
         map((errors) => Object.keys(errors).length === 0)

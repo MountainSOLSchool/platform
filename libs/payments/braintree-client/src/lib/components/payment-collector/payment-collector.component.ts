@@ -24,7 +24,7 @@ export type PaymentCollector = {
 export class PaymentCollectorComponent implements OnInit {
     store = inject(PaymentCollectorStore);
 
-    @Input() set sessionToken(token: string) {
+    @Input() set randomValueThatResetsPaymentCollector(token: string) {
         this.store.resetDropInInstance();
     }
 

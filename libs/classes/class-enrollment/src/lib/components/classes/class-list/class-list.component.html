@@ -89,8 +89,9 @@
                         <div style="position: relative; margin-top: -2.5rem">
                             <h2>{{ class.title }}</h2>
                             <img
+                                *rxIf="class.thumbnailUrl !== ''"
                                 alt="Card"
-                                [src]="class.image"
+                                [src]="class.thumbnailUrl"
                                 style="
                                     position: absolute;
                                     top: 0px;

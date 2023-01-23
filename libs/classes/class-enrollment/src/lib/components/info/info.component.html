@@ -27,6 +27,7 @@
                                 <ng-template pTemplate>
                                     <p-calendar
                                         name="birthdate"
+                                        id="birthdate"
                                         [inline]="true"
                                         dataType="string"
                                         [(ngModel)]="vm.student.birthdate"
@@ -49,11 +50,12 @@
                         <span class="p-float-label" width="20rem">
                             <input
                                 name="age"
+                                id="age"
                                 disabled
                                 pInputText
                                 [value]="vm.student.age"
                             />
-                            <label for="birthday">Age</label>
+                            <label for="age">Age</label>
                         </span>
                     </div>
                 </div>
@@ -99,6 +101,48 @@
                     </div>
                 </div>
 
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                type="email"
+                                id="studentEmail"
+                                name="studentEmail"
+                                pInputText
+                                [solValid]="!vm.errors['studentEmail']"
+                                [(ngModel)]="vm.student.studentEmail"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                            />
+                            <label for="studentEmail"
+                                >Student Email (Optional)</label
+                            >
+                        </span>
+                        <sol-messages
+                            [messages]="vm.errors['studentEmail']"
+                        ></sol-messages>
+                    </div>
+
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <p-inputMask
+                                type="studentPhone"
+                                id="studentPhone"
+                                name="studentPhone"
+                                mask="999-999-9999"
+                                [solValid]="!vm.errors['studentPhone']"
+                                [(ngModel)]="vm.student.studentPhone"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                            ></p-inputMask>
+                            <label for="studentPhone"
+                                >Student Phone (Optional)</label
+                            >
+                        </span>
+                        <sol-messages
+                            [messages]="vm.errors['studentPhone']"
+                        ></sol-messages>
+                    </div>
+                </div>
+
                 <div class="field" style="width: 49.35%">
                     <span class="p-float-label">
                         <input
@@ -134,6 +178,26 @@
                     </span>
                     <sol-messages
                         [messages]="vm.errors['school']"
+                    ></sol-messages>
+                </div>
+
+                <div class="field" style="width: 49.35%; padding-top: 1%">
+                    <span class="p-float-label">
+                        <p-dropdown
+                            name="tshirtSize"
+                            id="tshirtSize"
+                            [options]="tshirtSizes"
+                            [(ngModel)]="vm.student.tshirtSize"
+                            (ngModelChange)="updateStudentInfo(vm.student)"
+                            placeholder="Select a size"
+                            optionLabel="name"
+                            optionValue="value"
+                            [solValid]="!vm.errors['tshirtSize']"
+                        ></p-dropdown>
+                        <label for="tshirtSize">T-Shirt Size</label>
+                    </span>
+                    <sol-messages
+                        [messages]="vm.errors['tshirtSize']"
                     ></sol-messages>
                 </div>
 
@@ -180,6 +244,47 @@
         </ng-template>
         <form>
             <div class="p-fluid">
+                <!-- fields for primary contact first and last name -->
+                <div class="formgrid grid">
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                required
+                                type="text"
+                                id="contactFirstName"
+                                name="contactFirstName"
+                                pInputText
+                                [solValid]="!vm.errors['contactFirstName']"
+                                [(ngModel)]="vm.student.contactFirstName"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                                [ngModelOptions]="{ updateOn: 'blur' }"
+                            />
+                            <label for="contactFirstName">First Name</label>
+                        </span>
+                        <sol-messages
+                            [messages]="vm.errors['contactFirstName']"
+                        ></sol-messages>
+                    </div>
+                    <div class="field col">
+                        <span class="p-float-label">
+                            <input
+                                required
+                                type="text"
+                                id="contactLastName"
+                                name="contactLastName"
+                                pInputText
+                                [solValid]="!vm.errors['contactLastName']"
+                                [(ngModel)]="vm.student.contactLastName"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                                [ngModelOptions]="{ updateOn: 'blur' }"
+                            />
+                            <label for="contactLastName">Last Name</label>
+                        </span>
+                        <sol-messages
+                            [messages]="vm.errors['contactLastName']"
+                        ></sol-messages>
+                    </div>
+                </div>
                 <div class="formgrid grid">
                     <div class="field col">
                         <span class="p-float-label">
@@ -197,26 +302,6 @@
                         </span>
                         <sol-messages
                             [messages]="vm.errors['contactEmail']"
-                        ></sol-messages>
-                    </div>
-
-                    <div class="field col">
-                        <span class="p-float-label">
-                            <input
-                                type="email"
-                                id="studentEmail"
-                                name="studentEmail"
-                                pInputText
-                                [solValid]="!vm.errors['studentEmail']"
-                                [(ngModel)]="vm.student.studentEmail"
-                                (ngModelChange)="updateStudentInfo(vm.student)"
-                            />
-                            <label for="studentEmail"
-                                >Student Email (Optional)</label
-                            >
-                        </span>
-                        <sol-messages
-                            [messages]="vm.errors['studentEmail']"
                         ></sol-messages>
                     </div>
                 </div>
@@ -237,26 +322,6 @@
                         </span>
                         <sol-messages
                             [messages]="vm.errors['contactPhone']"
-                        ></sol-messages>
-                    </div>
-
-                    <div class="field col">
-                        <span class="p-float-label">
-                            <p-inputMask
-                                type="studentPhone"
-                                id="studentPhone"
-                                name="studentPhone"
-                                mask="999-999-9999"
-                                [solValid]="!vm.errors['studentPhone']"
-                                [(ngModel)]="vm.student.studentPhone"
-                                (ngModelChange)="updateStudentInfo(vm.student)"
-                            ></p-inputMask>
-                            <label for="studentPhone"
-                                >Student Phone (Optional)</label
-                            >
-                        </span>
-                        <sol-messages
-                            [messages]="vm.errors['studentPhone']"
                         ></sol-messages>
                     </div>
                 </div>

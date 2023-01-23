@@ -99,8 +99,8 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     );
 
     readonly enrollment$ = this.store.select((s) => s.enrollment);
-    readonly paymentSessionToken$ = this.store.select(
-        (s) => s.paymentSessionToken
+    readonly randomValueThatResetsPaymentCollector$ = this.store.select(
+        (s) => s.randomValueThatResetsPaymentCollector
     );
 
     complete() {

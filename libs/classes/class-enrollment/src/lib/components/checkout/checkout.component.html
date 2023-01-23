@@ -4,7 +4,9 @@
             [messages]="vm.errors['hasPaymentMethod']"
         ></sol-messages>
         <sol-payment-collector
-            [sessionToken]="sessionToken"
+            [randomValueThatResetsPaymentCollector]="
+                randomValueThatResetsPaymentCollector
+            "
             (paymentMethod)="setPaymentMethod($event)"
         ></sol-payment-collector
     ></ng-container>
