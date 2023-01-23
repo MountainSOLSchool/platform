@@ -445,13 +445,14 @@ export const createEnrollmentEmail = functions.firestore
     .onCreate(async (documentSnapshot) => {
         const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
 
-        await DatabaseUtility.getDatabase()
-            .collection('mail')
-            .add({
-                to: enrollmentRecord.contactEmail,
-                message: {
-                    subject: `Receipt for ${enrollmentRecord.studentName} Summer 2023 Enrollment`,
-                    html: `<p>Thank you for enrolling ${enrollmentRecord.studentName} for classes this summer! Below is your receipt for the classes in which they are enrolled.</p>
+        if (enrollmentRecord.status === 'enrolled') {
+            await DatabaseUtility.getDatabase()
+                .collection('mail')
+                .add({
+                    to: enrollmentRecord.contactEmail,
+                    message: {
+                        subject: `Receipt for ${enrollmentRecord.studentName} Summer 2023 Enrollment`,
+                        html: `<p>Thank you for enrolling ${enrollmentRecord.studentName} for classes this summer! Below is your receipt for the classes in which they are enrolled.</p>
                           <table>
                           <thead>
                           <th>
@@ -497,6 +498,7 @@ export const createEnrollmentEmail = functions.firestore
                           </tbody>
                           </table>
                           <p>Transaction ID: ${enrollmentRecord.transactionId}</p>`,
-                },
-            });
+                    },
+                });
+        }
     });
