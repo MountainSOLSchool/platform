@@ -48,6 +48,14 @@
                 "function": "roles"
             },
             {
+                "source": "/enrollments",
+                "function": "enrollments"
+            },
+            {
+                "source": "/calculateBasket",
+                "function": "calculateBasket"
+            },
+            {
                 "source": "**",
                 "destination": "/index.html"
             }
