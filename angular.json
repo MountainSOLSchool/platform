@@ -603,54 +603,6 @@
             "tags": []
         },
         "payments-transactions": "libs/payments/transactions",
-        "pdf-firebase": {
-            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-            "root": "libs/pdf/firebase",
-            "sourceRoot": "libs/pdf/firebase/src",
-            "projectType": "library",
-            "targets": {
-                "lint": {
-                    "executor": "@nrwl/linter:eslint",
-                    "options": {
-                        "lintFilePatterns": ["libs/pdf/firebase/**/*.ts"]
-                    },
-                    "outputs": ["{options.outputFile}"]
-                },
-                "test": {
-                    "executor": "@nrwl/jest:jest",
-                    "outputs": ["{workspaceRoot}/coverage/libs/pdf/firebase"],
-                    "options": {
-                        "jestConfig": "libs/pdf/firebase/jest.config.ts",
-                        "passWithNoTests": true
-                    }
-                }
-            },
-            "tags": ["scope:pdf", "type:api"]
-        },
-        "pdf-generate": {
-            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-            "root": "libs/pdf/generate",
-            "sourceRoot": "libs/pdf/generate/src",
-            "projectType": "library",
-            "targets": {
-                "lint": {
-                    "executor": "@nrwl/linter:eslint",
-                    "options": {
-                        "lintFilePatterns": ["libs/pdf/generate/**/*.ts"]
-                    },
-                    "outputs": ["{options.outputFile}"]
-                },
-                "test": {
-                    "executor": "@nrwl/jest:jest",
-                    "outputs": ["{workspaceRoot}/coverage/libs/pdf/generate"],
-                    "options": {
-                        "jestConfig": "libs/pdf/generate/jest.config.ts",
-                        "passWithNoTests": true
-                    }
-                }
-            },
-            "tags": ["scope:pdf", "type:api"]
-        },
         "portal": {
             "$schema": "../../node_modules/nx/schemas/project-schema.json",
             "projectType": "application",
@@ -977,30 +929,6 @@
                     "outputs": ["{workspaceRoot}/coverage/libs/table/html"],
                     "options": {
                         "jestConfig": "libs/table/html/jest.config.ts",
-                        "passWithNoTests": true
-                    }
-                }
-            },
-            "tags": ["scope:table", "type:api"]
-        },
-        "table-pdf": {
-            "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-            "root": "libs/table/pdf",
-            "sourceRoot": "libs/table/pdf/src",
-            "projectType": "library",
-            "targets": {
-                "lint": {
-                    "executor": "@nrwl/linter:eslint",
-                    "options": {
-                        "lintFilePatterns": ["libs/table/pdf/**/*.ts"]
-                    },
-                    "outputs": ["{options.outputFile}"]
-                },
-                "test": {
-                    "executor": "@nrwl/jest:jest",
-                    "outputs": ["{workspaceRoot}/coverage/libs/table/pdf"],
-                    "options": {
-                        "jestConfig": "libs/table/pdf/jest.config.ts",
                         "passWithNoTests": true
                     }
                 }

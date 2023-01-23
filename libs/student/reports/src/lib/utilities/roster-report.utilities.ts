@@ -6,38 +6,9 @@ import {
     StudentSignInRecordPropertyNames,
 } from '@sol/student/domain';
 import { CellStyle, TableHeader } from '@sol/table/domain';
-import { TablePdfUtility } from '@sol/table/pdf';
 import { FlatRecord } from '@sol/record/domain';
-import { StudentRepository } from '@sol/student/repository';
 
 export class RosterReportGenerator {
-    static async createRosterPdf(className: string) {
-        const students = await StudentRepository.fetchStudents(className);
-
-        const studentRecords =
-            this.transformStudentEntriesIntoRosterRecords(students);
-
-        return TablePdfUtility.createTablePdf({
-            records: studentRecords,
-            headers: this.studentRowHeaders,
-            title: `Class Roster for ${className}`, //later display name from class
-            styleBuilder: this.buildStudentRecordStyle,
-        });
-    }
-
-    static async createSignInOutPdf(className: string) {
-        const students = await StudentRepository.fetchStudents(className);
-
-        const studentSignInSheetRecords =
-            this.transformStudentEntriesIntoSignInSheet(students);
-
-        return TablePdfUtility.createTablePdf({
-            records: studentSignInSheetRecords,
-            headers: this.signInRowHeaders,
-            title: `Sign In/Out for ${className}`,
-        });
-    }
-
     static buildStudentRecordStyle(
         propertyName: StudentRecordPropertyNames,
         value: string,

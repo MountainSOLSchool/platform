@@ -77,7 +77,6 @@
         "firebase": "^9.15.0",
         "firebase-admin": "^11.3.0",
         "firebase-functions": "^4.1.1",
-        "html-pdf": "^3.0.1",
         "papaparse": "^5.3.2",
         "primeflex": "^3.2.1",
         "primeicons": "^6.0.1",
