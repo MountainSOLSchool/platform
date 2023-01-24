@@ -445,7 +445,10 @@ export const createEnrollmentEmail = functions.firestore
     .onCreate(async (documentSnapshot) => {
         const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
 
-        if (enrollmentRecord.status === 'enrolled') {
+        if (
+            enrollmentRecord.status === 'enrolled' &&
+            !!enrollmentRecord.transactionId
+        ) {
             await DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
