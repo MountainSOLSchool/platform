@@ -27,6 +27,7 @@ type Enrollment = {
         | undefined;
     discountCodes: Array<string>;
     student: Partial<StudentForm> | undefined;
+    isSignedUpForSolsticeEmails: boolean;
 };
 
 const initialState = {
@@ -36,6 +37,7 @@ const initialState = {
         selectedClasses: [],
         paymentMethod: undefined,
         discountCodes: [],
+        isSignedUpForSolsticeEmails: false,
         student: {
             birthdate: '',
             guardians: [

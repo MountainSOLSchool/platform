@@ -1,4 +1,11 @@
-import { Component, inject, Input, Output, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Input,
+    Output,
+    ViewChild,
+} from '@angular/core';
 import {
     BehaviorSubject,
     combineLatest,
@@ -30,6 +37,7 @@ import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         InputTextModule,

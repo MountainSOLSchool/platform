@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Input,
+    Output,
+} from '@angular/core';
 import {
     PaymentCollector,
     PaymentCollectorComponent,
@@ -11,13 +17,14 @@ import { InputTextModule } from 'primeng/inputtext';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { MessagesComponent } from '@sol/form/validity';
 import { create, enforce, test } from 'vest';
-import { BehaviorSubject, combineLatest, map, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { LetModule } from '@rx-angular/template/let';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         PaymentCollectorComponent,

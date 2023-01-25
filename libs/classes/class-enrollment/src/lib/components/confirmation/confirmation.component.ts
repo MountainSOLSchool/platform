@@ -1,5 +1,11 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, Input, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Input,
+    Output,
+} from '@angular/core';
 import { LetModule } from '@rx-angular/template/let';
 import { ChipModule } from 'primeng/chip';
 import { combineLatest, map, of, switchMap } from 'rxjs';
@@ -13,8 +19,10 @@ import { ButtonModule } from 'primeng/button';
 import { IfModule } from '@rx-angular/template/if';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
+import { TableModule } from 'primeng/table';
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         ChipModule,
@@ -27,6 +35,7 @@ import { TagModule } from 'primeng/tag';
         ButtonModule,
         ProgressSpinnerModule,
         TagModule,
+        TableModule,
     ],
     providers: [DatePipe],
     selector: 'sol-class-confirmation',

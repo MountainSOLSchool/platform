@@ -31,9 +31,9 @@ defineFullCalendarElement();
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, SkeletonModule],
     selector: 'sol-calendar',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './calendar.component.html',
 })

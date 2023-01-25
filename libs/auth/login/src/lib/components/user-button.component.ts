@@ -15,6 +15,7 @@ import { map, Observable } from 'rxjs';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         MenuModule,
@@ -23,7 +24,6 @@ import { map, Observable } from 'rxjs';
         AuthService,
     ],
     selector: 'sol-user-button',
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: ` <ng-container *ngIf="email$ | async as email; else login">
             <div style="cursor: pointer">
                 <p-avatar

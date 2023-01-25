@@ -9,6 +9,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         ButtonModule,
@@ -17,7 +18,6 @@ import { ToolbarModule } from 'primeng/toolbar';
         RouterModule,
         UserButtonComponent,
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     styles: [
         `
             .toolbar {

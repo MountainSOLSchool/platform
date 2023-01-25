@@ -5,8 +5,8 @@ import { ToastModule } from 'primeng/toast';
 
 @Component({
     standalone: true,
-    imports: [ToastModule, MessageModule, RouterModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [ToastModule, MessageModule, RouterModule],
     selector: 'sol-root',
     template: ` <div>
         <router-outlet></router-outlet>

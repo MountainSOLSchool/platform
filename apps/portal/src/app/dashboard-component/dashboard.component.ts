@@ -13,8 +13,8 @@ import { map, Observable } from 'rxjs';
 
 @Component({
     standalone: true,
-    imports: [CommonModule, ChartModule, RouterModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, ChartModule, RouterModule],
     templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {

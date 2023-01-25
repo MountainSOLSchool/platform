@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    HostListener,
+    inject,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { EnrollmentWorkflowStore } from './enrollment-workflow.store';
 import { StepsModule } from 'primeng/steps';
@@ -23,9 +28,11 @@ import { LetModule } from '@rx-angular/template/let';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { ComponentCanDeactivate } from './pending-changes.guard';
+import { EventsComponent } from '../events/events.component';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         provideComponentStore(EnrollmentWorkflowStore),
         {
@@ -50,6 +57,7 @@ import { ComponentCanDeactivate } from './pending-changes.guard';
         LetModule,
         ProgressSpinnerModule,
         DialogModule,
+        EventsComponent,
     ],
     styles: [
         `
@@ -119,6 +127,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         this.store.patchState({
             enrollment: {
                 selectedClasses: ['kzIlBrIIbrnfboPLvgA7'],
+                isSignedUpForSolsticeEmails: false,
                 paymentMethod: {
                     nonce: 'fake-valid-nonce-NOT',
                     deviceData: '{}',
@@ -139,9 +148,12 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
                     birthdate: '09/24/1980',
                     pronouns: 'pronoun',
                     school: 'school',
+                    tshirtSize: 'AS',
                     notes: 'notes',
                     contactEmail: 'contactEmail@email.com',
                     studentEmail: 'contact@email.com',
+                    contactFirstName: 'Somebody',
+                    contactLastName: 'Somelast',
                     contactPhone: '1234567890',
                     studentPhone: '1234567890',
                     address: 'address',

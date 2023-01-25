@@ -18,8 +18,8 @@ import { CardModule } from 'primeng/card';
 
 @Component({
     standalone: true,
-    selector: 'sol-login',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'sol-login',
     imports: [
         CommonModule,
         LoginStore,

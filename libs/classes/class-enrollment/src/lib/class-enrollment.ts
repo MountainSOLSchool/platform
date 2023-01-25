@@ -7,6 +7,7 @@ import { ClassEnrollmentComponent } from './components/enrollment-workflow/enrol
 import { AccountComponent } from './components/account/account.component';
 import { MedicalComponent } from './components/medical/medical.component';
 import { PendingChangesGuard } from './components/enrollment-workflow/pending-changes.guard';
+import { EventsComponent } from './components/events/events.component';
 
 export const enrollmentRoutes: Route[] = [
     {
@@ -16,6 +17,7 @@ export const enrollmentRoutes: Route[] = [
         children: [
             { path: '', redirectTo: 'classes', pathMatch: 'full' },
             { path: 'classes', component: ClassesComponent },
+            { path: 'events', component: EventsComponent },
             { path: 'info', component: InfoComponent },
             { path: 'medical', component: MedicalComponent },
             { path: 'account', component: AccountComponent },

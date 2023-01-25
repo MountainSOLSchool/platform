@@ -47,7 +47,7 @@
         <b>Selected classes ({{ selected?.length ?? 0 }})</b>
     </p>
     <div style="display: flex; gap: 4px; flex-wrap: wrap">
-        <div *ngFor="let class of selected">
+        <div *rxFor="let class of selected; trackBy: trackClassCard">
             <p-chip
                 [label]="class.title"
                 [removable]="true"
@@ -70,7 +70,7 @@
         <ng-container *rxLet="classesResult$; let classes; suspense: skeleton">
             <ng-container *ngIf="classes.length > 0; else noResults"
                 ><div
-                    *ngFor="let class of classes"
+                    *rxFor="let class of classes; trackBy: trackClassCard"
                     [ngStyle]="{
                         width: '40rem',
                         border: class.selected
@@ -98,8 +98,8 @@
                                     right: 0px;
                                     border-radius: 6px;
                                 "
-                                height="150px"
-                                width="150px"
+                                height="150"
+                                width="150"
                             />
                         </div>
                         <div
@@ -130,7 +130,7 @@
                             <b>Cost:</b> ${{ class.cost }}<br />
                             <b>Instructors:</b>
                             <span
-                                *ngFor="
+                                *rxFor="
                                     let instructor of class.instructors;
                                     let isLast = last
                                 "
@@ -149,6 +149,7 @@
                                 [inputId]="'select' + class.id"
                                 onIcon="pi pi-check"
                                 onLabel="Selected"
+                                offIcon="pi pi-plus"
                                 offLabel="Select"
                                 [(ngModel)]="class.selected"
                                 (ngModelChange)="selectionChanged(class)"
@@ -162,7 +163,7 @@
     </div>
 </ng-template>
 <ng-template #skeleton>
-    <div *ngFor="let i of [1, 2, 3]" class="custom-skeleton p-4">
+    <div *rxFor="let i of [1, 2, 3]" class="custom-skeleton p-4">
         <div class="flex mb-3">
             <p-skeleton
                 shape="circle"

@@ -1,10 +1,13 @@
-import { Component, inject, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Output,
+} from '@angular/core';
 import {
     BehaviorSubject,
     combineLatest,
-    debounceTime,
     delay,
-    filter,
     map,
     merge,
     ObservedValueOf,
@@ -30,9 +33,11 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IfModule } from '@rx-angular/template/if';
 import { DropdownModule } from 'primeng/dropdown';
+import { ForModule } from '@rx-angular/template/for';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CardModule,
         CommonModule,
@@ -48,6 +53,7 @@ import { DropdownModule } from 'primeng/dropdown';
         ProgressSpinnerModule,
         IfModule,
         DropdownModule,
+        ForModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -215,5 +221,10 @@ export class ClassesComponent {
     filterChange(filter: [] | [number, number]) {
         console.log(filter);
         this.gradeFilter$.next(filter);
+    }
+
+    trackClassCard(index: number, classCard: { id: string }) {
+        console.log(classCard);
+        return classCard.id;
     }
 }

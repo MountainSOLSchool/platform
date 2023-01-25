@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { LoginStore } from '@sol/auth/login';
 import { provideComponentStore } from '@ngrx/component-store';
@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: ` <h2>Manage Account</h2>
         <div style="margin-top: 2rem">
             <p><b>Email:</b> {{ email$ | async }}</p>

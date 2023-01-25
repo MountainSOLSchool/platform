@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Input,
+    OnInit,
+    Output,
+} from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -16,6 +23,7 @@ export type PaymentCollector = {
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, SkeletonModule],
     selector: 'sol-payment-collector',
     templateUrl: './payment-collector.component.html',

@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         ButtonModule,
@@ -28,7 +29,6 @@ import { CommonModule } from '@angular/common';
         ProgressBarModule,
         TableModule,
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './report.component.html',
 })
 export class ReportComponent implements OnInit {

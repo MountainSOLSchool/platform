@@ -1,0 +1,40 @@
+<div style="width: 40rem">
+    <p-card>
+        <ng-template pTemplate="header"></ng-template>
+        <div style="position: relative; margin-top: -2.5rem">
+            <h2>Summer Solstice</h2>
+        </div>
+        <div
+            class="flex align-items-center"
+            style="margin-bottom: 1.5rem; margin-top: 1rem"
+        >
+            <p-tag
+                value="June 17th"
+                icon="pi pi-calendar"
+                styleClass="mr-2"
+            ></p-tag>
+        </div>
+        <p>
+            <b>Location:</b> Chestnut Ridge Park and Campground<br /><br />
+            <b>Description:</b> <br />
+            From 12-4pm we will have a project work day, led by Mountain SOL
+            staff and students but open to the public, in support of Chestnut
+            Ridge Park. We will be doing projects including gardening and
+            maintenance. <br /><br />
+            From 5-9pm more people will gather, and we will have our big summer
+            solstice party! There will be potluck food, music, fire, and
+            activities. This is a favorite event for building our Mountain SOL
+            community, as many new students and older Mountain SOL alums all
+            gather together to party outdoors! <br />
+        </p>
+        <div style="margin-top: 2rem; margin-bottom: -1rem">
+            <p-toggleButton
+                onIcon="pi pi-check"
+                onLabel="Signed up for email alerts"
+                offIcon="pi pi-plus"
+                offLabel="Sign up for email alerts"
+                (onChange)="signupChanged($event)"
+            ></p-toggleButton>
+        </div>
+    </p-card>
+</div>

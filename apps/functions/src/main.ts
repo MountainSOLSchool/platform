@@ -29,6 +29,7 @@ import {
     ClassEnrollmentRepository,
 } from '@sol/classes/enrollment/repository';
 import * as functions from 'firebase-functions';
+import * as admin from 'firebase-admin';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -258,6 +259,7 @@ export const enroll = Functions.endpoint
         student: StudentForm;
         discountCodes: Array<string>;
         paymentMethod: { nonce: string; deviceData: string };
+        isSignedUpForSolsticeEmails: boolean;
     }>(async (request, response, secrets) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
 
@@ -271,6 +273,7 @@ export const enroll = Functions.endpoint
             student,
             discountCodes,
             paymentMethod: { nonce, deviceData },
+            isSignedUpForSolsticeEmails,
         } = request.body.data;
 
         const classes = await Promise.all(
@@ -296,6 +299,7 @@ export const enroll = Functions.endpoint
                 .map((d) => d.id)
                 .filter((d): d is string => !!d),
             classIds: classes.map((c) => c.id),
+            isSignedUpForSolsticeEmails,
         };
 
         const studentEnrollmentId = await ClassEnrollmentRepository.create({
@@ -439,6 +443,25 @@ export const calculateBasket = Functions.endpoint.handle<{
         _getEnrollmentDiscounts(discounts, classes);
     response.send({ discountAmounts, finalTotal, originalTotal });
 });
+
+export const addEmailToSolsticeList = functions.firestore
+    .document('enrollment/{enrollmentId}')
+    .onCreate(async (documentSnapshot) => {
+        const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
+        if (
+            enrollmentRecord.status === 'enrolled' &&
+            !!enrollmentRecord.transactionId
+        ) {
+            await DatabaseUtility.getDatabase()
+                .collection('mailing_lists')
+                .doc('summer_solstice_2023')
+                .update({
+                    emails: admin.firestore.FieldValue.arrayUnion(
+                        enrollmentRecord.contactEmail
+                    ),
+                });
+        }
+    });
 
 export const createEnrollmentEmail = functions.firestore
     .document('enrollment/{enrollmentId}')

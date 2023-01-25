@@ -1,4 +1,10 @@
-import { Component, inject, Input, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Input,
+    Output,
+} from '@angular/core';
 import { BehaviorSubject, combineLatest, filter, map, shareReplay } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,6 +27,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
         InputTextModule,

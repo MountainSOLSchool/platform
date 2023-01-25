@@ -13,6 +13,15 @@
             ></ng-container
         ></ng-template>
     </mat-step>
+    <mat-step #events label="Events">
+        <ng-template matStepContent>
+            <h2>Events</h2>
+            <sol-event-selection
+                (validityChange)="events.hasError = !$event"
+            ></sol-event-selection>
+            <ng-container *ngTemplateOutlet="navigation"></ng-container
+        ></ng-template>
+    </mat-step>
     <mat-step #studentInfo label="Student Info">
         <ng-template matStepContent>
             <h2>Student Info</h2>

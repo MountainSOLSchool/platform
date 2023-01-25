@@ -42,3 +42,7 @@
     background: var(--primary-color);
     color: var(--primary-color-text);
 }
+
+:host ::ng-deep .p-fieldset-content {
+    padding: 0.5rem;
+}

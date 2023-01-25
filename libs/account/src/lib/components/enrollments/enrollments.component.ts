@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { CardModule } from 'primeng/card';
@@ -8,6 +8,7 @@ import { LetModule } from '@rx-angular/template/let';
 
 @Component({
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <h2>Enrollments</h2>
         <ng-container *rxLet="enrollments$; let enrollments; suspense: skeleton"
