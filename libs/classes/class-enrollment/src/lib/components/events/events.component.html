@@ -33,6 +33,7 @@
                 onLabel="Signed up for email alerts"
                 offIcon="pi pi-plus"
                 offLabel="Sign up for email alerts"
+                [ngModel]="checked$ | async"
                 (onChange)="signupChanged($event)"
             ></p-toggleButton>
         </div>

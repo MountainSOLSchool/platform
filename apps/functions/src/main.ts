@@ -450,7 +450,8 @@ export const addEmailToSolsticeList = functions.firestore
         const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
         if (
             enrollmentRecord.status === 'enrolled' &&
-            !!enrollmentRecord.transactionId
+            !!enrollmentRecord.transactionId &&
+            enrollmentRecord.isSignedUpForSolsticeEmails === true
         ) {
             await DatabaseUtility.getDatabase()
                 .collection('mailing_lists')
