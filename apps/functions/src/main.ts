@@ -288,7 +288,10 @@ export const enroll = Functions.endpoint
             )
         ).filter((d): d is Discount<unknown> => !!d);
 
-        const { finalTotal } = _getEnrollmentDiscounts(discounts, classes);
+        const { finalTotal, discountAmounts } = _getEnrollmentDiscounts(
+            discounts,
+            classes
+        );
 
         const enrollmentRecord = {
             userId: user.uid,
@@ -298,6 +301,10 @@ export const enroll = Functions.endpoint
             discountIds: discounts
                 .map((d) => d.id)
                 .filter((d): d is string => !!d),
+            discounts: discountAmounts.map((da) => ({
+                description: da.code,
+                amount: da.amount,
+            })),
             classIds: classes.map((c) => c.id),
             isSignedUpForSolsticeEmails,
         };
@@ -473,13 +480,26 @@ export const createEnrollmentEmail = functions.firestore
             enrollmentRecord.status === 'enrolled' &&
             !!enrollmentRecord.transactionId
         ) {
+            const classes = await ClassRepository.getAll(
+                enrollmentRecord.classIds
+            );
+
             await DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
                     to: enrollmentRecord.contactEmail,
                     message: {
                         subject: `Receipt for ${enrollmentRecord.studentName} Summer 2023 Enrollment`,
-                        html: `<p>Thank you for enrolling ${enrollmentRecord.studentName} for classes this summer! Below is your receipt for the classes in which they are enrolled.</p>
+                        html: `<p>Thank you for enrolling ${
+                            enrollmentRecord.studentName
+                        } for classes with us this summer! 
+                        You can expect an email from us one week before each summer camp with more specific info 
+                        about the upcoming camp. The email will include a suggested sur-thrival backpack packing list 
+                        to send your student to camp with, including good hiking shoes, a water bottle, a snack, 
+                        bugspray/sunscreen, rain jacket, and lunch (if staying for the lunch hour). There may also 
+                        be other suggested items that are specific to each camp.
+                        In the meantime, please reach out to us or respond to this email with any questions! 
+                        <p>Below is your receipt for the classes in which they are enrolled:</p>
                           <table>
                           <thead>
                           <th>
@@ -490,30 +510,34 @@ export const createEnrollmentEmail = functions.firestore
                           </th>
                           </thead>
                           <tbody>
+                            ${classes
+                                .map(
+                                    (c) =>
+                                        `<tr>
+                            <td>
+                                ${c.name}
+                            </td>
+                            <td>
+                                $${c.cost}
+                            </td>   
+                            </tr>`
+                                )
+                                .join('')}
                           <tr>
-                            <td>
-                              Class A
+                          ${enrollmentRecord.discounts
+                              .map(
+                                  (d) =>
+                                      `<tr>
+                            <td> 
+                                ${d.description}
                             </td>
-                            <td>
-                              $100
+                            <td> 
+                                -\$${d.amount}
                             </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              Class B
-                            </td>
-                            <td>
-                              $110
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>
-                              Early Bird Discount
-                            </td>
-                            <td>
-                              $-20
-                            </td>
-                          </tr>
+                            </tr>
+                            `
+                              )
+                              .join('')}
                           <tr>
                             <td>
                               Total
@@ -524,7 +548,9 @@ export const createEnrollmentEmail = functions.firestore
                           </tr>
                           </tbody>
                           </table>
-                          <p>Transaction ID: ${enrollmentRecord.transactionId}</p>`,
+                          <p>Transaction ID: ${
+                              enrollmentRecord.transactionId
+                          }</p>`,
                     },
                 });
         }

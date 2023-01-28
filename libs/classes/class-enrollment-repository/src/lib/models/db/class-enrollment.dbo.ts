@@ -8,6 +8,10 @@ export interface ClassEnrollmentDbo {
     contactEmail: string;
     finalCost: number;
     discountIds: Array<string>;
+    discounts: Array<{
+        amount: number;
+        description: string;
+    }>;
     classIds: Array<string>;
     transactionId?: string;
     status: 'pending' | 'enrolled' | 'failed';

@@ -11,6 +11,14 @@ export class ClassRepository {
         return data as Class;
     }
 
+    static async getAll(ids: Array<string>): Promise<Class[]> {
+        return await Promise.all(
+            ids.map(async (id) => {
+                return await this.get(id);
+            })
+        );
+    }
+
     static async addStudentToClass(
         studentId: string,
         classId: string
