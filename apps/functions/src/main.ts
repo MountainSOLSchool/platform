@@ -532,7 +532,7 @@ export const createEnrollmentEmail = functions.firestore
                                 ${d.description}
                             </td>
                             <td> 
-                                -\$${d.amount}
+                                -$${d.amount}
                             </td>
                             </tr>
                             `
