@@ -489,18 +489,25 @@ export const createEnrollmentEmail = functions.firestore
                 .add({
                     to: enrollmentRecord.contactEmail,
                     message: {
-                        subject: `Receipt for ${enrollmentRecord.studentName} Summer 2023 Enrollment`,
+                        subject: `Enrollment confirmation for ${enrollmentRecord.studentName}`,
                         html: `<p>Thank you for enrolling ${
                             enrollmentRecord.studentName
-                        } for classes with us this summer! 
-                        You can expect an email from us one week before each summer camp with more specific info 
-                        about the upcoming camp. The email will include a suggested sur-thrival backpack packing list 
-                        to send your student to camp with, including good hiking shoes, a water bottle, a snack, 
-                        bugspray/sunscreen, rain jacket, and lunch (if staying for the lunch hour). There may also 
-                        be other suggested items that are specific to each camp.
-                        In the meantime, please reach out to us or respond to this email with any questions! 
+                        } for classes with us this summer!</p>
+                        <p>You can view all of your enrollments here by logging in with the account you created: <a href="https://mountain-sol-platform.web.app/account/enrollments">https://mountain-sol-platform.web.app/account/enrollments</a>.</p>
+                        <p>If you’re new to Mountain SOL, please review the summer info page here prior to the start of class: <a href="https://www.mountainsol.org/summer">https://www.mountainsol.org/summer</a>.</p>
+                        <p>Every student is encouraged to wear good hiking shoes and bring the following items in a backpack:
+                        <ul>
+                          <li>Water bottle</li>
+                          <li>Snacks</li>
+                          <li>Lunch (if staying for the lunch hour)</li>
+                          <li>Bugspray/sunscreen</li>
+                          <li>Rain jacket</li>
+                        </ul>
+                        </p>
+                        <p>We’ll send you another email one week before the start of each class with class-specific details about what else to expect and a more specific list for your student’s backpack.</p>
+                        <p>In the meantime, please reach out to us or reply to this email with any questions!</p>
                         <p>Below is your receipt for the classes in which they are enrolled:</p>
-                          <table>
+                        <table style="text-align: left">
                           <thead>
                           <th>
                             Class Name
@@ -519,7 +526,7 @@ export const createEnrollmentEmail = functions.firestore
                             </td>
                             <td>
                                 $${c.cost}
-                            </td>   
+                            </td>
                             </tr>`
                                 )
                                 .join('')}
@@ -528,10 +535,10 @@ export const createEnrollmentEmail = functions.firestore
                               .map(
                                   (d) =>
                                       `<tr>
-                            <td> 
+                            <td>
                                 ${d.description}
                             </td>
-                            <td> 
+                            <td>
                                 -$${d.amount}
                             </td>
                             </tr>
@@ -547,10 +554,10 @@ export const createEnrollmentEmail = functions.firestore
                             </td>
                           </tr>
                           </tbody>
-                          </table>
-                          <p>Transaction ID: ${
-                              enrollmentRecord.transactionId
-                          }</p>`,
+                        </table>
+                        <p>Transaction ID: ${
+                            enrollmentRecord.transactionId
+                        }</p>`,
                     },
                 });
         }
