@@ -22,12 +22,33 @@ type ServerClass = {
     thumbnailUrl: string;
 };
 
+type ServerClassGroup = {
+    name: string;
+    classIds: Array<string>;
+    cost: number;
+};
+
 @Injectable({ providedIn: 'root' })
 export class ClassListService {
     private readonly functionsApi = inject(FunctionsApi);
     private _cachedFutureClasses: Array<ServerClass> | undefined;
 
     getFutureClasses() {
+        return this._cachedFutureClasses
+            ? of(this._cachedFutureClasses)
+            : this.functionsApi
+                  .call<{
+                      classes: Array<ServerClass>;
+                  }>('classes')
+                  .pipe(
+                      map((response) =>
+                          response.classes.filter((c) => c.startMs > Date.now())
+                      ),
+                      tap((classes) => (this._cachedFutureClasses = classes))
+                  );
+    }
+
+    getClassGroups() {
         return this._cachedFutureClasses
             ? of(this._cachedFutureClasses)
             : this.functionsApi

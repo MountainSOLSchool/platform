@@ -74,13 +74,48 @@ export const signIn = Functions.endpoint
         response.send({ html: htmlTable });
     });
 
-export const classes = Functions.endpoint.handle(async (request, response) => {
-    const db = DatabaseUtility.getDatabase();
-
-    const classes = await _fetchClasses(db);
+export const classes = Functions.endpoint.handle<{
+    ids: Array<string>;
+}>(async (request, response) => {
+    const classes = await ClassRepository.getAll(request.body.data.ids);
 
     response.send({ classes });
 });
+
+// TODO: need endpoint to get "enrollable class list" for frontend (classes in groups)
+export const availableEnrollmentClasses = Functions.endpoint.handle(
+    async (request, response) => {
+        const db = DatabaseUtility.getDatabase();
+
+        const classes = await _fetchClasses(db);
+
+        response.send({ classes });
+    }
+);
+
+export const migrateClasses = functions.firestore
+    .document('migration/{id}')
+    .onCreate(async () => {
+        const classesCollection = DatabaseUtility.getDatabase().collection(
+            CLASSES_SUMMER_2023_COLLECTION
+        );
+
+        const { classesSummer2023 } =
+            await DatabaseUtility.getHydratedCollection(classesCollection);
+
+        const semestersCollection =
+            DatabaseUtility.getDatabase().collection('semesters');
+        const semesterDoc = await semestersCollection.doc('summer2023').get();
+        if (!semesterDoc.exists) {
+            await semestersCollection.doc('summer2023').set({});
+        }
+        for (const { id, ...aClass } of classesSummer2023) {
+            const semesterClassesRef = semestersCollection
+                .doc('summer2023')
+                .collection('classes');
+            await semesterClassesRef.add(aClass);
+        }
+    });
 
 export const emails = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -125,53 +160,54 @@ async function fetchMatchingClassRef({
 }
 
 const _fetchClasses = async (
-    database: FirebaseFirestore.Firestore,
-    classIds?: string[]
+    database: FirebaseFirestore.Firestore
 ): Promise<unknown> => {
     const classes = database.collection(CLASSES_SUMMER_2023_COLLECTION);
-
-    console.log(classes);
 
     const { classesSummer2023 } = await DatabaseUtility.getHydratedCollection(
         classes
     );
 
+    const filtered = classesSummer2023.filter((c) => !!c.start);
+
     const mappedClasses = await Promise.all(
-        classesSummer2023.map(async (c) => {
-            return {
-                title: c.name,
-                startMs:
-                    typeof c !== 'string' &&
-                    typeof c.start === 'object' &&
-                    c.start &&
-                    '_seconds' in c.start
-                        ? Number(c.start._seconds) * 1000
-                        : undefined,
-                endMs:
-                    typeof c !== 'string' &&
-                    typeof c.end === 'object' &&
-                    c.end &&
-                    '_seconds' in c.end
-                        ? Number(c.end._seconds) * 1000
-                        : undefined,
-                enrolledCount: Array.isArray(c.students)
-                    ? c.students?.length ?? 0
-                    : 0,
-                id: c.id,
-                classType: c.class_type,
-                gradeRangeStart: c.grade_range_start,
-                gradeRangeEnd: c.grade_range_end,
-                description: c.description,
-                live: c.live,
-                cost: c.cost,
-                location: c.location,
-                instructors: await DatabaseUtility.getHydratedDocuments(
-                    c.instructors as unknown as Array<FirebaseFirestore.DocumentReference>
-                ),
-                dailyTimes: c.daily_times,
-                weekday: c.weekday,
-                thumbnailUrl: c.thumbnailUrl,
-            };
+        filtered.map(async (c) => {
+            return c.classIds
+                ? c
+                : {
+                      title: c.name,
+                      startMs:
+                          typeof c !== 'string' &&
+                          typeof c.start === 'object' &&
+                          c.start &&
+                          '_seconds' in c.start
+                              ? Number(c.start._seconds) * 1000
+                              : undefined,
+                      endMs:
+                          typeof c !== 'string' &&
+                          typeof c.end === 'object' &&
+                          c.end &&
+                          '_seconds' in c.end
+                              ? Number(c.end._seconds) * 1000
+                              : undefined,
+                      enrolledCount: Array.isArray(c.students)
+                          ? c.students?.length ?? 0
+                          : 0,
+                      id: c.id,
+                      classType: c.class_type,
+                      gradeRangeStart: c.grade_range_start,
+                      gradeRangeEnd: c.grade_range_end,
+                      description: c.description,
+                      live: c.live,
+                      cost: c.cost,
+                      location: c.location,
+                      instructors: await DatabaseUtility.getHydratedDocuments(
+                          c.instructors as unknown as Array<FirebaseFirestore.DocumentReference>
+                      ),
+                      dailyTimes: c.daily_times,
+                      weekday: c.weekday,
+                      thumbnailUrl: c.thumbnailUrl,
+                  };
         })
     );
 
