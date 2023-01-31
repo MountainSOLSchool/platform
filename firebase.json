@@ -32,10 +32,6 @@
                 "function": "signIn"
             },
             {
-                "source": "/importEnrollment",
-                "function": "importEnrollment"
-            },
-            {
                 "source": "/paymentToken",
                 "function": "paymentToken"
             },
@@ -54,6 +50,10 @@
             {
                 "source": "/calculateBasket",
                 "function": "calculateBasket"
+            },
+            {
+                "source": "/availableEnrollmentClasses",
+                "function": "availableEnrollmentClasses"
             },
             {
                 "source": "**",
