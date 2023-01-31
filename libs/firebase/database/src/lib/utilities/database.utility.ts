@@ -33,6 +33,12 @@ export class DatabaseUtility {
         return await db.doc(path);
     }
 
+    public static async getCollectionRef(
+        path: string
+    ): Promise<FirebaseFirestore.CollectionReference> {
+        return db.collection(path);
+    }
+
     public static async getHydratedCollection(
         collectionRef: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
     ): Promise<{ [collectionName: string]: Collection }> {
@@ -104,6 +110,30 @@ export class DatabaseUtility {
         );
     }
 
+    public static async fetchMatchingDocuments(
+        collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
+        ...queries: Array<
+            [
+                fieldPath: string | FirebaseFirestore.FieldPath,
+                opString: FirebaseFirestore.WhereFilterOp,
+                value: unknown
+            ]
+        >
+    ): Promise<
+        Array<
+            FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
+        >
+    > {
+        const queried = queries
+            .slice(1)
+            .reduce(
+                (agg, q) => agg.where(...q),
+                collection.where(...queries[0])
+            );
+        const documents = await queried.get();
+        return documents.docs;
+    }
+
     public static async fetchFirstMatchingDocument(
         collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
         ...queries: Array<
@@ -117,13 +147,10 @@ export class DatabaseUtility {
         | FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
         | undefined
     > {
-        const queried = queries
-            .slice(1)
-            .reduce(
-                (agg, q) => agg.where(...q),
-                collection.where(...queries[0])
-            );
-        const documents = await queried.get();
-        return documents.docs[0];
+        const documents = await DatabaseUtility.fetchMatchingDocuments(
+            collection,
+            ...queries
+        );
+        return documents[0];
     }
 }

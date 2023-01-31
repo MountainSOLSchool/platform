@@ -1,65 +1,35 @@
 import { inject, Injectable } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
-import { map, of, tap } from 'rxjs';
-
-type ServerClass = {
-    title: string;
-    startMs: number;
-    endMs: number;
-    id: string;
-    classType: string;
-    gradeRangeStart: number;
-    gradeRangeEnd: number;
-    description: string;
-    cost: number;
-    location: string;
-    instructors: Array<{
-        first_name: string;
-        last_name: string;
-    }>;
-    dailyTimes: string;
-    weekday: string;
-    thumbnailUrl: string;
-};
-
-type ServerClassGroup = {
-    name: string;
-    classIds: Array<string>;
-    cost: number;
-};
+import { filter, map } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { classesActions } from '../store/classes.actions';
+import {
+    classesFeature,
+    selectAvailableClassesAndGroups,
+} from '../store/classes.feature';
 
 @Injectable({ providedIn: 'root' })
 export class ClassListService {
-    private readonly functionsApi = inject(FunctionsApi);
-    private _cachedFutureClasses: Array<ServerClass> | undefined;
+    private readonly store = inject(Store);
 
-    getFutureClasses() {
-        return this._cachedFutureClasses
-            ? of(this._cachedFutureClasses)
-            : this.functionsApi
-                  .call<{
-                      classes: Array<ServerClass>;
-                  }>('classes')
-                  .pipe(
-                      map((response) =>
-                          response.classes.filter((c) => c.startMs > Date.now())
-                      ),
-                      tap((classes) => (this._cachedFutureClasses = classes))
-                  );
+    getAvailableEnrollmentClassesAndGroups() {
+        this.store.dispatch(classesActions.loadAvailableEnrollmentStart());
+        console.log('ok bud');
+        return this.store.select(selectAvailableClassesAndGroups);
     }
 
-    getClassGroups() {
-        return this._cachedFutureClasses
-            ? of(this._cachedFutureClasses)
-            : this.functionsApi
-                  .call<{
-                      classes: Array<ServerClass>;
-                  }>('classes')
-                  .pipe(
-                      map((response) =>
-                          response.classes.filter((c) => c.startMs > Date.now())
-                      ),
-                      tap((classes) => (this._cachedFutureClasses = classes))
-                  );
+    getClassesByIds(ids: Array<string>) {
+        this.store.dispatch(classesActions.loadClassesStart({ ids }));
+        return this.store.select(classesFeature.selectClasses).pipe(
+            map((classes) => ids.map((id) => classes[id])),
+            filter((classes) => classes.every((c) => !!c))
+        );
+    }
+
+    getClassGroupsByIds(ids: Array<string>) {
+        this.store.dispatch(classesActions.loadClassGroupsStart({ ids }));
+        return this.store.select(classesFeature.selectGroups).pipe(
+            map((groups) => ids.map((id) => groups[id])),
+            filter((groups) => groups.every((c) => !!c))
+        );
     }
 }

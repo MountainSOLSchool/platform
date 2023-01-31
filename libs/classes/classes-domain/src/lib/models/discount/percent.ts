@@ -1,5 +1,5 @@
 import { BasketDiscount } from './basket-discount';
-import { Class } from '../class';
+import { SemesterClass } from '../semester-class';
 
 export class PercentDicount extends BasketDiscount {
     override type = 'percent';

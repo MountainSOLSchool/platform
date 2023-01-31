@@ -1,1 +1,1 @@
-export const CLASSES_SUMMER_2023_COLLECTION = 'classesSummer2023';
+export const SUMMER_2023_SEMESTER = 'summer2023';

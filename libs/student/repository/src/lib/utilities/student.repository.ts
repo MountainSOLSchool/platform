@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
 import { firestore } from 'firebase-admin';
 import DocumentReference = firestore.DocumentReference;
-import { CLASSES_SUMMER_2023_COLLECTION } from '@sol/classes/repository';
+import { SUMMER_2023_SEMESTER } from '@sol/classes/repository';
 
 export class StudentRepository {
     static async fetchMatchingStudent({
@@ -59,9 +59,7 @@ export class StudentRepository {
     ): Promise<Array<StudentDbEntry>> {
         let students: Array<StudentDbEntry>;
         if (className) {
-            const classes = this.database.collection(
-                CLASSES_SUMMER_2023_COLLECTION
-            );
+            const classes = this.database.collection(SUMMER_2023_SEMESTER);
 
             const classDocument =
                 await DatabaseUtility.fetchFirstMatchingDocument(classes, [

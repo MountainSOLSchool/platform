@@ -8,12 +8,21 @@ import { AccountComponent } from './components/account/account.component';
 import { MedicalComponent } from './components/medical/medical.component';
 import { PendingChangesGuard } from './components/enrollment-workflow/pending-changes.guard';
 import { EventsComponent } from './components/events/events.component';
+import { provideState } from '@ngrx/store';
+import { classesFeature } from './store/classes.feature';
+import { EffectsModule, provideEffects } from '@ngrx/effects';
+import { ClassesEffects } from './store/classes.effects';
+import { importProvidersFrom } from '@angular/core';
 
 export const enrollmentRoutes: Route[] = [
     {
         path: '',
         canDeactivate: [PendingChangesGuard],
         component: ClassEnrollmentComponent,
+        providers: [
+            provideState(classesFeature),
+            provideEffects(ClassesEffects),
+        ],
         children: [
             { path: '', redirectTo: 'classes', pathMatch: 'full' },
             { path: 'classes', component: ClassesComponent },

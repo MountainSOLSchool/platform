@@ -1,4 +1,5 @@
-export * from './lib/models/class';
+export * from './lib/models/semester-class';
+export * from './lib/models/semester-class-group';
 export * from './lib/models/discount/discount';
 export * from './lib/models/discount/amount';
 export * from './lib/models/discount/discount.dbo';

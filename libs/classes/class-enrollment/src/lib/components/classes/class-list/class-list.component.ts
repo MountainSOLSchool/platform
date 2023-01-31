@@ -10,6 +10,7 @@ import {
     delay,
     map,
     merge,
+    Observable,
     ObservedValueOf,
     of,
     shareReplay,
@@ -34,6 +35,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IfModule } from '@rx-angular/template/if';
 import { DropdownModule } from 'primeng/dropdown';
 import { ForModule } from '@rx-angular/template/for';
+import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
+
+interface ClassRow {
+    classes: Array<SemesterClass & { classDateTimes: string }>;
+    group?: SemesterClassGroup;
+    start: Date;
+}
 
 @Component({
     standalone: true,
@@ -93,12 +101,13 @@ export class ClassesComponent {
         map((selectedClasses) => selectedClasses.length > 0)
     );
 
-    classes$ = this.classListService.getFutureClasses().pipe(
-        shareReplay(),
-        map((classes) =>
-            classes
-                .map((c) => {
-                    return {
+    availableForEnrollment$: Observable<Array<ClassRow>> = this.classListService
+        .getAvailableEnrollmentClassesAndGroups()
+        .pipe(
+            shareReplay(),
+            map(({ classes, groups }) => {
+                const classesAsClassRows = classes
+                    .map((c) => ({
                         ...c,
                         classDateTimes:
                             c.startMs && c.endMs
@@ -112,21 +121,39 @@ export class ClassesComponent {
                                       'shortDate'
                                   )
                                 : '',
-                    };
-                })
-                .sort((a, b) => a.startMs - b.startMs)
-        ),
-        switchMap((classes) =>
-            this.selectedClassIds$.pipe(
-                map((selectedClasses) => {
-                    return classes.map((c) => {
-                        return {
-                            ...c,
-                            selected: selectedClasses.includes(c.id),
-                        };
-                    });
-                })
-            )
+                    }))
+                    .map((c) => ({
+                        classes: [c],
+                        start: new Date(c.startMs),
+                    }));
+                const groupsAsClassRows = groups.map((g) => ({
+                    classes: g.classes.map((c) => ({
+                        ...c,
+                        classDateTimes:
+                            c.startMs && c.endMs
+                                ? this.datePipe.transform(
+                                      new Date(c.startMs),
+                                      'shortDate'
+                                  ) +
+                                  ' - ' +
+                                  this.datePipe.transform(
+                                      new Date(c.endMs),
+                                      'shortDate'
+                                  )
+                                : '',
+                    })),
+                    group: g,
+                    start: new Date(g.classes[0].startMs),
+                }));
+                return [...classesAsClassRows, ...groupsAsClassRows].sort(
+                    (a, b) => a.start.getTime() - b.start.getTime()
+                );
+            })
+        );
+
+    classes$ = this.availableForEnrollment$.pipe(
+        map((rows) =>
+            rows.map((row) => row.classes).reduce((a, b) => a.concat(b), [])
         )
     );
 
@@ -159,8 +186,9 @@ export class ClassesComponent {
         this.classes$,
         this.search$,
         this.gradeFilter$,
+        this.selectedClassIds$,
     ]).pipe(
-        map(([classes, search, gradeFilter]) => {
+        map(([classes, search, gradeFilter, selectedClassIds]) => {
             const searched = classes.filter((c) => {
                 return (
                     c.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -182,7 +210,10 @@ export class ClassesComponent {
                               c.gradeRangeEnd === endGrade
                       )
                     : searched;
-            return filtered;
+            return filtered.map((c) => ({
+                ...c,
+                selected: selectedClassIds.includes(c.id),
+            }));
         })
     );
 

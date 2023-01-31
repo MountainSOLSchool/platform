@@ -9,8 +9,8 @@ import {
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
+import { EffectsModule, provideEffects } from '@ngrx/effects';
+import { provideStore, StoreModule } from '@ngrx/store';
 import { AuthInterceptor } from '@sol/auth/interceptor';
 import { MessageService } from 'primeng/api';
 import { appRoutes } from './app/app-routes';
@@ -39,8 +39,8 @@ bootstrapApplication(AppComponent, {
         importProvidersFrom(BrowserAnimationsModule),
         MessageService,
         provideRouter(appRoutes),
-        importProvidersFrom(StoreModule.forRoot({}, {})),
-        importProvidersFrom(EffectsModule.forRoot([])),
+        provideStore(),
+        provideEffects(),
         importProvidersFrom(
             AngularFireModule.initializeApp({
                 apiKey: 'AIzaSyBxv66X_Ye4MXI5lt8Sjc1xz88rdWJJ0ho',

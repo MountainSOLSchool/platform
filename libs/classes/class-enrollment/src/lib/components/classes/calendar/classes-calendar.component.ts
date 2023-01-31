@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { EventApi, EventInput } from '@fullcalendar/core';
-import { Class } from '@sol/classes/domain';
+import { SemesterClass } from '@sol/classes/domain';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { mergeMap, Observable, scan, Subject, map, startWith } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -34,7 +34,7 @@ export class SelectClassesCalendarComponent {
                 : selectedClasses.filter(
                       (c) => c.id !== classThatToggledSelection.id
                   );
-        }, new Array<Class>())
+        }, new Array<SemesterClass>())
     );
 
     #serverClassEvents$ = this.functionsApi

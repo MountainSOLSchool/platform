@@ -12,8 +12,8 @@ import { NewStudentDbEntry, StudentForm } from '@sol/student/domain';
 import { TableHtml } from '@sol/table/html';
 import { Braintree } from '@sol/payments/braintree';
 import {
-    CLASSES_SUMMER_2023_COLLECTION,
-    ClassRepository,
+    SUMMER_2023_SEMESTER,
+    SemesterRepository,
     DiscountRepository,
 } from '@sol/classes/repository';
 import {
@@ -22,7 +22,7 @@ import {
     isBasketDiscount,
     ClassesDiscount,
     BasketDiscount,
-    Class,
+    SemesterClass,
 } from '@sol/classes/domain';
 import {
     ClassEnrollmentDbo,
@@ -77,45 +77,29 @@ export const signIn = Functions.endpoint
 export const classes = Functions.endpoint.handle<{
     ids: Array<string>;
 }>(async (request, response) => {
-    const classes = await ClassRepository.getAll(request.body.data.ids);
+    const classes = await SemesterRepository.of(
+        SUMMER_2023_SEMESTER
+    ).classes.getMany(request.body.data.ids);
 
     response.send({ classes });
 });
 
-// TODO: need endpoint to get "enrollable class list" for frontend (classes in groups)
 export const availableEnrollmentClasses = Functions.endpoint.handle(
     async (request, response) => {
-        const db = DatabaseUtility.getDatabase();
-
-        const classes = await _fetchClasses(db);
-
-        response.send({ classes });
-    }
-);
-
-export const migrateClasses = functions.firestore
-    .document('migration/{id}')
-    .onCreate(async () => {
-        const classesCollection = DatabaseUtility.getDatabase().collection(
-            CLASSES_SUMMER_2023_COLLECTION
+        const semester = await SemesterRepository.of(SUMMER_2023_SEMESTER);
+        const now = Date.now();
+        const classes = await semester.classes.getByStartsAtOrAfter(now);
+        const groups = await semester.groups.getByStartsAtOrAfter(now);
+        const idsOfClassesInGroups = groups.flatMap((g) =>
+            g.classes.map((c) => c.id)
+        );
+        const classesNotInGroups = classes.filter(
+            (c) => !idsOfClassesInGroups.includes(c.id)
         );
 
-        const { classesSummer2023 } =
-            await DatabaseUtility.getHydratedCollection(classesCollection);
-
-        const semestersCollection =
-            DatabaseUtility.getDatabase().collection('semesters');
-        const semesterDoc = await semestersCollection.doc('summer2023').get();
-        if (!semesterDoc.exists) {
-            await semestersCollection.doc('summer2023').set({});
-        }
-        for (const { id, ...aClass } of classesSummer2023) {
-            const semesterClassesRef = semestersCollection
-                .doc('summer2023')
-                .collection('classes');
-            await semesterClassesRef.add(aClass);
-        }
-    });
+        response.send({ classes: classesNotInGroups, groups });
+    }
+);
 
 export const emails = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -136,84 +120,6 @@ export const tshirts = Functions.endpoint
         });
     });
 
-async function fetchMatchingClassRef({
-    name,
-}: {
-    name: string;
-}): Promise<
-    | FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
-    | undefined
-> {
-    const classes = DatabaseUtility.getDatabase().collection(
-        CLASSES_SUMMER_2023_COLLECTION
-    );
-
-    const classRef = (
-        await DatabaseUtility.fetchFirstMatchingDocument(classes, [
-            'name',
-            '==',
-            name,
-        ])
-    )?.ref;
-
-    return classRef;
-}
-
-const _fetchClasses = async (
-    database: FirebaseFirestore.Firestore
-): Promise<unknown> => {
-    const classes = database.collection(CLASSES_SUMMER_2023_COLLECTION);
-
-    const { classesSummer2023 } = await DatabaseUtility.getHydratedCollection(
-        classes
-    );
-
-    const filtered = classesSummer2023.filter((c) => !!c.start);
-
-    const mappedClasses = await Promise.all(
-        filtered.map(async (c) => {
-            return c.classIds
-                ? c
-                : {
-                      title: c.name,
-                      startMs:
-                          typeof c !== 'string' &&
-                          typeof c.start === 'object' &&
-                          c.start &&
-                          '_seconds' in c.start
-                              ? Number(c.start._seconds) * 1000
-                              : undefined,
-                      endMs:
-                          typeof c !== 'string' &&
-                          typeof c.end === 'object' &&
-                          c.end &&
-                          '_seconds' in c.end
-                              ? Number(c.end._seconds) * 1000
-                              : undefined,
-                      enrolledCount: Array.isArray(c.students)
-                          ? c.students?.length ?? 0
-                          : 0,
-                      id: c.id,
-                      classType: c.class_type,
-                      gradeRangeStart: c.grade_range_start,
-                      gradeRangeEnd: c.grade_range_end,
-                      description: c.description,
-                      live: c.live,
-                      cost: c.cost,
-                      location: c.location,
-                      instructors: await DatabaseUtility.getHydratedDocuments(
-                          c.instructors as unknown as Array<FirebaseFirestore.DocumentReference>
-                      ),
-                      dailyTimes: c.daily_times,
-                      weekday: c.weekday,
-                      thumbnailUrl: c.thumbnailUrl,
-                  };
-        })
-    );
-
-    return mappedClasses;
-};
-
 export const paymentToken = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle(async (request, response, secrets) => {
@@ -229,7 +135,7 @@ export const paymentToken = Functions.endpoint
 
 function _getEnrollmentDiscounts(
     discounts: Discount<unknown>[],
-    classes: Awaited<Class>[]
+    classes: Awaited<SemesterClass>[]
 ) {
     const activeDiscounts = discounts.filter((d) => d.active);
 
@@ -246,10 +152,13 @@ function _getEnrollmentDiscounts(
                     ...amounts,
                     { code: discount.code, amount: appliedDiscount.amount },
                 ],
-            ] satisfies [Array<Class>, Array<{ code: string; amount: number }>];
+            ] satisfies [
+                Array<SemesterClass>,
+                Array<{ code: string; amount: number }>
+            ];
         },
         [classes, new Array<{ code: string; amount: number }>()] satisfies [
-            Array<Class>,
+            Array<SemesterClass>,
             Array<{ code: string; amount: number }>
         ]
     );
@@ -312,8 +221,11 @@ export const enroll = Functions.endpoint
             isSignedUpForSolsticeEmails,
         } = request.body.data;
 
+        const classesRepository =
+            SemesterRepository.of(SUMMER_2023_SEMESTER).classes;
+
         const classes = await Promise.all(
-            selectedClasses.map(async (id) => await ClassRepository.get(id))
+            selectedClasses.map(async (id) => await classesRepository.get(id))
         );
 
         const discounts = (
@@ -374,7 +286,7 @@ export const enroll = Functions.endpoint
 
             await Promise.all(
                 classes.map(async (c) => {
-                    await ClassRepository.addStudentToClass(
+                    await classesRepository.addStudentToClass(
                         studentRef.id,
                         c.id
                     );
@@ -480,7 +392,12 @@ export const calculateBasket = Functions.endpoint.handle<{
         )
     ).filter((code): code is Discount<unknown> => !!code);
     const classes = await Promise.all(
-        classIds.map(async (id) => await ClassRepository.get(id))
+        classIds.map(
+            async (id) =>
+                await SemesterRepository.of(SUMMER_2023_SEMESTER).classes.get(
+                    id
+                )
+        )
     );
     const { discountAmounts, finalTotal, originalTotal } =
         _getEnrollmentDiscounts(discounts, classes);
@@ -516,9 +433,9 @@ export const createEnrollmentEmail = functions.firestore
             enrollmentRecord.status === 'enrolled' &&
             !!enrollmentRecord.transactionId
         ) {
-            const classes = await ClassRepository.getAll(
-                enrollmentRecord.classIds
-            );
+            const classes = await SemesterRepository.of(
+                SUMMER_2023_SEMESTER
+            ).classes.getMany(enrollmentRecord.classIds);
 
             await DatabaseUtility.getDatabase()
                 .collection('mail')
@@ -558,7 +475,7 @@ export const createEnrollmentEmail = functions.firestore
                                     (c) =>
                                         `<tr>
                             <td>
-                                ${c.name}
+                                ${c.title}
                             </td>
                             <td>
                                 $${c.cost}

@@ -1,4 +1,4 @@
-import { Class } from '../class';
+import { SemesterClass } from '../semester-class';
 import { ClassesDiscount } from './class-discount';
 
 export class ClassesPercentDicount extends ClassesDiscount {
@@ -16,7 +16,10 @@ export class ClassesPercentDicount extends ClassesDiscount {
 
     percent!: number;
 
-    apply(classes: Array<Class>): { updated: Array<Class>; amount: number } {
+    apply(classes: Array<SemesterClass>): {
+        updated: Array<SemesterClass>;
+        amount: number;
+    } {
         const updated = classes.map((c) => {
             if (this.classIds.includes(c.id)) {
                 return {

@@ -85,8 +85,8 @@ export class ConfirmationComponent {
     );
     private readonly selectedClasses$ = this.enrollment$.pipe(
         switchMap((enrollment) => {
-            return this.classList.getFutureClasses().pipe(
-                map((classes) => {
+            return this.classList.getAvailableEnrollmentClassesAndGroups().pipe(
+                map(({ classes, groups }) => {
                     return classes
                         .filter((c) =>
                             enrollment.selectedClasses.includes(c.id)

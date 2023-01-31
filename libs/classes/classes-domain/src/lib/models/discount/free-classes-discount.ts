@@ -1,4 +1,4 @@
-import { Class } from '../class';
+import { SemesterClass } from '../semester-class';
 import { ClassesDiscount } from './class-discount';
 
 export class FreeClassesDiscount extends ClassesDiscount {
@@ -9,8 +9,8 @@ export class FreeClassesDiscount extends ClassesDiscount {
         Object.assign(this, discount);
     }
     override type = 'free-classes';
-    override apply(classes: Array<Class>): {
-        updated: Array<Class>;
+    override apply(classes: Array<SemesterClass>): {
+        updated: Array<SemesterClass>;
         amount: number;
     } {
         const updated = classes.map((c) =>
