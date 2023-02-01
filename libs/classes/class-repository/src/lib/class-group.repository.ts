@@ -38,11 +38,17 @@ export class ClassGroupRepository {
     async getByStartsAtOrAfter(
         startsAt: number
     ): Promise<SemesterClassGroup[]> {
-        const query = await DatabaseUtility.fetchMatchingDocuments(
-            await DatabaseUtility.getCollectionRef(this.groupsPath),
-            ['start', '>=', new Date(startsAt)]
+        const groupsCollection = await DatabaseUtility.getCollectionRef(
+            this.groupsPath
         );
-        const groupIds = query.map((doc) => doc.id);
-        return this.getMany(groupIds);
+        const groupDocs = await groupsCollection.listDocuments();
+        const groupIds = groupDocs.map((doc) => doc.id);
+        const groups = await this.getMany(groupIds);
+        const groupsWithAllClassesStartingAfter = groups.filter((group) => {
+            return group.classes.every((classItem) => {
+                return classItem.startMs >= startsAt;
+            });
+        });
+        return groupsWithAllClassesStartingAfter;
     }
 }
