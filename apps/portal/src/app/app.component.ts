@@ -13,11 +13,13 @@ import { ToastModule } from 'primeng/toast';
             <p-toast position="top-right"></p-toast>
         </div>
         <footer style="padding: 10px; border-top: 1px solid gray">
-            <p>&#169; Mountain SOL 2023</p>
             <p>
+                &#169; Mountain SOL 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="https://www.mountainsol.org/privacy-policy/"
                     >Privacy Policy</a
                 >
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If you need help, please
+                contact us at info@mountainsol.org
             </p>
         </footer>`,
     styles: [``],
