@@ -101,7 +101,7 @@ export class ClassesComponent {
         map((selectedClasses) => selectedClasses.length > 0)
     );
 
-    availableForEnrollment$: Observable<Array<ClassRow>> = this.classListService
+    classRows$: Observable<Array<ClassRow>> = this.classListService
         .getAvailableEnrollmentClassesAndGroups()
         .pipe(
             shareReplay(),
@@ -151,7 +151,7 @@ export class ClassesComponent {
             })
         );
 
-    classes$ = this.availableForEnrollment$.pipe(
+    classes$ = this.classRows$.pipe(
         map((rows) =>
             rows.map((row) => row.classes).reduce((a, b) => a.concat(b), [])
         )
@@ -182,37 +182,46 @@ export class ClassesComponent {
         )
     );
 
-    classesResult$ = combineLatest([
-        this.classes$,
+    filteredClassRows$ = combineLatest([
+        this.classRows$,
         this.search$,
         this.gradeFilter$,
         this.selectedClassIds$,
     ]).pipe(
-        map(([classes, search, gradeFilter, selectedClassIds]) => {
-            const searched = classes.filter((c) => {
-                return (
-                    c.title.toLowerCase().includes(search.toLowerCase()) ||
-                    c.description
-                        .toLowerCase()
-                        .includes(search.toLowerCase()) ||
-                    c.location.toLowerCase().includes(search.toLowerCase()) ||
-                    c.classDateTimes
-                        .toLowerCase()
-                        .includes(search.toLowerCase())
+        map(([classRows, search, gradeFilter, selectedClassIds]) => {
+            const searched = classRows.filter((row) => {
+                return !!row.classes.find(
+                    (c) =>
+                        c.title.toLowerCase().includes(search.toLowerCase()) ||
+                        c.description
+                            .toLowerCase()
+                            .includes(search.toLowerCase()) ||
+                        c.location
+                            .toLowerCase()
+                            .includes(search.toLowerCase()) ||
+                        c.classDateTimes
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
                 );
             });
             const [startGrade, endGrade] = gradeFilter;
             const filtered =
                 startGrade && endGrade
                     ? searched.filter(
-                          (c) =>
-                              c.gradeRangeStart === startGrade &&
-                              c.gradeRangeEnd === endGrade
+                          (row) =>
+                              !!row.classes.find(
+                                  (c) =>
+                                      c.gradeRangeStart === startGrade &&
+                                      c.gradeRangeEnd === endGrade
+                              )
                       )
                     : searched;
-            return filtered.map((c) => ({
-                ...c,
-                selected: selectedClassIds.includes(c.id),
+            return filtered.map((row) => ({
+                ...row,
+                classes: row.classes.map((c) => ({
+                    ...c,
+                    selected: selectedClassIds.includes(c.id),
+                })),
             }));
         })
     );
@@ -257,5 +266,10 @@ export class ClassesComponent {
     trackClassCard(index: number, classCard: { id: string }) {
         console.log(classCard);
         return classCard.id;
+    }
+
+    trackClassRow(index: number, classRow: ClassRow) {
+        console.log(classRow);
+        return classRow.classes[0].id;
     }
 }
