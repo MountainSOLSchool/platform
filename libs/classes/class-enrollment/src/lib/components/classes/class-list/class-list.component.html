@@ -81,7 +81,22 @@
                     }"
                     *rxFor="let row of classRows; trackBy: trackClassRow"
                 >
-                    <h3 *ngIf="row.group?.name">{{ row.group?.name }}</h3>
+                    <h3 *ngIf="row.group?.name">
+                        {{ row.group?.name }} (-{{
+                            getClassRowSavings(row) | currency
+                        }}
+                        all-day discount)
+                    </h3>
+
+                    <div style="margin-top: 1rem; margin-bottom: 1rem">
+                        <p-toggleButton
+                            [inputId]="'select' + row.group?.id"
+                            onIcon="pi pi-check"
+                            onLabel="Selected all"
+                            offIcon="pi pi-plus"
+                            offLabel="Select all"
+                        ></p-toggleButton>
+                    </div>
                     <div
                         *rxFor="
                             let class of row.classes;

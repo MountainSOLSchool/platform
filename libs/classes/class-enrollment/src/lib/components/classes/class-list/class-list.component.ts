@@ -272,4 +272,16 @@ export class ClassesComponent {
         console.log(classRow);
         return classRow.classes[0].id;
     }
+
+    getClassRowSavings(classRow: ClassRow) {
+        const classesCost = classRow.classes.reduce(
+            // TODO: cost is a string, but should be a number
+            (agg, aClass) => agg + Number(aClass.cost),
+            0
+        );
+        const groupCost = classRow.group?.cost ?? 0;
+        const savings = classesCost - groupCost;
+        console.log(classesCost, groupCost, savings);
+        return savings;
+    }
 }
