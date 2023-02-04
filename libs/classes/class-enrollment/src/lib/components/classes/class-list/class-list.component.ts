@@ -91,7 +91,7 @@ export class ClassesComponent {
             map(() => false)
         ),
         of(false)
-    ).pipe(tap((x) => console.log('isFakeSearchLoading$', x)));
+    );
 
     selectedClassIds$ = this.workflow.select(
         (state) => state.enrollment.selectedClasses
@@ -262,17 +262,14 @@ export class ClassesComponent {
     }
 
     filterChange(filter: [] | [number, number]) {
-        console.log(filter);
         this.gradeFilter$.next(filter);
     }
 
     trackClassCard(index: number, classCard: { id: string }) {
-        console.log(classCard);
         return classCard.id;
     }
 
     trackClassRow(index: number, classRow: ClassRow) {
-        console.log(classRow);
         return classRow.group?.id ?? classRow.classes[0].id;
     }
 
@@ -284,11 +281,26 @@ export class ClassesComponent {
         );
         const groupCost = classRow.group?.cost ?? 0;
         const savings = classesCost - groupCost;
-        console.log(classesCost, groupCost, savings);
         return savings;
     }
 
     rowSelectedChange(classRow: ClassRow, selected: boolean) {
+        this.workflow.patchState((s) => ({
+            enrollment: {
+                ...s.enrollment,
+                selectedClassGroups: selected
+                    ? Array.from(
+                          new Set([
+                              ...s.enrollment.selectedClassGroups,
+                              classRow.group?.id ?? '',
+                          ])
+                      )
+                    : s.enrollment.selectedClassGroups.filter(
+                          (id) => id !== classRow.group?.id
+                      ),
+            },
+        }));
+
         classRow.classes.forEach((c) =>
             this.selectionChanged({ id: c.id, selected })
         );

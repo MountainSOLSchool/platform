@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { filter, map } from 'rxjs';
+import { filter, map, of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { classesActions } from '../store/classes.actions';
 import {
@@ -27,18 +27,35 @@ export class ClassListService {
     }
 
     getClassesByIds(ids: Array<string>) {
+        if (ids.length === 0) return of([]);
         this.store.dispatch(classesActions.loadClassesStart({ ids }));
         return this.store.select(classesFeature.selectClasses).pipe(
-            map((classes) => ids.map((id) => classes[id])),
-            filter((classes) => classes.every((c) => !!c))
+            map((classes) => ids.map((id) => ({ theClass: classes[id], id }))),
+            filter((classes) => {
+                const allClassesExist = classes.every(
+                    ({ theClass }) => !!theClass
+                );
+                const missingClasses = classes.filter(
+                    ({ theClass }) => !theClass
+                );
+                console.log('missing classes', missingClasses);
+                return allClassesExist;
+            }),
+            map((classes) => classes.map((c) => c.theClass))
         );
     }
 
     getClassGroupsByIds(ids: Array<string>) {
+        if (ids.length === 0) return of([]);
         this.store.dispatch(classesActions.loadClassGroupsStart({ ids }));
         return this.store.select(classesFeature.selectGroups).pipe(
             map((groups) => ids.map((id) => groups[id])),
-            filter((groups) => groups.every((c) => !!c))
+            filter((groups) => {
+                const allGroupsExist = groups.every((g) => !!g);
+                const missingGroups = groups.filter((g) => !g);
+                console.log('missing groups', missingGroups);
+                return allGroupsExist;
+            })
         );
     }
 }

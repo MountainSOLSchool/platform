@@ -47,7 +47,6 @@ export class PaymentCollectorStore extends ComponentStore<{
 
     readonly prepare = this.effect((prepare$) => {
         return prepare$.pipe(
-            tap(() => console.log('preparing')),
             switchMap(() => {
                 return this.selectDropInInstance().pipe(
                     take(1),

@@ -17,6 +17,7 @@ import { StudentForm } from '@sol/student/domain';
 import { Router } from '@angular/router';
 
 type Enrollment = {
+    selectedClassGroups: Array<string>;
     selectedClasses: Array<string>;
     paymentMethod:
         | {
@@ -34,6 +35,7 @@ const initialState = {
     status: 'draft' as const,
     randomValueThatResetsPaymentCollector: Math.random().toString(),
     enrollment: {
+        selectedClassGroups: [],
         selectedClasses: [],
         paymentMethod: undefined,
         discountCodes: [],
@@ -114,7 +116,6 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
                             .pipe(
                                 tapResponse(
                                     (response) => {
-                                        console.log(response);
                                         if (response.success) {
                                             this.patchState({
                                                 status: 'enrolled',
@@ -126,7 +127,6 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
                                         }
                                     },
                                     (error) => {
-                                        console.log(error);
                                         this.patchState({
                                             status: 'failed',
                                         });
@@ -145,7 +145,6 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
             filter(
                 ([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)
             ),
-            tap((pair) => console.log(`pair changed to ${pair}`)),
             switchMap(([, { codes, classIds }]) => {
                 this.patchState({ isLoadingDiscounts: true });
                 return this.functions

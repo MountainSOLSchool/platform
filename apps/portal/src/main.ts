@@ -17,6 +17,7 @@ import { appRoutes } from './app/app-routes';
 import { AppComponent } from './app/app.component';
 
 import { environment } from './environments/environment';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 if (environment.production) {
     enableProdMode();
@@ -40,6 +41,9 @@ bootstrapApplication(AppComponent, {
         MessageService,
         provideRouter(appRoutes),
         provideStore(),
+        provideStoreDevtools({
+            maxAge: 50,
+        }),
         provideEffects(),
         importProvidersFrom(
             AngularFireModule.initializeApp({

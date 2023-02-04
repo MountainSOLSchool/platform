@@ -10,8 +10,9 @@
         <div class="section">
             <p-fieldset legend="Class Cost Summary">
                 <p-table
-                    [value]="vm.selectedClasses"
+                    [value]="vm.classCostSummaryRows ?? []"
                     [tableStyle]="{ 'min-width': '50rem' }"
+                    [loading]="!vm.classCostSummaryRows"
                 >
                     <ng-template pTemplate="header">
                         <tr>
@@ -20,40 +21,17 @@
                             <th>Cost</th>
                         </tr>
                     </ng-template>
-                    <ng-template pTemplate="body" let-selectedClass>
+                    <ng-template pTemplate="body" let-row>
                         <tr>
-                            <td>{{ selectedClass.title }}</td>
-                            <td>{{ selectedClass.classDateTimes }}</td>
-                            <td>{{ selectedClass.cost | currency }}</td>
+                            <td>{{ row.name }}</td>
+                            <td>{{ row.date }}</td>
+                            <td>{{ row.cost | currency }}</td>
                         </tr>
                     </ng-template>
                 </p-table>
             </p-fieldset>
         </div>
 
-        <div class="section">
-            <p-fieldset legend="Payment Method">
-                <div>
-                    <p>
-                        Type:
-                        {{
-                            vm.enrollment.paymentMethod?.paymentDetails
-                                ?.cardType
-                        }}
-                    </p>
-                    <p>
-                        Number: **** **** ****
-                        {{
-                            vm.enrollment.paymentMethod?.paymentDetails
-                                ?.lastFour
-                        }}
-                    </p>
-                    <p>
-                        Contact Email: {{ vm.enrollment.student?.contactEmail }}
-                    </p>
-                </div>
-            </p-fieldset>
-        </div>
         <div class="section">
             <p-fieldset legend="Discounts">
                 <h3 style="margin-top: 0.5rem">Apply Discount</h3>
@@ -129,6 +107,31 @@
                 </ng-template>
             </p-fieldset>
         </div>
+
+        <div class="section">
+            <p-fieldset legend="Payment Method">
+                <div>
+                    <p>
+                        Type:
+                        {{
+                            vm.enrollment.paymentMethod?.paymentDetails
+                                ?.cardType
+                        }}
+                    </p>
+                    <p>
+                        Number: **** **** ****
+                        {{
+                            vm.enrollment.paymentMethod?.paymentDetails
+                                ?.lastFour
+                        }}
+                    </p>
+                    <p>
+                        Contact Email: {{ vm.enrollment.student?.contactEmail }}
+                    </p>
+                </div>
+            </p-fieldset>
+        </div>
+
         <div class="section">
             <p-fieldset legend="Total">
                 <div>

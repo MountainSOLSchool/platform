@@ -126,6 +126,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     fillOutForTest() {
         this.store.patchState({
             enrollment: {
+                selectedClassGroups: [],
                 selectedClasses: ['kzIlBrIIbrnfboPLvgA7'],
                 isSignedUpForSolsticeEmails: false,
                 paymentMethod: {

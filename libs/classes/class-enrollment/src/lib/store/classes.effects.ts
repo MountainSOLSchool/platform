@@ -42,7 +42,6 @@ export class ClassesEffects {
     loadAvailableClasses$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(classesActions.loadAvailableEnrollmentStart),
-            tap(() => console.log('hit loadAvailableClasses$')),
             switchMap(() => {
                 return this.functionsApi
                     .call<{

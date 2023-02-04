@@ -28,7 +28,7 @@ export const classesFeature = createFeature({
             ...state,
             classes: classes.reduce(
                 (acc, curr) => ({ ...acc, [curr.id]: curr }),
-                {}
+                state.classes
             ),
         })),
         on(classesActions.loadClassGroupsSuccess, (state, { groups }) => ({
@@ -42,10 +42,23 @@ export const classesFeature = createFeature({
             classesActions.loadAvailableEnrollmentSuccess,
             (state, { classes, groups }) => ({
                 ...state,
-                classes: classes.reduce(
-                    (acc, curr) => ({ ...acc, [curr.id]: curr }),
-                    state.classes
-                ),
+                classes: {
+                    ...state.classes,
+                    ...classes.reduce(
+                        (acc, curr) => ({ ...acc, [curr.id]: curr }),
+                        {}
+                    ),
+                    ...groups.reduce(
+                        (classesFromGroups, group) => ({
+                            ...classesFromGroups,
+                            ...group.classes.reduce((acc, curr) => ({
+                                ...acc,
+                                [curr.id]: curr,
+                            })),
+                        }),
+                        {}
+                    ),
+                },
                 groups: groups.reduce(
                     (acc, curr) => ({ ...acc, [curr.id]: curr }),
                     state.groups
