@@ -84,6 +84,16 @@ export const classes = Functions.endpoint.handle<{
     response.send({ classes });
 });
 
+export const classGroups = Functions.endpoint.handle<{
+    ids: Array<string>;
+}>(async (request, response) => {
+    const groups = await SemesterRepository.of(
+        SUMMER_2023_SEMESTER
+    ).groups.getMany(request.body.data.ids);
+
+    response.send({ groups });
+});
+
 export const availableEnrollmentClasses = Functions.endpoint.handle(
     async (request, response) => {
         const semester = await SemesterRepository.of(SUMMER_2023_SEMESTER);

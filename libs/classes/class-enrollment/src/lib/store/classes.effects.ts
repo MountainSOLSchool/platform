@@ -27,7 +27,7 @@ export class ClassesEffects {
                 return this.functionsApi
                     .call<{
                         classes: Array<SemesterClass>;
-                    }>('classes', idsOfClassesToLoad)
+                    }>('classes', { ids: idsOfClassesToLoad })
                     .pipe(
                         map(({ classes }) => {
                             return classesActions.loadClassesSuccess({
@@ -72,7 +72,7 @@ export class ClassesEffects {
                 return this.functionsApi
                     .call<{
                         groups: Array<SemesterClassGroup>;
-                    }>('classes', idsOfGroupsToLoad)
+                    }>('classGroups', idsOfGroupsToLoad)
                     .pipe(
                         map(({ groups }) => {
                             return classesActions.loadClassGroupsSuccess({

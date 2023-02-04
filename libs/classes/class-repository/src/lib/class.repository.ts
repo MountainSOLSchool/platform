@@ -63,9 +63,19 @@ export class ClassRepository {
             live: dbo.live,
             cost: dbo.cost,
             location: dbo.location,
-            instructors: (await DatabaseUtility.getHydratedDocuments(
-                dbo.instructors as unknown as Array<FirebaseFirestore.DocumentReference>
-            )) as Array<{ id: string; firstName: string; lastName: string }>,
+            instructors: (
+                (await DatabaseUtility.getHydratedDocuments(
+                    dbo.instructors as unknown as Array<FirebaseFirestore.DocumentReference>
+                )) as Array<{
+                    id: string;
+                    first_name: string;
+                    last_name: string;
+                }>
+            ).map((instructor) => ({
+                ...instructor,
+                firstName: instructor.first_name,
+                lastName: instructor.last_name,
+            })),
             dailyTimes: dbo.daily_times,
             weekday: dbo.weekday,
             thumbnailUrl: dbo.thumbnailUrl,

@@ -85,29 +85,31 @@ export class ConfirmationComponent {
     );
     private readonly selectedClasses$ = this.enrollment$.pipe(
         switchMap((enrollment) => {
-            return this.classList.getAvailableEnrollmentClassesAndGroups().pipe(
-                map(({ classes, groups }) => {
-                    return classes
-                        .filter((c) =>
-                            enrollment.selectedClasses.includes(c.id)
-                        )
-                        .map((c) => ({
-                            ...c,
-                            classDateTimes:
-                                c.startMs && c.endMs
-                                    ? this.datePipe.transform(
-                                          new Date(c.startMs),
-                                          'shortDate'
-                                      ) +
-                                      ' - ' +
-                                      this.datePipe.transform(
-                                          new Date(c.endMs),
-                                          'shortDate'
-                                      )
-                                    : '',
-                        }));
-                })
-            );
+            return this.classList
+                .getClassesByIds(enrollment.selectedClasses)
+                .pipe(
+                    map((classes) => {
+                        return classes
+                            .filter((c) =>
+                                enrollment.selectedClasses.includes(c.id)
+                            )
+                            .map((c) => ({
+                                ...c,
+                                classDateTimes:
+                                    c.startMs && c.endMs
+                                        ? this.datePipe.transform(
+                                              new Date(c.startMs),
+                                              'shortDate'
+                                          ) +
+                                          ' - ' +
+                                          this.datePipe.transform(
+                                              new Date(c.endMs),
+                                              'shortDate'
+                                          )
+                                        : '',
+                            }));
+                    })
+                );
         })
     );
 
