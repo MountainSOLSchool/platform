@@ -218,6 +218,9 @@ export class ClassesComponent {
                     : searched;
             return filtered.map((row) => ({
                 ...row,
+                selected: row.classes.every((c) =>
+                    selectedClassIds.includes(c.id)
+                ),
                 classes: row.classes.map((c) => ({
                     ...c,
                     selected: selectedClassIds.includes(c.id),
@@ -270,7 +273,7 @@ export class ClassesComponent {
 
     trackClassRow(index: number, classRow: ClassRow) {
         console.log(classRow);
-        return classRow.classes[0].id;
+        return classRow.group?.id ?? classRow.classes[0].id;
     }
 
     getClassRowSavings(classRow: ClassRow) {
@@ -283,5 +286,11 @@ export class ClassesComponent {
         const savings = classesCost - groupCost;
         console.log(classesCost, groupCost, savings);
         return savings;
+    }
+
+    rowSelectedChange(classRow: ClassRow, selected: boolean) {
+        classRow.classes.forEach((c) =>
+            this.selectionChanged({ id: c.id, selected })
+        );
     }
 }

@@ -13,8 +13,17 @@ export class ClassListService {
 
     getAvailableEnrollmentClassesAndGroups() {
         this.store.dispatch(classesActions.loadAvailableEnrollmentStart());
-        console.log('ok bud');
-        return this.store.select(selectAvailableClassesAndGroups);
+        return this.store
+            .select(selectAvailableClassesAndGroups)
+            .pipe(
+                filter(
+                    (
+                        enrollment
+                    ): enrollment is NonNullable<
+                        ReturnType<typeof selectAvailableClassesAndGroups>
+                    > => !!enrollment
+                )
+            );
     }
 
     getClassesByIds(ids: Array<string>) {

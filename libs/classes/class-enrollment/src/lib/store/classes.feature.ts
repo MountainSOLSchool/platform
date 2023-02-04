@@ -62,7 +62,10 @@ export const classesFeature = createFeature({
 export const selectAvailableClassesAndGroups = createSelector(
     classesFeature.selectClassesFeatureState,
     (feature) => {
-        if (feature) {
+        if (
+            Object.keys(feature.classes).length &&
+            Object.keys(feature.availableForEnrollment).length
+        ) {
             const classes = Object.values(feature.classes).filter((c) =>
                 feature.availableForEnrollment.classIds.has(c.id)
             );
@@ -71,7 +74,7 @@ export const selectAvailableClassesAndGroups = createSelector(
             );
             return { classes, groups };
         } else {
-            return { classes: [], groups: [] };
+            return undefined;
         }
     }
 );

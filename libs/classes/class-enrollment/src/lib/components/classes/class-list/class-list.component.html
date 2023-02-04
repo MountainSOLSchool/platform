@@ -91,10 +91,15 @@
                     <div style="margin-top: 1rem; margin-bottom: 1rem">
                         <p-toggleButton
                             [inputId]="'select' + row.group?.id"
+                            [name]="'row_' + row.group?.id"
                             onIcon="pi pi-check"
                             onLabel="Selected all"
                             offIcon="pi pi-plus"
                             offLabel="Select all"
+                            [ngModel]="row.selected"
+                            (ngModelChange)="
+                                rowSelectedChange(row, !row.selected)
+                            "
                         ></p-toggleButton>
                     </div>
                     <div
