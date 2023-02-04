@@ -78,10 +78,14 @@
                 >
                     <ng-container *rxIf="!!row.group">
                         <h3>
-                            {{ row.group?.name }} (-{{
-                                getClassRowSavings(row) | currency
-                            }}
-                            all-day discount)
+                            {{ row.group?.name }}
+                            <span
+                                *ngIf="getClassRowSavings(row) !== 0"
+                                style="color: #3c82f7"
+                            >
+                                (-{{ getClassRowSavings(row) | currency }}
+                                all-day discount)
+                            </span>
                         </h3>
 
                         <div
