@@ -19,7 +19,8 @@ import { ToastModule } from 'primeng/toast';
                     >Privacy Policy</a
                 >
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If you need help, please
-                contact us at info@mountainsol.org
+                contact us at
+                <a href="mailto:info@mountainsol.org">info@mountainsol.org</a>
             </p>
         </footer>`,
     styles: [``],
