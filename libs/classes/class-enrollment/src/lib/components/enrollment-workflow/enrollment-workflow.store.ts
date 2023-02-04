@@ -145,7 +145,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
             filter(
                 ([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)
             ),
-            switchMap(([, { codes, classIds }]) => {
+            switchMap(([, { codes, classIds, classGroupIds }]) => {
                 this.patchState({ isLoadingDiscounts: true });
                 return this.functions
                     .call<{
@@ -155,7 +155,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
                         }>;
                         finalTotal: number;
                         originalTotal: number;
-                    }>('calculateBasket', { codes, classIds })
+                    }>('calculateBasket', { codes, classIds, classGroupIds })
                     .pipe(
                         tap((basketCosts) => {
                             this.patchState(() => ({
@@ -185,6 +185,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         return this.select((state) => ({
             codes: state.enrollment.discountCodes,
             classIds: state.enrollment.selectedClasses,
+            classGroupIds: state.enrollment.selectedClassGroups,
         }));
     }
 }

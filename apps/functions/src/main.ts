@@ -23,6 +23,7 @@ import {
     ClassesDiscount,
     BasketDiscount,
     SemesterClass,
+    SemesterClassGroup,
 } from '@sol/classes/domain';
 import {
     ClassEnrollmentDbo,
@@ -143,9 +144,10 @@ export const paymentToken = Functions.endpoint
         response.send(token);
     });
 
-function _getEnrollmentDiscounts(
+function _getEnrollmentCost(
     discounts: Discount<unknown>[],
-    classes: Awaited<SemesterClass>[]
+    classes: Awaited<SemesterClass>[],
+    classGroups: Awaited<SemesterClassGroup>[]
 ) {
     const activeDiscounts = discounts.filter((d) => d.active);
 
@@ -177,8 +179,15 @@ function _getEnrollmentDiscounts(
         isBasketDiscount(d)
     );
 
-    const basketTotal = updatedClasses.reduce(
-        (total, c) => total + (c.cost ?? 0),
+    const classIdsOfClassesInGroups = classGroups.flatMap((g) =>
+        g.classes.map((c) => c.id)
+    );
+    const classesNotInGroups = updatedClasses.filter(
+        (c) => !classIdsOfClassesInGroups.includes(c.id)
+    );
+
+    const basketTotal = [...classesNotInGroups, ...classGroups].reduce(
+        (total, { cost }) => total + (cost ?? 0),
         0
     );
 
@@ -199,11 +208,22 @@ function _getEnrollmentDiscounts(
         ]
     );
 
+    const classGroupsTotal = classGroups.reduce(
+        (total, { cost }) => total + (cost ?? 0),
+        0
+    );
+    const classesNotInGroupsTotal = classesNotInGroups.reduce(
+        (total, { cost }) => total + (cost ?? 0),
+        0
+    );
+
+    const originalTotal = classGroupsTotal + classesNotInGroupsTotal;
+
     return {
         updatedClasses,
         finalTotal,
         discountAmounts: [...classDiscountAmounts, ...basketDiscountAmounts],
-        originalTotal: classes.reduce((total, c) => total + (c.cost ?? 0), 0),
+        originalTotal,
     };
 }
 
@@ -211,6 +231,7 @@ export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .handle<{
         selectedClasses: Array<string>;
+        selectedClassGroups: Array<string>;
         student: StudentForm;
         discountCodes: Array<string>;
         paymentMethod: { nonce: string; deviceData: string };
@@ -229,14 +250,16 @@ export const enroll = Functions.endpoint
             discountCodes,
             paymentMethod: { nonce, deviceData },
             isSignedUpForSolsticeEmails,
+            selectedClassGroups,
         } = request.body.data;
 
-        const classesRepository =
-            SemesterRepository.of(SUMMER_2023_SEMESTER).classes;
+        const semester = SemesterRepository.of(SUMMER_2023_SEMESTER);
 
-        const classes = await Promise.all(
-            selectedClasses.map(async (id) => await classesRepository.get(id))
-        );
+        const classesRepository = semester.classes;
+
+        const classes = await classesRepository.getMany(selectedClasses);
+
+        const classGroups = await semester.groups.getMany(selectedClassGroups);
 
         const discounts = (
             await Promise.all(
@@ -246,9 +269,10 @@ export const enroll = Functions.endpoint
             )
         ).filter((d): d is Discount<unknown> => !!d);
 
-        const { finalTotal, discountAmounts } = _getEnrollmentDiscounts(
+        const { finalTotal, discountAmounts } = _getEnrollmentCost(
             discounts,
-            classes
+            classes,
+            classGroups
         );
 
         const enrollmentRecord = {
@@ -394,8 +418,9 @@ export const enrollments = Functions.endpoint.handle(
 export const calculateBasket = Functions.endpoint.handle<{
     codes: Array<string>;
     classIds: Array<string>;
+    classGroupIds: Array<string>;
 }>(async (request, response) => {
-    const { codes, classIds } = request.body.data;
+    const { codes, classIds, classGroupIds } = request.body.data;
     const discounts = (
         await Promise.all(
             codes.map(async (code) => await DiscountRepository.get(code))
@@ -409,8 +434,17 @@ export const calculateBasket = Functions.endpoint.handle<{
                 )
         )
     );
-    const { discountAmounts, finalTotal, originalTotal } =
-        _getEnrollmentDiscounts(discounts, classes);
+    const groups = await Promise.all(
+        classGroupIds.map(
+            async (id) =>
+                await SemesterRepository.of(SUMMER_2023_SEMESTER).groups.get(id)
+        )
+    );
+    const { discountAmounts, finalTotal, originalTotal } = _getEnrollmentCost(
+        discounts,
+        classes,
+        groups
+    );
     response.send({ discountAmounts, finalTotal, originalTotal });
 });
 
