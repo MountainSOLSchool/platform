@@ -4,12 +4,17 @@ import { DiscountDbo } from './discount.dbo';
 import { FreeClassesDiscount } from './free-classes-discount';
 import { PercentDiscount } from './percent';
 import { BuyXClassTypePercentDiscount } from './buy-x-class-type-percent.discount';
+import { AmountBeforeDateDiscount } from './amount-before-date';
 
 export class DiscountFactory {
     static fromDbo(dbo: DiscountDbo) {
         switch (dbo.type) {
             case 'amount':
                 return new AmountDiscount(dbo as AmountDiscount);
+            case 'amount-before-date':
+                return new AmountBeforeDateDiscount(
+                    dbo as AmountBeforeDateDiscount
+                );
             case 'buy-x-class-type-percent':
                 return new BuyXClassTypePercentDiscount(
                     dbo as BuyXClassTypePercentDiscount
