@@ -1,10 +1,10 @@
 import { BasketDiscount } from './basket-discount';
 import { SemesterClass } from '../semester-class';
 
-export class PercentDicount extends BasketDiscount {
+export class PercentDiscount extends BasketDiscount {
     override type = 'percent';
     constructor(discount: {
-        [K in keyof Omit<PercentDicount, 'type'>]: PercentDicount[K];
+        [K in keyof Omit<PercentDiscount, 'type'>]: PercentDiscount[K];
     }) {
         super(discount);
         Object.assign(this, discount);

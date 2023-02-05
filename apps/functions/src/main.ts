@@ -155,9 +155,12 @@ function _getEnrollmentCost(
         isClassesDiscount(d)
     );
 
-    const [updatedClasses, classDiscountAmounts] = classesDiscounts.reduce(
-        ([updated, amounts], discount) => {
-            const appliedDiscount = discount.apply(updated);
+    const [
+        { classes: updatedClasses, groups: updatedGroups },
+        classDiscountAmounts,
+    ] = classesDiscounts.reduce(
+        ([{ classes, groups }, amounts], discount) => {
+            const appliedDiscount = discount.apply({ classes, groups });
             return [
                 appliedDiscount.updated,
                 [
@@ -165,12 +168,21 @@ function _getEnrollmentCost(
                     { code: discount.code, amount: appliedDiscount.amount },
                 ],
             ] satisfies [
-                Array<SemesterClass>,
+                {
+                    classes: Array<SemesterClass>;
+                    groups: Array<SemesterClassGroup>;
+                },
                 Array<{ code: string; amount: number }>
             ];
         },
-        [classes, new Array<{ code: string; amount: number }>()] satisfies [
-            Array<SemesterClass>,
+        [
+            { classes, groups: classGroups },
+            new Array<{ code: string; amount: number }>(),
+        ] satisfies [
+            {
+                classes: Array<SemesterClass>;
+                groups: Array<SemesterClassGroup>;
+            },
             Array<{ code: string; amount: number }>
         ]
     );
@@ -221,6 +233,7 @@ function _getEnrollmentCost(
 
     return {
         updatedClasses,
+        updatedGroups,
         finalTotal,
         discountAmounts: [...classDiscountAmounts, ...basketDiscountAmounts],
         originalTotal,
