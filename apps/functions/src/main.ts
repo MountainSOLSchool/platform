@@ -494,6 +494,14 @@ export const createEnrollmentEmail = functions.firestore
                 SUMMER_2023_SEMESTER
             ).classes.getMany(enrollmentRecord.classIds);
 
+            const classesCost = classes.reduce((total, c) => total + c.cost, 0);
+            const totalDiscounts = enrollmentRecord.discounts.reduce(
+                (total, d) => total + d.amount,
+                0
+            );
+            const differenceBetweenFinalCostAndOriginalCostWithDiscounts =
+                enrollmentRecord.finalCost - (classesCost - totalDiscounts);
+
             await DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
@@ -555,6 +563,14 @@ export const createEnrollmentEmail = functions.firestore
                             `
                               )
                               .join('')}
+                          <tr>
+                            <td>
+                            Other Savings
+                            </td>
+                            <td>
+                            -$${differenceBetweenFinalCostAndOriginalCostWithDiscounts}
+                            </td>
+                          </tr>
                           <tr>
                             <td>
                               Total
