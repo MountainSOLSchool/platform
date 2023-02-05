@@ -55,6 +55,33 @@
             ></p-chip>
         </div>
     </div>
+    <ng-container *rxIf="hasSelectedSummerClass$">
+        <ng-container
+            *rxLet="selectedSummerClasses$; let selectedSummerClasses"
+        >
+            <p>
+                <b
+                    >Pick 4 Camps Discount
+                    <ng-container
+                        *rxLet="
+                            selectedSummerClasses.length > 3;
+                            let hasSelectedEnough
+                        "
+                        ><span
+                            [ngStyle]="{
+                                color: hasSelectedEnough ? '#3c82f7' : 'black'
+                            }"
+                            >({{ selectedSummerClasses?.length ?? 0 }}/4
+                            selected<ng-container *rxIf="hasSelectedEnough">
+                                🥳</ng-container
+                            >)</span
+                        ></ng-container
+                    ></b
+                >
+            </p>
+            <p>Use code <b>4SUMMER2023</b> at checkout</p>
+        </ng-container>
+    </ng-container>
 </div>
 
 <div

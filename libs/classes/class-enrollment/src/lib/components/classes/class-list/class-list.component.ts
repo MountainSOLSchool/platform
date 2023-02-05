@@ -236,6 +236,20 @@ export class ClassesComponent {
         )
     );
 
+    selectedSummerClasses$ = this.selectedClasses$.pipe(
+        map((classes) =>
+            classes.filter((c) =>
+                ['Summer Camp Full Day', 'Summer Camp Half Day'].includes(
+                    c.classType
+                )
+            )
+        )
+    );
+
+    hasSelectedSummerClass$ = this.selectedSummerClasses$.pipe(
+        map((classes) => classes.length > 0)
+    );
+
     selectionChanged({
         id: classId,
         selected,
