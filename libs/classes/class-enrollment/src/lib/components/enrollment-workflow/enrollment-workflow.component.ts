@@ -127,7 +127,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         this.store.patchState({
             enrollment: {
                 selectedClassGroups: [],
-                selectedClasses: ['kzIlBrIIbrnfboPLvgA7'],
+                selectedClasses: [],
                 isSignedUpForSolsticeEmails: false,
                 paymentMethod: {
                     nonce: 'fake-valid-nonce-NOT',
