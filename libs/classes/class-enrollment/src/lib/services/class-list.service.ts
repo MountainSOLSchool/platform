@@ -38,7 +38,6 @@ export class ClassListService {
                 const missingClasses = classes.filter(
                     ({ theClass }) => !theClass
                 );
-                console.log('missing classes', missingClasses);
                 return allClassesExist;
             }),
             map((classes) => classes.map((c) => c.theClass))
@@ -53,7 +52,6 @@ export class ClassListService {
             filter((groups) => {
                 const allGroupsExist = groups.every((g) => !!g);
                 const missingGroups = groups.filter((g) => !g);
-                console.log('missing groups', missingGroups);
                 return allGroupsExist;
             })
         );

@@ -30,7 +30,7 @@ export abstract class ClassesDiscount extends _ClassesDiscount {
         super(discount);
         Object.assign(this, discount);
     }
-    classOrGroupIds!: Array<string>;
+    classOrGroupIds: Array<string> = [];
     abstract override apply({
         classes,
         groups,

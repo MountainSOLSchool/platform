@@ -198,7 +198,7 @@ function _getEnrollmentCost(
         (c) => !classIdsOfClassesInGroups.includes(c.id)
     );
 
-    const basketTotal = [...classesNotInGroups, ...classGroups].reduce(
+    const basketTotal = [...classesNotInGroups, ...updatedGroups].reduce(
         (total, { cost }) => total + (cost ?? 0),
         0
     );

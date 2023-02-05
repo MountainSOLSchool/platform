@@ -171,8 +171,7 @@ export class ConfirmationComponent {
                 )
             );
         }),
-        startWith(undefined),
-        tap((rows) => console.log('rows are ' + JSON.stringify(rows)))
+        startWith(undefined)
     );
 
     readonly viewModel$ = combineLatest([

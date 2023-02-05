@@ -19,7 +19,7 @@ export class BuyXClassTypePercentDiscount extends ClassesDiscount {
     }
 
     percent!: number;
-    classType!: string;
+    classTypes!: Array<string>;
     minimum!: number;
 
     apply({
@@ -30,8 +30,8 @@ export class BuyXClassTypePercentDiscount extends ClassesDiscount {
         groups: Array<SemesterClassGroup>;
     }) {
         const hasMinimum =
-            classes.filter((c) => c.classType === this.classType).length >=
-            this.minimum;
+            classes.filter((c) => this.classTypes.includes(c.classType))
+                .length >= this.minimum;
         if (hasMinimum) {
             const updatedClasses = classes.map((c) => {
                 return {
@@ -49,11 +49,31 @@ export class BuyXClassTypePercentDiscount extends ClassesDiscount {
                     ),
                 };
             });
+            const classIdsOfClassesInGroups = groups
+                .map((g) => g.classes.map((c) => c.id))
+                .reduce((acc, c) => acc.concat(c), []);
+            const updatedClassesNotInGroups = updatedClasses.filter(
+                (c) => !classIdsOfClassesInGroups.includes(c.id)
+            );
+            const originalClassesNotInGroups = classes.filter(
+                (c) => !classIdsOfClassesInGroups.includes(c.id)
+            );
+            const amountSavedFromClassesTotal =
+                originalClassesNotInGroups.reduce(
+                    (acc, c) => acc + (c.cost ?? 0),
+                    0
+                ) -
+                updatedClassesNotInGroups.reduce(
+                    (acc, c) => acc + (c.cost ?? 0),
+                    0
+                );
+            const amountSavedFromGroupsTotal =
+                groups.reduce((acc, g) => acc + (g.cost ?? 0), 0) -
+                updatedGroups.reduce((acc, g) => acc + (g.cost ?? 0), 0);
+
             const amount =
-                classes.reduce((acc, c) => acc + (c.cost ?? 0), 0) -
-                updatedClasses.reduce((acc, c) => acc + (c.cost ?? 0), 0) +
-                (groups.reduce((acc, g) => acc + (g.cost ?? 0), 0) -
-                    updatedGroups.reduce((acc, g) => acc + (g.cost ?? 0), 0));
+                amountSavedFromClassesTotal + amountSavedFromGroupsTotal;
+
             return {
                 updated: { classes: updatedClasses, groups: updatedGroups },
                 amount,
