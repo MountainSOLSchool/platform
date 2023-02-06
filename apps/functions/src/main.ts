@@ -516,7 +516,7 @@ export const createEnrollmentEmail = functions.firestore
                         <p>Every student is encouraged to wear good hiking shoes and bring the following items in a backpack:
                         <ul>
                           <li>Water bottle</li>
-                          <li>Snacks</li>
+                          <li>Peanut-free snacks</li>
                           <li>Lunch (if staying for the lunch hour)</li>
                           <li>Bugspray/sunscreen</li>
                           <li>Rain jacket</li>
