@@ -500,7 +500,9 @@ export const createEnrollmentEmail = functions.firestore
                 0
             );
             const differenceBetweenFinalCostAndOriginalCostWithDiscounts =
-                enrollmentRecord.finalCost - (classesCost - totalDiscounts);
+                Math.abs(
+                    enrollmentRecord.finalCost - (classesCost - totalDiscounts)
+                );
 
             const user = await AuthUtility.getUser(enrollmentRecord.userId);
 
