@@ -101,6 +101,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         },
     ];
     readonly isSubmitting$ = this.store.submitting$;
+    readonly hasFailed$ = this.store.failed$;
 
     readonly shouldShowSuccess$ = this.store.select(
         (s) => s.status === 'enrolled'

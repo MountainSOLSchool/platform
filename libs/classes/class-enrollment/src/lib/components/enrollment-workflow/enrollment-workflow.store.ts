@@ -101,6 +101,10 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         return this.select((state) => state.status === 'submitted');
     }
 
+    get failed$() {
+        return this.select((state) => state.status === 'failed');
+    }
+
     readonly submit = this.effect((submit$) => {
         return submit$.pipe(
             tap(() => this.patchState({ status: 'submitted' })),
