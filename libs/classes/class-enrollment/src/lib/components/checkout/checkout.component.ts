@@ -4,6 +4,7 @@ import {
     Component,
     inject,
     Input,
+    OnInit,
     Output,
 } from '@angular/core';
 import {
@@ -37,7 +38,7 @@ import { FunctionsApi } from '@sol/firebase/functions-api';
     selector: 'sol-checkout',
     templateUrl: './checkout.component.html',
 })
-export class CheckoutComponent {
+export class CheckoutComponent implements OnInit {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly user$ = inject(AngularFireAuth).user;
     private readonly functions = inject(FunctionsApi);
@@ -106,5 +107,9 @@ export class CheckoutComponent {
         this.workflow.patchState((s) => ({
             enrollment: { ...s.enrollment, paymentMethod },
         }));
+    }
+
+    ngOnInit() {
+        console.log('init checkout');
     }
 }

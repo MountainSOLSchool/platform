@@ -68,6 +68,10 @@ export class AuthUtility {
         }
     }
 
+    public static async getUser(uid: string) {
+        return await admin.auth().getUser(uid);
+    }
+
     public static async validateFirebaseIdToken(
         req: functions.https.Request,
         res: functions.Response

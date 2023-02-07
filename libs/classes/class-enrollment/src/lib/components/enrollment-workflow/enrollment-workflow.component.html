@@ -52,23 +52,6 @@
             <ng-container *ngTemplateOutlet="navigation"></ng-container
         ></ng-template>
     </mat-step>
-    <mat-step #paymentMethod label="Payment Method">
-        <ng-template matStepContent>
-            <h2>Payment Method</h2>
-            <sol-checkout
-                *rxLet="
-                    randomValueThatResetsPaymentCollector$;
-                    let randomValueThatResetsPaymentCollector
-                "
-                [randomValueThatResetsPaymentCollector]="
-                    randomValueThatResetsPaymentCollector
-                "
-                [interacted]="paymentMethod.interacted"
-                (validityChange)="paymentMethod.hasError = !$event"
-            ></sol-checkout>
-            <ng-container *ngTemplateOutlet="navigation"></ng-container
-        ></ng-template>
-    </mat-step>
     <mat-step #confirmation label="Confirm Enrollment">
         <ng-template matStepContent>
             <h2>Confirm Enrollment</h2>
@@ -78,11 +61,11 @@
                         classSelection,
                         studentInfo,
                         medicalInfo,
-                        account,
-                        paymentMethod
+                        account
                     )
                 "
-                (validityChange)="confirmation.completed = $event"
+                [interacted]="confirmation.interacted"
+                (validityChange$)="confirmation.completed = $event"
             ></sol-class-confirmation>
             <ng-container
                 *ngTemplateOutlet="navigation; context: { last: true }"
@@ -112,8 +95,7 @@
                             classSelection,
                             studentInfo,
                             medicalInfo,
-                            account,
-                            paymentMethod
+                            account
                         )
                     "
                     pButton

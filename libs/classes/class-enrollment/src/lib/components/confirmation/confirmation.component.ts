@@ -9,12 +9,15 @@ import {
 import { LetModule } from '@rx-angular/template/let';
 import { ChipModule } from 'primeng/chip';
 import {
+    BehaviorSubject,
     combineLatest,
+    filter,
     map,
     Observable,
     of,
     shareReplay,
     startWith,
+    Subject,
     switchMap,
     tap,
 } from 'rxjs';
@@ -29,6 +32,8 @@ import { IfModule } from '@rx-angular/template/if';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
+import { CheckoutComponent } from '../checkout/checkout.component';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,6 +50,7 @@ import { TableModule } from 'primeng/table';
         ProgressSpinnerModule,
         TagModule,
         TableModule,
+        CheckoutComponent,
     ],
     providers: [DatePipe],
     selector: 'sol-class-confirmation',
@@ -56,6 +62,11 @@ export class ConfirmationComponent {
     private readonly classList = inject(ClassListService);
     private readonly datePipe = inject(DatePipe);
 
+    readonly userEmail$ = inject(AngularFireAuth).user.pipe(
+        map((user) => user?.email),
+        filter((email): email is string => !!email)
+    );
+
     _allStepsComplete = false;
 
     get allStepsComplete() {
@@ -65,7 +76,9 @@ export class ConfirmationComponent {
         this._allStepsComplete = complete;
     }
 
-    @Output() validityChange = of(true);
+    @Input() interacted = false;
+
+    @Output() validityChange$ = new Subject<boolean>();
 
     private readonly enrollment$ = this.workflow.select(
         ({ enrollment }) => enrollment
@@ -202,6 +215,10 @@ export class ConfirmationComponent {
     );
 
     student$ = this.enrollment$.pipe(map((enrollment) => enrollment.student));
+
+    readonly randomValueThatResetsPaymentCollector$ = this.workflow.select(
+        (s) => s.randomValueThatResetsPaymentCollector
+    );
 
     submit() {
         this.workflow.submit();

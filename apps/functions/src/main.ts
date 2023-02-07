@@ -502,10 +502,12 @@ export const createEnrollmentEmail = functions.firestore
             const differenceBetweenFinalCostAndOriginalCostWithDiscounts =
                 enrollmentRecord.finalCost - (classesCost - totalDiscounts);
 
+            const user = await AuthUtility.getUser(enrollmentRecord.userId);
+
             await DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
-                    to: enrollmentRecord.contactEmail,
+                    to: user.email ?? enrollmentRecord.contactEmail,
                     message: {
                         subject: `Enrollment confirmation for ${enrollmentRecord.studentName}`,
                         html: `<p>Thank you for enrolling ${

@@ -99,11 +99,17 @@
         >
             <ng-container *ngIf="classRows.length > 0; else noResults">
                 <div
-                    style="border-radius: 5px; margin: 2px; padding: 5px"
+                    style="
+                        border-radius: 5px;
+                        margin: 2px;
+                        padding: 5px;
+                        display: flex;
+                        flex-wrap: wrap;
+                    "
                     [ngStyle]="{}"
                     *rxFor="let row of classRows; trackBy: trackClassRow"
                 >
-                    <ng-container *rxIf="!!row.group">
+                    <div *rxIf="!!row.group">
                         <h3>
                             {{ row.group?.name }}
                             <span
@@ -135,99 +141,118 @@
                                 "
                             ></p-toggleButton>
                         </div>
-                    </ng-container>
-                    <div
-                        *rxFor="
-                            let class of row.classes;
-                            trackBy: trackClassCard
-                        "
-                        [ngStyle]="{
-                            width: '40rem',
-                            border: class.selected
-                                ? '.2rem solid #3c82f7'
-                                : '.2rem solid transparent',
-                            'box-sizing': 'border-box',
-                            'border-radius': '6px',
-                            'margin-bottom': '2em',
-                            'margin-left': 'auto',
-                            'margin-right': 'auto',
-                            display: 'inline-block'
-                        }"
-                    >
-                        <p-card [styleClass]="'gradient'">
-                            <ng-template pTemplate="header"></ng-template>
-                            <div
-                                style="position: relative; margin-top: -2.5rem"
-                            >
-                                <h2>{{ class.title }}</h2>
-                                <img
-                                    *rxIf="class.thumbnailUrl !== ''"
-                                    alt="Card"
-                                    [src]="class.thumbnailUrl"
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap">
+                        <div
+                            *rxFor="
+                                let class of row.classes;
+                                trackBy: trackClassCard
+                            "
+                            [ngStyle]="{
+                                border: class.selected
+                                    ? '.2rem solid #3c82f7'
+                                    : '.2rem solid transparent',
+                                'box-sizing': 'border-box',
+                                'border-radius': '6px',
+                                'margin-bottom': '2em',
+                                'margin-left': 'auto',
+                                'margin-right': 'auto',
+                                flex:
+                                    row.classes.length > 1
+                                        ? '1 0 calc(50% - 20px)'
+                                        : '1 0 calc(100% - 20px)',
+                                'min-width': '25rem'
+                            }"
+                        >
+                            <p-card [styleClass]="'gradient'">
+                                <ng-template pTemplate="header"></ng-template>
+                                <div
                                     style="
-                                        position: absolute;
-                                        top: 0px;
-                                        right: 0px;
-                                        border-radius: 6px;
-                                    "
-                                    height="150"
-                                    width="150"
-                                />
-                            </div>
-                            <div
-                                class="flex align-items-center"
-                                style="margin-bottom: 1.5rem; margin-top: 1rem"
-                            >
-                                <p-tag
-                                    [value]="class.classDateTimes"
-                                    icon="pi pi-calendar"
-                                    styleClass="mr-2"
-                                ></p-tag>
-                                <p-tag
-                                    [value]="class.weekday"
-                                    styleClass="mr-2"
-                                ></p-tag>
-                                <p-tag
-                                    [value]="class.dailyTimes"
-                                    icon="pi pi-clock"
-                                    styleClass="mr-2"
-                                ></p-tag>
-                            </div>
-                            <p>
-                                <b>Class Type:</b> {{ class.classType }}<br />
-                                <b>Grades:</b>
-                                {{ class.gradeRangeStart }} -
-                                {{ class.gradeRangeEnd }}<br />
-                                <b>Location:</b> {{ class.location }}<br />
-                                <b>Cost:</b> ${{ class.cost }}<br />
-                                <b>Instructors:</b>
-                                <span
-                                    *rxFor="
-                                        let instructor of class.instructors;
-                                        let isLast = last
+                                        position: relative;
+                                        margin-top: -2.5rem;
                                     "
                                 >
-                                    {{ instructor.firstName }}
-                                    {{ instructor.lastName
-                                    }}{{ isLast ? '' : ', ' }}
-                                </span>
-                                <br />
-                                <br />
-                                <b>Description:</b> <br />
-                                {{ class.description }}<br />
-                            </p>
-                            <div style="margin-top: 2rem; margin-bottom: -1rem">
-                                <p-toggleButton
-                                    [inputId]="'select' + class.id"
-                                    onIcon="pi pi-check"
-                                    onLabel="Selected"
-                                    offIcon="pi pi-plus"
-                                    offLabel="Select"
-                                    [(ngModel)]="class.selected"
-                                    (ngModelChange)="selectionChanged(class)"
-                                ></p-toggleButton>
-                            </div>
-                        </p-card>
+                                    <h2>{{ class.title }}</h2>
+                                    <img
+                                        *rxIf="class.thumbnailUrl !== ''"
+                                        alt="Card"
+                                        [src]="class.thumbnailUrl"
+                                        style="
+                                            position: absolute;
+                                            top: 0px;
+                                            right: 0px;
+                                            border-radius: 6px;
+                                        "
+                                        height="150"
+                                        width="150"
+                                    />
+                                </div>
+                                <div
+                                    class="flex align-items-center"
+                                    style="
+                                        margin-bottom: 1.5rem;
+                                        margin-top: 1rem;
+                                    "
+                                >
+                                    <p-tag
+                                        [value]="class.classDateTimes"
+                                        icon="pi pi-calendar"
+                                        styleClass="mr-2"
+                                    ></p-tag>
+                                    <p-tag
+                                        [value]="class.weekday"
+                                        styleClass="mr-2"
+                                    ></p-tag>
+                                    <p-tag
+                                        [value]="class.dailyTimes"
+                                        icon="pi pi-clock"
+                                        styleClass="mr-2"
+                                    ></p-tag>
+                                </div>
+                                <p>
+                                    <b>Class Type:</b> {{ class.classType
+                                    }}<br />
+                                    <b>Grades:</b>
+                                    {{ class.gradeRangeStart }} -
+                                    {{ class.gradeRangeEnd }}<br />
+                                    <b>Location:</b> {{ class.location }}<br />
+                                    <b>Cost:</b> ${{ class.cost }}<br />
+                                    <b>Instructors:</b>
+                                    <span
+                                        *rxFor="
+                                            let instructor of class.instructors;
+                                            let isLast = last
+                                        "
+                                    >
+                                        {{ instructor.firstName }}
+                                        {{ instructor.lastName
+                                        }}{{ isLast ? '' : ', ' }}
+                                    </span>
+                                    <br />
+                                    <br />
+                                    <b>Description:</b> <br />
+                                    {{ class.description }}<br />
+                                </p>
+                                <div
+                                    style="
+                                        margin-top: 2rem;
+                                        margin-bottom: -1rem;
+                                    "
+                                >
+                                    <p-toggleButton
+                                        [inputId]="'select' + class.id"
+                                        onIcon="pi pi-check"
+                                        onLabel="Selected"
+                                        offIcon="pi pi-plus"
+                                        offLabel="Select"
+                                        [(ngModel)]="class.selected"
+                                        (ngModelChange)="
+                                            selectionChanged(class)
+                                        "
+                                    ></p-toggleButton>
+                                </div>
+                            </p-card>
+                        </div>
                     </div>
                 </div> </ng-container
             ><ng-template #noResults>
