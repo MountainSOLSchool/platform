@@ -148,17 +148,19 @@ export class MedicalComponent {
             });
 
             group('healthRelease', () => {
-                test('signedMedicalRelease', 'Must sign to continue', () => {
-                    enforce(student.signedMedicalRelease).isTruthy();
+                test('medicalReleaseSignature', 'Must sign to continue', () => {
+                    enforce(student.medicalReleaseSignature).isNotEmpty();
                 });
             });
 
             group('liabilityRelease', () => {
                 test(
-                    'signedReleaseOfLiability',
+                    'releaseOfLiabilitySignature',
                     'Must sign to continue',
                     () => {
-                        enforce(student.signedReleaseOfLiability).isTruthy();
+                        enforce(
+                            student.releaseOfLiabilitySignature
+                        ).isNotEmpty();
                     }
                 );
             });

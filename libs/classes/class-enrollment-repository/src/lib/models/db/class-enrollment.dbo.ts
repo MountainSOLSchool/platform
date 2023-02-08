@@ -17,4 +17,6 @@ export interface ClassEnrollmentDbo {
     status: 'pending' | 'enrolled' | 'failed';
     failures?: Array<string>;
     isSignedUpForSolsticeEmails?: boolean;
+    medicalReleaseSignature?: string;
+    releaseOfLiabilitySignature?: string;
 }

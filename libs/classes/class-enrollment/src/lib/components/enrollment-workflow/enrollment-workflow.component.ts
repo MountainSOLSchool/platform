@@ -246,8 +246,8 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
                     ],
                     authorizedToAdministerMedication: true,
                     medicalNotes: 'notes',
-                    signedMedicalRelease: 'true',
-                    signedReleaseOfLiability: 'true',
+                    medicalReleaseSignature: 'David Shortman',
+                    releaseOfLiabilitySignature: 'David Shortman',
                 },
             },
         });

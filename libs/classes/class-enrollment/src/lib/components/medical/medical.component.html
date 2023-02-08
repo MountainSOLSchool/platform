@@ -556,21 +556,25 @@
                     secure treatment for and to order injection, anesthesia or
                     surgery for the child as named herein.
                 </p>
+                <p>I hereby certify that this information is correct.</p>
             </div>
-            <div style="width: 60%">
-                <p-toggleButton
-                    id="studentLivesWith"
-                    name="studentLivesWith"
-                    onLabel="I hereby certify that the above information is correct."
-                    offLabel="I do not agree"
-                    onIcon="pi pi-check"
-                    offIcon="pi pi-times"
-                    [solValid]="!vm.errors['signedMedicalRelease']"
-                    [(ngModel)]="vm.student.signedMedicalRelease"
-                    (ngModelChange)="updateStudentMedicalInfo(vm.student)"
-                ></p-toggleButton>
+            <div style="width: 60%; margin-top: 2rem">
+                <span class="p-float-label">
+                    <input
+                        pInputText
+                        id="medicalReleaseSignature"
+                        name="medicalReleaseSignature"
+                        [solValid]="!vm.errors['medicalReleaseSignature']"
+                        [(ngModel)]="vm.student.medicalReleaseSignature"
+                        (ngModelChange)="updateStudentMedicalInfo(vm.student)"
+                    />
+
+                    <label for="medicalReleaseSignature"
+                        >Signature (type name)</label
+                    >
+                </span>
                 <sol-messages
-                    [messages]="vm.errors['signedMedicalRelease']"
+                    [messages]="vm.errors['medicalReleaseSignature']"
                 ></sol-messages>
             </div>
         </form>
@@ -655,22 +659,30 @@
                     will be modified, or partially enforced, to the maximum
                     extent permitted by West Virginia State law.
                 </p>
+                <p>
+                    I hereby certify that this information is correct. I have
+                    read all of the above terms and conditions, and I understand
+                    and agree to be bound by them.
+                </p>
             </div>
 
-            <div style="width: 60%">
-                <p-toggleButton
-                    id="studentLivesWith"
-                    name="studentLivesWith"
-                    onLabel="I hereby certify that this information is correct. I have read all of the above terms and conditions, and I understand and agree to be bound by them."
-                    offLabel="I do not agree"
-                    onIcon="pi pi-check"
-                    offIcon="pi pi-times"
-                    [solValid]="!vm.errors['signedReleaseOfLiability']"
-                    [(ngModel)]="vm.student.signedReleaseOfLiability"
-                    (ngModelChange)="updateStudentMedicalInfo(vm.student)"
-                ></p-toggleButton>
+            <div style="width: 60%; margin-top: 2rem">
+                <span class="p-float-label">
+                    <input
+                        pInputText
+                        id="releaseOfLiabilitySignature"
+                        name="releaseOfLiabilitySignature"
+                        [solValid]="!vm.errors['releaseOfLiabilitySignature']"
+                        [(ngModel)]="vm.student.releaseOfLiabilitySignature"
+                        (ngModelChange)="updateStudentMedicalInfo(vm.student)"
+                    />
+
+                    <label for="releaseOfLiabilitySignature"
+                        >Signature (type name)</label
+                    >
+                </span>
                 <sol-messages
-                    [messages]="vm.errors['signedReleaseOfLiability']"
+                    [messages]="vm.errors['releaseOfLiabilitySignature']"
                 ></sol-messages>
             </div>
         </form>

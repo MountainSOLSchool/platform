@@ -54,6 +54,6 @@ export interface StudentForm {
     }>;
     authorizedToAdministerMedication: boolean;
     medicalNotes: string;
-    signedMedicalRelease: string;
-    signedReleaseOfLiability: string;
+    medicalReleaseSignature: string;
+    releaseOfLiabilitySignature: string;
 }
