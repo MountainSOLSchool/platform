@@ -4,6 +4,7 @@ import {
     Component,
     HostListener,
     inject,
+    ViewChild,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { EnrollmentWorkflowStore } from './enrollment-workflow.store';
@@ -33,6 +34,8 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { IfModule } from '@rx-angular/template/if';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive';
 
 @Component({
     standalone: true,
@@ -66,6 +69,7 @@ import { IfModule } from '@rx-angular/template/if';
         MessageModule,
         ToastModule,
         IfModule,
+        MatVerticalStepperScrollerDirective,
     ],
     styles: [
         `
@@ -87,7 +91,10 @@ import { IfModule } from '@rx-angular/template/if';
 export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     private readonly store = inject(EnrollmentWorkflowStore);
 
-    readonly data$ = this.store.select((state) => state);
+    readonly userEmail$ = inject(AngularFireAuth).user.pipe(
+        map((user) => user?.email),
+        filter((email): email is string => !!email)
+    );
 
     readonly earlyBirdEnd = Date.parse('2023-04-01T23:59:59.999Z');
 
@@ -141,7 +148,12 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     }
 
     allStepsComplete(...steps: Array<MatStep>): boolean {
-        return steps.every((step) => !step.hasError && step.interacted);
+        return steps.every(
+            (step) =>
+                !step.hasError &&
+                // TODO: detect better
+                (step.interacted || step.label === 'Confirm Enrollment')
+        );
     }
 
     fillOutForTest() {

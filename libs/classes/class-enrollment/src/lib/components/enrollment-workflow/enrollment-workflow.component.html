@@ -14,75 +14,93 @@
 <button *ngIf="showSecretAutofill$ | async" (click)="fillOutForTest()">
     Fill out form for test
 </button>
-<mat-stepper #stepper [orientation]="(stepperOrientation | async)!">
+<mat-stepper
+    #stepper
+    [orientation]="(stepperOrientation | async)!"
+    style="height: 100%"
+>
     <mat-step #classSelection label="Class Selection">
         <ng-template matStepContent>
-            <h2>Class Selection</h2>
-            <sol-class-picker
-                (validityChange)="classSelection.hasError = !$event"
-            ></sol-class-picker>
-            <ng-container
-                *ngTemplateOutlet="navigation; context: { first: true }"
-            ></ng-container
+            <ng-container *rxIf="stepper.selected === classSelection">
+                <h2>Class Selection</h2>
+                <sol-class-picker
+                    (validityChange)="classSelection.hasError = !$event"
+                ></sol-class-picker>
+                <ng-container
+                    *ngTemplateOutlet="navigation; context: { first: true }"
+                ></ng-container></ng-container
         ></ng-template>
     </mat-step>
     <mat-step #events label="Events">
         <ng-template matStepContent>
-            <h2>Events</h2>
-            <sol-event-selection
-                (validityChange)="events.hasError = !$event"
-            ></sol-event-selection>
-            <ng-container *ngTemplateOutlet="navigation"></ng-container
+            <ng-container *rxIf="stepper.selected === events">
+                <h2>Events</h2>
+                <sol-event-selection
+                    (validityChange)="events.hasError = !$event"
+                ></sol-event-selection>
+                <ng-container
+                    *ngTemplateOutlet="navigation"
+                ></ng-container></ng-container
         ></ng-template>
     </mat-step>
     <mat-step #studentInfo label="Student Info">
         <ng-template matStepContent>
-            <h2>Student Info</h2>
-            <sol-student-info
-                [interacted]="studentInfo.interacted"
-                (validityChange)="studentInfo.hasError = !$event"
-            ></sol-student-info>
-            <ng-container *ngTemplateOutlet="navigation"></ng-container>
-        </ng-template>
+            <ng-container *rxIf="stepper.selected === studentInfo">
+                <h2>Student Info</h2>
+                <sol-student-info
+                    [interacted]="studentInfo.interacted"
+                    (validityChange)="studentInfo.hasError = !$event"
+                ></sol-student-info>
+                <ng-container
+                    *ngTemplateOutlet="navigation"
+                ></ng-container> </ng-container
+        ></ng-template>
     </mat-step>
     <mat-step #medicalInfo label="Medical Info and Releases">
         <ng-template matStepContent>
-            <h2>Medical Info and Releases</h2>
-            <sol-medical-n-releases
-                [interacted]="medicalInfo.interacted"
-                (validityChange)="medicalInfo.hasError = !$event"
-            ></sol-medical-n-releases>
-            <ng-container *ngTemplateOutlet="navigation"></ng-container>
-        </ng-template>
+            <ng-container *rxIf="stepper.selected === medicalInfo">
+                <h2>Medical Info and Releases</h2>
+                <sol-medical-n-releases
+                    [interacted]="medicalInfo.interacted"
+                    (validityChange)="medicalInfo.hasError = !$event"
+                ></sol-medical-n-releases>
+                <ng-container
+                    *ngTemplateOutlet="navigation"
+                ></ng-container> </ng-container
+        ></ng-template>
     </mat-step>
     <mat-step #account label="Account Registration">
         <ng-template matStepContent>
-            <h2>Account Registration</h2>
-            <sol-class-account
-                (validityChange)="account.hasError = !$event"
-            ></sol-class-account>
+            <ng-container *rxIf="stepper.selected === account">
+                <h2>Account Registration</h2>
+                <sol-class-account
+                    (validityChange)="account.hasError = !$event"
+                ></sol-class-account>
 
-            <ng-container *ngTemplateOutlet="navigation"></ng-container
+                <ng-container
+                    *ngTemplateOutlet="navigation"
+                ></ng-container></ng-container
         ></ng-template>
     </mat-step>
     <mat-step #confirmation label="Confirm Enrollment">
         <ng-template matStepContent>
-            <h2>Confirm Enrollment</h2>
-            <sol-class-confirmation
-                [allStepsComplete]="
-                    allStepsComplete(
-                        classSelection,
-                        studentInfo,
-                        medicalInfo,
-                        account
-                    )
-                "
-                [interacted]="confirmation.interacted"
-                (validityChange$)="confirmation.completed = $event"
-            ></sol-class-confirmation>
-            <ng-container
-                *ngTemplateOutlet="navigation; context: { last: true }"
-            ></ng-container
+            <ng-container *rxIf="stepper.selected === confirmation">
+                <h2>Confirm Enrollment</h2>
+                <sol-class-confirmation
+                    [allStepsComplete]="
+                        allStepsComplete(
+                            classSelection,
+                            studentInfo,
+                            medicalInfo,
+                            account
+                        )
+                    "
+                    [interacted]="confirmation.interacted"
+                    (validityChange)="confirmation.hasError = !$event"
+                ></sol-class-confirmation>
+                <ng-container
+                    *ngTemplateOutlet="navigation; context: { last: true }"
+                ></ng-container></ng-container
         ></ng-template>
     </mat-step>
 
@@ -108,7 +126,8 @@
                             classSelection,
                             studentInfo,
                             medicalInfo,
-                            account
+                            account,
+                            confirmation
                         )
                     "
                     pButton
@@ -161,9 +180,9 @@
             ></i>
         </div>
     </div>
-    <div style="margin-top: 1rem" *rxLet="enrollment$; let enrollment">
+    <div style="margin-top: 1rem" *rxLet="userEmail$; let email">
         A confirmation email has been sent to
-        <b>{{ enrollment?.student?.contactEmail }}</b
+        <b>{{ email }}</b
         >.
     </div>
     <div style="margin-top: 1rem">

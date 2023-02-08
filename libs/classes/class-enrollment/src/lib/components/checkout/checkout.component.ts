@@ -18,7 +18,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { MessagesComponent } from '@sol/form/validity';
 import { create, enforce, test } from 'vest';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, skip, startWith } from 'rxjs';
 import { LetModule } from '@rx-angular/template/let';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FunctionsApi } from '@sol/firebase/functions-api';
@@ -46,9 +46,15 @@ export class CheckoutComponent implements OnInit {
     readonly discountCodes$ = this.workflow.select(
         (s) => s.enrollment.discountCodes
     );
-    readonly hasPaymentMethod$ = this.workflow.select((s) => {
-        return !!s.enrollment.paymentMethod;
-    });
+    readonly hasPaymentMethod$ = this.workflow
+        .select((s) => {
+            return s.enrollment.paymentMethod;
+        })
+        .pipe(
+            skip(1),
+            map((paymentMethod) => !!paymentMethod),
+            startWith(false)
+        );
     private readonly interacted$ = new BehaviorSubject(false);
 
     private readonly suite = create(

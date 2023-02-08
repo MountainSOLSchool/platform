@@ -78,7 +78,11 @@ export class ConfirmationComponent {
 
     @Input() interacted = false;
 
-    @Output() validityChange$ = new Subject<boolean>();
+    @Output() validityChange = new Subject<boolean>();
+
+    thing = this.validityChange
+        .pipe(tap((change) => console.log('changed', change)))
+        .subscribe();
 
     private readonly enrollment$ = this.workflow.select(
         ({ enrollment }) => enrollment
