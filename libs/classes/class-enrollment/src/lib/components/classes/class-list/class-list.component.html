@@ -1,10 +1,15 @@
-<div style="margin-bottom: 2rem">
-    <div
-        class="p-input-icon-left"
-        style="margin-left: auto; margin-right: auto"
-    >
+<div
+    style="
+        margin-bottom: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        max-width: 600px;
+    "
+>
+    <div class="p-input-icon-left" style="flex: 2; min-width: 200px">
         <i class="pi pi-search"></i>
-        <span class="p-input-icon-right">
+        <span class="p-input-icon-right" style="width: 100%">
             <i
                 *ngIf="searchInput.value.length > 0"
                 class="pi pi-times-circle"
@@ -16,12 +21,12 @@
                 type="text"
                 pInputText
                 placeholder="Search"
-                style="width: 400px"
+                style="width: 100%"
                 (input)="searchChange(searchInput.value)"
             />
         </span>
     </div>
-    <div style="display: inline; margin-left: 1rem">
+    <div>
         <p-dropdown
             [options]="(filterOptions$ | async) ?? []"
             placeholder="Select a grade range"
@@ -105,6 +110,7 @@
                         padding: 5px;
                         display: flex;
                         flex-wrap: wrap;
+                        width: 100%;
                     "
                     [ngStyle]="{}"
                     *rxFor="let row of classRows; trackBy: trackClassRow"
@@ -162,7 +168,6 @@
                                     row.classes.length > 1
                                         ? '1 0 calc(50% - 40px)'
                                         : '1 0 calc(100% - 40px)',
-                                'min-width': '25rem',
                                 height: 'fit-content'
                             }"
                         >
