@@ -119,7 +119,7 @@
                         randomValueThatResetsPaymentCollector
                     "
                     [interacted]="interacted"
-                    (validityChange)="validityChange$.next(!$event)"
+                    (validityChange)="validityChange.next($event)"
                 ></sol-checkout>
                 <div>
                     <p *rxLet="userEmail$; let email">
