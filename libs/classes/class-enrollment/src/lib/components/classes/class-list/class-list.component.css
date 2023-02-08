@@ -1,6 +1,6 @@
 /* TODO make this work */
-.gradient {
-    background-image: linear-gradient(rgb(223, 242, 216), rgb(223, 242, 216));
+:host ::ng-deep .p-card.class-card {
+    border-top-right-radius: 100px;
 }
 .custom-skeleton {
     border: 1px solid var(--surface-d);
@@ -13,4 +13,8 @@
 
 .custom-skeleton ul {
     list-style: none;
+}
+:host ::ng-deep .p-chip.custom-chip {
+    background: var(--primary-color);
+    color: var(--primary-color-text);
 }

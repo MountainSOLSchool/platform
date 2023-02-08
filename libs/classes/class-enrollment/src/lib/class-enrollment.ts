@@ -10,9 +10,8 @@ import { PendingChangesGuard } from './components/enrollment-workflow/pending-ch
 import { EventsComponent } from './components/events/events.component';
 import { provideState } from '@ngrx/store';
 import { classesFeature } from './store/classes.feature';
-import { EffectsModule, provideEffects } from '@ngrx/effects';
+import { provideEffects } from '@ngrx/effects';
 import { ClassesEffects } from './store/classes.effects';
-import { importProvidersFrom } from '@angular/core';
 
 export const enrollmentRoutes: Route[] = [
     {

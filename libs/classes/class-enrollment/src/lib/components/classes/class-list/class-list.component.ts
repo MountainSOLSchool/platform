@@ -1,8 +1,10 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     inject,
     Output,
+    ViewChildren,
 } from '@angular/core';
 import {
     BehaviorSubject,
@@ -14,6 +16,7 @@ import {
     ObservedValueOf,
     of,
     shareReplay,
+    Subject,
     switchMap,
     tap,
     withLatestFrom,
@@ -36,6 +39,8 @@ import { IfModule } from '@rx-angular/template/if';
 import { DropdownModule } from 'primeng/dropdown';
 import { ForModule } from '@rx-angular/template/for';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { ContentObserver } from '@angular/cdk/observers';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -56,7 +61,6 @@ interface ClassRow {
         FormsModule,
         LetModule,
         SelectButtonModule,
-        TagModule,
         ToggleButtonModule,
         ProgressSpinnerModule,
         IfModule,

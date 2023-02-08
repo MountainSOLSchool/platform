@@ -60,26 +60,26 @@
             *rxLet="selectedSummerClasses$; let selectedSummerClasses"
         >
             <p>
-                <b
-                    >Pick 4 Camps Discount
-                    <ng-container
-                        *rxLet="
-                            selectedSummerClasses.length > 3;
-                            let hasSelectedEnough
-                        "
-                        ><span
-                            [ngStyle]="{
-                                color: hasSelectedEnough ? '#3c82f7' : 'black'
-                            }"
+                <ng-container
+                    *rxLet="
+                        selectedSummerClasses.length > 3;
+                        let hasSelectedEnough
+                    "
+                    ><span
+                        [ngStyle]="{
+                            color: hasSelectedEnough ? '#3c82f7' : 'black'
+                        }"
+                        ><b
                             >({{ selectedSummerClasses?.length ?? 0 }}/4
                             selected<ng-container *rxIf="hasSelectedEnough">
                                 🥳</ng-container
-                            >)</span
-                        ></ng-container
-                    ></b
+                            >)</b
+                        ></span
+                    ></ng-container
                 >
+                Summer Camps Discount: Use code <b>4SUMMER2023</b> at checkout
+                when you select 4 summer camps to get 10% off!
             </p>
-            <p>Use code <b>4SUMMER2023</b> at checkout</p>
         </ng-container>
     </ng-container>
 </div>
@@ -142,7 +142,7 @@
                             ></p-toggleButton>
                         </div>
                     </div>
-                    <div style="display: flex; flex-wrap: wrap">
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px">
                         <div
                             *rxFor="
                                 let class of row.classes;
@@ -152,19 +152,21 @@
                                 border: class.selected
                                     ? '.2rem solid #3c82f7'
                                     : '.2rem solid transparent',
-                                'box-sizing': 'border-box',
                                 'border-radius': '6px',
+                                'border-top-right-radius': '80px',
                                 'margin-bottom': '2em',
+                                'box-sizing': 'border-box',
                                 'margin-left': 'auto',
                                 'margin-right': 'auto',
                                 flex:
                                     row.classes.length > 1
-                                        ? '1 0 calc(50% - 20px)'
-                                        : '1 0 calc(100% - 20px)',
-                                'min-width': '25rem'
+                                        ? '1 0 calc(50% - 40px)'
+                                        : '1 0 calc(100% - 40px)',
+                                'min-width': '25rem',
+                                height: 'fit-content'
                             }"
                         >
-                            <p-card [styleClass]="'gradient'">
+                            <p-card styleClass="class-card">
                                 <ng-template pTemplate="header"></ng-template>
                                 <div
                                     style="
@@ -173,41 +175,53 @@
                                     "
                                 >
                                     <h2>{{ class.title }}</h2>
-                                    <img
-                                        *rxIf="class.thumbnailUrl !== ''"
-                                        alt="Card"
-                                        [src]="class.thumbnailUrl"
-                                        style="
-                                            position: absolute;
-                                            top: 0px;
-                                            right: 0px;
-                                            border-radius: 6px;
-                                        "
-                                        height="150"
-                                        width="150"
-                                    />
+                                    <!-- circular div with image -->
+                                    <div
+                                        [ngStyle]="{
+                                            position: 'absolute',
+                                            top: '-40px',
+                                            right: '-25px',
+                                            display: 'inline-block',
+                                            width: '150px',
+                                            height: '150px',
+                                            background:
+                                                'url(' +
+                                                class.thumbnailUrl +
+                                                ')',
+                                            'background-position': '50% 50%',
+                                            'background-size': 'cover',
+                                            'border-radius': '50%',
+                                            border:
+                                                '3px solid ' +
+                                                (class.selected
+                                                    ? '#3c82f7'
+                                                    : 'black')
+                                        }"
+                                    ></div>
                                 </div>
                                 <div
-                                    class="flex align-items-center"
+                                    class="flex flex-wrap align-items-center"
                                     style="
                                         margin-bottom: 1.5rem;
                                         margin-top: 1rem;
+                                        gap: 3px;
+                                        padding-right: 110px;
                                     "
                                 >
-                                    <p-tag
-                                        [value]="class.classDateTimes"
+                                    <p-chip
+                                        [label]="class.classDateTimes"
                                         icon="pi pi-calendar"
-                                        styleClass="mr-2"
-                                    ></p-tag>
-                                    <p-tag
-                                        [value]="class.weekday"
-                                        styleClass="mr-2"
-                                    ></p-tag>
-                                    <p-tag
-                                        [value]="class.dailyTimes"
+                                        styleClass="mr-2 custom-chip"
+                                    ></p-chip>
+                                    <p-chip
+                                        [label]="class.weekday"
+                                        styleClass="mr-2 custom-chip"
+                                    ></p-chip>
+                                    <p-chip
+                                        [label]="class.dailyTimes"
                                         icon="pi pi-clock"
-                                        styleClass="mr-2"
-                                    ></p-tag>
+                                        styleClass="mr-2 custom-chip"
+                                    ></p-chip>
                                 </div>
                                 <p>
                                     <b>Class Type:</b> {{ class.classType

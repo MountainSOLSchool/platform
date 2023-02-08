@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { filter, fromEvent, map, skip, take } from 'rxjs';
+import { filter, fromEvent, map, skip, take, timer } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
@@ -29,6 +29,10 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { ComponentCanDeactivate } from './pending-changes.guard';
 import { EventsComponent } from '../events/events.component';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { IfModule } from '@rx-angular/template/if';
 
 @Component({
     standalone: true,
@@ -58,6 +62,10 @@ import { EventsComponent } from '../events/events.component';
         ProgressSpinnerModule,
         DialogModule,
         EventsComponent,
+        MessagesModule,
+        MessageModule,
+        ToastModule,
+        IfModule,
     ],
     styles: [
         `
@@ -67,6 +75,12 @@ import { EventsComponent } from '../events/events.component';
             ::ng-deep .mat-horizontal-content-container {
                 overflow: unset !important;
             }
+            :host ::ng-deep .p-message-early-bird {
+                background-color: #ffff99;
+                border: solid #ffcc00;
+                border-width: 0 0 0 6px;
+                color: black;
+            }
         `,
     ],
 })
@@ -74,6 +88,12 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     private readonly store = inject(EnrollmentWorkflowStore);
 
     readonly data$ = this.store.select((state) => state);
+
+    readonly earlyBirdEnd = Date.parse('2023-04-01T23:59:59.999Z');
+
+    readonly isNowBeforeEarlyBirdEnd$ = timer(0, 5000).pipe(
+        map(() => Date.now() < this.earlyBirdEnd)
+    );
 
     readonly stepperOrientation = inject(BreakpointObserver)
         .observe('(min-width: 800px)')
