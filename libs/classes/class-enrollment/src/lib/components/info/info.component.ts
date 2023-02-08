@@ -282,15 +282,12 @@ export class InfoComponent {
     ];
 
     readonly tshirtSizes = [
-        { name: 'Youth Small', value: 'YS' },
-        { name: 'Youth Medium', value: 'YM' },
-        { name: 'Youth Large', value: 'YL' },
-        { name: 'Youth XL', value: 'YXL' },
-        { name: 'Adult Small', value: 'AS' },
-        { name: 'Adult Medium', value: 'AM' },
-        { name: 'Adult Large', value: 'AL' },
-        { name: 'Adult XL', value: 'AXL' },
-        { name: 'Adult 2XL', value: 'A2XL' },
+        { name: 'Adult XSmall', value: 'XS' },
+        { name: 'Adult Small', value: 'S' },
+        { name: 'Adult Medium', value: 'M' },
+        { name: 'Adult Large', value: 'L' },
+        { name: 'Adult XL', value: 'XL' },
+        { name: 'Adult 2XL', value: '2XL' },
     ];
 
     trackByIndex(index: number) {
