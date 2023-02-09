@@ -25,7 +25,7 @@ export interface StudentForm {
         guardianRelationship: string;
         guardianPhone: string;
         guardianEmail: string;
-        guardianResidesWithStudent: boolean;
+        guardianResidesWithStudent?: boolean;
     }>;
     pickupCodeword: string;
     authorizedForPickup: Array<{

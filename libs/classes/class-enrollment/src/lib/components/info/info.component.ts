@@ -131,6 +131,19 @@ export class InfoComponent {
                 test('photography', 'Photography privacy is required', () => {
                     enforce(student.photography).isNotUndefined();
                 });
+                test('deetspray', 'DEET bug spray choice is required', () => {
+                    enforce(student.deetBugspray).isNotUndefined();
+                });
+                test(
+                    'naturalspray',
+                    'Natural bug spray choice is required',
+                    () => {
+                        enforce(student.naturalBugspray).isNotUndefined();
+                    }
+                );
+                test('sunscreen', 'Sunscreen choice is required', () => {
+                    enforce(student.sunscreen).isNotUndefined();
+                });
             });
 
             group('guardians', () => {
@@ -269,6 +282,11 @@ export class InfoComponent {
     @Output() validityChange = this.errors$.pipe(
         map((errors) => Object.keys(errors).length === 0)
     );
+
+    readonly yesNoOptions = [
+        { name: 'Yes', value: true },
+        { name: 'No', value: false },
+    ];
 
     readonly photographyPrivacyOptions = [
         { name: 'Yes', value: 'yes' },

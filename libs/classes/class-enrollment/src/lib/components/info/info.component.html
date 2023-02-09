@@ -418,34 +418,46 @@
         </p>
         <div class="flexbox" style="width: 50%; margin-top: -1rem">
             <div class="field">
-                <p-toggleButton
-                    onLabel="Bug Spray OK"
-                    offLabel="No Bug Spray"
-                    onIcon="pi pi-check"
-                    offIcon="pi pi-times"
-                    [(ngModel)]="vm.student.naturalBugspray"
-                    (ngModelChange)="updateStudentInfo(vm.student)"
-                ></p-toggleButton>
-            </div>
-            <div class="field">
-                <p-toggleButton
-                    onLabel="DEET Bug Spray OK"
-                    offLabel="No DEET Bug Spray"
-                    onIcon="pi pi-check"
-                    offIcon="pi pi-times"
+                <p>DEET bug spray?</p>
+                <p-selectButton
+                    [options]="yesNoOptions"
+                    optionLabel="name"
+                    optionValue="value"
+                    [solValid]="!vm.errors['deetspray']"
                     [(ngModel)]="vm.student.deetBugspray"
                     (ngModelChange)="updateStudentInfo(vm.student)"
-                ></p-toggleButton>
+                ></p-selectButton>
+                <sol-messages
+                    [messages]="vm.errors['deetspray']"
+                ></sol-messages>
             </div>
             <div class="field">
-                <p-toggleButton
-                    onLabel="Sunscreen OK"
-                    offLabel="No Sunscreen"
-                    onIcon="pi pi-check"
-                    offIcon="pi pi-times"
+                <p>Natural bug spray?</p>
+                <p-selectButton
+                    [options]="yesNoOptions"
+                    optionLabel="name"
+                    optionValue="value"
+                    [solValid]="!vm.errors['naturalspray']"
+                    [(ngModel)]="vm.student.naturalBugspray"
+                    (ngModelChange)="updateStudentInfo(vm.student)"
+                ></p-selectButton>
+                <sol-messages
+                    [messages]="vm.errors['naturalspray']"
+                ></sol-messages>
+            </div>
+            <div class="field">
+                <p>Sunscreen?</p>
+                <p-selectButton
+                    [options]="yesNoOptions"
+                    optionLabel="name"
+                    optionValue="value"
+                    [solValid]="!vm.errors['sunscreen']"
                     [(ngModel)]="vm.student.sunscreen"
                     (ngModelChange)="updateStudentInfo(vm.student)"
-                ></p-toggleButton>
+                ></p-selectButton>
+                <sol-messages
+                    [messages]="vm.errors['sunscreen']"
+                ></sol-messages>
             </div>
         </div>
         <p>
