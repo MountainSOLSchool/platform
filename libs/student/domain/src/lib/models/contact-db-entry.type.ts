@@ -4,4 +4,5 @@ export type ContactDbEntry = {
     relationship: string;
     phone: string;
     email: string;
+    resides_with_student?: boolean;
 };

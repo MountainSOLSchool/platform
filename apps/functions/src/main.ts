@@ -372,11 +372,10 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
         ok_to_photograph:
             form.photography === 'yes' || form.photography === 'yesNoName',
         ok_use_name_photographs: form.photography === 'yes',
-        sunscreen_bug_spray:
-            form.sunscreen || form.deetBugspray || form.naturalBugspray
-                ? 'Yes'
-                : 'No',
-        birth_date: String(form.birthdate),
+        ok_deet_bugspray: form.deetBugspray,
+        ok_sunscreen: form.sunscreen,
+        ok_natural_bugspray: form.naturalBugspray,
+        birth_date: String(form),
         emergency_contacts: form.emergencyContacts.map((c) => ({
             first_name: c.name,
             last_name: 'string',
@@ -392,27 +391,42 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
                 phone: c.phone,
                 email: '',
             })) ?? [],
-        allergies:
-            (form.allergies ?? '').trim() === ''
-                ? []
-                : [
-                      {
-                          name: '',
-                          description: form.allergies ?? '',
-                          response: '',
-                          important: true,
-                      },
-                  ],
-        medications:
-            form.medications?.map((m) => ({
-                ...m,
-                important: true,
-            })) ?? [],
+        allergies: form.allergies,
+        medications: form.medications ?? [],
         tshirt_size: form.tshirtSize,
         pronouns: form.pronouns,
         weightPounds: form.weightImperial,
         heightFeet: form.heightFeet,
         heightInches: form.heightInches,
+        primary_phone: form.contactPhone,
+        student_email: form.studentEmail,
+        student_phone: form.studentPhone,
+        student_address: form.address,
+        student_city: form.city,
+        student_state: form.state,
+        student_zip: form.zip,
+        school: form.school,
+        guardians: form.guardians.map((g) => ({
+            first_name: g.guardianName,
+            last_name: '',
+            email: g.guardianEmail,
+            phone: g.guardianPhone,
+            relationship: g.guardianRelationship,
+            resides_with_student: g.guardianResidesWithStudent,
+        })),
+        has_life_threatening_allergies: form.hasLifeThreateningAllergies,
+        authorized_to_administer_meds: form.authorizedToAdministerMedication,
+        medical_notes: form.medicalNotes,
+        insurance_company: form.insuranceCompany,
+        insurance_id: form.insuranceId,
+        does_not_have_insurance: form.doesNotHaveInsurance,
+        doctor: form.doctorName,
+        doctor_phone: form.doctorPhone,
+        parent_notes: form.notes,
+        medical_release_signature: form.medicalReleaseSignature,
+        medical_release_signature_date: new Date().getUTCDate().toString(),
+        release_of_liability_signature: form.releaseOfLiabilitySignature,
+        release_of_liability_signature_date: new Date().getUTCDate().toString(),
     };
     return entry;
 }

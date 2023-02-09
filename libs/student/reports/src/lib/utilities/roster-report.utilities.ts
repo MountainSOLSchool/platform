@@ -167,23 +167,21 @@ export class RosterReportGenerator {
                         ?.map(this.medicationToString)
                         ?.join(', '),
                     metadata: {
-                        isImportant: !!student.medications?.find(
-                            (med) => med.important
-                        ),
+                        isImportant: false,
                     },
                 },
                 sunscreenBugSpray: {
-                    value: student.sunscreen_bug_spray ? 'Yes' : 'No',
+                    value:
+                        student.ok_natural_bugspray &&
+                        student.ok_deet_bugspray &&
+                        student.ok_sunscreen
+                            ? 'Yes'
+                            : 'No',
                 },
                 allergies: {
-                    value:
-                        student.allergies
-                            ?.map(this.allergiesToString)
-                            .join('\n') ?? '',
+                    value: student.allergies ?? '',
                     metadata: {
-                        isImportant: !!student.allergies?.find(
-                            (allergy) => allergy.important
-                        ),
+                        isImportant: student.has_life_threatening_allergies,
                     },
                 },
                 okToPhotographAndUseName: {
