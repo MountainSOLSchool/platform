@@ -329,6 +329,9 @@ export const enroll = Functions.endpoint
                 studentId: studentRef.id,
                 transactionId: transaction.id,
                 status: 'enrolled',
+                medicalReleaseSignature: student.medicalReleaseSignature,
+                releaseOfLiabilitySignature:
+                    student.releaseOfLiabilitySignature,
             });
 
             await Promise.all(
@@ -350,6 +353,9 @@ export const enroll = Functions.endpoint
                 relatedId: studentEnrollmentId,
                 status: 'failed',
                 failures: errors.deepErrors().map((e) => e.message),
+                releaseOfLiabilitySignature:
+                    student.releaseOfLiabilitySignature,
+                medicalReleaseSignature: student.medicalReleaseSignature,
             });
             response.send({ success, errors: errors.deepErrors() });
         }
