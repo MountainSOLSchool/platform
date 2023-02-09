@@ -24,6 +24,7 @@
             <ng-container *rxIf="stepper.selected === classSelection">
                 <h2>Class Selection</h2>
                 <sol-class-picker
+                    [interacted]="classSelection.interacted"
                     (validityChange)="classSelection.hasError = !$event"
                 ></sol-class-picker>
                 <ng-container

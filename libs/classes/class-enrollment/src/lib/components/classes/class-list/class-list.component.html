@@ -88,7 +88,13 @@
         </ng-container>
     </ng-container>
 </div>
-
+<div style="width: 100%" *rxIf="isInvalid$">
+    <p-messages severity="error">
+        <ng-template pTemplate>
+            <div class="ml-2">Please select at least one class.</div>
+        </ng-template>
+    </p-messages>
+</div>
 <div
     *rxIf="isFakeSearchLoading$; else classList"
     style="width: 100%; margin-top: 1rem"
@@ -164,6 +170,7 @@
                                 'box-sizing': 'border-box',
                                 'margin-left': 'auto',
                                 'margin-right': 'auto',
+                                'min-width': '300px',
                                 flex:
                                     row.classes.length > 1
                                         ? '1 0 calc(50% - 40px)'
@@ -186,11 +193,11 @@
                                     <div
                                         [ngStyle]="{
                                             position: 'absolute',
-                                            top: '-40px',
+                                            top: '-30px',
                                             right: '-25px',
                                             display: 'inline-block',
-                                            width: '150px',
-                                            height: '150px',
+                                            width: '180px',
+                                            height: '180px',
                                             background:
                                                 'url(' +
                                                 class.thumbnailUrl +

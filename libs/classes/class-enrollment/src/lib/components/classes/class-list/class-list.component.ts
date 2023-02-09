@@ -1,10 +1,9 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
     inject,
+    Input,
     Output,
-    ViewChildren,
 } from '@angular/core';
 import {
     BehaviorSubject,
@@ -16,9 +15,6 @@ import {
     ObservedValueOf,
     of,
     shareReplay,
-    Subject,
-    switchMap,
-    tap,
     withLatestFrom,
 } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
@@ -32,15 +28,15 @@ import { FormsModule } from '@angular/forms';
 import { ClassListService } from '../../../services/class-list.service';
 import { LetModule } from '@rx-angular/template/let';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { TagModule } from 'primeng/tag';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { IfModule } from '@rx-angular/template/if';
 import { DropdownModule } from 'primeng/dropdown';
 import { ForModule } from '@rx-angular/template/for';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { ContentObserver } from '@angular/cdk/observers';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -66,6 +62,9 @@ interface ClassRow {
         IfModule,
         DropdownModule,
         ForModule,
+        MessagesModule,
+        MessageModule,
+        ToastModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -73,6 +72,10 @@ interface ClassRow {
     providers: [DatePipe],
 })
 export class ClassesComponent {
+    private readonly interacted$ = new BehaviorSubject(false);
+    @Input() set interacted(value: boolean) {
+        this.interacted$.next(value);
+    }
     private readonly classListService = inject(ClassListService);
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
@@ -101,9 +104,16 @@ export class ClassesComponent {
         (state) => state.enrollment.selectedClasses
     );
 
-    @Output() validityChange = this.selectedClassIds$.pipe(
-        map((selectedClasses) => selectedClasses.length > 0)
+    isValid$ = this.selectedClassIds$.pipe(
+        map((selectedClasses) => selectedClasses.length > 0),
+        shareReplay()
     );
+
+    isInvalid$ = combineLatest([this.isValid$, this.interacted$]).pipe(
+        map(([isValid, interacted]) => !isValid && interacted)
+    );
+
+    @Output() validityChange = this.isValid$.pipe();
 
     classRows$: Observable<Array<ClassRow>> = this.classListService
         .getAvailableEnrollmentClassesAndGroups()
