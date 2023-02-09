@@ -229,14 +229,15 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
                         },
                     ],
                     weightImperial: 100,
-                    heightImperial: 100,
+                    heightFeet: 5,
+                    heightInches: 4,
                     doctorName: 'doctor',
                     doctorPhone: '1234567890',
                     insuranceCompany: 'insurance',
                     insuranceId: '1234567890',
                     doesNotHaveInsurance: false,
-                    hasLifeThreateningAllergies: false,
                     allergies: 'allergies',
+                    hasLifeThreateningAllergies: false,
                     medications: [
                         {
                             name: 'medication',

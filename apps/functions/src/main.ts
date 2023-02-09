@@ -409,6 +409,10 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
                 important: true,
             })) ?? [],
         tshirt_size: form.tshirtSize,
+        pronouns: form.pronouns,
+        weightPounds: form.weightImperial,
+        heightFeet: form.heightFeet,
+        heightInches: form.heightInches,
     };
     return entry;
 }

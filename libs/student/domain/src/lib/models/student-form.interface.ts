@@ -39,7 +39,8 @@ export interface StudentForm {
         phone: string;
     }>;
     weightImperial: number;
-    heightImperial: number;
+    heightFeet: number;
+    heightInches: number;
     doctorName: string;
     doctorPhone: string;
     insuranceCompany: string;

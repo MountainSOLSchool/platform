@@ -354,7 +354,6 @@ export class InfoComponent {
                             guardianEmail: '',
                             guardianPhone: '',
                             guardianRelationship: '',
-                            guardianResidesWithStudent: false,
                         },
                     ],
                 },

@@ -24,6 +24,7 @@ import { StudentForm } from '@sol/student/domain';
 import { LetModule } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { CommonModule } from '@angular/common';
+import { ForModule } from '@rx-angular/template/for';
 
 @Component({
     standalone: true,
@@ -43,6 +44,7 @@ import { CommonModule } from '@angular/common';
         SelectButtonModule,
         FormsModule,
         LetModule,
+        ForModule,
         ValidDirective,
         MessagesComponent,
     ],
@@ -90,8 +92,12 @@ export class MedicalComponent {
                     enforce(student.weightImperial).isNotEmpty();
                 });
 
-                test('height', 'Height is required', () => {
-                    enforce(student.heightImperial).isNotEmpty();
+                test('heightFeet', 'Height (ft) is required', () => {
+                    enforce(student.heightFeet).isNotEmpty();
+                });
+
+                test('heightInches', 'Height (in) is required', () => {
+                    enforce(student.heightInches).isNotEmpty();
                 });
 
                 test('doctorName', "Doctor's name is required", () => {
@@ -109,6 +115,16 @@ export class MedicalComponent {
                 test('insuranceId', 'Insurance ID is required', () => {
                     enforce(student.insuranceId).isNotEmpty();
                 });
+
+                test(
+                    'hasLifeThreateningAllergies',
+                    'Must select an option',
+                    () => {
+                        enforce(
+                            student.hasLifeThreateningAllergies
+                        ).isNotUndefined();
+                    }
+                );
 
                 group('medications', () => {
                     student.medications?.forEach((medication, i) => {
@@ -167,7 +183,13 @@ export class MedicalComponent {
         }
     );
 
-    authorized = true;
+    readonly lifeThreateningOptions = [
+        { name: 'My child has a life-threatening allergy', value: true },
+        {
+            name: 'My child does not have a life-threatening allergy',
+            value: false,
+        },
+    ];
 
     readonly student$ = this.workflow
         .select((state) => state.enrollment.student)

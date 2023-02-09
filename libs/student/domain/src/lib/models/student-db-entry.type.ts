@@ -4,6 +4,7 @@ export type StudentDbEntry = {
     id: string;
     first_name: string;
     last_name: string;
+    pronouns: string;
     code_word: string;
     primary_email: string;
     primary_first_name: string;
@@ -27,6 +28,9 @@ export type StudentDbEntry = {
         important: boolean;
     }>;
     tshirt_size: string;
+    weightPounds: number;
+    heightFeet: number;
+    heightInches: number;
 };
 
 export type NewStudentDbEntry = Omit<StudentDbEntry, 'id'>;
