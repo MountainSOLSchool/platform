@@ -9,8 +9,8 @@ import {
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { EffectsModule, provideEffects } from '@ngrx/effects';
-import { provideStore, StoreModule } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
+import { provideStore } from '@ngrx/store';
 import { AuthInterceptor } from '@sol/auth/interceptor';
 import { MessageService } from 'primeng/api';
 import { appRoutes } from './app/app-routes';

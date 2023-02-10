@@ -1,6 +1,6 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
-import { EffectsModule } from '@ngrx/effects';
+import { provideEffects } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { ReportComponent } from './report.component';
 import { ReportComponentEffects } from './store/report.effects';
@@ -14,9 +14,7 @@ export const reportRoutes: Routes = [
         providers: [
             importProvidersFrom(StoreModule.forFeature(reportComponentFeature)),
             importProvidersFrom(ReportComponentEffects),
-            importProvidersFrom(
-                EffectsModule.forFeature([ReportComponentEffects])
-            ),
+            provideEffects(ReportComponentEffects),
         ],
     },
 ];

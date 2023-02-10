@@ -1,7 +1,7 @@
 import { Injectable, NgModule } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
-import { createEffect, EffectsModule } from '@ngrx/effects';
+import { createEffect, provideEffects } from '@ngrx/effects';
 import { filter, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -28,6 +28,6 @@ export class LoginEffect {
 }
 
 @NgModule({
-    imports: [EffectsModule.forFeature([LoginEffect])],
+    providers: [provideEffects(LoginEffect)],
 })
 export class LoginEffectModule {}
