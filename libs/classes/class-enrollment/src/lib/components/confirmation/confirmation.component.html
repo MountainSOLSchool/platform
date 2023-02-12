@@ -9,26 +9,6 @@
 
         <div class="section">
             <p-fieldset legend="Class Cost Summary">
-                <p-table
-                    [value]="vm.classCostSummaryRows ?? []"
-                    [tableStyle]="{ 'min-width': '50rem' }"
-                    [loading]="!vm.classCostSummaryRows"
-                >
-                    <ng-template pTemplate="header">
-                        <tr>
-                            <th>Class</th>
-                            <th>Date</th>
-                            <th>Cost</th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-row>
-                        <tr>
-                            <td>{{ row.name }}</td>
-                            <td>{{ row.date }}</td>
-                            <td>{{ row.cost | currency }}</td>
-                        </tr>
-                    </ng-template>
-                </p-table>
                 <sol-class-summary-table
                     [classIds]="vm.enrollment.selectedClasses"
                     [groupIds]="vm.enrollment.selectedClassGroups"

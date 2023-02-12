@@ -8,19 +8,7 @@ import {
 } from '@angular/core';
 import { LetModule } from '@rx-angular/template/let';
 import { ChipModule } from 'primeng/chip';
-import {
-    BehaviorSubject,
-    combineLatest,
-    filter,
-    map,
-    Observable,
-    of,
-    shareReplay,
-    startWith,
-    Subject,
-    switchMap,
-    tap,
-} from 'rxjs';
+import { combineLatest, filter, map, Subject, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { ClassListService } from '../../services/class-list.service';
 import { ForModule } from '@rx-angular/template/for';
@@ -111,94 +99,12 @@ export class ConfirmationComponent {
             )
         )
     );
-    private readonly classCostSummaryRows$: Observable<
-        Array<{ name: string; date: string; cost: number }> | undefined
-    > = this.enrollment$.pipe(
-        switchMap((enrollment) => {
-            const classGroups$ = this.classList
-                .getClassGroupsByIds(enrollment.selectedClassGroups)
-                .pipe(shareReplay());
-            const tableClassGroups$ = classGroups$.pipe(
-                map((classGroups) => {
-                    return classGroups
-                        .filter((c) =>
-                            enrollment.selectedClassGroups.includes(c.id)
-                        )
-                        .map((group) => ({
-                            name: group.name,
-                            date:
-                                group.classes[0].startMs &&
-                                group.classes[0].endMs
-                                    ? this.datePipe.transform(
-                                          new Date(group.classes[0].startMs),
-                                          'shortDate'
-                                      ) +
-                                      ' - ' +
-                                      this.datePipe.transform(
-                                          new Date(group.classes[0].endMs),
-                                          'shortDate'
-                                      )
-                                    : '',
-                            cost: group.cost,
-                        }));
-                })
-            );
-            const tableClasses$ = classGroups$.pipe(
-                switchMap((groups) => {
-                    return this.classList
-                        .getClassesByIds(
-                            enrollment.selectedClasses.filter(
-                                (id) =>
-                                    !groups.some((g) =>
-                                        g.classes.some((c) => c.id === id)
-                                    )
-                            )
-                        )
-                        .pipe(
-                            map((classes) => {
-                                return classes
-                                    .filter((c) =>
-                                        enrollment.selectedClasses.includes(
-                                            c.id
-                                        )
-                                    )
-                                    .map((c) => ({
-                                        name: c.title,
-                                        date:
-                                            c.startMs && c.endMs
-                                                ? this.datePipe.transform(
-                                                      new Date(c.startMs),
-                                                      'shortDate'
-                                                  ) +
-                                                  ' - ' +
-                                                  this.datePipe.transform(
-                                                      new Date(c.endMs),
-                                                      'shortDate'
-                                                  )
-                                                : '',
-                                        cost: c.cost,
-                                    }));
-                            })
-                        );
-                })
-            );
-            return combineLatest([tableClasses$, tableClassGroups$]).pipe(
-                map(([classes, classGroups]) =>
-                    [...classes, ...classGroups].sort((a, b) =>
-                        a.name.localeCompare(b.name)
-                    )
-                )
-            );
-        }),
-        startWith(undefined)
-    );
 
     readonly viewModel$ = combineLatest([
         this.enrollment$,
         this.basketCosts$,
         this.validDiscountAmounts$,
         this.invalidDiscountCodes$,
-        this.classCostSummaryRows$,
         this.workflow.select(({ isLoadingDiscounts }) => isLoadingDiscounts),
     ]).pipe(
         map(
@@ -207,14 +113,12 @@ export class ConfirmationComponent {
                 basketCosts,
                 validDiscountAmounts,
                 invalidCodes,
-                classCostSummaryRows,
                 isLoadingDiscounts,
             ]) => ({
                 enrollment,
                 basketCosts,
                 validDiscountAmounts,
                 invalidCodes,
-                classCostSummaryRows,
                 isLoadingDiscounts,
             })
         )
