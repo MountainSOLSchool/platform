@@ -9,10 +9,10 @@ export const appRoutes: Routes = [
     {
         path: '',
         component: HeaderComponent,
+        providers: [importProvidersFrom(LoginEffectModule)],
         children: [
             {
                 path: 'user',
-                providers: [importProvidersFrom(LoginEffectModule)],
                 loadChildren: () =>
                     import('@sol/auth/login').then((m) => m.authRoutes),
             },

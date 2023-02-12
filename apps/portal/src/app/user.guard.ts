@@ -3,19 +3,36 @@ import {
     AngularFireAuth,
     AngularFireAuthModule,
 } from '@angular/fire/compat/auth';
-import { CanActivate, Router, UrlTree } from '@angular/router';
+import {
+    ActivatedRouteSnapshot,
+    CanActivate,
+    Router,
+    UrlTree,
+} from '@angular/router';
 import { map, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { userLoginInitiated } from './login.actions';
 
 @Injectable({ providedIn: 'root' })
 export class UserGuard implements CanActivate {
     constructor(
         private readonly router: Router,
-        private readonly afAuth: AngularFireAuth
+        private readonly afAuth: AngularFireAuth,
+        private readonly store: Store
     ) {}
 
-    canActivate(): Observable<boolean | UrlTree> {
+    canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
         return this.afAuth.user.pipe(
-            map((u) => (u ? true : this.router.parseUrl('/user/create')))
+            map((u) =>
+                u
+                    ? true
+                    : (() => {
+                          this.store.dispatch(
+                              userLoginInitiated(window.location.pathname)
+                          );
+                          return this.router.parseUrl('/user/create');
+                      })()
+            )
         );
     }
 }
