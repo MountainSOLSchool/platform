@@ -6,3 +6,4 @@ export * from './lib/models/discount/discount.dbo';
 export * from './lib/models/discount/discount-evaluator';
 export * from './lib/models/discount/classes-discount';
 export * from './lib/models/discount/basket-discount';
+export * from './lib/models/semester-enrollment';

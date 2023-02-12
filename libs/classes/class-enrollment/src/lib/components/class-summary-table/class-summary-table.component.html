@@ -1,0 +1,25 @@
+<p-table
+    *rxLet="classCostSummaryRows$; let rows; suspense: loading"
+    [value]="rows ?? []"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [loading]="!rows"
+>
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Class</th>
+            <th>Date</th>
+            <th>Cost</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+        <tr>
+            <td>{{ row.name }}</td>
+            <td>{{ row.date }}</td>
+            <td>{{ row.cost | currency }}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<ng-template #loading>
+    <p-progressSpinner></p-progressSpinner>
+</ng-template>

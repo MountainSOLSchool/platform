@@ -1,7 +1,7 @@
 import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { filter, map, switchMap, take, tap, throttleTime } from 'rxjs';
+import { filter, map, mergeMap, switchMap } from 'rxjs';
 import { classesActions } from './classes.actions';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { FunctionsApi } from '@sol/firebase/functions-api';
@@ -21,9 +21,11 @@ export class ClassesEffects {
             concatLatestFrom(() =>
                 this.store.select(classesFeature.selectClasses)
             ),
-            map(([action, classes]) => action.ids.filter((id) => !classes[id])),
+            map(([action, classes]) =>
+                action.ids.filter((id) => !classes?.[id])
+            ),
             filter((idsOfClassesToLoad) => idsOfClassesToLoad.length > 0),
-            switchMap((idsOfClassesToLoad) => {
+            mergeMap((idsOfClassesToLoad) => {
                 return this.functionsApi
                     .call<{
                         classes: Array<SemesterClass>;
@@ -67,7 +69,7 @@ export class ClassesEffects {
             ),
             map(([action, groups]) => action.ids.filter((id) => !groups[id])),
             filter((idsOfGroupsToLoad) => idsOfGroupsToLoad.length > 0),
-            switchMap((idsOfGroupsToLoad) => {
+            mergeMap((idsOfGroupsToLoad) => {
                 return this.functionsApi
                     .call<{
                         groups: Array<SemesterClassGroup>;

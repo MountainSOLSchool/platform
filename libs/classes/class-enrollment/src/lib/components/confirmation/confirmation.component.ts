@@ -34,6 +34,7 @@ import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
 import { CheckoutComponent } from '../checkout/checkout.component';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { ClassSummaryTableComponent } from '../class-summary-table/class-summary-table.component';
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +52,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
         TagModule,
         TableModule,
         CheckoutComponent,
+        ClassSummaryTableComponent,
     ],
     providers: [DatePipe],
     selector: 'sol-class-confirmation',

@@ -30,7 +30,9 @@ export class ClassListService {
         if (ids.length === 0) return of([]);
         this.store.dispatch(classesActions.loadClassesStart({ ids }));
         return this.store.select(classesFeature.selectClasses).pipe(
-            map((classes) => ids.map((id) => ({ theClass: classes[id], id }))),
+            map((classes) =>
+                ids.map((id) => ({ theClass: classes?.[id], id }))
+            ),
             filter((classes) => {
                 const allClassesExist = classes.every(
                     ({ theClass }) => !!theClass

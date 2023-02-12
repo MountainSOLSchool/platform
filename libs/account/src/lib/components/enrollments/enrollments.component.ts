@@ -5,6 +5,8 @@ import { FunctionsApi } from '@sol/firebase/functions-api';
 import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
 import { LetModule } from '@rx-angular/template/let';
+import { SemesterEnrollment } from '@sol/classes/domain';
+import { ClassSummaryTableComponent } from '../../../../../classes/class-enrollment/src/lib/components/class-summary-table/class-summary-table.component';
 
 @Component({
     standalone: true,
@@ -17,24 +19,20 @@ import { LetModule } from '@rx-angular/template/let';
                     style="margin-top: 2rem"
                     *ngFor="let enrollment of enrollments$ | async"
                 >
-                    <p-card
-                        [title]="
-                            enrollment.timestamp._seconds * 1000
-                                | date : 'short'
-                        "
-                    >
-                        <p><b>Student name:</b> {{ enrollment.studentName }}</p>
+                    <p-card [header]="enrollment.studentName + ', Summer 2023'">
                         <p>
                             <b>Final cost:</b>
                             {{ enrollment.finalCost | currency }}
                         </p>
-                        <p><b>Classes:</b> {{ enrollment.classIds | json }}</p>
                         <p>
                             <b>Transaction Id:</b>
                             {{ enrollment.transactionId }}
                         </p>
-                    </p-card>
-                </div></ng-container
+                        <p><b>Classes:</b></p>
+                        <sol-class-summary-table
+                            [classIds]="enrollment.classIds"
+                        ></sol-class-summary-table>
+                    </p-card></div></ng-container
             ><ng-template #none
                 >You have no enrollments.</ng-template
             ></ng-container
@@ -70,17 +68,15 @@ import { LetModule } from '@rx-angular/template/let';
             }
         `,
     ],
-    imports: [CommonModule, CardModule, SkeletonModule, LetModule],
+    imports: [
+        CommonModule,
+        CardModule,
+        SkeletonModule,
+        LetModule,
+        ClassSummaryTableComponent,
+    ],
 })
 export class AccountEnrollmentsComponent {
-    readonly enrollments$ = inject(FunctionsApi).call<
-        Array<{
-            studentName: string;
-            contactEmail: string;
-            finalCost: number;
-            classIds: Array<string>;
-            transactionId?: string;
-            timestamp: { _seconds: number };
-        }>
-    >('enrollments');
+    readonly enrollments$ =
+        inject(FunctionsApi).call<Array<SemesterEnrollment>>('enrollments');
 }
