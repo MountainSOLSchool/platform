@@ -10,11 +10,13 @@ export class Braintree {
             string
         >
     ) {
+        const isProd = process.env['IS_PROD'] === 'true';
+        const envSuffix = isProd ? '_PROD' : '';
         this.gateway = new BraintreeGateway({
-            environment: Environment.Sandbox,
-            merchantId: secrets['BRAINTREE_MERCHANT_ID'],
-            publicKey: secrets['BRAINTREE_PUBLIC_KEY'],
-            privateKey: secrets['BRAINTREE_PRIVATE_KEY'],
+            environment: isProd ? Environment.Production : Environment.Sandbox,
+            merchantId: secrets[`BRAINTREE_MERCHANT_ID${envSuffix}`],
+            publicKey: secrets[`BRAINTREE_PUBLIC_KEY${envSuffix}`],
+            privateKey: secrets[`BRAINTREE_PRIVATE_KEY${envSuffix}`],
         });
     }
 
@@ -22,6 +24,9 @@ export class Braintree {
         'BRAINTREE_MERCHANT_ID',
         'BRAINTREE_PUBLIC_KEY',
         'BRAINTREE_PRIVATE_KEY',
+        'BRAINTREE_MERCHANT_ID_PROD',
+        'BRAINTREE_PUBLIC_KEY_PROD',
+        'BRAINTREE_PRIVATE_KEY_PROD',
     ] as const;
 
     private gateway: BraintreeGateway;
