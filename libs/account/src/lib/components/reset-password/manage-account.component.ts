@@ -22,8 +22,7 @@ import { CommonModule } from '@angular/common';
                 (click)="sendResetLink()"
             ></button>
         </div>`,
-    imports: [CommonModule, ButtonModule],
-    providers: [provideComponentStore(LoginStore)],
+    imports: [CommonModule, ButtonModule, LoginStore],
 })
 export class ManageAccountComponent {
     private readonly loginStore = inject(LoginStore);
