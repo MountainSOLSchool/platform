@@ -8,9 +8,13 @@ export class Braintree {
         private readonly secrets: Record<
             (typeof Braintree.SECRET_NAMES)[number],
             string
+        >,
+        private readonly strings: Record<
+            (typeof Braintree.STRING_NAMES)[number],
+            string
         >
     ) {
-        const isProd = process.env['IS_PROD'] === 'true';
+        const isProd = this.strings.BRAINTREE_ENV === 'PROD';
         const envSuffix = isProd ? '_PROD' : '';
         this.gateway = new BraintreeGateway({
             environment: isProd ? Environment.Production : Environment.Sandbox,
@@ -28,6 +32,8 @@ export class Braintree {
         'BRAINTREE_PUBLIC_KEY_PROD',
         'BRAINTREE_PRIVATE_KEY_PROD',
     ] as const;
+
+    static STRING_NAMES = ['BRAINTREE_ENV'] as const;
 
     private gateway: BraintreeGateway;
 

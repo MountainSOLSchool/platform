@@ -1,16 +1,20 @@
 import * as functions from 'firebase-functions';
 import * as CORS from 'cors';
 import { AuthUtility, Role } from './auth.utility';
-import { defineSecret } from 'firebase-functions/params';
-import { SecretParam } from 'firebase-functions/lib/params/types';
+import { defineSecret, defineString } from 'firebase-functions/params';
+import { SecretParam, StringParam } from 'firebase-functions/lib/params/types';
 
 const cors = CORS({ origin: true });
 
-class FunctionBuilder<SecretNames extends string> {
+class FunctionBuilder<SecretNames extends string, StringNames extends string> {
     constructor(
         private secrets: Record<SecretNames, SecretParam> = {} as Record<
             SecretNames,
             SecretParam
+        >,
+        private strings: Record<StringNames, StringParam> = {} as Record<
+            StringNames,
+            StringParam
         >,
         private roles: Array<Role> = []
     ) {}
@@ -25,11 +29,24 @@ class FunctionBuilder<SecretNames extends string> {
                 (all, secret) => ({ ...all, [secret.name]: secret }),
                 {} as Record<SecretNames, SecretParam>
             );
-        return new FunctionBuilder(secrets, this.roles);
+        return new FunctionBuilder(secrets, this.strings, this.roles);
+    }
+
+    usingStrings<
+        StringNamesParam extends Array<string>,
+        StringNames extends string = StringNamesParam[number]
+    >(...stringNames: StringNamesParam) {
+        const strings: Record<StringNames, StringParam> = stringNames
+            .map((string) => defineString(string))
+            .reduce(
+                (all, string) => ({ ...all, [string.name]: string }),
+                {} as Record<StringNames, StringParam>
+            );
+        return new FunctionBuilder(this.secrets, strings, this.roles);
     }
 
     restrictedToRoles(...roles: Array<Role>) {
-        return new FunctionBuilder(this.secrets, roles);
+        return new FunctionBuilder(this.secrets, this.strings, roles);
     }
 
     handle<RequestData>(
@@ -38,7 +55,8 @@ class FunctionBuilder<SecretNames extends string> {
                 body: { data: RequestData };
             },
             response: functions.Response,
-            secrets: Record<string, string>
+            secrets: Record<string, string>,
+            strings: Record<string, string>
         ) => void
     ) {
         return functions
@@ -71,6 +89,16 @@ class FunctionBuilder<SecretNames extends string> {
                                     .map(([key, secret]) => [
                                         key,
                                         secret.value(),
+                                    ])
+                            ),
+                            Object.fromEntries(
+                                Object.entries(this.strings)
+                                    .map(
+                                        (pair) => pair as [string, StringParam]
+                                    )
+                                    .map(([key, string]) => [
+                                        key,
+                                        string.value(),
                                     ])
                             )
                         );

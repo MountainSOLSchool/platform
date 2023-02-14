@@ -133,13 +133,14 @@ export const tshirts = Functions.endpoint
 
 export const paymentToken = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
-    .handle(async (request, response, secrets) => {
+    .usingStrings(...Braintree.STRING_NAMES)
+    .handle(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
         if (!user) {
             response.status(401).send({ error: 'Unauthorized' });
             return;
         }
-        const braintree = new Braintree(secrets);
+        const braintree = new Braintree(secrets, strings);
         const token = await braintree.getClientToken(user);
         response.send(token);
     });
@@ -242,6 +243,7 @@ function _getEnrollmentCost(
 
 export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
+    .usingStrings(...Braintree.STRING_NAMES)
     .handle<{
         selectedClasses: Array<string>;
         selectedClassGroups: Array<string>;
@@ -249,7 +251,7 @@ export const enroll = Functions.endpoint
         discountCodes: Array<string>;
         paymentMethod: { nonce: string; deviceData: string };
         isSignedUpForSolsticeEmails: boolean;
-    }>(async (request, response, secrets) => {
+    }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
 
         if (!user) {
@@ -309,7 +311,7 @@ export const enroll = Functions.endpoint
             status: 'pending',
         });
 
-        const braintree = new Braintree(secrets);
+        const braintree = new Braintree(secrets, strings);
 
         const { success, transaction, errors } = await braintree.transact({
             amount: finalTotal,

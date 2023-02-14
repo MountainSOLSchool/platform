@@ -12,6 +12,6 @@ jobs:
             - run: npm ci && npm run build:functions
             - uses: w9jds/firebase-action@master
               with:
-                  args: deploy --only functions
+                  args: deploy --only functions --project prod
               env:
                   GCP_SA_KEY: ${{ secrets.FIREBASE_GCP_SA_KEY }}
