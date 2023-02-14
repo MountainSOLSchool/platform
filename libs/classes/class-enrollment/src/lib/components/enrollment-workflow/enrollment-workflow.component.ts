@@ -13,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { filter, fromEvent, map, skip, take, timer } from 'rxjs';
+import { filter, fromEvent, map, of, skip, take, timer } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
@@ -112,15 +112,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         .observe('(min-width: 800px)')
         .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
-    readonly showSecretAutofill$ = fromEvent<KeyboardEvent>(
-        document,
-        'keypress'
-    ).pipe(
-        filter((event) => event.key === 'z'),
-        skip(3),
-        map(() => true),
-        take(1)
-    );
+    readonly showSecretAutofill$ = of(false);
 
     readonly steps = [
         { label: 'Class Selection', routerLink: 'classes' },
