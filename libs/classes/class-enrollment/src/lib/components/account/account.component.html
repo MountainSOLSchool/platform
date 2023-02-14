@@ -17,9 +17,15 @@
     >
 </ng-container>
 <ng-template #login>
-    Please create an account, or log into an existing account when enrolling
-    multiple students, so that you can save your student and payment information
-    for future enrollment.
+    <p-messages [enableService]="false" severity="info">
+        <ng-template pTemplate>
+            <div class="ml-2">
+                <i class="pi pi-info-circle" style="margin-right: 4px"></i>
+                With an account, your student's information and your payment
+                information will be saved for future enrollment.
+            </div>
+        </ng-template>
+    </p-messages>
     <div style="margin-top: 3rem">
         <sol-login
             [isCreatingNewAccount]="true"

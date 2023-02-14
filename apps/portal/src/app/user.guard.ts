@@ -30,7 +30,7 @@ export class UserGuard implements CanActivate {
                           this.store.dispatch(
                               userLoginInitiated(window.location.pathname)
                           );
-                          return this.router.parseUrl('/user/create');
+                          return this.router.parseUrl('/user/login');
                       })()
             )
         );

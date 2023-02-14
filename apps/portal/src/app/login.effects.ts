@@ -37,7 +37,9 @@ export class LoginEffect {
                         window.location.pathname === '/user/login' ||
                         window.location.pathname === '/user/create'
                 ),
-                tap(([, prevRoute]) => this.router.navigateByUrl(prevRoute))
+                tap(([, prevRoute]) =>
+                    this.router.navigateByUrl(prevRoute ?? '/')
+                )
             );
         },
         { dispatch: false }

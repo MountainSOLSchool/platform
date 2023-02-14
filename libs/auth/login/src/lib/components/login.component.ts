@@ -33,6 +33,16 @@ import { CardModule } from 'primeng/card';
         CardModule,
     ],
     templateUrl: './login.component.html',
+    styles: [
+        `
+            :host ::ng-deep .p-message-boring {
+                background-color: #f0f0f0;
+                border: solid lightgray;
+                border-width: 0 0 0 6px;
+                color: black;
+            }
+        `,
+    ],
 })
 export class LoginComponent implements OnInit {
     @Input() isCreatingNewAccount = false;
@@ -62,6 +72,12 @@ export class LoginComponent implements OnInit {
     useSignIn(): void {
         this.loginStore.patchState({
             isCreatingNewAccount: false,
+        });
+    }
+
+    useCreation(): void {
+        this.loginStore.patchState({
+            isCreatingNewAccount: true,
         });
     }
 

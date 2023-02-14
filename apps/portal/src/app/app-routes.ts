@@ -22,7 +22,6 @@ export const appRoutes: Routes = [
                 children: [
                     {
                         path: '',
-
                         canActivate: [UserGuard],
                         children: [
                             {

@@ -9,25 +9,48 @@
     >
         <div style="margin-top: -10px">
             <p-messages
-                *ngIf="isCreatingNewAccount$ | async"
-                severity="info"
+                *ngIf="
+                    (isCreatingNewAccount$ | async) === false;
+                    else createAccountMessage
+                "
+                severity="boring"
                 [enableService]="false"
             >
                 <ng-template pTemplate>
                     <div class="ml-2">
-                        Already registered?
+                        First time?
                         <ng-container *ngIf="standalone; else useRouter">
-                            <a href="javascript:void(0)" (click)="useSignIn()"
-                                >Sign in</a
+                            <a href="javascript:void(0)" (click)="useCreation()"
+                                >Create an account</a
                             >.</ng-container
                         >
                         <ng-template #useRouter
-                            ><a routerLink="/user/login">Sign in</a
+                            ><a routerLink="/user/create">Create an account</a
                             >.</ng-template
                         >
                     </div>
                 </ng-template>
             </p-messages>
+            <ng-template #createAccountMessage>
+                <p-messages severity="boring" [enableService]="false">
+                    <ng-template pTemplate>
+                        <div class="ml-2">
+                            Already have an account?
+                            <ng-container *ngIf="standalone; else useRouter">
+                                <a
+                                    href="javascript:void(0)"
+                                    (click)="useSignIn()"
+                                    >Sign in</a
+                                >.</ng-container
+                            >
+                            <ng-template #useRouter
+                                ><a routerLink="/user/login">Sign in</a
+                                >.</ng-template
+                            >
+                        </div>
+                    </ng-template>
+                </p-messages></ng-template
+            >
 
             <form class="p-fluid" *ngIf="errors$ | async as errors">
                 <div class="field">

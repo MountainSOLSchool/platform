@@ -44,6 +44,19 @@
                 ></ng-container></ng-container
         ></ng-template>
     </mat-step>
+    <mat-step #account label="Account Registration">
+        <ng-template matStepContent>
+            <ng-container *rxIf="stepper.selected === account">
+                <h2>Account Registration</h2>
+                <sol-class-account
+                    (validityChange)="account.hasError = !$event"
+                ></sol-class-account>
+
+                <ng-container
+                    *ngTemplateOutlet="navigation"
+                ></ng-container></ng-container
+        ></ng-template>
+    </mat-step>
     <mat-step #studentInfo label="Student Info">
         <ng-template matStepContent>
             <ng-container *rxIf="stepper.selected === studentInfo">
@@ -68,19 +81,6 @@
                 <ng-container
                     *ngTemplateOutlet="navigation"
                 ></ng-container> </ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step #account label="Account Registration">
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === account">
-                <h2>Account Registration</h2>
-                <sol-class-account
-                    (validityChange)="account.hasError = !$event"
-                ></sol-class-account>
-
-                <ng-container
-                    *ngTemplateOutlet="navigation"
-                ></ng-container></ng-container
         ></ng-template>
     </mat-step>
     <mat-step #confirmation label="Confirm Enrollment">
