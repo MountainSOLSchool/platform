@@ -29,7 +29,8 @@ export class ClassRepository {
     async getByStartsAtOrAfter(startsAt: number): Promise<SemesterClass[]> {
         const query = await DatabaseUtility.fetchMatchingDocuments(
             await DatabaseUtility.getCollectionRef(this.classesPath),
-            ['start', '>=', new Date(startsAt)]
+            ['start', '>=', new Date(startsAt)],
+            ['live', '==', true]
         );
         const classIds = query.map((doc) => doc.id);
         return await this.getMany(classIds);
