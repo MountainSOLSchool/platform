@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     inject,
+    Input,
     OnInit,
 } from '@angular/core';
 import { UserService } from '@sol/auth/user';
@@ -46,7 +47,7 @@ import { map, Observable } from 'rxjs';
         <ng-template #login>
             <p-button
                 routerLink="/user/create"
-                label="Register / Sign In"
+                [label]="size === 'default' ? 'Register / Sign In' : 'Account'"
                 styleClass="p-button-md"
             ></p-button
         ></ng-template>`,
@@ -54,6 +55,8 @@ import { map, Observable } from 'rxjs';
 export class UserButtonComponent implements OnInit {
     private readonly auth = inject(AuthService);
     private readonly userService = inject(UserService);
+
+    @Input() size: 'default' | 'small' = 'default';
 
     public email$: Observable<string | null | undefined> | undefined;
 

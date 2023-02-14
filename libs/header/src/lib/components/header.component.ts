@@ -6,6 +6,9 @@ import { UserService } from '@sol/auth/user';
 import { ButtonModule } from 'primeng/button';
 import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { map } from 'rxjs';
+import { LetModule } from '@rx-angular/template/let';
 
 @Component({
     standalone: true,
@@ -16,6 +19,7 @@ import { ToolbarModule } from 'primeng/toolbar';
         SidebarModule,
         ToolbarModule,
         RouterModule,
+        LetModule,
         UserButtonComponent,
     ],
     styles: [
@@ -25,15 +29,17 @@ import { ToolbarModule } from 'primeng/toolbar';
             }
         `,
     ],
-    template: ` <header class="toolbarz">
+    template: ` <header *rxLet="size$; let size" class="toolbarz">
             <p-toolbar styleClass="toolbar">
                 <div routerLink="/" class="p-toolbar-group-left">
                     <div>
                         <img
                             src="https://www.mountainsol.org/wp-content/uploads/2020/03/SOL-horizontal-large-1024x234-1.jpg"
                             alt="sol-logo"
-                            height="50px"
-                            style="margin-right:10px"
+                            [ngStyle]="{
+                                'margin-right': '10px',
+                                height: size === 'default' ? '50px' : '25px'
+                            }"
                         />
                     </div>
                     <h2 style="margin: 0; cursor: pointer">
@@ -52,7 +58,9 @@ import { ToolbarModule } from 'primeng/toolbar';
                                 label="Menu"
                             ></p-button></div
                     ></ng-container>
-                    <sol-user-button></sol-user-button>
+                    <sol-user-button
+                        [size]="assertSize(size)"
+                    ></sol-user-button>
                 </div>
             </p-toolbar>
         </header>
@@ -87,10 +95,18 @@ import { ToolbarModule } from 'primeng/toolbar';
 export class HeaderComponent {
     private readonly userService = inject(UserService);
 
+    readonly size$ = inject(BreakpointObserver)
+        .observe('(min-width: 600px)')
+        .pipe(map(({ matches }) => (matches ? 'default' : 'small')));
+
     display = false;
 
     window = window;
 
     isLoggedIn$ = this.userService.isLoggedIn();
     isAdmin$ = this.userService.isAdmin();
+
+    assertSize(size: string): 'default' | 'small' {
+        return size as 'default' | 'small';
+    }
 }
