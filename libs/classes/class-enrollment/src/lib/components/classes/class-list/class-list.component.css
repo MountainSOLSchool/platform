@@ -15,6 +15,6 @@
     list-style: none;
 }
 :host ::ng-deep .p-chip.custom-chip {
-    background: var(--primary-color);
+    background: var(--green-600);
     color: var(--primary-color-text);
 }

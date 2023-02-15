@@ -39,26 +39,39 @@
 <div
     *rxLet="selectedClasses$; let selected"
     style="
-        position: -webkit-sticky;
         position: sticky;
-        top: 0;
+        top: 10px;
+        margin: auto;
         background: white;
-        padding: 0.5rem 0 1rem 0;
+        padding: 0.5rem 2rem 0.5rem 2rem;
         z-index: 1;
-        border-bottom: 1px solid lightgray;
+        border-radius: 20px;
+        border: 1px solid lightgray;
     "
 >
     <p>
         <b>Selected classes ({{ selected?.length ?? 0 }})</b>
     </p>
-    <div style="display: flex; gap: 4px; flex-wrap: wrap">
-        <div *rxFor="let class of selected; trackBy: trackClassCard">
-            <p-chip
-                [label]="class.title"
-                [removable]="true"
-                (onRemove)="selectionChanged({ id: class.id, selected: false })"
-            ></p-chip>
-        </div>
+    <div
+        *rxLet="{ showChips: false }; let view"
+        style="display: flex; gap: 4px; flex-wrap: wrap"
+    >
+        <ng-container *rxIf="view.showChips">
+            <div *rxFor="let class of selected; trackBy: trackClassCard">
+                <p-chip
+                    [label]="class.title"
+                    [removable]="true"
+                    (onRemove)="
+                        selectionChanged({ id: class.id, selected: false })
+                    "
+                ></p-chip></div
+        ></ng-container>
+        <p-button
+            *rxIf="selected.length > 0"
+            [label]="view.showChips ? 'Hide' : 'Show'"
+            (click)="view.showChips = !view.showChips"
+            styleClass="p-button-sm"
+        ></p-button>
     </div>
     <ng-container *rxIf="hasSelectedSummerClass$">
         <ng-container
@@ -170,7 +183,7 @@
                                 'box-sizing': 'border-box',
                                 'margin-left': 'auto',
                                 'margin-right': 'auto',
-                                'min-width': '360px',
+                                'min-width': '300px',
                                 flex:
                                     row.classes.length > 1
                                         ? '1 0 calc(50% - 40px)'

@@ -38,12 +38,16 @@ import { LetModule } from '@rx-angular/template/let';
                             alt="sol-logo"
                             [ngStyle]="{
                                 'margin-right': '10px',
-                                height: size === 'default' ? '50px' : '25px'
+                                height: size === 'default' ? '50px' : '35px'
                             }"
                         />
                     </div>
-                    <h2 style="margin: 0; cursor: pointer">
-                        Registration Portal
+                    <h2 style="margin: 0; cursor: pointer;">
+                        {{
+                            size === 'default'
+                                ? 'Registration Portal'
+                                : 'Portal'
+                        }}
                     </h2>
                 </div>
                 <div class="p-toolbar-group-right">

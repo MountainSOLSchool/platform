@@ -1,5 +1,15 @@
-<div style="width: 40rem">
-    <p-card>
+<div
+    [ngStyle]="{
+        border: '.2rem solid transparent',
+        'border-radius': '6px',
+        'box-sizing': 'border-box',
+        'margin-left': 'auto',
+        'margin-right': 'auto',
+        'min-width': '300px',
+        height: 'fit-content'
+    }"
+>
+    <p-card style="">
         <ng-template pTemplate="header"></ng-template>
         <div style="position: relative; margin-top: -2.5rem">
             <h2>Summer Solstice Workday and Celebration</h2>
@@ -8,11 +18,11 @@
             class="flex align-items-center"
             style="margin-bottom: 1.5rem; margin-top: 1rem"
         >
-            <p-tag
-                value="June 17th"
+            <p-chip
+                label="June 17th"
                 icon="pi pi-calendar"
-                styleClass="mr-2"
-            ></p-tag>
+                styleClass="mr-2 custom-chip"
+            ></p-chip>
         </div>
         <p>
             <b>Location:</b> Chestnut Ridge Park and Campground<br /><br />

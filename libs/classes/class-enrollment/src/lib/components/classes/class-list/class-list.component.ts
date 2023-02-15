@@ -37,6 +37,7 @@ import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { ButtonModule } from 'primeng/button';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -65,6 +66,7 @@ interface ClassRow {
         MessagesModule,
         MessageModule,
         ToastModule,
+        ButtonModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',

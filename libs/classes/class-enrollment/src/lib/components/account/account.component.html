@@ -1,7 +1,8 @@
 <ng-container *ngIf="user$ | async as user; else login">
     <p-card
         [style]="{
-            width: '50rem',
+            width: '100%',
+            'max-width': '600px',
             'margin-left': 'auto',
             'margin-right': 'auto'
         }"

@@ -86,7 +86,7 @@ import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive'
                 color: black;
             }
             :host ::ng-deep .mat-vertical-content-container {
-                margin-left: 0;
+                margin-left: -5px;
             }
             :host ::ng-deep .mat-stepper-vertical-line::before {
                 border: none;

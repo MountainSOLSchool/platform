@@ -13,6 +13,7 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { FormsModule } from '@angular/forms';
+import { ChipModule } from 'primeng/chip';
 
 @Component({
     standalone: true,
@@ -25,9 +26,18 @@ import { FormsModule } from '@angular/forms';
         TagModule,
         ToggleButtonModule,
         FormsModule,
+        ChipModule,
     ],
     selector: 'sol-event-selection',
     templateUrl: './events.component.html',
+    styles: [
+        `
+            :host ::ng-deep .p-chip.custom-chip {
+                background: var(--green-600);
+                color: var(--primary-color-text);
+            }
+        `,
+    ],
 })
 export class EventsComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
