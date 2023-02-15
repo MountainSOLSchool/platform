@@ -593,14 +593,19 @@ export const createEnrollmentEmail = functions.firestore
                             `
                               )
                               .join('')}
-                          <tr>
+                          ${
+                              differenceBetweenFinalCostAndOriginalCostWithDiscounts >
+                              0
+                                  ? `<tr>
                             <td>
                             Other Savings
                             </td>
                             <td>
                             -$${differenceBetweenFinalCostAndOriginalCostWithDiscounts}
                             </td>
-                          </tr>
+                          </tr>`
+                                  : ``
+                          }
                           <tr>
                             <td>
                               Total
