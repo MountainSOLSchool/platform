@@ -1,0 +1,27 @@
+{
+    "name": "workflow",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/workflow/src",
+    "prefix": "sol",
+    "targets": {
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/workflow"],
+            "options": {
+                "jestConfig": "libs/workflow/jest.config.ts",
+                "passWithNoTests": true
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": [
+                    "libs/workflow/**/*.ts",
+                    "libs/workflow/**/*.html"
+                ]
+            }
+        }
+    },
+    "tags": []
+}
