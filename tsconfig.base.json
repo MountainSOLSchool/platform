@@ -14,6 +14,7 @@
         "skipLibCheck": true,
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
+        "strict": true,
         "paths": {
             "@sol/account": ["libs/account/src/index.ts"],
             "@sol/auth/interceptor": ["libs/auth/interceptor/src/index.ts"],

@@ -393,7 +393,7 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
                 phone: c.phone,
                 email: '',
             })) ?? [],
-        allergies: form.allergies,
+        allergies: form.allergies ?? '',
         medications: form.medications ?? [],
         tshirt_size: form.tshirtSize,
         pronouns: form.pronouns,
