@@ -31,7 +31,7 @@ import {
 } from '@sol/classes/enrollment/repository';
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { Transaction } from 'braintree';
+import { Transaction, ValidationErrorsCollection } from 'braintree';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -316,11 +316,12 @@ export const enroll = Functions.endpoint
 
         let success = false;
         let transaction: Transaction | undefined;
+        let errors: ValidationErrorsCollection | undefined;
         if (finalTotal > 0) {
             const {
                 success: transactionSuccess,
-                transaction,
-                errors,
+                transaction: theTransaction,
+                errors: transactionErrors,
             } = await braintree.transact({
                 amount: finalTotal,
                 nonce,
@@ -328,6 +329,8 @@ export const enroll = Functions.endpoint
                 deviceData,
             });
             success = transactionSuccess;
+            transaction = theTransaction;
+            errors = transactionErrors;
         } else {
             success = true;
         }
@@ -366,12 +369,12 @@ export const enroll = Functions.endpoint
                 ...enrollmentRecord,
                 relatedId: studentEnrollmentId,
                 status: 'failed',
-                failures: errors.deepErrors().map((e) => e.message),
+                failures: errors?.deepErrors().map((e) => e.message) ?? [],
                 releaseOfLiabilitySignature:
                     student.releaseOfLiabilitySignature,
                 medicalReleaseSignature: student.medicalReleaseSignature,
             });
-            response.send({ success, errors: errors.deepErrors() });
+            response.send({ success, errors: errors?.deepErrors() ?? [] });
         }
     });
 
