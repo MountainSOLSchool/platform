@@ -6,6 +6,7 @@ if (admin.apps.length === 0) {
     admin.initializeApp();
 }
 const db = admin.firestore(functions.config().firebase);
+db.settings({ ignoreUndefinedProperties: true });
 
 type Collection = Array<DocumentProperty>;
 

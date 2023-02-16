@@ -433,7 +433,7 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
         })),
         has_life_threatening_allergies: form.hasLifeThreateningAllergies,
         authorized_to_administer_meds: form.authorizedToAdministerMedication,
-        medical_notes: form.medicalNotes,
+        medical_notes: form.medicalNotes ?? '',
         insurance_company: form.insuranceCompany,
         insurance_id: form.insuranceId,
         does_not_have_insurance: form.doesNotHaveInsurance,
