@@ -529,7 +529,8 @@ export const createEnrollmentEmail = functions.firestore
 
         if (
             enrollmentRecord.status === 'enrolled' &&
-            !!enrollmentRecord.transactionId
+            (!!enrollmentRecord.transactionId ||
+                enrollmentRecord.finalCost === 0)
         ) {
             const classes = await SemesterRepository.of(
                 SUMMER_2023_SEMESTER
