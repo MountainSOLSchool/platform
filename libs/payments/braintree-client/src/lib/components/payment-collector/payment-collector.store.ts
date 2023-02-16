@@ -124,14 +124,12 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     dropInInstance?.on(
                                         'paymentMethodRequestable',
                                         (event) => {
-                                            console.log('requestable');
                                             this.prepare();
                                         }
                                     );
                                     dropInInstance?.on(
                                         'noPaymentMethodRequestable',
                                         () => {
-                                            console.log('not requestable');
                                             this.patchState({
                                                 nonce: undefined,
                                                 paymentDetails: undefined,

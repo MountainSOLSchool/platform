@@ -45,7 +45,6 @@ export class ClassSummaryTableComponent {
         Array<{ name: string; date: string; cost: number }> | undefined
     > = combineLatest([this.classIds$, this.groupIds$]).pipe(
         switchMap(([classIds, groupIds]) => {
-            console.log('hi');
             const classGroups$ = this.classList
                 .getClassGroupsByIds(groupIds)
                 .pipe(shareReplay());

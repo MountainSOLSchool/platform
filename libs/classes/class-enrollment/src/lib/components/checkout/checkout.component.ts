@@ -4,13 +4,9 @@ import {
     Component,
     inject,
     Input,
-    OnInit,
     Output,
 } from '@angular/core';
-import {
-    PaymentCollector,
-    PaymentCollectorComponent,
-} from '@sol/payments/braintree-client';
+import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
@@ -38,7 +34,7 @@ import { FunctionsApi } from '@sol/firebase/functions-api';
     selector: 'sol-checkout',
     templateUrl: './checkout.component.html',
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly user$ = inject(AngularFireAuth).user;
     private readonly functions = inject(FunctionsApi);
@@ -99,8 +95,6 @@ export class CheckoutComponent implements OnInit {
         map((errors) => Object.keys(errors).length === 0)
     );
 
-    paymentCollector: PaymentCollector | undefined;
-
     setPaymentMethod(
         paymentMethod:
             | {
@@ -113,9 +107,5 @@ export class CheckoutComponent implements OnInit {
         this.workflow.patchState((s) => ({
             enrollment: { ...s.enrollment, paymentMethod },
         }));
-    }
-
-    ngOnInit() {
-        console.log('init checkout');
     }
 }
