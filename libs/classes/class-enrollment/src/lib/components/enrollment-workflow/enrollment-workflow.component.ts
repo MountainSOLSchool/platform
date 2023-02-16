@@ -126,7 +126,22 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         },
     ];
     readonly isSubmitting$ = this.store.submitting$;
-    readonly hasFailed$ = this.store.failed$;
+    readonly failureDialogState$ = this.store.failed$.pipe(
+        map(
+            (failed) =>
+                new Proxy(
+                    { visible: failed },
+                    {
+                        set: (target, prop, newValue) => {
+                            prop === 'visible' && newValue === false
+                                ? this.store.setStatusToDraft()
+                                : undefined;
+                            return Reflect.set(target, prop, newValue);
+                        },
+                    }
+                )
+        )
+    );
 
     readonly shouldShowSuccess$ = this.store.select(
         (s) => s.status === 'enrolled'
@@ -257,6 +272,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     }
 
     closeFailure() {
+        console.log('closing');
         this.store.setStatusToDraft();
     }
 }

@@ -153,9 +153,9 @@
 </p-dialog>
 <p-dialog
     header="Something went wrong"
-    *rxLet="hasFailed$; let hasFailed"
-    [visible]="hasFailed"
+    *rxIf="failureDialogState$; let failureDialogState"
     [closable]="true"
+    [(visible)]="failureDialogState.visible"
     [modal]="true"
     [draggable]="false"
     (onHide)="closeFailure()"
