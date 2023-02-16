@@ -314,7 +314,7 @@ export const enroll = Functions.endpoint
 
         const braintree = new Braintree(secrets, strings);
 
-        let success = false;
+        let success: boolean;
         let transaction: Transaction | undefined;
         let errors: ValidationErrorsCollection | undefined;
         if (finalTotal > 0) {
