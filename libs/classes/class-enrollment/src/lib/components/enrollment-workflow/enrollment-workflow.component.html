@@ -152,14 +152,13 @@
     <p-progressSpinner></p-progressSpinner>
 </p-dialog>
 <p-dialog
-    #failed
     header="Something went wrong"
     *rxLet="hasFailed$; let hasFailed"
     [visible]="hasFailed"
     [closable]="true"
     [modal]="true"
     [draggable]="false"
-    (onHide)="failed.visible = false"
+    (onHide)="closeFailure()"
 >
     Something went wrong while submitting your enrollment. Please try again or
     contact <a href="mailto:info@mountainsol.org">info@mountainsol.org</a>.
