@@ -31,6 +31,7 @@ import {
 } from '@sol/classes/enrollment/repository';
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import { Transaction } from 'braintree';
 
 export const roster = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -313,12 +314,23 @@ export const enroll = Functions.endpoint
 
         const braintree = new Braintree(secrets, strings);
 
-        const { success, transaction, errors } = await braintree.transact({
-            amount: finalTotal,
-            nonce,
-            customer: { email: enrollmentRecord.contactEmail },
-            deviceData,
-        });
+        let success = false;
+        let transaction: Transaction | undefined;
+        if (finalTotal > 0) {
+            const {
+                success: transactionSuccess,
+                transaction,
+                errors,
+            } = await braintree.transact({
+                amount: finalTotal,
+                nonce,
+                customer: { email: enrollmentRecord.contactEmail },
+                deviceData,
+            });
+            success = transactionSuccess;
+        } else {
+            success = true;
+        }
 
         if (success) {
             const studentRef = await StudentRepository.create(
@@ -329,7 +341,7 @@ export const enroll = Functions.endpoint
                 ...enrollmentRecord,
                 relatedId: studentEnrollmentId,
                 studentId: studentRef.id,
-                transactionId: transaction.id,
+                transactionId: transaction?.id ?? '',
                 status: 'enrolled',
                 medicalReleaseSignature: student.medicalReleaseSignature,
                 releaseOfLiabilitySignature:
