@@ -85,7 +85,7 @@ export const classes = Functions.endpoint.handle<
     const semesterClasses = SemesterRepository.of(SUMMER_2023_SEMESTER).classes;
     const classes = await (request.body.data
         ? semesterClasses.getMany(request.body.data.ids)
-        : semesterClasses.getAllLive());
+        : semesterClasses.getAll());
 
     response.send({ classes });
 });

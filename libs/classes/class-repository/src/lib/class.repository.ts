@@ -36,7 +36,7 @@ export class ClassRepository {
         return await this.getMany(classIds);
     }
 
-    async getAllLive(): Promise<SemesterClass[]> {
+    async getAll(): Promise<SemesterClass[]> {
         const query = await DatabaseUtility.fetchMatchingDocuments(
             await DatabaseUtility.getCollectionRef(this.classesPath),
             ['live', '==', true]
