@@ -39,12 +39,12 @@ bootstrapApplication(AppComponent, {
         importProvidersFrom(BrowserModule, BrowserAnimationsModule),
         importProvidersFrom(BrowserAnimationsModule),
         MessageService,
-        provideRouter(appRoutes),
         provideStore(),
+        provideEffects(),
+        provideRouter(appRoutes),
         provideStoreDevtools({
             maxAge: 50,
         }),
-        provideEffects(),
         importProvidersFrom(
             AngularFireModule.initializeApp({
                 apiKey: 'AIzaSyBxv66X_Ye4MXI5lt8Sjc1xz88rdWJJ0ho',

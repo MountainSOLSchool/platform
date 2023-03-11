@@ -76,12 +76,16 @@ export const signIn = Functions.endpoint
         response.send({ html: htmlTable });
     });
 
-export const classes = Functions.endpoint.handle<{
-    ids: Array<string>;
-}>(async (request, response) => {
-    const classes = await SemesterRepository.of(
-        SUMMER_2023_SEMESTER
-    ).classes.getMany(request.body.data.ids);
+export const classes = Functions.endpoint.handle<
+    | {
+          ids: Array<string>;
+      }
+    | undefined
+>(async (request, response) => {
+    const semesterClasses = SemesterRepository.of(SUMMER_2023_SEMESTER).classes;
+    const classes = await (request.body.data
+        ? semesterClasses.getMany(request.body.data.ids)
+        : semesterClasses.getAllLive());
 
     response.send({ classes });
 });

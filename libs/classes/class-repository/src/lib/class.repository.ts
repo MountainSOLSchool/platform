@@ -36,6 +36,15 @@ export class ClassRepository {
         return await this.getMany(classIds);
     }
 
+    async getAllLive(): Promise<SemesterClass[]> {
+        const query = await DatabaseUtility.fetchMatchingDocuments(
+            await DatabaseUtility.getCollectionRef(this.classesPath),
+            ['live', '==', true]
+        );
+        const classIds = query.map((doc) => doc.id);
+        return await this.getMany(classIds);
+    }
+
     private async convertDboToDomain(dbo: any): Promise<SemesterClass> {
         return {
             title: dbo.name,
