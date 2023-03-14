@@ -11,7 +11,6 @@
                 "outputPath": "dist/apps/functions",
                 "main": "apps/functions/src/main.ts",
                 "tsConfig": "apps/functions/tsconfig.app.json",
-                "assets": ["apps/functions/src/assets"],
                 "target": "node",
                 "compiler": "tsc"
             },
