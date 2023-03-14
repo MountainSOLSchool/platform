@@ -16,26 +16,30 @@
         "baseUrl": ".",
         "strict": true,
         "paths": {
-            "@sol/account": ["libs/account/src/index.ts"],
-            "@sol/auth/interceptor": ["libs/auth/interceptor/src/index.ts"],
-            "@sol/auth/login": ["libs/auth/login/src/index.ts"],
-            "@sol/auth/user": ["libs/auth/user/src/index.ts"],
-            "@sol/calendar": ["libs/calendar/calendar/src/index.ts"],
+            "@sol/account": ["libs/angular/account/src/index.ts"],
+            "@sol/auth/interceptor": [
+                "libs/angular/auth/interceptor/src/index.ts"
+            ],
+            "@sol/auth/login": ["libs/angular/auth/login/src/index.ts"],
+            "@sol/auth/user": ["libs/angular/auth/user/src/index.ts"],
+            "@sol/calendar": ["libs/angular/calendar/calendar/src/index.ts"],
             "@sol/classes/calendar": [
-                "libs/classes/class-calendar/src/index.ts"
+                "libs/angular/classes/class-calendar/src/index.ts"
             ],
             "@sol/classes/class-management": [
-                "libs/classes/class-management/src/index.ts"
+                "libs/angular/classes/class-management/src/index.ts"
             ],
-            "@sol/classes/domain": ["libs/classes/classes-domain/src/index.ts"],
+            "@sol/classes/domain": [
+                "libs/ts/classes/classes-domain/src/index.ts"
+            ],
             "@sol/classes/enrollment": [
-                "libs/classes/class-enrollment/src/index.ts"
+                "libs/angular/classes/class-enrollment/src/index.ts"
             ],
             "@sol/classes/enrollment/repository": [
-                "libs/classes/class-enrollment-repository/src/index.ts"
+                "libs/firebase/classes/class-enrollment-repository/src/index.ts"
             ],
             "@sol/classes/repository": [
-                "libs/classes/class-repository/src/index.ts"
+                "libs/firebase/classes/class-repository/src/index.ts"
             ],
             "@sol/firebase/auth": ["libs/firebase/auth/src/index.ts"],
             "@sol/firebase/database": ["libs/firebase/database/src/index.ts"],
@@ -43,23 +47,25 @@
             "@sol/firebase/functions-api": [
                 "libs/firebase/functions-api/src/index.ts"
             ],
-            "@sol/form/validity": ["libs/form/validity/src/index.ts"],
-            "@sol/header": ["libs/header/src/index.ts"],
-            "@sol/paths": ["libs/paths/src/index.ts"],
-            "@sol/payments/braintree": ["libs/payments/braintree/src/index.ts"],
+            "@sol/form/validity": ["libs/angular/form/validity/src/index.ts"],
+            "@sol/header": ["libs/angular/header/src/index.ts"],
+            "@sol/paths": ["libs/angular/paths/src/index.ts"],
+            "@sol/payments/braintree": ["libs/firebase/braintree/src/index.ts"],
             "@sol/payments/braintree-client": [
-                "libs/payments/braintree-client/src/index.ts"
+                "libs/angular/braintree-client/src/index.ts"
             ],
-            "@sol/payments/transactions": [
-                "libs/payments/transactions/src/index.ts"
+            "@sol/payments/transactions": ["libs/ts/transactions/src/index.ts"],
+            "@sol/record/domain": ["libs/ts/record/domain/src/index.ts"],
+            "@sol/student/domain": ["libs/ts/student/domain/src/index.ts"],
+            "@sol/student/import": ["libs/ts/student/import/src/index.ts"],
+            "@sol/student/reports": [
+                "libs/firebase/student/reports/src/index.ts"
             ],
-            "@sol/record/domain": ["libs/record/domain/src/index.ts"],
-            "@sol/student/domain": ["libs/student/domain/src/index.ts"],
-            "@sol/student/import": ["libs/student/import/src/index.ts"],
-            "@sol/student/reports": ["libs/student/reports/src/index.ts"],
-            "@sol/student/repository": ["libs/student/repository/src/index.ts"],
-            "@sol/table/domain": ["libs/table/domain/src/index.ts"],
-            "@sol/table/html": ["libs/table/html/src/index.ts"]
+            "@sol/student/repository": [
+                "libs/firebase/student/repository/src/index.ts"
+            ],
+            "@sol/table/domain": ["libs/ts/table/domain/src/index.ts"],
+            "@sol/table/html": ["libs/ts/table/html/src/index.ts"]
         }
     },
     "exclude": ["node_modules", "tmp"]

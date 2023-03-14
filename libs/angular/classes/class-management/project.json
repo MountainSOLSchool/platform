@@ -1,0 +1,29 @@
+{
+    "name": "classes-class-management",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "src",
+    "prefix": "sol",
+    "targets": {
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/classes/class-management"
+            ],
+            "options": {
+                "jestConfig": "libs/classes/class-management/jest.config.ts",
+                "passWithNoTests": true
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": [
+                    "libs/classes/class-management/src/**/*.ts",
+                    "libs/classes/class-management/src/**/*.html"
+                ]
+            }
+        }
+    },
+    "tags": ["scope:classes"]
+}

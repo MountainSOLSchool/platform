@@ -1,0 +1,27 @@
+{
+    "name": "auth-login",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "src",
+    "prefix": "sol",
+    "targets": {
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/auth/login"],
+            "options": {
+                "jestConfig": "libs/auth/login/jest.config.ts",
+                "passWithNoTests": true
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": [
+                    "libs/auth/login/src/**/*.ts",
+                    "libs/auth/login/src/**/*.html"
+                ]
+            }
+        }
+    },
+    "tags": ["scope:auth"]
+}

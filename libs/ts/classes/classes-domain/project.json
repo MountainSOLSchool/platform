@@ -1,0 +1,27 @@
+{
+    "name": "classeses-domain",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "src",
+    "prefix": "sol",
+    "targets": {
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/classes/classes-domain"],
+            "options": {
+                "jestConfig": "libs/classes/classes-domain/jest.config.ts",
+                "passWithNoTests": true
+            }
+        },
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "options": {
+                "lintFilePatterns": [
+                    "libs/classes/classes-domain/src/**/*.ts",
+                    "libs/classes/classes-domain/src/**/*.html"
+                ]
+            }
+        }
+    },
+    "tags": ["scope:classes"]
+}

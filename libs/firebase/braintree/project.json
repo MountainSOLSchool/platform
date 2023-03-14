@@ -1,0 +1,24 @@
+{
+    "name": "payments-braintree",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "src",
+    "projectType": "library",
+    "targets": {
+        "lint": {
+            "executor": "@nrwl/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["libs/payments/braintree/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nrwl/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/payments/braintree"],
+            "options": {
+                "jestConfig": "libs/payments/braintree/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": []
+}
