@@ -50,3 +50,6 @@ static/
 
 migrations.json
 .secret.local
+
+# Next.js
+.next
