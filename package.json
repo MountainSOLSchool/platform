@@ -28,7 +28,7 @@
         "build:functions": "nx dep-graph --file=output.html && rm -rf dist && npm run nx build functions",
         "build:functions:watch": "nx dep-graph --file=output.html && rm -rf dist && nx build functions --watch",
         "build:portal": "nx build portal --outputPath=\"public/portal\"",
-        "build:portal-react": "nx build portal-react --outputPath=\"public/portal2\" --verbose",
+        "build:portal-react": "nx build portal-react --outputPath=\"public/portal2\"",
         "serve:functions": "npm run build:functions:watch & (sleep 5 && firebase serve --only functions --project=dev --port=5001) && fg",
         "serve:dev:portal": "nx serve portal",
         "serve:portal": "nx serve portal --configuration=developmentRemoteFunctions",

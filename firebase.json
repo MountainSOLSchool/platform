@@ -56,12 +56,12 @@
                 "function": "availableEnrollmentClasses"
             },
             {
-                "source": "portal/**",
-                "destination": "portal/index.html"
-            },
-            {
                 "source": "portal2/**",
                 "destination": "portal2/index.html"
+            },
+            {
+                "source": "**",
+                "destination": "portal/index.html"
             }
         ]
     },
