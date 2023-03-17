@@ -1,5 +1,7 @@
 import * as auth from 'firebase/auth';
-import { Card } from 'primereact/card';
+// import styles from './index.module.css';
+
+import BulkUpdateForSingleUnit from './components/Units/BulkUpdateForSingleUnit/BulkUpdateForSingleUnit';
 
 export function Index() {
     /*
@@ -15,17 +17,10 @@ export function Index() {
         }
     });
     return (
-        <Card
-            title="Example Primereact Card Component"
-            style={{ width: '80%', margin: '10px' }}
-        >
-            <p className="m-0">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                Inventore sed consequuntur error repudiandae numquam deserunt
-                quisquam repellat libero asperiores earum nam nobis, culpa
-                ratione quam perferendis esse, cupiditate neque quas!
-            </p>
-        </Card>
+        <div>
+            Welcome to our new unit portal!!! it is super exciting!
+            <BulkUpdateForSingleUnit />
+        </div>
     );
 }
 
