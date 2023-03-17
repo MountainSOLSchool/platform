@@ -3,6 +3,7 @@
         "plugin:@nrwl/nx/react-typescript",
         "next",
         "next/core-web-vitals",
+        "plugin:prettier/recommended",
         "../../.eslintrc.json"
     ],
     "ignorePatterns": ["!**/*", ".next/**/*"],
