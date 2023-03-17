@@ -2,6 +2,12 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import './styles.css';
 import { initializeApp } from 'firebase/app';
+// primereact theme
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
+// primereact core
+import 'primereact/resources/primereact.min.css';
+// primereact icons
+import 'primeicons/primeicons.css';
 
 const app = initializeApp({
     apiKey: 'AIzaSyBxv66X_Ye4MXI5lt8Sjc1xz88rdWJJ0ho',
