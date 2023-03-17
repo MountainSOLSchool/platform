@@ -17,7 +17,6 @@ import { StudentForm } from '@sol/student/domain';
 import { Router } from '@angular/router';
 
 type Enrollment = {
-    selectedClassGroups: Array<string>;
     selectedClasses: Array<string>;
     paymentMethod:
         | {
@@ -153,7 +152,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
             filter(
                 ([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)
             ),
-            switchMap(([, { codes, classIds, classGroupIds }]) => {
+            switchMap(([, { codes, classIds }]) => {
                 this.patchState({ isLoadingDiscounts: true });
                 return this.functions
                     .call<{
@@ -163,7 +162,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
                         }>;
                         finalTotal: number;
                         originalTotal: number;
-                    }>('calculateBasket', { codes, classIds, classGroupIds })
+                    }>('calculateBasket', { codes, classIds })
                     .pipe(
                         tap((basketCosts) => {
                             this.patchState(() => ({
@@ -193,7 +192,6 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         return this.select((state) => ({
             codes: state.enrollment.discountCodes,
             classIds: state.enrollment.selectedClasses,
-            classGroupIds: state.enrollment.selectedClassGroups,
         }));
     }
 }

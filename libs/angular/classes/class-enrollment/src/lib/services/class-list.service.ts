@@ -33,15 +33,7 @@ export class ClassListService {
             map((classes) =>
                 ids.map((id) => ({ theClass: classes?.[id], id }))
             ),
-            filter((classes) => {
-                const allClassesExist = classes.every(
-                    ({ theClass }) => !!theClass
-                );
-                const missingClasses = classes.filter(
-                    ({ theClass }) => !theClass
-                );
-                return allClassesExist;
-            }),
+            filter((classes) => classes.every(({ theClass }) => !!theClass)),
             map((classes) => classes.map((c) => c.theClass))
         );
     }
@@ -51,11 +43,7 @@ export class ClassListService {
         this.store.dispatch(classesActions.loadClassGroupsStart({ ids }));
         return this.store.select(classesFeature.selectGroups).pipe(
             map((groups) => ids.map((id) => groups[id])),
-            filter((groups) => {
-                const allGroupsExist = groups.every((g) => !!g);
-                const missingGroups = groups.filter((g) => !g);
-                return allGroupsExist;
-            })
+            filter((groups) => groups.every((g) => !!g))
         );
     }
 }

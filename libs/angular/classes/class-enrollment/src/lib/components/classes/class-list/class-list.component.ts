@@ -315,22 +315,6 @@ export class ClassesComponent {
     }
 
     rowSelectedChange(classRow: ClassRow, selected: boolean) {
-        this.workflow.patchState((s) => ({
-            enrollment: {
-                ...s.enrollment,
-                selectedClassGroups: selected
-                    ? Array.from(
-                          new Set([
-                              ...s.enrollment.selectedClassGroups,
-                              classRow.group?.id ?? '',
-                          ])
-                      )
-                    : s.enrollment.selectedClassGroups.filter(
-                          (id) => id !== classRow.group?.id
-                      ),
-            },
-        }));
-
         classRow.classes.forEach((c) =>
             this.selectionChanged({ id: c.id, selected })
         );

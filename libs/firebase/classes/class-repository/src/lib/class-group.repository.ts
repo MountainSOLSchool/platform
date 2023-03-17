@@ -51,4 +51,18 @@ export class ClassGroupRepository {
         });
         return groupsWithAllClassesStartingAfter;
     }
+
+    async getByClassIds(
+        classIds: Array<string>
+    ): Promise<SemesterClassGroup[]> {
+        const groupsCollection = await DatabaseUtility.getCollectionRef(
+            this.groupsPath
+        );
+        const groupDocs = await groupsCollection.listDocuments();
+        const groupIds = groupDocs.map((doc) => doc.id);
+        const groups = await this.getMany(groupIds);
+        return groups.filter((group) =>
+            group.classes.every(({ id }) => classIds.includes(id))
+        );
+    }
 }

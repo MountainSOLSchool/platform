@@ -96,12 +96,26 @@ export class ConfirmationComponent {
         )
     );
 
+    private readonly selectedClassGroupIds$ = combineLatest([
+        this.classList.getAvailableEnrollmentClassesAndGroups(),
+        this.enrollment$,
+    ]).pipe(
+        map(([{ groups }, { selectedClasses }]) => {
+            return groups
+                .filter(({ classes }) =>
+                    classes.every(({ id }) => selectedClasses.includes(id))
+                )
+                .map((group) => group.id);
+        })
+    );
+
     readonly viewModel$ = combineLatest([
         this.enrollment$,
         this.basketCosts$,
         this.validDiscountAmounts$,
         this.invalidDiscountCodes$,
         this.workflow.select(({ isLoadingDiscounts }) => isLoadingDiscounts),
+        this.selectedClassGroupIds$,
     ]).pipe(
         map(
             ([
@@ -110,12 +124,14 @@ export class ConfirmationComponent {
                 validDiscountAmounts,
                 invalidCodes,
                 isLoadingDiscounts,
+                selectedClassGroupIds,
             ]) => ({
                 enrollment,
                 basketCosts,
                 validDiscountAmounts,
                 invalidCodes,
                 isLoadingDiscounts,
+                selectedClassGroupIds,
             })
         )
     );
