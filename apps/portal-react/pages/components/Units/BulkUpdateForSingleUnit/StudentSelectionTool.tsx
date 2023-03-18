@@ -1,41 +1,67 @@
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Checkbox } from 'primereact/checkbox';
 import React, { useState } from 'react';
+import { StudentRepository } from '@sol/student/repository';
+
+// const students = StudentRepository.fetchStudents();
 
 export function StudentSelectionTool(props) {
-    const [selectedStudents, setSelectedStudents] = useState([]);
-
     const tempStudents = [
-        { firstName: 'John', lastName: 'Doe' },
-        { firstName: 'Jane', lastName: 'Doe' },
+        {
+            firstName: 'John',
+            lastName: 'Doe',
+            studentID: '123',
+            unitCredit: false,
+        },
+        {
+            firstName: 'Jane',
+            lastName: 'Doe',
+            studentID: '456',
+            unitCredit: true,
+        },
     ];
+    const [studentsArr, setStudentsArr] = useState(tempStudents);
 
-    const selectStudent = (event) => {
-        // need studentID here
-        console.log('event data is ', event.target);
-
-        const student = event.target.value;
-        if (event.target.checked) {
-            setSelectedStudents([...selectedStudents, student]);
-        } else {
-            setSelectedStudents(selectedStudents.filter((s) => s !== student));
-        }
+    const selectStudent = (rowData) => {
+        const selectedStudent = rowData.value;
+        const newStudentsArr = studentsArr.map((s) => {
+            if (s.studentID == selectedStudent.studentID) {
+                return { ...s, unitCredit: !s.unitCredit };
+            }
+            return s;
+        });
+        setStudentsArr(newStudentsArr);
     };
 
     const updateStudents = (event) => {
-        console.log('selected students arr is ', selectedStudents);
+        console.log('studentsArr: ', studentsArr);
 
         // save updates to backend
+    };
+
+    const checkboxTemplate = (rowData) => {
+        const unitCred = studentsArr.find(
+            (s) => s.studentID === rowData.studentID
+        ).unitCredit;
+        return (
+            <div>
+                <Checkbox checked={unitCred} />
+            </div>
+        );
     };
 
     return (
         <div>
             <div>
-                -- student selection tool --
                 <DataTable
-                    value={tempStudents}
+                    value={studentsArr}
                     tableStyle={{ width: '30rem', maxHeight: '500' }}
+                    sortField="lastName"
+                    sortOrder={-1}
+                    selectionMode="single"
+                    onSelectionChange={selectStudent}
                 >
                     <Column key={1} field={'firstName'} header={'First Name'} />
                     <Column key={2} field={'lastName'} header={'Last Name'} />
@@ -47,16 +73,8 @@ export function StudentSelectionTool(props) {
                     />
                     <Column
                         key={3}
-                        field={'unitCredit'}
                         header={'Credit for Unit'}
-                        body={
-                            <div>
-                                <input
-                                    type="checkbox"
-                                    onClick={selectStudent}
-                                />
-                            </div>
-                        }
+                        body={checkboxTemplate}
                     />
                 </DataTable>
             </div>
