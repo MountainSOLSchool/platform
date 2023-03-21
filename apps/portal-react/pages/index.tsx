@@ -1,7 +1,9 @@
+/* eslint-disable prettier/prettier */
 import * as auth from 'firebase/auth';
-// import styles from './index.module.css';
+import './index.module.css';
 
 import BulkUpdateForSingleUnit from './components/Units/BulkUpdateForSingleUnit/BulkUpdateForSingleUnit';
+import TreeChart from './components/Units/TreeChart';
 
 export function Index() {
     /*
@@ -20,6 +22,8 @@ export function Index() {
         <div>
             Welcome to our new unit portal!!! it is super exciting!
             <BulkUpdateForSingleUnit />
+            {/**NEW STUFF */}
+            <TreeChart />
         </div>
     );
 }
