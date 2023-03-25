@@ -1,3 +1,13 @@
+.tree-node-selected {
+    transition: 200ms;
+    fill: green;
+}
+
+.tree-chart circle {
+    stroke: #00aaaa;
+    stroke-width: 1px;
+}
+
 html {
     -webkit-text-size-adjust: 100%;
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
