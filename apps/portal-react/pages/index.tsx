@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as auth from 'firebase/auth';
 // import styles from './index.module.css';
 import { Button } from 'primereact/button';
@@ -6,7 +7,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type RootState } from '../store/store';
 import { decrement, increment, trigger } from '../store/testStore';
 
-import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit/BulkUpdateForSingleUnit';
+import './index.module.css';
+
+import BulkUpdateForSingleUnit from './components/Units/BulkUpdateForSingleUnit/BulkUpdateForSingleUnit';
+
+import TreeChart, { SmartTreeChart } from './components/Units/TreeChart';
 
 export function Index() {
     auth.getAuth().onAuthStateChanged((user) => {
@@ -45,6 +50,11 @@ export function Index() {
                 />
             </div>
             {showBulkUpdate ? <BulkUpdateForSingleUnit /> : null}
+            Welcome to our new unit portal!!! it is super exciting!
+            <BulkUpdateForSingleUnit />
+            {/**NEW STUFF */}
+            <SmartTreeChart />
+            {/* <TreeChart /> */}
         </div>
     );
 }
