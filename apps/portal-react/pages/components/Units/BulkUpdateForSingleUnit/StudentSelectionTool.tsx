@@ -3,9 +3,6 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import React, { useState } from 'react';
-import { StudentRepository } from '@sol/student/repository';
-
-// const students = StudentRepository.fetchStudents();
 
 export function StudentSelectionTool(props) {
     const tempStudents = [
