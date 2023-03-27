@@ -13,12 +13,14 @@ export const testStudent = createSlice({
             return action.payload;
         },
         requestTestStudent: () => { console.log("loading test student") },
+        setTestStudent: (state, action) => action.payload,
     }
 })
 
 export const {
     loadedTestStudent,
-    requestTestStudent
+    requestTestStudent,
+    setTestStudent,
 } = testStudent.actions;
 
 export default testStudent.reducer;

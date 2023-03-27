@@ -8,13 +8,14 @@ import { type RootState } from '../store/store';
 import { decrement, increment, trigger } from '../store/testStore';
 import { loadedPaths, requestPaths } from '../store/paths';
 import { requestUnits } from '../store/unitStore';
-import { requestTestStudent } from '../store/testStudent';
+import { requestTestStudent, setTestStudent } from '../store/testStudent';
+
 
 import './index.module.css';
 
 import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit/BulkUpdateForSingleUnit';
 
-import { SmartTreeChart } from '../components/Units/TreeChart';
+import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
 
 export function Index() {
     auth.getAuth().onAuthStateChanged((user) => {
@@ -49,6 +50,7 @@ export function Index() {
                 <Button onClick={() => dispatch(requestTestStudent())} style={{"marginLeft": "2rem"}}>
                     get test student from database!
                 </Button>
+                <Button onClick={() => dispatch(setTestStudent({name: "Student", completedUnits: MtnMedicUnits}))}>GET TEST NOOB</Button>
                 <br />
 
             </div>
