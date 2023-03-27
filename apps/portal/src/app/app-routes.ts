@@ -45,10 +45,12 @@ export const appRoutes: Routes = [
                                     },
                                     {
                                         path: 'report',
-                                        loadChildren: () =>
+                                        loadComponent: () =>
                                             import(
-                                                './report-component/report-routes'
-                                            ).then((m) => m.reportRoutes),
+                                                '@sol/admin/class-printouts'
+                                            ).then(
+                                                (m) => m.ClassPrintoutsComponent
+                                            ),
                                     },
                                     {
                                         path: 't-shirts',
