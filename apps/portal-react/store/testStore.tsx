@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { createSlice } from '@reduxjs/toolkit';
 
 export const testStore = createSlice({
@@ -23,7 +24,7 @@ export const testStore = createSlice({
             console.log(action);
             state.value = action.payload.value;
         },
-        trigger: () => {},
+        trigger: () => { },
     },
 });
 

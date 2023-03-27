@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import * as d3 from 'd3';
+import { useSelector } from "react-redux";
+import { RootState } from "apps/portal-react/store/store";
 
 
 
@@ -97,7 +99,7 @@ function SmartTreeChart() {
     // [] ? SHOW ONE NODE DEEP FOR CLASSES THAT ARE NOT AVAILABLE ?
 
     const studentName = "Student"
-
+/*
     const paths = [
         {
             "path": "IJ9LKndreKUve8D9LMXk",
@@ -138,6 +140,9 @@ function SmartTreeChart() {
             "units": []
         }
     ]
+*/
+
+    const paths = useSelector((state: RootState) => [state.paths])
 
     const completeUnits = [
         "r4X1YxigB3y5vgyuY3HU", "VIOIwcg8semiuoZvqrDz", "7R0ZvJiL6V1LZWWXaTMB", "dW37QdAucaYfRDCcamd4",
@@ -152,7 +157,8 @@ function SmartTreeChart() {
         treeUnits.push(unit)
     }
     );
-
+    const treePaths = paths[0];
+/*
     const treePaths: Array<{ name: string; children: any[] }> = [];
 
     paths.forEach(path => {
@@ -175,7 +181,7 @@ function SmartTreeChart() {
 
         let treePath = treePaths.find(treePath => treePath["name"] === path["name"])
         if (treePath === undefined) { return }
-
+        
         let categories = [];
         treePath["children"].forEach(unit => {
             let category = categories.find(category => category['name'] === unit['category'])
@@ -183,27 +189,27 @@ function SmartTreeChart() {
                 category['children'].push(unit)
             }
             else {
-                category = Object.assign({}, {
+                category = {
                     name: unit['category'],
                     children: [unit]
-                })
+                }
                 categories.push(category)
             }
         })
         categories.forEach((category, index) => {
             if (category['children'].length === 1) {
-                console.log("unpacking: ", category['children'][0])
                 categories[index] = category['children'][0]
             }
         })
         treePath['children'] = categories;
 
     });
-
+*/
     const smartTreeData = {
         "name": studentName,
         "children": treePaths
     }
+    console.log(smartTreeData)
 
     const treeData = {
         "name": "Student",

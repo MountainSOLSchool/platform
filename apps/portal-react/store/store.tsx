@@ -1,19 +1,30 @@
+/* eslint-disable prettier/prettier */
 import { configureStore } from '@reduxjs/toolkit';
 import testStore from './testStore';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { applyMiddleware } from 'redux';
 import { load100 } from './testStoreEpic';
+import  paths  from './paths';
+import { loadPaths } from './pathsEpic';
+import unitStore from './unitStore';
+import { loadUnits } from './unitEpic';
 
 const epicMiddleware = createEpicMiddleware();
 
 export const store = configureStore({
     reducer: {
         counter: testStore,
+        paths: paths,
+        units: unitStore,
     },
     middleware: () => [epicMiddleware],
 });
 
-export const rootEpic = combineEpics(load100);
+export const rootEpic = combineEpics(
+    loadPaths, 
+    load100, 
+    loadUnits, 
+);
 
 epicMiddleware.run(rootEpic);
 
