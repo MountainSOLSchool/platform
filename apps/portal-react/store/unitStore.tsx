@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const units = createSlice({
     name: 'paths',
-    initialState: {  },
+    initialState: [],
     reducers: {
         loadedUnits: (state, action) => {
             //console.log("loaded => ",action.payload, " => ",action);

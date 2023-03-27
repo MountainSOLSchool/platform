@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const paths = createSlice({
     name: 'paths',
-    initialState: {  },
+    initialState: [],
     reducers: {
         loadedPaths: (state, action) => {
             //console.log("loaded => ",action.payload, " => ",action);

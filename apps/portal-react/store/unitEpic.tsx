@@ -1,18 +1,18 @@
 /* eslint-disable prettier/prettier */
-import { filter, mapTo, switchMap, from, tap } from 'rxjs';
+import { filter, switchMap, from, tap } from 'rxjs';
 import { requestUnits, loadedUnits } from './unitStore';
 import { Action } from 'redux';
 import { Observable, map } from 'rxjs';
 import { db } from '../firebase/database';
-import { collection, getDoc, doc, getDocs, collectionGroup } from 'firebase/firestore';
+import { collection, getDocs } from 'firebase/firestore';
 
 export const loadUnits = (action$: Observable<Action>) => 
     action$.pipe(
         filter((action) => action.type === requestUnits.type),
         switchMap(() =>
             from(getDocs(collection(db, 'units'))).pipe(
-                tap((collection) => console.log(collection)),
-                tap((collection) =>  console.log(collection['_snapshot'].docChanges.map(unit => {
+                //tap((collection) => console.log(collection)),
+                map((collection) =>  loadedUnits(collection['_snapshot'].docChanges.map(unit => {
                     
                     const id = [...unit.doc.key.path.segments].pop()
                     const fields = unit.doc.data.value.mapValue.fields;
@@ -24,8 +24,7 @@ export const loadUnits = (action$: Observable<Action>) =>
                         prereqs: fields.prereqs ? fields.prereqs.arrayValue.values.map(e => e.referenceValue.match(/\w+$/i).toString()) : "none",
                         description: fields.description.stringValue,
                     });
-                }))),
-                map((collection)=> loadedUnits(collection))
+                })))
             )
         )
     );

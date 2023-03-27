@@ -8,6 +8,7 @@ import { type RootState } from '../store/store';
 import { decrement, increment, trigger } from '../store/testStore';
 import { loadedPaths, requestPaths } from '../store/paths';
 import { requestUnits } from '../store/unitStore';
+import { requestTestStudent } from '../store/testStudent';
 
 import './index.module.css';
 
@@ -29,9 +30,11 @@ export function Index() {
     const dispatch = useDispatch();
     const count = useSelector((state: RootState) => state.counter.value);
     const pathData = useSelector((state: RootState) => state.paths);
+    const units = useSelector((state: RootState) => state.units);
+    const testStudent = useSelector((state: RootState) => state.student);
     
     useEffect(()=>{
-        console.table(pathData)
+        console.log("state => ", "paths: ", pathData, "units: ", units, "test student: ", testStudent)
     })
 
     return (
@@ -43,12 +46,9 @@ export function Index() {
                 <Button onClick={() => dispatch(increment())}>inc</Button>
                 <Button onClick={() => dispatch(decrement())}>dec</Button>
                 <Button onClick={() => dispatch(trigger())} >request 100</Button>
-                <Button onClick={() => dispatch(requestPaths())} style={{"marginLeft": "2rem"}}>
-                    console log path data from firebase!
+                <Button onClick={() => dispatch(requestTestStudent())} style={{"marginLeft": "2rem"}}>
+                    get test student from database!
                 </Button>
-                <Button onClick={() => dispatch(requestUnits())}>get units from database</Button>
-                <br />
-                <h2>number of paths loaded: </h2>
                 <br />
 
             </div>

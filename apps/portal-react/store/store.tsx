@@ -8,6 +8,8 @@ import  paths  from './paths';
 import { loadPaths } from './pathsEpic';
 import unitStore from './unitStore';
 import { loadUnits } from './unitEpic';
+import testStudent from './testStudent';
+import { loadTestStudent } from './testStudentEpic';
 
 const epicMiddleware = createEpicMiddleware();
 
@@ -16,6 +18,7 @@ export const store = configureStore({
         counter: testStore,
         paths: paths,
         units: unitStore,
+        student: testStudent,
     },
     middleware: () => [epicMiddleware],
 });
@@ -23,7 +26,8 @@ export const store = configureStore({
 export const rootEpic = combineEpics(
     loadPaths, 
     load100, 
-    loadUnits, 
+    loadUnits,
+    loadTestStudent,
 );
 
 epicMiddleware.run(rootEpic);
