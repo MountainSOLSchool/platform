@@ -2,6 +2,10 @@ import { StudentRepository } from '@sol/student/repository';
 import { RosterReportGenerator } from '@sol/student/reports';
 import { TableHtml } from '@sol/table/html';
 import { Functions, Role } from '@sol/firebase/functions';
+import {
+    SemesterRepository,
+    SUMMER_2023_SEMESTER,
+} from '@sol/classes/repository';
 
 async function getClassRosterTable(classId: string) {
     const students = await StudentRepository.fetchStudents(classId);
@@ -11,10 +15,14 @@ async function getClassRosterTable(classId: string) {
             students
         );
 
+    const className = await SemesterRepository.of(SUMMER_2023_SEMESTER)
+        .classes.get(classId)
+        .then((c) => c.title);
+
     return TableHtml.generateHtmlTableFromRecords({
         records: studentRecords,
         headers: RosterReportGenerator.studentRowHeaders,
-        title: `Class Roster for ${classId}`,
+        title: `Class Roster for ${className}`,
         styleBuilder: RosterReportGenerator.buildStudentRecordStyle,
     });
 }

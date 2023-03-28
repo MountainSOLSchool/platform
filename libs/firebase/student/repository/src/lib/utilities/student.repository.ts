@@ -66,9 +66,7 @@ export class StudentRepository {
                 SUMMER_2023_SEMESTER
             ).classes.get(classId);
 
-            const classStudentRefs =
-                (theClass.students as Array<FirebaseFirestore.DocumentReference>) ??
-                [];
+            const classStudentRefs = theClass.students ?? [];
 
             students =
                 await DatabaseUtility.getHydratedDocuments<StudentDbEntry>(

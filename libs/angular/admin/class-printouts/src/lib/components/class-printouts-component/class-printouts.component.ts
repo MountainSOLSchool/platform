@@ -54,8 +54,7 @@ export class ClassPrintoutsComponent {
                     };
                 })
             ),
-            shareReplay(),
-            tap(() => console.log('loaded classes'))
+            shareReplay()
         );
 
     readonly isClassFormDownloadInProgress$ = this.store.select(
@@ -80,8 +79,7 @@ export class ClassPrintoutsComponent {
                 isClassSignInFormDownloadsInProgress,
                 isClassFormDownloadInProgress,
             })
-        ),
-        tap(() => console.log('loaded view model'))
+        )
     );
 
     copyEmailsClick(classId: string) {
