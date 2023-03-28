@@ -1,1 +1,1 @@
-export { FlatRecord } from './flat-record.type';
+export { type FlatRecord } from './flat-record.type';

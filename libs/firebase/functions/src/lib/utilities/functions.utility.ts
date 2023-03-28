@@ -3,6 +3,7 @@ import * as CORS from 'cors';
 import { AuthUtility, Role } from './auth.utility';
 import { defineSecret, defineString } from 'firebase-functions/params';
 import { SecretParam, StringParam } from 'firebase-functions/lib/params/types';
+import { FunctionWithParametersType } from '@ngrx/store';
 
 const cors = CORS({ origin: true });
 
@@ -49,10 +50,11 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
         return new FunctionBuilder(this.secrets, this.strings, roles);
     }
 
-    handle<RequestData>(
+    handle<RequestData, QueryData extends ParsedQs = ParsedQs>(
         handler: (
-            request: Omit<functions.https.Request, 'body'> & {
+            request: Omit<functions.https.Request, 'body' | 'query'> & {
                 body: { data: RequestData };
+                query: QueryData;
             },
             response: functions.Response,
             secrets: Record<string, string>,
@@ -61,53 +63,40 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
     ) {
         return functions
             .runWith({ secrets: Object.values(this.secrets) })
-            .https.onRequest(
-                async (
-                    request: Omit<functions.https.Request, 'body'> & {
-                        body: { data: RequestData };
-                    },
-                    response
-                ) => {
-                    cors(request, response, async () => {
-                        this.roles.forEach((role) => {
-                            AuthUtility.validateRole(request, response, role);
-                        });
-                        handler(
-                            request,
-                            {
-                                ...response,
-                                status: (code: number) => response.status(code),
-                                send: (data: unknown) => {
-                                    response.send({ data });
-                                },
-                            } as functions.Response,
-                            Object.fromEntries(
-                                Object.entries(this.secrets)
-                                    .map(
-                                        (pair) => pair as [string, SecretParam]
-                                    )
-                                    .map(([key, secret]) => [
-                                        key,
-                                        secret.value(),
-                                    ])
-                            ),
-                            Object.fromEntries(
-                                Object.entries(this.strings)
-                                    .map(
-                                        (pair) => pair as [string, StringParam]
-                                    )
-                                    .map(([key, string]) => [
-                                        key,
-                                        string.value(),
-                                    ])
-                            )
-                        );
+            .https.onRequest(async (request, response) => {
+                cors(request, response, async () => {
+                    this.roles.forEach((role) => {
+                        AuthUtility.validateRole(request, response, role);
                     });
-                }
-            );
+                    handler(
+                        request as Parameters<typeof handler>[0],
+                        {
+                            ...response,
+                            status: (code: number) => response.status(code),
+                            send: (data: unknown) => {
+                                response.send({ data });
+                            },
+                        } as functions.Response,
+                        Object.fromEntries(
+                            Object.entries(this.secrets)
+                                .map((pair) => pair as [string, SecretParam])
+                                .map(([key, secret]) => [key, secret.value()])
+                        ),
+                        Object.fromEntries(
+                            Object.entries(this.strings)
+                                .map((pair) => pair as [string, StringParam])
+                                .map(([key, string]) => [key, string.value()])
+                        )
+                    );
+                });
+            });
     }
 }
 
 export class Functions {
     public static endpoint = new FunctionBuilder();
+}
+
+interface ParsedQs {
+    [key: string]: undefined | string | string[] | ParsedQs | ParsedQs[];
 }
