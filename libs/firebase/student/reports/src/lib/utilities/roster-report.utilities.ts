@@ -127,7 +127,6 @@ export class RosterReportGenerator {
     ): Array<StudentRecord> {
         return students
             .map((student) => {
-                console.log('student', student.guardians);
                 return {
                     lastName: { value: student.last_name },
                     firstName: { value: student.first_name },
