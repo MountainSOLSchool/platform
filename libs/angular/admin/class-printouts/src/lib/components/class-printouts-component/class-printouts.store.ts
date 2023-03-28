@@ -32,7 +32,7 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                             ...state.inProgressClassFormDownloads,
                             [classId]: true,
                         },
-                    })
+                    }))
                 ),
                 switchMap((classId) => {
                     return forkJoin([
@@ -82,7 +82,7 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                                     ...state.inProgressCopyClassEmails,
                                     [classId]: false,
                                 },
-                            });
+                            }));
                         })
                     );
             })
