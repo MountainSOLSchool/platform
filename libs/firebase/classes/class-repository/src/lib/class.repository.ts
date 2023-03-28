@@ -17,7 +17,6 @@ export class ClassRepository {
         const [data] = await DatabaseUtility.getHydratedDocuments([document]);
         return await this.convertDboToDomain(data);
     }
-
     async getMany(ids: Array<string>): Promise<SemesterClass[]> {
         return await Promise.all(
             ids.map(async (id) => {
@@ -89,6 +88,7 @@ export class ClassRepository {
             dailyTimes: dbo.daily_times,
             weekday: dbo.weekday,
             thumbnailUrl: dbo.thumbnailUrl,
+            students: dbo.students,
         };
     }
 

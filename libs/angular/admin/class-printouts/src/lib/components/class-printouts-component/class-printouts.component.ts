@@ -84,11 +84,11 @@ export class ClassPrintoutsComponent {
         tap(() => console.log('loaded view model'))
     );
 
-    copyEmailsClick(className: string) {
-        this.store.copyClassEmails(className);
+    copyEmailsClick(classId: string) {
+        this.store.copyClassEmails(classId);
     }
 
-    downloadClick(className: string) {
-        this.store.downloadClassForms(className);
+    downloadClick(classId: string) {
+        this.store.downloadClassForms(classId);
     }
 }

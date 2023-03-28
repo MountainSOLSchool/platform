@@ -3,7 +3,10 @@ import * as admin from 'firebase-admin';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
 import { firestore } from 'firebase-admin';
 import DocumentReference = firestore.DocumentReference;
-import { SUMMER_2023_SEMESTER } from '@sol/classes/repository';
+import {
+    SemesterRepository,
+    SUMMER_2023_SEMESTER,
+} from '@sol/classes/repository';
 
 export class StudentRepository {
     static async fetchMatchingStudent({
@@ -55,21 +58,17 @@ export class StudentRepository {
     }
 
     static async fetchStudents(
-        className?: string
+        classId?: string
     ): Promise<Array<StudentDbEntry>> {
-        let students: Array<StudentDbEntry>;
-        if (className) {
-            const classes = this.database.collection(SUMMER_2023_SEMESTER);
+        let students: Array<StudentDbEntry> = [];
+        if (classId) {
+            const theClass = await SemesterRepository.of(
+                SUMMER_2023_SEMESTER
+            ).classes.get(classId);
 
-            const classDocument =
-                await DatabaseUtility.fetchFirstMatchingDocument(classes, [
-                    'name',
-                    '==',
-                    className,
-                ]);
-
-            const classStudentRefs: Array<FirebaseFirestore.DocumentReference> =
-                classDocument?.get('students') ?? [];
+            const classStudentRefs =
+                (theClass.students as Array<FirebaseFirestore.DocumentReference>) ??
+                [];
 
             students =
                 await DatabaseUtility.getHydratedDocuments<StudentDbEntry>(

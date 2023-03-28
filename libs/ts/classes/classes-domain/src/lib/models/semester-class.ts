@@ -18,4 +18,5 @@ export interface SemesterClass {
     thumbnailUrl: string;
     enrolledCount: number;
     live: boolean;
+    students: Array<unknown>;
 }

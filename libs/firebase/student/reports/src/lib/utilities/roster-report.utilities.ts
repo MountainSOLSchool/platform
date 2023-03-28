@@ -131,6 +131,12 @@ export class RosterReportGenerator {
                 firstName: { value: student.first_name },
                 age: {
                     value: (() => {
+                        console.log(
+                            'birthday',
+                            Object.entries(student.birth_date),
+                            'student name',
+                            `${student.first_name} ${student.last_name}`
+                        );
                         const today = new Date();
                         const birthDate = new Date(student.birth_date);
                         let age = today.getFullYear() - birthDate.getFullYear();
@@ -147,7 +153,10 @@ export class RosterReportGenerator {
                     })(),
                 },
                 guardianContacts: {
-                    value: '',
+                    value:
+                        student.guardians
+                            ?.map(this.contactToString)
+                            .join('\n') ?? '',
                 },
                 emergencyContacts: {
                     value:
