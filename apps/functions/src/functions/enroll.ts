@@ -25,7 +25,7 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
         ok_deet_bugspray: form.deetBugspray,
         ok_sunscreen: form.sunscreen,
         ok_natural_bugspray: form.naturalBugspray,
-        birth_date: String(form),
+        birth_date: form.birthdate,
         emergency_contacts: form.emergencyContacts.map((c) => ({
             first_name: c.name,
             last_name: 'string',
@@ -105,7 +105,6 @@ export const enroll = Functions.endpoint
             discountCodes,
             paymentMethod: { nonce, deviceData },
             isSignedUpForSolsticeEmails,
-            selectedClassGroups,
         } = request.body.data;
 
         const semester = SemesterRepository.of(SUMMER_2023_SEMESTER);
@@ -114,7 +113,9 @@ export const enroll = Functions.endpoint
 
         const classes = await classesRepository.getMany(selectedClasses);
 
-        const classGroups = await semester.groups.getMany(selectedClassGroups);
+        const classGroups = await SemesterRepository.of(
+            SUMMER_2023_SEMESTER
+        ).groups.getByClassIds(selectedClasses);
 
         const discounts = (
             await Promise.all(
