@@ -22,7 +22,7 @@ export function StudentSelectionTool(props) {
     const [studentsArr, setStudentsArr] = useState(tempStudents);
 
     const selectStudent = (rowData) => {
-        const selectedStudent = rowData.value;
+        const selectedStudent = rowData.value ? rowData.value : rowData;
         const newStudentsArr = studentsArr.map((s) => {
             if (s.studentID == selectedStudent.studentID) {
                 return { ...s, unitCredit: !s.unitCredit };
@@ -39,12 +39,18 @@ export function StudentSelectionTool(props) {
     };
 
     const checkboxTemplate = (rowData) => {
+        console.log(rowData);
         const unitCred = studentsArr.find(
             (s) => s.studentID === rowData.studentID
         ).unitCredit;
         return (
             <div>
-                <Checkbox checked={unitCred} />
+                <Checkbox
+                    checked={unitCred}
+                    onChange={() => {
+                        selectStudent(rowData);
+                    }}
+                />
             </div>
         );
     };
