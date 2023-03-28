@@ -18,4 +18,6 @@ export interface SemesterClass {
     thumbnailUrl: string;
     enrolledCount: number;
     live: boolean;
+    // it's an array of Firestore.DocumentReference, but that can't class can't be imported here
+    students: Array<unknown>;
 }

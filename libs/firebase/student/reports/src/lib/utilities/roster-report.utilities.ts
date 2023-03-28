@@ -147,7 +147,10 @@ export class RosterReportGenerator {
                     })(),
                 },
                 guardianContacts: {
-                    value: '',
+                    value:
+                        student.guardians
+                            ?.map(this.contactToString)
+                            .join('\n') ?? '',
                 },
                 emergencyContacts: {
                     value:
@@ -227,7 +230,7 @@ export class RosterReportGenerator {
 
     private static contactToString(contact: ContactDbEntry): string {
         return [
-            `${contact.first_name} ${contact.last_name}`,
+            `${contact.first_name}`, // currently only one name is collected
             contact.relationship,
             contact.phone,
             contact.email,

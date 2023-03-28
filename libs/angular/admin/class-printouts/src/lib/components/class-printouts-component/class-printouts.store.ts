@@ -24,26 +24,26 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
     }
 
     readonly downloadClassForms = this.effect(
-        (className$: Observable<string>) => {
-            return className$.pipe(
-                tap((className) =>
+        (classId$: Observable<string>) => {
+            return classId$.pipe(
+                tap((classId) =>
                     this.patchState({
                         inProgressClassFormDownloads: {
                             ...this.get().inProgressClassFormDownloads,
-                            [className]: true,
+                            [classId]: true,
                         },
                     })
                 ),
-                switchMap((className) => {
+                switchMap((classId) => {
                     return forkJoin([
-                        this.openClassRoster(className),
-                        this.openClassSignIn(className),
+                        this.openClassRoster(classId),
+                        this.openClassSignIn(classId),
                     ]).pipe(
                         tap(() => {
                             this.patchState({
                                 inProgressClassFormDownloads: {
                                     ...this.get().inProgressClassFormDownloads,
-                                    [className]: false,
+                                    [classId]: false,
                                 },
                             });
                         })
@@ -53,19 +53,19 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
         }
     );
 
-    readonly copyClassEmails = this.effect((className$: Observable<string>) => {
-        return className$.pipe(
-            tap((className) =>
+    readonly copyClassEmails = this.effect((classId$: Observable<string>) => {
+        return classId$.pipe(
+            tap((classId) =>
                 this.patchState({
                     inProgressCopyClassEmails: {
                         ...this.get().inProgressCopyClassEmails,
-                        [className]: true,
+                        [classId]: true,
                     },
                 })
             ),
-            switchMap((className) => {
+            switchMap((classId) => {
                 return this.functionsApi
-                    .call<{ list: Array<string> }>(`emails?class=${className}`)
+                    .call<{ list: Array<string> }>(`emails?classId=${classId}`)
                     .pipe(
                         map(({ list }) => list.join(', ')),
                         tap((joinedEmails) =>
@@ -75,12 +75,12 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                             this.clipboard.copy(emails);
                             this.messageService.add({
                                 severity: 'success',
-                                summary: `Copied emails for ${className}`,
+                                summary: `Copied emails for ${classId}`,
                             });
                             this.patchState({
                                 inProgressCopyClassEmails: {
                                     ...this.get().inProgressCopyClassEmails,
-                                    [className]: false,
+                                    [classId]: false,
                                 },
                             });
                         })
@@ -89,14 +89,14 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
         );
     });
 
-    private openClassSignIn(className: string) {
+    private openClassSignIn(classId: string) {
         return this.functionsApi
-            .call<{ html: string }>(`signIn?class=${className}`)
+            .call<{ html: string }>(`signIn?classId=${classId}`)
             .pipe(
                 tap(({ html }) => {
                     const win = window.open(
                         '',
-                        `${className} Sign In/Out`,
+                        `${classId} Sign In/Out`,
                         `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${
                             screen.width / 2
                         },height=${screen.height},top=0,left=${
@@ -110,14 +110,14 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
             );
     }
 
-    private openClassRoster(className: string) {
+    private openClassRoster(classId: string) {
         return this.functionsApi
-            .call<{ html: string }>(`roster?class=${className}`)
+            .call<{ html: string }>(`roster?classId=${classId}`)
             .pipe(
                 tap(({ html }) => {
                     const win = window.open(
                         '',
-                        `${className} Roster`,
+                        `${classId} Roster`,
                         `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${
                             screen.width / 2
                         },height=${screen.height},top=0,left=0`
