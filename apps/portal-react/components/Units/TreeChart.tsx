@@ -42,41 +42,37 @@ function SmartTreeChart() {
     const studentName = student['name'];
     const [completeUnits, setCompleteUnits] = useState([])
 
-    /*
-    const studentName = "Student"
-    */
-
-
     function generateNodes() {
         const treeUnits = [];
-        completeUnits.forEach(URL => {
-            let unit = units.find(unit => unit["URL"] === URL);
-            treeUnits.push(unit)
-        }
-        );
         const treePaths = [];
 
+
+        // MERGE DATA FROM PATHS AND UNITS
         paths.forEach(path => {
-            completeUnits.forEach(URL => {
-                if (path['units'].includes(URL)) {
-                    let unit = units.find(unit => unit["URL"] === URL);
-                    let treePath = treePaths.find(treePath => treePath['name'] === path['name']);
-                    if (treePath === undefined) {
-                        treePaths.push({
-                            name: path['name'],
-                            children: [unit]
-                        })
-                    }
-                    else {
-                        treePath.children.push(unit)
-                    }
+            if (path.units === 'none') {return}
+            let newPath = Object.assign({}, path, {status: 'locked', children: []})
+            newPath.units.forEach((unit: string) => {
+                let newUnit = Object.assign({}, units.find(e => e['URL'] === unit), {status: 'locked'})
+                
+                // MARK COMPLETED UNITS
+                if (completeUnits.includes(unit)) {
+                    if (newPath.status === 'locked') { newPath.status = 'unlocked' }
+                    newUnit.status = 'complete'
                 }
-            })
-            let treePath = treePaths.find(treePath => treePath["name"] === path["name"])
-            if (treePath === undefined) { return }
-            
+                else {
+                    
+                    // CHECK PREREQUISITES AND UNLOCK UNITS
+                    if (newUnit['prereqs'] === 'none' || !newUnit['prereqs'].find((req: string) => !completeUnits.includes(req))) {
+                        newUnit.status = 'unlocked'
+                    }
+                } 
+                newPath.children.push(newUnit)
+            });
+
+
+            // SORT CATEGORIES
             let categories = [];
-            treePath["children"].forEach(unit => {
+            newPath["children"].forEach(unit => {
                 let category = categories.find(category => category['name'] === unit['category'])
                 if (category) {
                     category['children'].push(unit)
@@ -84,20 +80,47 @@ function SmartTreeChart() {
                 else {
                     category = {
                         name: unit['category'],
-                        children: [unit]
+                        children: [unit],
+                        status: 'locked',
                     }
                     categories.push(category)
                 }
             })
+            // BREAK DOWN CATEGORIES WITH ONLY ONE UNIT
             categories.forEach((category, index) => {
                 if (category['children'].length === 1) {
                     categories[index] = category['children'][0]
                 }
+                // CHECK COMPLETION OF REMAINING CATEGORIES
+                else {
+                    if (!category['children'].find(unit => unit.status !== 'complete')) {
+                        categories[index].status = 'complete'
+                    }
+                }
             })
-            treePath['children'] = categories;
-    
+            newPath['children'] = categories;            
+
+            // ACTIVE PATHS
+            if (newPath.children.find((unit: {status: string}) => unit.status === 'complete')) {
+                if (!newPath.children.find((unit: {status: string}) => unit.status !== 'complete')) {
+                    newPath.status = 'complete';
+                }
+                treePaths.push(newPath)
+            }
+            else {
+
+                // INACTIVE PATHS
+                let lockedChildren = [...newPath.children]
+                newPath = Object.assign({},newPath,{
+                    children: [],
+                    lockedChildren: lockedChildren
+                })
+                treePaths.push(newPath)
+            }
+
         })
-        
+
+        //console.log("PATHS", treePaths) 
 
         const smartTreeData = {
             "name": studentName,
@@ -110,12 +133,29 @@ function SmartTreeChart() {
         render(smartTreeData)
     }
 
-    function render(data: {}) {
+    function render(fromData: {name: string, children: Array<{ name: string, children: Array<{}>}> }) {
+
+        let data = fromData;
+
+        let nodeCount: number = 0;
+
+        data.children.forEach(path => {
+            path.children.forEach(category => {
+                if (category.hasOwnProperty('children')) {
+                    category['children'].forEach(unit => {
+                        nodeCount ++;
+                    }) 
+                }
+                else {
+                    nodeCount++;
+                }
+            })
+        })
 
         const margin = { top: 20, right: 350, bottom: 20, left: 80 }
 
-        const chartHeight = (completeUnits.length * 60) - margin.top - margin.bottom;
-        const chartWidth = 1200 - margin.left - margin.right;
+        const chartHeight = (nodeCount * 40) - margin.top - margin.bottom;
+        const chartWidth = 1000 - margin.left - margin.right;
         const treemap = d3.tree().size([chartHeight, chartWidth])
         let nodes = d3.hierarchy(data, (d: any) => d.children);
         nodes = treemap(nodes);
@@ -133,7 +173,13 @@ function SmartTreeChart() {
             .data(nodes.descendants().slice(1))
             .enter().append("path")
             .attr("class", "link")
-            .style("stroke", "#00aaaa80")
+            .style("stroke", (d: any) => {
+                switch(d.data.status) {
+                    case 'unlocked': return '#00aaaa40';
+                    case 'complete': return '#00aaaa80'
+                    default: return '#00000080';
+                }
+            })
             .style("fill", "none")
             .style("stroke-width", "12px")
             .attr("d", (d: any) => ` M ${d.y} , ${d.x} C ${(d.y + d.parent.y) / 2} , ${d.x} ${(d.y + d.parent.y) / 2} , ${d.parent.x} ${d.parent.y} , ${d.parent.x} `);
@@ -147,13 +193,43 @@ function SmartTreeChart() {
         node.append("circle")
             .attr("r", 15)
             .style("cursor", "pointer")
+            .style("fill", (d: any) => {
+                switch(d.data.status) {
+                    case 'locked': return '#aaaaaa';
+                    break;
+                    case 'unlocked': return '#aaffff';
+                    break;
+                    case 'complete': return '#00aaaa';
+                }
+            })
             .on("click", (e: any) => {
-                console.log(e.target)
+
+                let nodeData = e.target["__data__"].data;
+                let path = data.children.find(path => path.name === nodeData.name);
+
+                //console.log(nodeData, path)
+
+                data.children = data.children.map(e => {
+                    if ( e.hasOwnProperty("lockedChildren") ) {
+                        if (e.name === path.name && e.children.length === 0) {
+                            e.children = e["lockedChildren"];
+                            console.log(data)
+                        }
+                        else {
+                            e.children = []
+                        }
+                    }
+                    return e
+                })
+
                 d3.selectAll("circle")
                     .classed("tree-node-selected", false)
 
                 d3.select(e.target)
-                    .classed("tree-node-selected", true);
+                    .classed("tree-node-selected", true)
+
+                render(data)
+
             });
 
 
@@ -176,7 +252,8 @@ function SmartTreeChart() {
             dispatch( requestPaths() )
             dispatch( requestUnits() )
         }
-    })
+        return;
+    },[paths.length, units.length, student])
 
     return (
         <div className="smart-tree-wrapper">
