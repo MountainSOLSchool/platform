@@ -54,8 +54,7 @@ export class ClassPrintoutsComponent {
                     };
                 })
             ),
-            shareReplay(),
-            tap(() => console.log('loaded classes'))
+            shareReplay()
         );
 
     readonly isClassFormDownloadInProgress$ = this.store.select(
@@ -80,15 +79,14 @@ export class ClassPrintoutsComponent {
                 isClassSignInFormDownloadsInProgress,
                 isClassFormDownloadInProgress,
             })
-        ),
-        tap(() => console.log('loaded view model'))
+        )
     );
 
-    copyEmailsClick(className: string) {
-        this.store.copyClassEmails(className);
+    copyEmailsClick(classId: string) {
+        this.store.copyClassEmails(classId);
     }
 
-    downloadClick(className: string) {
-        this.store.downloadClassForms(className);
+    downloadClick(classId: string) {
+        this.store.downloadClassForms(classId);
     }
 }

@@ -271,7 +271,6 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     }
 
     closeFailure() {
-        console.log('closing');
         this.store.setStatusToDraft();
     }
 }

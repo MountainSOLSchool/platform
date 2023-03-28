@@ -10,14 +10,17 @@ export class ClassRepository {
     private get classesPath(): string {
         return `semesters/${this.semesterId}/classes`;
     }
-    async get(id: string): Promise<SemesterClass> {
+    async get(
+        id: string
+    ): Promise<
+        SemesterClass & { students: Array<FirebaseFirestore.DocumentReference> }
+    > {
         const document = await DatabaseUtility.getDocumentRef(
             `${this.classesPath}/${id}`
         );
         const [data] = await DatabaseUtility.getHydratedDocuments([document]);
         return await this.convertDboToDomain(data);
     }
-
     async getMany(ids: Array<string>): Promise<SemesterClass[]> {
         return await Promise.all(
             ids.map(async (id) => {
@@ -45,7 +48,11 @@ export class ClassRepository {
         return await this.getMany(classIds);
     }
 
-    private async convertDboToDomain(dbo: any): Promise<SemesterClass> {
+    private async convertDboToDomain(
+        dbo: any
+    ): Promise<
+        SemesterClass & { students: Array<FirebaseFirestore.DocumentReference> }
+    > {
         return {
             title: dbo.name,
             startMs:
@@ -89,6 +96,7 @@ export class ClassRepository {
             dailyTimes: dbo.daily_times,
             weekday: dbo.weekday,
             thumbnailUrl: dbo.thumbnailUrl,
+            students: dbo.students,
         };
     }
 
