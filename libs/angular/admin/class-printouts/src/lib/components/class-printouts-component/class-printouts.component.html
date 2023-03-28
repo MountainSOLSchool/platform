@@ -1,15 +1,9 @@
 <h1>Class Forms and Contacts</h1>
-<div style="margin-top: 20px">
+<div *rxLet="viewModel$; let vm" style="margin-top: 20px">
     <p-table
-        *ngIf="{
-            isClassFormDownloadInProgress:
-                (isClassFormDownloadInProgress$ | async) ?? {},
-            isClassSignInFormDownloadsInProgress:
-                (isClassSignInFormDownloadsInProgress$ | async) ?? {}
-        } as progress"
-        [value]="(classes$ | async) ?? []"
+        [value]="vm.classes ?? []"
         responsiveLayout="scroll"
-        [loading]="(classes$ | async) === null"
+        [loading]="!vm.classes"
         sortMode="single"
     >
         <ng-template pTemplate="header">
@@ -46,7 +40,7 @@
                         icon="pi pi-download"
                         [id]="class.id + 'downloadBtn'"
                         [loading]="
-                            progress.isClassFormDownloadInProgress[class.title]
+                            vm.isClassFormDownloadInProgress[class.title]
                         "
                         (click)="downloadClick(class.title)"
                     >
@@ -58,9 +52,7 @@
                         [id]="class.id + 'emailsBtn'"
                         label="Copy Email Lists"
                         [loading]="
-                            progress.isClassSignInFormDownloadsInProgress[
-                                class.title
-                            ]
+                            vm.isClassSignInFormDownloadsInProgress[class.title]
                         "
                         (click)="copyEmailsClick(class.title)"
                     >

@@ -17,6 +17,9 @@
         "strict": true,
         "paths": {
             "@sol/account": ["libs/angular/account/src/index.ts"],
+            "@sol/admin/class-printouts": [
+                "libs/angular/admin/class-printouts/src/index.ts"
+            ],
             "@sol/auth/interceptor": [
                 "libs/angular/auth/interceptor/src/index.ts"
             ],
