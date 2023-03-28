@@ -126,79 +126,76 @@ export class RosterReportGenerator {
         students: Array<StudentDbEntry>
     ): Array<StudentRecord> {
         return students
-            .map((student) => {
-                return {
-                    lastName: { value: student.last_name },
-                    firstName: { value: student.first_name },
-                    age: {
-                        value: (() => {
-                            const today = new Date();
-                            const birthDate = new Date(student.birth_date);
-                            let age =
-                                today.getFullYear() - birthDate.getFullYear();
-                            const monthDiff =
-                                today.getMonth() - birthDate.getMonth();
-                            if (
-                                monthDiff < 0 ||
-                                (monthDiff === 0 &&
-                                    today.getDate() < birthDate.getDate())
-                            ) {
-                                age--;
-                            }
-                            return String(age);
-                        })(),
+            .map((student) => ({
+                lastName: { value: student.last_name },
+                firstName: { value: student.first_name },
+                age: {
+                    value: (() => {
+                        const today = new Date();
+                        const birthDate = new Date(student.birth_date);
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const monthDiff =
+                            today.getMonth() - birthDate.getMonth();
+                        if (
+                            monthDiff < 0 ||
+                            (monthDiff === 0 &&
+                                today.getDate() < birthDate.getDate())
+                        ) {
+                            age--;
+                        }
+                        return String(age);
+                    })(),
+                },
+                guardianContacts: {
+                    value:
+                        student.guardians
+                            ?.map(this.contactToString)
+                            .join('\n') ?? '',
+                },
+                emergencyContacts: {
+                    value:
+                        student.emergency_contacts
+                            ?.map(this.contactToString)
+                            .join('\n') ?? '',
+                },
+                authorizedPickUpContacts: {
+                    value:
+                        student.authorized_pick_up_contacts
+                            ?.map(this.contactToString)
+                            .join('\n') ?? '',
+                },
+                codeWord: { value: student.code_word },
+                medications: {
+                    value: student.medications
+                        ?.map(this.medicationToString)
+                        ?.join(', '),
+                    metadata: {
+                        isImportant: false,
                     },
-                    guardianContacts: {
-                        value:
-                            student.guardians
-                                ?.map(this.contactToString)
-                                .join('\n') ?? '',
+                },
+                sunscreenBugSpray: {
+                    value:
+                        student.ok_natural_bugspray &&
+                        student.ok_deet_bugspray &&
+                        student.ok_sunscreen
+                            ? 'Yes'
+                            : 'No',
+                },
+                allergies: {
+                    value: student.allergies ?? '',
+                    metadata: {
+                        isImportant: student.has_life_threatening_allergies,
                     },
-                    emergencyContacts: {
-                        value:
-                            student.emergency_contacts
-                                ?.map(this.contactToString)
-                                .join('\n') ?? '',
-                    },
-                    authorizedPickUpContacts: {
-                        value:
-                            student.authorized_pick_up_contacts
-                                ?.map(this.contactToString)
-                                .join('\n') ?? '',
-                    },
-                    codeWord: { value: student.code_word },
-                    medications: {
-                        value: student.medications
-                            ?.map(this.medicationToString)
-                            ?.join(', '),
-                        metadata: {
-                            isImportant: false,
-                        },
-                    },
-                    sunscreenBugSpray: {
-                        value:
-                            student.ok_natural_bugspray &&
-                            student.ok_deet_bugspray &&
-                            student.ok_sunscreen
-                                ? 'Yes'
-                                : 'No',
-                    },
-                    allergies: {
-                        value: student.allergies ?? '',
-                        metadata: {
-                            isImportant: student.has_life_threatening_allergies,
-                        },
-                    },
-                    okToPhotographAndUseName: {
-                        value: `${student.ok_to_photograph ? 'Yes' : 'No'}${
-                            student.ok_to_photograph &&
-                            !student.ok_use_name_photographs
-                                ? ', but no name'
-                                : ''
-                        }`,
-                    },
-                };
-            })
+                },
+                okToPhotographAndUseName: {
+                    value: `${student.ok_to_photograph ? 'Yes' : 'No'}${
+                        student.ok_to_photograph &&
+                        !student.ok_use_name_photographs
+                            ? ', but no name'
+                            : ''
+                    }`,
+                },
+            }))
             .sort((a, b) => {
                 const lastNameDiff = a.lastName.value.localeCompare(
                     b.lastName.value
