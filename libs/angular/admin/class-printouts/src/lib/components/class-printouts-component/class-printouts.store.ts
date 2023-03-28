@@ -26,13 +26,13 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
     readonly downloadClassForms = this.effect(
         (classId$: Observable<string>) => {
             return classId$.pipe(
-                tap((className) =>
+                tap((classId) =>
                     this.patchState((state) => ({
                         inProgressClassFormDownloads: {
                             ...state.inProgressClassFormDownloads,
-                            [className]: true,
+                            [classId]: true,
                         },
-                    }))
+                    })
                 ),
                 switchMap((classId) => {
                     return forkJoin([
@@ -43,7 +43,7 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                             this.patchState((state) => ({
                                 inProgressClassFormDownloads: {
                                     ...state.inProgressClassFormDownloads,
-                                    [className]: false,
+                                    [classId]: false,
                                 },
                             }));
                         })
@@ -55,11 +55,11 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
 
     readonly copyClassEmails = this.effect((classId$: Observable<string>) => {
         return classId$.pipe(
-            tap((className) =>
+            tap((classId) =>
                 this.patchState((state) => ({
                     inProgressCopyClassEmails: {
                         ...state.inProgressCopyClassEmails,
-                        [className]: true,
+                        [classId]: true,
                     },
                 }))
             ),
@@ -80,9 +80,9 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                             this.patchState((state) => ({
                                 inProgressCopyClassEmails: {
                                     ...state.inProgressCopyClassEmails,
-                                    [className]: false,
+                                    [classId]: false,
                                 },
-                            }));
+                            });
                         })
                     );
             })
