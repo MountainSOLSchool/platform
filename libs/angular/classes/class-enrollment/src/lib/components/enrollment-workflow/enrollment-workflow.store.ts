@@ -34,7 +34,6 @@ const initialState = {
     status: 'draft' as const,
     randomValueThatResetsPaymentCollector: Math.random().toString(),
     enrollment: {
-        selectedClassGroups: [],
         selectedClasses: [],
         paymentMethod: undefined,
         discountCodes: [],
