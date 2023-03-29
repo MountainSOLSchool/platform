@@ -155,7 +155,7 @@ function SmartTreeChart() {
         const margin = { top: 20, right: 350, bottom: 20, left: 80 }
 
         const chartHeight = (nodeCount * 40) - margin.top - margin.bottom;
-        const chartWidth = 1000 - margin.left - margin.right;
+        const chartWidth = 1400 - margin.left - margin.right;
         const treemap = d3.tree().size([chartHeight, chartWidth])
         let nodes = d3.hierarchy(data, (d: any) => d.children);
         nodes = treemap(nodes);
@@ -253,7 +253,7 @@ function SmartTreeChart() {
             dispatch( requestUnits() )
         }
         return;
-    },[paths.length, units.length, student])
+    })
 
     return (
         <div className="smart-tree-wrapper">
