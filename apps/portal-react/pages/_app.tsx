@@ -1,33 +1,26 @@
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import './styles.css';
-import { initializeApp } from 'firebase/app';
 // primereact theme
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 // primereact core
 import 'primereact/resources/primereact.min.css';
 // primereact icons
 import 'primeicons/primeicons.css';
-
-const app = initializeApp({
-    apiKey: 'AIzaSyBxv66X_Ye4MXI5lt8Sjc1xz88rdWJJ0ho',
-    authDomain: 'mountain-sol-platform.web.app',
-    projectId: 'mountain-sol-platform',
-    storageBucket: 'mountain-sol-platform.appspot.com',
-    messagingSenderId: '319228048592',
-    appId: '1:319228048592:web:2d418795ca948ba2665ad5',
-    measurementId: 'G-QN03ENCDDC',
-});
+import { Provider } from 'react-redux';
+import { store } from '../store/store';
 
 function CustomApp({ Component, pageProps }: AppProps) {
     return (
         <>
-            <Head>
-                <title>Welcome to portal-react!</title>
-            </Head>
-            <main className="app">
-                <Component {...pageProps} />
-            </main>
+            <Provider store={store}>
+                <Head>
+                    <title>Welcome to portal-react!</title>
+                </Head>
+                <main className="app">
+                    <Component {...pageProps} />
+                </main>
+            </Provider>
         </>
     );
 }
