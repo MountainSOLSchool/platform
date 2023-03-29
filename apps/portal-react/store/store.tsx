@@ -1,10 +1,9 @@
-/* eslint-disable prettier/prettier */
 import { configureStore } from '@reduxjs/toolkit';
 import testStore from './testStore';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { applyMiddleware } from 'redux';
 import { load100 } from './testStoreEpic';
-import  paths  from './paths';
+import paths from './paths';
 import { loadPaths } from './pathsEpic';
 import unitStore from './unitStore';
 import { loadUnits } from './unitEpic';
@@ -24,10 +23,10 @@ export const store = configureStore({
 });
 
 export const rootEpic = combineEpics(
-    loadPaths, 
-    load100, 
+    loadPaths,
+    load100,
     loadUnits,
-    loadTestStudent,
+    loadTestStudent
 );
 
 epicMiddleware.run(rootEpic);

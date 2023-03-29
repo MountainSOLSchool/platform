@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const units = createSlice({
     name: 'paths',
@@ -7,20 +6,16 @@ export const units = createSlice({
     reducers: {
         loadedUnits: (state, action) => {
             //console.log("loaded => ",action.payload, " => ",action);
-            return (action.payload)
+            return action.payload;
         },
-        requestUnits: () => {  },
+        requestUnits: () => {},
         overrideUnits: (state, action) => {
-            return (action.payload)
-        }
+            return action.payload;
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const {
-    loadedUnits,
-    requestUnits,
-    overrideUnits
-} = units.actions;
+export const { loadedUnits, requestUnits, overrideUnits } = units.actions;
 
 export default units.reducer;

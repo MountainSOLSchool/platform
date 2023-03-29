@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 export const paths = createSlice({
     name: 'paths',
@@ -7,16 +6,13 @@ export const paths = createSlice({
     reducers: {
         loadedPaths: (state, action) => {
             //console.log("loaded => ",action.payload, " => ",action);
-            return (action.payload)
+            return action.payload;
         },
-        requestPaths: () => {  },
+        requestPaths: () => {},
     },
 });
 
 // Action creators are generated for each case reducer function
-export const {
-    loadedPaths,
-    requestPaths
-} = paths.actions;
+export const { loadedPaths, requestPaths } = paths.actions;
 
 export default paths.reducer;
