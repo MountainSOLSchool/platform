@@ -27,12 +27,12 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
         (classId$: Observable<string>) => {
             return classId$.pipe(
                 tap((classId) =>
-                    this.patchState({
+                    this.patchState((state) => ({
                         inProgressClassFormDownloads: {
-                            ...this.get().inProgressClassFormDownloads,
+                            ...state.inProgressClassFormDownloads,
                             [classId]: true,
                         },
-                    })
+                    }))
                 ),
                 switchMap((classId) => {
                     return forkJoin([
@@ -40,12 +40,12 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                         this.openClassSignIn(classId),
                     ]).pipe(
                         tap(() => {
-                            this.patchState({
+                            this.patchState((state) => ({
                                 inProgressClassFormDownloads: {
-                                    ...this.get().inProgressClassFormDownloads,
+                                    ...state.inProgressClassFormDownloads,
                                     [classId]: false,
                                 },
-                            });
+                            }));
                         })
                     );
                 })
@@ -56,12 +56,12 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
     readonly copyClassEmails = this.effect((classId$: Observable<string>) => {
         return classId$.pipe(
             tap((classId) =>
-                this.patchState({
+                this.patchState((state) => ({
                     inProgressCopyClassEmails: {
-                        ...this.get().inProgressCopyClassEmails,
+                        ...state.inProgressCopyClassEmails,
                         [classId]: true,
                     },
-                })
+                }))
             ),
             switchMap((classId) => {
                 return this.functionsApi
@@ -77,12 +77,12 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                                 severity: 'success',
                                 summary: `Copied emails for ${classId}`,
                             });
-                            this.patchState({
+                            this.patchState((state) => ({
                                 inProgressCopyClassEmails: {
-                                    ...this.get().inProgressCopyClassEmails,
+                                    ...state.inProgressCopyClassEmails,
                                     [classId]: false,
                                 },
-                            });
+                            }));
                         })
                     );
             })
