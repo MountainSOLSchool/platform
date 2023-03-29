@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import * as auth from 'firebase/auth';
 // import styles from './index.module.css';
 import { Button } from 'primereact/button';
@@ -9,7 +8,6 @@ import { decrement, increment, trigger } from '../store/testStore';
 import { loadedPaths, requestPaths } from '../store/paths';
 import { requestUnits } from '../store/unitStore';
 import { requestTestStudent, setTestStudent } from '../store/testStudent';
-
 
 import './index.module.css';
 
@@ -33,10 +31,18 @@ export function Index() {
     const pathData = useSelector((state: RootState) => state.paths);
     const units = useSelector((state: RootState) => state.units);
     const testStudent = useSelector((state: RootState) => state.student);
-    
-    useEffect(()=>{
-        console.log("state => ", "paths: ", pathData, "units: ", units, "test student: ", testStudent)
-    })
+
+    useEffect(() => {
+        console.log(
+            'state => ',
+            'paths: ',
+            pathData,
+            'units: ',
+            units,
+            'test student: ',
+            testStudent
+        );
+    });
 
     return (
         <div>
@@ -46,13 +52,26 @@ export function Index() {
                 {count}
                 <Button onClick={() => dispatch(increment())}>inc</Button>
                 <Button onClick={() => dispatch(decrement())}>dec</Button>
-                <Button onClick={() => dispatch(trigger())} >request 100</Button>
-                <Button onClick={() => dispatch(requestTestStudent())} style={{"marginLeft": "2rem"}}>
+                <Button onClick={() => dispatch(trigger())}>request 100</Button>
+                <Button
+                    onClick={() => dispatch(requestTestStudent())}
+                    style={{ marginLeft: '2rem' }}
+                >
                     get test student from database!
                 </Button>
-                <Button onClick={() => dispatch(setTestStudent({name: "Student", completedUnits: MtnMedicUnits}))}>GET TEST NOOB</Button>
+                <Button
+                    onClick={() =>
+                        dispatch(
+                            setTestStudent({
+                                name: 'Student',
+                                completedUnits: MtnMedicUnits,
+                            })
+                        )
+                    }
+                >
+                    GET TEST NOOB
+                </Button>
                 <br />
-
             </div>
             Welcome to our new unit portal!!! it is super exciting! Here are
             some things you can do:

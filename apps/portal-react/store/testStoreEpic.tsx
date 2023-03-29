@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { filter, mapTo, switchMap, from, tap } from 'rxjs';
 import { loadedFromBackend, trigger } from './testStore';
 import { Action } from 'redux';
@@ -6,7 +5,7 @@ import { Observable } from 'rxjs';
 import { db } from '../firebase/database';
 import { getDoc, doc } from 'firebase/firestore';
 
-export const load100 = (action$: Observable<Action>) => 
+export const load100 = (action$: Observable<Action>) =>
     action$.pipe(
         filter((action) => action.type === trigger.type),
         switchMap(() =>
@@ -16,4 +15,3 @@ export const load100 = (action$: Observable<Action>) =>
             )
         )
     );
-

@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { configureStore } from '@reduxjs/toolkit';
 import testStore from './testStore';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';

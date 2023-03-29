@@ -1,7 +1,7 @@
 {
     "root": true,
     "ignorePatterns": ["**/*"],
-    "plugins": ["@nrwl/nx"],
+    "plugins": ["@nrwl/nx", "unused-imports"],
     "overrides": [
         {
             "files": ["*.ts"],
@@ -59,6 +59,31 @@
                 "project": ["./tsconfig.base.json"]
             },
             "extends": ["plugin:ngrx/recommended"]
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "extends": [
+                "eslint:recommended",
+                "plugin:eslint-comments/recommended"
+            ],
+            "rules": {
+                "eslint-comments/no-use": ["error", { "allow": [] }]
+            }
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "rules": {
+                "unused-imports/no-unused-imports": "error",
+                "unused-imports/no-unused-vars": [
+                    "warn",
+                    {
+                        "vars": "all",
+                        "varsIgnorePattern": "^_",
+                        "args": "after-used",
+                        "argsIgnorePattern": "^_"
+                    }
+                ]
+            }
         }
     ]
 }
