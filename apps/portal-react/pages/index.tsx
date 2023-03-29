@@ -15,7 +15,7 @@ import './index.module.css';
 
 import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit/BulkUpdateForSingleUnit';
 
-import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
+import { SmartTreeChart, MtnMedicUnits, testNoobUnits } from '../components/Units/TreeChart';
 
 export function Index() {
     auth.getAuth().onAuthStateChanged((user) => {
@@ -50,7 +50,8 @@ export function Index() {
                 <Button onClick={() => dispatch(requestTestStudent())} style={{"marginLeft": "2rem"}}>
                     get test student from database!
                 </Button>
-                <Button onClick={() => dispatch(setTestStudent({name: "Student", completedUnits: MtnMedicUnits}))}>GET TEST NOOB</Button>
+                <Button onClick={() => dispatch(setTestStudent({name: "Student", completedUnits: testNoobUnits}))}>GET TEST NOOB</Button>
+                <Button onClick={() => dispatch(setTestStudent({name: "Student", completedUnits: MtnMedicUnits}))}>finished Mtn Medic Path</Button>
                 <br />
 
             </div>

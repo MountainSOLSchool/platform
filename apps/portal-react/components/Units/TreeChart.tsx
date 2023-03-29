@@ -22,54 +22,42 @@ const MtnMedicUnits = [
     "qM5ZYnpRP7EN82cyfHga", "S5XcEBn4r1rvSHefGv8e", "jQ6gBqnA1OrcvLrP1Bg1", "LpY0xbdjBZf9MgjECs57",
     "7t8i3KtPnUvS6ir0k5pj", "HHwX56kM8sqwQVAFGEUp"
 ];
+const testNoobUnits = [
+    "r4X1YxigB3y5vgyuY3HU", "VIOIwcg8semiuoZvqrDz", "7R0ZvJiL6V1LZWWXaTMB", "dW37QdAucaYfRDCcamd4",
+    "PtUZKsO1S5RT8jTGepU2", "LtpeTP057a4lrAv0uVk0", "vLqkFHw4lh0Hhxkhs1Jz", "MViHvnge0OghyBwgIU7j",
+    "qM5ZYnpRP7EN82cyfHga", "S5XcEBn4r1rvSHefGv8e", "jQ6gBqnA1OrcvLrP1Bg1",
+    "7t8i3KtPnUvS6ir0k5pj", "HHwX56kM8sqwQVAFGEUp"
+];
 
 function SmartTreeChart() {
     const dispatch = useDispatch()
-
-    // [x] GET UNITS ARRAY
-    // [x] GET STUDENT PROFILE
-    // [x] FIND COMPLETED UNITS
-    // [] COMPARE STUDENT UNITS TO PREREQS AND MARK ALL COMPLETED, INCOMPLETE, AND UNAVAILABLE CLASSES
-    // [x] SORT INTO HIERARCHY
-    // [x] IF LOADING MULTIPLE NODES FOR ANY CATEGORY, GENERATE NEW CATEGORY BRANCH
-    // [] ? SHOW ONE NODE DEEP FOR CLASSES THAT ARE NOT AVAILABLE ?
-
-    
     const paths = useSelector((state: RootState) => state.paths)
     const units = useSelector((state: RootState) => state.units);
-    
     const student = useSelector((state: RootState) => state.student);
     const studentName = student['name'];
     const [completeUnits, setCompleteUnits] = useState([])
 
     function generateNodes() {
-        const treeUnits = [];
         const treePaths = [];
-
-
         // MERGE DATA FROM PATHS AND UNITS
         paths.forEach(path => {
             if (path.units === 'none') {return}
             let newPath = Object.assign({}, path, {status: 'locked', children: []})
             newPath.units.forEach((unit: string) => {
-                let newUnit = Object.assign({}, units.find(e => e['URL'] === unit), {status: 'locked'})
-                
+                let newUnit = Object.assign({}, units.find(e => e['URL'] === unit), {status: 'locked'});
                 // MARK COMPLETED UNITS
                 if (completeUnits.includes(unit)) {
                     if (newPath.status === 'locked') { newPath.status = 'unlocked' }
                     newUnit.status = 'complete'
                 }
-                else {
-                    
+                else {   
                     // CHECK PREREQUISITES AND UNLOCK UNITS
                     if (newUnit['prereqs'] === 'none' || !newUnit['prereqs'].find((req: string) => !completeUnits.includes(req))) {
                         newUnit.status = 'unlocked'
                     }
-                } 
+                }
                 newPath.children.push(newUnit)
             });
-
-
             // SORT CATEGORIES
             let categories = [];
             newPath["children"].forEach(unit => {
@@ -96,10 +84,12 @@ function SmartTreeChart() {
                     if (!category['children'].find(unit => unit.status !== 'complete')) {
                         categories[index].status = 'complete'
                     }
+                    else if (category['children'].find(unit => unit.status !== 'locked')) {
+                        categories[index].status = 'unlocked'
+                    }
                 }
             })
-            newPath['children'] = categories;            
-
+            newPath['children'] = categories;
             // ACTIVE PATHS
             if (newPath.children.find((unit: {status: string}) => unit.status === 'complete')) {
                 if (!newPath.children.find((unit: {status: string}) => unit.status !== 'complete')) {
@@ -108,7 +98,6 @@ function SmartTreeChart() {
                 treePaths.push(newPath)
             }
             else {
-
                 // INACTIVE PATHS
                 let lockedChildren = [...newPath.children]
                 newPath = Object.assign({},newPath,{
@@ -117,10 +106,29 @@ function SmartTreeChart() {
                 })
                 treePaths.push(newPath)
             }
+        });
 
+        treePaths.forEach(path => {
+            if (path.name === "Mountain Medic") {return}
+            // UNLOCK PATHS IF MTN MEDIC IS FINISHED
+            if ( treePaths.find(path => path.name === "Mountain Medic").status === 'complete' ) {
+                path.status = 'unlocked';
+                console.log("Mtn Medic is complete")
+            }
+            // LOCK DOWN PATHS
+            else if (path.hasOwnProperty('lockedChildren')) {
+                path.lockedChildren.forEach(category => {
+                    if (category.hasOwnProperty('children')) {
+                        category.children.forEach(unit => {
+                            unit.status = 'locked'
+                        })
+                    }
+                    category.status = 'locked'
+                })
+            }
         })
-
-        //console.log("PATHS", treePaths) 
+        
+        console.log("PATHS", treePaths) 
 
         const smartTreeData = {
             "name": studentName,
@@ -212,8 +220,7 @@ function SmartTreeChart() {
                 data.children = data.children.map(e => {
                     if ( e.hasOwnProperty("lockedChildren") ) {
                         if (e.name === path.name && e.children.length === 0) {
-                            e.children = e["lockedChildren"];
-                            console.log(data)
+                            e.children = e["lockedChildren"]
                         }
                         else {
                             e.children = []
@@ -257,6 +264,13 @@ function SmartTreeChart() {
 
     return (
         <div className="smart-tree-wrapper">
+            <div className="skill-tree-menu">
+                <ul>
+                    <li>option 1</li>
+                    <li>option 2</li>
+                    <li>option 3</li>
+                </ul>
+            </div>
             <h1>HELLO THERE</h1>
             <button onClick={ () => dispatch( overrideUnits( MtnMedicUnits ) ) }>MTN MEDIC ONLY</button>
             <div className="smart-tree-container"></div>
@@ -264,4 +278,4 @@ function SmartTreeChart() {
     )
 }
 
-export { SmartTreeChart, MtnMedicUnits };
+export { SmartTreeChart, MtnMedicUnits, testNoobUnits };
