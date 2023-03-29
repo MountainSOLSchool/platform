@@ -59,6 +59,16 @@
                 "project": ["./tsconfig.base.json"]
             },
             "extends": ["plugin:ngrx/recommended"]
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "extends": [
+                "eslint:recommended",
+                "plugin:eslint-comments/recommended"
+            ],
+            "rules": {
+                "eslint-comments/no-use": ["error", { "allow": [] }]
+            }
         }
     ]
 }
