@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import testStore from './testStore';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
-import { applyMiddleware } from 'redux';
+import { AnyAction } from 'redux';
 import { load100 } from './testStoreEpic';
 import paths from './paths';
 import { loadPaths } from './pathsEpic';
@@ -22,7 +22,7 @@ export const store = configureStore({
     middleware: () => [epicMiddleware],
 });
 
-export const rootEpic = combineEpics(
+export const rootEpic = combineEpics<AnyAction>(
     loadPaths,
     load100,
     loadUnits,
