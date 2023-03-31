@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'classes-class-repository',
     preset: '../../../jest.preset.js',

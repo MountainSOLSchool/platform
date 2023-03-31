@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'angular-admin-class-printouts',
     preset: '../../../../jest.preset.js',

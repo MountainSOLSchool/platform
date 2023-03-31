@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'payments-braintree-client',
     preset: '../../../jest.preset.js',

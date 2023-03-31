@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'table-domain',
     preset: '../../../jest.preset.js',

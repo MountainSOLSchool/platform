@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'form-validity',
     preset: '../../../jest.preset.js',
