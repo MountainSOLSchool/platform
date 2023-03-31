@@ -5,8 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { type RootState } from '../store/store';
 import { decrement, increment, trigger } from '../store/testStore';
-import { loadedPaths, requestPaths } from '../store/paths';
-import { requestUnits } from '../store/unitStore';
 import { requestTestStudent, setTestStudent } from '../store/testStudent';
 
 import './index.module.css';
@@ -14,6 +12,7 @@ import './index.module.css';
 import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit/BulkUpdateForSingleUnit';
 
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
+import { LoginForm } from '@sol/react/auth/login';
 
 export function Index() {
     auth.getAuth().onAuthStateChanged((user) => {
@@ -46,6 +45,9 @@ export function Index() {
 
     return (
         <div>
+            <div>
+                <LoginForm></LoginForm>
+            </div>
             <div>
                 <br />
                 data from store:

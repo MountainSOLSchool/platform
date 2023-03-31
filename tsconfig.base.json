@@ -58,6 +58,7 @@
                 "libs/angular/braintree-client/src/index.ts"
             ],
             "@sol/payments/transactions": ["libs/ts/transactions/src/index.ts"],
+            "@sol/react/auth/login": ["libs/react/auth/src/index.ts"],
             "@sol/record/domain": ["libs/ts/record/domain/src/index.ts"],
             "@sol/student/domain": ["libs/ts/student/domain/src/index.ts"],
             "@sol/student/import": ["libs/ts/student/import/src/index.ts"],
