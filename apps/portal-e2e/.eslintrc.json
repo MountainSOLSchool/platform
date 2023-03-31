@@ -12,6 +12,16 @@
                 "@typescript-eslint/no-var-requires": "off",
                 "no-undef": "off"
             }
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "extends": [
+                "eslint:recommended",
+                "plugin:eslint-comments/recommended"
+            ],
+            "rules": {
+                "eslint-comments/no-use": ["warn", { "allow": [] }]
+            }
         }
     ]
 }

@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'auth-interceptor',
     preset: '../../../jest.preset.js',

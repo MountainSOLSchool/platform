@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'student-reports',
     preset: '../../../jest.preset.js',

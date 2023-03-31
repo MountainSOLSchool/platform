@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'classes-class-enrollment-repository',
     preset: '../../../jest.preset.js',

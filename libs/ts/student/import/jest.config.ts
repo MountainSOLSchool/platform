@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'student-import',
     preset: '../../../jest.preset.js',

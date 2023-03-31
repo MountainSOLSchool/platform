@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'firebase-auth',
     preset: '../../../jest.preset.js',

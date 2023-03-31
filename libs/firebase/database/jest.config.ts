@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'firebase-database',
     preset: '../../../jest.preset.js',
