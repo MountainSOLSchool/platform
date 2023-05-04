@@ -3,12 +3,13 @@ import * as admin from 'firebase-admin';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
 import { firestore } from 'firebase-admin';
 import DocumentReference = firestore.DocumentReference;
-import {
-    SemesterRepository,
-    SUMMER_2023_SEMESTER,
-} from '@sol/classes/repository';
+import { ClassRepository } from '@sol/classes/repository';
 
 export class StudentRepository {
+    protected constructor(private readonly semesterId: string) {}
+    static of(semesterId: string): StudentRepository {
+        return new StudentRepository(semesterId);
+    }
     static async fetchMatchingStudent({
         firstName,
         lastName,
@@ -57,14 +58,22 @@ export class StudentRepository {
         )?.ref;
     }
 
-    static async fetchStudents(
-        classId?: string
-    ): Promise<Array<StudentDbEntry>> {
+    static async create(
+        student: NewStudentDbEntry
+    ): Promise<DocumentReference> {
+        return await this.database.collection('students').add(student);
+    }
+
+    private static get database(): FirebaseFirestore.Firestore {
+        return DatabaseUtility.getDatabase();
+    }
+
+    async getEnrolled(classId?: string): Promise<Array<StudentDbEntry>> {
         let students: Array<StudentDbEntry> = [];
         if (classId) {
-            const theClass = await SemesterRepository.of(
-                SUMMER_2023_SEMESTER
-            ).classes.get(classId);
+            const theClass = await ClassRepository.of(this.semesterId).get(
+                classId
+            );
 
             const classStudentRefs = theClass.students ?? [];
 
@@ -75,7 +84,7 @@ export class StudentRepository {
         } else {
             const { students: hydratedStudents } =
                 await DatabaseUtility.getHydratedCollection(
-                    this.database.collection('students')
+                    StudentRepository.database.collection('students')
                 );
             students = hydratedStudents.map(
                 (doc) => doc as unknown as StudentDbEntry
@@ -83,15 +92,5 @@ export class StudentRepository {
         }
 
         return students;
-    }
-
-    static async create(
-        student: NewStudentDbEntry
-    ): Promise<DocumentReference> {
-        return await this.database.collection('students').add(student);
-    }
-
-    private static get database(): FirebaseFirestore.Firestore {
-        return DatabaseUtility.getDatabase();
     }
 }

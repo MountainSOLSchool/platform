@@ -2,7 +2,7 @@ import { StudentRepository } from '@sol/student/repository';
 
 export class ClassEmailGenerator {
     static async createEmailList(className: string) {
-        const students = await StudentRepository.fetchStudents(className);
+        const students = await StudentRepository.getEnrolled(className);
         return students.map((student) => {
             const primaryContact = student.emergency_contacts?.[0];
             return `${primaryContact ? primaryContact.first_name + ' ' : ''}${

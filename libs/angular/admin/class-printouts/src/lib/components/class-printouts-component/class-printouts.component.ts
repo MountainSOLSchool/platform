@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
-import { combineLatest, map, shareReplay, tap } from 'rxjs';
+import { combineLatest, map, shareReplay } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { ClassPrintoutsStore } from './class-printouts.store';
 import { provideComponentStore } from '@ngrx/component-store';
 import { LetModule } from '@rx-angular/template/let';
+import { SemesterClass } from '@sol/classes/domain';
 
 @Component({
     standalone: true,
@@ -82,8 +83,8 @@ export class ClassPrintoutsComponent {
         )
     );
 
-    copyEmailsClick(classId: string) {
-        this.store.copyClassEmails(classId);
+    copyEmailsClick(semesterClass: SemesterClass) {
+        this.store.copyClassEmails(semesterClass);
     }
 
     downloadClick(classId: string) {
