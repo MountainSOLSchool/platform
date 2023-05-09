@@ -29,7 +29,8 @@
             "configurations": {
                 "development": {
                     "buildTarget": "portal-react:build:development",
-                    "dev": true
+                    "dev": true,
+                    "port": 4201
                 },
                 "production": {
                     "buildTarget": "portal-react:build:production",
