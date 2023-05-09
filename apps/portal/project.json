@@ -61,7 +61,8 @@
                     "vendorChunk": true,
                     "extractLicenses": false,
                     "sourceMap": true,
-                    "namedChunks": true
+                    "namedChunks": true,
+                    "baseHref": "/"
                 },
                 "developmentRemoteFunctions": {
                     "buildOptimizer": false,
@@ -70,6 +71,7 @@
                     "extractLicenses": false,
                     "sourceMap": true,
                     "namedChunks": true,
+                    "baseHref": "/",
                     "fileReplacements": [
                         {
                             "replace": "apps/portal/src/environments/environment.ts",
