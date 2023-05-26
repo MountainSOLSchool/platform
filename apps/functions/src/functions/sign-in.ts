@@ -8,7 +8,9 @@ import {
 } from '@sol/classes/repository';
 
 async function getClassSignInTable(classId: string) {
-    const students = await StudentRepository.getEnrolled(classId);
+    const students = await StudentRepository.of(
+        SUMMER_2023_SEMESTER
+    ).getEnrolled(classId);
 
     const studentRecords =
         RosterReportGenerator.transformStudentEntriesIntoSignInSheet(students);
