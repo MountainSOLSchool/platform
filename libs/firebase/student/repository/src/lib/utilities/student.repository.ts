@@ -82,12 +82,22 @@ export class StudentRepository {
                     classStudentRefs
                 );
         } else {
-            const { students: hydratedStudents } =
-                await DatabaseUtility.getHydratedCollection(
-                    StudentRepository.database.collection('students')
-                );
-            students = hydratedStudents.map(
-                (doc) => doc as unknown as StudentDbEntry
+            const allClasses = await ClassRepository.of(
+                this.semesterId
+            ).getAll();
+            const allStudentsFromAllClassesRefs = allClasses.map(
+                (theClass) => theClass.students
+            );
+            const allStudentsFromEachClassInSemester = await Promise.all(
+                allStudentsFromAllClassesRefs.map((studentRefs) =>
+                    DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
+                        studentRefs as any
+                    )
+                )
+            );
+            students = allStudentsFromEachClassInSemester.reduce(
+                (acc, curr) => [...acc, ...curr],
+                []
             );
         }
 
