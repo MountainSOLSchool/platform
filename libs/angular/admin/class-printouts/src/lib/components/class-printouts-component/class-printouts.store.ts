@@ -4,6 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MessageService } from 'primeng/api';
+import { SemesterClass } from '@sol/classes/domain';
 
 interface ClassPrintoutsState {
     inProgressClassFormDownloads: Record<string, boolean>;
@@ -53,41 +54,45 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
         }
     );
 
-    readonly copyClassEmails = this.effect((classId$: Observable<string>) => {
-        return classId$.pipe(
-            tap((classId) =>
-                this.patchState((state) => ({
-                    inProgressCopyClassEmails: {
-                        ...state.inProgressCopyClassEmails,
-                        [classId]: true,
-                    },
-                }))
-            ),
-            switchMap((classId) => {
-                return this.functionsApi
-                    .call<{ list: Array<string> }>(`emails?classId=${classId}`)
-                    .pipe(
-                        map(({ list }) => list.join(', ')),
-                        tap((joinedEmails) =>
-                            this.clipboard.copy(joinedEmails)
-                        ),
-                        tap((emails) => {
-                            this.clipboard.copy(emails);
-                            this.messageService.add({
-                                severity: 'success',
-                                summary: `Copied emails for ${classId}`,
-                            });
-                            this.patchState((state) => ({
-                                inProgressCopyClassEmails: {
-                                    ...state.inProgressCopyClassEmails,
-                                    [classId]: false,
-                                },
-                            }));
-                        })
-                    );
-            })
-        );
-    });
+    readonly copyClassEmails = this.effect(
+        (class$: Observable<SemesterClass>) => {
+            return class$.pipe(
+                tap((semesterClass) =>
+                    this.patchState((state) => ({
+                        inProgressCopyClassEmails: {
+                            ...state.inProgressCopyClassEmails,
+                            [semesterClass.id]: true,
+                        },
+                    }))
+                ),
+                switchMap((semeseterClass) => {
+                    return this.functionsApi
+                        .call<{ list: Array<string> }>(
+                            `emails?classId=${semeseterClass.id}`
+                        )
+                        .pipe(
+                            map(({ list }) => list.join(', ')),
+                            tap((joinedEmails) =>
+                                this.clipboard.copy(joinedEmails)
+                            ),
+                            tap((emails) => {
+                                this.clipboard.copy(emails);
+                                this.messageService.add({
+                                    severity: 'success',
+                                    summary: `Copied emails for ${semeseterClass.title}`,
+                                });
+                                this.patchState((state) => ({
+                                    inProgressCopyClassEmails: {
+                                        ...state.inProgressCopyClassEmails,
+                                        [semeseterClass.id]: false,
+                                    },
+                                }));
+                            })
+                        );
+                })
+            );
+        }
+    );
 
     private openClassSignIn(classId: string) {
         return this.functionsApi

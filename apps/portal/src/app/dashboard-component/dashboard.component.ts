@@ -1,28 +1,58 @@
 import { CommonModule } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    inject,
-    OnInit,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FunctionsApi } from '@sol/firebase/functions-api';
-import { ChartData } from 'chart.js';
 import { ChartModule } from 'primeng/chart';
-import { map, Observable } from 'rxjs';
+import { map } from 'rxjs';
+import { ChartOptions } from 'chart.js';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { LetModule } from '@rx-angular/template/let';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, ChartModule, RouterModule],
+    imports: [
+        CommonModule,
+        LetModule,
+        ChartModule,
+        RouterModule,
+        ProgressSpinnerModule,
+        PanelModule,
+    ],
     templateUrl: './dashboard.component.html',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
     private readonly functionsApi = inject(FunctionsApi);
 
-    data$: Observable<ChartData> | undefined;
+    readonly data$ = this.functionsApi
+        .call<{
+            classes: Array<{ title: string; enrolledCount: string }>;
+        }>('classes')
+        .pipe(
+            map((response) => {
+                return {
+                    labels: response.classes.map(({ title }) => title),
+                    datasets: [
+                        {
+                            // make the background of the radar transparent green
+                            backgroundColor: 'rgba(0, 110, 255, 0.5)',
+                            label: 'Enrolled Students',
+                            data: response.classes.map(({ enrolledCount }) =>
+                                Number(enrolledCount)
+                            ),
+                            pointBackgroundColor: response.classes.map(
+                                (c, i) => {
+                                    return this.#colors[i];
+                                }
+                            ),
+                        },
+                    ],
+                };
+            })
+        );
 
-    chartOptions = {};
+    chartOptions: ChartOptions = {};
 
     #colors = [
         'red',
@@ -49,30 +79,4 @@ export class DashboardComponent implements OnInit {
         'slateblue',
         'seagreen',
     ];
-
-    ngOnInit(): void {
-        this.data$ = this.functionsApi
-            .call<{
-                classes: Array<{ title: string; enrolledCount: string }>;
-            }>('classes')
-            .pipe(
-                map((response) => {
-                    return {
-                        labels: response.classes.map(({ title }) => title),
-                        datasets: [
-                            {
-                                data: response.classes.map(
-                                    ({ enrolledCount }) => Number(enrolledCount)
-                                ),
-                                backgroundColor: response.classes.map(
-                                    (c, i) => {
-                                        return this.#colors[i];
-                                    }
-                                ),
-                            },
-                        ],
-                    };
-                })
-            );
-    }
 }
