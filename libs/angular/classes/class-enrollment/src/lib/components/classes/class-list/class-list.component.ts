@@ -315,8 +315,8 @@ export class ClassesComponent {
     }
 
     rowSelectedChange(classRow: ClassRow, selected: boolean) {
-        classRow.classes.forEach((c) =>
-            this.selectionChanged({ id: c.id, selected })
-        );
+        classRow.classes
+            .filter((c) => !c.pausedForEnrollment)
+            .forEach((c) => this.selectionChanged({ id: c.id, selected }));
     }
 }
