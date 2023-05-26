@@ -154,12 +154,18 @@
                             "
                         >
                             <p-toggleButton
+                                *rxLet="hasPausedClass(row); let paused"
+                                [disabled]="paused"
                                 [inputId]="'select' + row.group?.id"
                                 [name]="'row_' + row.group?.id"
                                 onIcon="pi pi-check"
                                 onLabel="Selected all-day"
                                 offIcon="pi pi-plus"
-                                offLabel="Select all-day"
+                                [offLabel]="
+                                    paused
+                                        ? 'One or more classes are full'
+                                        : 'Select all-day'
+                                "
                                 [ngModel]="row.selected"
                                 (ngModelChange)="
                                     rowSelectedChange(row, !row.selected)
@@ -200,7 +206,14 @@
                                     "
                                 >
                                     <div style="padding-right: 145px">
-                                        <h2>{{ class.title }}</h2>
+                                        <h2>
+                                            {{ class.title
+                                            }}{{
+                                                class.pausedForEnrollment
+                                                    ? ' (Full)'
+                                                    : ''
+                                            }}
+                                        </h2>
                                     </div>
                                     <!-- circular div with image -->
                                     <div
@@ -218,6 +231,9 @@
                                             'background-position': '50% 50%',
                                             'background-size': 'cover',
                                             'border-radius': '50%',
+                                            filter: class.pausedForEnrollment
+                                                ? 'grayscale(100%)'
+                                                : '',
                                             border:
                                                 '3px solid ' +
                                                 (class.selected
@@ -280,12 +296,26 @@
                                         margin-bottom: -1rem;
                                     "
                                 >
+                                    <div
+                                        *rxIf="class.pausedForEnrollment"
+                                        style="margin-bottom: 1rem"
+                                    >
+                                        <b
+                                            >This class is not accepting
+                                            additional students at this time.</b
+                                        >
+                                    </div>
                                     <p-toggleButton
+                                        [disabled]="class.pausedForEnrollment"
                                         [inputId]="'select' + class.id"
                                         onIcon="pi pi-check"
                                         onLabel="Selected"
                                         offIcon="pi pi-plus"
-                                        offLabel="Select"
+                                        [offLabel]="
+                                            class.pausedForEnrollment
+                                                ? 'Class Full'
+                                                : 'Select'
+                                        "
                                         [(ngModel)]="class.selected"
                                         (ngModelChange)="
                                             selectionChanged(class)

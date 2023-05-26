@@ -97,6 +97,9 @@ export class ClassRepository {
             weekday: dbo.weekday,
             thumbnailUrl: dbo.thumbnailUrl,
             students: dbo.students,
+            pausedForEnrollment: dbo.max_student_size
+                ? dbo.students.length > dbo.max_student_size
+                : false,
         };
     }
 

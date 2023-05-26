@@ -319,4 +319,8 @@ export class ClassesComponent {
             this.selectionChanged({ id: c.id, selected })
         );
     }
+
+    hasPausedClass(classRow: ClassRow): boolean {
+        return classRow.classes.some((c) => c.pausedForEnrollment);
+    }
 }
