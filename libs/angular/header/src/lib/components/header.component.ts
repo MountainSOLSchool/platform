@@ -72,25 +72,31 @@ import { LetModule } from '@rx-angular/template/let';
         <p-sidebar [(visible)]="display" position="right">
             <ul style="font-size:16px">
                 <li>
+                    <a
+                        routerLink="/classes/enrollment"
+                        (click)="display = false"
+                        >Class Registration</a
+                    >
+                </li>
+                <h4 style="margin-bottom:4px">Admin</h4>
+                <li>
+                    <a routerLink="/admin" (click)="display = false"
+                        >Dashboard</a
+                    >
+                </li>
+                <li>
                     <a routerLink="/admin/report" (click)="display = false"
                         >Class Forms and Contacts</a
                     >
                 </li>
                 <li>
                     <a routerLink="/admin/t-shirts" (click)="display = false"
-                        >Tshirt Sizes</a
+                        >T-shirt Sizes</a
                     >
                 </li>
                 <li>
                     <a routerLink="/calendar/classes" (click)="display = false"
                         >Class Calendar</a
-                    >
-                </li>
-                <li>
-                    <a
-                        routerLink="/classes/enrollment"
-                        (click)="display = false"
-                        >Class Registration</a
                     >
                 </li>
             </ul>

@@ -8,7 +8,9 @@ import {
 } from '@sol/classes/repository';
 
 async function getClassRosterTable(classId: string) {
-    const students = await StudentRepository.fetchStudents(classId);
+    const students = await StudentRepository.of(
+        SUMMER_2023_SEMESTER
+    ).getEnrolled(classId);
 
     const studentRecords =
         RosterReportGenerator.transformStudentEntriesIntoRosterRecords(

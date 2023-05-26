@@ -1,5 +1,6 @@
 import { ClassRepository } from './class.repository';
 import { ClassGroupRepository } from './class-group.repository';
+import { StudentRepository } from '@sol/student/repository';
 
 export class SemesterRepository {
     protected constructor(private readonly id: string) {}
@@ -14,5 +15,9 @@ export class SemesterRepository {
 
     get groups(): ClassGroupRepository {
         return ClassGroupRepository.of(this.id);
+    }
+
+    get students(): StudentRepository {
+        return StudentRepository.of(this.id);
     }
 }
