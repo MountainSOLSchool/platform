@@ -34,8 +34,8 @@ export class LoginEffect {
                 filter(([user]) => !!user),
                 filter(
                     () =>
-                        window.location.pathname === '/user/login' ||
-                        window.location.pathname === '/user/create'
+                        window.location.pathname.endsWith('/user/login') ||
+                        window.location.pathname.endsWith('/user/create')
                 ),
                 tap(([, prevRoute]) =>
                     this.router.navigateByUrl(prevRoute ?? '/')
