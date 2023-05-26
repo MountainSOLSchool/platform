@@ -154,12 +154,18 @@
                             "
                         >
                             <p-toggleButton
+                                *rxLet="hasPausedClass(row); let paused"
+                                [disabled]="paused"
                                 [inputId]="'select' + row.group?.id"
                                 [name]="'row_' + row.group?.id"
                                 onIcon="pi pi-check"
                                 onLabel="Selected all-day"
                                 offIcon="pi pi-plus"
-                                offLabel="Select all-day"
+                                [offLabel]="
+                                    paused
+                                        ? 'One or more classes are full'
+                                        : 'Select all-day'
+                                "
                                 [ngModel]="row.selected"
                                 (ngModelChange)="
                                     rowSelectedChange(row, !row.selected)

@@ -315,8 +315,12 @@ export class ClassesComponent {
     }
 
     rowSelectedChange(classRow: ClassRow, selected: boolean) {
-        classRow.classes
-            .filter((c) => !c.pausedForEnrollment)
-            .forEach((c) => this.selectionChanged({ id: c.id, selected }));
+        classRow.classes.forEach((c) =>
+            this.selectionChanged({ id: c.id, selected })
+        );
+    }
+
+    hasPausedClass(classRow: ClassRow): boolean {
+        return classRow.classes.some((c) => c.pausedForEnrollment);
     }
 }
