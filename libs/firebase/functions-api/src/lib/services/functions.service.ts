@@ -1,5 +1,5 @@
 import { AngularFireFunctions } from '@angular/fire/compat/functions';
-import { inject, Injectable, NgModule } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable({
