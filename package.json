@@ -106,6 +106,9 @@
         },
         "@rx-angular/template": {
             "@angular/core": "^16.0.0"
+        },
+        "@rx-angular/cdk": {
+            "@angular/core": "^16.0.0"
         }
     },
     "devDependencies": {
