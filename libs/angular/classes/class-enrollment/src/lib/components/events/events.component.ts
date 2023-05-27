@@ -48,11 +48,11 @@ export class EventsComponent {
         (s) => s.enrollment.isSignedUpForSolsticeEmails
     );
 
-    signupChanged({ checked }: { checked: boolean }) {
+    signupChanged({ checked }: { checked: boolean | undefined }) {
         this.workflow.patchState((s) => ({
             enrollment: {
                 ...s.enrollment,
-                isSignedUpForSolsticeEmails: checked,
+                isSignedUpForSolsticeEmails: checked ?? false,
             },
         }));
     }

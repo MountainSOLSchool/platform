@@ -14,7 +14,31 @@
     },
     "defaultProject": "portal",
     "generators": {
-        "@nrwl/angular": {
+        "@nx/angular:application": {
+            "style": "css",
+            "linter": "eslint",
+            "unitTestRunner": "jest",
+            "e2eTestRunner": "cypress"
+        },
+        "@nx/angular:library": {
+            "linter": "eslint",
+            "unitTestRunner": "jest"
+        },
+        "@nx/angular:component": {
+            "style": "css"
+        },
+        "@nx/react": {
+            "application": {
+                "babel": true
+            }
+        },
+        "@nx/next": {
+            "application": {
+                "style": "css",
+                "linter": "eslint"
+            }
+        },
+        "@nx/angular": {
             "application": {
                 "linter": "eslint"
             },
@@ -22,30 +46,6 @@
                 "linter": "eslint"
             },
             "storybook-configuration": {
-                "linter": "eslint"
-            }
-        },
-        "@nrwl/angular:application": {
-            "style": "css",
-            "linter": "eslint",
-            "unitTestRunner": "jest",
-            "e2eTestRunner": "cypress"
-        },
-        "@nrwl/angular:library": {
-            "linter": "eslint",
-            "unitTestRunner": "jest"
-        },
-        "@nrwl/angular:component": {
-            "style": "css"
-        },
-        "@nrwl/react": {
-            "application": {
-                "babel": true
-            }
-        },
-        "@nrwl/next": {
-            "application": {
-                "style": "css",
                 "linter": "eslint"
             }
         }

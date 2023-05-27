@@ -29,20 +29,20 @@
             }
         },
         "serve": {
-            "executor": "@nrwl/node:node",
+            "executor": "@nx/node:node",
             "options": {
                 "buildTarget": "functions:build"
             }
         },
         "lint": {
-            "executor": "@nrwl/linter:eslint",
+            "executor": "@nx/linter:eslint",
             "outputs": ["{options.outputFile}"],
             "options": {
                 "lintFilePatterns": ["apps/functions/**/*.ts"]
             }
         },
         "test": {
-            "executor": "@nrwl/jest:jest",
+            "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/apps/functions"],
             "options": {
                 "jestConfig": "apps/functions/jest.config.ts",

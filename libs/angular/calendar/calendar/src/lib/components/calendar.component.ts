@@ -16,25 +16,24 @@ import {
     startWith,
     ReplaySubject,
 } from 'rxjs';
-import {
-    CalendarOptions,
-    defineFullCalendarElement,
-} from '@fullcalendar/web-component';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
-import { EventApi, EventInput, EventClickArg } from '@fullcalendar/core';
+import {
+    EventApi,
+    EventInput,
+    EventClickArg,
+    CalendarOptions,
+} from '@fullcalendar/core';
 import { CommonModule } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
-
-defineFullCalendarElement();
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, SkeletonModule],
+    imports: [CommonModule, FullCalendarModule, SkeletonModule],
     selector: 'sol-calendar',
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
     templateUrl: './calendar.component.html',
 })
 export class CalendarComponent {

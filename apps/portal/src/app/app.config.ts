@@ -1,38 +1,21 @@
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { ApplicationConfig } from '@angular/core';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MessageService } from 'primeng/api';
+import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { provideEffects } from '@ngrx/effects';
+import { provideRouter } from '@angular/router';
+import { appRoutes } from './app-routes';
 import { AngularFireModule } from '@angular/fire/compat';
 import {
     AngularFireFunctionsModule,
     ORIGIN,
     USE_EMULATOR,
 } from '@angular/fire/compat/functions';
-import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
-import { provideEffects } from '@ngrx/effects';
-import { provideStore } from '@ngrx/store';
-import { AuthInterceptor } from '@sol/auth/interceptor';
-import { MessageService } from 'primeng/api';
-import { appRoutes } from './app/app-routes';
-import { AppComponent } from './app/app.component';
-import { environment } from './environments/environment';
-import { provideStoreDevtools } from '@ngrx/store-devtools';
-
-if (environment.production) {
-    enableProdMode();
-}
-
-const httpInterceptorProviders = [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-];
-const functionsProvider = environment.remoteFunctions
-    ? {
-          provide: ORIGIN,
-          useValue: 'https://mountain-sol-platform.web.app',
-      }
-    : { provide: USE_EMULATOR, useValue: ['localhost', 5001] };
-
-bootstrapApplication(AppComponent, {
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+export const appConfig: ApplicationConfig = {
     providers: [
         importProvidersFrom(BrowserModule, BrowserAnimationsModule),
         importProvidersFrom(BrowserAnimationsModule),
@@ -59,4 +42,4 @@ bootstrapApplication(AppComponent, {
         httpInterceptorProviders,
         functionsProvider,
     ],
-});
+};
