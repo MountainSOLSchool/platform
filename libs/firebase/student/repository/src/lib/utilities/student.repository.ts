@@ -95,10 +95,14 @@ export class StudentRepository {
                     )
                 )
             );
-            students = allStudentsFromEachClassInSemester.reduce(
-                (acc, curr) => [...acc, ...curr],
-                []
-            );
+            const uniqueStudentsById: Map<string, StudentDbEntry> =
+                allStudentsFromEachClassInSemester
+                    .reduce((acc, curr) => [...acc, ...curr], [])
+                    .reduce(
+                        (unique, student) => unique.set(student.id, student),
+                        new Map<string, StudentDbEntry>()
+                    );
+            students = Array.from(uniqueStudentsById.values());
         }
 
         return students;
