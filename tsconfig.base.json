@@ -20,6 +20,9 @@
             "@sol/admin/class-printouts": [
                 "libs/angular/admin/class-printouts/src/index.ts"
             ],
+            "@sol/angular/admin/enrollments": [
+                "libs/angular/admin/enrollments/src/index.ts"
+            ],
             "@sol/auth/interceptor": [
                 "libs/angular/auth/interceptor/src/index.ts"
             ],

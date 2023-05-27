@@ -1,0 +1,64 @@
+<h1>Enrollments</h1>
+<!-- div with button flex aligned to right -->
+<div style="display: flex; justify-content: flex-end; margin-bottom: 1rem">
+    <button
+        type="button"
+        pButton
+        pRipple
+        icon="pi pi-file"
+        label="Export to CSV"
+        (click)="dt.exportCSV()"
+        class="mr-2"
+    ></button>
+</div>
+<p-table
+    #dt
+    [columns]="(columns$ | async) ?? []"
+    [value]="(enrollments$ | async) ?? []"
+    responsiveLayout="scroll"
+    [loading]="(enrollments$ | async) === null"
+    sortMode="single"
+>
+    <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="studentName">
+                Student Name <p-sortIcon field="studentName"></p-sortIcon>
+            </th>
+            <th pSortableColumn="finalCost">
+                Final Cost <p-sortIcon field="finalCost"></p-sortIcon>
+            </th>
+            <ng-container
+                *rxFor="let discount of longestDiscounts$; let i = index"
+            >
+                <th [pSortableColumn]="'discount' + i + '_description'">
+                    Discount {{ i + 1 }} Name
+                    <p-sortIcon
+                        [field]="'discount' + i + '_description'"
+                    ></p-sortIcon>
+                </th>
+                <th [pSortableColumn]="'discount' + i + '_amount'">
+                    Discount {{ i + 1 }} Amount
+                    <p-sortIcon
+                        [field]="'discount' + i + '_amount'"
+                    ></p-sortIcon>
+                </th>
+            </ng-container>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-enrollment>
+        <tr>
+            <td>{{ enrollment.studentName }}</td>
+            <td>{{ enrollment.finalCost | currency }}</td>
+            <ng-container
+                *rxFor="let discount of longestDiscounts$; let i = index"
+            >
+                <td>{{ enrollment['discount' + i + '_description'] ?? '' }}</td>
+                <td>
+                    {{
+                        enrollment['discount' + i + '_amount'] ?? '' | currency
+                    }}
+                </td>
+            </ng-container>
+        </tr>
+    </ng-template>
+</p-table>
