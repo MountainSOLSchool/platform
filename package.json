@@ -103,6 +103,9 @@
             "@angular/core": "^16.0.0",
             "@angular/platform-browser": "^16.0.0",
             "@angular/platform-browser-dynamic": "^16.0.0"
+        },
+        "@rx-angular/template": {
+            "@angular/core": "^16.0.0"
         }
     },
     "devDependencies": {
