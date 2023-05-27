@@ -1,6 +1,6 @@
 <h1>Student T-shirt Sizes</h1>
 <h2>Size Counts</h2>
-<div style="margin-top: 20px" *rxLet="students$; let students">
+<div style="margin-top: 20px">
     <div style="margin-bottom: 2rem">
         <p-table
             [value]="(sizeCounts$ | async) ?? []"
@@ -30,7 +30,7 @@
     </div>
     <h2>Students</h2>
     <p-table
-        [value]="students ?? []"
+        [value]="(students$ | async) ?? []"
         responsiveLayout="scroll"
         [loading]="(students$ | async) === null"
         sortMode="single"

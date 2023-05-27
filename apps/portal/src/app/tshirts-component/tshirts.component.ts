@@ -32,7 +32,7 @@ export class TshirtsComponent {
                         : lastNameDiff;
                 })
             ),
-            shareReplay(1)
+            shareReplay()
         );
 
     sizeCounts$ = this.students$.pipe(
