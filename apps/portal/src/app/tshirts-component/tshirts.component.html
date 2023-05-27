@@ -1,7 +1,36 @@
 <h1>Student T-shirt Sizes</h1>
-<div style="margin-top: 20px">
+<h2>Size Counts</h2>
+<div style="margin-top: 20px" *rxLet="students$; let students">
+    <div style="margin-bottom: 2rem">
+        <p-table
+            [value]="(sizeCounts$ | async) ?? []"
+            responsiveLayout="scroll"
+            [loading]="(sizeCounts$ | async) === null"
+            sortMode="single"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="size">
+                        Shirt Size
+                        <p-sortIcon field="size"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="count">
+                        Count
+                        <p-sortIcon field="count"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-sizeCount>
+                <tr>
+                    <td>{{ sizeCount.size }}</td>
+                    <td>{{ sizeCount.count }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <h2>Students</h2>
     <p-table
-        [value]="(students$ | async) ?? []"
+        [value]="students ?? []"
         responsiveLayout="scroll"
         [loading]="(students$ | async) === null"
         sortMode="single"
