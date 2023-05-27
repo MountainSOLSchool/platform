@@ -12,3 +12,4 @@ export { roles } from './roles';
 export { calculateBasket } from './calculate-basket';
 export { addEmailToSolsticeList } from './add-email-to-solstice-list';
 export { createEnrollmentEmail } from './create-enrollment-email';
+export { adminEnrollments } from './admin-enrollments';

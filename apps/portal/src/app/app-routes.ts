@@ -60,6 +60,15 @@ export const appRoutes: Routes = [
                                             ).then((m) => m.tshirtRoutes),
                                     },
                                     {
+                                        path: 'enrollments',
+                                        loadComponent: () =>
+                                            import(
+                                                '@sol/angular/admin/enrollments'
+                                            ).then(
+                                                (m) => m.EnrollmentsComponent
+                                            ),
+                                    },
+                                    {
                                         path: 'classes',
                                         children: [
                                             {

@@ -28,6 +28,10 @@
                 "function": "tshirts"
             },
             {
+                "source": "/adminEnrollments",
+                "function": "adminEnrollments"
+            },
+            {
                 "source": "/signIn",
                 "function": "signIn"
             },

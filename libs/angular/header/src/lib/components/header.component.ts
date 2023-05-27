@@ -95,6 +95,11 @@ import { LetModule } from '@rx-angular/template/let';
                     >
                 </li>
                 <li>
+                    <a routerLink="/admin/enrollments" (click)="display = false"
+                        >Enrollments</a
+                    >
+                </li>
+                <li>
                     <a routerLink="/calendar/classes" (click)="display = false"
                         >Class Calendar</a
                     >

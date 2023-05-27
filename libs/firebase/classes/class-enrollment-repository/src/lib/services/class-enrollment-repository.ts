@@ -16,6 +16,28 @@ export class ClassEnrollmentRepository {
         return DatabaseUtility.getDatabase();
     }
 
+    static async getCurrentSemesterEnrollments(): Promise<
+        Array<SemesterEnrollment>
+    > {
+        const snapshot = await this.database
+            .collection('enrollment')
+            .where('status', '==', 'enrolled')
+            .get();
+        return await Promise.all(
+            snapshot.docs.map(async (doc) => {
+                const dbo = doc.data();
+                return {
+                    studentName: dbo.studentName,
+                    finalCost: dbo.finalCost,
+                    classIds: dbo.classIds,
+                    transactionId: dbo.transactionId,
+                    timestamp: dbo.timestamp,
+                    discounts: dbo.discounts,
+                };
+            })
+        );
+    }
+
     static async getCurrentUserCompletedEnrollments(
         request: functions.https.Request,
         response: functions.Response
@@ -39,6 +61,7 @@ export class ClassEnrollmentRepository {
                     classIds: dbo.classIds,
                     transactionId: dbo.transactionId,
                     timestamp: dbo.timestamp,
+                    discounts: dbo.discounts,
                 };
             })
         );

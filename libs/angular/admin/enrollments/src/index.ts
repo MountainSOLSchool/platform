@@ -1,1 +1,1 @@
-export * from './lib/angular-admin-enrollments.module';
+export { EnrollmentsComponent } from './lib/components/enrollments.component';
