@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { UserService } from '@sol/auth/user';
 import { Observable, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class AdminGuard implements CanActivate {
+export class AdminGuard {
     constructor(
         private readonly router: Router,
         private readonly user: UserService

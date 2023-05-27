@@ -3,18 +3,13 @@ import {
     AngularFireAuth,
     AngularFireAuthModule,
 } from '@angular/fire/compat/auth';
-import {
-    ActivatedRouteSnapshot,
-    CanActivate,
-    Router,
-    UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { userLoginInitiated } from './login.actions';
 
 @Injectable({ providedIn: 'root' })
-export class UserGuard implements CanActivate {
+export class UserGuard {
     constructor(
         private readonly router: Router,
         private readonly afAuth: AngularFireAuth,

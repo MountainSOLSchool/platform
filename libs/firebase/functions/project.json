@@ -5,14 +5,14 @@
     "projectType": "library",
     "targets": {
         "lint": {
-            "executor": "@nrwl/linter:eslint",
+            "executor": "@nx/linter:eslint",
             "options": {
                 "lintFilePatterns": ["libs/firebase/functions/**/*.ts"]
             },
             "outputs": ["{options.outputFile}"]
         },
         "test": {
-            "executor": "@nrwl/jest:jest",
+            "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/firebase/functions"],
             "options": {
                 "jestConfig": "libs/firebase/functions/jest.config.ts",
