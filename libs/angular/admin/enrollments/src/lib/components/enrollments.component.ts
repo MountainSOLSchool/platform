@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
-import { map, shareReplay, tap } from 'rxjs';
+import { map, shareReplay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
@@ -41,7 +41,6 @@ export class EnrollmentsComponent {
                         .reduce((acc, cur) => ({ ...acc, ...cur }), {}),
                 }));
             }),
-            tap(console.log),
             shareReplay()
         );
 
