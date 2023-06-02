@@ -1,4 +1,3 @@
-import * as admin from 'firebase-admin';
 import {
     DocumentReference,
     Timestamp,
@@ -7,12 +6,13 @@ import {
     QueryDocumentSnapshot,
     FieldPath,
     WhereFilterOp,
+    getFirestore,
 } from 'firebase-admin/firestore';
+import { getApps, initializeApp } from 'firebase-admin/app';
 
-if (admin.apps.length === 0) {
-    admin.initializeApp();
-}
-const db = admin.firestore();
+const apps = getApps();
+const app = apps.length === 0 ? initializeApp() : apps[0];
+const db = getFirestore(app);
 
 db.settings({ ignoreUndefinedProperties: true });
 
