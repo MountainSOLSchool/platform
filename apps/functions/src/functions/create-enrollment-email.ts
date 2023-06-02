@@ -1,4 +1,3 @@
-import * as functions from 'firebase-functions';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
 import {
     SemesterRepository,
@@ -6,11 +5,13 @@ import {
 } from '@sol/classes/repository';
 import { AuthUtility } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 
-export const createEnrollmentEmail = functions.firestore
-    .document('enrollment/{enrollmentId}')
-    .onCreate(async (documentSnapshot) => {
-        const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
+export const createEnrollmentEmail = onDocumentCreated(
+    'enrollment/{enrollmentId}',
+    async (documentSnapshot) => {
+        const enrollmentRecord =
+            documentSnapshot.data as unknown as ClassEnrollmentDbo;
 
         if (
             enrollmentRecord.status === 'enrolled' &&
@@ -124,4 +125,5 @@ export const createEnrollmentEmail = functions.firestore
                     },
                 });
         }
-    });
+    }
+);
