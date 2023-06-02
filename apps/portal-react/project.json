@@ -9,6 +9,7 @@
             "outputs": ["{options.outputPath}"],
             "defaultConfiguration": "production",
             "options": {
+                "root": "apps/portal-react",
                 "outputPath": "dist/apps/portal-react"
             },
             "configurations": {
