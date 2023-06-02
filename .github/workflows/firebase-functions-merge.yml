@@ -10,7 +10,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - run: npm ci && npm run build:functions
-            - uses: w9jds/firebase-action@master
+            - uses: david-shortman/firebase-action@firebase-tools-12.3.0
               with:
                   args: deploy --only functions --project prod
               env:

@@ -6,6 +6,9 @@ import {
 import { AuthUtility } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { setGlobalOptions } from 'firebase-functions/v2';
+
+setGlobalOptions({ maxInstances: 10 });
 
 export const createEnrollmentEmail = onDocumentCreated(
     'enrollment/{enrollmentId}',

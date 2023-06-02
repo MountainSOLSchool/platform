@@ -2,6 +2,9 @@ import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
 import { DatabaseUtility } from '@sol/firebase/database';
 import * as admin from 'firebase-admin';
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { setGlobalOptions } from 'firebase-functions/v2';
+
+setGlobalOptions({ maxInstances: 10 });
 
 export const addEmailToSolsticeList = onDocumentCreated(
     'enrollment/{enrollmentId}',

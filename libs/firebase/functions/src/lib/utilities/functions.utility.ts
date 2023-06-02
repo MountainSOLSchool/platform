@@ -62,7 +62,7 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
         ) => void
     ) {
         return onRequest(
-            { secrets: Object.values(this.secrets) },
+            { secrets: Object.values(this.secrets), maxInstances: 10 },
             async (request, response) => {
                 cors(request, response, async () => {
                     this.roles.forEach((role) => {
