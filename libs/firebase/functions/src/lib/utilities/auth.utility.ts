@@ -1,7 +1,8 @@
 import { DatabaseUtility } from '@sol/firebase/database';
 import * as admin from 'firebase-admin';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
-import * as functions from 'firebase-functions';
+import { Request } from 'firebase-functions/v2/https';
+import * as express from 'express';
 
 export enum Role {
     Admin = 'admin',
@@ -9,8 +10,8 @@ export enum Role {
 
 export class AuthUtility {
     static validateRole(
-        request: functions.https.Request,
-        response: functions.Response,
+        request: Request,
+        response: express.Response,
         role: Role
     ) {
         switch (role) {
@@ -19,10 +20,7 @@ export class AuthUtility {
                 break;
         }
     }
-    public static async validateIsAdmin(
-        req: functions.https.Request,
-        res: functions.Response
-    ) {
+    public static async validateIsAdmin(req: Request, res: express.Response) {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
             res.status(403).send('Unauthorized');
@@ -56,8 +54,8 @@ export class AuthUtility {
     }
 
     public static async getUserFromRequest(
-        req: functions.https.Request,
-        res: functions.Response
+        req: Request,
+        res: express.Response
     ): Promise<admin.auth.UserRecord | void> {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
@@ -73,8 +71,8 @@ export class AuthUtility {
     }
 
     public static async validateFirebaseIdToken(
-        req: functions.https.Request,
-        res: functions.Response
+        req: Request,
+        res: express.Response
     ): Promise<DecodedIdToken | void> {
         if (
             (!req.headers.authorization ||

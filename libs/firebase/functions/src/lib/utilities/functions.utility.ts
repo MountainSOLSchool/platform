@@ -1,11 +1,11 @@
-import * as functions from 'firebase-functions';
 import * as CORS from 'cors';
 import { AuthUtility, Role } from './auth.utility';
 import { defineSecret, defineString } from 'firebase-functions/params';
 import { SecretParam, StringParam } from 'firebase-functions/lib/params/types';
-import { FunctionWithParametersType } from '@ngrx/store';
-
+import { onRequest } from 'firebase-functions/v2/https';
 const cors = CORS({ origin: true });
+import { Request } from 'firebase-functions/v2/https';
+import * as express from 'express';
 
 class FunctionBuilder<SecretNames extends string, StringNames extends string> {
     constructor(
@@ -52,18 +52,18 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
 
     handle<RequestData, QueryData extends ParsedQs = ParsedQs>(
         handler: (
-            request: Omit<functions.https.Request, 'body' | 'query'> & {
+            request: Omit<Request, 'body' | 'query'> & {
                 body: { data: RequestData };
                 query: QueryData;
             },
-            response: functions.Response,
+            response: express.Response,
             secrets: Record<string, string>,
             strings: Record<string, string>
         ) => void
     ) {
-        return functions
-            .runWith({ secrets: Object.values(this.secrets) })
-            .https.onRequest(async (request, response) => {
+        return onRequest(
+            { secrets: Object.values(this.secrets) },
+            async (request, response) => {
                 cors(request, response, async () => {
                     this.roles.forEach((role) => {
                         AuthUtility.validateRole(request, response, role);
@@ -76,7 +76,7 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
                             send: (data: unknown) => {
                                 response.send({ data });
                             },
-                        } as functions.Response,
+                        } as express.Response,
                         Object.fromEntries(
                             Object.entries(this.secrets)
                                 .map((pair) => pair as [string, SecretParam])
@@ -89,7 +89,8 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
                         )
                     );
                 });
-            });
+            }
+        );
     }
 }
 
