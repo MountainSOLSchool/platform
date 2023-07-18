@@ -3,12 +3,19 @@ import * as admin from 'firebase-admin';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
 import { firestore } from 'firebase-admin';
 import DocumentReference = firestore.DocumentReference;
-import { ClassRepository } from '@sol/classes/repository';
+import {
+    ActiveSemesterRepository,
+    ClassRepository,
+    SemesterRepository,
+} from '@sol/classes/repository';
 
 export class StudentRepository {
-    protected constructor(private readonly semesterId: string) {}
-    static of(semesterId: string): StudentRepository {
-        return new StudentRepository(semesterId);
+    protected constructor(private readonly semester: SemesterRepository) {}
+    static enrolledInActiveSemester(): StudentRepository {
+        return new StudentRepository(ActiveSemesterRepository.of());
+    }
+    static of(semester: SemesterRepository): StudentRepository {
+        return new StudentRepository(semester);
     }
     static async fetchMatchingStudent({
         firstName,
@@ -64,47 +71,39 @@ export class StudentRepository {
         return await this.database.collection('students').add(student);
     }
 
-    private static get database(): FirebaseFirestore.Firestore {
+    private static get database() {
         return DatabaseUtility.getDatabase();
     }
 
-    async getEnrolled(classId?: string): Promise<Array<StudentDbEntry>> {
-        let students: Array<StudentDbEntry> = [];
-        if (classId) {
-            const theClass = await ClassRepository.of(this.semesterId).get(
-                classId
-            );
-
-            const classStudentRefs = theClass.students ?? [];
-
-            students =
-                await DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
-                    classStudentRefs
-                );
-        } else {
-            const allClasses = await ClassRepository.of(
-                this.semesterId
-            ).getAll();
-            const allStudentsFromAllClassesRefs = allClasses.map(
-                (theClass) => theClass.students
-            );
-            const allStudentsFromEachClassInSemester = await Promise.all(
-                allStudentsFromAllClassesRefs.map((studentRefs) =>
-                    DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
-                        studentRefs as any
-                    )
+    async getAll(): Promise<Array<StudentDbEntry>> {
+        const allClasses = await ClassRepository.of(this.semester).getAll();
+        const allStudentsFromAllClassesRefs = allClasses.map(
+            (theClass) => theClass.students
+        );
+        const allStudentsFromEachClassInSemester = await Promise.all(
+            allStudentsFromAllClassesRefs.map((studentRefs) =>
+                DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
+                    studentRefs as any
                 )
-            );
-            const uniqueStudentsById: Map<string, StudentDbEntry> =
-                allStudentsFromEachClassInSemester
-                    .reduce((acc, curr) => [...acc, ...curr], [])
-                    .reduce(
-                        (unique, student) => unique.set(student.id, student),
-                        new Map<string, StudentDbEntry>()
-                    );
-            students = Array.from(uniqueStudentsById.values());
-        }
+            )
+        );
+        const uniqueStudentsById: Map<string, StudentDbEntry> =
+            allStudentsFromEachClassInSemester
+                .reduce((acc, curr) => [...acc, ...curr], [])
+                .reduce(
+                    (unique, student) => unique.set(student.id, student),
+                    new Map<string, StudentDbEntry>()
+                );
+        return Array.from(uniqueStudentsById.values());
+    }
 
-        return students;
+    async getInClass(classId: string): Promise<Array<StudentDbEntry>> {
+        const theClass = await ClassRepository.of(this.semester).get(classId);
+
+        const classStudentRefs = theClass.students ?? [];
+
+        return await DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
+            classStudentRefs
+        );
     }
 }

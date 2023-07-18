@@ -1,10 +1,7 @@
 import { Functions } from '@sol/firebase/functions';
-import {
-    DiscountRepository,
-    SemesterRepository,
-    SUMMER_2023_SEMESTER,
-} from '@sol/classes/repository';
+import { DiscountRepository } from '@sol/classes/repository';
 import { Discount, EnrollmentUtility } from '@sol/classes/domain';
+import { Semester } from '@sol/firebase/classes/semester';
 
 export const calculateBasket = Functions.endpoint.handle<{
     codes: Array<string>;
@@ -17,9 +14,7 @@ export const calculateBasket = Functions.endpoint.handle<{
         )
     ).filter((code): code is Discount<unknown> => !!code);
 
-    const groups = await SemesterRepository.of(
-        SUMMER_2023_SEMESTER
-    ).groups.getByClassIds(classIds);
+    const groups = await Semester.active().groups.getByClassIds(classIds);
 
     const idsOfStandaloneClasses = classIds.filter(
         (id) =>
@@ -31,9 +26,9 @@ export const calculateBasket = Functions.endpoint.handle<{
             )
     );
 
-    const classes = await SemesterRepository.of(
-        SUMMER_2023_SEMESTER
-    ).classes.getMany(idsOfStandaloneClasses);
+    const classes = await Semester.active().classes.getMany(
+        idsOfStandaloneClasses
+    );
 
     const { discountAmounts, finalTotal, originalTotal } =
         EnrollmentUtility.getEnrollmentCost(discounts, classes, groups);

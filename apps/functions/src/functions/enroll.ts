@@ -1,15 +1,12 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { Braintree } from '@sol/payments/braintree';
 import { NewStudentDbEntry, StudentForm } from '@sol/student/domain';
-import {
-    DiscountRepository,
-    SemesterRepository,
-    SUMMER_2023_SEMESTER,
-} from '@sol/classes/repository';
+import { DiscountRepository } from '@sol/classes/repository';
 import { Discount, EnrollmentUtility } from '@sol/classes/domain';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
+import { Semester } from '@sol/firebase/classes/semester';
 
 function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
     const entry: NewStudentDbEntry = {
@@ -107,15 +104,15 @@ export const enroll = Functions.endpoint
             isSignedUpForSolsticeEmails,
         } = request.body.data;
 
-        const semester = SemesterRepository.of(SUMMER_2023_SEMESTER);
+        const semester = Semester.active();
 
         const classesRepository = semester.classes;
 
         const classes = await classesRepository.getMany(selectedClasses);
 
-        const classGroups = await SemesterRepository.of(
-            SUMMER_2023_SEMESTER
-        ).groups.getByClassIds(selectedClasses);
+        const classGroups = await semester.groups.getByClassIds(
+            selectedClasses
+        );
 
         const discounts = (
             await Promise.all(

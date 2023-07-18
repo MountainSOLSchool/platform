@@ -2,20 +2,16 @@ import { Functions, Role } from '@sol/firebase/functions';
 import { StudentRepository } from '@sol/student/repository';
 import { RosterReportGenerator } from '@sol/student/reports';
 import { TableHtml } from '@sol/table/html';
-import {
-    SemesterRepository,
-    SUMMER_2023_SEMESTER,
-} from '@sol/classes/repository';
+import { Semester } from '@sol/firebase/classes/semester';
 
 async function getClassSignInTable(classId: string) {
-    const students = await StudentRepository.of(
-        SUMMER_2023_SEMESTER
-    ).getEnrolled(classId);
+    const students =
+        await StudentRepository.enrolledInActiveSemester().getInClass(classId);
 
     const studentRecords =
         RosterReportGenerator.transformStudentEntriesIntoSignInSheet(students);
 
-    const className = await SemesterRepository.of(SUMMER_2023_SEMESTER)
+    const className = await Semester.active()
         .classes.get(classId)
         .then((c) => c.title);
 
