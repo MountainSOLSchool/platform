@@ -1,0 +1,60 @@
+<!-- donate form with amount and payment collector and donate button -->
+<ng-container *rxLet="viewModel$; let vm">
+    <div class="formgrid grid">
+        <div class="field col" *rxLet="'name'; let fieldname">
+            <span class="p-float-label">
+                <input
+                    type="text"
+                    [id]="fieldname"
+                    [name]="fieldname"
+                    pInputText
+                    [solValid]="!vm.errors[fieldname]"
+                    [(ngModel)]="guardian.guardianName"
+                    (ngModelChange)="updateStudentInfo(vm.student)"
+                />
+                <label [for]="fieldname">Name</label>
+            </span>
+            <sol-messages [messages]="vm.errors[fieldname]"></sol-messages>
+        </div>
+        <div
+            class="field col"
+            *rxLet="'guardian_' + i + '_relationship'; let fieldname"
+        >
+            <span class="p-float-label">
+                <input
+                    type="text"
+                    [id]="fieldname"
+                    [name]="fieldname"
+                    pInputText
+                    [solValid]="!vm.errors[fieldname]"
+                    [(ngModel)]="guardian.guardianRelationship"
+                    (ngModelChange)="updateStudentInfo(vm.student)"
+                />
+                <label [for]="fieldname">Relationship to Student</label>
+            </span>
+            <sol-messages [messages]="vm.errors[fieldname]"></sol-messages>
+        </div>
+        <div
+            class="field col"
+            *rxLet="'guardian_' + i + '_phone'; let fieldname"
+        >
+            <span class="p-float-label">
+                <p-inputMask
+                    type="text"
+                    [id]="fieldname"
+                    [name]="fieldname"
+                    mask="999-999-9999"
+                    [solValid]="!vm.errors[fieldname]"
+                    [(ngModel)]="guardian.guardianPhone"
+                    (ngModelChange)="updateStudentInfo(vm.student)"
+                ></p-inputMask>
+                <label [for]="fieldname">Phone Number</label>
+            </span>
+            <sol-messages [messages]="vm.errors[fieldname]"></sol-messages>
+        </div>
+    </div>
+    <sol-messages [messages]="vm.errors['hasPaymentMethod']"></sol-messages>
+    <sol-payment-collector
+        (paymentMethod)="setPaymentMethod($event)"
+    ></sol-payment-collector>
+</ng-container>

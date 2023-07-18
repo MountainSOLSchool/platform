@@ -11,107 +11,102 @@ export const appRoutes: Routes = [
         component: HeaderComponent,
         providers: [importProvidersFrom(LoginEffectModule)],
         children: [
+            { path: '', redirectTo: 'classes', pathMatch: 'full' },
             {
                 path: 'user',
                 loadChildren: () =>
                     import('@sol/auth/login').then((m) => m.authRoutes),
             },
-            { path: '', redirectTo: 'classes', pathMatch: 'full' },
             {
                 path: '',
+                canActivate: [UserGuard],
                 children: [
                     {
-                        path: '',
-                        canActivate: [UserGuard],
+                        path: 'account',
+                        loadChildren: () =>
+                            import('@sol/account').then((m) => m.accountRoutes),
+                    },
+                    {
+                        path: 'admin',
+                        providers: [AdminGuard],
+                        canActivate: [AdminGuard],
                         children: [
                             {
-                                path: 'account',
+                                path: '',
                                 loadChildren: () =>
-                                    import('@sol/account').then(
-                                        (m) => m.accountRoutes
+                                    import(
+                                        './dashboard-component/dashboard-routes'
+                                    ).then((m) => m.dashboardRoutes),
+                            },
+                            {
+                                path: 'report',
+                                loadComponent: () =>
+                                    import('@sol/admin/class-printouts').then(
+                                        (m) => m.ClassPrintoutsComponent
                                     ),
                             },
                             {
-                                path: 'admin',
-                                providers: [AdminGuard],
-                                canActivate: [AdminGuard],
+                                path: 't-shirts',
+                                loadChildren: () =>
+                                    import(
+                                        './tshirts-component/tshirt-routes'
+                                    ).then((m) => m.tshirtRoutes),
+                            },
+                            {
+                                path: 'enrollments',
+                                loadComponent: () =>
+                                    import(
+                                        '@sol/angular/admin/enrollments'
+                                    ).then((m) => m.EnrollmentsComponent),
+                            },
+                            {
+                                path: 'classes',
                                 children: [
                                     {
-                                        path: '',
+                                        path: 'management',
                                         loadChildren: () =>
                                             import(
-                                                './dashboard-component/dashboard-routes'
-                                            ).then((m) => m.dashboardRoutes),
-                                    },
-                                    {
-                                        path: 'report',
-                                        loadComponent: () =>
-                                            import(
-                                                '@sol/admin/class-printouts'
+                                                '@sol/classes/class-management'
                                             ).then(
-                                                (m) => m.ClassPrintoutsComponent
+                                                (m) => m.classManagementRoutes
                                             ),
-                                    },
-                                    {
-                                        path: 't-shirts',
-                                        loadChildren: () =>
-                                            import(
-                                                './tshirts-component/tshirt-routes'
-                                            ).then((m) => m.tshirtRoutes),
-                                    },
-                                    {
-                                        path: 'enrollments',
-                                        loadComponent: () =>
-                                            import(
-                                                '@sol/angular/admin/enrollments'
-                                            ).then(
-                                                (m) => m.EnrollmentsComponent
-                                            ),
-                                    },
-                                    {
-                                        path: 'classes',
-                                        children: [
-                                            {
-                                                path: 'management',
-                                                loadChildren: () =>
-                                                    import(
-                                                        '@sol/classes/class-management'
-                                                    ).then(
-                                                        (m) =>
-                                                            m.classManagementRoutes
-                                                    ),
-                                            },
-                                        ],
                                     },
                                 ],
                             },
                         ],
                     },
+                ],
+            },
+            {
+                path: 'calendar',
+                loadChildren: () =>
+                    import('@sol/classes/calendar').then(
+                        (m) => m.calendarRoutes
+                    ),
+            },
+            {
+                path: 'classes',
+                children: [
                     {
-                        path: 'calendar',
+                        path: '',
+                        redirectTo: 'enrollment',
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: 'enrollment',
                         loadChildren: () =>
-                            import('@sol/classes/calendar').then(
-                                (m) => m.calendarRoutes
+                            import('@sol/classes/enrollment').then(
+                                (m) => m.enrollmentRoutes
                             ),
                     },
-                    {
-                        path: 'classes',
-                        children: [
-                            {
-                                path: '',
-                                redirectTo: 'enrollment',
-                                pathMatch: 'full',
-                            },
-                            {
-                                path: 'enrollment',
-                                loadChildren: () =>
-                                    import('@sol/classes/enrollment').then(
-                                        (m) => m.enrollmentRoutes
-                                    ),
-                            },
-                        ],
-                    },
                 ],
+            },
+            {
+                path: 'donate',
+                loadComponent: () =>
+                    import('@sol/angular/donate').then(
+                        (m) => m.DonateComponent
+                    ),
             },
         ],
     },

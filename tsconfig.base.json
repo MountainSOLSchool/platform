@@ -23,6 +23,7 @@
             "@sol/angular/admin/enrollments": [
                 "libs/angular/admin/enrollments/src/index.ts"
             ],
+            "@sol/angular/donate": ["libs/angular/donate/src/index.ts"],
             "@sol/auth/interceptor": [
                 "libs/angular/auth/interceptor/src/index.ts"
             ],
