@@ -1,11 +1,9 @@
 import * as functions from 'firebase-functions';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
-import {
-    SemesterRepository,
-    SUMMER_2023_SEMESTER,
-} from '@sol/classes/repository';
+
 import { AuthUtility } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
+import { Semester } from '@sol/firebase/classes/semester';
 
 export const createEnrollmentEmail = functions.firestore
     .document('enrollment/{enrollmentId}')
@@ -17,9 +15,9 @@ export const createEnrollmentEmail = functions.firestore
             (!!enrollmentRecord.transactionId ||
                 enrollmentRecord.finalCost === 0)
         ) {
-            const classes = await SemesterRepository.of(
-                SUMMER_2023_SEMESTER
-            ).classes.getMany(enrollmentRecord.classIds);
+            const classes = await Semester.active().classes.getMany(
+                enrollmentRecord.classIds
+            );
 
             const classesCost = classes.reduce((total, c) => total + c.cost, 0);
             const totalDiscounts = enrollmentRecord.discounts.reduce(

@@ -1,19 +1,20 @@
 import { DatabaseUtility } from '@sol/firebase/database';
 import { SemesterClassGroup } from '@sol/classes/domain';
 import { ClassRepository } from './class.repository';
+import { SemesterRepository } from './semester.repository';
 
 export class ClassGroupRepository {
-    protected constructor(private readonly semesterId: string) {}
-    static of(semesterId: string): ClassGroupRepository {
-        return new ClassGroupRepository(semesterId);
+    protected constructor(private readonly semester: SemesterRepository) {}
+    static of(semester: SemesterRepository): ClassGroupRepository {
+        return new ClassGroupRepository(semester);
     }
-    private get groupsPath(): string {
-        return `semesters/${this.semesterId}/groups`;
+    private async getGroupsPath(): Promise<string> {
+        return `${await this.semester.getPath()}/groups`;
     }
 
     async get(id: string): Promise<SemesterClassGroup> {
         const document = await DatabaseUtility.getDocumentRef(
-            `${this.groupsPath}/${id}`
+            `${await this.getGroupsPath()}/${id}`
         );
         const [data] = await DatabaseUtility.getHydratedDocuments([document]);
         return await this.convertDboToDomain(data);
@@ -22,7 +23,7 @@ export class ClassGroupRepository {
     private async convertDboToDomain(dbo: any): Promise<SemesterClassGroup> {
         return {
             ...dbo,
-            classes: await ClassRepository.of(this.semesterId).getMany(
+            classes: await ClassRepository.of(this.semester).getMany(
                 dbo.classIds
             ),
         };
@@ -39,7 +40,7 @@ export class ClassGroupRepository {
         startsAt: number
     ): Promise<SemesterClassGroup[]> {
         const groupsCollection = await DatabaseUtility.getCollectionRef(
-            this.groupsPath
+            await this.getGroupsPath()
         );
         const groupDocs = await groupsCollection.listDocuments();
         const groupIds = groupDocs.map((doc) => doc.id);
@@ -56,7 +57,7 @@ export class ClassGroupRepository {
         classIds: Array<string>
     ): Promise<SemesterClassGroup[]> {
         const groupsCollection = await DatabaseUtility.getCollectionRef(
-            this.groupsPath
+            await this.getGroupsPath()
         );
         const groupDocs = await groupsCollection.listDocuments();
         const groupIds = groupDocs.map((doc) => doc.id);

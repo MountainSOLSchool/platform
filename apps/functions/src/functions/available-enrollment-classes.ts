@@ -1,11 +1,8 @@
 import { Functions } from '@sol/firebase/functions';
-import {
-    SemesterRepository,
-    SUMMER_2023_SEMESTER,
-} from '@sol/classes/repository';
+import { Semester } from '@sol/firebase/classes/semester';
 
 async function getCategorizedClasses() {
-    const semester = await SemesterRepository.of(SUMMER_2023_SEMESTER);
+    const semester = await Semester.active();
     const now = Date.now();
     const classes = await semester.classes.getByStartsAtOrAfter(now);
     const groups = await semester.groups.getByStartsAtOrAfter(now);
