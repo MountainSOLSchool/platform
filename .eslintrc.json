@@ -67,7 +67,12 @@
                 "plugin:eslint-comments/recommended"
             ],
             "rules": {
-                "eslint-comments/no-use": ["error", { "allow": [] }]
+                "eslint-comments/no-use": [
+                    "error",
+                    {
+                        "allow": []
+                    }
+                ]
             }
         },
         {
