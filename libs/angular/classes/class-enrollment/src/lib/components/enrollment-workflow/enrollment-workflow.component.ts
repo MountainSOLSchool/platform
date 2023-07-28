@@ -4,7 +4,6 @@ import {
     Component,
     HostListener,
     inject,
-    ViewChild,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { EnrollmentWorkflowStore } from './enrollment-workflow.store';
@@ -13,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { filter, fromEvent, map, of, skip, take, timer } from 'rxjs';
+import { filter, map, of, timer } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
@@ -25,7 +24,7 @@ import {
     STEPPER_GLOBAL_OPTIONS,
 } from '@angular/cdk/stepper';
 import { MedicalComponent } from '../medical/medical.component';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { ComponentCanDeactivate } from './pending-changes.guard';
@@ -33,7 +32,7 @@ import { EventsComponent } from '../events/events.component';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive';
 
@@ -61,14 +60,14 @@ import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive'
         CheckoutComponent,
         ConfirmationComponent,
         MedicalComponent,
-        LetModule,
+        RxLet,
         ProgressSpinnerModule,
         DialogModule,
         EventsComponent,
         MessagesModule,
         MessageModule,
         ToastModule,
-        IfModule,
+        RxIf,
         MatVerticalStepperScrollerDirective,
     ],
     styles: [

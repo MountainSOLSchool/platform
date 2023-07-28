@@ -4,12 +4,12 @@ import { map, shareReplay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, ProgressBarModule, TableModule, LetModule],
+    imports: [CommonModule, ProgressBarModule, TableModule, RxLet],
     templateUrl: './tshirts.component.html',
 })
 export class TshirtsComponent {

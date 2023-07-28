@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { of } from 'rxjs';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { CheckboxModule } from 'primeng/checkbox';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
@@ -20,7 +20,7 @@ import { ChipModule } from 'primeng/chip';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
-        LetModule,
+        RxLet,
         CheckboxModule,
         CardModule,
         TagModule,

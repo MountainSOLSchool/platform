@@ -6,14 +6,7 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
-import {
-    BehaviorSubject,
-    combineLatest,
-    map,
-    shareReplay,
-    tap,
-    timer,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, map, shareReplay } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -27,7 +20,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { create, test, enforce, group } from 'vest';
 import { CommonModule } from '@angular/common';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
@@ -52,7 +45,7 @@ import { DropdownModule } from 'primeng/dropdown';
         ToggleButtonModule,
         SelectButtonModule,
         FormsModule,
-        LetModule,
+        RxLet,
         ValidDirective,
         MessagesComponent,
         OverlayPanelModule,

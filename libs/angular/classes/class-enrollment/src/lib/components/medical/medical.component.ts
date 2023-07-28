@@ -21,10 +21,10 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { create, enforce, group, test } from 'vest';
 import { StudentForm } from '@sol/student/domain';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { CommonModule } from '@angular/common';
-import { ForModule } from '@rx-angular/template/for';
+import { RxFor } from '@rx-angular/template/for';
 
 @Component({
     standalone: true,
@@ -43,8 +43,8 @@ import { ForModule } from '@rx-angular/template/for';
         ToggleButtonModule,
         SelectButtonModule,
         FormsModule,
-        LetModule,
-        ForModule,
+        RxLet,
+        RxFor,
         ValidDirective,
         MessagesComponent,
     ],

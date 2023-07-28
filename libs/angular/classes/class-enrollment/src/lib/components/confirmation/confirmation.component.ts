@@ -6,17 +6,17 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { ChipModule } from 'primeng/chip';
-import { combineLatest, filter, map, Subject, tap } from 'rxjs';
+import { combineLatest, filter, map, Subject } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { ClassListService } from '../../services/class-list.service';
-import { ForModule } from '@rx-angular/template/for';
+import { RxFor } from '@rx-angular/template/for';
 import { FieldsetModule } from 'primeng/fieldset';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
@@ -29,9 +29,9 @@ import { ClassSummaryTableComponent } from '../class-summary-table/class-summary
     imports: [
         CommonModule,
         ChipModule,
-        LetModule,
-        ForModule,
-        IfModule,
+        RxLet,
+        RxFor,
+        RxIf,
         FieldsetModule,
         CardModule,
         InputTextModule,

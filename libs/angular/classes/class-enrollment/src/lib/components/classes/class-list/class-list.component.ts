@@ -26,13 +26,13 @@ import { ChipModule } from 'primeng/chip';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormsModule } from '@angular/forms';
 import { ClassListService } from '../../../services/class-list.service';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { IfModule } from '@rx-angular/template/if';
+import { RxIf } from '@rx-angular/template/if';
 import { DropdownModule } from 'primeng/dropdown';
-import { ForModule } from '@rx-angular/template/for';
+import { RxFor } from '@rx-angular/template/for';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
@@ -56,13 +56,13 @@ interface ClassRow {
         ChipModule,
         SkeletonModule,
         FormsModule,
-        LetModule,
+        RxLet,
         SelectButtonModule,
         ToggleButtonModule,
         ProgressSpinnerModule,
-        IfModule,
+        RxIf,
         DropdownModule,
-        ForModule,
+        RxFor,
         MessagesModule,
         MessageModule,
         ToastModule,
