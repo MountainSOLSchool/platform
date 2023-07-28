@@ -32,7 +32,7 @@
                 ></ng-container></ng-container
         ></ng-template>
     </mat-step>
-    <mat-step #events label="Events">
+    <mat-step *rxIf="false" #events label="Events">
         <ng-template matStepContent>
             <ng-container *rxIf="stepper.selected === events">
                 <h2>Events</h2>
@@ -44,6 +44,19 @@
                 ></ng-container></ng-container
         ></ng-template>
     </mat-step>
+    <mat-step #account label="Account">
+    <ng-template matStepContent>
+      <ng-container *rxIf="stepper.selected === account">
+        <h2>Account</h2>
+        <sol-class-account
+          (validityChange)="account.hasError = !$event"
+        ></sol-class-account>
+
+        <ng-container
+          *ngTemplateOutlet="navigation"
+        ></ng-container></ng-container
+      ></ng-template>
+  </mat-step>
     <mat-step #selectStudent label="Select Student">
         <ng-template matStepContent>
             <ng-container *rxIf="stepper.selected === selectStudent">
@@ -51,19 +64,6 @@
                 <sol-student-selection
                     (validityChange)="selectStudent.hasError = !$event"
                 ></sol-student-selection>
-                <ng-container
-                    *ngTemplateOutlet="navigation"
-                ></ng-container></ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step #account label="Account Registration">
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === account">
-                <h2>Account Registration</h2>
-                <sol-class-account
-                    (validityChange)="account.hasError = !$event"
-                ></sol-class-account>
-
                 <ng-container
                     *ngTemplateOutlet="navigation"
                 ></ng-container></ng-container
