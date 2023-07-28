@@ -35,6 +35,7 @@ import { ToastModule } from 'primeng/toast';
 import { RxIf } from '@rx-angular/template/if';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive';
+import { SelectStudentComponent } from '../select-student/select-student.component';
 
 @Component({
     standalone: true,
@@ -69,6 +70,7 @@ import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive'
         ToastModule,
         RxIf,
         MatVerticalStepperScrollerDirective,
+        SelectStudentComponent,
     ],
     styles: [
         `

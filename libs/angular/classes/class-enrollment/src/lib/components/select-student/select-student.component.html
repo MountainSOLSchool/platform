@@ -1,0 +1,15 @@
+<ng-container *rxLet="students$; let students; suspense: skeleton">
+  <div>
+    <p-dropdown
+      [options]="students"
+      placeholder="Select a student"
+      optionLabel="name"
+      optionValue="id"
+      [showClear]="true"
+      (onChange)="selectedStudent()"
+    ></p-dropdown>
+  </div>
+</ng-container>
+<ng-template #skeleton>
+💀
+</ng-template>
