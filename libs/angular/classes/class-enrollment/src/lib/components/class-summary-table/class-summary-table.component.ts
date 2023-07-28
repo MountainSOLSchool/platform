@@ -16,7 +16,7 @@ import {
 } from 'rxjs';
 import { ClassListService } from '../../services/class-list.service';
 import { TableModule } from 'primeng/table';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
@@ -24,7 +24,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-class-summary-table',
     templateUrl: './class-summary-table.component.html',
-    imports: [CommonModule, LetModule, TableModule, ProgressSpinnerModule],
+    imports: [CommonModule, RxLet, TableModule, ProgressSpinnerModule],
     providers: [DatePipe],
 })
 export class ClassSummaryTableComponent {

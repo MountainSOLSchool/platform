@@ -4,7 +4,7 @@ import { map, shareReplay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { SemesterEnrollment } from '@sol/classes/domain';
 import { RxFor } from '@rx-angular/template/for';
 import { ButtonModule } from 'primeng/button';
@@ -17,7 +17,7 @@ import { RippleModule } from 'primeng/ripple';
         CommonModule,
         ProgressBarModule,
         TableModule,
-        LetModule,
+        RxLet,
         RxFor,
         ButtonModule,
         RippleModule,

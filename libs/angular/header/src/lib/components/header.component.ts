@@ -8,7 +8,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 
 @Component({
     standalone: true,
@@ -19,8 +19,8 @@ import { LetModule } from '@rx-angular/template/let';
         SidebarModule,
         ToolbarModule,
         RouterModule,
-        LetModule,
         UserButtonComponent,
+        RxLet,
     ],
     styles: [
         `

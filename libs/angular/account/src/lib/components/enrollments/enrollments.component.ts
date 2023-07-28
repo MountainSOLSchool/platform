@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 import { CardModule } from 'primeng/card';
 import { SkeletonModule } from 'primeng/skeleton';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { SemesterEnrollment } from '@sol/classes/domain';
 import { ClassSummaryTableComponent } from '../../../../../classes/class-enrollment/src/lib/components/class-summary-table/class-summary-table.component';
 
@@ -72,7 +72,7 @@ import { ClassSummaryTableComponent } from '../../../../../classes/class-enrollm
         CommonModule,
         CardModule,
         SkeletonModule,
-        LetModule,
+        RxLet,
         ClassSummaryTableComponent,
     ],
 })

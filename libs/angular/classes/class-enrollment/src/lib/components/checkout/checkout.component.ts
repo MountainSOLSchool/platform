@@ -15,7 +15,7 @@ import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workf
 import { MessagesComponent } from '@sol/form/validity';
 import { create, enforce, test } from 'vest';
 import { BehaviorSubject, combineLatest, map, skip, startWith } from 'rxjs';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FunctionsApi } from '@sol/firebase/functions-api';
 
@@ -29,7 +29,7 @@ import { FunctionsApi } from '@sol/firebase/functions-api';
         InputTextModule,
         ChipModule,
         MessagesComponent,
-        LetModule,
+        RxLet,
     ],
     selector: 'sol-checkout',
     templateUrl: './checkout.component.html',

@@ -10,7 +10,7 @@ import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { ClassPrintoutsStore } from './class-printouts.store';
 import { provideComponentStore } from '@ngrx/component-store';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { SemesterClass } from '@sol/classes/domain';
 
 @Component({
@@ -24,7 +24,7 @@ import { SemesterClass } from '@sol/classes/domain';
         FileUploadModule,
         ProgressBarModule,
         TableModule,
-        LetModule,
+        RxLet,
     ],
     providers: [provideComponentStore(ClassPrintoutsStore)],
     templateUrl: './class-printouts.component.html',

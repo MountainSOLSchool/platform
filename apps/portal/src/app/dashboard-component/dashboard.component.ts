@@ -6,7 +6,7 @@ import { ChartModule } from 'primeng/chart';
 import { map } from 'rxjs';
 import { ChartOptions } from 'chart.js';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { LetModule } from '@rx-angular/template/let';
+import { RxLet } from '@rx-angular/template/let';
 import { PanelModule } from 'primeng/panel';
 
 @Component({
@@ -14,7 +14,7 @@ import { PanelModule } from 'primeng/panel';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CommonModule,
-        LetModule,
+        RxLet,
         ChartModule,
         RouterModule,
         ProgressSpinnerModule,
