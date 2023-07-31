@@ -36,6 +36,7 @@ import { RxIf } from '@rx-angular/template/if';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive';
 import { SelectStudentComponent } from '../select-student/select-student.component';
+import { ReleasesComponent } from '../releases/releases.component';
 
 @Component({
     standalone: true,
@@ -71,6 +72,7 @@ import { SelectStudentComponent } from '../select-student/select-student.compone
         RxIf,
         MatVerticalStepperScrollerDirective,
         SelectStudentComponent,
+        ReleasesComponent,
     ],
     styles: [
         `
@@ -173,7 +175,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     fillOutForTest() {
         this.store.patchState({
             enrollment: {
-                selectedClasses: [],
+                selectedClasses: ['123'],
                 isSignedUpForSolsticeEmails: false,
                 paymentMethod: {
                     nonce: 'fake-valid-nonce-NOT',
@@ -189,7 +191,9 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
                     },
                 },
                 discountCodes: [],
+                isStudentNew: false,
                 student: {
+                    id: undefined,
                     firstName: 'David',
                     lastName: 'McCoy',
                     birthdate: '09/24/1980',

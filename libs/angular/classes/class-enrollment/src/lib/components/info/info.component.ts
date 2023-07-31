@@ -6,7 +6,7 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, shareReplay, tap } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -69,7 +69,7 @@ export class InfoComponent {
                     enforce(student.lastName).isNotEmpty();
                 });
 
-                test('birthdate', 'Birthdate is required', () => {
+                test('date', 'Birthdate is required', () => {
                     enforce(student.birthdate).isNotBlank();
                 });
 
@@ -259,6 +259,9 @@ export class InfoComponent {
         this.interacted$,
         this.hasErrorsByGroup$,
     ]).pipe(
+        tap(([student]) => {
+            console.log(student.birthdate);
+        }),
         map(([student, errors, interacted, hasErrorsByGroup]) => {
             return {
                 student,

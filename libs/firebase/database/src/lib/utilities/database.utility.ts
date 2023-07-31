@@ -74,7 +74,7 @@ export class DatabaseUtility {
     }
 
     public static async getHydratedDocuments<
-        DocumentValue extends { id: string }
+        DocumentValue extends { id: string },
     >(
         documentRefs: Array<
             FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
@@ -117,7 +117,7 @@ export class DatabaseUtility {
             [
                 fieldPath: string | FirebaseFirestore.FieldPath,
                 opString: FirebaseFirestore.WhereFilterOp,
-                value: unknown
+                value: unknown,
             ]
         >
     ): Promise<
@@ -141,7 +141,7 @@ export class DatabaseUtility {
             [
                 string | FirebaseFirestore.FieldPath,
                 FirebaseFirestore.WhereFilterOp,
-                string
+                string,
             ]
         >
     ): Promise<

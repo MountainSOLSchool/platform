@@ -45,22 +45,22 @@
         ></ng-template>
     </mat-step>
     <mat-step #account label="Account">
-    <ng-template matStepContent>
-      <ng-container *rxIf="stepper.selected === account">
-        <h2>Account</h2>
-        <sol-class-account
-          (validityChange)="account.hasError = !$event"
-        ></sol-class-account>
+        <ng-template matStepContent>
+            <ng-container *rxIf="stepper.selected === account">
+                <h2>Account</h2>
+                <sol-class-account
+                    (validityChange)="account.hasError = !$event"
+                ></sol-class-account>
 
-        <ng-container
-          *ngTemplateOutlet="navigation"
-        ></ng-container></ng-container
-      ></ng-template>
-  </mat-step>
-    <mat-step #selectStudent label="Select Student">
+                <ng-container
+                    *ngTemplateOutlet="navigation"
+                ></ng-container></ng-container
+        ></ng-template>
+    </mat-step>
+    <mat-step #selectStudent label="Student Selection">
         <ng-template matStepContent>
             <ng-container *rxIf="stepper.selected === selectStudent">
-                <h2>Select Student</h2>
+                <h2>Student Selection</h2>
                 <sol-student-selection
                     (validityChange)="selectStudent.hasError = !$event"
                 ></sol-student-selection>
@@ -69,11 +69,15 @@
                 ></ng-container></ng-container
         ></ng-template>
     </mat-step>
-    <mat-step #studentInfo label="Student Info">
+    <mat-step #studentInfo label="Student Info" disabled>
         <ng-template matStepContent>
             <ng-container *rxIf="stepper.selected === studentInfo">
                 <h2>Student Info</h2>
                 <sol-student-info
+                    *rxIf="
+                        allStepsComplete(selectStudent);
+                        else mustSelectStudent
+                    "
                     [interacted]="studentInfo.interacted"
                     (validityChange)="studentInfo.hasError = !$event"
                 ></sol-student-info>
@@ -82,14 +86,35 @@
                 ></ng-container> </ng-container
         ></ng-template>
     </mat-step>
-    <mat-step #medicalInfo label="Medical Info and Releases">
+    <mat-step #medicalInfo label="Medical Info">
         <ng-template matStepContent>
             <ng-container *rxIf="stepper.selected === medicalInfo">
-                <h2>Medical Info and Releases</h2>
-                <sol-medical-n-releases
+                <h2>Medical Info</h2>
+                <sol-medical
+                    *rxIf="
+                        allStepsComplete(selectStudent);
+                        else mustSelectStudent
+                    "
                     [interacted]="medicalInfo.interacted"
                     (validityChange)="medicalInfo.hasError = !$event"
-                ></sol-medical-n-releases>
+                ></sol-medical>
+                <ng-container
+                    *ngTemplateOutlet="navigation"
+                ></ng-container> </ng-container
+        ></ng-template>
+    </mat-step>
+    <mat-step #releases label="Releases">
+        <ng-template matStepContent>
+            <ng-container *rxIf="stepper.selected === releases">
+                <h2>Releases</h2>
+                <sol-releases
+                    *rxIf="
+                        allStepsComplete(selectStudent);
+                        else mustSelectStudent
+                    "
+                    [interacted]="releases.interacted"
+                    (validityChange)="releases.hasError = !$event"
+                ></sol-releases>
                 <ng-container
                     *ngTemplateOutlet="navigation"
                 ></ng-container> </ng-container
@@ -105,6 +130,7 @@
                             classSelection,
                             studentInfo,
                             medicalInfo,
+                            releases,
                             account
                         )
                     "
@@ -116,6 +142,10 @@
                 ></ng-container></ng-container
         ></ng-template>
     </mat-step>
+
+    <ng-template #mustSelectStudent>
+        <p>Please complete the Student Selection step first.</p>
+    </ng-template>
 
     <ng-template #navigation let-first="first" let-last="last">
         <div style="margin-top: 2rem">

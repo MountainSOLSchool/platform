@@ -74,6 +74,8 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
         medical_release_signature_date: new Date().getUTCDate().toString(),
         release_of_liability_signature: form.releaseOfLiabilitySignature,
         release_of_liability_signature_date: new Date().getUTCDate().toString(),
+        // TODO: fill in
+        releaseSignatures: [],
     };
     return entry;
 }

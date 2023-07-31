@@ -1,4 +1,5 @@
 export interface StudentForm {
+    id: string | undefined;
     firstName: string;
     lastName: string;
     birthdate: string;

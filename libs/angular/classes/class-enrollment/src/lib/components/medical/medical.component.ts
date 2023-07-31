@@ -48,7 +48,7 @@ import { RxFor } from '@rx-angular/template/for';
         ValidDirective,
         MessagesComponent,
     ],
-    selector: 'sol-medical-n-releases',
+    selector: 'sol-medical',
     templateUrl: './medical.component.html',
     styleUrls: ['./medical.component.css'],
 })
@@ -158,24 +158,6 @@ export class MedicalComponent {
                     () => {
                         enforce(
                             student.authorizedToAdministerMedication
-                        ).isNotEmpty();
-                    }
-                );
-            });
-
-            group('healthRelease', () => {
-                test('medicalReleaseSignature', 'Must sign to continue', () => {
-                    enforce(student.medicalReleaseSignature).isNotEmpty();
-                });
-            });
-
-            group('liabilityRelease', () => {
-                test(
-                    'releaseOfLiabilitySignature',
-                    'Must sign to continue',
-                    () => {
-                        enforce(
-                            student.releaseOfLiabilitySignature
                         ).isNotEmpty();
                     }
                 );

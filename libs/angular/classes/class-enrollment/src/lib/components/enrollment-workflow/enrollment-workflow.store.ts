@@ -1,20 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { FunctionsApi } from '@sol/firebase/functions-api';
-import {
-    filter,
-    map,
-    pairwise,
-    startWith,
-    Subject,
-    switchMap,
-    take,
-    tap,
-} from 'rxjs';
+import { filter, pairwise, Subject, switchMap, take, tap } from 'rxjs';
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
 import { StudentForm } from '@sol/student/domain';
 import { Router } from '@angular/router';
+import { createSelector } from '@ngrx/store';
 
 type Enrollment = {
     selectedClasses: Array<string>;
@@ -27,6 +18,7 @@ type Enrollment = {
         | undefined;
     discountCodes: Array<string>;
     student: Partial<StudentForm> | undefined;
+    isStudentNew: boolean | undefined;
     isSignedUpForSolsticeEmails: boolean;
 };
 
@@ -38,7 +30,9 @@ const initialState = {
         paymentMethod: undefined,
         discountCodes: [],
         isSignedUpForSolsticeEmails: false,
+        isStudentNew: undefined,
         student: {
+            id: undefined,
             birthdate: '',
             guardians: [
                 {
@@ -68,10 +62,10 @@ const initialState = {
         originalTotal: 0,
     },
     isLoadingDiscounts: false,
+    isLoadingStudent: false,
 };
 
-@Injectable()
-export class EnrollmentWorkflowStore extends ComponentStore<{
+type State = {
     enrollment: Enrollment;
     randomValueThatResetsPaymentCollector: string;
     status: 'draft' | 'submitted' | 'failed' | 'enrolled';
@@ -81,7 +75,11 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         originalTotal: number;
     };
     isLoadingDiscounts: boolean;
-}> {
+    isLoadingStudent: boolean;
+};
+
+@Injectable()
+export class EnrollmentWorkflowStore extends ComponentStore<State> {
     private readonly functions = inject(FunctionsApi);
     private readonly router = inject(Router);
 
@@ -102,10 +100,56 @@ export class EnrollmentWorkflowStore extends ComponentStore<{
         return this.select((state) => state.status === 'failed');
     }
 
+    private readonly selectState = createSelector(
+        (state: State) => state,
+        (state) => state
+    );
+    private readonly selectEnrollment = createSelector(
+        this.selectState,
+        (state) => state.enrollment
+    );
+    private readonly selectStudent = createSelector(
+        this.selectEnrollment,
+        (enrollment) => enrollment.student
+    );
+    private readonly selectStudentId = createSelector(
+        this.selectStudent,
+        (student) => student?.id
+    );
+
     readonly setStatusToDraft = this.updater((state) => ({
         ...state,
         status: 'draft',
     }));
+
+    readonly loadStudent = this.effect(() => {
+        return this.select(this.selectStudentId).pipe(
+            filter(Boolean),
+            tap((id) => this.patchState({ isLoadingStudent: true })),
+            switchMap((id) =>
+                this.functions
+                    .call<{ student: StudentForm }>('getMyStudent', {
+                        studentId: id,
+                    })
+                    .pipe(
+                        tapResponse(
+                            ({ student }) => {
+                                this.patchState((state) => ({
+                                    isLoadingStudent: false,
+                                    enrollment: {
+                                        ...state.enrollment,
+                                        student,
+                                    },
+                                }));
+                            },
+                            () => {
+                                this.patchState({ isLoadingStudent: false });
+                            }
+                        )
+                    )
+            )
+        );
+    });
 
     readonly submit = this.effect((submit$) => {
         return submit$.pipe(

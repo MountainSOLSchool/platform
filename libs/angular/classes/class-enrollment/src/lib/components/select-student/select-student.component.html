@@ -1,15 +1,52 @@
-<ng-container *rxLet="students$; let students; suspense: skeleton">
-  <div>
-    <p-dropdown
-      [options]="students"
-      placeholder="Select a student"
-      optionLabel="name"
-      optionValue="id"
-      [showClear]="true"
-      (onChange)="selectedStudent()"
-    ></p-dropdown>
-  </div>
-</ng-container>
-<ng-template #skeleton>
-💀
-</ng-template>
+<div style="margin-bottom: 2rem">
+    Select whether to enroll a new student or a student which you've previously
+    enrolled on this portal.
+</div>
+<div *rxLet="viewModel$; let vm" class="flex flex-column gap-3">
+    <div class="field-checkbox">
+        <p-radioButton
+            inputId="previousStudent"
+            name="studentSelection"
+            value="previous"
+            [ngModel]="vm.selectedStudentType"
+            (onClick)="selectedStudentType($event.value)"
+        ></p-radioButton>
+        <label for="previousStudent" class="ml-2"
+            >Previously Enrolled Student</label
+        >
+    </div>
+    <ng-container *rxIf="vm.selectedStudentType === 'previous'">
+        <div
+            style="margin-top: -0.5rem; margin-bottom: 1rem"
+            *rxIf="vm.students !== undefined; else skeleton"
+        >
+            <p-dropdown
+                *rxIf="vm.students.length > 0; else noStudents"
+                [options]="vm.students"
+                placeholder="Select a student"
+                optionLabel="name"
+                optionValue="id"
+                [ngModel]="vm.selectedStudentId"
+                [showClear]="true"
+                (onChange)="selectedStudent($event.value)"
+            ></p-dropdown>
+            <ng-template #noStudents
+                ><div>
+                    There were no previous student enrollments found for your
+                    account.
+                </div></ng-template
+            >
+        </div>
+    </ng-container>
+    <ng-template #skeleton> Loading students... </ng-template>
+    <div class="field-checkbox" style="margin-top: 0.5rem">
+        <p-radioButton
+            inputId="newStudent"
+            name="studentSelection"
+            value="new"
+            [ngModel]="vm.selectedStudentType"
+            (onClick)="selectedStudentType($event.value)"
+        ></p-radioButton>
+        <label for="newStudent" class="ml-2">New Student</label>
+    </div>
+</div>
