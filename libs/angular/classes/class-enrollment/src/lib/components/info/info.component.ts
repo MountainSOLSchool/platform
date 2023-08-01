@@ -73,7 +73,7 @@ export class InfoComponent {
                     enforce(student.lastName).isNotEmpty();
                 });
 
-                test('date', 'Birthdate is required', () => {
+                test('birthdate', 'Birthdate is required', () => {
                     enforce(student.birthdate).isNotBlank();
                 });
 
