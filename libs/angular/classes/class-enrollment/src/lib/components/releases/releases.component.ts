@@ -5,7 +5,13 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, filter, map, shareReplay } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    map,
+    ObservedValueOf,
+    shareReplay,
+} from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
@@ -20,7 +26,6 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { create, enforce, group, test } from 'vest';
-import { StudentForm } from '@sol/student/domain';
 import { RxLet } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { CommonModule } from '@angular/common';
@@ -56,10 +61,16 @@ export class ReleasesComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
 
     private readonly validationSuite = create(
-        (student: Partial<StudentForm>) => {
+        (enrollment: {
+            releaseSignatures: Array<{ name: string; signature: string }>;
+        }) => {
             group('healthRelease', () => {
                 test('medicalReleaseSignature', 'Must sign to continue', () => {
-                    enforce(student.medicalReleaseSignature).isNotEmpty();
+                    enforce(
+                        enrollment.releaseSignatures.find(
+                            ({ name }) => name === 'MEDICAL_RELEASE_FALL_2023'
+                        )?.signature
+                    ).isNotBlank();
                 });
             });
 
@@ -69,24 +80,24 @@ export class ReleasesComponent {
                     'Must sign to continue',
                     () => {
                         enforce(
-                            student.releaseOfLiabilitySignature
-                        ).isNotEmpty();
+                            enrollment.releaseSignatures.find(
+                                ({ name }) =>
+                                    name === 'LIABILITY_RELEASE_FALL_2023'
+                            )?.signature
+                        ).isNotBlank();
                     }
                 );
             });
         }
     );
 
-    readonly student$ = this.workflow
-        .select((state) => state.enrollment.student)
-        .pipe(map((student) => student ?? {}));
+    readonly enrollment$ = this.workflow.select((state) => state.enrollment);
 
     private readonly interacted$ = new BehaviorSubject(false);
 
-    private readonly validation$ = this.student$.pipe(
-        filter((student): student is StudentForm => !!student),
-        map((student) => {
-            return this.validationSuite(student);
+    private readonly validation$ = this.enrollment$.pipe(
+        map((enrollment) => {
+            return this.validationSuite(enrollment);
         }),
         shareReplay()
     );
@@ -116,14 +127,29 @@ export class ReleasesComponent {
     );
 
     readonly viewModel$ = combineLatest([
-        this.student$,
+        this.enrollment$,
         this.errors$,
         this.interacted$,
         this.hasErrorsByGroup$,
     ]).pipe(
-        map(([student, errors, interacted, hasErrorsByGroup]) => {
+        map(([enrollment, errors, interacted, hasErrorsByGroup]) => {
             return {
-                student,
+                releaseSignatures: {
+                    MEDICAL_RELEASE_FALL_2023:
+                        enrollment.releaseSignatures.find(
+                            ({ name }) => name === 'MEDICAL_RELEASE_FALL_2023'
+                        ) ?? {
+                            name: 'MEDICAL_RELEASE_FALL_2023',
+                            signature: '',
+                        },
+                    LIABILITY_RELEASE_FALL_2023:
+                        enrollment.releaseSignatures.find(
+                            ({ name }) => name === 'LIABILITY_RELEASE_FALL_2023'
+                        ) ?? {
+                            name: 'LIABILITY_RELEASE_FALL_2023',
+                            signature: '',
+                        },
+                },
                 errors: interacted ? errors : {},
                 hasErrorsByGroup,
             };
@@ -142,14 +168,28 @@ export class ReleasesComponent {
         return index;
     }
 
-    updateStudentMedicalInfo(info: any): void {
+    updateReleaseSignatures(
+        releaseSignatures: ObservedValueOf<
+            typeof this.viewModel$
+        >['releaseSignatures']
+    ): void {
         this.workflow.patchState(({ enrollment }) => ({
             enrollment: {
                 ...enrollment,
-                student: {
-                    ...enrollment.student,
-                    ...info,
-                },
+                releaseSignatures: [
+                    {
+                        name: 'MEDICAL_RELEASE_FALL_2023',
+                        signature:
+                            releaseSignatures.MEDICAL_RELEASE_FALL_2023
+                                .signature,
+                    },
+                    {
+                        name: 'LIABILITY_RELEASE_FALL_2023',
+                        signature:
+                            releaseSignatures.LIABILITY_RELEASE_FALL_2023
+                                .signature,
+                    },
+                ],
             },
         }));
     }

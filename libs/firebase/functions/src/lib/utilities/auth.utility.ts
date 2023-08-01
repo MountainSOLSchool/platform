@@ -55,23 +55,19 @@ export class AuthUtility {
         return roles;
     }
 
-    public static async getUserStudents(
+    public static async getUserStudentIds(
         user: admin.auth.UserRecord
-    ): Promise<Array<{ name: string; id: string }>> {
+    ): Promise<Array<string>> {
         const db = DatabaseUtility.getDatabase();
-        const students = await db
+        const studentEnrollments = await db
             .collection('enrollment')
             .where('userId', '==', user.uid)
             .where('status', '==', 'enrolled')
             .get();
-        const nonUniqueStudents = students.docs.map((student) => ({
-            id: student.data().studentId as string,
-            name: student.data().studentName as string,
-        }));
-        const uniqueStudentsMap = new Map(
-            nonUniqueStudents.map(({ id, name }) => [id, { id, name }])
+        const nonUniqueStudents = studentEnrollments.docs.map(
+            (enrollment) => enrollment.data().studentId
         );
-        return Array.from(uniqueStudentsMap.values());
+        return Array.from(new Set(nonUniqueStudents));
     }
 
     public static async getUserFromRequest(

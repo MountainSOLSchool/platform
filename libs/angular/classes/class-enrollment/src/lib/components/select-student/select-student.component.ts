@@ -3,17 +3,23 @@ import {
     ChangeDetectionStrategy,
     Component,
     inject,
+    Input,
     Output,
 } from '@angular/core';
 import { LoginComponent } from '@sol/auth/login';
 import { CardModule } from 'primeng/card';
 import {
+    BehaviorSubject,
     combineLatest,
+    filter,
     map,
+    merge,
     Observable,
+    pairwise,
     shareReplay,
     startWith,
-    tap,
+    Subject,
+    take,
 } from 'rxjs';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
@@ -26,6 +32,8 @@ import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { RxIf } from '@rx-angular/template/if';
 import { create, enforce, omitWhen, test } from 'vest';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
     standalone: true,
@@ -42,6 +50,8 @@ import { create, enforce, omitWhen, test } from 'vest';
         RadioButtonModule,
         FormsModule,
         RxIf,
+        ButtonModule,
+        DialogModule,
     ],
     selector: 'sol-student-selection',
     templateUrl: './select-student.component.html',
@@ -75,6 +85,8 @@ export class SelectStudentComponent {
         }
     );
 
+    private readonly interactedFromWorkflow$ = new BehaviorSubject(false);
+
     private enrollment$ = this.workflow.select((state) => state.enrollment);
 
     private readonly validation$ = this.enrollment$.pipe(
@@ -88,6 +100,19 @@ export class SelectStudentComponent {
         map((validation) => {
             return validation.getErrors();
         })
+    );
+
+    readonly hasAnyErrors$ = this.errors$.pipe(
+        map((errors) => Object.keys(errors).length !== 0),
+        shareReplay()
+    );
+
+    readonly transitionOccurredToNoErrors$ = this.hasAnyErrors$.pipe(
+        pairwise(),
+        map(([prev, curr]) => prev && !curr),
+        filter((value) => value),
+        take(1),
+        startWith(false)
     );
 
     private selectedStudentType$: Observable<'previous' | 'new' | undefined> =
@@ -112,16 +137,51 @@ export class SelectStudentComponent {
         this.selectedStudentType$,
         this.selectedStudentId$,
         this.students$.pipe(startWith(undefined)),
+        this.interactedFromWorkflow$,
+        this.hasAnyErrors$,
+        this.transitionOccurredToNoErrors$,
     ]).pipe(
-        map(([selectedStudentType, selectedStudentId, students]) => ({
-            selectedStudentType,
-            selectedStudentId,
-            students,
-        }))
+        map(
+            ([
+                selectedStudentType,
+                selectedStudentId,
+                students,
+                interacted,
+                hasAnyErrors,
+                transitionOccurredToNoErrors,
+            ]) => ({
+                selectedStudentType,
+                selectedStudentId,
+                students,
+                showAsReadonlyBlock:
+                    interacted &&
+                    !transitionOccurredToNoErrors &&
+                    !hasAnyErrors,
+            })
+        )
     );
 
+    readonly startOverIntent$ = new Subject<void>();
+    readonly confirmedStartOver$ = new Subject<void>();
+    readonly canceledChange$ = new Subject<void>();
+
+    readonly showStartOverModal$ = merge(
+        merge(this.startOverIntent$).pipe(map(() => true)),
+        merge(this.confirmedStartOver$, this.canceledChange$).pipe(
+            map(() => false)
+        )
+    );
+
+    startOverIntent() {
+        this.startOverIntent$.next();
+    }
+
+    confirmStartOver() {
+        this.confirmedStartOver$.next();
+        this.workflow.startOverEnrollment();
+    }
+
     selectedStudent(id: string) {
-        console.log('patching', id);
         this.workflow.patchState((state) => ({
             enrollment: {
                 ...state.enrollment,
@@ -134,7 +194,6 @@ export class SelectStudentComponent {
     }
 
     selectedStudentType(type: 'previous' | 'new') {
-        console.log('patching', type);
         this.workflow.patchState((state) => ({
             enrollment: {
                 ...state.enrollment,
@@ -143,8 +202,9 @@ export class SelectStudentComponent {
         }));
     }
 
-    @Output() validityChange = this.errors$.pipe(
-        tap((errors) => console.log('errors', errors)),
-        map((errors) => Object.keys(errors).length === 0)
-    );
+    @Input() set interacted(value: boolean) {
+        this.interactedFromWorkflow$.next(value);
+    }
+
+    @Output() validityChange = this.hasAnyErrors$.pipe(map((value) => !value));
 }

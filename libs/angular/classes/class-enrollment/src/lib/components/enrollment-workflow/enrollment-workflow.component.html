@@ -14,224 +14,238 @@
 <button *ngIf="showSecretAutofill$ | async" (click)="fillOutForTest()">
     Fill out form for test
 </button>
-<mat-stepper
-    #stepper
-    [orientation]="(stepperOrientation | async)!"
-    style="height: 100%"
->
-    <mat-step #classSelection label="Class Selection">
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === classSelection">
-                <h2>Class Selection</h2>
-                <sol-class-picker
-                    [interacted]="classSelection.interacted"
-                    (validityChange)="classSelection.hasError = !$event"
-                ></sol-class-picker>
-                <ng-container
-                    *ngTemplateOutlet="navigation; context: { first: true }"
-                ></ng-container></ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step *rxIf="false" #events label="Events">
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === events">
-                <h2>Events</h2>
-                <sol-event-selection
-                    (validityChange)="events.hasError = !$event"
-                ></sol-event-selection>
-                <ng-container
-                    *ngTemplateOutlet="navigation"
-                ></ng-container></ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step #account label="Account">
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === account">
-                <h2>Account</h2>
-                <sol-class-account
-                    (validityChange)="account.hasError = !$event"
-                ></sol-class-account>
+<ng-container *rxLet="isUserLoggedIn$; let isUserLoggedIn">
+    <mat-stepper
+        #stepper
+        [orientation]="(stepperOrientation | async)!"
+        style="height: 100%"
+    >
+        <mat-step #classSelection label="Class Selection">
+            <ng-template matStepContent>
+                <ng-container *rxIf="stepper.selected === classSelection">
+                    <h2>Class Selection</h2>
+                    <sol-class-picker
+                        [interacted]="classSelection.interacted"
+                        (validityChange)="classSelection.hasError = !$event"
+                    ></sol-class-picker>
+                    <ng-container
+                        *ngTemplateOutlet="navigation; context: { first: true }"
+                    ></ng-container></ng-container
+            ></ng-template>
+        </mat-step>
+        <mat-step *rxIf="false" #events label="Events">
+            <ng-template matStepContent>
+                <ng-container *rxIf="stepper.selected === events">
+                    <h2>Events</h2>
+                    <sol-event-selection
+                        (validityChange)="events.hasError = !$event"
+                    ></sol-event-selection>
+                    <ng-container
+                        *ngTemplateOutlet="navigation"
+                    ></ng-container></ng-container
+            ></ng-template>
+        </mat-step>
+        <mat-step #account label="Account">
+            <ng-template matStepContent>
+                <ng-container *rxIf="stepper.selected === account">
+                    <h2>Account</h2>
+                    <sol-class-account
+                        (validityChange)="account.hasError = !$event"
+                    ></sol-class-account>
 
-                <ng-container
-                    *ngTemplateOutlet="navigation"
-                ></ng-container></ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step #selectStudent label="Student Selection">
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === selectStudent">
-                <h2>Student Selection</h2>
-                <sol-student-selection
-                    (validityChange)="selectStudent.hasError = !$event"
-                ></sol-student-selection>
-                <ng-container
-                    *ngTemplateOutlet="navigation"
-                ></ng-container></ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step #studentInfo label="Student Info" disabled>
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === studentInfo">
-                <h2>Student Info</h2>
-                <sol-student-info
-                    *rxIf="
-                        allStepsComplete(selectStudent);
-                        else mustSelectStudent
-                    "
-                    [interacted]="studentInfo.interacted"
-                    (validityChange)="studentInfo.hasError = !$event"
-                ></sol-student-info>
-                <ng-container
-                    *ngTemplateOutlet="navigation"
-                ></ng-container> </ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step #medicalInfo label="Medical Info">
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === medicalInfo">
-                <h2>Medical Info</h2>
-                <sol-medical
-                    *rxIf="
-                        allStepsComplete(selectStudent);
-                        else mustSelectStudent
-                    "
-                    [interacted]="medicalInfo.interacted"
-                    (validityChange)="medicalInfo.hasError = !$event"
-                ></sol-medical>
-                <ng-container
-                    *ngTemplateOutlet="navigation"
-                ></ng-container> </ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step #releases label="Releases">
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === releases">
-                <h2>Releases</h2>
-                <sol-releases
-                    *rxIf="
-                        allStepsComplete(selectStudent);
-                        else mustSelectStudent
-                    "
-                    [interacted]="releases.interacted"
-                    (validityChange)="releases.hasError = !$event"
-                ></sol-releases>
-                <ng-container
-                    *ngTemplateOutlet="navigation"
-                ></ng-container> </ng-container
-        ></ng-template>
-    </mat-step>
-    <mat-step #confirmation label="Confirm Enrollment">
-        <ng-template matStepContent>
-            <ng-container *rxIf="stepper.selected === confirmation">
-                <h2>Confirm Enrollment</h2>
-                <sol-class-confirmation
-                    [allStepsComplete]="
-                        allStepsComplete(
-                            classSelection,
-                            studentInfo,
-                            medicalInfo,
-                            releases,
-                            account
-                        )
-                    "
-                    [interacted]="confirmation.interacted"
-                    (validityChange)="confirmation.hasError = !$event"
-                ></sol-class-confirmation>
-                <ng-container
-                    *ngTemplateOutlet="navigation; context: { last: true }"
-                ></ng-container></ng-container
-        ></ng-template>
-    </mat-step>
+                    <ng-container
+                        *ngTemplateOutlet="navigation"
+                    ></ng-container></ng-container
+            ></ng-template>
+        </mat-step>
+        <mat-step #selectStudent label="Student Selection">
+            <ng-template matStepContent>
+                <ng-container *rxIf="stepper.selected === selectStudent">
+                    <h2>Student Selection</h2>
+                    <sol-student-selection
+                        *rxIf="isUserLoggedIn; else mustBeLoggedIn"
+                        [interacted]="selectStudent.interacted"
+                        (validityChange)="selectStudent.hasError = !$event"
+                    ></sol-student-selection>
+                    <ng-container
+                        *ngTemplateOutlet="navigation"
+                    ></ng-container></ng-container
+            ></ng-template>
+        </mat-step>
+        <mat-step #studentInfo label="Student Info" disabled>
+            <ng-template matStepContent>
+                <ng-container *rxIf="stepper.selected === studentInfo">
+                    <h2>Student Info</h2>
+                    <sol-student-info
+                        *rxIf="
+                            allStepsComplete(isUserLoggedIn, selectStudent);
+                            else mustSelectStudent
+                        "
+                        [interacted]="studentInfo.interacted"
+                        (validityChange)="studentInfo.hasError = !$event"
+                    ></sol-student-info>
+                    <ng-container
+                        *ngTemplateOutlet="navigation"
+                    ></ng-container> </ng-container
+            ></ng-template>
+        </mat-step>
+        <mat-step #medicalInfo label="Medical Info">
+            <ng-template matStepContent>
+                <ng-container *rxIf="stepper.selected === medicalInfo">
+                    <h2>Medical Info</h2>
+                    <sol-medical
+                        *rxIf="
+                            allStepsComplete(isUserLoggedIn, selectStudent);
+                            else mustSelectStudent
+                        "
+                        [interacted]="medicalInfo.interacted"
+                        (validityChange)="medicalInfo.hasError = !$event"
+                    ></sol-medical>
+                    <ng-container
+                        *ngTemplateOutlet="navigation"
+                    ></ng-container> </ng-container
+            ></ng-template>
+        </mat-step>
+        <mat-step #releases label="Releases">
+            <ng-template matStepContent>
+                <ng-container *rxIf="stepper.selected === releases">
+                    <h2>Releases</h2>
+                    <sol-releases
+                        *rxIf="
+                            allStepsComplete(isUserLoggedIn, selectStudent);
+                            else mustSelectStudent
+                        "
+                        [interacted]="releases.interacted"
+                        (validityChange)="releases.hasError = !$event"
+                    ></sol-releases>
+                    <ng-container
+                        *ngTemplateOutlet="navigation"
+                    ></ng-container> </ng-container
+            ></ng-template>
+        </mat-step>
+        <mat-step #confirmation label="Confirm Enrollment">
+            <ng-template matStepContent>
+                <ng-container *rxIf="stepper.selected === confirmation">
+                    <h2>Confirm Enrollment</h2>
+                    <sol-class-confirmation
+                        [allStepsComplete]="
+                            allStepsComplete(
+                                isUserLoggedIn,
+                                classSelection,
+                                studentInfo,
+                                medicalInfo,
+                                releases,
+                                account
+                            )
+                        "
+                        [interacted]="confirmation.interacted"
+                        (validityChange)="confirmation.hasError = !$event"
+                    ></sol-class-confirmation>
+                    <ng-container
+                        *ngTemplateOutlet="navigation; context: { last: true }"
+                    ></ng-container></ng-container
+            ></ng-template>
+        </mat-step>
 
-    <ng-template #mustSelectStudent>
-        <p>Please complete the Student Selection step first.</p>
-    </ng-template>
+        <ng-template #mustSelectStudent>
+            <p>Please complete the Student Selection step first.</p>
+        </ng-template>
 
-    <ng-template #navigation let-first="first" let-last="last">
-        <div style="margin-top: 2rem">
-            <button
-                *ngIf="!first"
-                pButton
-                matStepperPrevious
-                class="p-button-outlined"
-            >
-                Previous
-            </button>
-            <ng-container *ngIf="!last; else submit">
-                <button pButton matStepperNext style="margin-left: 1rem">
-                    Next
-                </button>
-            </ng-container>
-            <ng-template #submit>
+        <ng-template #mustBeLoggedIn>
+            <p>
+                Please log in or create an account on the Account step to
+                continue.
+            </p>
+        </ng-template>
+
+        <ng-template #navigation let-first="first" let-last="last">
+            <div style="margin-top: 2rem">
                 <button
-                    *ngIf="
-                        allStepsComplete(
-                            classSelection,
-                            studentInfo,
-                            medicalInfo,
-                            account,
-                            confirmation
-                        )
-                    "
+                    *ngIf="!first"
                     pButton
-                    style="margin-left: 1rem"
-                    (click)="complete()"
+                    matStepperPrevious
+                    class="p-button-outlined"
                 >
-                    Submit
-                </button></ng-template
-            >
-        </div>
-    </ng-template>
-</mat-stepper>
-<p-dialog
-    header="Submitting..."
-    *rxLet="isSubmitting$; let isSubmitting"
-    [visible]="isSubmitting"
-    [closable]="false"
-    [modal]="true"
-    [draggable]="false"
->
-    <p-progressSpinner></p-progressSpinner>
-</p-dialog>
-<p-dialog
-    header="Something went wrong"
-    *rxIf="failureDialogState$; let failureDialogState"
-    [closable]="true"
-    [(visible)]="failureDialogState.visible"
-    [modal]="true"
-    [draggable]="false"
-    (onHide)="closeFailure()"
->
-    Something went wrong while submitting your enrollment. Please try again or
-    contact <a href="mailto:info@mountainsol.org">info@mountainsol.org</a>.
-</p-dialog>
+                    Previous
+                </button>
+                <ng-container *ngIf="!last; else submit">
+                    <button pButton matStepperNext style="margin-left: 1rem">
+                        Next
+                    </button>
+                </ng-container>
+                <ng-template #submit>
+                    <button
+                        *ngIf="
+                            allStepsComplete(
+                                isUserLoggedIn,
+                                classSelection,
+                                studentInfo,
+                                medicalInfo,
+                                account,
+                                confirmation
+                            )
+                        "
+                        pButton
+                        style="margin-left: 1rem"
+                        (click)="complete()"
+                    >
+                        Submit
+                    </button></ng-template
+                >
+            </div>
+        </ng-template>
+    </mat-stepper>
+    <p-dialog
+        header="Submitting..."
+        *rxLet="isSubmitting$; let isSubmitting"
+        [visible]="isSubmitting"
+        [closable]="false"
+        [modal]="true"
+        [draggable]="false"
+    >
+        <p-progressSpinner></p-progressSpinner>
+    </p-dialog>
+    <p-dialog
+        header="Something went wrong"
+        *rxIf="failureDialogState$; let failureDialogState"
+        [closable]="true"
+        [(visible)]="failureDialogState.visible"
+        [modal]="true"
+        [draggable]="false"
+        (onHide)="closeFailure()"
+    >
+        Something went wrong while submitting your enrollment. Please try again
+        or contact
+        <a href="mailto:info@mountainsol.org">info@mountainsol.org</a>.
+    </p-dialog>
 
-<p-dialog
-    header="Successfully enrolled!"
-    *rxLet="shouldShowSuccess$; let shouldShow"
-    [visible]="shouldShow"
-    [closable]="false"
-    [modal]="true"
-    [draggable]="false"
->
-    <div style="width: 100%">
-        <div style="text-align: center">
-            <i
-                style="color: green; font-size: 60px"
-                class="pi pi-check-circle"
-            ></i>
+    <p-dialog
+        header="Successfully enrolled!"
+        *rxLet="shouldShowSuccess$; let shouldShow"
+        [visible]="shouldShow"
+        [closable]="false"
+        [modal]="true"
+        [draggable]="false"
+    >
+        <div style="width: 100%">
+            <div style="text-align: center">
+                <i
+                    style="color: green; font-size: 60px"
+                    class="pi pi-check-circle"
+                ></i>
+            </div>
         </div>
-    </div>
-    <div style="margin-top: 1rem" *rxLet="userEmail$; let email">
-        A confirmation email has been sent to
-        <b>{{ email }}</b
-        >.
-    </div>
-    <div style="margin-top: 1rem">
-        <button
-            pButton
-            label="Enroll Another Student"
-            (click)="enrollAnother(stepper)"
-        ></button>
-    </div>
-</p-dialog>
+        <div style="margin-top: 1rem" *rxLet="userEmail$; let email">
+            A confirmation email has been sent to
+            <b>{{ email }}</b
+            >.
+        </div>
+        <div style="margin-top: 1rem">
+            <button
+                pButton
+                label="Enroll Another Student"
+                (click)="enrollAnother(stepper)"
+            ></button>
+        </div>
+    </p-dialog>
+</ng-container>

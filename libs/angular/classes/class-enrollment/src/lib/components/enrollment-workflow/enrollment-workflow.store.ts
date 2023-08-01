@@ -18,6 +18,7 @@ type Enrollment = {
         | undefined;
     discountCodes: Array<string>;
     student: Partial<StudentForm> | undefined;
+    releaseSignatures: Array<{ name: string; signature: string }>;
     isStudentNew: boolean | undefined;
     isSignedUpForSolsticeEmails: boolean;
 };
@@ -31,6 +32,7 @@ const initialState = {
         discountCodes: [],
         isSignedUpForSolsticeEmails: false,
         isStudentNew: undefined,
+        releaseSignatures: [],
         student: {
             id: undefined,
             birthdate: '',
@@ -125,7 +127,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     readonly loadStudent = this.effect(() => {
         return this.select(this.selectStudentId).pipe(
             filter(Boolean),
-            tap((id) => this.patchState({ isLoadingStudent: true })),
+            tap(() => this.patchState({ isLoadingStudent: true })),
             switchMap((id) =>
                 this.functions
                     .call<{ student: StudentForm }>('getMyStudent', {
@@ -176,7 +178,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                                             });
                                         }
                                     },
-                                    (error) => {
+                                    () => {
                                         this.patchState({
                                             status: 'failed',
                                         });
@@ -214,6 +216,19 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                             }));
                         })
                     );
+            })
+        );
+    });
+
+    readonly startOverEnrollment = this.effect((trigger$) => {
+        return trigger$.pipe(
+            tap(() => {
+                this.patchState((state) => ({
+                    enrollment: {
+                        ...initialState.enrollment,
+                        selectedClasses: state.enrollment.selectedClasses,
+                    },
+                }));
             })
         );
     });

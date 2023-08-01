@@ -25,6 +25,8 @@ import { RxLet } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { CommonModule } from '@angular/common';
 import { RxFor } from '@rx-angular/template/for';
+import { MessagesModule } from 'primeng/messages';
+import { RxIf } from '@rx-angular/template/if';
 
 @Component({
     standalone: true,
@@ -47,6 +49,8 @@ import { RxFor } from '@rx-angular/template/for';
         RxFor,
         ValidDirective,
         MessagesComponent,
+        MessagesModule,
+        RxIf,
     ],
     selector: 'sol-medical',
     templateUrl: './medical.component.html',
@@ -172,6 +176,10 @@ export class MedicalComponent {
             value: false,
         },
     ];
+
+    readonly isUpdatingExistingStudent$ = this.workflow.select(
+        (state) => !state.enrollment.isStudentNew
+    );
 
     readonly student$ = this.workflow
         .select((state) => state.enrollment.student)

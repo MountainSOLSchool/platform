@@ -6,7 +6,7 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, shareReplay } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -27,6 +27,8 @@ import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { StudentForm } from '@sol/student/domain';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DropdownModule } from 'primeng/dropdown';
+import { MessagesModule } from 'primeng/messages';
+import { RxIf } from '@rx-angular/template/if';
 
 @Component({
     standalone: true,
@@ -50,6 +52,8 @@ import { DropdownModule } from 'primeng/dropdown';
         MessagesComponent,
         OverlayPanelModule,
         DropdownModule,
+        MessagesModule,
+        RxIf,
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
@@ -200,6 +204,10 @@ export class InfoComponent {
 
     authorized = true;
 
+    readonly isUpdatingExistingStudent$ = this.workflow.select(
+        (state) => !state.enrollment.isStudentNew
+    );
+
     readonly student$ = this.workflow
         .select((state) => state.enrollment.student)
         .pipe(
@@ -259,9 +267,6 @@ export class InfoComponent {
         this.interacted$,
         this.hasErrorsByGroup$,
     ]).pipe(
-        tap(([student]) => {
-            console.log(student.birthdate);
-        }),
         map(([student, errors, interacted, hasErrorsByGroup]) => {
             return {
                 student,

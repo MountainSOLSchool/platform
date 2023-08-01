@@ -1,3 +1,16 @@
+<p-messages
+    *rxIf="isUpdatingExistingStudent$"
+    [enableService]="false"
+    severity="info"
+>
+    <ng-template pTemplate>
+        <div class="ml-2">
+            <i class="pi pi-info-circle" style="margin-right: 4px"></i>
+            Your student's medical information from the previous enrollment has
+            been automatically filled in. Please review and update as needed.
+        </div>
+    </ng-template>
+</p-messages>
 <p-accordion *rxLet="viewModel$; let vm">
     <p-accordionTab [selected]="true">
         <ng-template pTemplate="header">
@@ -502,17 +515,21 @@
                     their participation in the program. Are there certain things
                     that would be helpful to know about your child?
                 </p>
-                <div id="healthNotes" class="field">
+                <div id="medicalNotes" class="field">
                     <span class="p-float-label">
                         <textarea
-                            id="healthNotes"
-                            name="healthNotes"
+                            id="medicalNotes"
+                            name="medicalNotes"
                             [rows]="5"
                             [cols]="50"
                             pInputTextarea
+                            [(ngModel)]="vm.student.medicalNotes"
+                            (ngModelChange)="
+                                updateStudentMedicalInfo(vm.student)
+                            "
                             [autoResize]="true"
                         ></textarea>
-                        <label for="healthNotes"
+                        <label for="medicalNotes"
                             >Additional Health or Medical Notes
                             (Optional)</label
                         ><br /><br />

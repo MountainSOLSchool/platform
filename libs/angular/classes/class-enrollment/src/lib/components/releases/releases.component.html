@@ -1,5 +1,5 @@
 <p-accordion *rxLet="viewModel$; let vm">
-    <p-accordionTab>
+    <p-accordionTab [selected]="true">
         <ng-template pTemplate="header">
             <div
                 *rxLet="!vm.hasErrorsByGroup['healthRelease']; let valid"
@@ -39,8 +39,13 @@
                         id="medicalReleaseSignature"
                         name="medicalReleaseSignature"
                         [solValid]="!vm.errors['medicalReleaseSignature']"
-                        [(ngModel)]="vm.student.medicalReleaseSignature"
-                        (ngModelChange)="updateStudentMedicalInfo(vm.student)"
+                        [(ngModel)]="
+                            vm.releaseSignatures.MEDICAL_RELEASE_FALL_2023
+                                .signature
+                        "
+                        (ngModelChange)="
+                            updateReleaseSignatures(vm.releaseSignatures)
+                        "
                     />
 
                     <label for="medicalReleaseSignature"
@@ -147,8 +152,13 @@
                         id="releaseOfLiabilitySignature"
                         name="releaseOfLiabilitySignature"
                         [solValid]="!vm.errors['releaseOfLiabilitySignature']"
-                        [(ngModel)]="vm.student.releaseOfLiabilitySignature"
-                        (ngModelChange)="updateStudentMedicalInfo(vm.student)"
+                        [(ngModel)]="
+                            vm.releaseSignatures.LIABILITY_RELEASE_FALL_2023
+                                .signature
+                        "
+                        (ngModelChange)="
+                            updateReleaseSignatures(vm.releaseSignatures)
+                        "
                     />
 
                     <label for="releaseOfLiabilitySignature"

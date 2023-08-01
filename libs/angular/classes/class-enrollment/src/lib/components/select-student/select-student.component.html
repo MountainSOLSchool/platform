@@ -1,52 +1,102 @@
-<div style="margin-bottom: 2rem">
-    Select whether to enroll a new student or a student which you've previously
-    enrolled on this portal.
-</div>
-<div *rxLet="viewModel$; let vm" class="flex flex-column gap-3">
-    <div class="field-checkbox">
-        <p-radioButton
-            inputId="previousStudent"
-            name="studentSelection"
-            value="previous"
-            [ngModel]="vm.selectedStudentType"
-            (onClick)="selectedStudentType($event.value)"
-        ></p-radioButton>
-        <label for="previousStudent" class="ml-2"
-            >Previously Enrolled Student</label
-        >
+<ng-container *rxLet="viewModel$; let vm">
+    <div
+        *rxIf="!vm.showAsReadonlyBlock; else readonlyExplanation"
+        style="margin-bottom: 2rem"
+    >
+        Select whether to enroll a new student or a student which you've
+        previously enrolled on this portal.
     </div>
-    <ng-container *rxIf="vm.selectedStudentType === 'previous'">
-        <div
-            style="margin-top: -0.5rem; margin-bottom: 1rem"
-            *rxIf="vm.students !== undefined; else skeleton"
-        >
-            <p-dropdown
-                *rxIf="vm.students.length > 0; else noStudents"
-                [options]="vm.students"
-                placeholder="Select a student"
-                optionLabel="name"
-                optionValue="id"
-                [ngModel]="vm.selectedStudentId"
-                [showClear]="true"
-                (onChange)="selectedStudent($event.value)"
-            ></p-dropdown>
-            <ng-template #noStudents
-                ><div>
-                    There were no previous student enrollments found for your
-                    account.
-                </div></ng-template
+    <ng-template #readonlyExplanation>
+        <div style="margin-bottom: 1rem">
+            In order to change the student you are enrolling, you must start
+            over.
+        </div>
+        <button
+            style="margin-bottom: 2rem"
+            pButton
+            label="Start Over"
+            (click)="startOverIntent()"
+        ></button>
+    </ng-template>
+    <div class="flex flex-column gap-3">
+        <div class="field-checkbox">
+            <p-radioButton
+                inputId="previousStudent"
+                name="studentSelection"
+                value="previous"
+                [ngModel]="vm.selectedStudentType"
+                [disabled]="vm.showAsReadonlyBlock"
+                (onClick)="selectedStudentType($event.value)"
+            ></p-radioButton>
+            <label for="previousStudent" class="ml-2"
+                >Previously Enrolled Student</label
             >
         </div>
-    </ng-container>
-    <ng-template #skeleton> Loading students... </ng-template>
-    <div class="field-checkbox" style="margin-top: 0.5rem">
-        <p-radioButton
-            inputId="newStudent"
-            name="studentSelection"
-            value="new"
-            [ngModel]="vm.selectedStudentType"
-            (onClick)="selectedStudentType($event.value)"
-        ></p-radioButton>
-        <label for="newStudent" class="ml-2">New Student</label>
+        <ng-container *rxIf="vm.selectedStudentType === 'previous'">
+            <div
+                style="margin-top: -0.5rem; margin-bottom: 1rem"
+                *rxIf="vm.students !== undefined; else skeleton"
+            >
+                <p-dropdown
+                    *rxIf="vm.students.length > 0; else noStudents"
+                    [options]="vm.students"
+                    placeholder="Select a student"
+                    optionLabel="name"
+                    optionValue="id"
+                    [ngModel]="vm.selectedStudentId"
+                    [showClear]="true"
+                    [disabled]="vm.showAsReadonlyBlock"
+                    (onChange)="selectedStudent($event.value)"
+                ></p-dropdown>
+                <ng-template #noStudents
+                    ><div>
+                        There were no previous student enrollments found for
+                        your account.
+                    </div></ng-template
+                >
+            </div>
+        </ng-container>
+        <ng-template #skeleton> Loading students... </ng-template>
+        <div class="field-checkbox" style="margin-top: 0.5rem">
+            <p-radioButton
+                inputId="newStudent"
+                name="studentSelection"
+                value="new"
+                [ngModel]="vm.selectedStudentType"
+                [disabled]="vm.showAsReadonlyBlock"
+                (onClick)="selectedStudentType($event.value)"
+            ></p-radioButton>
+            <label for="newStudent" class="ml-2">New Student</label>
+        </div>
     </div>
-</div>
+</ng-container>
+
+<p-dialog
+    header="Start over?"
+    *rxLet="showStartOverModal$; let showStartOverModal"
+    [visible]="showStartOverModal"
+    [closable]="false"
+    [modal]="true"
+    [draggable]="false"
+    (onHide)="canceledChange$.next(undefined)"
+>
+    <div style="margin-top: 1rem">
+        Starting over the selected student will cause you to lose any new or
+        updated information you've entered on the subsequent steps. Are you sure
+        you want to start over and change students?
+    </div>
+    <div style="margin-top: 1rem">
+        <button
+            pButton
+            class="p-button-danger"
+            label="Yes, Start Over"
+            (click)="confirmStartOver()"
+        ></button>
+        <button
+            pButton
+            label="No, Cancel"
+            style="margin-left: 1rem"
+            (click)="canceledChange$.next(undefined)"
+        ></button>
+    </div>
+</p-dialog>

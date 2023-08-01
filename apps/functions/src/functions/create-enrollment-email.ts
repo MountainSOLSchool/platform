@@ -39,21 +39,18 @@ export const createEnrollmentEmail = functions.firestore
                         subject: `Enrollment confirmation for ${enrollmentRecord.studentName}`,
                         html: `<p>Thank you for enrolling ${
                             enrollmentRecord.studentName
-                        } for classes with us this summer!</p>
+                        } for classes with us!</p>
                         <p>You can view all of your enrollments here by logging in with the account you created: <a href="https://mountain-sol-platform.web.app/account/enrollments">https://mountain-sol-platform.web.app/account/enrollments</a>.</p>
                         <p>If you'd like to sign up another student, use the coupon code "SIBLING2023" for a 10% discount on all classes for your second student!</p>
-                        <p>If you’re new to Mountain SOL, please review the summer info page here prior to the start of class: <a href="https://www.mountainsol.org/summer">https://www.mountainsol.org/summer</a>.</p>
                         <p>Every student is encouraged to wear good hiking shoes and bring the following items in a backpack:
                         <ul>
                           <li>Water bottle</li>
-                          <li>Peanut-free snacks</li>
-                          <li>Lunch (if staying for the lunch hour)</li>
+                          <li>Peanut-free snack</li>
                           <li>Bugspray/sunscreen</li>
                           <li>Rain jacket</li>
                         </ul>
                         </p>
-                        <p>We’ll send you another email one week before the start of each class with class-specific details about what else to expect and a more specific list for your student’s backpack.</p>
-                        <p>In the meantime, please reach out to us or reply to this email with any questions!</p>
+                        <p>Please feel free to reach out to your class instructor or reply to this email with any questions!</p>
                         <p>Below is your receipt for the classes in which they are enrolled:</p>
                         <table style="text-align: left">
                           <thead>

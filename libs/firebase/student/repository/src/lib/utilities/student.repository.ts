@@ -8,6 +8,7 @@ import {
     ClassRepository,
     SemesterRepository,
 } from '@sol/classes/repository';
+import WriteResult = firestore.WriteResult;
 
 export class StudentRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
@@ -65,10 +66,26 @@ export class StudentRepository {
         )?.ref;
     }
 
+    static async get(id: string): Promise<StudentDbEntry | undefined> {
+        return (
+            await DatabaseUtility.getHydratedDocuments<StudentDbEntry>([
+                this.database.collection('students').doc(id),
+            ])
+        )[0];
+    }
+
     static async create(
         student: NewStudentDbEntry
     ): Promise<DocumentReference> {
         return await this.database.collection('students').add(student);
+    }
+
+    static async update(student: StudentDbEntry): Promise<DocumentReference> {
+        await this.database
+            .collection('students')
+            .doc(student.id)
+            .update(student);
+        return this.database.collection('students').doc(student.id);
     }
 
     private static get database() {

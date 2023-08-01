@@ -1,6 +1,7 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { StudentDbEntry, StudentForm } from '@sol/student/domain';
-import { DatabaseUtility } from '@sol/firebase/database';
+import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
+import { StudentRepository } from '@sol/student/repository';
 
 function _mapStudentDbEntryToStudentForm(dbEntry: StudentDbEntry): StudentForm {
     const form: StudentForm = {
@@ -77,21 +78,12 @@ export const getMyStudent = Functions.endpoint.handle<{ studentId: string }>(
             response.send({ studentIds: [] });
             return;
         }
-        const myStudents = await AuthUtility.getUserStudents(user);
         const { studentId } = request.body.data;
-        const userHasAccessToStudent = !!myStudents.find(
-            (student) => student.id === studentId
-        );
-        if (!userHasAccessToStudent) {
-            response.status(403).send();
-            return;
-        }
-        const [student] =
-            await DatabaseUtility.getHydratedDocuments<StudentDbEntry>([
-                DatabaseUtility.getDatabase()
-                    .collection('students')
-                    .doc(studentId),
-            ]);
+
+        await _assertUserCanManageStudent(user, studentId, response);
+
+        const student = await StudentRepository.get(studentId);
+
         if (!student) {
             response.status(404).send();
             return;
