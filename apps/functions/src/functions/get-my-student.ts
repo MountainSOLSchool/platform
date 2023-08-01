@@ -65,8 +65,6 @@ function _mapStudentDbEntryToStudentForm(dbEntry: StudentDbEntry): StudentForm {
         doctorName: dbEntry.doctor,
         doctorPhone: dbEntry.doctor_phone,
         notes: dbEntry.parent_notes,
-        medicalReleaseSignature: '',
-        releaseOfLiabilitySignature: '',
     };
     return form;
 }
