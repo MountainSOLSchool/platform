@@ -45,10 +45,6 @@ export type StudentDbEntry = {
     heightFeet: number;
     heightInches: number;
     parent_notes: string;
-    medical_release_signature: string;
-    medical_release_signature_date: string;
-    release_of_liability_signature: string;
-    release_of_liability_signature_date: string;
 };
 
 export type NewStudentDbEntry = Omit<StudentDbEntry, 'id'>;

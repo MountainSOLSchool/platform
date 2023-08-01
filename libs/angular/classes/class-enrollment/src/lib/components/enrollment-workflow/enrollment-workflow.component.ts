@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { filter, map, of, timer } from 'rxjs';
+import { filter, map, of, shareReplay, timer } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
@@ -35,6 +35,8 @@ import { ToastModule } from 'primeng/toast';
 import { RxIf } from '@rx-angular/template/if';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive';
+import { SelectStudentComponent } from '../select-student/select-student.component';
+import { ReleasesComponent } from '../releases/releases.component';
 
 @Component({
     standalone: true,
@@ -69,6 +71,8 @@ import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive'
         ToastModule,
         RxIf,
         MatVerticalStepperScrollerDirective,
+        SelectStudentComponent,
+        ReleasesComponent,
     ],
     styles: [
         `
@@ -96,7 +100,11 @@ import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive'
 export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     private readonly store = inject(EnrollmentWorkflowStore);
 
-    readonly userEmail$ = inject(AngularFireAuth).user.pipe(
+    private readonly user$ = inject(AngularFireAuth).user.pipe(shareReplay());
+
+    readonly isUserLoggedIn$ = this.user$.pipe(map((user) => !!user));
+
+    readonly userEmail$ = this.user$.pipe(
         map((user) => user?.email),
         filter((email): email is string => !!email)
     );
@@ -159,19 +167,25 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         stepper.next();
     }
 
-    allStepsComplete(...steps: Array<MatStep>): boolean {
-        return steps.every(
-            (step) =>
-                !step.hasError &&
-                // TODO: detect better
-                (step.interacted || step.label === 'Confirm Enrollment')
+    allStepsComplete(
+        isUserLoggedIn: boolean,
+        ...steps: Array<MatStep>
+    ): boolean {
+        return (
+            isUserLoggedIn &&
+            steps.every(
+                (step) =>
+                    !step.hasError &&
+                    // TODO: detect better
+                    (step.interacted || step.label === 'Confirm Enrollment')
+            )
         );
     }
 
     fillOutForTest() {
         this.store.patchState({
             enrollment: {
-                selectedClasses: [],
+                selectedClasses: ['123'],
                 isSignedUpForSolsticeEmails: false,
                 paymentMethod: {
                     nonce: 'fake-valid-nonce-NOT',
@@ -187,7 +201,10 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
                     },
                 },
                 discountCodes: [],
+                isStudentNew: false,
+                releaseSignatures: [],
                 student: {
+                    id: undefined,
                     firstName: 'David',
                     lastName: 'McCoy',
                     birthdate: '09/24/1980',
@@ -252,8 +269,6 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
                     ],
                     authorizedToAdministerMedication: true,
                     medicalNotes: 'notes',
-                    medicalReleaseSignature: 'David Shortman',
-                    releaseOfLiabilitySignature: 'David Shortman',
                 },
             },
         });

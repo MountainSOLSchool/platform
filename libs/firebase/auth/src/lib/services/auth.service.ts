@@ -12,7 +12,10 @@ import { take, tap } from 'rxjs/operators';
 })
 @Injectable()
 export class AuthService {
-    constructor(private afAuth: AngularFireAuth, private router: Router) {}
+    constructor(
+        private afAuth: AngularFireAuth,
+        private router: Router
+    ) {}
 
     public login(email: string, password: string) {
         return from(this.afAuth.signInWithEmailAndPassword(email, password));

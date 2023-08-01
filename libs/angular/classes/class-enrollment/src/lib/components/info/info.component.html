@@ -1,3 +1,16 @@
+<p-messages
+    *rxIf="isUpdatingExistingStudent$"
+    [enableService]="false"
+    severity="info"
+>
+    <ng-template pTemplate>
+        <div class="ml-2">
+            <i class="pi pi-info-circle" style="margin-right: 4px"></i>
+            Your student's information from the previous enrollment has been
+            automatically filled in. Please review and update as needed.
+        </div>
+    </ng-template>
+</p-messages>
 <p-accordion *rxLet="viewModel$; let vm">
     <p-accordionTab [selected]="true">
         <ng-template pTemplate="header"

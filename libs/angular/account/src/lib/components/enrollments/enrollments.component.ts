@@ -7,6 +7,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { RxLet } from '@rx-angular/template/let';
 import { SemesterEnrollment } from '@sol/classes/domain';
 import { ClassSummaryTableComponent } from '../../../../../classes/class-enrollment/src/lib/components/class-summary-table/class-summary-table.component';
+import { map } from 'rxjs';
 
 @Component({
     standalone: true,
@@ -19,7 +20,7 @@ import { ClassSummaryTableComponent } from '../../../../../classes/class-enrollm
                     style="margin-top: 2rem"
                     *ngFor="let enrollment of enrollments$ | async"
                 >
-                    <p-card [header]="enrollment.studentName + ', Summer 2023'">
+                    <p-card [header]="enrollment.studentName">
                         <p>
                             <b>Final cost:</b>
                             {{ enrollment.finalCost | currency }}
@@ -77,6 +78,13 @@ import { ClassSummaryTableComponent } from '../../../../../classes/class-enrollm
     ],
 })
 export class AccountEnrollmentsComponent {
-    readonly enrollments$ =
-        inject(FunctionsApi).call<Array<SemesterEnrollment>>('enrollments');
+    readonly enrollments$ = inject(FunctionsApi)
+        .call<Array<SemesterEnrollment>>('enrollments')
+        .pipe(
+            map((enrollments) =>
+                enrollments.sort(
+                    (a, b) => b.timestamp._seconds - a.timestamp._seconds
+                )
+            )
+        );
 }

@@ -1,4 +1,5 @@
 export interface StudentForm {
+    id: string | undefined;
     firstName: string;
     lastName: string;
     birthdate: string;
@@ -55,6 +56,4 @@ export interface StudentForm {
     }>;
     authorizedToAdministerMedication: boolean;
     medicalNotes: string | undefined;
-    medicalReleaseSignature: string;
-    releaseOfLiabilitySignature: string;
 }

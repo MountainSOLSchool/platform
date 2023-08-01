@@ -1,15 +1,22 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { Braintree } from '@sol/payments/braintree';
-import { NewStudentDbEntry, StudentForm } from '@sol/student/domain';
+import {
+    NewStudentDbEntry,
+    StudentDbEntry,
+    StudentForm,
+} from '@sol/student/domain';
 import { DiscountRepository } from '@sol/classes/repository';
 import { Discount, EnrollmentUtility } from '@sol/classes/domain';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
 import { Semester } from '@sol/firebase/classes/semester';
+import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
 
-function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
-    const entry: NewStudentDbEntry = {
+function _mapStudentFormToStudentDbEntry(
+    form: StudentForm
+): StudentDbEntry | NewStudentDbEntry {
+    const entry: StudentDbEntry | NewStudentDbEntry = {
         first_name: form.firstName,
         last_name: form.lastName,
         code_word: form.pickupCodeword,
@@ -70,11 +77,10 @@ function _mapStudentFormToStudentDbEntry(form: StudentForm): NewStudentDbEntry {
         doctor: form.doctorName,
         doctor_phone: form.doctorPhone,
         parent_notes: form.notes,
-        medical_release_signature: form.medicalReleaseSignature,
-        medical_release_signature_date: new Date().getUTCDate().toString(),
-        release_of_liability_signature: form.releaseOfLiabilitySignature,
-        release_of_liability_signature_date: new Date().getUTCDate().toString(),
     };
+    if (form.id) {
+        Object.assign(entry, { id: form.id });
+    }
     return entry;
 }
 
@@ -85,9 +91,9 @@ export const enroll = Functions.endpoint
         selectedClasses: Array<string>;
         selectedClassGroups: Array<string>;
         student: StudentForm;
+        releaseSignatures: Array<{ name: string; signature: string }>;
         discountCodes: Array<string>;
         paymentMethod: { nonce: string; deviceData: string };
-        isSignedUpForSolsticeEmails: boolean;
     }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
 
@@ -101,8 +107,12 @@ export const enroll = Functions.endpoint
             student,
             discountCodes,
             paymentMethod: { nonce, deviceData },
-            isSignedUpForSolsticeEmails,
+            releaseSignatures,
         } = request.body.data;
+
+        if (student?.id) {
+            await _assertUserCanManageStudent(user, student.id, response);
+        }
 
         const semester = Semester.active();
 
@@ -142,7 +152,6 @@ export const enroll = Functions.endpoint
                 amount: da.amount,
             })),
             classIds: classes.map((c) => c.id),
-            isSignedUpForSolsticeEmails,
         };
 
         const studentEnrollmentId = await ClassEnrollmentRepository.create({
@@ -174,9 +183,11 @@ export const enroll = Functions.endpoint
         }
 
         if (success) {
-            const studentRef = await StudentRepository.create(
-                _mapStudentFormToStudentDbEntry(student)
-            );
+            const studentDbEntry = _mapStudentFormToStudentDbEntry(student);
+
+            const studentRef = await ('id' in studentDbEntry
+                ? StudentRepository.update(studentDbEntry)
+                : StudentRepository.create(studentDbEntry));
 
             await ClassEnrollmentRepository.create({
                 ...enrollmentRecord,
@@ -184,9 +195,7 @@ export const enroll = Functions.endpoint
                 studentId: studentRef.id,
                 transactionId: transaction?.id ?? '',
                 status: 'enrolled',
-                medicalReleaseSignature: student.medicalReleaseSignature,
-                releaseOfLiabilitySignature:
-                    student.releaseOfLiabilitySignature,
+                releaseSignatures,
             });
 
             await Promise.all(
@@ -208,9 +217,7 @@ export const enroll = Functions.endpoint
                 relatedId: studentEnrollmentId,
                 status: 'failed',
                 failures: errors?.deepErrors().map((e) => e.message) ?? [],
-                releaseOfLiabilitySignature:
-                    student.releaseOfLiabilitySignature,
-                medicalReleaseSignature: student.medicalReleaseSignature,
+                releaseSignatures,
             });
             response.send({ success, errors: errors?.deepErrors() ?? [] });
         }

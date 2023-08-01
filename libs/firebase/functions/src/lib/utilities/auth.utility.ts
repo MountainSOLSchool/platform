@@ -55,6 +55,21 @@ export class AuthUtility {
         return roles;
     }
 
+    public static async getUserStudentIds(
+        user: admin.auth.UserRecord
+    ): Promise<Array<string>> {
+        const db = DatabaseUtility.getDatabase();
+        const studentEnrollments = await db
+            .collection('enrollment')
+            .where('userId', '==', user.uid)
+            .where('status', '==', 'enrolled')
+            .get();
+        const nonUniqueStudents = studentEnrollments.docs.map(
+            (enrollment) => enrollment.data().studentId
+        );
+        return Array.from(new Set(nonUniqueStudents));
+    }
+
     public static async getUserFromRequest(
         req: functions.https.Request,
         res: functions.Response
@@ -108,7 +123,6 @@ export class AuthUtility {
         }
 
         try {
-            // TODO: validate user is admin, not just valid user
             const decodedIdToken = await admin.auth().verifyIdToken(idToken);
             return decodedIdToken;
         } catch (error) {
