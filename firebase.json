@@ -60,6 +60,14 @@
                 "function": "availableEnrollmentClasses"
             },
             {
+              "source": "/myEnrolledStudents",
+              "function": "myEnrolledStudents"
+            },
+            {
+              "source": "/getMyStudent",
+              "function": "getMyStudent"
+            },
+            {
                 "source": "/portal2/**",
                 "destination": "/portal2/index.html"
             },
