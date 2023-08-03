@@ -211,7 +211,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
                     birthdate: '09/24/1980',
                     pronouns: 'pronoun',
                     school: 'school',
-                    tshirtSize: 'AS',
+                    tshirtSize: 'S',
                     notes: 'notes',
                     contactEmail: 'contactEmail@email.com',
                     studentEmail: 'contact@email.com',
