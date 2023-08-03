@@ -22,7 +22,7 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
 
     usingSecrets<
         SecretNamesParam extends Array<string>,
-        SecretNames extends string = SecretNamesParam[number]
+        SecretNames extends string = SecretNamesParam[number],
     >(...secretNames: SecretNamesParam) {
         const secrets: Record<SecretNames, SecretParam> = secretNames
             .map((secret) => defineSecret(secret))
@@ -35,7 +35,7 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
 
     usingStrings<
         StringNamesParam extends Array<string>,
-        StringNames extends string = StringNamesParam[number]
+        StringNames extends string = StringNamesParam[number],
     >(...stringNames: StringNamesParam) {
         const strings: Record<StringNames, StringParam> = stringNames
             .map((string) => defineString(string))

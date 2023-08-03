@@ -3,25 +3,30 @@
     border-top-right-radius: 100px;
 }
 :host ::ng-deep .p-togglebutton.p-button {
-    border-color: #3B82F6;
-    color: #3B82F6;
+    border-color: #3b82f6;
+    color: #3b82f6;
 }
-:host ::ng-deep .p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover {
-    border-color: #3B82F6;
-    color: #3B82F6;
+:host
+    ::ng-deep
+    .p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
 }
 :host ::ng-deep .p-togglebutton.p-button .p-button-icon-left {
-    color: #3B82F6;
+    color: #3b82f6;
 }
-:host ::ng-deep .p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover .p-button-icon-left {
-    color: #3B82F6;
+:host
+    ::ng-deep
+    .p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover
+    .p-button-icon-left {
+    color: #3b82f6;
 }
 
 :host ::ng-deep .p-togglebutton.p-button.p-highlight {
-    color: #FFFFFF;
+    color: #ffffff;
 }
 :host ::ng-deep .p-togglebutton.p-button.p-highlight .p-button-icon-left {
-    color: #FFFFFF;
+    color: #ffffff;
 }
 .custom-skeleton {
     border: 1px solid var(--surface-d);
