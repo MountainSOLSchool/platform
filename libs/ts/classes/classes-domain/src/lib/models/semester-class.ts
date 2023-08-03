@@ -8,6 +8,10 @@ export interface SemesterClass {
     gradeRangeEnd: number;
     description: string;
     cost: number;
+    paymentRange?: {
+        lowest?: number;
+        highest?: number;
+    };
     location: string;
     instructors: Array<{
         firstName: string;

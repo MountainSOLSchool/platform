@@ -33,6 +33,9 @@ export class ClassSummaryTableComponent {
 
     private readonly classIds$ = new BehaviorSubject(new Array<string>());
     private readonly groupIds$ = new BehaviorSubject(new Array<string>());
+    private readonly userCostsToClassIds$ = new BehaviorSubject<
+        Record<string, number | undefined> | undefined
+    >(undefined);
 
     @Input() set classIds(ids: Array<string>) {
         this.classIds$.next(ids);
@@ -40,11 +43,25 @@ export class ClassSummaryTableComponent {
     @Input() set groupIds(ids: Array<string>) {
         this.groupIds$.next(ids);
     }
+    @Input() set userCostsToClassIds(
+        userCostsToClassIds:
+            | Record<string, number | undefined>
+            | null
+            | undefined
+    ) {
+        if (userCostsToClassIds) {
+            this.userCostsToClassIds$.next(userCostsToClassIds);
+        }
+    }
 
     readonly classCostSummaryRows$: Observable<
         Array<{ name: string; date: string; cost: number }> | undefined
-    > = combineLatest([this.classIds$, this.groupIds$]).pipe(
-        switchMap(([classIds, groupIds]) => {
+    > = combineLatest([
+        this.classIds$,
+        this.groupIds$,
+        this.userCostsToClassIds$,
+    ]).pipe(
+        switchMap(([classIds, groupIds, userCostsToClassIds]) => {
             const classGroups$ = this.classList
                 .getClassGroupsByIds(groupIds)
                 .pipe(shareReplay());
@@ -100,7 +117,9 @@ export class ClassSummaryTableComponent {
                                                       'shortDate'
                                                   )
                                                 : '',
-                                        cost: c.cost,
+                                        cost:
+                                            userCostsToClassIds?.[c.id] ??
+                                            c.cost,
                                     }));
                             })
                         );

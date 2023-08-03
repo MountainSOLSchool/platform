@@ -9,7 +9,7 @@ import { FlatRecord } from '@sol/record/domain';
 export class TableHtml {
     public static generateHtmlTableFromRecords<
         PropertyNames extends string,
-        Metadata
+        Metadata,
     >({
         records,
         headers,
@@ -101,7 +101,7 @@ export class TableHtml {
 
     private static transformRecordsIntoTableRows<
         PropertyNames extends string,
-        Metadata
+        Metadata,
     >(
         records: Array<FlatRecord<PropertyNames, Metadata>>,
         styleBuilder?: CellStyleBuilder<PropertyNames, Metadata>

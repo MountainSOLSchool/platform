@@ -38,6 +38,10 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { SliderModule } from 'primeng/slider';
+import { AutoFocusModule } from 'primeng/autofocus';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -67,6 +71,10 @@ interface ClassRow {
         MessageModule,
         ToastModule,
         ButtonModule,
+        OverlayPanelModule,
+        SliderModule,
+        AutoFocusModule,
+        InputNumberModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -198,51 +206,67 @@ export class ClassesComponent {
         )
     );
 
+    private readonly userCostsToSelectedClassIds$ = this.workflow.select(
+        (state) => state.enrollment.userCostsToSelectedClassIds
+    );
+
     filteredClassRows$ = combineLatest([
         this.classRows$,
         this.search$,
         this.gradeFilter$,
         this.selectedClassIds$,
+        this.userCostsToSelectedClassIds$,
     ]).pipe(
-        map(([classRows, search, gradeFilter, selectedClassIds]) => {
-            const searched = classRows.filter((row) => {
-                return !!row.classes.find(
-                    (c) =>
-                        c.title.toLowerCase().includes(search.toLowerCase()) ||
-                        c.description
-                            .toLowerCase()
-                            .includes(search.toLowerCase()) ||
-                        c.location
-                            .toLowerCase()
-                            .includes(search.toLowerCase()) ||
-                        c.classDateTimes
-                            .toLowerCase()
-                            .includes(search.toLowerCase())
-                );
-            });
-            const [startGrade, endGrade] = gradeFilter;
-            const filtered =
-                startGrade && endGrade
-                    ? searched.filter(
-                          (row) =>
-                              !!row.classes.find(
-                                  (c) =>
-                                      c.gradeRangeStart === startGrade &&
-                                      c.gradeRangeEnd === endGrade
-                              )
-                      )
-                    : searched;
-            return filtered.map((row) => ({
-                ...row,
-                selected: row.classes.every((c) =>
-                    selectedClassIds.includes(c.id)
-                ),
-                classes: row.classes.map((c) => ({
-                    ...c,
-                    selected: selectedClassIds.includes(c.id),
-                })),
-            }));
-        })
+        map(
+            ([
+                classRows,
+                search,
+                gradeFilter,
+                selectedClassIds,
+                userCostsToSelectedClassIds,
+            ]) => {
+                const searched = classRows.filter((row) => {
+                    return !!row.classes.find(
+                        (c) =>
+                            c.title
+                                .toLowerCase()
+                                .includes(search.toLowerCase()) ||
+                            c.description
+                                .toLowerCase()
+                                .includes(search.toLowerCase()) ||
+                            c.location
+                                .toLowerCase()
+                                .includes(search.toLowerCase()) ||
+                            c.classDateTimes
+                                .toLowerCase()
+                                .includes(search.toLowerCase())
+                    );
+                });
+                const [startGrade, endGrade] = gradeFilter;
+                const filtered =
+                    startGrade && endGrade
+                        ? searched.filter(
+                              (row) =>
+                                  !!row.classes.find(
+                                      (c) =>
+                                          c.gradeRangeStart === startGrade &&
+                                          c.gradeRangeEnd === endGrade
+                                  )
+                          )
+                        : searched;
+                return filtered.map((row) => ({
+                    ...row,
+                    selected: row.classes.every((c) =>
+                        selectedClassIds.includes(c.id)
+                    ),
+                    classes: row.classes.map((c) => ({
+                        ...c,
+                        selected: selectedClassIds.includes(c.id),
+                        userCost: userCostsToSelectedClassIds[c.id] ?? c.cost,
+                    })),
+                }));
+            }
+        )
     );
 
     selectedClasses$ = this.selectedClassIds$.pipe(
@@ -266,13 +290,19 @@ export class ClassesComponent {
         map((classes) => classes.length > 0)
     );
 
-    selectionChanged({
-        id: classId,
-        selected,
-    }: {
-        id: string;
-        selected: boolean;
-    }) {
+    selectionChanged(
+        {
+            id: classId,
+            selected,
+            userCost,
+        }: {
+            id: string;
+            selected: boolean;
+            userCost?: number;
+        },
+        overlayPanel?: OverlayPanel
+    ) {
+        overlayPanel?.hide();
         this.workflow.patchState((s) => ({
             enrollment: {
                 ...s.enrollment,
@@ -283,6 +313,10 @@ export class ClassesComponent {
                     : s.enrollment.selectedClasses.filter(
                           (id) => id !== classId
                       ),
+                userCostsToSelectedClassIds: {
+                    ...s.enrollment.userCostsToSelectedClassIds,
+                    [classId]: userCost,
+                },
             },
         }));
     }

@@ -41,7 +41,6 @@ export const createEnrollmentEmail = functions.firestore
                             enrollmentRecord.studentName
                         } for classes with us!</p>
                         <p>You can view all of your enrollments here by logging in with the account you created: <a href="https://mountain-sol-platform.web.app/account/enrollments">https://mountain-sol-platform.web.app/account/enrollments</a>.</p>
-                        <p>If you'd like to sign up another student, use the coupon code "SIBLING2023" for a 10% discount on all classes for your second student!</p>
                         <p>Every student is encouraged to wear good hiking shoes and bring the following items in a backpack:
                         <ul>
                           <li>Water bottle</li>
@@ -95,7 +94,7 @@ export const createEnrollmentEmail = functions.firestore
                               0
                                   ? `<tr>
                             <td>
-                            Other Savings
+                            Other Adjustments
                             </td>
                             <td>
                             -$${differenceBetweenFinalCostAndOriginalCostWithDiscounts}

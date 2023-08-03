@@ -94,6 +94,7 @@ export const enroll = Functions.endpoint
         releaseSignatures: Array<{ name: string; signature: string }>;
         discountCodes: Array<string>;
         paymentMethod: { nonce: string; deviceData: string };
+        userCostsToSelectedClassIds: Record<string, number | undefined>;
     }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
 
@@ -108,6 +109,7 @@ export const enroll = Functions.endpoint
             discountCodes,
             paymentMethod: { nonce, deviceData },
             releaseSignatures,
+            userCostsToSelectedClassIds,
         } = request.body.data;
 
         if (student?.id) {
@@ -119,6 +121,16 @@ export const enroll = Functions.endpoint
         const classesRepository = semester.classes;
 
         const classes = await classesRepository.getMany(selectedClasses);
+
+        const classesWithUserCostsApplied = EnrollmentUtility.applyUserCosts(
+            classes,
+            userCostsToSelectedClassIds
+        );
+
+        if ('error' in classesWithUserCostsApplied) {
+            response.status(400).send(classesWithUserCostsApplied);
+            return;
+        }
 
         const classGroups = await semester.groups.getByClassIds(
             selectedClasses
@@ -135,7 +147,7 @@ export const enroll = Functions.endpoint
         const { finalTotal, discountAmounts } =
             EnrollmentUtility.getEnrollmentCost(
                 discounts,
-                classes,
+                classesWithUserCostsApplied,
                 classGroups
             );
 
