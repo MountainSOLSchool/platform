@@ -1,17 +1,43 @@
 import {
     BasketDiscount,
-    ClassesDiscount,
-    Discount,
     isBasketDiscount,
+} from '../models/discount/basket-discount';
+import {
+    ClassesDiscount,
     isClassesDiscount,
-    SemesterClass,
-    SemesterClassGroup,
-} from '@sol/classes/domain';
+} from '../models/discount/classes-discount';
+import { Discount } from '../models/discount/discount';
+import { SemesterClass } from '../models/semester-class';
+import { SemesterClassGroup } from '../models/semester-class-group';
 
 export class EnrollmentUtility {
+    static applyUserCosts(
+        classes: Array<SemesterClass>,
+        userCostsToClassIds: Record<string, number | undefined>
+    ): Array<SemesterClass> | { error: string } {
+        if (
+            classes.some((c) => {
+                const userCost = userCostsToClassIds[c.id];
+                return userCost
+                    ? !c.paymentRange ||
+                          userCost < (c.paymentRange.lowest ?? c.cost) ||
+                          userCost > (c.paymentRange.highest ?? c.cost)
+                    : false;
+            })
+        ) {
+            return {
+                error: 'User cost is not within the payment range of the class',
+            };
+        }
+        return classes.map((c) => ({
+            ...c,
+            cost: c.paymentRange ? userCostsToClassIds[c.id] ?? c.cost : c.cost,
+        }));
+    }
+
     static getEnrollmentCost(
         discounts: Discount<unknown>[],
-        classes: Awaited<SemesterClass>[],
+        classes: SemesterClass[],
         classGroups: Awaited<SemesterClassGroup>[]
     ) {
         const activeDiscounts = discounts.filter((d) => d.active);
@@ -37,7 +63,7 @@ export class EnrollmentUtility {
                         classes: Array<SemesterClass>;
                         groups: Array<SemesterClassGroup>;
                     },
-                    Array<{ code: string; amount: number }>
+                    Array<{ code: string; amount: number }>,
                 ];
             },
             [
@@ -48,7 +74,7 @@ export class EnrollmentUtility {
                     classes: Array<SemesterClass>;
                     groups: Array<SemesterClassGroup>;
                 },
-                Array<{ code: string; amount: number }>
+                Array<{ code: string; amount: number }>,
             ]
         );
 

@@ -9,6 +9,7 @@ import { createSelector } from '@ngrx/store';
 
 type Enrollment = {
     selectedClasses: Array<string>;
+    userCostsToSelectedClassIds: Record<string, number | undefined>;
     paymentMethod:
         | {
               nonce: string;
@@ -28,6 +29,7 @@ const initialState = {
     randomValueThatResetsPaymentCollector: Math.random().toString(),
     enrollment: {
         selectedClasses: [],
+        userCostsToSelectedClassIds: {},
         paymentMethod: undefined,
         discountCodes: [],
         isSignedUpForSolsticeEmails: false,
@@ -197,7 +199,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
             filter(
                 ([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)
             ),
-            switchMap(([, { codes, classIds }]) => {
+            switchMap(([, { codes, classIds, userCostsToClassIds }]) => {
                 this.patchState({ isLoadingDiscounts: true });
                 return this.functions
                     .call<{
@@ -207,7 +209,11 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                         }>;
                         finalTotal: number;
                         originalTotal: number;
-                    }>('calculateBasket', { codes, classIds })
+                    }>('calculateBasket', {
+                        codes,
+                        classIds,
+                        userCostsToClassIds,
+                    })
                     .pipe(
                         tap((basketCosts) => {
                             this.patchState(() => ({
@@ -250,6 +256,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         return this.select((state) => ({
             codes: state.enrollment.discountCodes,
             classIds: state.enrollment.selectedClasses,
+            userCostsToClassIds: state.enrollment.userCostsToSelectedClassIds,
         }));
     }
 }

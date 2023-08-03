@@ -109,6 +109,11 @@ export class ConfirmationComponent {
         })
     );
 
+    private readonly userCostsToClassIds$ = this.workflow.select(
+        ({ enrollment: { userCostsToSelectedClassIds } }) =>
+            userCostsToSelectedClassIds
+    );
+
     readonly viewModel$ = combineLatest([
         this.enrollment$,
         this.basketCosts$,
@@ -116,6 +121,7 @@ export class ConfirmationComponent {
         this.invalidDiscountCodes$,
         this.workflow.select(({ isLoadingDiscounts }) => isLoadingDiscounts),
         this.selectedClassGroupIds$,
+        this.userCostsToClassIds$,
     ]).pipe(
         map(
             ([
@@ -125,6 +131,7 @@ export class ConfirmationComponent {
                 invalidCodes,
                 isLoadingDiscounts,
                 selectedClassGroupIds,
+                userCostsToClassIds,
             ]) => ({
                 enrollment,
                 basketCosts,
@@ -132,6 +139,7 @@ export class ConfirmationComponent {
                 invalidCodes,
                 isLoadingDiscounts,
                 selectedClassGroupIds,
+                userCostsToClassIds,
             })
         )
     );

@@ -119,7 +119,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         .observe('(min-width: 800px)')
         .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
-    readonly showSecretAutofill$ = of(false);
+    readonly showSecretAutofill$ = of(true);
 
     readonly steps = [
         { label: 'Class Selection', routerLink: 'classes' },
@@ -185,7 +185,8 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     fillOutForTest() {
         this.store.patchState({
             enrollment: {
-                selectedClasses: ['123'],
+                selectedClasses: [],
+                userCostsToSelectedClassIds: {},
                 isSignedUpForSolsticeEmails: false,
                 paymentMethod: {
                     nonce: 'fake-valid-nonce-NOT',

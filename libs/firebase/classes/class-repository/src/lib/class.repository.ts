@@ -55,7 +55,7 @@ export class ClassRepository {
     ): Promise<
         SemesterClass & { students: Array<firestore.DocumentReference> }
     > {
-        return {
+        const domain: Awaited<ReturnType<typeof this.convertDboToDomain>> = {
             title: dbo.name,
             startMs:
                 typeof dbo !== 'string' &&
@@ -103,6 +103,14 @@ export class ClassRepository {
                 ? dbo.students.length > dbo.max_student_size
                 : false,
         };
+
+        if (!!dbo.payment_range_lowest || !!dbo.payment_range_highest) {
+            domain.paymentRange = {
+                lowest: dbo.payment_range_lowest,
+                highest: dbo.payment_range_highest,
+            };
+        }
+        return domain;
     }
 
     async addStudentToClass(studentId: string, classId: string): Promise<void> {

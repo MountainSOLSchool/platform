@@ -2,6 +2,27 @@
 :host ::ng-deep .p-card.class-card {
     border-top-right-radius: 100px;
 }
+:host ::ng-deep .p-togglebutton.p-button {
+    border-color: #3B82F6;
+    color: #3B82F6;
+}
+:host ::ng-deep .p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover {
+    border-color: #3B82F6;
+    color: #3B82F6;
+}
+:host ::ng-deep .p-togglebutton.p-button .p-button-icon-left {
+    color: #3B82F6;
+}
+:host ::ng-deep .p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover .p-button-icon-left {
+    color: #3B82F6;
+}
+
+:host ::ng-deep .p-togglebutton.p-button.p-highlight {
+    color: #FFFFFF;
+}
+:host ::ng-deep .p-togglebutton.p-button.p-highlight .p-button-icon-left {
+    color: #FFFFFF;
+}
 .custom-skeleton {
     border: 1px solid var(--surface-d);
     border-radius: 4px;

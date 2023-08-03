@@ -273,7 +273,12 @@
                                     {{ class.gradeRangeStart }} -
                                     {{ class.gradeRangeEnd }}<br />
                                     <b>Location:</b> {{ class.location }}<br />
+                                    <ng-container *rxIf="!class.paymentRange; else paymentRange">
                                     <b>Cost:</b> ${{ class.cost }}<br />
+                                    </ng-container>
+                                  <ng-template #paymentRange>
+                                    <b>Sliding Scale Cost:</b> ${{ class.paymentRange?.lowest }}-${{ class.paymentRange?.highest }}<br />
+                                  </ng-template>
                                     <b>Instructors:</b>
                                     <span
                                         *rxFor="
@@ -305,22 +310,43 @@
                                             additional students at this time.</b
                                         >
                                     </div>
+                                  <p-overlayPanel pAutoFocus #op>
+                                    <div>Sliding Scale Cost</div>
+                                    <div style="margin-top:1rem; margin-bottom:1rem; display: flex">
+                                      <p-button icon="pi pi-minus" styleClass="p-button-outlined" [disabled]="class.userCost <= (class.paymentRange?.lowest ?? class.cost)" (onClick)="class.userCost = class.userCost - 5"></p-button>
+                                      <div>
+                                        <p-inputNumber [min]="class.paymentRange?.lowest ?? class.cost" [max]="class.paymentRange?.highest ?? class.cost" [(ngModel)]="class.userCost" class="w-full"/>
+                                        <p-slider [step]="5" [min]="class.paymentRange?.lowest ?? class.cost" [max]="class.paymentRange?.highest ?? class.cost" [(ngModel)]="class.userCost" class="w-full"></p-slider>
+                                      </div>
+                                      <p-button icon="pi pi-plus" styleClass="p-button-outlined" [disabled]="class.userCost >= (class.paymentRange?.highest ?? class.cost)" (onClick)="class.userCost = class.userCost + 5"></p-button>
+                                    </div>
+                                    <p-button (click)="selectionChanged({ id: class.id, selected: true, userCost: class.userCost }, op)">Confirm</p-button>
+                                  </p-overlayPanel>
+                                  <ng-container *rxIf="(class.paymentRange?.lowest ?? -1) >= 0; else regularSelect">
+                                    <p-button *rxIf="!class.selected; else selectedRange" label="Select" styleClass="p-button-outlined" icon="pi pi-plus" (click)="op.toggle($event)"></p-button>
+                                    <ng-template #selectedRange>
+                                      <p-button [label]="'Selected ($' + class.userCost + ')'" styleClass="p-button-primary" icon="pi pi-check" (click)="selectionChanged({ id: class.id, selected: false })"></p-button>
+                                    </ng-template>
+                                  </ng-container>
+                                  <ng-template #regularSelect>
                                     <p-toggleButton
-                                        [disabled]="class.pausedForEnrollment"
-                                        [inputId]="'select' + class.id"
-                                        onIcon="pi pi-check"
-                                        onLabel="Selected"
-                                        offIcon="pi pi-plus"
-                                        [offLabel]="
-                                            class.pausedForEnrollment
-                                                ? 'Class Full'
-                                                : 'Select'
-                                        "
-                                        [(ngModel)]="class.selected"
-                                        (ngModelChange)="
-                                            selectionChanged(class)
-                                        "
-                                    ></p-toggleButton>
+                                          [disabled]="class.pausedForEnrollment"
+                                          [inputId]="'select' + class.id"
+                                          styleClass="p-button-primary"
+                                          onIcon="pi pi-check"
+                                          onLabel="Selected"
+                                          offIcon="pi pi-plus"
+                                          [offLabel]="
+                                              class.pausedForEnrollment
+                                                  ? 'Class Full'
+                                                  : 'Select'
+                                          "
+                                          [(ngModel)]="class.selected"
+                                          (ngModelChange)="
+                                              selectionChanged(class)
+                                          "
+                                      ></p-toggleButton>
+                                  </ng-template>
                                 </div>
                             </p-card>
                         </div>
