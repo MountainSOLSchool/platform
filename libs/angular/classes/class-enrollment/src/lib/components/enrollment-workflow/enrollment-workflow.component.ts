@@ -119,7 +119,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         .observe('(min-width: 800px)')
         .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
-    readonly showSecretAutofill$ = of(true);
+    readonly showSecretAutofill$ = of(false);
 
     readonly steps = [
         { label: 'Class Selection', routerLink: 'classes' },
