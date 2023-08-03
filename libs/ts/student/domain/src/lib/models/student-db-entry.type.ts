@@ -28,7 +28,7 @@ export type StudentDbEntry = {
     guardians: Array<ContactDbEntry>;
     has_life_threatening_allergies: boolean;
     allergies: string;
-    authorized_to_administer_meds: boolean;
+    authorized_to_administer_meds: string;
     medications: Array<{
         name: string;
         dosage: string;

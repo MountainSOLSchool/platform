@@ -268,7 +268,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
                             doctor: 'doctor',
                         },
                     ],
-                    authorizedToAdministerMedication: true,
+                    authorizedToAdministerMedication: 'Yes',
                     medicalNotes: 'notes',
                 },
             },

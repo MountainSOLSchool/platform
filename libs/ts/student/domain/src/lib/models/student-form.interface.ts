@@ -54,6 +54,6 @@ export interface StudentForm {
         dosage: string;
         doctor: string;
     }>;
-    authorizedToAdministerMedication: boolean;
+    authorizedToAdministerMedication: string;
     medicalNotes: string | undefined;
 }
