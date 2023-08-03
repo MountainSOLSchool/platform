@@ -120,14 +120,7 @@ export const enroll = Functions.endpoint
 
         const classesRepository = semester.classes;
 
-        const classes = (await classesRepository.getMany(selectedClasses)).map(
-            (c) => ({
-                ...c,
-                cost: c.paymentRange
-                    ? userCostsToSelectedClassIds[c.id] ?? c.cost
-                    : c.cost,
-            })
-        );
+        const classes = await classesRepository.getMany(selectedClasses);
 
         const classesWithUserCostsApplied = EnrollmentUtility.applyUserCosts(
             classes,
