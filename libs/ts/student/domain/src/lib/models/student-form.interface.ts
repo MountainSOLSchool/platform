@@ -3,6 +3,10 @@ export interface StudentForm {
     firstName: string;
     lastName: string;
     birthdate: string;
+    schoolGrade?: {
+        initialGrade: number;
+        atDate: Date;
+    }
     pronouns: string;
     school: string;
     tshirtSize: string;
