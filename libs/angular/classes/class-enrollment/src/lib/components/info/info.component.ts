@@ -6,7 +6,13 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, shareReplay, switchMap } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    map,
+    shareReplay,
+    switchMap,
+} from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -52,29 +58,52 @@ export const studentInfoValidationSuite = create(
             });
 
             skipWhen(
-                () => !!student.schoolGrade,
+                () => !student.schoolGrade,
                 () => {
-                    test('schoolGrade', 'Age range must be appropriate for class(es)', () => {
-                        const schoolGrade = student.schoolGrade as NonNullable<typeof student.schoolGrade>;
-                        
-                        const today = new Date();
-                        const july = 6;
-                        
-                        const isCurrentlyFirstHalfOfYear = today.getMonth() < july;
-                        const yearsPassedSinceGradeWasEntered = today.getFullYear() - schoolGrade.atDate.getFullYear();
-                        const wasStudentGradeCapturedInFirstHalfOfYear = schoolGrade.atDate.getMonth() < july;
-                        
-                        const offset = isCurrentlyFirstHalfOfYear
-                            ? wasStudentGradeCapturedInFirstHalfOfYear ? 1 : 0
-                            : wasStudentGradeCapturedInFirstHalfOfYear ? 0 : 1;
-                        
-                            const studentCurrentGrade = schoolGrade.initialGrade + yearsPassedSinceGradeWasEntered + offset;
+                    test(
+                        'schoolGrade',
+                        'Age range must be appropriate for class(es)',
+                        () => {
+                            const schoolGrade =
+                                student.schoolGrade as NonNullable<
+                                    typeof student.schoolGrade
+                                >;
 
-                        classes.forEach(({gradeRangeStart, gradeRangeEnd}) => enforce(studentCurrentGrade).isBetween(gradeRangeStart, gradeRangeEnd));
-                });
+                            const today = new Date();
+                            const july = 6;
+
+                            const isCurrentlyFirstHalfOfYear =
+                                today.getMonth() < july;
+                            const yearsPassedSinceGradeWasEntered =
+                                today.getFullYear() -
+                                schoolGrade.atDate.getFullYear();
+                            const wasStudentGradeCapturedInFirstHalfOfYear =
+                                schoolGrade.atDate.getMonth() < july;
+
+                            const offset = isCurrentlyFirstHalfOfYear
+                                ? wasStudentGradeCapturedInFirstHalfOfYear
+                                    ? 0
+                                    : 1
+                                : wasStudentGradeCapturedInFirstHalfOfYear
+                                ? 1
+                                : 0;
+
+                            const studentCurrentGrade =
+                                schoolGrade.initialGrade +
+                                yearsPassedSinceGradeWasEntered +
+                                offset;
+
+                            classes.forEach(
+                                ({ gradeRangeStart, gradeRangeEnd }) =>
+                                    enforce(studentCurrentGrade).isBetween(
+                                        gradeRangeStart,
+                                        gradeRangeEnd
+                                    )
+                            );
+                        }
+                    );
                 }
-            )
-                
+            );
 
             test('pronouns', 'Pronouns are required', () => {
                 enforce(student.pronouns).isNotEmpty();
@@ -130,13 +159,9 @@ export const studentInfoValidationSuite = create(
             test('deetspray', 'DEET bug spray choice is required', () => {
                 enforce(student.deetBugspray).isNotUndefined();
             });
-            test(
-                'naturalspray',
-                'Natural bug spray choice is required',
-                () => {
-                    enforce(student.naturalBugspray).isNotUndefined();
-                }
-            );
+            test('naturalspray', 'Natural bug spray choice is required', () => {
+                enforce(student.naturalBugspray).isNotUndefined();
+            });
             test('sunscreen', 'Sunscreen choice is required', () => {
                 enforce(student.sunscreen).isNotUndefined();
             });
@@ -164,15 +189,11 @@ export const studentInfoValidationSuite = create(
                     }
                 );
 
-                test(
-                    `guardian_${i}_residence`,
-                    'Residence is required',
-                    () => {
-                        enforce(
-                            guardian.guardianResidesWithStudent
-                        ).isNotUndefined();
-                    }
-                );
+                test(`guardian_${i}_residence`, 'Residence is required', () => {
+                    enforce(
+                        guardian.guardianResidesWithStudent
+                    ).isNotUndefined();
+                });
             });
         });
 
@@ -199,7 +220,7 @@ export const studentInfoValidationSuite = create(
             });
         });
     }
-)
+);
 
 @Component({
     standalone: true,
@@ -264,13 +285,15 @@ export class InfoComponent {
 
     private readonly interacted$ = new BehaviorSubject(false);
 
-    private selectedClassList$ = this.workflow.select(({enrollment: {selectedClasses}}) => selectedClasses).pipe(
-        switchMap(classIds =>  this.classList.getClassesByIds(classIds))
-    );
+    private selectedClassList$ = this.workflow
+        .select(({ enrollment: { selectedClasses } }) => selectedClasses)
+        .pipe(
+            switchMap((classIds) => this.classList.getClassesByIds(classIds))
+        );
 
     private readonly validation$ = combineLatest([
         this.student$,
-        this.selectedClassList$
+        this.selectedClassList$,
     ]).pipe(
         map(([student, selectedClassList]) => {
             return this.validationSuite(student, selectedClassList);

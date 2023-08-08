@@ -1,6 +1,6 @@
-import { StudentForm } from "@sol/student/domain";
-import { studentInfoValidationSuite } from "./info.component";
-import { SemesterClass } from "@sol/classes/domain";
+import { StudentForm } from '@sol/student/domain';
+import { studentInfoValidationSuite } from './info.component';
+import { SemesterClass } from '@sol/classes/domain';
 
 describe('Info Component', () => {
     describe('validation suite', () => {
@@ -13,21 +13,25 @@ describe('Info Component', () => {
                 const studentForm: Partial<StudentForm> = {
                     schoolGrade: {
                         initialGrade: 2,
-                        atDate: new Date(`September 24, ${lastYear}`)
-                    }
+                        atDate: new Date(`September 24, ${lastYear}`),
+                    },
                 };
                 const classThatStudentIsOutsideOfGradeRange: SemesterClass = {
                     gradeRangeStart: 4,
-                    gradeRangeEnd: 12
+                    gradeRangeEnd: 12,
                 } satisfies Partial<SemesterClass> as unknown as SemesterClass;
                 const selectedClasses = [classThatStudentIsOutsideOfGradeRange];
-                
-            
+
                 // when wen wens there be snacks
-                const results = studentInfoValidationSuite(studentForm, selectedClasses);
+                const results = studentInfoValidationSuite(
+                    studentForm,
+                    selectedClasses
+                );
 
                 // then
-                expect(results.getErrors()['schoolGrade']).toBe(['Age range must be appropriate for class(es)']);
+                expect(results.getErrors()['schoolGrade']).toEqual([
+                    'Age range must be appropriate for class(es)',
+                ]);
             });
         });
     });
