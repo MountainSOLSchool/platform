@@ -3,9 +3,9 @@ import { ClassEmailGenerator } from '@sol/student/reports';
 
 export const emails = Functions.endpoint
     .restrictedToRoles(Role.Admin)
-    .handle(async (request, response) => {
-        const className = request.query.class as string;
-        const emailList = await ClassEmailGenerator.createEmailList(className);
+    .handle<unknown, { classId: string }>(async (request, response) => {
+        const { classId } = request.query;
+        const emailList = await ClassEmailGenerator.createEmailList(classId);
         response.send({
             list: emailList,
         });
