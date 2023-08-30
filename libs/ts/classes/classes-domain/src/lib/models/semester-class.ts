@@ -2,6 +2,7 @@ export interface SemesterClass {
     title: string;
     startMs: number;
     endMs: number;
+    registrationEndMs: number;
     id: string;
     classType: string;
     gradeRangeStart: number;
