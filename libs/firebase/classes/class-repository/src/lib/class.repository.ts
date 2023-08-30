@@ -31,10 +31,11 @@ export class ClassRepository {
         );
     }
 
-    async getByStartsAtOrAfter(startsAt: number): Promise<SemesterClass[]> {
+    async getOpenForRegistration(): Promise<SemesterClass[]> {
+        const now = new Date(Date.now());
         const query = await DatabaseUtility.fetchMatchingDocuments(
             await DatabaseUtility.getCollectionRef(await this.getClassesPath()),
-            ['start', '>=', new Date(startsAt)],
+            ['registration_end_date', '>=', now],
             ['live', '==', true]
         );
         const classIds = query.map((doc) => doc.id);
@@ -70,6 +71,13 @@ export class ClassRepository {
                 dbo.end &&
                 '_seconds' in dbo.end
                     ? Number(dbo.end._seconds) * 1000
+                    : 0,
+            registrationEndMs:
+                typeof dbo !== 'string' &&
+                typeof dbo.registration_end_date === 'object' &&
+                dbo.registration_end_date &&
+                '_seconds' in dbo.registration_end_date
+                    ? Number(dbo.registration_end_date._seconds) * 1000
                     : 0,
             enrolledCount: Array.isArray(dbo.students)
                 ? dbo.students?.length ?? 0

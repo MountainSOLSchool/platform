@@ -3,9 +3,8 @@ import { Semester } from '@sol/firebase/classes/semester';
 
 async function getCategorizedClasses() {
     const semester = await Semester.active();
-    const now = Date.now();
-    const classes = await semester.classes.getByStartsAtOrAfter(now);
-    const groups = await semester.groups.getByStartsAtOrAfter(now);
+    const classes = await semester.classes.getOpenForRegistration();
+    const groups = await semester.groups.getOpenForRegistration();
     const idsOfClassesInGroups = groups.flatMap((g) =>
         g.classes.map((c) => c.id)
     );

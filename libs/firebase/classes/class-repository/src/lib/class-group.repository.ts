@@ -36,18 +36,17 @@ export class ClassGroupRepository {
             })
         );
     }
-    async getByStartsAtOrAfter(
-        startsAt: number
-    ): Promise<SemesterClassGroup[]> {
+    async getOpenForRegistration(): Promise<SemesterClassGroup[]> {
         const groupsCollection = await DatabaseUtility.getCollectionRef(
             await this.getGroupsPath()
         );
         const groupDocs = await groupsCollection.listDocuments();
         const groupIds = groupDocs.map((doc) => doc.id);
         const groups = await this.getMany(groupIds);
+        const now = Date.now();
         const groupsWithAllClassesStartingAfter = groups.filter((group) => {
             return group.classes.every((classItem) => {
-                return classItem.startMs >= startsAt;
+                return classItem.live && classItem.registrationEndMs >= now;
             });
         });
         return groupsWithAllClassesStartingAfter;
