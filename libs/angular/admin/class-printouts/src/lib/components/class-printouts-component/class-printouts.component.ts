@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { combineLatest, map, shareReplay } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -12,6 +12,7 @@ import { ClassPrintoutsStore } from './class-printouts.store';
 import { provideComponentStore } from '@ngrx/component-store';
 import { RxLet } from '@rx-angular/template/let';
 import { SemesterClass } from '@sol/classes/domain';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     standalone: true,
@@ -31,7 +32,7 @@ import { SemesterClass } from '@sol/classes/domain';
 })
 export class ClassPrintoutsComponent {
     private readonly store = inject(ClassPrintoutsStore);
-    readonly classes$ = inject(FunctionsApi)
+    readonly classes$ = inject(FirebaseFunctionsService)
         .call<{
             classes: Array<{
                 title: string;
@@ -42,6 +43,7 @@ export class ClassPrintoutsComponent {
             }>;
         }>('classes')
         .pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
             map(({ classes }) =>
                 classes.map((c) => {
                     const start = new Date(c.startMs).toLocaleDateString();

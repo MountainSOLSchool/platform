@@ -8,7 +8,7 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "importHelpers": true,
-        "target": "es2015",
+        "target": "es2022",
         "module": "esnext",
         "lib": ["es2017", "dom"],
         "skipLibCheck": true,
@@ -23,6 +23,10 @@
             "@sol/angular/admin/enrollments": [
                 "libs/angular/admin/enrollments/src/index.ts"
             ],
+            "@sol/angular/auth/firebase": [
+                "libs/angular/auth/firebase/src/index.ts"
+            ],
+            "@sol/angular/request": ["libs/angular/request/src/index.ts"],
             "@sol/auth/interceptor": [
                 "libs/angular/auth/interceptor/src/index.ts"
             ],
@@ -47,7 +51,6 @@
             "@sol/classes/repository": [
                 "libs/firebase/classes/class-repository/src/index.ts"
             ],
-            "@sol/firebase/auth": ["libs/firebase/auth/src/index.ts"],
             "@sol/firebase/classes/semester": [
                 "libs/firebase/classes/semester/src/index.ts"
             ],
@@ -74,7 +77,10 @@
                 "libs/firebase/student/repository/src/index.ts"
             ],
             "@sol/table/domain": ["libs/ts/table/domain/src/index.ts"],
-            "@sol/table/html": ["libs/ts/table/html/src/index.ts"]
+            "@sol/table/html": ["libs/ts/table/html/src/index.ts"],
+            "@sol/ts/firebase/adapter": [
+                "libs/ts/firebase/adapter/src/index.ts"
+            ]
         }
     },
     "exclude": ["node_modules", "tmp"]

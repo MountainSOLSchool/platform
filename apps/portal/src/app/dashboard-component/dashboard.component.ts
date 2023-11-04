@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { ChartModule } from 'primeng/chart';
 import { map } from 'rxjs';
 import { ChartOptions } from 'chart.js';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RxLet } from '@rx-angular/template/let';
 import { PanelModule } from 'primeng/panel';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     standalone: true,
@@ -23,13 +24,14 @@ import { PanelModule } from 'primeng/panel';
     templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent {
-    private readonly functionsApi = inject(FunctionsApi);
+    private readonly functionsApi = inject(FirebaseFunctionsService);
 
     readonly data$ = this.functionsApi
         .call<{
             classes: Array<{ title: string; enrolledCount: string }>;
         }>('classes')
         .pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
             map((response) => {
                 return {
                     labels: response.classes.map(({ title }) => title),

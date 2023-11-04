@@ -4,8 +4,9 @@ import { Store } from '@ngrx/store';
 import { filter, map, mergeMap, switchMap } from 'rxjs';
 import { classesActions } from './classes.actions';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { classesFeature } from './classes.feature';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Injectable({
     providedIn: 'root',
@@ -13,7 +14,7 @@ import { classesFeature } from './classes.feature';
 export class ClassesEffects {
     private readonly actions$ = inject(Actions);
     private readonly store = inject(Store);
-    private readonly functionsApi = inject(FunctionsApi);
+    private readonly functionsApi = inject(FirebaseFunctionsService);
 
     loadClasses$ = createEffect(() => {
         return this.actions$.pipe(
@@ -31,6 +32,7 @@ export class ClassesEffects {
                         classes: Array<SemesterClass>;
                     }>('classes', { ids: idsOfClassesToLoad })
                     .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                         map(({ classes }) => {
                             return classesActions.loadClassesSuccess({
                                 classes,
@@ -51,6 +53,7 @@ export class ClassesEffects {
                         groups: Array<SemesterClassGroup>;
                     }>('availableEnrollmentClasses')
                     .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                         map((available) => {
                             return classesActions.loadAvailableEnrollmentSuccess(
                                 available
@@ -75,6 +78,7 @@ export class ClassesEffects {
                         groups: Array<SemesterClassGroup>;
                     }>('classGroups', idsOfGroupsToLoad)
                     .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                         map(({ groups }) => {
                             return classesActions.loadClassGroupsSuccess({
                                 groups,

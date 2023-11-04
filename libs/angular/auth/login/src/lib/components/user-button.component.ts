@@ -7,7 +7,7 @@ import {
     OnInit,
 } from '@angular/core';
 import { UserService } from '@sol/auth/user';
-import { AuthService } from '@sol/firebase/auth';
+import { FirebaseAuthService } from '@sol/angular/auth/firebase';
 import { MenuItem } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
@@ -22,7 +22,7 @@ import { map, Observable } from 'rxjs';
         MenuModule,
         AvatarModule,
         ButtonModule,
-        AuthService,
+        FirebaseAuthService,
     ],
     selector: 'sol-user-button',
     template: ` <ng-container *ngIf="email$ | async as email; else login">
@@ -53,7 +53,7 @@ import { map, Observable } from 'rxjs';
         ></ng-template>`,
 })
 export class UserButtonComponent implements OnInit {
-    private readonly auth = inject(AuthService);
+    private readonly auth = inject(FirebaseAuthService);
     private readonly userService = inject(UserService);
 
     @Input() size: 'default' | 'small' = 'default';

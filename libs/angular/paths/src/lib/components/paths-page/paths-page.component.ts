@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Path } from '../../models/path';
@@ -35,9 +35,9 @@ import { pathsFeature } from '../../store/paths.reducer';
     ],
 })
 export class PathsPageComponent implements OnInit {
-    public paths$: Observable<Array<Path>> | undefined;
+    private readonly store = inject(Store);
 
-    constructor(private readonly store: Store) {}
+    public paths$: Observable<Array<Path>> | undefined;
 
     public ngOnInit() {
         this.paths$ = this.store.select(pathsFeature.selectPaths);

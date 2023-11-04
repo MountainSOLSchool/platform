@@ -26,7 +26,7 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { RxLet } from '@rx-angular/template/let';
 import { DropdownModule } from 'primeng/dropdown';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
@@ -34,6 +34,7 @@ import { RxIf } from '@rx-angular/template/if';
 import { create, enforce, omitWhen, test } from 'vest';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     standalone: true,
@@ -58,7 +59,7 @@ import { DialogModule } from 'primeng/dialog';
     styleUrls: ['./select-student.component.css'],
 })
 export class SelectStudentComponent {
-    private api = inject(FunctionsApi);
+    private api = inject(FirebaseFunctionsService);
     private workflow = inject(EnrollmentWorkflowStore);
 
     private readonly validationSuite = create(
@@ -131,7 +132,10 @@ export class SelectStudentComponent {
         .call<{ students: Array<{ id: string; name: string }> }>(
             'myEnrolledStudents'
         )
-        .pipe(map(({ students }) => students));
+        .pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+            map(({ students }) => students)
+        );
 
     readonly viewModel$ = combineLatest([
         this.selectedStudentType$,

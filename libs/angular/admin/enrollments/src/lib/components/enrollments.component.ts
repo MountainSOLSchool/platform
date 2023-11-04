@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { map, shareReplay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -9,6 +9,7 @@ import { SemesterEnrollment } from '@sol/classes/domain';
 import { RxFor } from '@rx-angular/template/for';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     standalone: true,
@@ -25,11 +26,12 @@ import { RippleModule } from 'primeng/ripple';
     templateUrl: './enrollments.component.html',
 })
 export class EnrollmentsComponent {
-    private readonly functionsApi = inject(FunctionsApi);
+    private readonly functionsApi = inject(FirebaseFunctionsService);
 
-    readonly enrollments$ = inject(FunctionsApi)
+    readonly enrollments$ = inject(FirebaseFunctionsService)
         .call<Array<SemesterEnrollment>>('adminEnrollments')
         .pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
             map((enrollments) => {
                 return enrollments.map((enrollment) => ({
                     ...enrollment,

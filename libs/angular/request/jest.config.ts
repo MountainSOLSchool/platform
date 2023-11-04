@@ -1,16 +1,17 @@
+/* eslint-disable */
 export default {
-    displayName: 'firebase-auth',
-    preset: '../../../jest.preset.js',
+    displayName: 'request',
+    preset: '../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-    globals: {
-        'ts-jest': {
-            tsconfig: '<rootDir>/tsconfig.spec.json',
-            stringifyContentPathRegex: '\\.(html|svg)$',
-        },
-    },
-    coverageDirectory: '../../../coverage/libs/firebase/auth',
+    coverageDirectory: '../../coverage/angular/request',
     transform: {
-        '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
+        '^.+\\.(ts|mjs|js|html)$': [
+            'jest-preset-angular',
+            {
+                tsconfig: '<rootDir>/tsconfig.spec.json',
+                stringifyContentPathRegex: '\\.(html|svg)$',
+            },
+        ],
     },
     transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
     snapshotSerializers: [

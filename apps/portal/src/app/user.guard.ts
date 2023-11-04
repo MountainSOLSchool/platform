@@ -1,23 +1,18 @@
-import { Injectable, NgModule } from '@angular/core';
-import {
-    AngularFireAuth,
-    AngularFireAuthModule,
-} from '@angular/fire/compat/auth';
+import { inject, Injectable, NgModule } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { userLoginInitiated } from './login.actions';
+import { UserService } from '@sol/auth/user';
 
 @Injectable({ providedIn: 'root' })
 export class UserGuard {
-    constructor(
-        private readonly router: Router,
-        private readonly afAuth: AngularFireAuth,
-        private readonly store: Store
-    ) {}
+    private readonly router = inject(Router);
+    private readonly user = inject(UserService).getUser();
+    private readonly store = inject(Store);
 
     canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
-        return this.afAuth.user.pipe(
+        return this.user.pipe(
             map((u) =>
                 u
                     ? true
@@ -34,6 +29,5 @@ export class UserGuard {
 
 @NgModule({
     providers: [UserGuard],
-    imports: [AngularFireAuthModule],
 })
 export class UserGuardModule {}

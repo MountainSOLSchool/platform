@@ -1,5 +1,5 @@
 export default {
-    displayName: 'auth-user',
+    displayName: 'firebase-user',
     preset: '../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
@@ -8,7 +8,7 @@ export default {
             stringifyContentPathRegex: '\\.(html|svg)$',
         },
     },
-    coverageDirectory: '../../../coverage/libs/auth/user',
+    coverageDirectory: '../../../coverage/libs/firebase/user',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
     },
