@@ -60,7 +60,6 @@ export class AccountEnrollmentsViewComponent {
     sortEnrollments(
         enrollments: Array<SemesterEnrollment>
     ): Array<SemesterEnrollment> {
-        console.log('SORTING 🎲');
         return enrollments.sort(
             (a, b) => b.timestamp._seconds - a.timestamp._seconds
         );
