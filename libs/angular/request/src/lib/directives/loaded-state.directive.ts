@@ -5,7 +5,8 @@ import {
     ViewContainerRef,
     inject,
 } from '@angular/core';
-import { Requested, RequestState } from '../models/requested.type';
+import { Requested } from '../models/requested.type';
+import { RequestedUtility } from '../utilities/requested.utility';
 
 @Directive({
     selector: '[solLoaded]',
@@ -16,11 +17,7 @@ export class SolLoadedDirective<T> {
     private readonly viewContainer = inject(ViewContainerRef);
 
     @Input() set solLoaded(requestState: Requested<T>) {
-        if (
-            requestState !== RequestState.Loading &&
-            requestState !== RequestState.Error &&
-            requestState !== RequestState.Empty
-        ) {
+        if (RequestedUtility.isLoaded(requestState)) {
             this.viewContainer.createEmbeddedView(this.templateRef, {
                 $implicit: requestState,
             });
