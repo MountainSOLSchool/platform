@@ -36,8 +36,7 @@
         "deploy:functions": "firebase deploy",
         "format:everything": "prettier --write .",
         "install:all": "npm ci && husky install && node ./decorate-angular-cli.js",
-        "analyze": "webpack-bundle-analyzer public/stats.json",
-        "prepare": "husky install"
+        "analyze": "webpack-bundle-analyzer public/stats.json"
     },
     "main": "dist/apps/functions/main.js",
     "engines": {
