@@ -2,11 +2,14 @@ import * as admin from 'firebase-admin';
 import { DocumentReference } from 'firebase-admin/firestore';
 import * as functions from 'firebase-functions';
 
+let db: ReturnType<typeof admin.firestore>;
 if (admin.apps.length === 0) {
     admin.initializeApp();
+    db = admin.firestore(functions.config().firebase);
+    // db.settings({ ignoreUndefinedProperties: true });
+} else {
+    db = admin.firestore(functions.config().firebase);
 }
-const db = admin.firestore(functions.config().firebase);
-db.settings({ ignoreUndefinedProperties: true });
 
 type Collection = Array<DocumentProperty>;
 

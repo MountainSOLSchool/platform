@@ -9,10 +9,14 @@ import {
     WhereFilterOp,
 } from 'firebase-admin/firestore';
 
+let db: ReturnType<typeof admin.firestore>;
 if (admin.apps.length === 0) {
     admin.initializeApp();
+    db = admin.firestore();
+    db.settings({ ignoreUndefinedProperties: true });
+} else {
+    db = admin.firestore();
 }
-const db = admin.firestore();
 
 db.settings({ ignoreUndefinedProperties: true });
 
