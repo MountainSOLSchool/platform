@@ -9,6 +9,7 @@ import {
     SemesterRepository,
 } from '@sol/classes/repository';
 import WriteResult = firestore.WriteResult;
+import { DatabaseV2Utility } from '../../../../../database/src/lib/utilities/database.v2.utility';
 
 export class StudentRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
@@ -69,6 +70,14 @@ export class StudentRepository {
     static async get(id: string): Promise<StudentDbEntry | undefined> {
         return (
             await DatabaseUtility.getHydratedDocuments<StudentDbEntry>([
+                this.database.collection('students').doc(id),
+            ])
+        )[0];
+    }
+
+    static async getV2(id: string): Promise<StudentDbEntry | undefined> {
+        return (
+            await DatabaseV2Utility.getHydratedDocuments<StudentDbEntry>([
                 this.database.collection('students').doc(id),
             ])
         )[0];
