@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { AccountEnrollmentsComponent } from './components/enrollments/enrollments.component';
 import { ManageAccountComponent } from './components/reset-password/manage-account.component';
 import { provideEffects } from '@ngrx/effects';
 import { ClassesEffects, classesFeature } from '@sol/classes/enrollment';
 import { provideState } from '@ngrx/store';
+import { AccountEnrollmentsComponent } from './components/enrollments/account-enrollments.component';
 
 export const accountRoutes: Routes = [
     {

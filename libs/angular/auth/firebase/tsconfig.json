@@ -1,5 +1,5 @@
 {
-    "extends": "../../../tsconfig.base.json",
+    "extends": "../../../../tsconfig.base.json",
     "files": [],
     "include": [],
     "references": [
@@ -17,7 +17,7 @@
         "noPropertyAccessFromIndexSignature": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
-        "target": "es2020"
+        "target": "es2022"
     },
     "angularCompilerOptions": {
         "strictInjectionParameters": true,

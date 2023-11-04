@@ -33,10 +33,10 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { RxIf } from '@rx-angular/template/if';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive';
 import { SelectStudentComponent } from '../select-student/select-student.component';
 import { ReleasesComponent } from '../releases/releases.component';
+import { UserService } from '@sol/auth/user';
 
 @Component({
     standalone: true,
@@ -100,7 +100,7 @@ import { ReleasesComponent } from '../releases/releases.component';
 export class ClassEnrollmentComponent implements ComponentCanDeactivate {
     private readonly store = inject(EnrollmentWorkflowStore);
 
-    private readonly user$ = inject(AngularFireAuth).user.pipe(shareReplay());
+    private readonly user$ = inject(UserService).getUser().pipe(shareReplay());
 
     readonly isUserLoggedIn$ = this.user$.pipe(map((user) => !!user));
 

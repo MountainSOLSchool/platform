@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { map, shareReplay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
 import { RxLet } from '@rx-angular/template/let';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     standalone: true,
@@ -13,7 +14,7 @@ import { RxLet } from '@rx-angular/template/let';
     templateUrl: './tshirts.component.html',
 })
 export class TshirtsComponent {
-    private readonly functionsApi = inject(FunctionsApi);
+    private readonly functionsApi = inject(FirebaseFunctionsService);
 
     students$ = this.functionsApi
         .call<{
@@ -24,6 +25,7 @@ export class TshirtsComponent {
             }>;
         }>('tshirts')
         .pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
             map(({ list }) =>
                 list.sort((a, b) => {
                     const lastNameDiff = a.lastName.localeCompare(b.lastName);

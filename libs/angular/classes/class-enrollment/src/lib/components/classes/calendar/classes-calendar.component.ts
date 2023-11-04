@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { EventApi, EventInput } from '@fullcalendar/core';
 import { SemesterClass } from '@sol/classes/domain';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { mergeMap, Observable, scan, Subject, map, startWith } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { CalendarComponent } from '@sol/calendar';
@@ -14,7 +14,7 @@ import { CardModule } from 'primeng/card';
     templateUrl: './classes-calendar.component.html',
 })
 export class SelectClassesCalendarComponent {
-    private readonly functionsApi = inject(FunctionsApi);
+    private readonly functionsApi = inject(FirebaseFunctionsService);
 
     public classSelected$ = new Subject<EventApi>();
 

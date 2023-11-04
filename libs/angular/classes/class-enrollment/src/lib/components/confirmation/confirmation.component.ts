@@ -21,8 +21,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
 import { CheckoutComponent } from '../checkout/checkout.component';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { ClassSummaryTableComponent } from '../class-summary-table/class-summary-table.component';
+import { UserService } from '@sol/auth/user';
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,10 +52,12 @@ export class ConfirmationComponent {
     private readonly classList = inject(ClassListService);
     private readonly datePipe = inject(DatePipe);
 
-    readonly userEmail$ = inject(AngularFireAuth).user.pipe(
-        map((user) => user?.email),
-        filter((email): email is string => !!email)
-    );
+    readonly userEmail$ = inject(UserService)
+        .getUser()
+        .pipe(
+            map((user) => user?.email),
+            filter((email): email is string => !!email)
+        );
 
     _allStepsComplete = false;
 

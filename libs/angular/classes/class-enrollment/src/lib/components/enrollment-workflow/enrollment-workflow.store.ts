@@ -1,11 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { filter, pairwise, Subject, switchMap, take, tap } from 'rxjs';
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
 import { StudentForm } from '@sol/student/domain';
 import { Router } from '@angular/router';
 import { createSelector } from '@ngrx/store';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 type Enrollment = {
     selectedClasses: Array<string>;
@@ -84,7 +85,7 @@ type State = {
 
 @Injectable()
 export class EnrollmentWorkflowStore extends ComponentStore<State> {
-    private readonly functions = inject(FunctionsApi);
+    private readonly functions = inject(FirebaseFunctionsService);
     private readonly router = inject(Router);
 
     constructor() {
@@ -136,6 +137,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                         studentId: id,
                     })
                     .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                         tapResponse(
                             ({ student }) => {
                                 this.patchState((state) => ({
@@ -168,6 +170,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                                 enrollment
                             )
                             .pipe(
+                                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                                 tapResponse(
                                     (response) => {
                                         if (response.success) {
@@ -215,6 +218,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                         userCostsToClassIds,
                     })
                     .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                         tap((basketCosts) => {
                             this.patchState(() => ({
                                 basketCosts,

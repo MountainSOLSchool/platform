@@ -1,17 +1,22 @@
 import { inject, Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { filter, Observable, switchMap } from 'rxjs';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { UserService } from '@sol/auth/user';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentService {
-    private readonly functions = inject(FunctionsApi);
-    private readonly afAuth = inject(AngularFireAuth);
+    private readonly functions = inject(FirebaseFunctionsService);
+    private readonly user = inject(UserService).getUser();
 
     getToken(): Observable<string> {
-        return this.afAuth.user.pipe(
+        return this.user.pipe(
             filter((user) => !!user),
-            switchMap(() => this.functions.call<string>('paymentToken'))
+            switchMap(() =>
+                this.functions
+                    .call<string>('paymentToken')
+                    .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+            )
         );
     }
 }

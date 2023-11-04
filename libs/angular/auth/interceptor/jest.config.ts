@@ -1,5 +1,5 @@
 export default {
-    displayName: 'auth-interceptor',
+    displayName: 'firebase-interceptor',
     preset: '../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
@@ -8,7 +8,7 @@ export default {
             stringifyContentPathRegex: '\\.(html|svg)$',
         },
     },
-    coverageDirectory: '../../../coverage/libs/auth/interceptor',
+    coverageDirectory: '../../../coverage/libs/firebase/interceptor',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
     },

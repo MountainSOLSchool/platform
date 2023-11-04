@@ -1,0 +1,27 @@
+{
+    "name": "firebase-auth",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/angular/auth/firebase/src",
+    "prefix": "sol",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/angular/auth/firebase"],
+            "options": {
+                "jestConfig": "libs/angular/auth/firebase/jest.config.ts",
+                "passWithNoTests": true
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint",
+            "options": {
+                "lintFilePatterns": [
+                    "libs/angular/auth/firebase/src/**/*.ts",
+                    "libs/angular/auth/firebase/src/**/*.html"
+                ]
+            }
+        }
+    },
+    "tags": ["scope:firebase"]
+}

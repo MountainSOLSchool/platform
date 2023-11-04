@@ -6,7 +6,7 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import {
     mergeMap,
     Observable,
@@ -37,7 +37,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     templateUrl: './calendar.component.html',
 })
 export class CalendarComponent {
-    private readonly firebaseApi = inject(FunctionsApi);
+    private readonly firebaseApi = inject(FirebaseFunctionsService);
 
     @Input() set events(events: Array<EventInput> | null) {
         this.#events$.next(events);

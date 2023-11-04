@@ -1,10 +1,11 @@
 import { ComponentStore } from '@ngrx/component-store';
 import { forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 import { inject, Injectable } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MessageService } from 'primeng/api';
 import { SemesterClass } from '@sol/classes/domain';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 interface ClassPrintoutsState {
     inProgressClassFormDownloads: Record<string, boolean>;
@@ -13,7 +14,7 @@ interface ClassPrintoutsState {
 
 @Injectable()
 export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
-    private readonly functionsApi = inject(FunctionsApi);
+    private readonly functionsApi = inject(FirebaseFunctionsService);
     private readonly clipboard = inject(Clipboard);
     private readonly messageService = inject(MessageService);
 
@@ -71,6 +72,7 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                             `emails?classId=${semeseterClass.id}`
                         )
                         .pipe(
+                            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                             map(({ list }) => list.join(', ')),
                             tap((joinedEmails) =>
                                 this.clipboard.copy(joinedEmails)
@@ -98,6 +100,7 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
         return this.functionsApi
             .call<{ html: string }>(`signIn?classId=${classId}`)
             .pipe(
+                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 tap(({ html }) => {
                     const win = window.open(
                         '',
@@ -119,6 +122,7 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
         return this.functionsApi
             .call<{ html: string }>(`roster?classId=${classId}`)
             .pipe(
+                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 tap(({ html }) => {
                     const win = window.open(
                         '',

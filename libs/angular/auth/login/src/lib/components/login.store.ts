@@ -9,12 +9,15 @@ import {
     tap,
 } from 'rxjs';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
-import { AuthService, FirebaseAuthModule } from '@sol/firebase/auth';
+import {
+    FirebaseAuthService,
+    FirebaseAuthModule,
+} from '@sol/angular/auth/firebase';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { concatLatestFrom } from '@ngrx/effects';
 import { loginSuite } from './login.suite';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { UserService } from '@sol/auth/user';
 
 export type Login = { email: string; password: string };
 type LoginState = Login & { isCreatingNewAccount: boolean };
@@ -28,13 +31,13 @@ enum RequestState {
 }
 
 @NgModule({
-    imports: [FirebaseAuthModule, AuthService],
+    imports: [FirebaseAuthModule, FirebaseAuthService],
     providers: [LoginStore],
 })
 @Injectable({ providedIn: 'root' })
 export class LoginStore extends ComponentStore<LoginState> {
-    private readonly authService = inject(AuthService);
-    private readonly user$ = inject(AngularFireAuth).user;
+    private readonly authService = inject(FirebaseAuthService);
+    private readonly user$ = inject(UserService).getUser();
     private readonly router = inject(Router);
     private readonly messageService = inject(MessageService);
 

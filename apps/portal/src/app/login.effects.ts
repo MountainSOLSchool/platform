@@ -1,17 +1,15 @@
-import { Injectable, NgModule } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { inject, Injectable, NgModule } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType, provideEffects } from '@ngrx/effects';
 import { filter, Subject, tap, withLatestFrom } from 'rxjs';
 import { userLoginInitiated } from './login.actions';
+import { UserService } from '@sol/auth/user';
 
 @Injectable({ providedIn: 'root' })
 export class LoginEffect {
-    constructor(
-        private readonly router: Router,
-        private readonly afAuth: AngularFireAuth,
-        private readonly actions: Actions
-    ) {}
+    private readonly router = inject(Router);
+    private readonly user = inject(UserService).getUser();
+    private readonly actions = inject(Actions);
 
     private readonly lastRouteBeforeUserPages$ = new Subject<string>();
 
@@ -29,7 +27,7 @@ export class LoginEffect {
 
     readonly redirectWhenLoggedIn = createEffect(
         () => {
-            return this.afAuth.user.pipe(
+            return this.user.pipe(
                 withLatestFrom(this.lastRouteBeforeUserPages$),
                 filter(([user]) => !!user),
                 filter(
