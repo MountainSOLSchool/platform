@@ -10,7 +10,6 @@ import { RxLet } from '@rx-angular/template/let';
 import { ChipModule } from 'primeng/chip';
 import { combineLatest, filter, map, Subject } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { ClassListService } from '../../services/class-list.service';
 import { RxFor } from '@rx-angular/template/for';
 import { FieldsetModule } from 'primeng/fieldset';
 import { CardModule } from 'primeng/card';
@@ -23,6 +22,9 @@ import { TableModule } from 'primeng/table';
 import { CheckoutComponent } from '../checkout/checkout.component';
 import { ClassSummaryTableComponent } from '../class-summary-table/class-summary-table.component';
 import { UserService } from '@sol/auth/user';
+import { ClassListService } from '@sol/angular/classes/list';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
+
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -99,7 +101,9 @@ export class ConfirmationComponent {
     );
 
     private readonly selectedClassGroupIds$ = combineLatest([
-        this.classList.getAvailableEnrollmentClassesAndGroups(),
+        this.classList
+            .getAvailableEnrollmentClassesAndGroups()
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
         this.enrollment$,
     ]).pipe(
         map(([{ groups }, { selectedClasses }]) => {

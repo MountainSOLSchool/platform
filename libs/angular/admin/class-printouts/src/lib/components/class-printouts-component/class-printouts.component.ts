@@ -1,34 +1,26 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { combineLatest, map, shareReplay } from 'rxjs';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { FileUploadModule } from 'primeng/fileupload';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { TableModule } from 'primeng/table';
-import { CommonModule } from '@angular/common';
 import { ClassPrintoutsStore } from './class-printouts.store';
 import { provideComponentStore } from '@ngrx/component-store';
-import { RxLet } from '@rx-angular/template/let';
 import { SemesterClass } from '@sol/classes/domain';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { ClassPrintoutsViewComponent } from './class-printouts.view.component';
 
 @Component({
+    template: `<sol-class-printouts-view
+        [classes]="viewModel().classes()"
+        [isClassSignInFormDownloadsInProgress]="
+            viewModel().isClassSignInFormDownloadsInProgress()
+        "
+        [isClassFormDownloadInProgress]="
+            viewModel().isClassFormDownloadInProgress()
+        "
+    ></sol-class-printouts-view>`,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        CommonModule,
-        ButtonModule,
-        InputTextModule,
-        AutoCompleteModule,
-        FileUploadModule,
-        ProgressBarModule,
-        TableModule,
-        RxLet,
-    ],
+    imports: [ClassPrintoutsViewComponent],
     providers: [provideComponentStore(ClassPrintoutsStore)],
-    templateUrl: './class-printouts.component.html',
 })
 export class ClassPrintoutsComponent {
     private readonly store = inject(ClassPrintoutsStore);

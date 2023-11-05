@@ -19,7 +19,7 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
         "target": "es2022",
-        "lib": ["es2020", "dom"]
+        "lib": ["es2022", "dom"]
     },
     "angularCompilerOptions": {
         "strictInjectionParameters": true,
