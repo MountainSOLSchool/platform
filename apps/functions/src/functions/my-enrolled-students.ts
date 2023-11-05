@@ -1,16 +1,16 @@
-import { AuthV2Utility, Functions } from '@sol/firebase/functions';
-import { StudentV2Repository } from '@sol/student/repository';
+import { AuthUtility, Functions } from '@sol/firebase/functions';
+import { StudentRepository } from '@sol/student/repository';
 
-export const myEnrolledStudents = Functions.endpoint.handleV2(
+export const myEnrolledStudents = Functions.endpoint.handle(
     async (request, response) => {
-        const user = await AuthV2Utility.getUserFromRequest(request, response);
+        const user = await AuthUtility.getUserFromRequest(request, response);
         if (!user) {
             response.send({ studentIds: [] });
             return;
         }
-        const studentIds = await AuthV2Utility.getUserStudentIds(user);
+        const studentIds = await AuthUtility.getUserStudentIds(user);
         const studentOrEmptyLookups = await Promise.all(
-            studentIds.map(async (id) => await StudentV2Repository.get(id))
+            studentIds.map(async (id) => await StudentRepository.get(id))
         );
         const students = studentOrEmptyLookups
             .filter(
