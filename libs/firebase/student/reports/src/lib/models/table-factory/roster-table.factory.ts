@@ -1,81 +1,37 @@
-import {
-    ContactDbEntry,
-    StudentDbEntry,
-    StudentRecord,
-    StudentRecordPropertyNames,
-    StudentSignInRecordPropertyNames,
-} from '@sol/student/domain';
-import { CellStyle, TableHeader } from '@sol/table/domain';
+import { ContactDbEntry, StudentDbEntry } from '@sol/student/domain';
+import { TableHeader } from '@sol/table/domain';
 import { FlatRecord } from '@sol/record/domain';
+import { TableHtmlFactory } from '@sol/table/html';
 
-export class RosterReportGenerator {
-    static buildStudentRecordStyle(
-        propertyName: StudentRecordPropertyNames,
-        value: string,
-        metadata: { isImportant: boolean } | undefined
-    ): CellStyle {
-        return {
-            isHighlighted: !!metadata?.isImportant,
-            isBold: !!metadata?.isImportant,
-        };
+export type StudentRecordPropertyNames =
+    | 'lastName'
+    | 'firstName'
+    | 'age'
+    | 'guardianContacts'
+    | 'emergencyContacts'
+    | 'authorizedPickUpContacts'
+    | 'codeWord'
+    | 'medications'
+    | 'sunscreenBugSpray'
+    | 'allergies'
+    | 'okToPhotographAndUseName';
+
+type TitleArgs = [className: string];
+
+type Metadata = { isImportant: boolean };
+
+export class RosterTableFactory extends TableHtmlFactory<
+    StudentDbEntry,
+    StudentRecordPropertyNames,
+    TitleArgs,
+    Metadata
+> {
+    protected getTitle(...[className]: TitleArgs): string {
+        return `Class Roster for ${className}`;
     }
 
-    /* Sign In/Out Sheet */
-
-    static signInRowHeaders: readonly TableHeader<StudentSignInRecordPropertyNames>[] =
-        [
-            {
-                title: 'Last Name',
-                propertyName: 'lastName',
-            },
-            {
-                title: 'First Name',
-                propertyName: 'firstName',
-            },
-            {
-                title: 'Sign In Time',
-                propertyName: 'signInTime',
-            },
-            {
-                title: 'Signature',
-                propertyName: 'signInSignature',
-            },
-            {
-                title: 'Sign Out Time',
-                propertyName: 'signOutTime',
-            },
-            {
-                title: 'Signature',
-                propertyName: 'signOutSignature',
-            },
-        ];
-
-    static transformStudentEntriesIntoSignInSheet(
-        students: Array<StudentDbEntry>
-    ): Array<FlatRecord<StudentSignInRecordPropertyNames>> {
-        return students
-            .map((student) => ({
-                lastName: { value: student.last_name },
-                firstName: { value: student.first_name },
-                signInTime: { value: '' },
-                signInSignature: { value: '' },
-                signOutTime: { value: '' },
-                signOutSignature: { value: '' },
-            }))
-            .sort((a, b) => {
-                const lastNameDiff = a.lastName.value.localeCompare(
-                    b.lastName.value
-                );
-                return lastNameDiff === 0
-                    ? a.firstName.value.localeCompare(b.firstName.value)
-                    : lastNameDiff;
-            });
-    }
-
-    /* Records = Doom Sheet = Roster */
-
-    static studentRowHeaders: readonly TableHeader<StudentRecordPropertyNames>[] =
-        [
+    protected getHeaders(): Array<TableHeader<StudentRecordPropertyNames>> {
+        return [
             {
                 title: 'Last Name',
                 propertyName: 'lastName',
@@ -120,11 +76,12 @@ export class RosterReportGenerator {
                 title: 'OK to Photograph?',
                 propertyName: 'okToPhotographAndUseName',
             },
-        ] as const;
+        ];
+    }
 
-    static transformStudentEntriesIntoRosterRecords(
+    protected getRecords(
         students: Array<StudentDbEntry>
-    ): Array<StudentRecord> {
+    ): Array<FlatRecord<StudentRecordPropertyNames, Metadata>> {
         return students
             .map((student) => ({
                 lastName: { value: student.last_name },
@@ -206,21 +163,7 @@ export class RosterReportGenerator {
             });
     }
 
-    private static allergiesToString({
-        name,
-        description,
-        response,
-    }: {
-        name: string;
-        description: string;
-        response: string;
-    }): string {
-        return [name, description, response]
-            .filter((prop) => prop?.length > 0)
-            .join(', ');
-    }
-
-    private static medicationToString(med: {
+    private medicationToString(med: {
         name: string;
         doctor: string;
         dosage: string;
@@ -228,7 +171,7 @@ export class RosterReportGenerator {
         return `${med.name} is prescribed by ${med.doctor} and should be taken "${med.dosage}"`;
     }
 
-    private static contactToString(contact: ContactDbEntry): string {
+    private contactToString(contact: ContactDbEntry): string {
         return [
             `${contact.first_name}`, // currently only one name is collected
             contact.relationship,
