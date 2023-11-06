@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
-import { map } from 'rxjs';
-import { RequestedUtility } from '@sol/angular/request';
+import { map, Observable } from 'rxjs';
+import { Requested, RequestedUtility } from '@sol/angular/request';
 
 @Injectable({
     providedIn: 'root',
@@ -10,15 +10,30 @@ import { RequestedUtility } from '@sol/angular/request';
 export class ClassesApiService {
     private readonly functions = inject(FirebaseFunctionsService);
 
-    private readonly classesCall = this.functions.call<Array<SemesterClass>>;
     private readonly classesResourcePath = 'classes';
 
     getCurrentSemesterClasses() {
-        return this.classesCall(this.classesResourcePath);
+        return this.functions
+            .call<{ classes: Array<SemesterClass> }>(this.classesResourcePath)
+            .pipe(
+                map((response) =>
+                    RequestedUtility.mapLoaded(response, (r) => r.classes)
+                )
+            );
     }
 
-    getClassesByIds(ids: Array<string>) {
-        return this.classesCall(this.classesResourcePath, { ids });
+    getClassesByIds(
+        ids: Array<string>
+    ): Observable<Requested<Array<SemesterClass>>> {
+        return this.functions
+            .call<{ classes: Array<SemesterClass> }>(this.classesResourcePath, {
+                ids,
+            })
+            .pipe(
+                map((response) =>
+                    RequestedUtility.mapLoaded(response, (r) => r.classes)
+                )
+            );
     }
 
     getClassesAvailableForEnrollment() {
@@ -35,9 +50,7 @@ export class ClassesApiService {
             }>('classGroups', ids)
             .pipe(
                 map((response) =>
-                    RequestedUtility.isLoaded(response)
-                        ? response.groups
-                        : response
+                    RequestedUtility.mapLoaded(response, (r) => r.groups)
                 )
             );
     }

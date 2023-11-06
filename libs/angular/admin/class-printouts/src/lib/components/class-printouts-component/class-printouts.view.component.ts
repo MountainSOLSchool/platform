@@ -19,15 +19,11 @@ import { ClassPrintoutRow } from '../../models/class-printout-row.type';
 @Component({
     selector: 'sol-class-printouts-view',
     template: `<h1>Class Forms and Contacts</h1>
-        <sol-class-printouts-loading-view
-            *solLoading="classes"
-        ></sol-class-printouts-loading-view>
-        <div *solLoaded="classes" style="margin-top: 20px">
-            <p-table
-                [value]="classes"
-                responsiveLayout="scroll"
-                sortMode="single"
-            >
+        <sol-class-printouts-skeleton-view
+            *solLoading="rows"
+        ></sol-class-printouts-skeleton-view>
+        <div *solLoaded="rows" style="margin-top: 20px">
+            <p-table [value]="rows" responsiveLayout="scroll" sortMode="single">
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="title" style="width: 40%">
@@ -73,9 +69,7 @@ import { ClassPrintoutRow } from '../../models/class-printout-row.type';
                                 class="sol-button"
                                 [id]="row.id + 'emailsBtn'"
                                 label="Copy Email Lists"
-                                [loading]="
-                                    isClassSignInFormDownloadsInProgress[row.id]
-                                "
+                                [loading]="isCopyEmailsInProgress[row.id]"
                                 (click)="copyEmailsClick.emit(row)"
                             >
                             </p-button>
@@ -97,11 +91,11 @@ import { ClassPrintoutRow } from '../../models/class-printout-row.type';
 })
 export class ClassPrintoutsViewComponent {
     @Input({ required: true })
-    classes!: Requested<Array<ClassPrintoutRow>>;
+    rows!: Requested<Array<ClassPrintoutRow>>;
     @Input({ required: true })
-    isClassSignInFormDownloadsInProgress!: boolean;
+    isCopyEmailsInProgress!: Record<string, boolean>;
     @Input({ required: true })
-    isClassFormDownloadInProgress!: boolean;
+    isClassFormDownloadInProgress!: Record<string, boolean>;
 
     @Output()
     copyEmailsClick = new EventEmitter<ClassPrintoutRow>();

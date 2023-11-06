@@ -6,6 +6,7 @@ import {
     selectAvailableClassesAndGroups,
     selectClassesByIds,
     selectClassGroupsByIds,
+    selectCurrentSemesterClasses,
 } from '../store/classes.feature';
 
 @Injectable({ providedIn: 'root' })
@@ -21,6 +22,11 @@ export class ClassListService {
         if (ids.length === 0) return of([]);
         this.store.dispatch(classesActions.loadClassesStart({ ids }));
         return this.store.select(selectClassesByIds(ids));
+    }
+
+    getCurrentSemesterClasses() {
+        this.store.dispatch(classesActions.loadCurrentSemesterClassesStart());
+        return this.store.select(selectCurrentSemesterClasses);
     }
 
     getClassGroupsByIds(ids: Array<string>) {

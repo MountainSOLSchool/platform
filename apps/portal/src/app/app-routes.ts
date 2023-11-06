@@ -4,6 +4,7 @@ import { HeaderComponent } from '@sol/header';
 import { AdminGuard } from './admin.guard';
 import { LoginEffectModule } from './login.effects';
 import { UserGuard } from './user.guard';
+import { provideClassList } from '@sol/angular/classes/list';
 
 export const appRoutes: Routes = [
     {
@@ -45,6 +46,7 @@ export const appRoutes: Routes = [
                                     },
                                     {
                                         path: 'report',
+                                        providers: [provideClassList()],
                                         loadComponent: () =>
                                             import(
                                                 '@sol/admin/class-printouts'

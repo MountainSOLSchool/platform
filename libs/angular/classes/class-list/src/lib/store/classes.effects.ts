@@ -3,8 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { filter, map, mergeMap, switchMap } from 'rxjs';
 import { classesActions } from './classes.actions';
-import { classesFeature, selectLoadedClasses } from './classes.feature';
+import {
+    classesFeature,
+    selectCurrentSemesterClasses,
+    selectLoadedClasses,
+} from './classes.feature';
 import { ClassesApiService } from '../services/classes-api.service';
+import { RequestedUtility } from '@sol/angular/request';
 
 @Injectable({
     providedIn: 'root',
@@ -29,6 +34,29 @@ export class ClassesEffects {
                             ids: idsOfClassesToLoad,
                             classes: request,
                         })
+                    )
+                );
+            })
+        );
+    });
+
+    loadCurrentSemesterClasses$ = createEffect(() => {
+        return this.actions$.pipe(
+            ofType(classesActions.loadCurrentSemesterClassesStart),
+            concatLatestFrom(() =>
+                this.store.select(selectCurrentSemesterClasses)
+            ),
+            filter(([, currentSemesterClasses]) =>
+                RequestedUtility.isEmpty(currentSemesterClasses)
+            ),
+            switchMap(() => {
+                return this.classesApi.getCurrentSemesterClasses().pipe(
+                    map((request) =>
+                        classesActions.loadCurrentSemesterClassesRequestChanged(
+                            {
+                                classes: request,
+                            }
+                        )
                     )
                 );
             })

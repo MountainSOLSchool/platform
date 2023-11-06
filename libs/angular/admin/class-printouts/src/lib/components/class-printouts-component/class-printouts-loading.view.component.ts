@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { TableModule } from 'primeng/table';
 
 @Component({
-    selector: 'sol-class-printouts-loading-view',
+    selector: 'sol-class-printouts-skeleton-view',
     template: `<p-table [loading]="true">
         <ng-template pTemplate="header">
             <tr>

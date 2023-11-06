@@ -14,6 +14,10 @@ type Feature = {
         classIds: Set<string>;
         groupIds: Set<string>;
     }>;
+    classIdsBySemesterId: {
+        current: Requested<Array<string>>;
+        [semesterId: string]: Requested<Array<string>>;
+    };
 };
 
 const initialState: Feature = {
@@ -22,6 +26,9 @@ const initialState: Feature = {
     availableForEnrollment: {
         classIds: new Set(),
         groupIds: new Set(),
+    },
+    classIdsBySemesterId: {
+        current: RequestState.Empty,
     },
 };
 
@@ -120,6 +127,30 @@ export const classesFeature = createFeature({
                     };
                 }
             }
+        ),
+        on(
+            classesActions.loadCurrentSemesterClassesRequestChanged,
+            (state, { classes }) => {
+                if (RequestedUtility.isLoaded(classes)) {
+                    return {
+                        ...state,
+                        classes: classes.reduce(
+                            (acc, curr) => ({ ...acc, [curr.id]: curr }),
+                            state.classes
+                        ),
+                        classIdsBySemesterId: {
+                            current: classes.map((c) => c.id),
+                        },
+                    };
+                } else {
+                    return {
+                        ...state,
+                        classIdsBySemesterId: {
+                            current: classes,
+                        },
+                    };
+                }
+            }
         )
     ),
 });
@@ -135,6 +166,29 @@ export const selectLoadedClasses = createSelector(
                 }
             )
         );
+    }
+);
+
+export const selectCurrentSemesterClassIds = createSelector(
+    classesFeature.selectClassIdsBySemesterId,
+    (classIdsBySemesterId) => {
+        return classIdsBySemesterId.current;
+    }
+);
+
+export const selectCurrentSemesterClasses = createSelector(
+    selectCurrentSemesterClassIds,
+    selectLoadedClasses,
+    (currentSemesterClassIds, classes) => {
+        let currentSemesterClasses: Requested<Array<SemesterClass>>;
+        if (RequestedUtility.isLoaded(currentSemesterClassIds)) {
+            currentSemesterClasses = currentSemesterClassIds.map(
+                (id) => classes[id]
+            );
+        } else {
+            currentSemesterClasses = currentSemesterClassIds;
+        }
+        return currentSemesterClasses;
     }
 );
 
