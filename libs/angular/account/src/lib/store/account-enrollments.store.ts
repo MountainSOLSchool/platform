@@ -1,7 +1,7 @@
 import { computed, inject, Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
 import { SemesterEnrollment } from '@sol/classes/domain';
-import { AccountEnrollmentsService } from '../services/account-enrollments.service';
+import { AccountEnrollmentsApiService } from '../services/account-enrollments-api.service';
 import { RequestState, Requested } from '@sol/angular/request';
 import { of, switchMap, tap } from 'rxjs';
 
@@ -11,7 +11,7 @@ type State = {
 
 @Injectable()
 export class AccountEnrollmentsStore extends ComponentStore<State> {
-    private readonly accountEnrollments = inject(AccountEnrollmentsService);
+    private readonly accountEnrollments = inject(AccountEnrollmentsApiService);
 
     readonly enrollments = computed(() => this.state().enrollments);
 

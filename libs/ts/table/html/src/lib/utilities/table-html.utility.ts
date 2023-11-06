@@ -1,9 +1,4 @@
-import {
-    CellStyle,
-    CellStyleBuilder,
-    TableHeader,
-    TableRow,
-} from '@sol/table/domain';
+import { CellStyleBuilder, TableHeader, TableRow } from '@sol/table/domain';
 import { FlatRecord } from '@sol/record/domain';
 
 export class TableHtml {

@@ -25,7 +25,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormsModule } from '@angular/forms';
-import { ClassListService } from '../../../services/class-list.service';
 import { RxLet } from '@rx-angular/template/let';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToggleButtonModule } from 'primeng/togglebutton';
@@ -42,6 +41,8 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { SliderModule } from 'primeng/slider';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ClassListService } from '@sol/angular/classes/list';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -128,6 +129,7 @@ export class ClassesComponent {
     classRows$: Observable<Array<ClassRow>> = this.classListService
         .getAvailableEnrollmentClassesAndGroups()
         .pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
             shareReplay(),
             map(({ classes, groups }) => {
                 const classesAsClassRows = classes

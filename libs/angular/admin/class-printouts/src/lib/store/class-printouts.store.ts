@@ -1,29 +1,79 @@
 import { ComponentStore } from '@ngrx/component-store';
-import { forkJoin, map, Observable, switchMap, tap } from 'rxjs';
-import { inject, Injectable } from '@angular/core';
+import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { computed, inject, Injectable } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { MessageService } from 'primeng/api';
-import { SemesterClass } from '@sol/classes/domain';
-import { RequestedOperatorsUtility } from '@sol/angular/request';
+import {
+    Requested,
+    RequestedOperatorsUtility,
+    RequestedUtility,
+    RequestState,
+} from '@sol/angular/request';
+import { ClassPrintoutRow } from '../models/class-printout-row.type';
+import { ClassListService } from '@sol/angular/classes/list';
 
 interface ClassPrintoutsState {
     inProgressClassFormDownloads: Record<string, boolean>;
     inProgressCopyClassEmails: Record<string, boolean>;
+    rows: Requested<Array<ClassPrintoutRow>>;
 }
 
 @Injectable()
 export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
+    private readonly classListService = inject(ClassListService);
     private readonly functionsApi = inject(FirebaseFunctionsService);
     private readonly clipboard = inject(Clipboard);
     private readonly messageService = inject(MessageService);
+
+    readonly rows = computed(() => this.state().rows);
+    readonly inProgressClassFormDownloads = computed(
+        () => this.state().inProgressClassFormDownloads
+    );
+    readonly inProgressCopyClassEmails = computed(
+        () => this.state().inProgressCopyClassEmails
+    );
 
     constructor() {
         super({
             inProgressClassFormDownloads: {},
             inProgressCopyClassEmails: {},
+            rows: RequestState.Empty,
         });
     }
+
+    readonly loadClassRows = this.effect((call) => {
+        return call.pipe(
+            switchMap(() => {
+                return this.classListService.getCurrentSemesterClasses().pipe(
+                    map((classes) =>
+                        RequestedUtility.mapLoaded(classes, (cs) =>
+                            cs.map((c) => {
+                                const start = new Date(
+                                    c.startMs
+                                ).toLocaleDateString();
+                                const end = new Date(
+                                    c.endMs
+                                ).toLocaleDateString();
+                                return {
+                                    id: c.id,
+                                    title: c.title,
+                                    enrolledCount: String(c.enrolledCount),
+                                    start,
+                                    end,
+                                };
+                            })
+                        )
+                    ),
+                    tap((rows) => this.patchState({ rows }))
+                );
+            })
+        );
+    });
+
+    private loadClassRowsOnInit = this.effect(() => {
+        return of(undefined).pipe(tap(() => this.loadClassRows()));
+    });
 
     readonly downloadClassForms = this.effect(
         (classId$: Observable<string>) => {
@@ -40,6 +90,7 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                     return forkJoin([
                         this.openClassRoster(classId),
                         this.openClassSignIn(classId),
+                        this.openStudentHealth(classId),
                     ]).pipe(
                         tap(() => {
                             this.patchState((state) => ({
@@ -56,13 +107,13 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
     );
 
     readonly copyClassEmails = this.effect(
-        (class$: Observable<SemesterClass>) => {
+        (class$: Observable<ClassPrintoutRow>) => {
             return class$.pipe(
-                tap((semesterClass) =>
+                tap((row) =>
                     this.patchState((state) => ({
                         inProgressCopyClassEmails: {
                             ...state.inProgressCopyClassEmails,
-                            [semesterClass.id]: true,
+                            [row.id]: true,
                         },
                     }))
                 ),
@@ -127,6 +178,26 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                     const win = window.open(
                         '',
                         `${classId} Roster`,
+                        `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${
+                            screen.width / 2
+                        },height=${screen.height},top=0,left=0`
+                    );
+                    if (win) {
+                        win.document.body.innerHTML = html;
+                    }
+                })
+            );
+    }
+
+    private openStudentHealth(classId: string) {
+        return this.functionsApi
+            .call<{ html: string }>(`studentHealth?classId=${classId}`)
+            .pipe(
+                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                tap(({ html }) => {
+                    const win = window.open(
+                        '',
+                        `${classId} Student Health`,
                         `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${
                             screen.width / 2
                         },height=${screen.height},top=0,left=0`

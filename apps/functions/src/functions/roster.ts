@@ -1,28 +1,17 @@
 import { StudentRepository } from '@sol/student/repository';
-import { RosterReportGenerator } from '@sol/student/reports';
-import { TableHtml } from '@sol/table/html';
 import { Functions, Role } from '@sol/firebase/functions';
 import { Semester } from '@sol/firebase/classes/semester';
+import { RosterTableFactory } from '@sol/student/reports';
 
 async function getClassRosterTable(classId: string) {
     const students =
         await StudentRepository.enrolledInActiveSemester().getInClass(classId);
 
-    const studentRecords =
-        RosterReportGenerator.transformStudentEntriesIntoRosterRecords(
-            students
-        );
-
     const className = await Semester.active()
         .classes.get(classId)
         .then((c) => c.title);
 
-    return TableHtml.generateHtmlTableFromRecords({
-        records: studentRecords,
-        headers: RosterReportGenerator.studentRowHeaders,
-        title: `Class Roster for ${className}`,
-        styleBuilder: RosterReportGenerator.buildStudentRecordStyle,
-    });
+    return new RosterTableFactory().build(students, [className]);
 }
 
 export const roster = Functions.endpoint

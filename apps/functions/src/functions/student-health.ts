@@ -1,9 +1,9 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { StudentRepository } from '@sol/student/repository';
 import { Semester } from '@sol/firebase/classes/semester';
-import { SignInTableFactory } from '@sol/student/reports';
+import { StudentHealthTableFactory } from '@sol/student/reports';
 
-async function getClassSignInTable(classId: string) {
+async function getClassStudentHealthTable(classId: string) {
     const students =
         await StudentRepository.enrolledInActiveSemester().getInClass(classId);
 
@@ -11,15 +11,15 @@ async function getClassSignInTable(classId: string) {
         .classes.get(classId)
         .then((c) => c.title);
 
-    return new SignInTableFactory().build(students, [className]);
+    return new StudentHealthTableFactory().build(students, [className]);
 }
 
-export const signIn = Functions.endpoint
+export const studentHealth = Functions.endpoint
     .restrictedToRoles(Role.Admin)
     .handle<unknown, { classId: string }>(async (request, response) => {
         const classId = request.query.classId;
 
-        const htmlTable = await getClassSignInTable(classId);
+        const htmlTable = await getClassStudentHealthTable(classId);
 
         response.send({ html: htmlTable });
     });

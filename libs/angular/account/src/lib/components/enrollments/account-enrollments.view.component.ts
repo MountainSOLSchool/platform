@@ -15,12 +15,12 @@ import { EnrollmentSkeletonViewComponent } from './enrollment-skeleton.view.comp
 @Component({
     selector: 'sol-account-enrollments-view',
     template: `<h2>Enrollments</h2>
-        <ng-container *solEmpty="enrollments">
-            <ng-container *ngTemplateOutlet="skeleton"></ng-container>
-        </ng-container>
-        <ng-container *solLoading="enrollments">
-            <ng-container *ngTemplateOutlet="skeleton"></ng-container>
-        </ng-container>
+        <sol-enrollment-skeleton-view
+            *solEmpty="enrollments"
+        ></sol-enrollment-skeleton-view>
+        <sol-enrollment-skeleton-view
+            *solLoading="enrollments"
+        ></sol-enrollment-skeleton-view>
         <ng-container *solError="enrollments">
             <p>There was an error loading your enrollments.</p>
         </ng-container>
@@ -35,10 +35,7 @@ import { EnrollmentSkeletonViewComponent } from './enrollment-skeleton.view.comp
             <ng-template #empty>
                 <p>You have no enrollments.</p>
             </ng-template>
-        </ng-container>
-        <ng-template #skeleton>
-            <sol-enrollment-skeleton-view></sol-enrollment-skeleton-view>
-        </ng-template> `,
+        </ng-container>`,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [

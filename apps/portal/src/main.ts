@@ -1,6 +1,5 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { ORIGIN, USE_EMULATOR } from '@angular/fire/compat/functions';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -13,7 +12,11 @@ import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFunctions, provideFunctions } from '@angular/fire/functions';
+import {
+    connectFunctionsEmulator,
+    getFunctions,
+    provideFunctions,
+} from '@angular/fire/functions';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import {
     provideFireAuth,
@@ -27,21 +30,12 @@ if (environment.production) {
 const httpInterceptorProviders = [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
 ];
-const functionsProvider = environment.remoteFunctions
-    ? {
-          provide: ORIGIN,
-          useValue: 'https://mountain-sol-platform.web.app',
-      }
-    : { provide: USE_EMULATOR, useValue: ['localhost', 5001] };
 
 bootstrapApplication(AppComponent, {
     providers: [
         importProvidersFrom(BrowserModule, BrowserAnimationsModule),
         importProvidersFrom(BrowserAnimationsModule),
         MessageService,
-        provideStore(),
-        provideEffects(),
-        provideRouter(appRoutes),
         provideStoreDevtools({
             maxAge: 50,
         }),
@@ -58,12 +52,22 @@ bootstrapApplication(AppComponent, {
                 })
             )
         ),
-        importProvidersFrom(provideFunctions(() => getFunctions())),
+        importProvidersFrom(
+            provideFunctions(() => {
+                const functions = getFunctions();
+                if (!environment.remoteFunctions) {
+                    connectFunctionsEmulator(functions, 'localhost', 5001);
+                }
+                return functions;
+            })
+        ),
         importProvidersFrom(provideAuth(() => getAuth())),
         provideFireAuth(),
         provideFireFunctions(),
         importProvidersFrom(HttpClientModule),
         httpInterceptorProviders,
-        functionsProvider,
+        provideStore(),
+        provideEffects(),
+        provideRouter(appRoutes),
     ],
 });

@@ -5,7 +5,7 @@ import { SemesterEnrollment } from '@sol/classes/domain';
 @Injectable({
     providedIn: 'root',
 })
-export class AccountEnrollmentsService {
+export class AccountEnrollmentsApiService {
     private readonly functions = inject(FirebaseFunctionsService);
 
     getAll() {

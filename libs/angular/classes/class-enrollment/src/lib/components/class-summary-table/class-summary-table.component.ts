@@ -14,10 +14,11 @@ import {
     switchMap,
     combineLatest,
 } from 'rxjs';
-import { ClassListService } from '../../services/class-list.service';
 import { TableModule } from 'primeng/table';
 import { RxLet } from '@rx-angular/template/let';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ClassListService } from '@sol/angular/classes/list';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     standalone: true,
@@ -64,7 +65,10 @@ export class ClassSummaryTableComponent {
         switchMap(([classIds, groupIds, userCostsToClassIds]) => {
             const classGroups$ = this.classList
                 .getClassGroupsByIds(groupIds)
-                .pipe(shareReplay());
+                .pipe(
+                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                    shareReplay()
+                );
             const tableClassGroups$ = classGroups$.pipe(
                 map((classGroups) => {
                     return classGroups
@@ -100,6 +104,7 @@ export class ClassSummaryTableComponent {
                             )
                         )
                         .pipe(
+                            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                             map((classes) => {
                                 return classes
                                     .filter((c) => classIds.includes(c.id))
