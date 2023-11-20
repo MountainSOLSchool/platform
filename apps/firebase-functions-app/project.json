@@ -1,0 +1,68 @@
+{
+    "name": "firebase-functions-app",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/firebase-functions-app/src",
+    "projectType": "application",
+    "targets": {
+        "build": {
+            "executor": "@nx/esbuild:esbuild",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/apps/firebase-functions-app",
+                "main": "apps/firebase-functions-app/src/main.ts",
+                "tsConfig": "apps/firebase-functions-app/tsconfig.app.json",
+                "assets": [
+                    "apps/firebase-functions-app/src/assets",
+                    {
+                        "glob": "**/*",
+                        "input": "apps/firebase/environment",
+                        "output": "."
+                    }
+                ],
+                "generatePackageJson": true,
+                "platform": "node",
+                "bundle": true,
+                "thirdParty": false,
+                "dependenciesFieldType": "dependencies",
+                "target": "node16",
+                "format": ["esm"],
+                "esbuildOptions": {
+                    "logLevel": "info"
+                }
+            }
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["apps/firebase-functions-app/**/*.ts"]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "apps/firebase-functions-app/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "configurations": {
+                "ci": {
+                    "ci": true,
+                    "codeCoverage": true
+                }
+            }
+        },
+        "deploy": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "nx run firebase:deploy --only functions:firebase-functions-app"
+            },
+            "dependsOn": ["build"]
+        }
+    },
+    "tags": [
+        "firebase:function",
+        "firebase:name:firebase-functions-app",
+        "firebase:dep:firebase"
+    ]
+}

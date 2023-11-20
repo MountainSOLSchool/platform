@@ -1,91 +1,125 @@
 {
-    "firestore": {
-        "rules": "firestore.rules",
-        "indexes": "firestore.indexes.json"
+    "database": {
+        "rules": "apps/firebase/database.rules.json"
     },
-    "functions": {
-        "source": "/",
-        "predeploy": ["npm run lint:functions", "npm run build:functions"]
+    "firestore": {
+        "rules": "apps/firebase/firestore.rules",
+        "indexes": "apps/firebase/firestore.indexes.json"
     },
     "hosting": {
-        "public": "public",
+        "public": "apps/firebase/public",
         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
         "rewrites": [
             {
-                "source": "/classes",
-                "function": "classes"
-            },
-            {
-                "source": "/roster",
-                "function": "roster"
-            },
-            {
-                "source": "/emails",
-                "function": "emails"
-            },
-            {
-                "source": "/tshirts",
-                "function": "tshirts"
-            },
-            {
-                "source": "/adminEnrollments",
-                "function": "adminEnrollments"
-            },
-            {
-                "source": "/signIn",
-                "function": "signIn"
-            },
-            {
-                "source": "/paymentToken",
-                "function": "paymentToken"
-            },
-            {
-                "source": "/enroll",
-                "function": "enroll"
-            },
-            {
-                "source": "/roles",
-                "function": "roles"
-            },
-            {
-                "source": "/enrollments",
-                "function": "enrollments"
-            },
-            {
-                "source": "/calculateBasket",
-                "function": "calculateBasket"
-            },
-            {
-                "source": "/availableEnrollmentClasses",
-                "function": "availableEnrollmentClasses"
-            },
-            {
-                "source": "/myEnrolledStudents",
-                "function": "myEnrolledStudents"
-            },
-            {
-                "source": "/getMyStudent",
-                "function": "getMyStudent"
-            },
-            {
-                "source": "/portal2/**",
-                "destination": "/portal2/index.html"
-            },
-            {
                 "source": "**",
-                "destination": "/portal/index.html"
+                "destination": "/index.html"
             }
         ]
     },
     "storage": {
-        "rules": "storage.rules"
+        "rules": "apps/firebase/storage.rules"
     },
+    "functions": [
+        {
+            "codebase": "firebase-functions-app",
+            "source": "dist/apps/firebase-functions-app",
+            "runtime": "nodejs16",
+            "ignore": ["*.local"],
+            "predeploy": ["npm run lint:functions", "npm run build:functions"]
+        }
+    ],
     "emulators": {
+        "auth": {
+            "port": 9099
+        },
         "functions": {
             "port": 5001
         },
         "firestore": {
             "port": 8080
+        },
+        "database": {
+            "port": 9000
+        },
+        "hosting": {
+            "port": 5000,
+            "public": "public",
+            "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+            "rewrites": [
+            {
+              "source": "/classes",
+              "function": "classes"
+            },
+            {
+              "source": "/roster",
+              "function": "roster"
+            },
+            {
+              "source": "/emails",
+              "function": "emails"
+            },
+            {
+              "source": "/tshirts",
+              "function": "tshirts"
+            },
+            {
+              "source": "/adminEnrollments",
+              "function": "adminEnrollments"
+            },
+            {
+              "source": "/signIn",
+              "function": "signIn"
+            },
+            {
+              "source": "/paymentToken",
+              "function": "paymentToken"
+            },
+            {
+              "source": "/enroll",
+              "function": "enroll"
+            },
+            {
+              "source": "/roles",
+              "function": "roles"
+            },
+            {
+              "source": "/enrollments",
+              "function": "enrollments"
+            },
+            {
+              "source": "/calculateBasket",
+              "function": "calculateBasket"
+            },
+            {
+              "source": "/availableEnrollmentClasses",
+              "function": "availableEnrollmentClasses"
+            },
+            {
+              "source": "/myEnrolledStudents",
+              "function": "myEnrolledStudents"
+            },
+            {
+              "source": "/getMyStudent",
+              "function": "getMyStudent"
+            },
+            {
+              "source": "/portal2/**",
+              "destination": "/portal2/index.html"
+            },
+            {
+              "source": "**",
+              "destination": "/portal/index.html"
+            }
+          ]
+        },
+        "pubsub": {
+            "port": 8085
+        },
+        "storage": {
+            "port": 9199
+        },
+        "eventarc": {
+            "port": 9299
         },
         "ui": {
             "enabled": true
