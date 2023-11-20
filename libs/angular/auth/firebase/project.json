@@ -9,8 +9,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/angular/auth/firebase"],
             "options": {
-                "jestConfig": "libs/angular/auth/firebase/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/angular/auth/firebase/jest.config.ts"
             }
         },
         "lint": {

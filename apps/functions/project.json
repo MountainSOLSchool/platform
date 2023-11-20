@@ -45,8 +45,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/apps/functions"],
             "options": {
-                "jestConfig": "apps/functions/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "apps/functions/jest.config.ts"
             }
         }
     },

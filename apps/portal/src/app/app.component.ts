@@ -20,7 +20,7 @@ import { ToastModule } from 'primeng/toast';
                 >
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; If you need help, please
                 contact us at
-                <a href="mailto:info@mountainsol.org">info@mountainsol.org</a>
+                <a href="mailto:info@mountainsol.org">info&#64;mountainsol.org</a>
             </p>
         </footer>`,
     styles: [``],

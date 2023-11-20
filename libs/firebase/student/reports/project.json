@@ -15,8 +15,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/student/reports"],
             "options": {
-                "jestConfig": "libs/student/reports/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/student/reports/jest.config.ts"
             }
         }
     },

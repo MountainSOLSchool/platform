@@ -3,7 +3,6 @@ import * as CORS from 'cors';
 import { AuthUtility, Role } from './auth.utility';
 import { defineSecret, defineString } from 'firebase-functions/params';
 import { SecretParam, StringParam } from 'firebase-functions/lib/params/types';
-import { FunctionWithParametersType } from '@ngrx/store';
 
 const cors = CORS({ origin: true });
 

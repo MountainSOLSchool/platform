@@ -11,8 +11,7 @@
                 "{workspaceRoot}/coverage/libs/payments/braintree-client"
             ],
             "options": {
-                "jestConfig": "libs/payments/braintree-client/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/payments/braintree-client/jest.config.ts"
             }
         },
         "lint": {

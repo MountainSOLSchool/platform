@@ -9,8 +9,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/auth/interceptor"],
             "options": {
-                "jestConfig": "libs/auth/interceptor/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/auth/interceptor/jest.config.ts"
             }
         },
         "lint": {
