@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -50,7 +50,7 @@ import { UserService } from '@sol/auth/user';
     ],
     templateUrl: './enrollment-workflow.component.html',
     imports: [
-        CommonModule,
+        AsyncPipe,
         RouterModule,
         StepsModule,
         CdkStepperModule,

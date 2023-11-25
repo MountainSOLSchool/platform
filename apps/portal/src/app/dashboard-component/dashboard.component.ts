@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
@@ -9,17 +8,18 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RxLet } from '@rx-angular/template/let';
 import { PanelModule } from 'primeng/panel';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         RxLet,
         ChartModule,
         RouterModule,
         ProgressSpinnerModule,
         PanelModule,
+        AsyncPipe,
     ],
     templateUrl: './dashboard.component.html',
 })

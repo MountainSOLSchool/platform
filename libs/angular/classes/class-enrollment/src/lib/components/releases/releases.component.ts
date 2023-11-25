@@ -28,14 +28,12 @@ import { FormsModule } from '@angular/forms';
 import { create, enforce, group, test } from 'vest';
 import { RxLet } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
-import { CommonModule } from '@angular/common';
 import { RxFor } from '@rx-angular/template/for';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         InputTextModule,
         CalendarModule,
         ButtonModule,

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -18,14 +18,14 @@ import { map, Observable } from 'rxjs';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        AsyncPipe,
         MenuModule,
         AvatarModule,
         ButtonModule,
         FirebaseAuthService,
     ],
     selector: 'sol-user-button',
-    template: ` <ng-container *ngIf="email$ | async as email; else login">
+    template: `@if (email$ | async; as email) {
             <div style="cursor: pointer">
                 <p-avatar
                     size="large"
@@ -43,14 +43,13 @@ import { map, Observable } from 'rxjs';
                     [model]="(menuItems$ | async) ?? []"
                 ></p-menu>
             </div>
-        </ng-container>
-        <ng-template #login>
+        } @else {
             <p-button
                 routerLink="/user/create"
                 [label]="size === 'default' ? 'Register / Sign In' : 'Account'"
                 styleClass="p-button-md"
-            ></p-button
-        ></ng-template>`,
+            ></p-button>
+        }`,
 })
 export class UserButtonComponent implements OnInit {
     private readonly auth = inject(FirebaseAuthService);

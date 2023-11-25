@@ -18,9 +18,10 @@
                 *rxLet="!vm.hasErrorsByGroup['contacts']; let valid"
                 [solValid]="valid"
             >
-                Emergency Contacts<ng-container *ngIf="!valid">
-                    ⚠️</ng-container
-                >
+                Emergency Contacts
+                @if (!valid) {
+                    ⚠️
+                }
             </div>
         </ng-template>
         <form>
@@ -117,19 +118,18 @@
                             ></sol-messages>
                         </div>
                     </div>
-                    <div
-                        *ngIf="i > 1"
-                        style="width: 10rem; margin-bottom: 1rem"
-                    >
-                        <button
-                            label="Remove"
-                            type="button"
-                            pRipple
-                            pButton
-                            class="p-button-outlined p-button-danger"
-                            (click)="removeContact(i)"
-                        ></button>
-                    </div>
+                    @if (i > 1) {
+                        <div style="width: 10rem; margin-bottom: 1rem">
+                            <button
+                                label="Remove"
+                                type="button"
+                                pRipple
+                                pButton
+                                class="p-button-outlined p-button-danger"
+                                (click)="removeContact(i)"
+                            ></button>
+                        </div>
+                    }
                 </div>
 
                 <div class="col-6" style="padding-bottom: 20px">
@@ -151,9 +151,10 @@
                 *rxLet="!vm.hasErrorsByGroup['health']; let valid"
                 [solValid]="valid"
             >
-                Student Health Information<ng-container *ngIf="!valid">
-                    ⚠️</ng-container
-                >
+                Student Health Information
+                @if (!valid) {
+                    ⚠️
+                }
             </div>
         </ng-template>
         <form>

@@ -1,4 +1,4 @@
-import { NgForOf, NgIf, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { SemesterEnrollment } from '@sol/classes/domain';
@@ -26,11 +26,15 @@ import { EnrollmentSkeletonViewComponent } from './enrollment-skeleton.view.comp
         </ng-container>
         <ng-container *solLoaded="enrollments">
             @if (enrollments.length > 0) {
-                <sol-enrollment-view
-                    style="margin-top: 2rem"
-                    *ngFor="let enrollment of sortEnrollments(enrollments)"
-                    [enrollment]="enrollment"
-                ></sol-enrollment-view>
+                @for (
+                    enrollment of sortEnrollments(enrollments);
+                    track enrollment
+                ) {
+                    <sol-enrollment-view
+                        style="margin-top: 2rem"
+                        [enrollment]="enrollment"
+                    ></sol-enrollment-view>
+                }
             } @else {
                 <p>You have no enrollments.</p>
             }
@@ -45,8 +49,6 @@ import { EnrollmentSkeletonViewComponent } from './enrollment-skeleton.view.comp
         SolLoadedDirective,
         EnrollmentViewComponent,
         EnrollmentSkeletonViewComponent,
-        NgForOf,
-        NgIf,
     ],
 })
 export class AccountEnrollmentsViewComponent {

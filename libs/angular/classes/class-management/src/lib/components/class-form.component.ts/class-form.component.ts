@@ -7,7 +7,7 @@ import { PanelModule } from 'primeng/panel';
 import { FormsModule } from '@angular/forms';
 import { SidebarModule } from 'primeng/sidebar';
 import { Subject } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TooltipModule } from 'primeng/tooltip';
@@ -16,7 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        CommonModule,
+        AsyncPipe,
         ButtonModule,
         InputTextModule,
         DropdownModule,
@@ -41,37 +41,38 @@ import { TooltipModule } from 'primeng/tooltip';
             (onHide)="isUnitsPanelVisible$.next(false)"
         >
             <h3>Select All Units For Which Students Can Get Credit:</h3>
-            <div
-                style="margin-bottom:10px;"
-                *ngFor="let category of categories"
-            >
-                <p-panel [header]="category.name">
-                    <ng-container *ngFor="let unit of category.units">
-                        <div class="field-checkbox">
-                            <p-checkbox
-                                [binary]="true"
-                                [inputId]="'unit_' + unit.name"
-                            ></p-checkbox>
-                            <label [for]="'unit_' + unit.name">{{
-                                unit.name
-                            }}</label>
-                            &nbsp;(<a
-                                href="javascript:void(0)"
-                                (click)="unitDescriptionTooltip.show($event)"
-                                >description</a
-                            >)
-                            <br />
-                        </div>
-                        <p-overlayPanel
-                            #unitDescriptionTooltip
-                            [showCloseIcon]="true"
-                            [style]="{ width: '450px' }"
-                        >
-                            {{ unit.description }}
-                        </p-overlayPanel>
-                    </ng-container>
-                </p-panel>
-            </div>
+            @for (category of categories; track category) {
+                <div style="margin-bottom:10px;">
+                    <p-panel [header]="category.name">
+                        @for (unit of category.units; track unit) {
+                            <div class="field-checkbox">
+                                <p-checkbox
+                                    [binary]="true"
+                                    [inputId]="'unit_' + unit.name"
+                                ></p-checkbox>
+                                <label [for]="'unit_' + unit.name">{{
+                                    unit.name
+                                }}</label>
+                                &nbsp;(<a
+                                    href="javascript:void(0)"
+                                    (click)="
+                                        unitDescriptionTooltip.show($event)
+                                    "
+                                    >description</a
+                                >)
+                                <br />
+                            </div>
+                            <p-overlayPanel
+                                #unitDescriptionTooltip
+                                [showCloseIcon]="true"
+                                [style]="{ width: '450px' }"
+                            >
+                                {{ unit.description }}
+                            </p-overlayPanel>
+                        }
+                    </p-panel>
+                </div>
+            }
         </p-sidebar>
         <br />
         <br />

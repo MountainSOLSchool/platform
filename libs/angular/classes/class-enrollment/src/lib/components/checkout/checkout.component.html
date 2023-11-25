@@ -1,19 +1,16 @@
 <ng-container *rxLet="viewModel$; let vm">
-    <ng-container *ngIf="vm.hasCreatedAccount; else hasNotCreatedAccount"
-        ><sol-messages
-            [messages]="vm.errors['hasPaymentMethod']"
-        ></sol-messages>
+    @if (vm.hasCreatedAccount) {
+        <sol-messages [messages]="vm.errors['hasPaymentMethod']"></sol-messages>
         <sol-payment-collector
             [randomValueThatResetsPaymentCollector]="
                 randomValueThatResetsPaymentCollector
             "
             (paymentMethod)="setPaymentMethod($event)"
-        ></sol-payment-collector
-    ></ng-container>
-    <ng-template #hasNotCreatedAccount>
+        ></sol-payment-collector>
+    } @else {
         <p>
             Before you can enter payment information, you need to create or sign
             into an account on the Account Registration step.
         </p>
-    </ng-template>
+    }
 </ng-container>

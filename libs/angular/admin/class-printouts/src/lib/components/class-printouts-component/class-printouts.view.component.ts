@@ -13,7 +13,6 @@ import {
     SolLoadingDirective,
 } from '@sol/angular/request';
 import { ClassPrintoutsLoadingViewComponent } from './class-printouts-loading.view.component';
-import { NgIf } from '@angular/common';
 import { ClassPrintoutRow } from '../../models/class-printout-row.type';
 
 @Component({
@@ -46,42 +45,43 @@ import { ClassPrintoutRow } from '../../models/class-printout-row.type';
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-data>
-                    <tr *ngIf="assertSemesterClass(data) as row">
-                        <td>{{ row.title }}</td>
-                        <td>{{ row.enrolledCount }}</td>
-                        <td>{{ row.start }}</td>
-                        <td>{{ row.end }}</td>
-                        <td>
-                            <p-button
-                                class="sol-button"
-                                label="View/Print Class Forms"
-                                icon="pi pi-download"
-                                [id]="row.id + 'downloadBtn'"
-                                [loading]="
-                                    isClassFormDownloadInProgress[row.id]
-                                "
-                                (click)="downloadClick.emit(row.id)"
-                            >
-                            </p-button>
-                        </td>
-                        <td>
-                            <p-button
-                                class="sol-button"
-                                [id]="row.id + 'emailsBtn'"
-                                label="Copy Email Lists"
-                                [loading]="isCopyEmailsInProgress[row.id]"
-                                (click)="copyEmailsClick.emit(row)"
-                            >
-                            </p-button>
-                        </td>
-                    </tr>
+                    @if (assertSemesterClass(data); as row) {
+                        <tr>
+                            <td>{{ row.title }}</td>
+                            <td>{{ row.enrolledCount }}</td>
+                            <td>{{ row.start }}</td>
+                            <td>{{ row.end }}</td>
+                            <td>
+                                <p-button
+                                    class="sol-button"
+                                    label="View/Print Class Forms"
+                                    icon="pi pi-download"
+                                    [id]="row.id + 'downloadBtn'"
+                                    [loading]="
+                                        isClassFormDownloadInProgress[row.id]
+                                    "
+                                    (click)="downloadClick.emit(row.id)"
+                                >
+                                </p-button>
+                            </td>
+                            <td>
+                                <p-button
+                                    class="sol-button"
+                                    [id]="row.id + 'emailsBtn'"
+                                    label="Copy Email Lists"
+                                    [loading]="isCopyEmailsInProgress[row.id]"
+                                    (click)="copyEmailsClick.emit(row)"
+                                >
+                                </p-button>
+                            </td>
+                        </tr>
+                    }
                 </ng-template>
             </p-table>
         </div>`,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgIf,
         ButtonModule,
         TableModule,
         SolLoadingDirective,

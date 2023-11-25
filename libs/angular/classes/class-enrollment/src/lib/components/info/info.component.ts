@@ -22,19 +22,19 @@ import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { RxLet } from '@rx-angular/template/let';
 import { create, test, enforce, group } from 'vest';
-import { CommonModule } from '@angular/common';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { StudentForm } from '@sol/student/domain';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { RxIf } from '@rx-angular/template/if';
+import { NgStyle } from '@angular/common';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        NgStyle,
         InputTextModule,
         CalendarModule,
         ButtonModule,
@@ -308,10 +308,6 @@ export class InfoComponent {
         { name: 'Adult XL', value: 'XL' },
         { name: 'Adult 2XL', value: '2XL' },
     ];
-
-    trackByIndex(index: number) {
-        return index;
-    }
 
     @ViewChild('op') op!: OverlayPanel;
 

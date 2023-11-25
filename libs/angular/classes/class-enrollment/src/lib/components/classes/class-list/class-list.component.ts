@@ -19,7 +19,7 @@ import {
 } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
 import { CardModule } from 'primeng/card';
-import { CommonModule, DatePipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip';
@@ -54,8 +54,10 @@ interface ClassRow {
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        AsyncPipe,
+        NgStyle,
+        CurrencyPipe,
         CardModule,
-        CommonModule,
         CheckboxModule,
         InputTextModule,
         ChipModule,

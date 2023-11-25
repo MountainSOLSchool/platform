@@ -2,10 +2,12 @@
     [events]="classEvents$ | async"
     (eventClick)="classSelected$.next($event)"
 ></sol-calendar>
-<p-card
-    *ngFor="let class of selectedClasses$ | async"
-    [header]="class.title"
-    [style]="{ width: '25rem', 'margin-bottom': '2em' }"
->
-    <p>Hey I'm the details.</p>
-</p-card>
+
+@for (selectedClass of selectedClasses$ | async; track selectedClass) {
+    <p-card
+        [header]="selectedClass.title"
+        [style]="{ width: '25rem', 'margin-bottom': '2em' }"
+    >
+        <p>Hey I'm the details.</p>
+    </p-card>
+}
