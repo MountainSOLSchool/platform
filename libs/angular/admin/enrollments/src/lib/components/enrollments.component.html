@@ -27,9 +27,11 @@
             <th pSortableColumn="finalCost">
                 Final Cost <p-sortIcon field="finalCost"></p-sortIcon>
             </th>
-            <ng-container
-                *rxFor="let discount of longestDiscounts$; let i = index"
-            >
+            @for (
+                discount of longestDiscounts$ | async;
+                track discount;
+                let i = $index
+            ) {
                 <th [pSortableColumn]="'discount' + i + '_description'">
                     Discount {{ i + 1 }} Name
                     <p-sortIcon
@@ -42,23 +44,25 @@
                         [field]="'discount' + i + '_amount'"
                     ></p-sortIcon>
                 </th>
-            </ng-container>
+            }
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-enrollment>
         <tr>
             <td>{{ enrollment.studentName }}</td>
             <td>{{ enrollment.finalCost | currency }}</td>
-            <ng-container
-                *rxFor="let discount of longestDiscounts$; let i = index"
-            >
+            @for (
+                discount of longestDiscounts$ | async;
+                track discount;
+                let i = $index
+            ) {
                 <td>{{ enrollment['discount' + i + '_description'] ?? '' }}</td>
                 <td>
                     {{
                         enrollment['discount' + i + '_amount'] ?? '' | currency
                     }}
                 </td>
-            </ng-container>
+            }
         </tr>
     </ng-template>
 </p-table>

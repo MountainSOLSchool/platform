@@ -1,4 +1,4 @@
-import {Directive, HostListener, inject} from '@angular/core';
+import { Directive, HostListener, inject } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 
 @Directive({

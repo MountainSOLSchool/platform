@@ -9,8 +9,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/auth/login"],
             "options": {
-                "jestConfig": "libs/auth/login/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/auth/login/jest.config.ts"
             }
         },
         "lint": {

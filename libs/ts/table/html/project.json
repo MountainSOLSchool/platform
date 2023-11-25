@@ -15,8 +15,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/table/html"],
             "options": {
-                "jestConfig": "libs/table/html/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/table/html/jest.config.ts"
             }
         }
     },

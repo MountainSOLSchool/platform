@@ -1,5 +1,4 @@
-import * as braintree from 'braintree';
-import { BraintreeGateway, Environment } from 'braintree';
+import { Customer, BraintreeGateway, Environment } from 'braintree';
 import { PreparedTransaction } from '@sol/payments/transactions';
 import { type auth } from 'firebase-admin';
 
@@ -38,7 +37,7 @@ export class Braintree {
     private gateway: BraintreeGateway;
 
     public async getClientToken(user: auth.UserRecord) {
-        let customer: braintree.Customer | undefined;
+        let customer: Customer | undefined;
         try {
             customer = await this.gateway.customer.find(user.uid);
         } catch (e) {

@@ -15,8 +15,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/firebase/functions"],
             "options": {
-                "jestConfig": "libs/firebase/functions/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/firebase/functions/jest.config.ts"
             }
         }
     },

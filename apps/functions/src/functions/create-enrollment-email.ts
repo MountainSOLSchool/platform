@@ -1,11 +1,10 @@
-import * as functions from 'firebase-functions';
+import { firestore } from 'firebase-functions/v1';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
-
 import { AuthUtility } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { Semester } from '@sol/firebase/classes/semester';
 
-export const createEnrollmentEmail = functions.firestore
+export const createEnrollmentEmail = firestore
     .document('enrollment/{enrollmentId}')
     .onCreate(async (documentSnapshot) => {
         const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;

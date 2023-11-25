@@ -1,5 +1,5 @@
 import { inject, Injectable, NgModule } from '@angular/core';
-import { ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
+import { Router, UrlTree } from '@angular/router';
 import { map, Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { userLoginInitiated } from './login.actions';
@@ -11,7 +11,7 @@ export class UserGuard {
     private readonly user = inject(UserService).getUser();
     private readonly store = inject(Store);
 
-    canActivate(route: ActivatedRouteSnapshot): Observable<boolean | UrlTree> {
+    canActivate(): Observable<boolean | UrlTree> {
         return this.user.pipe(
             map((u) =>
                 u

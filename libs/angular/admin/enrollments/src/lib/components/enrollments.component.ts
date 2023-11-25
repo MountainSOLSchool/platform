@@ -1,12 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
-import { map, shareReplay } from 'rxjs';
+import { Observable, map, shareReplay } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
-import { RxLet } from '@rx-angular/template/let';
 import { SemesterEnrollment } from '@sol/classes/domain';
-import { RxFor } from '@rx-angular/template/for';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
@@ -18,8 +16,6 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
         CommonModule,
         ProgressBarModule,
         TableModule,
-        RxLet,
-        RxFor,
         ButtonModule,
         RippleModule,
     ],
@@ -46,18 +42,19 @@ export class EnrollmentsComponent {
             shareReplay()
         );
 
-    readonly longestDiscounts$ = this.enrollments$.pipe(
-        map((enrollments) =>
-            enrollments.reduce(
-                (greatest: number, enrollment: any) =>
-                    enrollment.discounts?.length > greatest
-                        ? enrollment.discounts.length
-                        : greatest,
-                0
-            )
-        ),
-        map((longest) => Array.from(new Array(longest)))
-    );
+    readonly longestDiscounts$: Observable<Array<number>> =
+        this.enrollments$.pipe(
+            map((enrollments) =>
+                enrollments.reduce(
+                    (greatest: number, enrollment) =>
+                        enrollment.discounts?.length > greatest
+                            ? enrollment.discounts.length
+                            : greatest,
+                    0
+                )
+            ),
+            map((longest) => Array.from(new Array(longest)))
+        );
 
     readonly columns$ = this.longestDiscounts$.pipe(
         map((longest) => [

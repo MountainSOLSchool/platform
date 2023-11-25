@@ -1,9 +1,9 @@
-import * as functions from 'firebase-functions';
+import { firestore } from 'firebase-functions/v1';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
 import { DatabaseUtility } from '@sol/firebase/database';
-import * as admin from 'firebase-admin';
+import { FieldValue } from 'firebase-admin/firestore';
 
-export const addEmailToSolsticeList = functions.firestore
+export const addEmailToSolsticeList = firestore
     .document('enrollment/{enrollmentId}')
     .onCreate(async (documentSnapshot) => {
         const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
@@ -16,7 +16,7 @@ export const addEmailToSolsticeList = functions.firestore
                 .collection('mailing_lists')
                 .doc('summer_solstice_2023')
                 .update({
-                    emails: admin.firestore.FieldValue.arrayUnion(
+                    emails: FieldValue.arrayUnion(
                         enrollmentRecord.contactEmail
                     ),
                 });
