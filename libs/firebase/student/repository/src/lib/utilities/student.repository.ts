@@ -1,14 +1,11 @@
 import { DatabaseUtility } from '@sol/firebase/database';
-import * as admin from 'firebase-admin';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
-import { firestore } from 'firebase-admin';
-import DocumentReference = firestore.DocumentReference;
 import {
     ActiveSemesterRepository,
     ClassRepository,
     SemesterRepository,
 } from '@sol/classes/repository';
-import WriteResult = firestore.WriteResult;
+import { DocumentReference, DocumentData } from 'firebase-admin/firestore';
 
 export class StudentRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
@@ -50,10 +47,7 @@ export class StudentRepository {
         firstName: string;
         lastName: string;
         birthDate: string;
-    }): Promise<
-        | admin.firestore.DocumentReference<admin.firestore.DocumentData>
-        | undefined
-    > {
+    }): Promise<DocumentReference<DocumentData> | undefined> {
         const students = this.database.collection('students');
 
         return (

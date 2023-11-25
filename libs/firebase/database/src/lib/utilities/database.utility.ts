@@ -1,11 +1,20 @@
-import * as admin from 'firebase-admin';
-import { DocumentReference } from 'firebase-admin/firestore';
-import * as functions from 'firebase-functions';
+import { getApps, initializeApp } from 'firebase-admin/app';
+import {
+    DocumentReference,
+    Timestamp,
+    CollectionReference,
+    DocumentData,
+    FieldPath,
+    WhereFilterOp,
+    QueryDocumentSnapshot,
+    getFirestore,
+} from 'firebase-admin/firestore';
+import { config } from 'firebase-functions/v1';
 
-if (admin.apps.length === 0) {
-    admin.initializeApp();
+if (getApps().length === 0) {
+    initializeApp();
 }
-const db = admin.firestore(functions.config().firebase);
+const db = getFirestore(config().firebase);
 db.settings({ ignoreUndefinedProperties: true });
 
 type Collection = Array<DocumentProperty>;
@@ -15,9 +24,9 @@ type DocumentProperty = {
         | DocumentProperty
         | Collection
         | string
-        | FirebaseFirestore.DocumentReference
-        | Array<FirebaseFirestore.DocumentReference>
-        | FirebaseFirestore.Timestamp
+        | DocumentReference
+        | Array<DocumentReference>
+        | Timestamp
         | number
         | boolean
         | null;
@@ -36,12 +45,12 @@ export class DatabaseUtility {
 
     public static async getCollectionRef(
         path: string
-    ): Promise<FirebaseFirestore.CollectionReference> {
+    ): Promise<CollectionReference> {
         return db.collection(path);
     }
 
     public static async getHydratedCollection(
-        collectionRef: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
+        collectionRef: CollectionReference
     ): Promise<{ [collectionName: string]: Collection }> {
         const collectionDocs = (await collectionRef.get()).docs;
         const docValues = await Promise.all(
@@ -57,9 +66,7 @@ export class DatabaseUtility {
                     )
                 );
                 const mergedCollections: {
-                    [
-                        collectionName: string
-                    ]: Array<FirebaseFirestore.DocumentData>;
+                    [collectionName: string]: Array<DocumentData>;
                 } = Object.assign({}, ...hydratedCollections);
                 return {
                     id: doc.id,
@@ -75,11 +82,7 @@ export class DatabaseUtility {
 
     public static async getHydratedDocuments<
         DocumentValue extends { id: string },
-    >(
-        documentRefs: Array<
-            FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
-        >
-    ): Promise<Array<DocumentValue>> {
+    >(documentRefs: Array<DocumentReference>): Promise<Array<DocumentValue>> {
         if (!documentRefs?.length) {
             return new Array<DocumentValue>();
         }
@@ -89,17 +92,13 @@ export class DatabaseUtility {
                 const collectionRefs = await documentRef.listCollections();
 
                 const collectionsList: Array<{
-                    [
-                        collectionName: string
-                    ]: Array<FirebaseFirestore.DocumentData>;
+                    [collectionName: string]: Array<DocumentData>;
                 }> = await Promise.all(
                     collectionRefs.map(DatabaseUtility.getHydratedCollection)
                 );
 
                 const subCollectionsObject: {
-                    [
-                        collectionName: string
-                    ]: Array<FirebaseFirestore.DocumentData>;
+                    [collectionName: string]: Array<DocumentData>;
                 } = Object.assign({}, ...collectionsList);
 
                 return {
@@ -112,19 +111,15 @@ export class DatabaseUtility {
     }
 
     public static async fetchMatchingDocuments(
-        collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
+        collection: CollectionReference,
         ...queries: Array<
             [
-                fieldPath: string | FirebaseFirestore.FieldPath,
-                opString: FirebaseFirestore.WhereFilterOp,
+                fieldPath: string | FieldPath,
+                opString: WhereFilterOp,
                 value: unknown,
             ]
         >
-    ): Promise<
-        Array<
-            FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
-        >
-    > {
+    ): Promise<Array<QueryDocumentSnapshot>> {
         const queried = queries
             .slice(1)
             .reduce(
@@ -136,18 +131,9 @@ export class DatabaseUtility {
     }
 
     public static async fetchFirstMatchingDocument(
-        collection: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,
-        ...queries: Array<
-            [
-                string | FirebaseFirestore.FieldPath,
-                FirebaseFirestore.WhereFilterOp,
-                string,
-            ]
-        >
-    ): Promise<
-        | FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
-        | undefined
-    > {
+        collection: CollectionReference,
+        ...queries: Array<[string | FieldPath, WhereFilterOp, string]>
+    ): Promise<QueryDocumentSnapshot | undefined> {
         const documents = await DatabaseUtility.fetchMatchingDocuments(
             collection,
             ...queries

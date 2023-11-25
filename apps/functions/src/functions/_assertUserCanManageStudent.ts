@@ -1,11 +1,11 @@
 import { AuthUtility } from '@sol/firebase/functions';
-import * as admin from 'firebase-admin';
-import * as functions from 'firebase-functions';
+import { UserRecord } from 'firebase-admin/auth';
+import { Response } from 'firebase-functions/v1';
 
 export const _assertUserCanManageStudent = async (
-    user: admin.auth.UserRecord,
+    user: UserRecord,
     studentId: string,
-    response: functions.Response
+    response: Response
 ) => {
     const myStudentIds = await AuthUtility.getUserStudentIds(user);
     const userHasAccessToStudent = !!myStudentIds.find(

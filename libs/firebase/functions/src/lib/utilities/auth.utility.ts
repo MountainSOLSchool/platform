@@ -1,28 +1,23 @@
 import { DatabaseUtility } from '@sol/firebase/database';
-import * as admin from 'firebase-admin';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
-import * as functions from 'firebase-functions';
+import { type Request, type Response } from 'firebase-functions/v1';
+import { type UserRecord, getAuth } from 'firebase-admin/auth';
+
+const auth = getAuth();
 
 export enum Role {
     Admin = 'admin',
 }
 
 export class AuthUtility {
-    static validateRole(
-        request: functions.https.Request,
-        response: functions.Response,
-        role: Role
-    ) {
+    static validateRole(request: Request, response: Response, role: Role) {
         switch (role) {
             case Role.Admin:
                 AuthUtility.validateIsAdmin(request, response);
                 break;
         }
     }
-    public static async validateIsAdmin(
-        req: functions.https.Request,
-        res: functions.Response
-    ) {
+    public static async validateIsAdmin(req: Request, res: Response) {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
             res.status(403).send('Unauthorized');
@@ -45,9 +40,7 @@ export class AuthUtility {
         return !!admin;
     }
 
-    public static async getUserRoles(
-        user: admin.auth.UserRecord
-    ): Promise<Array<Role>> {
+    public static async getUserRoles(user: UserRecord): Promise<Array<Role>> {
         const roles = new Array<Role>();
         if (await AuthUtility.isAdmin(user.uid)) {
             roles.push(Role.Admin);
@@ -56,7 +49,7 @@ export class AuthUtility {
     }
 
     public static async getUserStudentIds(
-        user: admin.auth.UserRecord
+        user: UserRecord
     ): Promise<Array<string>> {
         const db = DatabaseUtility.getDatabase();
         const studentEnrollments = await db
@@ -71,25 +64,25 @@ export class AuthUtility {
     }
 
     public static async getUserFromRequest(
-        req: functions.https.Request,
-        res: functions.Response
-    ): Promise<admin.auth.UserRecord | void> {
+        req: Request,
+        res: Response
+    ): Promise<UserRecord | void> {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
             res.status(403).send('Unauthorized');
             return;
         } else {
-            return await admin.auth().getUser(decoded.uid);
+            return await auth.getUser(decoded.uid);
         }
     }
 
     public static async getUser(uid: string) {
-        return await admin.auth().getUser(uid);
+        return await auth.getUser(uid);
     }
 
     public static async validateFirebaseIdToken(
-        req: functions.https.Request,
-        res: functions.Response
+        req: Request,
+        res: Response
     ): Promise<DecodedIdToken | void> {
         if (
             (!req.headers.authorization ||
@@ -123,7 +116,7 @@ export class AuthUtility {
         }
 
         try {
-            const decodedIdToken = await admin.auth().verifyIdToken(idToken);
+            const decodedIdToken = await auth.verifyIdToken(idToken);
             return decodedIdToken;
         } catch (error) {
             console.error('Error while verifying Firebase ID token:', error);

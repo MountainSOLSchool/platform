@@ -1,7 +1,8 @@
 import { ClassEnrollmentDbo } from '../models/db/class-enrollment.dbo';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { AuthUtility } from '@sol/firebase/functions';
-import * as functions from 'firebase-functions';
+import { type Firestore } from 'firebase-admin/firestore';
+import { type Request, type Response } from 'firebase-functions/v1';
 import { SemesterEnrollment } from '@sol/classes/domain';
 
 export class ClassEnrollmentRepository {
@@ -12,7 +13,7 @@ export class ClassEnrollmentRepository {
         return id;
     }
 
-    private static get database(): FirebaseFirestore.Firestore {
+    private static get database(): Firestore {
         return DatabaseUtility.getDatabase();
     }
 
@@ -39,8 +40,8 @@ export class ClassEnrollmentRepository {
     }
 
     static async getCurrentUserCompletedEnrollments(
-        request: functions.https.Request,
-        response: functions.Response
+        request: Request,
+        response: Response
     ): Promise<Array<SemesterEnrollment>> {
         const user = await AuthUtility.getUserFromRequest(request, response);
         if (!user) {
