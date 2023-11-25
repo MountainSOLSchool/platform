@@ -1,4 +1,4 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -29,7 +29,8 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        DatePipe,
+        CurrencyPipe,
         ChipModule,
         RxLet,
         RxFor,

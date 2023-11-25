@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -17,7 +17,7 @@ import { UserService } from '@sol/auth/user';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        AsyncPipe,
         LoginComponent,
         CardModule,
         MessagesModule,

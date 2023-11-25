@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { Observable, map, shareReplay } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
 import { SemesterEnrollment } from '@sol/classes/domain';
@@ -13,7 +13,8 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        AsyncPipe,
+        CurrencyPipe,
         ProgressBarModule,
         TableModule,
         ButtonModule,

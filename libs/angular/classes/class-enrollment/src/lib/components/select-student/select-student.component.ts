@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -40,7 +39,6 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         LoginComponent,
         CardModule,
         MessagesModule,

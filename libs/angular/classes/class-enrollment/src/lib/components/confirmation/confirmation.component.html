@@ -1,5 +1,5 @@
-<ng-container *ngIf="allStepsComplete; else incomplete"
-    ><ng-container *rxLet="viewModel$; let vm">
+@if (allStepsComplete) {
+    <ng-container *rxLet="viewModel$; let vm">
         <div class="section">
             <p-fieldset legend="Student" *rxLet="student$; let student">
                 <p>Name: {{ student?.firstName }} {{ student?.lastName }}</p>
@@ -61,26 +61,25 @@
                             (onRemove)="removeDiscountCode(discount.code)"
                         ></p-chip>
                     </div>
-                    <div
-                        *ngIf="vm.invalidCodes.length > 0"
-                        style="margin-top: 1rem"
-                    >
-                        <div>
-                            Could not find a discount matching these codes:
+                    @if (vm.invalidCodes.length > 0) {
+                        <div style="margin-top: 1rem">
+                            <div>
+                                Could not find a discount matching these codes:
+                            </div>
+                            <div
+                                class="flex align-items-center"
+                                style="margin-top: 0.5rem"
+                            >
+                                <p-chip
+                                    *rxFor="let code of vm.invalidCodes"
+                                    [label]="code"
+                                    styleClass="mr-2"
+                                    [removable]="true"
+                                    (onRemove)="removeDiscountCode(code)"
+                                ></p-chip>
+                            </div>
                         </div>
-                        <div
-                            class="flex align-items-center"
-                            style="margin-top: 0.5rem"
-                        >
-                            <p-chip
-                                *rxFor="let code of vm.invalidCodes"
-                                [label]="code"
-                                styleClass="mr-2"
-                                [removable]="true"
-                                (onRemove)="removeDiscountCode(code)"
-                            ></p-chip>
-                        </div>
-                    </div> </ng-container
+                    }</ng-container
                 ><ng-template #loadingDiscounts>
                     <p-progressSpinner
                         [style]="{ width: '50px', height: '50px' }"
@@ -147,8 +146,7 @@
                 </div>
             </p-fieldset>
         </div>
-    </ng-container></ng-container
->
-<ng-template #incomplete>
+    </ng-container>
+} @else {
     <p>Please complete all steps before submitting.</p>
-</ng-template>
+}

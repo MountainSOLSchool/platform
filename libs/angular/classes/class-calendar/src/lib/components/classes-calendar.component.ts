@@ -3,7 +3,7 @@ import { EventApi, EventInput } from '@fullcalendar/core';
 import { SemesterClass } from '@sol/classes/domain';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { mergeMap, Observable, scan, Subject, map, startWith } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { CalendarComponent } from '@sol/calendar';
 import { CardModule } from 'primeng/card';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
@@ -11,7 +11,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, CalendarComponent, CardModule],
+    imports: [AsyncPipe, CalendarComponent, CardModule],
     templateUrl: './classes-calendar.component.html',
 })
 export class SelectClassesCalendarComponent {

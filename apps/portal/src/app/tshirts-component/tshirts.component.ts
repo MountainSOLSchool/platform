@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { map, shareReplay } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
 import { RxLet } from '@rx-angular/template/let';
@@ -10,7 +10,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, ProgressBarModule, TableModule, RxLet],
+    imports: [AsyncPipe, ProgressBarModule, TableModule, RxLet],
     templateUrl: './tshirts.component.html',
 })
 export class TshirtsComponent {

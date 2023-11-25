@@ -23,16 +23,16 @@ import { create, enforce, group, test } from 'vest';
 import { StudentForm } from '@sol/student/domain';
 import { RxLet } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
-import { CommonModule } from '@angular/common';
 import { RxFor } from '@rx-angular/template/for';
 import { MessagesModule } from 'primeng/messages';
 import { RxIf } from '@rx-angular/template/if';
+import { NgStyle } from '@angular/common';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        NgStyle,
         InputTextModule,
         CalendarModule,
         ButtonModule,

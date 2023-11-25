@@ -4,7 +4,7 @@ import {
     inject,
     Input,
 } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import {
     BehaviorSubject,
     map,
@@ -25,7 +25,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-class-summary-table',
     templateUrl: './class-summary-table.component.html',
-    imports: [CommonModule, RxLet, TableModule, ProgressSpinnerModule],
+    imports: [CurrencyPipe, RxLet, TableModule, ProgressSpinnerModule],
     providers: [DatePipe],
 })
 export class ClassSummaryTableComponent {

@@ -10,12 +10,13 @@
     <div class="p-input-icon-left" style="flex: 2; min-width: 200px">
         <i class="pi pi-search"></i>
         <span class="p-input-icon-right" style="width: 100%">
-            <i
-                *ngIf="searchInput.value.length > 0"
-                class="pi pi-times-circle"
-                (click)="searchChange((searchInput.value = ''))"
-                style="cursor: pointer"
-            ></i>
+            @if (searchInput.value.length > 0) {
+                <i
+                    class="pi pi-times-circle"
+                    (click)="searchChange((searchInput.value = ''))"
+                    style="cursor: pointer"
+                ></i>
+            }
             <input
                 #searchInput
                 type="text"
@@ -121,7 +122,7 @@
         <ng-container
             *rxLet="filteredClassRows$; let classRows; suspense: skeleton"
         >
-            <ng-container *ngIf="classRows.length > 0; else noResults">
+            @if (classRows.length > 0) {
                 <div
                     style="
                         border-radius: 5px;
@@ -136,14 +137,13 @@
                 >
                     <div *rxIf="!!row.group">
                         <h3>
-                            {{ row.group?.name }}
-                            <span
-                                *ngIf="getClassRowSavings(row) !== 0"
-                                style="color: #3c82f7"
-                            >
-                                (-{{ getClassRowSavings(row) | currency }}
-                                all-day discount)
-                            </span>
+                            {{ row.group.name }}
+                            @if (getClassRowSavings(row) !== 0) {
+                                <span style="color: #3c82f7">
+                                    (-{{ getClassRowSavings(row) | currency }}
+                                    all-day discount)
+                                </span>
+                            }
                         </h3>
 
                         <div
@@ -156,8 +156,8 @@
                             <p-toggleButton
                                 *rxLet="hasPausedClass(row); let paused"
                                 [disabled]="paused"
-                                [inputId]="'select' + row.group?.id"
-                                [name]="'row_' + row.group?.id"
+                                [inputId]="'select' + row.group.id"
+                                [name]="'row_' + row.group.id"
                                 onIcon="pi pi-check"
                                 onLabel="Selected all-day"
                                 offIcon="pi pi-plus"
@@ -467,11 +467,11 @@
                             </p-card>
                         </div>
                     </div>
-                </div> </ng-container
-            ><ng-template #noResults>
+                </div>
+            } @else {
                 There are no classes for the current search.
-            </ng-template></ng-container
-        >
+            }
+        </ng-container>
     </div>
 </ng-template>
 <ng-template #skeleton>

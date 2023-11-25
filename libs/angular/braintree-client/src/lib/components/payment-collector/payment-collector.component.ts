@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -24,7 +24,7 @@ export type PaymentCollector = {
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, SkeletonModule],
+    imports: [AsyncPipe, SkeletonModule],
     selector: 'sol-payment-collector',
     templateUrl: './payment-collector.component.html',
     providers: [provideComponentStore(PaymentCollectorStore)],

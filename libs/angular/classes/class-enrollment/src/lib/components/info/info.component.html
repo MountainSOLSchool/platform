@@ -18,7 +18,10 @@
                 *rxLet="!vm.hasErrorsByGroup['student']; let valid"
                 [solValid]="valid"
             >
-                Student<ng-container *ngIf="!valid"> ⚠️</ng-container>
+                Student
+                @if (!valid) {
+                    ⚠️
+                }
             </div>
         </ng-template>
         <form>
@@ -249,11 +252,10 @@
                 *rxLet="!vm.hasErrorsByGroup['contact']; let valid"
                 [solValid]="valid"
             >
-                Primary Contact for Student Registration<ng-container
-                    *ngIf="!valid"
-                >
-                    ⚠️</ng-container
-                >
+                Primary Contact for Student Registration
+                @if (!valid) {
+                    ⚠️
+                }
             </div>
         </ng-template>
         <form>
@@ -420,9 +422,10 @@
                 *rxLet="!vm.hasErrorsByGroup['privacy']; let valid"
                 [solValid]="valid"
             >
-                Privacy and Protectants<ng-container *ngIf="!valid">
-                    ⚠️</ng-container
-                >
+                Privacy and Protectants
+                @if (!valid) {
+                    ⚠️
+                }
             </div>
         </ng-template>
         <h3>Protectants</h3>
@@ -511,162 +514,181 @@
                 *rxLet="!vm.hasErrorsByGroup['guardians']; let valid"
                 [solValid]="valid"
             >
-                Parents and Guardians<ng-container *ngIf="!valid">
-                    ⚠️</ng-container
-                >
+                Parents and Guardians
+                @if (!valid) {
+                    ⚠️
+                }
             </div>
         </ng-template>
         <form>
             <div class="p-fluid">
                 <h3>Parent/Guardian</h3>
-                <div
-                    *ngFor="
-                        let guardian of vm.student.guardians;
-                        let i = index;
-                        let first = first;
-                        let last = last;
-                        trackBy: trackByIndex
-                    "
-                    style="margin-bottom: 1rem"
-                    [ngStyle]="{
-                        'border-bottom': last ? 'none' : '1px solid lightgray'
-                    }"
-                >
-                    <div class="formgrid grid">
-                        <div
-                            class="field col"
-                            *rxLet="'guardian_' + i + '_name'; let fieldname"
-                        >
-                            <span class="p-float-label">
-                                <input
-                                    type="text"
-                                    [id]="fieldname"
-                                    [name]="fieldname"
-                                    pInputText
-                                    [solValid]="!vm.errors[fieldname]"
-                                    [(ngModel)]="guardian.guardianName"
-                                    (ngModelChange)="
-                                        updateStudentInfo(vm.student)
-                                    "
-                                />
-                                <label [for]="fieldname">Name</label>
-                            </span>
-                            <sol-messages
-                                [messages]="vm.errors[fieldname]"
-                            ></sol-messages>
-                        </div>
-                        <div
-                            class="field col"
-                            *rxLet="
-                                'guardian_' + i + '_relationship';
-                                let fieldname
-                            "
-                        >
-                            <span class="p-float-label">
-                                <input
-                                    type="text"
-                                    [id]="fieldname"
-                                    [name]="fieldname"
-                                    pInputText
-                                    [solValid]="!vm.errors[fieldname]"
-                                    [(ngModel)]="guardian.guardianRelationship"
-                                    (ngModelChange)="
-                                        updateStudentInfo(vm.student)
-                                    "
-                                />
-                                <label [for]="fieldname"
-                                    >Relationship to Student</label
-                                >
-                            </span>
-                            <sol-messages
-                                [messages]="vm.errors[fieldname]"
-                            ></sol-messages>
-                        </div>
-                        <div
-                            class="field col"
-                            *rxLet="'guardian_' + i + '_phone'; let fieldname"
-                        >
-                            <span class="p-float-label">
-                                <p-inputMask
-                                    type="text"
-                                    [id]="fieldname"
-                                    [name]="fieldname"
-                                    mask="999-999-9999"
-                                    [solValid]="!vm.errors[fieldname]"
-                                    [(ngModel)]="guardian.guardianPhone"
-                                    (ngModelChange)="
-                                        updateStudentInfo(vm.student)
-                                    "
-                                ></p-inputMask>
-                                <label [for]="fieldname">Phone Number</label>
-                            </span>
-                            <sol-messages
-                                [messages]="vm.errors[fieldname]"
-                            ></sol-messages>
-                        </div>
-                    </div>
-                    <div class="formgrid grid" style="margin-bottom: 1rem">
-                        <div
-                            class="field col-12 md:col-6"
-                            *rxLet="'guardian_' + i + '_email'; let fieldname"
-                        >
-                            <span class="p-float-label">
-                                <input
-                                    type="text"
-                                    [id]="fieldname"
-                                    [name]="fieldname"
-                                    pInputText
-                                    [solValid]="!vm.errors[fieldname]"
-                                    [(ngModel)]="guardian.guardianEmail"
-                                    (ngModelChange)="
-                                        updateStudentInfo(vm.student)
-                                    "
-                                />
-                                <label [for]="fieldname">Email</label>
-                            </span>
-                            <sol-messages
-                                [messages]="vm.errors[fieldname]"
-                            ></sol-messages>
-                        </div>
-                        <div
-                            class="field col-12 md:col-6"
-                            *rxLet="
-                                'guardian_' + i + '_residence';
-                                let fieldname
-                            "
-                        >
-                            <p-selectButton
-                                [options]="guardianResidesWithStudentOptions"
-                                optionLabel="name"
-                                optionValue="value"
-                                [id]="fieldname"
-                                [name]="fieldname"
-                                [solValid]="!vm.errors[fieldname]"
-                                [(ngModel)]="
-                                    guardian.guardianResidesWithStudent
-                                "
-                                (ngModelChange)="updateStudentInfo(vm.student)"
-                            ></p-selectButton>
-                            <sol-messages
-                                [messages]="vm.errors[fieldname]"
-                            ></sol-messages>
-                        </div>
-                    </div>
+                @for (
+                    guardian of vm.student.guardians;
+                    track guardian;
+                    let i = $index;
+                    let first = $first;
+                    let last = $last
+                ) {
                     <div
-                        *ngIf="!first"
-                        class="col-6"
                         style="margin-bottom: 1rem"
+                        [ngStyle]="{
+                            'border-bottom': last
+                                ? 'none'
+                                : '1px solid lightgray'
+                        }"
                     >
-                        <button
-                            label="Remove"
-                            type="button"
-                            pRipple
-                            pButton
-                            class="p-button-outlined p-button-danger"
-                            (click)="removeGuardian(i)"
-                        ></button>
+                        <div class="formgrid grid">
+                            <div
+                                class="field col"
+                                *rxLet="
+                                    'guardian_' + i + '_name';
+                                    let fieldname
+                                "
+                            >
+                                <span class="p-float-label">
+                                    <input
+                                        type="text"
+                                        [id]="fieldname"
+                                        [name]="fieldname"
+                                        pInputText
+                                        [solValid]="!vm.errors[fieldname]"
+                                        [(ngModel)]="guardian.guardianName"
+                                        (ngModelChange)="
+                                            updateStudentInfo(vm.student)
+                                        "
+                                    />
+                                    <label [for]="fieldname">Name</label>
+                                </span>
+                                <sol-messages
+                                    [messages]="vm.errors[fieldname]"
+                                ></sol-messages>
+                            </div>
+                            <div
+                                class="field col"
+                                *rxLet="
+                                    'guardian_' + i + '_relationship';
+                                    let fieldname
+                                "
+                            >
+                                <span class="p-float-label">
+                                    <input
+                                        type="text"
+                                        [id]="fieldname"
+                                        [name]="fieldname"
+                                        pInputText
+                                        [solValid]="!vm.errors[fieldname]"
+                                        [(ngModel)]="
+                                            guardian.guardianRelationship
+                                        "
+                                        (ngModelChange)="
+                                            updateStudentInfo(vm.student)
+                                        "
+                                    />
+                                    <label [for]="fieldname"
+                                        >Relationship to Student</label
+                                    >
+                                </span>
+                                <sol-messages
+                                    [messages]="vm.errors[fieldname]"
+                                ></sol-messages>
+                            </div>
+                            <div
+                                class="field col"
+                                *rxLet="
+                                    'guardian_' + i + '_phone';
+                                    let fieldname
+                                "
+                            >
+                                <span class="p-float-label">
+                                    <p-inputMask
+                                        type="text"
+                                        [id]="fieldname"
+                                        [name]="fieldname"
+                                        mask="999-999-9999"
+                                        [solValid]="!vm.errors[fieldname]"
+                                        [(ngModel)]="guardian.guardianPhone"
+                                        (ngModelChange)="
+                                            updateStudentInfo(vm.student)
+                                        "
+                                    ></p-inputMask>
+                                    <label [for]="fieldname"
+                                        >Phone Number</label
+                                    >
+                                </span>
+                                <sol-messages
+                                    [messages]="vm.errors[fieldname]"
+                                ></sol-messages>
+                            </div>
+                        </div>
+                        <div class="formgrid grid" style="margin-bottom: 1rem">
+                            <div
+                                class="field col-12 md:col-6"
+                                *rxLet="
+                                    'guardian_' + i + '_email';
+                                    let fieldname
+                                "
+                            >
+                                <span class="p-float-label">
+                                    <input
+                                        type="text"
+                                        [id]="fieldname"
+                                        [name]="fieldname"
+                                        pInputText
+                                        [solValid]="!vm.errors[fieldname]"
+                                        [(ngModel)]="guardian.guardianEmail"
+                                        (ngModelChange)="
+                                            updateStudentInfo(vm.student)
+                                        "
+                                    />
+                                    <label [for]="fieldname">Email</label>
+                                </span>
+                                <sol-messages
+                                    [messages]="vm.errors[fieldname]"
+                                ></sol-messages>
+                            </div>
+                            <div
+                                class="field col-12 md:col-6"
+                                *rxLet="
+                                    'guardian_' + i + '_residence';
+                                    let fieldname
+                                "
+                            >
+                                <p-selectButton
+                                    [options]="
+                                        guardianResidesWithStudentOptions
+                                    "
+                                    optionLabel="name"
+                                    optionValue="value"
+                                    [id]="fieldname"
+                                    [name]="fieldname"
+                                    [solValid]="!vm.errors[fieldname]"
+                                    [(ngModel)]="
+                                        guardian.guardianResidesWithStudent
+                                    "
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                ></p-selectButton>
+                                <sol-messages
+                                    [messages]="vm.errors[fieldname]"
+                                ></sol-messages>
+                            </div>
+                        </div>
+                        @if (!first) {
+                            <div class="col-6" style="margin-bottom: 1rem">
+                                <button
+                                    label="Remove"
+                                    type="button"
+                                    pRipple
+                                    pButton
+                                    class="p-button-outlined p-button-danger"
+                                    (click)="removeGuardian(i)"
+                                ></button>
+                            </div>
+                        }
                     </div>
-                </div>
+                }
 
                 <div class="col-6" style="padding-bottom: 20px">
                     <button
@@ -686,7 +708,10 @@
                 *rxLet="!vm.hasErrorsByGroup['pickup']; let valid"
                 [solValid]="valid"
             >
-                Pickup<ng-container *ngIf="!valid"> ⚠️</ng-container>
+                Pickup
+                @if (!valid) {
+                    ⚠️
+                }
             </div>
         </ng-template>
         <form>
@@ -721,122 +746,127 @@
                     pick up your child.
                 </p>
                 <div class="margin-bottom:2rem">
+                    @for (
+                        guardian of vm.student.guardians;
+                        track guardian;
+                        let i = $index
+                    ) {
+                        <div style="width: 16rem; margin-bottom: 1rem">
+                            @if (guardian.guardianName !== '') {
+                                <p-toggleButton
+                                    [disabled]="true"
+                                    [onLabel]="guardian.guardianName"
+                                    offLabel="None"
+                                    onIcon="pi pi-check"
+                                    offIcon="pi pi-times"
+                                    [name]="'guardian_' + i"
+                                    [(ngModel)]="authorized"
+                                ></p-toggleButton>
+                            }
+                        </div>
+                    }
+                </div>
+                @for (
+                    authorized of vm.student.authorizedForPickup;
+                    track authorized;
+                    let i = $index;
+                    let last = $last
+                ) {
                     <div
-                        *ngFor="
-                            let guardian of vm.student.guardians;
-                            let i = index;
-                            trackBy: trackByIndex
-                        "
-                        style="width: 16rem; margin-bottom: 1rem"
+                        style="margin-bottom: 1rem"
+                        [ngStyle]="{
+                            'border-bottom': last
+                                ? 'none'
+                                : '1px solid lightgray'
+                        }"
                     >
-                        <p-toggleButton
-                            *ngIf="guardian.guardianName !== ''"
-                            [disabled]="true"
-                            [onLabel]="guardian.guardianName"
-                            offLabel="None"
-                            onIcon="pi pi-check"
-                            offIcon="pi pi-times"
-                            [name]="'guardian_' + i"
-                            [(ngModel)]="authorized"
-                        ></p-toggleButton>
-                    </div>
-                </div>
-                <div
-                    *ngFor="
-                        let authorized of vm.student.authorizedForPickup;
-                        let i = index;
-                        let last = last;
-                        trackBy: trackByIndex
-                    "
-                    style="margin-bottom: 1rem"
-                    [ngStyle]="{
-                        'border-bottom': last ? 'none' : '1px solid lightgray'
-                    }"
-                >
-                    <div class="formgrid grid">
-                        <div
-                            class="field col"
-                            *rxLet="'pickup_' + i + '_name'; let fieldname"
-                        >
-                            <span class="p-float-label">
-                                <input
-                                    type="text"
-                                    [id]="fieldname"
-                                    [name]="fieldname"
-                                    pInputText
-                                    [solValid]="!vm.errors[fieldname]"
-                                    [(ngModel)]="authorized.name"
-                                    (ngModelChange)="
-                                        updateStudentInfo(vm.student)
-                                    "
-                                />
-                                <label [for]="fieldname">Name</label>
-                            </span>
-                            <sol-messages
-                                [messages]="vm.errors[fieldname]"
-                            ></sol-messages>
+                        <div class="formgrid grid">
+                            <div
+                                class="field col"
+                                *rxLet="'pickup_' + i + '_name'; let fieldname"
+                            >
+                                <span class="p-float-label">
+                                    <input
+                                        type="text"
+                                        [id]="fieldname"
+                                        [name]="fieldname"
+                                        pInputText
+                                        [solValid]="!vm.errors[fieldname]"
+                                        [(ngModel)]="authorized.name"
+                                        (ngModelChange)="
+                                            updateStudentInfo(vm.student)
+                                        "
+                                    />
+                                    <label [for]="fieldname">Name</label>
+                                </span>
+                                <sol-messages
+                                    [messages]="vm.errors[fieldname]"
+                                ></sol-messages>
+                            </div>
+                            <div
+                                class="field col"
+                                *rxLet="
+                                    'pickup_' + i + '_relationship';
+                                    let fieldname
+                                "
+                            >
+                                <span class="p-float-label">
+                                    <input
+                                        type="text"
+                                        [id]="fieldname"
+                                        [name]="fieldname"
+                                        pInputText
+                                        [solValid]="!vm.errors[fieldname]"
+                                        [(ngModel)]="authorized.relationship"
+                                        (ngModelChange)="
+                                            updateStudentInfo(vm.student)
+                                        "
+                                    />
+                                    <label [for]="fieldname"
+                                        >Relationship to Student</label
+                                    >
+                                </span>
+                                <sol-messages
+                                    [messages]="vm.errors[fieldname]"
+                                ></sol-messages>
+                            </div>
+                            <div
+                                class="field col"
+                                *rxLet="'pickup_' + i + '_phone'; let fieldname"
+                            >
+                                <span class="p-float-label">
+                                    <p-inputMask
+                                        type="text"
+                                        [id]="fieldname"
+                                        [name]="fieldname"
+                                        mask="999-999-9999"
+                                        [solValid]="!vm.errors[fieldname]"
+                                        [(ngModel)]="authorized.phone"
+                                        (ngModelChange)="
+                                            updateStudentInfo(vm.student)
+                                        "
+                                    ></p-inputMask>
+                                    <label [for]="fieldname"
+                                        >Phone Number</label
+                                    >
+                                </span>
+                                <sol-messages
+                                    [messages]="vm.errors[fieldname]"
+                                ></sol-messages>
+                            </div>
                         </div>
-                        <div
-                            class="field col"
-                            *rxLet="
-                                'pickup_' + i + '_relationship';
-                                let fieldname
-                            "
-                        >
-                            <span class="p-float-label">
-                                <input
-                                    type="text"
-                                    [id]="fieldname"
-                                    [name]="fieldname"
-                                    pInputText
-                                    [solValid]="!vm.errors[fieldname]"
-                                    [(ngModel)]="authorized.relationship"
-                                    (ngModelChange)="
-                                        updateStudentInfo(vm.student)
-                                    "
-                                />
-                                <label [for]="fieldname"
-                                    >Relationship to Student</label
-                                >
-                            </span>
-                            <sol-messages
-                                [messages]="vm.errors[fieldname]"
-                            ></sol-messages>
-                        </div>
-                        <div
-                            class="field col"
-                            *rxLet="'pickup_' + i + '_phone'; let fieldname"
-                        >
-                            <span class="p-float-label">
-                                <p-inputMask
-                                    type="text"
-                                    [id]="fieldname"
-                                    [name]="fieldname"
-                                    mask="999-999-9999"
-                                    [solValid]="!vm.errors[fieldname]"
-                                    [(ngModel)]="authorized.phone"
-                                    (ngModelChange)="
-                                        updateStudentInfo(vm.student)
-                                    "
-                                ></p-inputMask>
-                                <label [for]="fieldname">Phone Number</label>
-                            </span>
-                            <sol-messages
-                                [messages]="vm.errors[fieldname]"
-                            ></sol-messages>
+                        <div style="width: 10rem; margin-bottom: 1rem">
+                            <button
+                                label="Remove"
+                                type="button"
+                                pRipple
+                                pButton
+                                class="p-button-outlined p-button-danger"
+                                (click)="removeAuthorized(i)"
+                            ></button>
                         </div>
                     </div>
-                    <div style="width: 10rem; margin-bottom: 1rem">
-                        <button
-                            label="Remove"
-                            type="button"
-                            pRipple
-                            pButton
-                            class="p-button-outlined p-button-danger"
-                            (click)="removeAuthorized(i)"
-                        ></button>
-                    </div>
-                </div>
+                }
                 <div
                     class="col-6"
                     style="margin-top: 2rem; padding-bottom: 20px"
