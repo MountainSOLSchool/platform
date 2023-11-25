@@ -10,7 +10,7 @@ This monorepository is home to apps and libraries that serve the Mountain SOL or
 
 ## Setup
 
-Run `npm run install:all`.
+Run `npm ci`.
 
 ## Functions
 

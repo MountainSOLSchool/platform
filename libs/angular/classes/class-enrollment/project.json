@@ -11,8 +11,7 @@
                 "{workspaceRoot}/coverage/libs/classes/class-enrollment"
             ],
             "options": {
-                "jestConfig": "libs/classes/class-enrollment/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/classes/class-enrollment/jest.config.ts"
             }
         },
         "lint": {

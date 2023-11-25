@@ -15,8 +15,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/payments/braintree"],
             "options": {
-                "jestConfig": "libs/payments/braintree/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/payments/braintree/jest.config.ts"
             }
         }
     },

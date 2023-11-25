@@ -9,8 +9,7 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/classes/class-calendar"],
             "options": {
-                "jestConfig": "libs/classes/class-calendar/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/classes/class-calendar/jest.config.ts"
             }
         },
         "lint": {

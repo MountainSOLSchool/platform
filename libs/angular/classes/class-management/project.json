@@ -11,8 +11,7 @@
                 "{workspaceRoot}/coverage/libs/classes/class-management"
             ],
             "options": {
-                "jestConfig": "libs/classes/class-management/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/classes/class-management/jest.config.ts"
             }
         },
         "lint": {

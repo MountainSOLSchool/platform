@@ -132,9 +132,8 @@ export const enroll = Functions.endpoint
             return;
         }
 
-        const classGroups = await semester.groups.getByClassIds(
-            selectedClasses
-        );
+        const classGroups =
+            await semester.groups.getByClassIds(selectedClasses);
 
         const discounts = (
             await Promise.all(

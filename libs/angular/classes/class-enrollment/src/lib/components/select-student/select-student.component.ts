@@ -121,8 +121,8 @@ export class SelectStudentComponent {
             state.enrollment.isStudentNew === true
                 ? 'new'
                 : state.enrollment.isStudentNew === false
-                ? 'previous'
-                : undefined
+                  ? 'previous'
+                  : undefined
         );
 
     private selectedStudentId$: Observable<string | undefined> =
