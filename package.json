@@ -35,8 +35,9 @@
         "serve:portal2": "nx serve portal-react",
         "deploy:functions": "firebase deploy",
         "format:everything": "prettier --write .",
-        "install:all": "npm ci && husky install && node ./decorate-angular-cli.js",
-        "analyze": "webpack-bundle-analyzer public/stats.json"
+        "analyze": "webpack-bundle-analyzer public/stats.json",
+        "install:husky": "[ ! -d \"/node_modules/is-ci/\" ] || is-ci || [ ! -d \"/node_modules/husky/\" ] || husky install",
+        "prepare": "npm run install:husky"
     },
     "main": "dist/apps/functions/main.cjs",
     "engines": {
@@ -106,9 +107,9 @@
         "@angular-devkit/architect": "0.1700.3",
         "@angular-devkit/build-angular": "17.0.3",
         "@angular-devkit/core": "17.0.3",
-        "@angular-eslint/eslint-plugin": "17.0.1",
-        "@angular-eslint/eslint-plugin-template": "17.0.1",
-        "@angular-eslint/template-parser": "17.0.1",
+        "@angular-eslint/eslint-plugin": "^17.1.0",
+        "@angular-eslint/eslint-plugin-template": "^17.1.0",
+        "@angular-eslint/template-parser": "^17.1.0",
         "@angular/cli": "~17.0.0",
         "@angular/compiler-cli": "17.0.4",
         "@angular/language-service": "17.0.4",
@@ -156,6 +157,7 @@
         "eslint-plugin-react-hooks": "^4.6.0",
         "firebase-functions-test": "^0.3.3",
         "husky": "^8.0.3",
+        "is-ci": "^3.0.1",
         "jest": "^29.4.3",
         "jest-environment-jsdom": "29.5.0",
         "jest-environment-node": "^29.4.1",
