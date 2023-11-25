@@ -25,16 +25,15 @@ import { EnrollmentSkeletonViewComponent } from './enrollment-skeleton.view.comp
             <p>There was an error loading your enrollments.</p>
         </ng-container>
         <ng-container *solLoaded="enrollments">
-            <ng-container *ngIf="enrollments.length > 0; else empty">
+            @if (enrollments.length > 0) {
                 <sol-enrollment-view
                     style="margin-top: 2rem"
                     *ngFor="let enrollment of sortEnrollments(enrollments)"
                     [enrollment]="enrollment"
                 ></sol-enrollment-view>
-            </ng-container>
-            <ng-template #empty>
+            } @else {
                 <p>You have no enrollments.</p>
-            </ng-template>
+            }
         </ng-container>`,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
