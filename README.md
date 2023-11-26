@@ -14,17 +14,17 @@ Run `npm ci`.
 
 ## Functions
 
-Run the Firebase functions locally with `npm run serve:functions`.
+Run the Firebase functions locally with `npx nx run functions:serve`.
 
 ## Portal
 
-Run the frontend portal with `npm run serve:portal` and view at http://localhost:4200/.
+Run the frontend portal with `npx nx run portal:serve:developmentRemoteFunctions` and view at http://localhost:4200/.
 
-The default configuration uses remote addresses for Firebase functions. Run `npm run serve:dev:portal` to develop against locally served functions.
+The default configuration uses remote addresses for Firebase functions. Run `npx nx run portal:serve` to develop against locally served functions.
 
 ## React Portal
 
-Run the frontend portal with `npm run serve:portal2` and view at http://localhost:4200/.
+Run the frontend portal with `npx nx run portal-react:serve` and view at http://localhost:4200/.
 
 ### Deployed
 

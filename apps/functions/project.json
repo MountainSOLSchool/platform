@@ -24,9 +24,12 @@
             }
         },
         "serve": {
-            "executor": "@nx/js:node",
+            "executor": "nx:run-commands",
             "options": {
-                "buildTarget": "functions:build"
+                "commands": [
+                    "npm run build:functions:watch",
+                    "firebase serve --only functions --project=dev --port=5001"
+                ]
             }
         },
         "lint": {

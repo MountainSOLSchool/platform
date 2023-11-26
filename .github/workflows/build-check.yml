@@ -12,4 +12,4 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - run: npm ci && npm run build:portal && npm run build:portal2 && npm run build:functions
+            - run: npm ci && npx nx run portal:build:production && npx nx run portal-react:build:production && npx nx run functions:build
