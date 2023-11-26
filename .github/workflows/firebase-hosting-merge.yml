@@ -13,7 +13,7 @@ jobs:
         steps:
             - uses: actions/checkout@v2
             - run: npm ci
-            - run: npx nx run portal:build:production
+            - run: npx nx run portal:build:production --outputPath=\"public/portal\"
             - uses: FirebaseExtended/action-hosting-deploy@v0
               with:
                   firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MOUNTAIN_SOL_PLATFORM }}'
