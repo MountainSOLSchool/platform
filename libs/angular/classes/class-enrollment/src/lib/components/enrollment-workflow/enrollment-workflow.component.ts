@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -51,6 +51,7 @@ import { UserService } from '@sol/auth/user';
     templateUrl: './enrollment-workflow.component.html',
     imports: [
         AsyncPipe,
+        NgTemplateOutlet,
         RouterModule,
         StepsModule,
         CdkStepperModule,

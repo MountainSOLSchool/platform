@@ -9,6 +9,7 @@ import { RxLet } from '@rx-angular/template/let';
 import { PanelModule } from 'primeng/panel';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { AsyncPipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
     standalone: true,
@@ -26,33 +27,35 @@ import { AsyncPipe } from '@angular/common';
 export class DashboardComponent {
     private readonly functionsApi = inject(FirebaseFunctionsService);
 
-    readonly data$ = this.functionsApi
-        .call<{
-            classes: Array<{ title: string; enrolledCount: string }>;
-        }>('classes')
-        .pipe(
-            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-            map((response) => {
-                return {
-                    labels: response.classes.map(({ title }) => title),
-                    datasets: [
-                        {
-                            // make the background of the radar transparent green
-                            backgroundColor: 'rgba(0, 110, 255, 0.5)',
-                            label: 'Enrolled Students',
-                            data: response.classes.map(({ enrolledCount }) =>
-                                Number(enrolledCount)
-                            ),
-                            pointBackgroundColor: response.classes.map(
-                                (c, i) => {
-                                    return this.#colors[i];
-                                }
-                            ),
-                        },
-                    ],
-                };
-            })
-        );
+    readonly data = toSignal(
+        this.functionsApi
+            .call<{
+                classes: Array<{ title: string; enrolledCount: string }>;
+            }>('classes')
+            .pipe(
+                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                map((response) => {
+                    return {
+                        labels: response.classes.map(({ title }) => title),
+                        datasets: [
+                            {
+                                // make the background of the radar transparent green
+                                backgroundColor: 'rgba(0, 110, 255, 0.5)',
+                                label: 'Enrolled Students',
+                                data: response.classes.map(
+                                    ({ enrolledCount }) => Number(enrolledCount)
+                                ),
+                                pointBackgroundColor: response.classes.map(
+                                    (c, i) => {
+                                        return this.#colors[i];
+                                    }
+                                ),
+                            },
+                        ],
+                    };
+                })
+            )
+    );
 
     chartOptions: ChartOptions = {};
 

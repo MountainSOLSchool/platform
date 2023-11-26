@@ -21,14 +21,14 @@
     <div>
         <p-panel header="Fall 2023 Enrollment"
             ><div style="width: 500px; margin-top: 10px">
-                <p-chart
-                    *rxLet="data$; let data; suspense: loading"
-                    type="radar"
-                    [data]="data$ | async"
-                    [options]="chartOptions"
-                    [style]="{ height: '200px' }"
-                ></p-chart>
-                <ng-template #loading>
+                @defer (when data() !== undefined) {
+                    <p-chart
+                        type="radar"
+                        [data]="data()"
+                        [options]="chartOptions"
+                        [style]="{ height: '200px' }"
+                    ></p-chart>
+                } @placeholder (minimum 1s) {
                     <div
                         style="
                             margin-left: auto;
@@ -36,8 +36,9 @@
                             width: fit-content;
                         "
                     >
-                        <p-progressSpinner></p-progressSpinner></div
-                ></ng-template></div
+                        <p-progressSpinner></p-progressSpinner>
+                    </div>
+                }</div
         ></p-panel>
     </div>
 </div>
