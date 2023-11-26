@@ -12,7 +12,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - run: npm ci && npm run build:portal && npm run build:portal2 && mkdir ./public/portal2 && cp -r ./dist/apps/portal-react/exported/* ./public/portal2
+            - run: npm ci
+            - run: npx nx run portal:build:production
             - uses: FirebaseExtended/action-hosting-deploy@v0
               with:
                   firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MOUNTAIN_SOL_PLATFORM }}'

@@ -24,18 +24,6 @@
         "workspace-generator": "nx workspace-generator",
         "dep-graph": "nx dep-graph",
         "help": "nx help",
-        "lint:functions": "nx lint functions",
-        "build:functions": "nx reset && nx dep-graph --file=output.html && rm -rf dist && npm run nx build functions",
-        "build:functions:watch": "nx dep-graph --file=output.html && rm -rf dist && nx build functions --watch",
-        "build:portal": "nx build portal --outputPath=\"public/portal\"",
-        "build:portal2": "nx export portal-react --outputPath=\"public/portal2\"",
-        "serve:functions": "npm run build:functions:watch & (sleep 5 && firebase serve --only functions --project=dev --port=5001) && fg",
-        "serve:dev:portal": "nx serve portal",
-        "serve:portal": "nx serve portal --configuration=developmentRemoteFunctions",
-        "serve:portal2": "nx serve portal-react",
-        "deploy:functions": "firebase deploy",
-        "format:everything": "prettier --write .",
-        "analyze": "webpack-bundle-analyzer public/stats.json",
         "install:husky": "[ ! -d \"/node_modules/is-ci/\" ] || is-ci || [ ! -d \"/node_modules/husky/\" ] || husky install",
         "prepare": "npm run install:husky"
     },
@@ -175,8 +163,5 @@
         "ts-node": "10.9.1",
         "typescript": "5.2.2",
         "webpack-bundle-analyzer": "^4.4.2"
-    },
-    "lint-staged": {
-        "*.js": "eslint --cache --fix"
     }
 }
