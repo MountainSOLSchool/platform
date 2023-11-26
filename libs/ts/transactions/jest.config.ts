@@ -10,5 +10,5 @@ export default {
         '^.+\\.[tj]s$': 'ts-jest',
     },
     moduleFileExtensions: ['ts', 'js', 'html'],
-    coverageDirectory: '../../../coverage/libs/payments/transactions',
+    coverageDirectory: '../../../coverage/libs/ts/transactions',
 };

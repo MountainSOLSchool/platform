@@ -1,5 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-# TODO: fix all lint errors
-# npx lint-staged --concurrent false --relative
+npx lint-staged --concurrent false --relative

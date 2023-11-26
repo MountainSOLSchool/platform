@@ -5,7 +5,14 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, filter, map, shareReplay } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    filter,
+    map,
+    ObservedValueOf,
+    shareReplay,
+} from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
@@ -246,7 +253,9 @@ export class MedicalComponent {
         return index;
     }
 
-    updateStudentMedicalInfo(info: any): void {
+    updateStudentMedicalInfo(
+        info: ObservedValueOf<typeof this.student$>
+    ): void {
         this.workflow.patchState(({ enrollment }) => ({
             enrollment: {
                 ...enrollment,

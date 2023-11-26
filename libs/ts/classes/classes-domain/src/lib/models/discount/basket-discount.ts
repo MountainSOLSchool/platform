@@ -2,6 +2,7 @@ import { Discount } from './discount';
 
 class _BasketDiscount extends Discount<number> {
     apply(total: number): { updated: number; amount: number } {
+        total;
         throw new Error('Not implemented in private class');
     }
 }

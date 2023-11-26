@@ -7,15 +7,15 @@
         "lint": {
             "executor": "@nx/eslint:lint",
             "options": {
-                "lintFilePatterns": ["libs/record/domain/**/*.ts"]
+                "lintFilePatterns": ["libs/ts/record/domain/**/*.ts"]
             },
             "outputs": ["{options.outputFile}"]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/record/domain"],
+            "outputs": ["{workspaceRoot}/coverage/libs/ts/record/domain"],
             "options": {
-                "jestConfig": "libs/record/domain/jest.config.ts"
+                "jestConfig": "libs/ts/record/domain/jest.config.ts"
             }
         }
     },

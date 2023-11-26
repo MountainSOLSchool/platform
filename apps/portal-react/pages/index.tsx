@@ -5,8 +5,6 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { type RootState } from '../store/store';
 import { decrement, increment, trigger } from '../store/testStore';
-import { loadedPaths, requestPaths } from '../store/paths';
-import { requestUnits } from '../store/unitStore';
 import { requestTestStudent, setTestStudent } from '../store/testStudent';
 
 import './index.module.css';

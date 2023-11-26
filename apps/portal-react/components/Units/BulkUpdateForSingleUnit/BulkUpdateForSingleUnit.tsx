@@ -1,7 +1,7 @@
 import UnitSelectionTool from '../UnitSelectionTool';
 import StudentSelectionTool from './StudentSelectionTool';
 
-export function BulkUpdateForSingleUnit(props) {
+export function BulkUpdateForSingleUnit() {
     return (
         <div>
             <div>

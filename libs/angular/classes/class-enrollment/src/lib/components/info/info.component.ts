@@ -6,7 +6,13 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, shareReplay } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    map,
+    ObservedValueOf,
+    shareReplay,
+} from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -311,7 +317,7 @@ export class InfoComponent {
 
     @ViewChild('op') op!: OverlayPanel;
 
-    updateStudentInfo(info: any): void {
+    updateStudentInfo(info: ObservedValueOf<typeof this.student$>): void {
         this.workflow.patchState((s) => ({
             enrollment: {
                 ...s.enrollment,

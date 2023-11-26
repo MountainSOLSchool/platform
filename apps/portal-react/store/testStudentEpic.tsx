@@ -1,4 +1,4 @@
-import { filter, switchMap, from, tap } from 'rxjs';
+import { filter, switchMap, from } from 'rxjs';
 import { Action } from 'redux';
 import { Observable, map } from 'rxjs';
 import { db } from '../firebase/database';

@@ -18,8 +18,8 @@
             "outputs": ["{options.outputFile}"],
             "options": {
                 "lintFilePatterns": [
-                    "angular/request/**/*.ts",
-                    "angular/request/**/*.html"
+                    "libs/angular/request/**/*.ts",
+                    "libs/angular/request/**/*.html"
                 ]
             }
         }

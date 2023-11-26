@@ -9,15 +9,15 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
-                "jestConfig": "libs/form/validity/jest.config.ts"
+                "jestConfig": "libs/angular/form/validity/jest.config.ts"
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint",
             "options": {
                 "lintFilePatterns": [
-                    "libs/form/validity/**/*.ts",
-                    "libs/form/validity/**/*.html"
+                    "libs/angular/form/validity/**/*.ts",
+                    "libs/angular/form/validity/**/*.html"
                 ]
             }
         }
