@@ -1,4 +1,4 @@
-name: Deploy Firebase Functions on merge
+name: Deploy Firebase Functions Dev on merge
 'on':
     push:
         branches:
