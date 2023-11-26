@@ -8,18 +8,18 @@
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": [
-                "{workspaceRoot}/coverage/libs/payments/braintree-client"
+                "{workspaceRoot}/coverage/libs/angular/braintree-client"
             ],
             "options": {
-                "jestConfig": "libs/payments/braintree-client/jest.config.ts"
+                "jestConfig": "libs/angular/braintree-client/jest.config.ts"
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint",
             "options": {
                 "lintFilePatterns": [
-                    "libs/payments/braintree-client/**/*.ts",
-                    "libs/payments/braintree-client/**/*.html"
+                    "libs/angular/braintree-client/**/*.ts",
+                    "libs/angular/braintree-client/**/*.html"
                 ]
             }
         }

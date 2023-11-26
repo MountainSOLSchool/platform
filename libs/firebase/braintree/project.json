@@ -8,14 +8,14 @@
             "executor": "@nx/eslint:lint",
             "outputs": ["{options.outputFile}"],
             "options": {
-                "lintFilePatterns": ["libs/payments/braintree/**/*.ts"]
+                "lintFilePatterns": ["libs/firebase/braintree/**/*.ts"]
             }
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/payments/braintree"],
+            "outputs": ["{workspaceRoot}/coverage/libs/firebase/braintree"],
             "options": {
-                "jestConfig": "libs/payments/braintree/jest.config.ts"
+                "jestConfig": "libs/firebase/braintree/jest.config.ts"
             }
         }
     },

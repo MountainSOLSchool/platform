@@ -4,7 +4,7 @@ import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import React, { useState } from 'react';
 
-export function StudentSelectionTool(props) {
+export function StudentSelectionTool() {
     const tempStudents = [
         {
             firstName: 'John',
@@ -32,7 +32,7 @@ export function StudentSelectionTool(props) {
         setStudentsArr(newStudentsArr);
     };
 
-    const updateStudents = (event) => {
+    const updateStudents = () => {
         console.log('studentsArr: ', studentsArr);
 
         // save updates to backend

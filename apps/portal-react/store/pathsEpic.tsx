@@ -1,4 +1,4 @@
-import { filter, switchMap, from, tap } from 'rxjs';
+import { filter, switchMap, from } from 'rxjs';
 import { loadedPaths, requestPaths } from './paths';
 import { Action } from 'redux';
 import { Observable, map } from 'rxjs';

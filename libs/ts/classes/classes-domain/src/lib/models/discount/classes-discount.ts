@@ -6,13 +6,7 @@ class _ClassesDiscount extends Discount<{
     classes: Array<SemesterClass>;
     groups: Array<SemesterClassGroup>;
 }> {
-    apply({
-        classes,
-        groups,
-    }: {
-        classes: Array<SemesterClass>;
-        groups: Array<SemesterClassGroup>;
-    }): {
+    apply(): {
         updated: {
             classes: Array<SemesterClass>;
             groups: Array<SemesterClassGroup>;

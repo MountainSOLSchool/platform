@@ -5,13 +5,6 @@ import { RootState } from 'apps/portal-react/store/store';
 import { requestPaths } from 'apps/portal-react/store/paths';
 import { requestUnits, overrideUnits } from 'apps/portal-react/store/unitStore';
 
-const colors = {
-    selected0: '#00aa55',
-    selected1: '#005555',
-    completed0: '#00aaaa',
-    completed1: '#00aaaa',
-};
-
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',
     'VIOIwcg8semiuoZvqrDz',
@@ -48,7 +41,6 @@ function SmartTreeChart() {
     const [completeUnits, setCompleteUnits] = useState([]);
 
     function generateNodes() {
-        const treeUnits = [];
         const treePaths = [];
 
         // MERGE DATA FROM PATHS AND UNITS
@@ -170,8 +162,8 @@ function SmartTreeChart() {
 
         data.children.forEach((path) => {
             path.children.forEach((category) => {
-                if (category.hasOwnProperty('children')) {
-                    category['children'].forEach((unit) => {
+                if (Object.hasOwn(category, 'children')) {
+                    category['children'].forEach(() => {
                         nodeCount++;
                     });
                 } else {
@@ -243,10 +235,8 @@ function SmartTreeChart() {
                 switch (d.data.status) {
                     case 'locked':
                         return '#aaaaaa';
-                        break;
                     case 'unlocked':
                         return '#aaffff';
-                        break;
                     case 'complete':
                         return '#00aaaa';
                 }
@@ -260,7 +250,7 @@ function SmartTreeChart() {
                 //console.log(nodeData, path)
 
                 data.children = data.children.map((e) => {
-                    if (e.hasOwnProperty('lockedChildren')) {
+                    if (Object.hasOwn(e, 'lockedChildren')) {
                         if (e.name === path.name && e.children.length === 0) {
                             e.children = e['lockedChildren'];
                             console.log(data);

@@ -7,17 +7,17 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/student/import"],
+            "outputs": ["{workspaceRoot}/coverage/libs/ts/student/import"],
             "options": {
-                "jestConfig": "libs/student/import/jest.config.ts"
+                "jestConfig": "libs/ts/student/import/jest.config.ts"
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint",
             "options": {
                 "lintFilePatterns": [
-                    "libs/student/import/src/**/*.ts",
-                    "libs/student/import/src/**/*.html"
+                    "libs/ts/student/import/src/**/*.ts",
+                    "libs/ts/student/import/src/**/*.html"
                 ]
             }
         }

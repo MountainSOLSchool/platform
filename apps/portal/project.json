@@ -19,7 +19,7 @@
                     "apps/portal/src/assets",
                     {
                         "glob": "**/*",
-                        "input": "libs/header/src/lib/assets/",
+                        "input": "libs/angular/header/src/lib/assets/",
                         "output": "./assets/header/"
                     }
                 ],

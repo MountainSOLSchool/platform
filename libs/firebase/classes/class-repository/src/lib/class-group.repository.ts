@@ -3,6 +3,10 @@ import { SemesterClassGroup } from '@sol/classes/domain';
 import { ClassRepository } from './class.repository';
 import { SemesterRepository } from './semester.repository';
 
+type SemesterClassGroupDbo = Omit<SemesterClassGroup, 'classes'> & {
+    classIds: Array<string>;
+};
+
 export class ClassGroupRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
     static of(semester: SemesterRepository): ClassGroupRepository {
@@ -17,10 +21,12 @@ export class ClassGroupRepository {
             `${await this.getGroupsPath()}/${id}`
         );
         const [data] = await DatabaseUtility.getHydratedDocuments([document]);
-        return await this.convertDboToDomain(data);
+        return await this.convertDboToDomain(data as SemesterClassGroupDbo);
     }
 
-    private async convertDboToDomain(dbo: any): Promise<SemesterClassGroup> {
+    private async convertDboToDomain(
+        dbo: SemesterClassGroupDbo
+    ): Promise<SemesterClassGroup> {
         return {
             ...dbo,
             classes: await ClassRepository.of(this.semester).getMany(

@@ -8,7 +8,7 @@ export default {
             stringifyContentPathRegex: '\\.(html|svg)$',
         },
     },
-    coverageDirectory: '../../coverage/libs/paths',
+    coverageDirectory: '../../coverage/libs/angular/paths',
     transform: {
         '^.+.(ts|mjs|js|html)$': 'jest-preset-angular',
     },

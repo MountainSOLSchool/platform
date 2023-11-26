@@ -89,12 +89,12 @@ export class StudentRepository {
     async getAll(): Promise<Array<StudentDbEntry>> {
         const allClasses = await ClassRepository.of(this.semester).getAll();
         const allStudentsFromAllClassesRefs = allClasses.map(
-            (theClass) => theClass.students
+            (theClass) => theClass.students as Array<DocumentReference>
         );
         const allStudentsFromEachClassInSemester = await Promise.all(
             allStudentsFromAllClassesRefs.map((studentRefs) =>
                 DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
-                    studentRefs as any
+                    studentRefs
                 )
             )
         );
