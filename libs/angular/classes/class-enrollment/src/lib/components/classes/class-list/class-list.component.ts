@@ -34,6 +34,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ClassListService } from '@sol/angular/classes/list';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { MarkdownComponent } from 'ngx-markdown';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -67,6 +68,7 @@ interface ClassRow {
         SliderModule,
         AutoFocusModule,
         InputNumberModule,
+        MarkdownComponent,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',

@@ -22,6 +22,7 @@ import {
     provideFireAuth,
     provideFireFunctions,
 } from '@sol/ts/firebase/adapter';
+import { MarkdownModule } from 'ngx-markdown';
 
 if (environment.production) {
     enableProdMode();
@@ -69,5 +70,6 @@ bootstrapApplication(AppComponent, {
         provideStore(),
         provideEffects(),
         provideRouter(appRoutes),
+        importProvidersFrom(MarkdownModule.forRoot()),
     ],
 });
