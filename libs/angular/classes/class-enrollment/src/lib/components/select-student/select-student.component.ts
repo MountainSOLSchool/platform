@@ -127,9 +127,9 @@ export class SelectStudentComponent {
         this.workflow.select((state) => state.enrollment.student?.id);
 
     private students$ = this.api
-        .call<{ students: Array<{ id: string; name: string }> }>(
-            'myEnrolledStudents'
-        )
+        .call<{
+            students: Array<{ id: string; name: string }>;
+        }>('myEnrolledStudents')
         .pipe(
             RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
             map(({ students }) => students)

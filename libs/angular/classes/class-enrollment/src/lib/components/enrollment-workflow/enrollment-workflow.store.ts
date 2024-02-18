@@ -165,10 +165,10 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                     take(1),
                     switchMap(({ enrollment }) => {
                         return this.functions
-                            .call<{ email: string; success: boolean }>(
-                                'enroll',
-                                enrollment
-                            )
+                            .call<{
+                                email: string;
+                                success: boolean;
+                            }>('enroll', enrollment)
                             .pipe(
                                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                                 tapResponse(

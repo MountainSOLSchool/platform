@@ -15,13 +15,7 @@
             }
         },
         "lint": {
-            "executor": "@nx/eslint:lint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/angular/calendar/calendar/src/**/*.ts",
-                    "libs/angular/calendar/calendar/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": []
