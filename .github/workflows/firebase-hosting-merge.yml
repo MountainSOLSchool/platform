@@ -11,7 +11,7 @@ jobs:
     build_and_deploy:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v4
             - run: npm ci
             - run: npx nx run portal:build:production --outputPath=\"public/portal\"
             - uses: FirebaseExtended/action-hosting-deploy@v0
