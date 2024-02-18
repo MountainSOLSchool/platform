@@ -164,11 +164,10 @@ export class ClassesComponent {
         { initialValue: undefined }
     );
 
-    classes = computed(
-        () =>
-            this.classRows()
-                ?.map((row) => row.classes)
-                .reduce((a, b) => a.concat(b), [])
+    classes = computed(() =>
+        this.classRows()
+            ?.map((row) => row.classes)
+            .reduce((a, b) => a.concat(b), [])
     );
 
     readonly filterOptions = computed(() => {

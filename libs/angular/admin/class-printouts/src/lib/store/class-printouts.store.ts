@@ -119,9 +119,9 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                 ),
                 switchMap((semeseterClass) => {
                     return this.functionsApi
-                        .call<{ list: Array<string> }>(
-                            `emails?classId=${semeseterClass.id}`
-                        )
+                        .call<{
+                            list: Array<string>;
+                        }>(`emails?classId=${semeseterClass.id}`)
                         .pipe(
                             RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                             map(({ list }) => list.join(', ')),

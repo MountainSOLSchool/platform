@@ -13,13 +13,7 @@
             }
         },
         "lint": {
-            "executor": "@nx/eslint:lint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/angular/auth/firebase/src/**/*.ts",
-                    "libs/angular/auth/firebase/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": ["scope:firebase"]

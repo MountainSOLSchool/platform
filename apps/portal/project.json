@@ -105,12 +105,6 @@
         },
         "lint": {
             "executor": "@nx/eslint:lint",
-            "options": {
-                "lintFilePatterns": [
-                    "apps/portal/src/**/*.ts",
-                    "apps/portal/src/**/*.html"
-                ]
-            },
             "outputs": ["{options.outputFile}"]
         },
         "test": {

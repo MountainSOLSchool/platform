@@ -6,9 +6,6 @@
     "targets": {
         "lint": {
             "executor": "@nx/eslint:lint",
-            "options": {
-                "lintFilePatterns": ["libs/ts/record/domain/**/*.ts"]
-            },
             "outputs": ["{options.outputFile}"]
         },
         "test": {
