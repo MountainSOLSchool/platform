@@ -1,8 +1,10 @@
 export { roster } from './roster';
 export { signIn } from './sign-in';
 export { classes } from './classes';
+export { classesBySemester } from './classes-by-semester';
 export { classGroups } from './class-groups';
 export { availableEnrollmentClasses } from './available-enrollment-classes';
+export { semestersAvailableToEnroll } from './semesters-available-to-enroll';
 export { emails } from './emails';
 export { tshirts } from './tshirts';
 export { paymentToken } from './payment-token';

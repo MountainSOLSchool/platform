@@ -6,6 +6,14 @@ export class ActiveSemesterRepository extends SemesterRepository {
         return new ActiveSemesterRepository();
     }
 
+    async getId(): Promise<string> {
+        const activeSemesterDoc = await DatabaseUtility.getDocumentRef(
+            `config/activeSemester`
+        );
+        const activeSemester = await activeSemesterDoc.get();
+        return activeSemester.data()?.id;
+    }
+
     async getPath(): Promise<string> {
         const activeSemesterDoc = await DatabaseUtility.getDocumentRef(
             `config/activeSemester`

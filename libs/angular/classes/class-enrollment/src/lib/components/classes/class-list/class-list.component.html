@@ -1,586 +1,687 @@
-<div
-    style="
-        margin-bottom: 1rem;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-        max-width: 600px;
-    "
->
-    <div class="p-input-icon-left" style="flex: 2; min-width: 200px">
-        <i class="pi pi-search"></i>
-        <span class="p-input-icon-right" style="width: 100%">
-            @if (searchInput.value.length > 0) {
-                <i
-                    class="pi pi-times-circle"
-                    (click)="searchChange((searchInput.value = ''))"
-                    style="cursor: pointer"
-                ></i>
-            }
-            <input
-                #searchInput
-                type="text"
-                pInputText
-                placeholder="Search"
-                style="width: 100%"
-                (input)="searchChange(searchInput.value)"
-            />
-        </span>
-    </div>
-    <div>
-        <p-dropdown
-            [options]="filterOptions()"
-            placeholder="Select a grade range"
-            optionLabel="name"
-            [showClear]="true"
-            (onChange)="filterChange($event.value?.value ?? [])"
-        ></p-dropdown>
-    </div>
+<div style="margin-bottom: 1rem">
+    Enrolling for
+    <p *solLoading="semesterOptions()">Loading semester options...</p>
+    <p *solError="semesterOptions()">Failed to load semester options.</p>
+    <p-multiSelect
+        *solLoaded="semesterOptions(); let semesterOptions"
+        [options]="semesterOptions"
+        [filter]="false"
+        placeholder="Select a semester"
+        optionValue="id"
+        optionLabel="name"
+        [ngModel]="semesterOptions[0] ? [semesterOptions[0].id] : []"
+        [showClear]="false"
+        (onChange)="semesterChange($event.value ?? [])"
+    ></p-multiSelect>
+    semester
 </div>
-@if (selectedClasses(); as selectedClasses) {
-    @if (selectedClasses.length > 0) {
-        <div
-            style="
-                position: sticky;
-                top: 10px;
-                margin: auto;
-                background: white;
-                padding: 0.5rem 2rem 0.5rem 2rem;
-                z-index: 1;
-                border-radius: 20px;
-                border: 1px solid lightgray;
-            "
-        >
-            <p>
-                <b>Selected classes ({{ selectedClasses.length }})</b>
-            </p>
+@defer (when !!semesterOptions()?.length) {
+    <div
+        style="
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-width: 600px;
+        "
+    >
+        <div class="p-input-icon-left" style="flex: 2; min-width: 200px">
+            <i class="pi pi-search"></i>
+            <span class="p-input-icon-right" style="width: 100%">
+                @if (searchInput.value.length > 0) {
+                    <i
+                        class="pi pi-times-circle"
+                        (click)="searchChange((searchInput.value = ''))"
+                        style="cursor: pointer"
+                    ></i>
+                }
+                <input
+                    #searchInput
+                    type="text"
+                    pInputText
+                    placeholder="Search for a class"
+                    style="width: 100%"
+                    (input)="searchChange(searchInput.value)"
+                />
+            </span>
+        </div>
+        <div>
+            <p-dropdown
+                [options]="filterOptions()"
+                placeholder="Select a grade range"
+                optionLabel="name"
+                [showClear]="true"
+                (onChange)="filterChange($event.value?.value ?? [])"
+            ></p-dropdown>
+        </div>
+    </div>
+    @if (selectedClasses(); as selectedClasses) {
+        @if (selectedClasses.length > 0) {
             <div
-                *rxLet="{ showChips: false }; let view"
-                style="display: flex; gap: 4px; flex-wrap: wrap"
+                style="
+                    position: sticky;
+                    top: 10px;
+                    margin: auto;
+                    background: white;
+                    padding: 0.5rem 2rem 0.5rem 2rem;
+                    z-index: 1;
+                    border-radius: 20px;
+                    border: 1px solid lightgray;
+                "
             >
-                @if (view.showChips) {
-                    @for (
-                        selectedClass of selectedClasses;
-                        track selectedClass.id
-                    ) {
-                        <div>
-                            <p-chip
-                                [label]="selectedClass.title"
-                                [removable]="true"
-                                (onRemove)="
-                                    selectionChanged({
-                                        id: selectedClass.id,
-                                        selected: false
-                                    })
-                                "
-                            ></p-chip>
-                        </div>
+                <p>
+                    <b>Selected classes ({{ selectedClasses.length }})</b>
+                </p>
+                <div
+                    *rxLet="{ showChips: false }; let view"
+                    style="display: flex; gap: 4px; flex-wrap: wrap"
+                >
+                    @if (view.showChips) {
+                        @for (
+                            selectedClass of selectedClasses;
+                            track selectedClass.id
+                        ) {
+                            <div>
+                                <p-chip
+                                    [label]="selectedClass.title"
+                                    [removable]="true"
+                                    (onRemove)="
+                                        selectionChanged({
+                                            id: selectedClass.id,
+                                            selected: false
+                                        })
+                                    "
+                                ></p-chip>
+                            </div>
+                        }
+                    }
+                    @if (selectedClasses.length > 0) {
+                        <p-button
+                            [label]="view.showChips ? 'Hide' : 'Show'"
+                            (click)="view.showChips = !view.showChips"
+                            styleClass="p-button-sm"
+                        ></p-button>
+                    }
+                </div>
+                @if (hasSelectedSummerClass()) {
+                    @if (selectedSummerClasses()) {
+                        <p>
+                            @if (
+                                selectedSummerClasses().length > 3;
+                                as hasSelectedEnough
+                            ) {
+                                <span
+                                    [ngStyle]="{
+                                        color: hasSelectedEnough
+                                            ? '#3c82f7'
+                                            : 'black'
+                                    }"
+                                    ><b
+                                        >({{ selectedSummerClasses().length }}/4
+                                        selected
+                                        @if (hasSelectedEnough) {
+                                            🥳
+                                        }
+                                        )</b
+                                    ></span
+                                >
+                            }
+                            Use code <b>4SUMMER2023</b> at checkout when you
+                            select 4 summer camps to get 10% off!
+                        </p>
                     }
                 }
-                @if (selectedClasses.length > 0) {
-                    <p-button
-                        [label]="view.showChips ? 'Hide' : 'Show'"
-                        (click)="view.showChips = !view.showChips"
-                        styleClass="p-button-sm"
-                    ></p-button>
-                }
             </div>
-            @if (hasSelectedSummerClass()) {
-                @if (selectedSummerClasses()) {
+        }
+    }
+    @if (isInvalid()) {
+        <div style="width: 100%">
+            <p-messages severity="error">
+                <ng-template pTemplate>
+                    <div class="ml-2">Please select at least one class.</div>
+                </ng-template>
+            </p-messages>
+        </div>
+    }
+    @if ((isFakeSearchLoading$ | async) === true) {
+        <div style="width: 100%; margin-top: 1rem">
+            <div
+                style="
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: fit-content;
+                "
+            >
+                <p-progressSpinner></p-progressSpinner>
+            </div>
+        </div>
+    } @else {
+        <div style="margin-top: 1rem">
+            @defer (when classesBySelectedSemesters()) {
+                @if (
+                    classesBySelectedSemesters();
+                    as classesBySelectedSemesters
+                ) {
+                    <!-- for each entry -->
                     <p>
-                        @if (
-                            selectedSummerClasses().length > 3;
-                            as hasSelectedEnough
+                        {{ classesBySelectedSemesters | json }}/p>
+                        @for (
+                            semester of classesBySelectedSemesters | keyvalue;
+                            track semester
                         ) {
-                            <span
-                                [ngStyle]="{
-                                    color: hasSelectedEnough
-                                        ? '#3c82f7'
-                                        : 'black'
-                                }"
-                                ><b
-                                    >({{ selectedSummerClasses().length }}/4
-                                    selected
-                                    @if (hasSelectedEnough) {
-                                        🥳
-                                    }
-                                    )</b
-                                ></span
-                            >
+                            <p>{{ semester.key }}</p>
+                            <pre>{{ semester | json }}</pre>
+                            @if (semester.value && semester.value.length > 0) {
+                                @for (row of semester.value; track row) {
+                                    <div
+                                        style="
+                                            border-radius: 5px;
+                                            margin: 2px;
+                                            padding: 5px;
+                                            display: flex;
+                                            flex-wrap: wrap;
+                                            width: 100%;
+                                        "
+                                    >
+                                        @if (!!row.group) {
+                                            <div>
+                                                <h3>
+                                                    {{ row.group?.name }}
+                                                    @if (
+                                                        getClassRowSavings(
+                                                            row
+                                                        ) !== 0
+                                                    ) {
+                                                        <span
+                                                            style="
+                                                                color: #3c82f7;
+                                                            "
+                                                        >
+                                                            (-{{
+                                                                getClassRowSavings(
+                                                                    row
+                                                                ) | currency
+                                                            }}
+                                                            all-day discount)
+                                                        </span>
+                                                    }
+                                                </h3>
+
+                                                <div
+                                                    style="
+                                                        margin-top: 1rem;
+                                                        margin-bottom: 1rem;
+                                                        margin-left: 1rem;
+                                                    "
+                                                >
+                                                    <p-toggleButton
+                                                        *rxLet="
+                                                            hasPausedClass(row);
+                                                            let paused
+                                                        "
+                                                        [disabled]="paused"
+                                                        [inputId]="
+                                                            'select' +
+                                                            row.group?.id
+                                                        "
+                                                        [name]="
+                                                            'row_' +
+                                                            row.group?.id
+                                                        "
+                                                        onIcon="pi pi-check"
+                                                        onLabel="Selected all-day"
+                                                        offIcon="pi pi-plus"
+                                                        [offLabel]="
+                                                            paused
+                                                                ? 'One or more classes are full'
+                                                                : 'Select all-day'
+                                                        "
+                                                        [ngModel]="row.selected"
+                                                        (ngModelChange)="
+                                                            rowSelectedChange(
+                                                                row,
+                                                                !row.selected
+                                                            )
+                                                        "
+                                                    ></p-toggleButton>
+                                                </div>
+                                            </div>
+                                        }
+                                        <div
+                                            style="
+                                                display: flex;
+                                                flex-wrap: wrap;
+                                                gap: 10px;
+                                            "
+                                        >
+                                            @for (
+                                                rowClass of row.classes;
+                                                track rowClass.id
+                                            ) {
+                                                <div
+                                                    [ngStyle]="{
+                                                        border: rowClass.selected
+                                                            ? '.2rem solid #3c82f7'
+                                                            : '.2rem solid transparent',
+                                                        'border-radius': '6px',
+                                                        'border-top-right-radius':
+                                                            '80px',
+                                                        'margin-bottom': '2em',
+                                                        'box-sizing':
+                                                            'border-box',
+                                                        'margin-left': 'auto',
+                                                        'margin-right': 'auto',
+                                                        'min-width': '300px',
+                                                        flex:
+                                                            row.classes.length >
+                                                            1
+                                                                ? '1 0 calc(50% - 40px)'
+                                                                : '1 0 calc(100% - 40px)',
+                                                        height: 'fit-content'
+                                                    }"
+                                                >
+                                                    <p-card
+                                                        styleClass="class-card"
+                                                    >
+                                                        <ng-template
+                                                            pTemplate="header"
+                                                        ></ng-template>
+                                                        <div
+                                                            style="
+                                                                position: relative;
+                                                                margin-top: -2.5rem;
+                                                            "
+                                                        >
+                                                            <div
+                                                                style="
+                                                                    padding-right: 145px;
+                                                                "
+                                                            >
+                                                                <h2>
+                                                                    {{
+                                                                        rowClass.title
+                                                                    }}{{
+                                                                        rowClass.pausedForEnrollment
+                                                                            ? ' (Full)'
+                                                                            : ''
+                                                                    }}
+                                                                </h2>
+                                                            </div>
+                                                            <!-- circular div with image -->
+                                                            <div
+                                                                [ngStyle]="{
+                                                                    position:
+                                                                        'absolute',
+                                                                    top: '-30px',
+                                                                    right: '-25px',
+                                                                    display:
+                                                                        'inline-block',
+                                                                    width: '165px',
+                                                                    height: '165px',
+                                                                    background:
+                                                                        'url(' +
+                                                                        rowClass.thumbnailUrl +
+                                                                        ')',
+                                                                    'background-position':
+                                                                        '50% 50%',
+                                                                    'background-size':
+                                                                        'cover',
+                                                                    'border-radius':
+                                                                        '50%',
+                                                                    filter: rowClass.pausedForEnrollment
+                                                                        ? 'grayscale(100%)'
+                                                                        : '',
+                                                                    border:
+                                                                        '3px solid ' +
+                                                                        (rowClass.selected
+                                                                            ? '#3c82f7'
+                                                                            : 'black')
+                                                                }"
+                                                            ></div>
+                                                        </div>
+                                                        <div
+                                                            class="flex flex-wrap align-items-center"
+                                                            style="
+                                                                margin-bottom: 1.5rem;
+                                                                margin-top: 1rem;
+                                                                gap: 3px;
+                                                                padding-right: 145px;
+                                                            "
+                                                        >
+                                                            <p-chip
+                                                                [label]="
+                                                                    rowClass.classDateTimes
+                                                                "
+                                                                icon="pi pi-calendar"
+                                                                styleClass="mr-2 custom-chip"
+                                                            ></p-chip>
+                                                            <p-chip
+                                                                [label]="
+                                                                    rowClass.weekday
+                                                                "
+                                                                styleClass="mr-2 custom-chip"
+                                                            ></p-chip>
+                                                            <p-chip
+                                                                [label]="
+                                                                    rowClass.dailyTimes
+                                                                "
+                                                                icon="pi pi-clock"
+                                                                styleClass="mr-2 custom-chip"
+                                                            ></p-chip>
+                                                        </div>
+                                                        <p>
+                                                            <b>Class Type:</b>
+                                                            {{
+                                                                rowClass.classType
+                                                            }}<br />
+                                                            <b>Grades:</b>
+                                                            {{
+                                                                rowClass.gradeRangeStart
+                                                            }}
+                                                            -
+                                                            {{
+                                                                rowClass.gradeRangeEnd
+                                                            }}<br />
+                                                            <b>Location:</b>
+                                                            {{
+                                                                rowClass.location
+                                                            }}<br />
+                                                            @if (
+                                                                !rowClass.paymentRange
+                                                            ) {
+                                                                <b>Cost:</b> ${{
+                                                                    rowClass.cost
+                                                                }}<br />
+                                                            } @else {
+                                                                <b
+                                                                    >Sliding
+                                                                    Scale
+                                                                    Cost:</b
+                                                                >
+                                                                ${{
+                                                                    rowClass
+                                                                        .paymentRange
+                                                                        ?.lowest
+                                                                }}-${{
+                                                                    rowClass
+                                                                        .paymentRange
+                                                                        ?.highest
+                                                                }}<br />
+                                                            }
+                                                            <b>Instructors:</b>
+                                                            @for (
+                                                                instructor of rowClass.instructors;
+                                                                track instructor;
+                                                                let isLast = $last
+                                                            ) {
+                                                                <span>
+                                                                    {{
+                                                                        instructor.firstName
+                                                                    }}
+                                                                    {{
+                                                                        instructor.lastName
+                                                                    }}{{
+                                                                        isLast
+                                                                            ? ''
+                                                                            : ', '
+                                                                    }}
+                                                                </span>
+                                                            }
+                                                            <br />
+                                                            <br />
+                                                            <b>Description:</b>
+                                                            <br />
+                                                            <markdown>{{
+                                                                rowClass.description
+                                                            }}</markdown>
+                                                            <br />
+                                                        </p>
+                                                        <div
+                                                            style="
+                                                                margin-top: 2rem;
+                                                                margin-bottom: -1rem;
+                                                            "
+                                                        >
+                                                            @if (
+                                                                rowClass.pausedForEnrollment
+                                                            ) {
+                                                                <div
+                                                                    style="
+                                                                        margin-bottom: 1rem;
+                                                                    "
+                                                                >
+                                                                    <b
+                                                                        >This
+                                                                        class is
+                                                                        not
+                                                                        accepting
+                                                                        additional
+                                                                        students
+                                                                        at this
+                                                                        time.</b
+                                                                    >
+                                                                </div>
+                                                            }
+                                                            <p-overlayPanel
+                                                                pAutoFocus
+                                                                #op
+                                                            >
+                                                                <div>
+                                                                    Sliding
+                                                                    Scale Cost
+                                                                </div>
+                                                                <div
+                                                                    style="
+                                                                        margin-top: 1rem;
+                                                                        margin-bottom: 1rem;
+                                                                        display: flex;
+                                                                    "
+                                                                >
+                                                                    <p-button
+                                                                        icon="pi pi-minus"
+                                                                        styleClass="p-button-outlined"
+                                                                        [disabled]="
+                                                                            rowClass.userCost <=
+                                                                            (rowClass
+                                                                                .paymentRange
+                                                                                ?.lowest ??
+                                                                                rowClass.cost)
+                                                                        "
+                                                                        (onClick)="
+                                                                            rowClass.userCost =
+                                                                                rowClass.userCost -
+                                                                                5
+                                                                        "
+                                                                    ></p-button>
+                                                                    <div>
+                                                                        <p-inputNumber
+                                                                            mode="currency"
+                                                                            currency="USD"
+                                                                            [min]="
+                                                                                rowClass
+                                                                                    .paymentRange
+                                                                                    ?.lowest ??
+                                                                                rowClass.cost
+                                                                            "
+                                                                            [max]="
+                                                                                rowClass
+                                                                                    .paymentRange
+                                                                                    ?.highest ??
+                                                                                rowClass.cost
+                                                                            "
+                                                                            [(ngModel)]="
+                                                                                rowClass.userCost
+                                                                            "
+                                                                            class="w-full"
+                                                                        />
+                                                                        <p-slider
+                                                                            [step]="
+                                                                                5
+                                                                            "
+                                                                            [min]="
+                                                                                rowClass
+                                                                                    .paymentRange
+                                                                                    ?.lowest ??
+                                                                                rowClass.cost
+                                                                            "
+                                                                            [max]="
+                                                                                rowClass
+                                                                                    .paymentRange
+                                                                                    ?.highest ??
+                                                                                rowClass.cost
+                                                                            "
+                                                                            [(ngModel)]="
+                                                                                rowClass.userCost
+                                                                            "
+                                                                            class="w-full"
+                                                                        ></p-slider>
+                                                                    </div>
+                                                                    <p-button
+                                                                        icon="pi pi-plus"
+                                                                        styleClass="p-button-outlined"
+                                                                        [disabled]="
+                                                                            rowClass.userCost >=
+                                                                            (rowClass
+                                                                                .paymentRange
+                                                                                ?.highest ??
+                                                                                rowClass.cost)
+                                                                        "
+                                                                        (onClick)="
+                                                                            rowClass.userCost =
+                                                                                rowClass.userCost +
+                                                                                5
+                                                                        "
+                                                                    ></p-button>
+                                                                </div>
+                                                                <p-button
+                                                                    (click)="
+                                                                        selectionChanged(
+                                                                            {
+                                                                                id: rowClass.id,
+                                                                                selected: true,
+                                                                                userCost:
+                                                                                    rowClass.userCost
+                                                                            },
+                                                                            op
+                                                                        )
+                                                                    "
+                                                                    >Confirm</p-button
+                                                                >
+                                                            </p-overlayPanel>
+                                                            @if (
+                                                                (rowClass
+                                                                    .paymentRange
+                                                                    ?.lowest ??
+                                                                    -1) >= 0
+                                                            ) {
+                                                                @if (
+                                                                    !rowClass.selected
+                                                                ) {
+                                                                    <p-button
+                                                                        [disabled]="
+                                                                            rowClass.pausedForEnrollment
+                                                                        "
+                                                                        label="Select"
+                                                                        styleClass="p-button-outlined"
+                                                                        icon="pi pi-plus"
+                                                                        (click)="
+                                                                            op.toggle(
+                                                                                $event
+                                                                            )
+                                                                        "
+                                                                    ></p-button>
+                                                                } @else {
+                                                                    <p-button
+                                                                        [disabled]="
+                                                                            rowClass.pausedForEnrollment
+                                                                        "
+                                                                        [label]="
+                                                                            'Selected ($' +
+                                                                            rowClass.userCost +
+                                                                            ')'
+                                                                        "
+                                                                        styleClass="p-button-primary"
+                                                                        icon="pi pi-check"
+                                                                        (click)="
+                                                                            selectionChanged(
+                                                                                {
+                                                                                    id: rowClass.id,
+                                                                                    selected: false
+                                                                                }
+                                                                            )
+                                                                        "
+                                                                    ></p-button>
+                                                                }
+                                                            } @else {
+                                                                <p-toggleButton
+                                                                    [disabled]="
+                                                                        rowClass.pausedForEnrollment
+                                                                    "
+                                                                    [inputId]="
+                                                                        'select' +
+                                                                        rowClass.id
+                                                                    "
+                                                                    styleClass="p-button-primary"
+                                                                    onIcon="pi pi-check"
+                                                                    onLabel="Selected"
+                                                                    offIcon="pi pi-plus"
+                                                                    [offLabel]="
+                                                                        rowClass.pausedForEnrollment
+                                                                            ? 'Class Full'
+                                                                            : 'Select'
+                                                                    "
+                                                                    [(ngModel)]="
+                                                                        rowClass.selected
+                                                                    "
+                                                                    (ngModelChange)="
+                                                                        selectionChanged(
+                                                                            rowClass
+                                                                        )
+                                                                    "
+                                                                ></p-toggleButton>
+                                                            }
+                                                        </div>
+                                                    </p-card>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            } @else {
+                                There are no classes for the current search.
+                            }
                         }
-                        Use code <b>4SUMMER2023</b> at checkout when you select
-                        4 summer camps to get 10% off!
                     </p>
+                }
+            } @placeholder (minimum 1s) {
+                @for (i of [1, 2, 3]; track i) {
+                    <div class="custom-skeleton p-4">
+                        <div class="flex mb-3">
+                            <p-skeleton
+                                shape="circle"
+                                size="4rem"
+                                styleClass="mr-2"
+                            ></p-skeleton>
+                            <div>
+                                <p-skeleton
+                                    width="10rem"
+                                    styleClass="mb-2"
+                                ></p-skeleton>
+                                <p-skeleton
+                                    width="5rem"
+                                    styleClass="mb-2"
+                                ></p-skeleton>
+                                <p-skeleton height=".5rem"></p-skeleton>
+                            </div>
+                        </div>
+                        <p-skeleton width="100%" height="150px"></p-skeleton>
+                        <div class="flex justify-content-between mt-3">
+                            <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                            <p-skeleton width="4rem" height="2rem"></p-skeleton>
+                        </div>
+                    </div>
                 }
             }
         </div>
     }
-}
-@if (isInvalid()) {
-    <div style="width: 100%">
-        <p-messages severity="error">
-            <ng-template pTemplate>
-                <div class="ml-2">Please select at least one class.</div>
-            </ng-template>
-        </p-messages>
-    </div>
-}
-@if ((isFakeSearchLoading$ | async) === true) {
-    <div style="width: 100%; margin-top: 1rem">
-        <div style="margin-left: auto; margin-right: auto; width: fit-content">
-            <p-progressSpinner></p-progressSpinner>
-        </div>
-    </div>
-} @else {
-    <div style="margin-top: 1rem">
-        @defer (when filteredClassRows()) {
-            @if (filteredClassRows(); as filteredClassRows) {
-                @if (filteredClassRows.length > 0) {
-                    @for (row of filteredClassRows; track row) {
-                        <div
-                            style="
-                                border-radius: 5px;
-                                margin: 2px;
-                                padding: 5px;
-                                display: flex;
-                                flex-wrap: wrap;
-                                width: 100%;
-                            "
-                        >
-                            @if (!!row.group) {
-                                <div>
-                                    <h3>
-                                        {{ row.group?.name }}
-                                        @if (getClassRowSavings(row) !== 0) {
-                                            <span style="color: #3c82f7">
-                                                (-{{
-                                                    getClassRowSavings(row)
-                                                        | currency
-                                                }}
-                                                all-day discount)
-                                            </span>
-                                        }
-                                    </h3>
-
-                                    <div
-                                        style="
-                                            margin-top: 1rem;
-                                            margin-bottom: 1rem;
-                                            margin-left: 1rem;
-                                        "
-                                    >
-                                        <p-toggleButton
-                                            *rxLet="
-                                                hasPausedClass(row);
-                                                let paused
-                                            "
-                                            [disabled]="paused"
-                                            [inputId]="'select' + row.group?.id"
-                                            [name]="'row_' + row.group?.id"
-                                            onIcon="pi pi-check"
-                                            onLabel="Selected all-day"
-                                            offIcon="pi pi-plus"
-                                            [offLabel]="
-                                                paused
-                                                    ? 'One or more classes are full'
-                                                    : 'Select all-day'
-                                            "
-                                            [ngModel]="row.selected"
-                                            (ngModelChange)="
-                                                rowSelectedChange(
-                                                    row,
-                                                    !row.selected
-                                                )
-                                            "
-                                        ></p-toggleButton>
-                                    </div>
-                                </div>
-                            }
-                            <div
-                                style="
-                                    display: flex;
-                                    flex-wrap: wrap;
-                                    gap: 10px;
-                                "
-                            >
-                                @for (
-                                    rowClass of row.classes;
-                                    track rowClass.id
-                                ) {
-                                    <div
-                                        [ngStyle]="{
-                                            border: rowClass.selected
-                                                ? '.2rem solid #3c82f7'
-                                                : '.2rem solid transparent',
-                                            'border-radius': '6px',
-                                            'border-top-right-radius': '80px',
-                                            'margin-bottom': '2em',
-                                            'box-sizing': 'border-box',
-                                            'margin-left': 'auto',
-                                            'margin-right': 'auto',
-                                            'min-width': '300px',
-                                            flex:
-                                                row.classes.length > 1
-                                                    ? '1 0 calc(50% - 40px)'
-                                                    : '1 0 calc(100% - 40px)',
-                                            height: 'fit-content'
-                                        }"
-                                    >
-                                        <p-card styleClass="class-card">
-                                            <ng-template
-                                                pTemplate="header"
-                                            ></ng-template>
-                                            <div
-                                                style="
-                                                    position: relative;
-                                                    margin-top: -2.5rem;
-                                                "
-                                            >
-                                                <div
-                                                    style="padding-right: 145px"
-                                                >
-                                                    <h2>
-                                                        {{ rowClass.title
-                                                        }}{{
-                                                            rowClass.pausedForEnrollment
-                                                                ? ' (Full)'
-                                                                : ''
-                                                        }}
-                                                    </h2>
-                                                </div>
-                                                <!-- circular div with image -->
-                                                <div
-                                                    [ngStyle]="{
-                                                        position: 'absolute',
-                                                        top: '-30px',
-                                                        right: '-25px',
-                                                        display: 'inline-block',
-                                                        width: '165px',
-                                                        height: '165px',
-                                                        background:
-                                                            'url(' +
-                                                            rowClass.thumbnailUrl +
-                                                            ')',
-                                                        'background-position':
-                                                            '50% 50%',
-                                                        'background-size':
-                                                            'cover',
-                                                        'border-radius': '50%',
-                                                        filter: rowClass.pausedForEnrollment
-                                                            ? 'grayscale(100%)'
-                                                            : '',
-                                                        border:
-                                                            '3px solid ' +
-                                                            (rowClass.selected
-                                                                ? '#3c82f7'
-                                                                : 'black')
-                                                    }"
-                                                ></div>
-                                            </div>
-                                            <div
-                                                class="flex flex-wrap align-items-center"
-                                                style="
-                                                    margin-bottom: 1.5rem;
-                                                    margin-top: 1rem;
-                                                    gap: 3px;
-                                                    padding-right: 145px;
-                                                "
-                                            >
-                                                <p-chip
-                                                    [label]="
-                                                        rowClass.classDateTimes
-                                                    "
-                                                    icon="pi pi-calendar"
-                                                    styleClass="mr-2 custom-chip"
-                                                ></p-chip>
-                                                <p-chip
-                                                    [label]="rowClass.weekday"
-                                                    styleClass="mr-2 custom-chip"
-                                                ></p-chip>
-                                                <p-chip
-                                                    [label]="
-                                                        rowClass.dailyTimes
-                                                    "
-                                                    icon="pi pi-clock"
-                                                    styleClass="mr-2 custom-chip"
-                                                ></p-chip>
-                                            </div>
-                                            <p>
-                                                <b>Class Type:</b>
-                                                {{ rowClass.classType }}<br />
-                                                <b>Grades:</b>
-                                                {{ rowClass.gradeRangeStart }} -
-                                                {{ rowClass.gradeRangeEnd
-                                                }}<br />
-                                                <b>Location:</b>
-                                                {{ rowClass.location }}<br />
-                                                @if (!rowClass.paymentRange) {
-                                                    <b>Cost:</b> ${{
-                                                        rowClass.cost
-                                                    }}<br />
-                                                } @else {
-                                                    <b>Sliding Scale Cost:</b>
-                                                    ${{
-                                                        rowClass.paymentRange
-                                                            ?.lowest
-                                                    }}-${{
-                                                        rowClass.paymentRange
-                                                            ?.highest
-                                                    }}<br />
-                                                }
-                                                <b>Instructors:</b>
-                                                @for (
-                                                    instructor of rowClass.instructors;
-                                                    track instructor;
-                                                    let isLast = $last
-                                                ) {
-                                                    <span>
-                                                        {{
-                                                            instructor.firstName
-                                                        }}
-                                                        {{ instructor.lastName
-                                                        }}{{
-                                                            isLast ? '' : ', '
-                                                        }}
-                                                    </span>
-                                                }
-                                                <br />
-                                                <br />
-                                                <b>Description:</b> <br />
-                                                <markdown>{{
-                                                    rowClass.description
-                                                }}</markdown>
-                                                <br />
-                                            </p>
-                                            <div
-                                                style="
-                                                    margin-top: 2rem;
-                                                    margin-bottom: -1rem;
-                                                "
-                                            >
-                                                @if (
-                                                    rowClass.pausedForEnrollment
-                                                ) {
-                                                    <div
-                                                        style="
-                                                            margin-bottom: 1rem;
-                                                        "
-                                                    >
-                                                        <b
-                                                            >This class is not
-                                                            accepting additional
-                                                            students at this
-                                                            time.</b
-                                                        >
-                                                    </div>
-                                                }
-                                                <p-overlayPanel pAutoFocus #op>
-                                                    <div>
-                                                        Sliding Scale Cost
-                                                    </div>
-                                                    <div
-                                                        style="
-                                                            margin-top: 1rem;
-                                                            margin-bottom: 1rem;
-                                                            display: flex;
-                                                        "
-                                                    >
-                                                        <p-button
-                                                            icon="pi pi-minus"
-                                                            styleClass="p-button-outlined"
-                                                            [disabled]="
-                                                                rowClass.userCost <=
-                                                                (rowClass
-                                                                    .paymentRange
-                                                                    ?.lowest ??
-                                                                    rowClass.cost)
-                                                            "
-                                                            (onClick)="
-                                                                rowClass.userCost =
-                                                                    rowClass.userCost -
-                                                                    5
-                                                            "
-                                                        ></p-button>
-                                                        <div>
-                                                            <p-inputNumber
-                                                                mode="currency"
-                                                                currency="USD"
-                                                                [min]="
-                                                                    rowClass
-                                                                        .paymentRange
-                                                                        ?.lowest ??
-                                                                    rowClass.cost
-                                                                "
-                                                                [max]="
-                                                                    rowClass
-                                                                        .paymentRange
-                                                                        ?.highest ??
-                                                                    rowClass.cost
-                                                                "
-                                                                [(ngModel)]="
-                                                                    rowClass.userCost
-                                                                "
-                                                                class="w-full"
-                                                            />
-                                                            <p-slider
-                                                                [step]="5"
-                                                                [min]="
-                                                                    rowClass
-                                                                        .paymentRange
-                                                                        ?.lowest ??
-                                                                    rowClass.cost
-                                                                "
-                                                                [max]="
-                                                                    rowClass
-                                                                        .paymentRange
-                                                                        ?.highest ??
-                                                                    rowClass.cost
-                                                                "
-                                                                [(ngModel)]="
-                                                                    rowClass.userCost
-                                                                "
-                                                                class="w-full"
-                                                            ></p-slider>
-                                                        </div>
-                                                        <p-button
-                                                            icon="pi pi-plus"
-                                                            styleClass="p-button-outlined"
-                                                            [disabled]="
-                                                                rowClass.userCost >=
-                                                                (rowClass
-                                                                    .paymentRange
-                                                                    ?.highest ??
-                                                                    rowClass.cost)
-                                                            "
-                                                            (onClick)="
-                                                                rowClass.userCost =
-                                                                    rowClass.userCost +
-                                                                    5
-                                                            "
-                                                        ></p-button>
-                                                    </div>
-                                                    <p-button
-                                                        (click)="
-                                                            selectionChanged(
-                                                                {
-                                                                    id: rowClass.id,
-                                                                    selected: true,
-                                                                    userCost:
-                                                                        rowClass.userCost
-                                                                },
-                                                                op
-                                                            )
-                                                        "
-                                                        >Confirm</p-button
-                                                    >
-                                                </p-overlayPanel>
-                                                @if (
-                                                    (rowClass.paymentRange
-                                                        ?.lowest ?? -1) >= 0
-                                                ) {
-                                                    @if (!rowClass.selected) {
-                                                        <p-button
-                                                            [disabled]="
-                                                                rowClass.pausedForEnrollment
-                                                            "
-                                                            label="Select"
-                                                            styleClass="p-button-outlined"
-                                                            icon="pi pi-plus"
-                                                            (click)="
-                                                                op.toggle(
-                                                                    $event
-                                                                )
-                                                            "
-                                                        ></p-button>
-                                                    } @else {
-                                                        <p-button
-                                                            [disabled]="
-                                                                rowClass.pausedForEnrollment
-                                                            "
-                                                            [label]="
-                                                                'Selected ($' +
-                                                                rowClass.userCost +
-                                                                ')'
-                                                            "
-                                                            styleClass="p-button-primary"
-                                                            icon="pi pi-check"
-                                                            (click)="
-                                                                selectionChanged(
-                                                                    {
-                                                                        id: rowClass.id,
-                                                                        selected: false
-                                                                    }
-                                                                )
-                                                            "
-                                                        ></p-button>
-                                                    }
-                                                } @else {
-                                                    <p-toggleButton
-                                                        [disabled]="
-                                                            rowClass.pausedForEnrollment
-                                                        "
-                                                        [inputId]="
-                                                            'select' +
-                                                            rowClass.id
-                                                        "
-                                                        styleClass="p-button-primary"
-                                                        onIcon="pi pi-check"
-                                                        onLabel="Selected"
-                                                        offIcon="pi pi-plus"
-                                                        [offLabel]="
-                                                            rowClass.pausedForEnrollment
-                                                                ? 'Class Full'
-                                                                : 'Select'
-                                                        "
-                                                        [(ngModel)]="
-                                                            rowClass.selected
-                                                        "
-                                                        (ngModelChange)="
-                                                            selectionChanged(
-                                                                rowClass
-                                                            )
-                                                        "
-                                                    ></p-toggleButton>
-                                                }
-                                            </div>
-                                        </p-card>
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    }
-                } @else {
-                    There are no classes for the current search.
-                }
-            }
-        } @placeholder (minimum 1s) {
-            @for (i of [1, 2, 3]; track i) {
-                <div class="custom-skeleton p-4">
-                    <div class="flex mb-3">
-                        <p-skeleton
-                            shape="circle"
-                            size="4rem"
-                            styleClass="mr-2"
-                        ></p-skeleton>
-                        <div>
-                            <p-skeleton
-                                width="10rem"
-                                styleClass="mb-2"
-                            ></p-skeleton>
-                            <p-skeleton
-                                width="5rem"
-                                styleClass="mb-2"
-                            ></p-skeleton>
-                            <p-skeleton height=".5rem"></p-skeleton>
-                        </div>
-                    </div>
-                    <p-skeleton width="100%" height="150px"></p-skeleton>
-                    <div class="flex justify-content-between mt-3">
-                        <p-skeleton width="4rem" height="2rem"></p-skeleton>
-                        <p-skeleton width="4rem" height="2rem"></p-skeleton>
-                    </div>
-                </div>
-            }
-        }
-    </div>
 }

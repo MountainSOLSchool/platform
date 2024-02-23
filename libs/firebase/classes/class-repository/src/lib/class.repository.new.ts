@@ -2,6 +2,7 @@ import { SemesterClass } from '@sol/classes/domain';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { SemesterRepository } from './semester.repository';
 import { firestore } from 'firebase-admin';
+import { FieldPath } from 'firebase-admin/firestore';
 
 type ClassDbo = {
     id: string;
@@ -27,10 +28,22 @@ type ClassDbo = {
     max_student_size: number;
 };
 
-export class ClassRepository {
-    protected constructor(private readonly semester: SemesterRepository) {}
-    static of(semester: SemesterRepository): ClassRepository {
-        return new ClassRepository(semester);
+export class NewClassRepository {
+    protected constructor(
+        private readonly semesters: Array<SemesterRepository>
+    ) {}
+
+    static of(): NewClassRepository;
+    static of(semester: SemesterRepository): NewClassRepository;
+    static of(semesters: Array<SemesterRepository>): NewClassRepository;
+    static of(
+        semesterOrSemesters?: SemesterRepository | Array<SemesterRepository>
+    ): NewClassRepository {
+        return Array.isArray(semesterOrSemesters)
+            ? new NewClassRepository(semesterOrSemesters)
+            : new NewClassRepository(
+                  semesterOrSemesters ? [semesterOrSemesters] : []
+              );
     }
 
     private async getClassesPath(): Promise<string> {
@@ -41,11 +54,17 @@ export class ClassRepository {
     ): Promise<
         SemesterClass & { students: Array<firestore.DocumentReference> }
     > {
-        const document = await DatabaseUtility.getDocumentRef(
-            `${await this.getClassesPath()}/${id}`
-        );
-        const [data] = await DatabaseUtility.getHydratedDocuments([document]);
-        return await this.convertDboToDomain(data as ClassDbo);
+        const classesCollectionGroup =
+            DatabaseUtility.getDatabase().collectionGroup('classes');
+        const querySnapshot = await classesCollectionGroup
+            .where(FieldPath.documentId(), '==', id)
+            .get();
+        const classDoc = querySnapshot.docs[0];
+        const classData = classDoc.data() as ClassDbo;
+        classData.id = classDoc.id;
+        const pathSegments = classDoc.ref.path.split('/');
+        const semesterId = pathSegments[pathSegments.indexOf('classes') - 1];
+        return this.convertDboToDomain(classData, semesterId);
     }
     async getMany(ids: Array<string>): Promise<SemesterClass[]> {
         return await Promise.all(
@@ -76,7 +95,8 @@ export class ClassRepository {
     }
 
     private async convertDboToDomain(
-        dbo: ClassDbo
+        dbo: ClassDbo,
+        semesterId: string
     ): Promise<
         SemesterClass & { students: Array<firestore.DocumentReference> }
     > {
@@ -134,7 +154,7 @@ export class ClassRepository {
             pausedForEnrollment: dbo.max_student_size
                 ? dbo.students.length > dbo.max_student_size
                 : false,
-            semesterId: await this.semester.getId(),
+            semesterId,
         };
 
         if (!!dbo.payment_range_lowest || !!dbo.payment_range_highest) {

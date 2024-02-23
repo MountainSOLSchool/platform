@@ -8,10 +8,26 @@ import {
     Signal,
     signal,
 } from '@angular/core';
-import { combineLatest, delay, map, merge, of, shareReplay, skip } from 'rxjs';
+import {
+    combineLatest,
+    delay,
+    map,
+    merge,
+    of,
+    shareReplay,
+    skip,
+    switchMap,
+} from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
 import { CardModule } from 'primeng/card';
-import { AsyncPipe, CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
+import {
+    AsyncPipe,
+    CurrencyPipe,
+    DatePipe,
+    JsonPipe,
+    KeyValuePipe,
+    NgStyle,
+} from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip';
@@ -22,6 +38,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
@@ -32,9 +49,15 @@ import { SliderModule } from 'primeng/slider';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ClassListService } from '@sol/angular/classes/list';
-import { RequestedOperatorsUtility } from '@sol/angular/request';
+import {
+    RequestedOperatorsUtility,
+    requestStateDirectives,
+} from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MarkdownComponent } from 'ngx-markdown';
+import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
+
+type SignalValue<T> = T extends Signal<infer U> ? U : never;
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -60,6 +83,7 @@ interface ClassRow {
         ToggleButtonModule,
         ProgressSpinnerModule,
         DropdownModule,
+        MultiSelectModule,
         MessagesModule,
         MessageModule,
         ToastModule,
@@ -69,6 +93,9 @@ interface ClassRow {
         AutoFocusModule,
         InputNumberModule,
         MarkdownComponent,
+        requestStateDirectives,
+        KeyValuePipe,
+        JsonPipe,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -81,11 +108,13 @@ export class ClassesComponent {
         this._interacted.set(value);
     }
     private readonly classListService = inject(ClassListService);
+    private readonly semesterListService = inject(ClassesSemesterListService);
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
 
     private search = signal('');
 
+    private semesterIdFilter = signal<Array<string>>([]);
     private gradeFilter = signal<[] | [number, number]>([]);
 
     private isFakeSearchStarted$ = combineLatest([
@@ -111,6 +140,96 @@ export class ClassesComponent {
     isInvalid = computed(() => !this.isValid() && this._interacted());
 
     @Output() validityChange = toObservable(this.isValid);
+
+    readonly semesterOptions = toSignal(
+        this.semesterListService.getEnrollableSemesters()
+    );
+
+    readonly thingy = toSignal(
+        toObservable(this.semesterIdFilter).pipe(
+            switchMap((semesterIds) =>
+                this.classListService.getClassesBySemesterIds(semesterIds).pipe(
+                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                    shareReplay(),
+                    map((classesBySemester) => {
+                        return Object.fromEntries(
+                            Object.entries(classesBySemester).map(
+                                ([semesterId, { classes, groups }]) => {
+                                    const classesAsClassRows = classes
+                                        .map((c) => ({
+                                            ...c,
+                                            classDateTimes:
+                                                c.startMs && c.endMs
+                                                    ? this.datePipe.transform(
+                                                          new Date(c.startMs),
+                                                          'shortDate'
+                                                      ) +
+                                                      ' - ' +
+                                                      this.datePipe.transform(
+                                                          new Date(c.endMs),
+                                                          'shortDate'
+                                                      )
+                                                    : '',
+                                        }))
+                                        .map((c) => ({
+                                            classes: [c],
+                                            start: new Date(c.startMs),
+                                            selected: false,
+                                        }));
+                                    const groupsAsClassRows = groups.map(
+                                        (g) => ({
+                                            classes: g.classes.map((c) => ({
+                                                ...c,
+                                                classDateTimes:
+                                                    c.startMs && c.endMs
+                                                        ? this.datePipe.transform(
+                                                              new Date(
+                                                                  c.startMs
+                                                              ),
+                                                              'shortDate'
+                                                          ) +
+                                                          ' - ' +
+                                                          this.datePipe.transform(
+                                                              new Date(c.endMs),
+                                                              'shortDate'
+                                                          )
+                                                        : '',
+                                            })),
+                                            group: g,
+                                            start: new Date(
+                                                g.classes[0].startMs
+                                            ),
+                                            selected: false,
+                                        })
+                                    );
+                                    return [
+                                        semesterId,
+                                        [
+                                            ...classesAsClassRows,
+                                            ...groupsAsClassRows,
+                                        ]
+                                            .sort(
+                                                (a, b) =>
+                                                    a.start.getTime() -
+                                                    b.start.getTime()
+                                            )
+                                            .map((thingy) => ({
+                                                ...thingy,
+                                                selected: false,
+                                            })),
+                                    ] as const;
+                                }
+                            )
+                        );
+                    })
+                )
+            )
+        )
+    );
+
+    readonly classesBySelectedSemesters: Signal<
+        Record<string, SignalValue<typeof this.filteredClassRows>>
+    > = this.thingy as any;
 
     classRows: Signal<Array<ClassRow> | undefined> = toSignal(
         this.classListService.getAvailableEnrollmentClassesAndGroups().pipe(
@@ -293,6 +412,10 @@ export class ClassesComponent {
 
     searchChange(search: string) {
         this.search.set(search);
+    }
+
+    semesterChange(semesterIds: Array<string>) {
+        this.semesterIdFilter.set(semesterIds);
     }
 
     filterChange(filter: [] | [number, number]) {
