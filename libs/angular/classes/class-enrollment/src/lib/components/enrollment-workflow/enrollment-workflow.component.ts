@@ -173,14 +173,18 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         ...steps: Array<MatStep>
     ): boolean {
         return (
-            isUserLoggedIn &&
-            steps.every(
-                (step) =>
-                    !step.hasError &&
-                    // TODO: detect better
-                    (step.interacted || step.label === 'Confirm Enrollment')
-            )
+            isUserLoggedIn && steps.every((step) => this.isStepComplete(step))
         );
+    }
+
+    private isStepComplete(step: MatStep) {
+        const hasStepValidationBeenRun = step.hasError !== undefined;
+        const isStepValid = hasStepValidationBeenRun && !step.hasError;
+        const labelsOStepsNotRequiringInteraction = ['Confirm Enrollment'];
+        const hasStepRequiringInteractionBeenInteractedWith =
+            step.interacted ||
+            labelsOStepsNotRequiringInteraction.includes(step.label);
+        return isStepValid && hasStepRequiringInteractionBeenInteractedWith;
     }
 
     fillOutForTest() {
