@@ -130,8 +130,8 @@
         <ng-container *ngTemplateOutlet="largeSpinner"></ng-container>
     } @else {
         <div style="margin-top: 1rem">
-            @defer (when classRowsBySemesters()) {
-                @if (classRowsBySemesters(); as classRowsBySemesters) {
+            @defer (when filteredClassRowsBySemesters()) {
+                @if (filteredClassRowsBySemesters(); as classRowsBySemesters) {
                     <p-tabView>
                         @for (
                             semester of classRowsBySemesters | keyvalue;
@@ -174,10 +174,10 @@
                                                 width: 100%;
                                             "
                                         >
-                                            @if (!!row.group) {
+                                            @if (hasGroup(row)) {
                                                 <div>
                                                     <h3>
-                                                        {{ row.group?.name }}
+                                                        {{ row.group.name }}
                                                         @if (
                                                             getClassRowSavings(
                                                                 row
@@ -216,15 +216,21 @@
                                                             [disabled]="paused"
                                                             [inputId]="
                                                                 'select' +
-                                                                row.group?.id
+                                                                row.group.id
                                                             "
                                                             [name]="
                                                                 'row_' +
-                                                                row.group?.id
+                                                                row.group.id
                                                             "
-                                                            onIcon="pi pi-check"
-                                                            onLabel="Selected all-day"
-                                                            offIcon="pi pi-plus"
+                                                            [onIcon]="
+                                                                'pi pi-check'
+                                                            "
+                                                            [onLabel]="
+                                                                'Selected all-day'
+                                                            "
+                                                            [offIcon]="
+                                                                'pi pi-plus'
+                                                            "
                                                             [offLabel]="
                                                                 paused
                                                                     ? 'One or more classes are full'

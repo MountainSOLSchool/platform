@@ -18,11 +18,6 @@ import { FormsModule } from '@angular/forms';
 import { SliderModule } from 'primeng/slider';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 
-type SelectionChange = {
-    id: string;
-    userCost?: number;
-};
-
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,12 +66,27 @@ export class ClassCardComponent {
         userCost: number;
     };
 
-    @Output() selectedChange = new EventEmitter<
-        SelectionChange & { selected: boolean }
-    >();
+    @Output() selectedChange = new EventEmitter<{
+        id: string;
+        userCost?: number;
+        selected: boolean;
+    }>();
 
-    selectionChanged(change: SelectionChange, overlayPanel?: OverlayPanel) {
+    selectionChanged(
+        change: {
+            id: string;
+            userCost?: number;
+            selected?: boolean;
+        },
+        overlayPanel?: OverlayPanel
+    ) {
         overlayPanel?.hide();
-        this.selectedChange.emit({ ...change, selected: !this.selected });
+        this.selectedChange.emit({
+            ...change,
+            selected:
+                change.selected !== undefined
+                    ? change.selected
+                    : !this.selected,
+        });
     }
 }

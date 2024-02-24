@@ -223,12 +223,16 @@ export class ClassesComponent {
                                             selected: false,
                                         })
                                     );
+                                    const combined: Array<
+                                        | (typeof classesAsClassRows)[number]
+                                        | (typeof groupsAsClassRows)[number]
+                                    > = [
+                                        ...classesAsClassRows,
+                                        ...groupsAsClassRows,
+                                    ];
                                     return [
                                         semesterId,
-                                        [
-                                            ...classesAsClassRows,
-                                            ...groupsAsClassRows,
-                                        ]
+                                        combined
                                             .sort(
                                                 (a, b) =>
                                                     a.start.getTime() -
@@ -290,44 +294,64 @@ export class ClassesComponent {
         (state) => state.enrollment.userCostsToSelectedClassIds
     );
 
-    filteredClassRows = computed(() => {
-        const searched = this.classRows()?.filter((row) => {
-            const search = this.search();
-            return !!row.classes.find(
-                (c) =>
-                    c.title.toLowerCase().includes(search.toLowerCase()) ||
-                    c.description
-                        .toLowerCase()
-                        .includes(search.toLowerCase()) ||
-                    c.location.toLowerCase().includes(search.toLowerCase()) ||
-                    c.classDateTimes
-                        .toLowerCase()
-                        .includes(search.toLowerCase())
-            );
-        });
-        const [startGrade, endGrade] = this.gradeFilter();
-        const filtered =
-            startGrade && endGrade
-                ? searched?.filter(
-                      (row) =>
-                          !!row.classes.find(
-                              (c) =>
-                                  c.gradeRangeStart === startGrade &&
-                                  c.gradeRangeEnd === endGrade
-                          )
+    filteredClassRowsBySemesters = computed(() => {
+        const classRowsBySemesters = this.classRowsBySemesters();
+        return classRowsBySemesters
+            ? Object.fromEntries(
+                  Object.entries(classRowsBySemesters).map(
+                      ([semesterId, classRows]) => {
+                          const searched = classRows.filter((row) => {
+                              const search = this.search();
+                              return !!row.classes.find(
+                                  (c) =>
+                                      c.title
+                                          .toLowerCase()
+                                          .includes(search.toLowerCase()) ||
+                                      c.description
+                                          .toLowerCase()
+                                          .includes(search.toLowerCase()) ||
+                                      c.location
+                                          .toLowerCase()
+                                          .includes(search.toLowerCase()) ||
+                                      c.classDateTimes
+                                          .toLowerCase()
+                                          .includes(search.toLowerCase())
+                              );
+                          });
+                          const [startGrade, endGrade] = this.gradeFilter();
+                          const filtered =
+                              startGrade && endGrade
+                                  ? searched?.filter(
+                                        (row) =>
+                                            !!row.classes.find(
+                                                (c) =>
+                                                    c.gradeRangeStart ===
+                                                        startGrade &&
+                                                    c.gradeRangeEnd === endGrade
+                                            )
+                                    )
+                                  : searched;
+                          const result = filtered?.map((row) => ({
+                              ...row,
+                              selected: row.classes.every((c) =>
+                                  this.selectedClassIds().includes(c.id)
+                              ),
+                              classes: row.classes.map((c) => ({
+                                  ...c,
+                                  selected: this.selectedClassIds().includes(
+                                      c.id
+                                  ),
+                                  userCost:
+                                      this.userCostsToSelectedClassIds()[
+                                          c.id
+                                      ] ?? c.cost,
+                              })),
+                          }));
+                          return [semesterId, result] as const;
+                      }
                   )
-                : searched;
-        return filtered?.map((row) => ({
-            ...row,
-            selected: row.classes.every((c) =>
-                this.selectedClassIds().includes(c.id)
-            ),
-            classes: row.classes.map((c) => ({
-                ...c,
-                selected: this.selectedClassIds().includes(c.id),
-                userCost: this.userCostsToSelectedClassIds()[c.id] ?? c.cost,
-            })),
-        }));
+              )
+            : undefined;
     });
 
     selectedClasses = computed(() => {
@@ -379,10 +403,6 @@ export class ClassesComponent {
         this.search.set(search);
     }
 
-    semesterChange(semesterIds: Array<string>) {
-        this.semesterIdFilter.set(semesterIds);
-    }
-
     filterChange(filter: [] | [number, number]) {
         this.gradeFilter.set(filter);
     }
@@ -421,5 +441,9 @@ export class ClassesComponent {
                 options?.find((o) => o.id === semesterId)?.name) ||
             ''
         );
+    }
+
+    hasGroup(row: object): row is { group: unknown } {
+        return 'group' in row;
     }
 }
