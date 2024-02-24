@@ -11,6 +11,7 @@ import {
 import {
     combineLatest,
     delay,
+    filter,
     map,
     merge,
     of,
@@ -24,7 +25,6 @@ import {
     AsyncPipe,
     CurrencyPipe,
     DatePipe,
-    JsonPipe,
     KeyValuePipe,
     NgStyle,
 } from '@angular/common';
@@ -50,12 +50,15 @@ import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ClassListService } from '@sol/angular/classes/list';
 import {
+    Requested,
     RequestedOperatorsUtility,
+    RequestState,
     requestStateDirectives,
 } from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MarkdownComponent } from 'ngx-markdown';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
+import { TabViewModule } from 'primeng/tabview';
 
 type SignalValue<T> = T extends Signal<infer U> ? U : never;
 
@@ -95,7 +98,7 @@ interface ClassRow {
         MarkdownComponent,
         requestStateDirectives,
         KeyValuePipe,
-        JsonPipe,
+        TabViewModule,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -142,11 +145,23 @@ export class ClassesComponent {
     @Output() validityChange = toObservable(this.isValid);
 
     readonly semesterOptions = toSignal(
-        this.semesterListService.getEnrollableSemesters()
+        this.semesterListService
+            .getEnrollableSemesters()
+            .pipe(filter((request) => request !== RequestState.Loading))
     );
 
+    private readonly selectedSemesterIds = computed(() => {
+        const semesterOptions = this.semesterOptions();
+        return (
+            (Array.isArray(semesterOptions) &&
+                semesterOptions.map(({ id }) => id)) ||
+            []
+        );
+    });
+
     readonly thingy = toSignal(
-        toObservable(this.semesterIdFilter).pipe(
+        toObservable(this.selectedSemesterIds).pipe(
+            filter((semesterIds) => semesterIds?.length > 0),
             switchMap((semesterIds) =>
                 this.classListService.getClassesBySemesterIds(semesterIds).pipe(
                     RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
@@ -445,5 +460,16 @@ export class ClassesComponent {
 
     hasPausedClass(classRow: ClassRow): boolean {
         return classRow.classes.some((c) => c.pausedForEnrollment);
+    }
+
+    semesterName(
+        semesterId: string,
+        options: Requested<Array<{ id: string; name: string }>> | undefined
+    ) {
+        return (
+            (Array.isArray(options) &&
+                options?.find((o) => o.id === semesterId)?.name) ||
+            ''
+        );
     }
 }

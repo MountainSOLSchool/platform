@@ -1,33 +1,33 @@
 import { Functions } from '@sol/firebase/functions';
 
-import { Semester } from '@sol/firebase/classes/semester';
-import { SemesterClass } from '@sol/classes/domain';
+import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
+import { _getCategorizedClasses } from './_getCategorizedClasses';
 
 export const classesBySemester = Functions.endpoint.handle<
-    Record<string, Array<string> | 'all'> // class ids by semester id
+    Array<string> // semester ids
 >(async (request, response) => {
-    const allClasses: Array<SemesterClass> = [];
+    const theClassesBySemester: {
+        [semesterId: string]: {
+            classes: SemesterClass[];
+            groups: SemesterClassGroup[];
+        };
+    } = {};
 
     try {
-        for (const [semesterId, classIdsOrAll] of Object.entries(
-            request.body.data
-        )) {
-            const classes = await _classesBySemester(semesterId, classIdsOrAll);
-            allClasses.push(...classes);
+        const semesterIds = request.body.data;
+        for (const semesterId of semesterIds) {
+            console.log(semesterId);
+            const { classesNotInGroups, groups } =
+                await _getCategorizedClasses(semesterId);
+            theClassesBySemester[semesterId] = {
+                classes: classesNotInGroups,
+                groups,
+            };
         }
-
-        response.send({ classes: allClasses });
-    } catch (error) {
-        response.status(500).send({ error: 'Internal server error' });
+        response.send(theClassesBySemester);
+    } catch (e) {
+        response
+            .status(500)
+            .send({ error: 'Error fetching classes by semester' });
     }
 });
-
-const _classesBySemester = async (
-    semesterId: string,
-    classIdsOrAll: Array<string> | 'all'
-) => {
-    const semesterClasses = Semester.of(semesterId).classes;
-    return await (classIdsOrAll === 'all'
-        ? semesterClasses.getAll()
-        : semesterClasses.getMany(classIdsOrAll));
-};

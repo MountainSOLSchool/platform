@@ -10,6 +10,7 @@ import {
 } from '../store/classes.feature';
 import { Requested } from '@sol/angular/request';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 
 @Injectable({ providedIn: 'root' })
 export class ClassListService {
@@ -37,6 +38,8 @@ export class ClassListService {
         return this.store.select(selectClassGroupsByIds(ids));
     }
 
+    private readonly functions = inject(FirebaseFunctionsService);
+
     getClassesBySemesterIds(semesterIds: Array<string>): Observable<
         Requested<{
             [semesterId: string]: {
@@ -45,6 +48,7 @@ export class ClassListService {
             };
         }>
     > {
+        return this.functions.call('classesBySemester', semesterIds);
         return of({
             spring2024: {
                 classes: [
