@@ -27,6 +27,7 @@ import {
     DatePipe,
     KeyValuePipe,
     NgStyle,
+    NgTemplateOutlet,
 } from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
@@ -44,7 +45,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SliderModule } from 'primeng/slider';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -59,6 +60,8 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MarkdownComponent } from 'ngx-markdown';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { TabViewModule } from 'primeng/tabview';
+import { ClassCardComponent } from '../class-card/class-card.component';
+import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
 
 type SignalValue<T> = T extends Signal<infer U> ? U : never;
 
@@ -99,6 +102,9 @@ interface ClassRow {
         requestStateDirectives,
         KeyValuePipe,
         TabViewModule,
+        ClassCardComponent,
+        NgTemplateOutlet,
+        ClassesSkeletonComponent,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -159,7 +165,7 @@ export class ClassesComponent {
         );
     });
 
-    readonly thingy = toSignal(
+    readonly classRowsBySemesters = toSignal(
         toObservable(this.selectedSemesterIds).pipe(
             filter((semesterIds) => semesterIds?.length > 0),
             switchMap((semesterIds) =>
@@ -242,67 +248,15 @@ export class ClassesComponent {
         )
     );
 
-    readonly classesBySelectedSemesters: Signal<
-        Record<string, SignalValue<typeof this.filteredClassRows>>
-    > = this.thingy as any;
-
-    classRows: Signal<Array<ClassRow> | undefined> = toSignal(
-        this.classListService.getAvailableEnrollmentClassesAndGroups().pipe(
-            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-            shareReplay(),
-            map(({ classes, groups }) => {
-                const classesAsClassRows = classes
-                    .map((c) => ({
-                        ...c,
-                        classDateTimes:
-                            c.startMs && c.endMs
-                                ? this.datePipe.transform(
-                                      new Date(c.startMs),
-                                      'shortDate'
-                                  ) +
-                                  ' - ' +
-                                  this.datePipe.transform(
-                                      new Date(c.endMs),
-                                      'shortDate'
-                                  )
-                                : '',
-                    }))
-                    .map((c) => ({
-                        classes: [c],
-                        start: new Date(c.startMs),
-                    }));
-                const groupsAsClassRows = groups.map((g) => ({
-                    classes: g.classes.map((c) => ({
-                        ...c,
-                        classDateTimes:
-                            c.startMs && c.endMs
-                                ? this.datePipe.transform(
-                                      new Date(c.startMs),
-                                      'shortDate'
-                                  ) +
-                                  ' - ' +
-                                  this.datePipe.transform(
-                                      new Date(c.endMs),
-                                      'shortDate'
-                                  )
-                                : '',
-                    })),
-                    group: g,
-                    start: new Date(g.classes[0].startMs),
-                }));
-                return [...classesAsClassRows, ...groupsAsClassRows].sort(
-                    (a, b) => a.start.getTime() - b.start.getTime()
-                );
-            })
-        ),
-        { initialValue: undefined }
-    );
-
-    classes = computed(() =>
-        this.classRows()
-            ?.map((row) => row.classes)
-            .reduce((a, b) => a.concat(b), [])
-    );
+    classes = computed(() => {
+        const classRowsBySemesters = this.classRowsBySemesters();
+        return classRowsBySemesters
+            ? Object.values(classRowsBySemesters)
+                  .flat()
+                  .map((row) => row.classes)
+                  .reduce((a, b) => a.concat(b), [])
+            : undefined;
+    });
 
     readonly filterOptions = computed(() => {
         const classes = this.classes();
@@ -394,19 +348,15 @@ export class ClassesComponent {
         () => this.selectedSummerClasses().length > 0
     );
 
-    selectionChanged(
-        {
-            id: classId,
-            selected,
-            userCost,
-        }: {
-            id: string;
-            selected: boolean;
-            userCost?: number;
-        },
-        overlayPanel?: OverlayPanel
-    ) {
-        overlayPanel?.hide();
+    selectionChanged({
+        id: classId,
+        selected,
+        userCost,
+    }: {
+        id: string;
+        selected: boolean;
+        userCost?: number;
+    }) {
         this.workflow.patchState((s) => ({
             enrollment: {
                 ...s.enrollment,
