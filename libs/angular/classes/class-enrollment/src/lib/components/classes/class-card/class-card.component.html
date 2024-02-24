@@ -164,17 +164,7 @@
                         (onClick)="classInfo.userCost = classInfo.userCost + 5"
                     ></p-button>
                 </div>
-                <p-button
-                    (click)="
-                        selectionChanged(
-                            {
-                                id: classInfo.id,
-                                selected: true,
-                                userCost: classInfo.userCost
-                            },
-                            op
-                        )
-                    "
+                <p-button (click)="customCostSelected(classInfo.userCost, op)"
                     >Confirm</p-button
                 >
             </p-overlayPanel>
@@ -193,12 +183,7 @@
                         [label]="'Selected ($' + classInfo.userCost + ')'"
                         styleClass="p-button-primary"
                         icon="pi pi-check"
-                        (click)="
-                            selectionChanged({
-                                id: classInfo.id,
-                                selected: false
-                            })
-                        "
+                        (click)="deselected()"
                     ></p-button>
                 }
             } @else {
@@ -213,7 +198,7 @@
                         classInfo.pausedForEnrollment ? 'Class Full' : 'Select'
                     "
                     [(ngModel)]="selected"
-                    (ngModelChange)="selectionChanged(classInfo)"
+                    (ngModelChange)="selectionToggled()"
                 ></p-toggleButton>
             }
         </div>

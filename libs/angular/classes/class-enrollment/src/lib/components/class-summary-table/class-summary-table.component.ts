@@ -56,7 +56,8 @@ export class ClassSummaryTableComponent {
     }
 
     readonly classCostSummaryRows$: Observable<
-        Array<{ name: string; date: string; cost: number }> | undefined
+        | Array<{ name: string; semester: string; date: string; cost: number }>
+        | undefined
     > = combineLatest([
         this.classIds$,
         this.groupIds$,
@@ -75,6 +76,7 @@ export class ClassSummaryTableComponent {
                         .filter((c) => groupIds.includes(c.id))
                         .map((group) => ({
                             name: group.name,
+                            semester: group.classes[0].semesterId,
                             date:
                                 group.classes[0].startMs &&
                                 group.classes[0].endMs
@@ -110,6 +112,7 @@ export class ClassSummaryTableComponent {
                                     .filter((c) => classIds.includes(c.id))
                                     .map((c) => ({
                                         name: c.title,
+                                        semester: c.semesterId,
                                         date:
                                             c.startMs && c.endMs
                                                 ? this.datePipe.transform(

@@ -72,21 +72,26 @@ export class ClassCardComponent {
         selected: boolean;
     }>();
 
-    selectionChanged(
-        change: {
-            id: string;
-            userCost?: number;
-            selected?: boolean;
-        },
-        overlayPanel?: OverlayPanel
-    ) {
-        overlayPanel?.hide();
+    selectionToggled() {
         this.selectedChange.emit({
-            ...change,
-            selected:
-                change.selected !== undefined
-                    ? change.selected
-                    : !this.selected,
+            id: this.classInfo.id,
+            selected: this.selected,
+        });
+    }
+
+    customCostSelected(cost: number, panel: OverlayPanel) {
+        panel.hide();
+        this.selectedChange.emit({
+            id: this.classInfo.id,
+            userCost: cost,
+            selected: true,
+        });
+    }
+
+    deselected() {
+        this.selectedChange.emit({
+            id: this.classInfo.id,
+            selected: false,
         });
     }
 }

@@ -46,7 +46,7 @@
                 margin: auto;
                 background: white;
                 padding: 0.5rem 2rem 0.5rem 2rem;
-                z-index: 1;
+                z-index: 100;
                 border-radius: 20px;
                 border: 1px solid lightgray;
             "
@@ -126,44 +126,35 @@
     </div>
 }
 @defer (when semesterOptions()) {
-    @if ((isFakeSearchLoading$ | async) === true) {
-        <ng-container *ngTemplateOutlet="largeSpinner"></ng-container>
-    } @else {
-        <div style="margin-top: 1rem">
-            @defer (when filteredClassRowsBySemesters()) {
-                @if (filteredClassRowsBySemesters(); as classRowsBySemesters) {
-                    <p-tabView>
-                        @for (
-                            semester of classRowsBySemesters | keyvalue;
-                            track semester;
-                            let first = $first;
-                            let last = $last
-                        ) {
-                            <!-- @if (!(first && last)) {
-                                <h3>
-                                    {{
-                                        semesterName(
-                                            semester.key,
-                                            semesterOptions()
-                                        )
-                                    }}
-                                </h3>
-                                <div
-                                    style="border-bottom: solid 1px black"
-                                ></div>
-                            } -->
-                            <p-tabPanel
-                                [header]="
-                                    semesterName(
-                                        semester.key,
-                                        semesterOptions()
-                                    )
-                                "
-                            >
+    <div style="margin-top: 1rem">
+        <p-tabView>
+            @for (
+                semester of semesterOptions();
+                track semester;
+                let first = $first;
+                let last = $last
+            ) {
+                <p-tabPanel [header]="semester.name">
+                    @if ((isFakeSearchLoading$ | async) === true) {
+                        <ng-container
+                            *ngTemplateOutlet="largeSpinner"
+                        ></ng-container>
+                    } @else {
+                        @defer (when filteredClassRowsBySemesters()) {
+                            @if (
+                                filteredClassRowsBySemesters();
+                                as classRowsBySemesters
+                            ) {
                                 @if (
-                                    semester.value && semester.value.length > 0
+                                    classRowsBySemesters[semester.id] &&
+                                    classRowsBySemesters[semester.id].length > 0
                                 ) {
-                                    @for (row of semester.value; track row) {
+                                    @for (
+                                        row of classRowsBySemesters[
+                                            semester.id
+                                        ];
+                                        track row
+                                    ) {
                                         <div
                                             style="
                                                 border-radius: 5px;
@@ -284,15 +275,15 @@
                                 } @else {
                                     There are no classes for the current search.
                                 }
-                            </p-tabPanel>
+                            }
+                        } @placeholder (minimum 1s) {
+                            <sol-classes-skeleton></sol-classes-skeleton>
                         }
-                    </p-tabView>
-                }
-            } @placeholder (minimum 1s) {
-                <sol-classes-skeleton></sol-classes-skeleton>
+                    }
+                </p-tabPanel>
             }
-        </div>
-    }
+        </p-tabView>
+    </div>
 } @placeholder (minimum 500ms) {
     <ng-container *ngTemplateOutlet="largeSpinner"></ng-container>
 }

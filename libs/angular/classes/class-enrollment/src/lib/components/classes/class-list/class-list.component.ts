@@ -5,11 +5,9 @@ import {
     inject,
     Input,
     Output,
-    Signal,
     signal,
 } from '@angular/core';
 import {
-    combineLatest,
     delay,
     filter,
     map,
@@ -53,7 +51,6 @@ import { ClassListService } from '@sol/angular/classes/list';
 import {
     Requested,
     RequestedOperatorsUtility,
-    RequestState,
     requestStateDirectives,
 } from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
@@ -62,8 +59,6 @@ import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { TabViewModule } from 'primeng/tabview';
 import { ClassCardComponent } from '../class-card/class-card.component';
 import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
-
-type SignalValue<T> = T extends Signal<infer U> ? U : never;
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -123,13 +118,12 @@ export class ClassesComponent {
 
     private search = signal('');
 
-    private semesterIdFilter = signal<Array<string>>([]);
     private gradeFilter = signal<[] | [number, number]>([]);
 
-    private isFakeSearchStarted$ = combineLatest([
+    private isFakeSearchStarted$ = merge(
         toObservable(this.search).pipe(skip(1)),
-        toObservable(this.gradeFilter).pipe(skip(1)),
-    ]).pipe(map(() => true));
+        toObservable(this.gradeFilter).pipe(skip(1))
+    ).pipe(map(() => true));
 
     readonly isFakeSearchLoading$ = merge(
         this.isFakeSearchStarted$,
@@ -138,7 +132,7 @@ export class ClassesComponent {
             map(() => false)
         ),
         of(false)
-    );
+    ).pipe();
 
     selectedClassIds = this.workflow.selectSignal(
         (state) => state.enrollment.selectedClasses
@@ -153,7 +147,7 @@ export class ClassesComponent {
     readonly semesterOptions = toSignal(
         this.semesterListService
             .getEnrollableSemesters()
-            .pipe(filter((request) => request !== RequestState.Loading))
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
     );
 
     private readonly selectedSemesterIds = computed(() => {
@@ -308,13 +302,13 @@ export class ClassesComponent {
                                           .toLowerCase()
                                           .includes(search.toLowerCase()) ||
                                       c.description
-                                          .toLowerCase()
+                                          ?.toLowerCase()
                                           .includes(search.toLowerCase()) ||
                                       c.location
-                                          .toLowerCase()
+                                          ?.toLowerCase()
                                           .includes(search.toLowerCase()) ||
                                       c.classDateTimes
-                                          .toLowerCase()
+                                          ?.toLowerCase()
                                           .includes(search.toLowerCase())
                               );
                           });
