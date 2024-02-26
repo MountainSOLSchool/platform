@@ -31,6 +31,7 @@ export class ClassEnrollmentRepository {
                     studentName: dbo.studentName,
                     finalCost: dbo.finalCost,
                     classIds: dbo.classIds,
+                    classes: dbo.classes,
                     transactionId: dbo.transactionId,
                     timestamp: dbo.timestamp,
                     discounts: dbo.discounts,

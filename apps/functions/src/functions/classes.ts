@@ -1,18 +1,43 @@
 import { Functions } from '@sol/firebase/functions';
 
 import { Semester } from '@sol/firebase/classes/semester';
-import { NewClassRepository } from '@sol/classes/repository';
 
 export const classes = Functions.endpoint.handle<
     | {
-          ids: Array<string>;
+          query: Array<{ id: string; semesterId: string }>;
       }
     | undefined
 >(async (request, response) => {
-    const semesterClasses = Semester.active().classes;
-    const classes = await (request.body.data
-        ? NewClassRepository.of().getMany(request.body.data.ids)
-        : semesterClasses.getAll());
+    const activeSemesterClasses = Semester.active().classes;
+
+    const query = request.body.data?.query;
+
+    const classIdsBySemesterId = query?.reduce(
+        (acc, { id, semesterId }) => {
+            if (!acc[semesterId]) {
+                acc[semesterId] = [];
+            }
+            acc[semesterId].push(id);
+            return acc;
+        },
+        {} as Record<string, Array<string>>
+    );
+
+    const classes = await (classIdsBySemesterId
+        ? Object.fromEntries(
+              await Promise.all(
+                  Object.entries(classIdsBySemesterId).map(
+                      async ([semesterId, classIds]) =>
+                          [
+                              semesterId,
+                              await Semester.of(semesterId).classes.getMany(
+                                  classIds
+                              ),
+                          ] as const
+                  )
+              )
+          )
+        : activeSemesterClasses.getAll());
 
     response.send({ classes });
 });

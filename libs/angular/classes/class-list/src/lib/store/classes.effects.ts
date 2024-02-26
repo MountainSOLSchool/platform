@@ -23,16 +23,16 @@ export class ClassesEffects {
         return this.actions$.pipe(
             ofType(classesActions.loadClassesStart),
             concatLatestFrom(() => this.store.select(selectLoadedClasses)),
-            map(([action, classes]) =>
-                action.ids.filter((id) => !classes?.[id])
-            ),
-            filter((idsOfClassesToLoad) => idsOfClassesToLoad.length > 0),
-            mergeMap((idsOfClassesToLoad) => {
-                return this.classesApi.getClassesByIds(idsOfClassesToLoad).pipe(
-                    map((request) =>
+            map(([action, classes]) => {
+                return action.query.filter(({ id }) => !classes[id]);
+            }),
+            filter((classesToLoad) => classesToLoad.length > 0),
+            mergeMap((classesToLoad) => {
+                return this.classesApi.getClasses(classesToLoad).pipe(
+                    map((classesBySemester) =>
                         classesActions.loadClassesRequestChanged({
-                            ids: idsOfClassesToLoad,
-                            classes: request,
+                            query: classesToLoad,
+                            classesBySemester,
                         })
                     )
                 );
@@ -84,21 +84,19 @@ export class ClassesEffects {
             concatLatestFrom(() =>
                 this.store.select(classesFeature.selectGroups)
             ),
-            map(([action, groups]) => action.ids.filter((id) => !groups[id])),
-            filter((idsOfGroupsToLoad) => idsOfGroupsToLoad.length > 0),
-            mergeMap((idsOfGroupsToLoad) => {
-                return this.classesApi
-                    .getCurrentSemesterClassGroups(idsOfGroupsToLoad)
-                    .pipe(
-                        map((request) => {
-                            return classesActions.loadClassGroupsRequestChanged(
-                                {
-                                    ids: idsOfGroupsToLoad,
-                                    groups: request,
-                                }
-                            );
-                        })
-                    );
+            map(([action, groups]) => {
+                return action.query.filter(({ id }) => !groups[id]);
+            }),
+            filter((groupsToLoad) => groupsToLoad.length > 0),
+            mergeMap((groupsToLoad) => {
+                return this.classesApi.getClassGroups(groupsToLoad).pipe(
+                    map((request) => {
+                        return classesActions.loadClassGroupsRequestChanged({
+                            query: groupsToLoad,
+                            groupsBySemester: request,
+                        });
+                    })
+                );
             })
         );
     });

@@ -12,8 +12,10 @@ export const createEnrollmentEmail = firestore
         if (
             enrollmentRecord.status === 'enrolled' &&
             (!!enrollmentRecord.transactionId ||
-                enrollmentRecord.finalCost === 0)
+                enrollmentRecord.finalCost === 0) &&
+            'classIds' in enrollmentRecord
         ) {
+            // TODO: get by semester instead
             const classes = await Semester.active().classes.getMany(
                 enrollmentRecord.classIds
             );

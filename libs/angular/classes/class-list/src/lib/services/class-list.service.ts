@@ -21,17 +21,11 @@ export class ClassListService {
         return this.store.select(selectAvailableClassesAndGroups);
     }
 
-    getClassesByIds(ids: Array<string>) {
-        if (ids.length === 0) return of([]);
-        this.store.dispatch(classesActions.loadClassesStart({ ids }));
-        return this.store.select(selectClassesByIds(ids));
-    }
-
     getClasses(classes: Array<{ id: string; semesterId: string }>) {
         if (classes.length === 0) return of([]);
         this.store.dispatch(
-            classesActions.loadQualifiedClassesStart({
-                classes,
+            classesActions.loadClassesStart({
+                query: classes,
             })
         );
         return this.store.select(selectClassesByIds(classes.map((c) => c.id)));
@@ -42,10 +36,19 @@ export class ClassListService {
         return this.store.select(selectCurrentSemesterClasses);
     }
 
-    getClassGroupsByIds(ids: Array<string>) {
-        if (ids.length === 0) return of([]);
-        this.store.dispatch(classesActions.loadClassGroupsStart({ ids }));
-        return this.store.select(selectClassGroupsByIds(ids));
+    getClassGroups(
+        groups: Array<{
+            id: string;
+            semesterId: string;
+        }>
+    ) {
+        if (groups.length === 0) return of([]);
+        this.store.dispatch(
+            classesActions.loadClassGroupsStart({ query: groups })
+        );
+        return this.store.select(
+            selectClassGroupsByIds(groups.map((g) => g.id))
+        );
     }
 
     private readonly functions = inject(FirebaseFunctionsService);

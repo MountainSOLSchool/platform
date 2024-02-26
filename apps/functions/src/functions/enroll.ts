@@ -163,6 +163,7 @@ export const enroll = Functions.endpoint
                 amount: da.amount,
             })),
             classIds: classes.map((c) => c.id),
+            // TODO: assign classes by semester
         };
 
         const studentEnrollmentId = await ClassEnrollmentRepository.create({

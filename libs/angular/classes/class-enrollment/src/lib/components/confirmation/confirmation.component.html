@@ -10,8 +10,8 @@
         <div class="section">
             <p-fieldset legend="Class Cost Summary">
                 <sol-class-summary-table
-                    [classIds]="vm.enrollment.selectedClasses"
-                    [groupIds]="vm.selectedClassGroupIds"
+                    [classes]="vm.enrollment.selectedClasses"
+                    [groups]="vm.selectedClassGroups"
                     [userCostsToClassIds]="vm.userCostsToClassIds"
                 ></sol-class-summary-table>
             </p-fieldset>

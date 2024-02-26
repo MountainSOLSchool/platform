@@ -375,7 +375,7 @@ export class ClassesComponent {
         selected,
         userCost,
     }: {
-        classSelection: { id: string; semesterId: string; groupId?: string };
+        classSelection: { id: string; semesterId: string };
         selected: boolean;
         userCost?: number;
     }) {

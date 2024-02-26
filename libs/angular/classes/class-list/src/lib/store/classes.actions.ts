@@ -5,22 +5,38 @@ import { Requested } from '@sol/angular/request';
 export const classesActions = createActionGroup({
     source: 'Class List Service',
     events: {
-        'Load Classes Start': props<{ ids: Array<string> }>(),
+        'Load Classes Start': props<{
+            query: Array<{ id: string; semesterId: string }>;
+        }>(),
         'Load Classes Request Changed': props<{
-            ids: Array<string>;
-            classes: Requested<Array<SemesterClass>>;
+            query: Array<{ id: string; semesterId: string }>;
+            classesBySemester: Requested<{
+                [semesterId: string]: Array<SemesterClass>;
+            }>;
         }>(),
         'Load Available Enrollment Start': emptyProps(),
         'Load Available Enrollment Request Changed': props<{
             request: Requested<{
-                classes: Array<SemesterClass>;
-                groups: Array<SemesterClassGroup>;
+                [semesterId: string]: {
+                    classes: Array<SemesterClass>;
+                    groups: Array<SemesterClassGroup>;
+                };
             }>;
         }>(),
-        'Load Class Groups Start': props<{ ids: Array<string> }>(),
+        'Load Class Groups Start': props<{
+            query: Array<{
+                id: string;
+                semesterId: string;
+            }>;
+        }>(),
         'Load Class Groups Request Changed': props<{
-            ids: Array<string>;
-            groups: Requested<Array<SemesterClassGroup>>;
+            query: Array<{
+                id: string;
+                semesterId: string;
+            }>;
+            groupsBySemester: Requested<{
+                [semesterId: string]: Array<SemesterClassGroup>;
+            }>;
         }>(),
         'Load Current Semester Classes Start': emptyProps(),
         'Load Current Semester Classes Request Changed': props<{

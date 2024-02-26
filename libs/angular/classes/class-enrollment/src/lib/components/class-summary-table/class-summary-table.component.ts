@@ -13,6 +13,7 @@ import {
     startWith,
     switchMap,
     combineLatest,
+    take,
 } from 'rxjs';
 import { TableModule } from 'primeng/table';
 import { RxLet } from '@rx-angular/template/let';
@@ -32,17 +33,21 @@ export class ClassSummaryTableComponent {
     private readonly classList = inject(ClassListService);
     private readonly datePipe = inject(DatePipe);
 
-    private readonly classes$ = new BehaviorSubject<
-        Array<{ id: string; semesterId: string; groupId?: string }>
-    >([]);
+    private readonly classes$ = new BehaviorSubject(
+        new Array<{ id: string; semesterId: string }>()
+    );
+    private readonly groups$ = new BehaviorSubject(
+        new Array<{ id: string; semesterId: string }>()
+    );
     private readonly userCostsToClassIds$ = new BehaviorSubject<
         Record<string, number | undefined> | undefined
     >(undefined);
 
-    @Input() set classes(
-        classes: Array<{ id: string; semesterId: string; groupId?: string }>
-    ) {
+    @Input() set classes(classes: Array<{ id: string; semesterId: string }>) {
         this.classes$.next(classes);
+    }
+    @Input() set groups(groups: Array<{ id: string; semesterId: string }>) {
+        this.groups$.next(groups);
     }
     @Input() set userCostsToClassIds(
         userCostsToClassIds:
@@ -58,21 +63,24 @@ export class ClassSummaryTableComponent {
     readonly classCostSummaryRows$: Observable<
         | Array<{ name: string; semester: string; date: string; cost: number }>
         | undefined
-    > = combineLatest([this.classes$, this.userCostsToClassIds$]).pipe(
-        switchMap(([classes, userCostsToClassIds]) => {
-            const groupIdsOfClasses = classes
-                .map((c) => c.groupId)
-                .filter((groupId): groupId is string => !!groupId);
+    > = combineLatest([
+        this.classes$,
+        this.groups$,
+        this.userCostsToClassIds$,
+    ]).pipe(
+        take(1),
+        switchMap(([classes, groups, userCostsToClassIds]) => {
             const classGroups$ = this.classList
-                .getClassGroupsByIds(groupIdsOfClasses)
+                .getClassGroups(groups)
                 .pipe(
                     RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                     shareReplay()
                 );
+            const groupIds = groups.map((g) => g.id);
             const tableClassGroups$ = classGroups$.pipe(
                 map((classGroups) => {
                     return classGroups
-                        .filter((c) => groupIdsOfClasses.includes(c.id))
+                        .filter((cg) => groupIds.includes(cg.id))
                         .map((group) => ({
                             name: group.name,
                             semester: group.classes[0].semesterId,
@@ -93,12 +101,15 @@ export class ClassSummaryTableComponent {
                         }));
                 })
             );
+            const classIds = classes.map((c) => c.id);
             const tableClasses$ = classGroups$.pipe(
+                take(1),
                 switchMap((groups) => {
+                    console.log('getting again');
                     return this.classList
-                        .getClassesByIds(
-                            classIds.filter(
-                                (id) =>
+                        .getClasses(
+                            classes.filter(
+                                ({ id }) =>
                                     !groups.some((g) =>
                                         g.classes.some((c) => c.id === id)
                                     )

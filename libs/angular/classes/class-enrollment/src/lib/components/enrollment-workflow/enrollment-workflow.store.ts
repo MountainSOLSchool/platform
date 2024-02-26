@@ -12,7 +12,6 @@ type Enrollment = {
     selectedClasses: Array<{
         id: string;
         semesterId: string;
-        groupId?: string;
     }>;
     userCostsToSelectedClassIds: Record<string, number | undefined>;
     paymentMethod:
@@ -125,6 +124,28 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         this.selectStudent,
         (student) => student?.id
     );
+    private readonly selectDiscountCodes = createSelector(
+        this.selectEnrollment,
+        (enrollment) => enrollment.discountCodes
+    );
+    private readonly selectSelectedClasses = createSelector(
+        this.selectEnrollment,
+        (enrollment) => enrollment.selectedClasses
+    );
+    private readonly selectUserCostsToSelectedClassIds = createSelector(
+        this.selectEnrollment,
+        (enrollment) => enrollment.userCostsToSelectedClassIds
+    );
+    private readonly selectBasktCostRequest = createSelector(
+        this.selectDiscountCodes,
+        this.selectSelectedClasses,
+        this.selectUserCostsToSelectedClassIds,
+        (codes, classes, userCostsToClassIds) => ({
+            codes,
+            classes,
+            userCostsToClassIds,
+        })
+    );
 
     readonly setStatusToDraft = this.updater((state) => ({
         ...state,
@@ -201,12 +222,13 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     });
 
     readonly calculateBasket = this.effect(() => {
-        return this.selectBasketCostRequest().pipe(
+        return this.select(this.selectBasktCostRequest).pipe(
             pairwise(),
+            filter((request) => Object.values(request).every(Boolean)),
             filter(
                 ([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)
             ),
-            switchMap(([, { codes, classIds, userCostsToClassIds }]) => {
+            switchMap(([, { codes, classes, userCostsToClassIds }]) => {
                 this.patchState({ isLoadingDiscounts: true });
                 return this.functions
                     .call<{
@@ -218,7 +240,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                         originalTotal: number;
                     }>('calculateBasket', {
                         codes,
-                        classIds,
+                        classes,
                         userCostsToClassIds,
                     })
                     .pipe(
@@ -259,12 +281,4 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
             })
         );
     });
-
-    private selectBasketCostRequest() {
-        return this.select((state) => ({
-            codes: state.enrollment.discountCodes,
-            classIds: state.enrollment.selectedClasses,
-            userCostsToClassIds: state.enrollment.userCostsToSelectedClassIds,
-        }));
-    }
 }

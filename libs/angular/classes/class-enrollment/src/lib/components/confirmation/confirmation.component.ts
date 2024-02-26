@@ -101,15 +101,18 @@ export class ConfirmationComponent {
         )
     );
 
-    private readonly selectedClassGroupIds$ = combineLatest([
+    private readonly selectedClassGroups$ = combineLatest([
         this.classList
             .getAvailableEnrollmentClassesAndGroups()
             .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
         this.enrollment$,
     ]).pipe(
-        map(([{ groups }, { selectedClasses }]) => {
-            return groups
-                .filter(({ classes }) =>
+        map(([bySemester, { selectedClasses }]) => {
+            return Object.entries(bySemester)
+                .flatMap(([semesterId, { groups }]) =>
+                    groups.map((group) => ({ semesterId, group }))
+                )
+                .filter(({ group: { classes } }) =>
                     classes.every(
                         ({ id, semesterId }) =>
                             !!selectedClasses.find(
@@ -119,7 +122,10 @@ export class ConfirmationComponent {
                             )
                     )
                 )
-                .map((group) => group.id);
+                .map(({ semesterId, group }) => ({
+                    id: group.id,
+                    semesterId,
+                }));
         })
     );
 
@@ -134,7 +140,7 @@ export class ConfirmationComponent {
         this.validDiscountAmounts$,
         this.invalidDiscountCodes$,
         this.workflow.select(({ isLoadingDiscounts }) => isLoadingDiscounts),
-        this.selectedClassGroupIds$,
+        this.selectedClassGroups$,
         this.userCostsToClassIds$,
     ]).pipe(
         map(
@@ -144,7 +150,7 @@ export class ConfirmationComponent {
                 validDiscountAmounts,
                 invalidCodes,
                 isLoadingDiscounts,
-                selectedClassGroupIds,
+                selectedClassGroups,
                 userCostsToClassIds,
             ]) => ({
                 enrollment,
@@ -152,7 +158,7 @@ export class ConfirmationComponent {
                 validDiscountAmounts,
                 invalidCodes,
                 isLoadingDiscounts,
-                selectedClassGroupIds,
+                selectedClassGroups,
                 userCostsToClassIds,
             })
         )

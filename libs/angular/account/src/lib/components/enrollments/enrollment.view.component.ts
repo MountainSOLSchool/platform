@@ -17,8 +17,9 @@ import { CardModule } from 'primeng/card';
             {{ enrollment.transactionId }}
         </p>
         <p><b>Classes:</b></p>
+        <!-- TODO: how to display historical data? -->
         <sol-class-summary-table
-            [classIds]="enrollment.classIds"
+            [classes]="assertHasClasses(enrollment) ? enrollment.classes : []"
         ></sol-class-summary-table>
     </p-card>`,
     imports: [ClassSummaryTableComponent, CurrencyPipe, CardModule],
@@ -28,4 +29,12 @@ import { CardModule } from 'primeng/card';
 export class EnrollmentViewComponent {
     @Input({ required: true })
     enrollment!: SemesterEnrollment;
+
+    assertHasClasses(
+        enrollment: SemesterEnrollment
+    ): enrollment is SemesterEnrollment & {
+        classes: Array<{ id: string; semesterId: string }>;
+    } {
+        return 'classes' in enrollment;
+    }
 }
