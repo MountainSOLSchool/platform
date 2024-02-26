@@ -134,8 +134,12 @@ export class ClassesComponent {
         of(false)
     ).pipe();
 
-    selectedClassIds = this.workflow.selectSignal(
+    selectedWorkflowClasses = this.workflow.selectSignal(
         (state) => state.enrollment.selectedClasses
+    );
+
+    selectedClassIds = computed(() =>
+        this.selectedWorkflowClasses().map((c) => c.id)
     );
 
     isValid = computed(() => this.selectedClassIds().length > 0);
@@ -367,11 +371,11 @@ export class ClassesComponent {
     );
 
     selectionChanged({
-        id: classId,
+        classSelection,
         selected,
         userCost,
     }: {
-        id: string;
+        classSelection: { id: string; semesterId: string; groupId?: string };
         selected: boolean;
         userCost?: number;
     }) {
@@ -380,14 +384,18 @@ export class ClassesComponent {
                 ...s.enrollment,
                 selectedClasses: selected
                     ? Array.from(
-                          new Set([...s.enrollment.selectedClasses, classId])
+                          new Set([
+                              ...s.enrollment.selectedClasses,
+                              classSelection,
+                          ])
                       )
                     : s.enrollment.selectedClasses.filter(
-                          (id) => id !== classId
+                          (selectedClass) =>
+                              selectedClass.id !== classSelection.id
                       ),
                 userCostsToSelectedClassIds: {
                     ...s.enrollment.userCostsToSelectedClassIds,
-                    [classId]: userCost,
+                    [classSelection.id]: userCost,
                 },
             },
         }));
@@ -418,7 +426,13 @@ export class ClassesComponent {
 
     rowSelectedChange(classRow: ClassRow, selected: boolean) {
         classRow.classes.forEach((c) =>
-            this.selectionChanged({ id: c.id, selected })
+            this.selectionChanged({
+                classSelection: {
+                    id: c.id,
+                    semesterId: c.semesterId,
+                },
+                selected,
+            })
         );
     }
 

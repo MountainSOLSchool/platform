@@ -69,7 +69,10 @@
                                 [removable]="true"
                                 (onRemove)="
                                     selectionChanged({
-                                        id: selectedClass.id,
+                                        classSelection: {
+                                            id: selectedClass.id,
+                                            semesterId: selectedClass.semesterId
+                                        },
                                         selected: false
                                     })
                                 "

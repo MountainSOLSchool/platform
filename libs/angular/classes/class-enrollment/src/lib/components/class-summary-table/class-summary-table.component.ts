@@ -32,17 +32,17 @@ export class ClassSummaryTableComponent {
     private readonly classList = inject(ClassListService);
     private readonly datePipe = inject(DatePipe);
 
-    private readonly classIds$ = new BehaviorSubject(new Array<string>());
-    private readonly groupIds$ = new BehaviorSubject(new Array<string>());
+    private readonly classes$ = new BehaviorSubject<
+        Array<{ id: string; semesterId: string; groupId?: string }>
+    >([]);
     private readonly userCostsToClassIds$ = new BehaviorSubject<
         Record<string, number | undefined> | undefined
     >(undefined);
 
-    @Input() set classIds(ids: Array<string>) {
-        this.classIds$.next(ids);
-    }
-    @Input() set groupIds(ids: Array<string>) {
-        this.groupIds$.next(ids);
+    @Input() set classes(
+        classes: Array<{ id: string; semesterId: string; groupId?: string }>
+    ) {
+        this.classes$.next(classes);
     }
     @Input() set userCostsToClassIds(
         userCostsToClassIds:
@@ -58,14 +58,13 @@ export class ClassSummaryTableComponent {
     readonly classCostSummaryRows$: Observable<
         | Array<{ name: string; semester: string; date: string; cost: number }>
         | undefined
-    > = combineLatest([
-        this.classIds$,
-        this.groupIds$,
-        this.userCostsToClassIds$,
-    ]).pipe(
-        switchMap(([classIds, groupIds, userCostsToClassIds]) => {
+    > = combineLatest([this.classes$, this.userCostsToClassIds$]).pipe(
+        switchMap(([classes, userCostsToClassIds]) => {
+            const groupIdsOfClasses = classes
+                .map((c) => c.groupId)
+                .filter((groupId): groupId is string => !!groupId);
             const classGroups$ = this.classList
-                .getClassGroupsByIds(groupIds)
+                .getClassGroupsByIds(groupIdsOfClasses)
                 .pipe(
                     RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                     shareReplay()
@@ -73,7 +72,7 @@ export class ClassSummaryTableComponent {
             const tableClassGroups$ = classGroups$.pipe(
                 map((classGroups) => {
                     return classGroups
-                        .filter((c) => groupIds.includes(c.id))
+                        .filter((c) => groupIdsOfClasses.includes(c.id))
                         .map((group) => ({
                             name: group.name,
                             semester: group.classes[0].semesterId,

@@ -26,5 +26,12 @@ export const classesActions = createActionGroup({
         'Load Current Semester Classes Request Changed': props<{
             classes: Requested<Array<SemesterClass>>;
         }>(),
+        'Load Qualified Classes Start': props<{
+            classes: Array<{ id: string; semesterId: string }>;
+        }>(),
+        'Load Qualified Classes Request Changed': props<{
+            classes: Array<{ id: string; semesterId: string }>;
+            loaded: Requested<Array<SemesterClass>>;
+        }>(),
     },
 });

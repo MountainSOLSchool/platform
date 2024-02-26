@@ -1,6 +1,7 @@
 import { Functions } from '@sol/firebase/functions';
 
 import { Semester } from '@sol/firebase/classes/semester';
+import { NewClassRepository } from '@sol/classes/repository';
 
 export const classes = Functions.endpoint.handle<
     | {
@@ -10,7 +11,7 @@ export const classes = Functions.endpoint.handle<
 >(async (request, response) => {
     const semesterClasses = Semester.active().classes;
     const classes = await (request.body.data
-        ? semesterClasses.getMany(request.body.data.ids)
+        ? NewClassRepository.of().getMany(request.body.data.ids)
         : semesterClasses.getAll());
 
     response.send({ classes });

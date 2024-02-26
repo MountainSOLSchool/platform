@@ -110,7 +110,14 @@ export class ConfirmationComponent {
         map(([{ groups }, { selectedClasses }]) => {
             return groups
                 .filter(({ classes }) =>
-                    classes.every(({ id }) => selectedClasses.includes(id))
+                    classes.every(
+                        ({ id, semesterId }) =>
+                            !!selectedClasses.find(
+                                (selectedClass) =>
+                                    selectedClass.id === id &&
+                                    selectedClass.semesterId === semesterId
+                            )
+                    )
                 )
                 .map((group) => group.id);
         })

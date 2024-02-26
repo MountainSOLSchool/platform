@@ -64,17 +64,21 @@ export class ClassCardComponent {
             lastName: string;
         }>;
         userCost: number;
+        semesterId: string;
     };
 
     @Output() selectedChange = new EventEmitter<{
-        id: string;
+        classSelection: { id: string; semesterId: string };
         userCost?: number;
         selected: boolean;
     }>();
 
     selectionToggled() {
         this.selectedChange.emit({
-            id: this.classInfo.id,
+            classSelection: {
+                id: this.classInfo.id,
+                semesterId: this.classInfo.semesterId,
+            },
             selected: this.selected,
         });
     }
@@ -82,7 +86,10 @@ export class ClassCardComponent {
     customCostSelected(cost: number, panel: OverlayPanel) {
         panel.hide();
         this.selectedChange.emit({
-            id: this.classInfo.id,
+            classSelection: {
+                id: this.classInfo.id,
+                semesterId: this.classInfo.semesterId,
+            },
             userCost: cost,
             selected: true,
         });
@@ -90,7 +97,10 @@ export class ClassCardComponent {
 
     deselected() {
         this.selectedChange.emit({
-            id: this.classInfo.id,
+            classSelection: {
+                id: this.classInfo.id,
+                semesterId: this.classInfo.semesterId,
+            },
             selected: false,
         });
     }

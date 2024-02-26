@@ -9,7 +9,11 @@ import { createSelector } from '@ngrx/store';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 type Enrollment = {
-    selectedClasses: Array<string>;
+    selectedClasses: Array<{
+        id: string;
+        semesterId: string;
+        groupId?: string;
+    }>;
     userCostsToSelectedClassIds: Record<string, number | undefined>;
     paymentMethod:
         | {

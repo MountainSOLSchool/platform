@@ -27,6 +27,16 @@ export class ClassListService {
         return this.store.select(selectClassesByIds(ids));
     }
 
+    getClasses(classes: Array<{ id: string; semesterId: string }>) {
+        if (classes.length === 0) return of([]);
+        this.store.dispatch(
+            classesActions.loadQualifiedClassesStart({
+                classes,
+            })
+        );
+        return this.store.select(selectClassesByIds(classes.map((c) => c.id)));
+    }
+
     getCurrentSemesterClasses() {
         this.store.dispatch(classesActions.loadCurrentSemesterClassesStart());
         return this.store.select(selectCurrentSemesterClasses);
@@ -49,61 +59,5 @@ export class ClassListService {
         }>
     > {
         return this.functions.call('classesBySemester', semesterIds);
-        return of({
-            spring2024: {
-                classes: [
-                    {
-                        title: 'Class 1',
-                        startMs: 0,
-                        endMs: 0,
-                        registrationEndMs: 0,
-                        id: '1',
-                        classType: 'Class',
-                        gradeRangeStart: 0,
-                        gradeRangeEnd: 0,
-                        description: 'Description',
-                        cost: 0,
-                        location: 'Location',
-                        instructors: [],
-                        dailyTimes: 'Daily Times',
-                        weekday: 'Weekday',
-                        thumbnailUrl: 'Thumbnail Url',
-                        enrolledCount: 0,
-                        live: true,
-                        pausedForEnrollment: false,
-                        students: [],
-                        semesterId: 'spring2024',
-                    },
-                ],
-                groups: [],
-            },
-            winter2024: {
-                classes: [
-                    {
-                        title: 'Class 1',
-                        startMs: 0,
-                        endMs: 0,
-                        registrationEndMs: 0,
-                        id: '1',
-                        classType: 'Class',
-                        gradeRangeStart: 0,
-                        gradeRangeEnd: 0,
-                        description: 'Description',
-                        cost: 0,
-                        location: 'Location',
-                        instructors: [],
-                        dailyTimes: 'Daily Times',
-                        weekday: 'Weekday',
-                        thumbnailUrl: 'Thumbnail Url',
-                        enrolledCount: 0,
-                        live: true,
-                        pausedForEnrollment: false,
-                        students: [],
-                        semesterId: 'winter2024',
-                    },
-                ],
-                groups: [],
-            },
-        });
     }
 }

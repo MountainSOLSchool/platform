@@ -1,6 +1,5 @@
 import { SemesterClass } from '@sol/classes/domain';
 import { DatabaseUtility } from '@sol/firebase/database';
-import { SemesterRepository } from './semester.repository';
 import { firestore } from 'firebase-admin';
 import { FieldPath } from 'firebase-admin/firestore';
 
@@ -29,26 +28,14 @@ type ClassDbo = {
 };
 
 export class NewClassRepository {
-    protected constructor(
-        private readonly semesters: Array<SemesterRepository>
-    ) {}
-
-    static of(): NewClassRepository;
-    static of(semester: SemesterRepository): NewClassRepository;
-    static of(semesters: Array<SemesterRepository>): NewClassRepository;
-    static of(
-        semesterOrSemesters?: SemesterRepository | Array<SemesterRepository>
-    ): NewClassRepository {
-        return Array.isArray(semesterOrSemesters)
-            ? new NewClassRepository(semesterOrSemesters)
-            : new NewClassRepository(
-                  semesterOrSemesters ? [semesterOrSemesters] : []
-              );
+    protected constructor() {
+        // empty protected constructor
     }
 
-    private async getClassesPath(): Promise<string> {
-        return `${await this.semester.getPath()}/classes`;
+    static of(): NewClassRepository {
+        return new NewClassRepository();
     }
+
     async get(
         id: string
     ): Promise<
@@ -72,26 +59,6 @@ export class NewClassRepository {
                 return await this.get(id);
             })
         );
-    }
-
-    async getOpenForRegistration(): Promise<SemesterClass[]> {
-        const now = new Date(Date.now());
-        const query = await DatabaseUtility.fetchMatchingDocuments(
-            await DatabaseUtility.getCollectionRef(await this.getClassesPath()),
-            ['registration_end_date', '>=', now],
-            ['live', '==', true]
-        );
-        const classIds = query.map((doc) => doc.id);
-        return await this.getMany(classIds);
-    }
-
-    async getAll(): Promise<SemesterClass[]> {
-        const query = await DatabaseUtility.fetchMatchingDocuments(
-            await DatabaseUtility.getCollectionRef(await this.getClassesPath()),
-            ['live', '==', true]
-        );
-        const classIds = query.map((doc) => doc.id);
-        return await this.getMany(classIds);
     }
 
     private async convertDboToDomain(
@@ -164,27 +131,5 @@ export class NewClassRepository {
             };
         }
         return domain;
-    }
-
-    async addStudentToClass(studentId: string, classId: string): Promise<void> {
-        const classRef = await DatabaseUtility.getDocumentRef(
-            `${await this.getClassesPath()}/${classId}`
-        );
-        const studentRef = await DatabaseUtility.getDocumentRef(
-            `students/${studentId}`
-        );
-        const enrolledStudents =
-            ((await classRef.get()).data()?.students as Array<
-                firestore.DocumentReference<firestore.DocumentData>
-            >) ?? [];
-        if (
-            !enrolledStudents
-                ?.map((ref) => ref.id)
-                .find((s) => s === studentRef.id)
-        ) {
-            await classRef.update({
-                students: [...enrolledStudents, studentRef],
-            });
-        }
     }
 }

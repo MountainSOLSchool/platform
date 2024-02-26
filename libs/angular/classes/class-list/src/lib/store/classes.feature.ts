@@ -37,6 +37,15 @@ export const classesFeature = createFeature({
     reducer: createReducer(
         initialState,
         on(
+            classesActions.loadClassesStart,
+            classesActions.loadClassGroupsStart,
+            (state): Feature => ({
+                ...state,
+                classes: {},
+                groups: {},
+            })
+        ),
+        on(
             classesActions.loadClassesRequestChanged,
             (state, { ids, classes }) => {
                 let updatedClasses: Record<string, Requested<SemesterClass>>;
