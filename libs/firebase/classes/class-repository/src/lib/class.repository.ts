@@ -59,7 +59,7 @@ export class ClassRepository {
         const now = new Date(Date.now());
         const query = await DatabaseUtility.fetchMatchingDocuments(
             await DatabaseUtility.getCollectionRef(await this.getClassesPath()),
-            // TODO: no lol
+            // TODO: temporary for local dev, remove before merging
             // ['registration_end_date', '>=', now],
             ['live', '==', true]
         );
