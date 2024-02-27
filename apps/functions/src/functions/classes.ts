@@ -1,6 +1,7 @@
 import { Functions } from '@sol/firebase/functions';
 
 import { Semester } from '@sol/firebase/classes/semester';
+import { _getClasses } from './_getClasses';
 
 export const classes = Functions.endpoint.handle<
     | {
@@ -12,32 +13,9 @@ export const classes = Functions.endpoint.handle<
 
     const query = request.body.data?.query;
 
-    const classIdsBySemesterId = query?.reduce(
-        (acc, { id, semesterId }) => {
-            if (!acc[semesterId]) {
-                acc[semesterId] = [];
-            }
-            acc[semesterId].push(id);
-            return acc;
-        },
-        {} as Record<string, Array<string>>
-    );
-
-    const classes = await (classIdsBySemesterId
-        ? Object.fromEntries(
-              await Promise.all(
-                  Object.entries(classIdsBySemesterId).map(
-                      async ([semesterId, classIds]) =>
-                          [
-                              semesterId,
-                              await Semester.of(semesterId).classes.getMany(
-                                  classIds
-                              ),
-                          ] as const
-                  )
-              )
-          )
-        : activeSemesterClasses.getAll());
+    const classes = query
+        ? await _getClasses(query)
+        : await activeSemesterClasses.getAll();
 
     response.send({ classes });
 });

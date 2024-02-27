@@ -10,8 +10,10 @@ import { Discount, EnrollmentUtility } from '@sol/classes/domain';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
-import { Semester } from '@sol/firebase/classes/semester';
 import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
+import { _getClasses } from './_getClasses';
+import { _getClassGroups } from './_getClassGroups';
+import { Semester } from '@sol/firebase/classes/semester';
 
 function _mapStudentFormToStudentDbEntry(
     form: StudentForm
@@ -88,8 +90,8 @@ export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .usingStrings(...Braintree.STRING_NAMES)
     .handle<{
-        selectedClasses: Array<string>;
-        selectedClassGroups: Array<string>;
+        selectedClasses: Array<{ id: string; semesterId: string }>;
+        selectedClassGroups: Array<{ id: string; semesterId: string }>;
         student: StudentForm;
         releaseSignatures: Array<{ name: string; signature: string }>;
         discountCodes: Array<string>;
@@ -105,6 +107,7 @@ export const enroll = Functions.endpoint
 
         const {
             selectedClasses,
+            selectedClassGroups,
             student,
             discountCodes,
             paymentMethod: { nonce, deviceData },
@@ -116,11 +119,9 @@ export const enroll = Functions.endpoint
             await _assertUserCanManageStudent(user, student.id, response);
         }
 
-        const semester = Semester.active();
-
-        const classesRepository = semester.classes;
-
-        const classes = await classesRepository.getMany(selectedClasses);
+        const classes = Object.values(
+            await _getClasses(selectedClasses)
+        ).flatMap((c) => c);
 
         const classesWithUserCostsApplied = EnrollmentUtility.applyUserCosts(
             classes,
@@ -132,8 +133,9 @@ export const enroll = Functions.endpoint
             return;
         }
 
-        const classGroups =
-            await semester.groups.getByClassIds(selectedClasses);
+        const classGroups = Object.values(
+            await _getClassGroups(selectedClassGroups)
+        ).flatMap((g) => g);
 
         const discounts = (
             await Promise.all(
@@ -162,8 +164,10 @@ export const enroll = Functions.endpoint
                 description: da.code,
                 amount: da.amount,
             })),
-            classIds: classes.map((c) => c.id),
-            // TODO: assign classes by semester
+            classes: classes.map((c) => ({
+                id: c.id,
+                semesterId: c.semesterId,
+            })),
         };
 
         const studentEnrollmentId = await ClassEnrollmentRepository.create({
@@ -212,7 +216,7 @@ export const enroll = Functions.endpoint
 
             await Promise.all(
                 classes.map(async (c) => {
-                    await classesRepository.addStudentToClass(
+                    await Semester.of(c.semesterId).classes.addStudentToClass(
                         studentRef.id,
                         c.id
                     );
