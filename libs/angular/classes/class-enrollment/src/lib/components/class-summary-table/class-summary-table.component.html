@@ -1,9 +1,8 @@
 <div>
     <p-table
-        *rxLet="classCostSummaryRows$; let rows; suspense: loading"
-        [value]="rows ?? []"
+        [value]="classCostSummaryRows() ?? []"
         [tableStyle]="{ width: '100%', 'min-width': '300px' }"
-        [loading]="!rows"
+        [loading]="isLoading()"
         responsiveLayout="stack"
         [breakpoint]="'900px'"
     >
@@ -25,7 +24,3 @@
         </ng-template>
     </p-table>
 </div>
-
-<ng-template #loading>
-    <p-progressSpinner></p-progressSpinner>
-</ng-template>

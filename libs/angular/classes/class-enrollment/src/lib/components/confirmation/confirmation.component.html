@@ -1,5 +1,5 @@
 @if (allStepsComplete) {
-    <ng-container *rxLet="viewModel$; let vm">
+    <ng-container *rxLet="viewModel$; let vm; suspense: skeleton">
         <div class="section">
             <p-fieldset legend="Student" *rxLet="student$; let student">
                 <p>Name: {{ student?.firstName }} {{ student?.lastName }}</p>
@@ -11,7 +11,7 @@
             <p-fieldset legend="Class Cost Summary">
                 <sol-class-summary-table
                     [classes]="vm.enrollment.selectedClasses"
-                    [groups]="vm.selectedClassGroups"
+                    [groups]="selectedClassGroups() ?? []"
                     [userCostsToClassIds]="vm.userCostsToClassIds"
                 ></sol-class-summary-table>
             </p-fieldset>
@@ -147,6 +147,19 @@
             </p-fieldset>
         </div>
     </ng-container>
+    <ng-template #skeleton>
+        <div style="width: 100%; margin-top: 1rem">
+            <div
+                style="
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: fit-content;
+                "
+            >
+                <p-progressSpinner></p-progressSpinner>
+            </div>
+        </div>
+    </ng-template>
 } @else {
     <p>Please complete all steps before submitting.</p>
 }
