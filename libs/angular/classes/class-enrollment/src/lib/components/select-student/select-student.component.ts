@@ -34,6 +34,7 @@ import { create, enforce, omitWhen, test } from 'vest';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
     standalone: true,
@@ -51,6 +52,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
         RxIf,
         ButtonModule,
         DialogModule,
+        ProgressSpinnerModule,
     ],
     selector: 'sol-student-selection',
     templateUrl: './select-student.component.html',

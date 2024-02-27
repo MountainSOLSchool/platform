@@ -6,7 +6,7 @@ import { classesActions } from './classes.actions';
 import {
     classesFeature,
     selectCurrentSemesterClasses,
-    selectLoadedClasses,
+    selectLoadingAndLoadedClassIds,
 } from './classes.feature';
 import { ClassesApiService } from '../services/classes-api.service';
 import { RequestedUtility } from '@sol/angular/request';
@@ -22,9 +22,11 @@ export class ClassesEffects {
     loadClasses$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(classesActions.loadClassesStart),
-            concatLatestFrom(() => this.store.select(selectLoadedClasses)),
+            concatLatestFrom(() =>
+                this.store.select(selectLoadingAndLoadedClassIds)
+            ),
             map(([action, classes]) => {
-                return action.query.filter(({ id }) => !classes[id]);
+                return action.query.filter(({ id }) => !classes.includes(id));
             }),
             filter((classesToLoad) => classesToLoad.length > 0),
             mergeMap((classesToLoad) => {

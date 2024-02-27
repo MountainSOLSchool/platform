@@ -35,31 +35,31 @@ export const classesFeature = createFeature({
     name: 'classesFeature',
     reducer: createReducer(
         initialState,
-        on(
-            classesActions.loadClassesStart,
-            classesActions.loadClassGroupsStart,
-            (state): Feature => ({
-                ...state,
-                classes: {},
-                groups: {},
-            })
-        ),
+        // on(
+        //     classesActions.loadClassesStart,
+        //     classesActions.loadClassGroupsStart,
+        //     (state): Feature => ({
+        //         ...state,
+        //         classes: {},
+        //         groups: {},
+        //     })
+        // ),
         on(
             classesActions.loadClassesRequestChanged,
             (state, { query, classesBySemester }) => {
                 const ids = query.map((c) => c.id);
                 let updatedClasses: Record<string, Requested<SemesterClass>>;
-                const classes = RequestedUtility.isLoaded(classesBySemester)
-                    ? Object.values(classesBySemester).flatMap((c) => c)
-                    : classesBySemester;
-                if (RequestedUtility.isLoaded(classes)) {
-                    updatedClasses = classes.reduce(
+                if (RequestedUtility.isLoaded(classesBySemester)) {
+                    const updated = Object.values(classesBySemester).flatMap(
+                        (c) => c
+                    );
+                    updatedClasses = updated.reduce(
                         (acc, curr) => ({ ...acc, [curr.id]: curr }),
                         {}
                     );
                 } else {
                     updatedClasses = ids.reduce(
-                        (acc, curr) => ({ ...acc, [curr]: classes }),
+                        (acc, curr) => ({ ...acc, [curr]: classesBySemester }),
                         {}
                     );
                 }
@@ -197,6 +197,24 @@ export const selectLoadedClasses = createSelector(
                 }
             )
         );
+    }
+);
+
+export const selectLoadingClassIds = createSelector(
+    classesFeature.selectClasses,
+    (classes) => {
+        return Object.keys(classes).filter(
+            (id) => classes[id] === RequestState.Loading
+        );
+    }
+);
+
+export const selectLoadingAndLoadedClassIds = createSelector(
+    selectLoadedClasses,
+    selectLoadingClassIds,
+    (loadedClasses, loadingClassIds) => {
+        const loadedClassIds = Object.keys(loadedClasses);
+        return Array.from(new Set([...loadedClassIds, ...loadingClassIds]));
     }
 );
 

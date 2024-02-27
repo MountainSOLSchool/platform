@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
 import { SemesterEnrollment } from '@sol/classes/domain';
 import { ClassSummaryTableComponent } from '@sol/classes/enrollment';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { CardModule } from 'primeng/card';
 
 @Component({
@@ -13,8 +13,16 @@ import { CardModule } from 'primeng/card';
             {{ enrollment.finalCost | currency }}
         </p>
         <p>
-            <b>Transaction Id:</b>
-            {{ enrollment.transactionId }}
+            <b>Date:</b>
+            {{ enrollment.timestamp._seconds * 1000 | date: 'short' }}
+        </p>
+        <p>
+            <b>Transaction ID:</b>
+            {{
+                enrollment.transactionId === ''
+                    ? 'Paid by Check'
+                    : enrollment.transactionId
+            }}
         </p>
         <p><b>Classes:</b></p>
         <!-- TODO: how to display historical data? -->
@@ -22,7 +30,7 @@ import { CardModule } from 'primeng/card';
             [classes]="assertHasClasses(enrollment) ? enrollment.classes : []"
         ></sol-class-summary-table>
     </p-card>`,
-    imports: [ClassSummaryTableComponent, CurrencyPipe, CardModule],
+    imports: [ClassSummaryTableComponent, CurrencyPipe, CardModule, DatePipe],
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
