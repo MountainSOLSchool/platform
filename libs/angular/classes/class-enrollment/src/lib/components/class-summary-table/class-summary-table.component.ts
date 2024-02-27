@@ -113,6 +113,7 @@ export class ClassSummaryTableComponent implements OnInit {
                         (semester) =>
                             semester.id === group.classes[0].semesterId
                     )?.name ?? '--',
+                _startMs: group.classes[0].startMs,
                 date:
                     group.classes[0].startMs && group.classes[0].endMs
                         ? this.datePipe.transform(
@@ -146,6 +147,7 @@ export class ClassSummaryTableComponent implements OnInit {
                     enrollableSemesters?.find(
                         (semester) => semester.id === c.semesterId
                     )?.name ?? '--',
+                _startMs: c.startMs,
                 date:
                     c.startMs && c.endMs
                         ? this.datePipe.transform(
@@ -169,8 +171,8 @@ export class ClassSummaryTableComponent implements OnInit {
         const tableClasses = this.tableClasses();
         const tableClassGroups = this.tableClassGroups();
         return tableClasses && tableClassGroups
-            ? [...tableClasses, ...tableClassGroups].sort((a, b) =>
-                  a.name.localeCompare(b.name)
+            ? [...tableClasses, ...tableClassGroups].sort(
+                  (a, b) => a._startMs - b._startMs
               )
             : undefined;
     });
