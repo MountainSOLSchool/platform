@@ -6,7 +6,10 @@ import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
 import { StudentForm } from '@sol/student/domain';
 import { Router } from '@angular/router';
 import { createSelector } from '@ngrx/store';
-import { RequestedOperatorsUtility } from '@sol/angular/request';
+import {
+    RequestedOperatorsUtility,
+    RequestedUtility,
+} from '@sol/angular/request';
 
 type Enrollment = {
     selectedClasses: Array<{
@@ -195,10 +198,9 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                                 success: boolean;
                             }>('enroll', enrollment)
                             .pipe(
-                                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                                tapResponse(
-                                    (response) => {
-                                        if (response.success) {
+                                tap((response) => {
+                                    if (RequestedUtility.isLoaded(response)) {
+                                        if (response) {
                                             this.patchState({
                                                 status: 'enrolled',
                                             });
@@ -207,13 +209,14 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                                                 status: 'failed',
                                             });
                                         }
-                                    },
-                                    () => {
+                                    } else if (
+                                        RequestedUtility.isError(response)
+                                    ) {
                                         this.patchState({
                                             status: 'failed',
                                         });
                                     }
-                                )
+                                })
                             );
                     })
                 );

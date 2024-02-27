@@ -31,17 +31,18 @@ export const calculateBasket = Functions.endpoint.handle<{
         })
     ).then((groups) => groups.flat());
 
-    const idsOfStandaloneClasses = classIds.filter(
-        (id) =>
+    const standaloneClasses = requestClasses.filter(
+        (requestClass) =>
             !groups.some(
                 (group) =>
                     !group.classes.find(
-                        ({ id: groupClassId }) => groupClassId === id
+                        ({ id: groupClassId }) =>
+                            groupClassId === requestClass.id
                     )
             )
     );
 
-    const classIdsBySemesterId = requestClasses.reduce(
+    const classIdsBySemesterId = standaloneClasses.reduce(
         (acc, { id, semesterId }) => {
             if (!acc[semesterId]) {
                 acc[semesterId] = [];

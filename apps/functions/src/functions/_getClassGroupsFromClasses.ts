@@ -1,10 +1,10 @@
 import { SemesterClassGroup } from '@sol/classes/domain';
 import { Semester } from '@sol/firebase/classes/semester';
 
-export async function _getClassGroups(
-    query: Array<{ id: string; semesterId: string }>
+export async function _getClassGroupsFromClasses(
+    classQuery: Array<{ id: string; semesterId: string }>
 ): Promise<{ [semesterId: string]: Array<SemesterClassGroup> }> {
-    const classIdsBySemesterId = query.reduce(
+    const classIdsBySemesterId = classQuery.reduce(
         (acc, { id, semesterId }) => {
             if (!acc[semesterId]) {
                 acc[semesterId] = [];
@@ -21,7 +21,9 @@ export async function _getClassGroups(
                 async ([semesterId, classIds]) =>
                     [
                         semesterId,
-                        await Semester.of(semesterId).groups.getMany(classIds),
+                        await Semester.of(semesterId).groups.getByClassIds(
+                            classIds
+                        ),
                     ] as const
             )
         )

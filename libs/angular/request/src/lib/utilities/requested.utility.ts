@@ -14,6 +14,11 @@ export class RequestedUtility {
     ): state is typeof RequestState.Empty {
         return state === RequestState.Empty;
     }
+    static isError<T>(
+        state: Requested<T> | null | undefined
+    ): state is typeof RequestState.Error {
+        return state === RequestState.Error;
+    }
     static mapLoaded<T, U>(
         state: Requested<T>,
         map: (t: T) => U

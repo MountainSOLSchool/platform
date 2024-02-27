@@ -12,8 +12,8 @@ import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
 import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
 import { _getClasses } from './_getClasses';
-import { _getClassGroups } from './_getClassGroups';
 import { Semester } from '@sol/firebase/classes/semester';
+import { _getClassGroupsFromClasses } from './_getClassGroupsFromClasses';
 
 function _mapStudentFormToStudentDbEntry(
     form: StudentForm
@@ -91,7 +91,6 @@ export const enroll = Functions.endpoint
     .usingStrings(...Braintree.STRING_NAMES)
     .handle<{
         selectedClasses: Array<{ id: string; semesterId: string }>;
-        selectedClassGroups: Array<{ id: string; semesterId: string }>;
         student: StudentForm;
         releaseSignatures: Array<{ name: string; signature: string }>;
         discountCodes: Array<string>;
@@ -107,7 +106,6 @@ export const enroll = Functions.endpoint
 
         const {
             selectedClasses,
-            selectedClassGroups,
             student,
             discountCodes,
             paymentMethod: { nonce, deviceData },
@@ -134,7 +132,7 @@ export const enroll = Functions.endpoint
         }
 
         const classGroups = Object.values(
-            await _getClassGroups(selectedClassGroups)
+            await _getClassGroupsFromClasses(selectedClasses)
         ).flatMap((g) => g);
 
         const discounts = (
