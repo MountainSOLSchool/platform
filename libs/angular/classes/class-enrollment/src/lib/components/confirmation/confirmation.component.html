@@ -104,17 +104,21 @@
 
         <div class="section">
             <p-fieldset legend="Payment Method">
-                <sol-checkout
-                    *rxLet="
-                        randomValueThatResetsPaymentCollector$;
-                        let randomValueThatResetsPaymentCollector
-                    "
-                    [randomValueThatResetsPaymentCollector]="
-                        randomValueThatResetsPaymentCollector
-                    "
-                    [interacted]="interacted"
-                    (validityChange)="validityChange.next($event)"
-                ></sol-checkout>
+                @if (finalTotal()) {
+                    <sol-checkout
+                        *rxLet="
+                            randomValueThatResetsPaymentCollector$;
+                            let randomValueThatResetsPaymentCollector
+                        "
+                        [randomValueThatResetsPaymentCollector]="
+                            randomValueThatResetsPaymentCollector
+                        "
+                        [interacted]="interacted"
+                        (validityChange)="validityChange.next($event)"
+                    ></sol-checkout>
+                } @else {
+                    <p>No payment method is required at this time.</p>
+                }
                 <div>
                     <p *rxLet="userEmail$; let email">
                         Receipt Email: {{ email }}

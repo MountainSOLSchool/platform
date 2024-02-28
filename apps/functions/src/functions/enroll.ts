@@ -94,7 +94,7 @@ export const enroll = Functions.endpoint
         student: StudentForm;
         releaseSignatures: Array<{ name: string; signature: string }>;
         discountCodes: Array<string>;
-        paymentMethod: { nonce: string; deviceData: string };
+        paymentMethod?: { nonce: string; deviceData: string };
         userCostsToSelectedClassIds: Record<string, number | undefined>;
     }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
@@ -108,7 +108,7 @@ export const enroll = Functions.endpoint
             selectedClasses,
             student,
             discountCodes,
-            paymentMethod: { nonce, deviceData },
+            paymentMethod,
             releaseSignatures,
             userCostsToSelectedClassIds,
         } = request.body.data;
@@ -183,12 +183,18 @@ export const enroll = Functions.endpoint
                 success: transactionSuccess,
                 transaction: theTransaction,
                 errors: transactionErrors,
-            } = await braintree.transact({
-                amount: finalTotal,
-                nonce,
-                customer: { email: enrollmentRecord.contactEmail },
-                deviceData,
-            });
+            } = paymentMethod
+                ? await braintree.transact({
+                      amount: finalTotal,
+                      nonce: paymentMethod.nonce,
+                      customer: { email: enrollmentRecord.contactEmail },
+                      deviceData: paymentMethod.deviceData,
+                  })
+                : {
+                      success: false,
+                      transaction: undefined,
+                      errors: undefined,
+                  };
             success = transactionSuccess;
             transaction = theTransaction;
             errors = transactionErrors;

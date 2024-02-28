@@ -116,6 +116,17 @@ export class ConfirmationComponent {
         )
     );
 
+    readonly finalTotal = toSignal(
+        this.basketCosts$.pipe(
+            map(({ finalTotal }) => finalTotal),
+            tap((total) => {
+                if (!total) {
+                    this.validityChange.next(true);
+                }
+            })
+        )
+    );
+
     private readonly enrollmentSignal = toSignal(this.enrollment$);
 
     readonly selectedClassGroups = computed(() => {
