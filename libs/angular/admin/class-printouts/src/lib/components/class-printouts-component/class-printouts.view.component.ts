@@ -14,10 +14,25 @@ import {
 } from '@sol/angular/request';
 import { ClassPrintoutsLoadingViewComponent } from './class-printouts-loading.view.component';
 import { ClassPrintoutRow } from '../../models/class-printout-row.type';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sol-class-printouts-view',
-    template: `<h1>Class Forms and Contacts</h1>
+    template: `<div
+            style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px"
+        >
+            <h1>Class Forms and Contacts</h1>
+            <p-dropdown
+                [options]="semesters"
+                placeholder="Select a semester"
+                optionLabel="name"
+                optionValue="id"
+                [showClear]="false"
+                [ngModel]="selectedSemester"
+                (ngModelChange)="selectedSemesterChange.next($event)"
+            ></p-dropdown>
+        </div>
         <sol-class-printouts-skeleton-view
             *solLoading="rows"
         ></sol-class-printouts-skeleton-view>
@@ -87,6 +102,8 @@ import { ClassPrintoutRow } from '../../models/class-printout-row.type';
         SolLoadingDirective,
         SolLoadedDirective,
         ClassPrintoutsLoadingViewComponent,
+        DropdownModule,
+        FormsModule,
     ],
 })
 export class ClassPrintoutsViewComponent {
@@ -96,12 +113,19 @@ export class ClassPrintoutsViewComponent {
     isCopyEmailsInProgress!: Record<string, boolean>;
     @Input({ required: true })
     isClassFormDownloadInProgress!: Record<string, boolean>;
+    @Input({ required: true })
+    semesters!: Array<{ id: string; name: string }>;
+    @Input({ required: true })
+    selectedSemester!: string;
 
     @Output()
     copyEmailsClick = new EventEmitter<ClassPrintoutRow>();
 
     @Output()
     downloadClick = new EventEmitter<string>();
+
+    @Output()
+    selectedSemesterChange = new EventEmitter<string>();
 
     assertSemesterClass(obj: unknown): ClassPrintoutRow {
         return obj as ClassPrintoutRow;

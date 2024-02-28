@@ -24,8 +24,6 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
     templateUrl: './enrollments.component.html',
 })
 export class EnrollmentsComponent {
-    private readonly functionsApi = inject(FirebaseFunctionsService);
-
     readonly enrollments$ = inject(FirebaseFunctionsService)
         .call<Array<SemesterEnrollment>>('adminEnrollments')
         .pipe(
