@@ -65,6 +65,7 @@ export class ClassCardComponent {
         }>;
         userCost: number;
         semesterId: string;
+        forInformationOnly: boolean;
     };
 
     @Output() selectedChange = new EventEmitter<{

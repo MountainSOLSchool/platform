@@ -27,4 +27,5 @@ export interface SemesterClass {
     // it's an array of Firestore.DocumentReference, but that can't class can't be imported here
     students: Array<unknown>;
     semesterId: string;
+    forInformationOnly: boolean;
 }

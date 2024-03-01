@@ -164,38 +164,48 @@
                     >Confirm</p-button
                 >
             </p-overlayPanel>
-            @if ((classInfo.paymentRange?.lowest ?? -1) >= 0) {
-                @if (!selected) {
-                    <p-button
-                        [disabled]="classInfo.pausedForEnrollment"
-                        label="Select"
-                        styleClass="p-button-outlined"
-                        icon="pi pi-plus"
-                        (click)="op.toggle($event)"
-                    ></p-button>
-                } @else {
-                    <p-button
-                        [disabled]="classInfo.pausedForEnrollment"
-                        [label]="'Selected ($' + classInfo.userCost + ')'"
-                        styleClass="p-button-primary"
-                        icon="pi pi-check"
-                        (click)="deselected()"
-                    ></p-button>
-                }
+            @if (classInfo.forInformationOnly) {
+                Contact
+                <a href="mailto:info@mountainsol.org"
+                    >info&#64;mountainsol.org</a
+                >
+                for more information.
             } @else {
-                <p-toggleButton
-                    [disabled]="classInfo.pausedForEnrollment"
-                    [inputId]="'select' + classInfo.id"
-                    styleClass="p-button-primary"
-                    [onIcon]="'pi pi-check'"
-                    onLabel="Selected"
-                    [offIcon]="'pi pi-plus'"
-                    [offLabel]="
-                        classInfo.pausedForEnrollment ? 'Class Full' : 'Select'
-                    "
-                    [(ngModel)]="selected"
-                    (ngModelChange)="selectionToggled()"
-                ></p-toggleButton>
+                @if ((classInfo.paymentRange?.lowest ?? -1) >= 0) {
+                    @if (!selected) {
+                        <p-button
+                            [disabled]="classInfo.pausedForEnrollment"
+                            label="Select"
+                            styleClass="p-button-outlined"
+                            icon="pi pi-plus"
+                            (click)="op.toggle($event)"
+                        ></p-button>
+                    } @else {
+                        <p-button
+                            [disabled]="classInfo.pausedForEnrollment"
+                            [label]="'Selected ($' + classInfo.userCost + ')'"
+                            styleClass="p-button-primary"
+                            icon="pi pi-check"
+                            (click)="deselected()"
+                        ></p-button>
+                    }
+                } @else {
+                    <p-toggleButton
+                        [disabled]="classInfo.pausedForEnrollment"
+                        [inputId]="'select' + classInfo.id"
+                        styleClass="p-button-primary"
+                        [onIcon]="'pi pi-check'"
+                        onLabel="Selected"
+                        [offIcon]="'pi pi-plus'"
+                        [offLabel]="
+                            classInfo.pausedForEnrollment
+                                ? 'Class Full'
+                                : 'Select'
+                        "
+                        [(ngModel)]="selected"
+                        (ngModelChange)="selectionToggled()"
+                    ></p-toggleButton>
+                }
             }
         </div>
     </p-card>

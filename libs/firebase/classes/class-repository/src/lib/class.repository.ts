@@ -25,6 +25,7 @@ type ClassDbo = {
     paused_for_enrollment: boolean;
     daily_times: string;
     max_student_size: number;
+    for_information_only?: boolean;
 };
 
 export class ClassRepository {
@@ -136,6 +137,7 @@ export class ClassRepository {
                 ? dbo.students.length > dbo.max_student_size
                 : false,
             semesterId: await this.semester.getId(),
+            forInformationOnly: dbo.for_information_only ?? false,
         };
 
         if (!!dbo.payment_range_lowest || !!dbo.payment_range_highest) {

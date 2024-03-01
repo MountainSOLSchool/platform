@@ -59,6 +59,10 @@
                 "function": "availableEnrollmentClasses"
             },
             {
+                "source": "/classesBySemester",
+                "function": "classesBySemester"
+            },
+            {
                 "source": "/semestersAvailableToEnroll",
                 "function": "semestersAvailableToEnroll"
             },

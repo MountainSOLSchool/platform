@@ -2,7 +2,6 @@ import { Functions } from '@sol/firebase/functions';
 
 import { Semester } from '@sol/firebase/classes/semester';
 import { _getClasses } from './_getClasses';
-import { _getClassesForSemester } from './_getClassesForSemester';
 
 export const classes = Functions.endpoint.handle<
     | {
@@ -18,7 +17,7 @@ export const classes = Functions.endpoint.handle<
 
     const classes = query
         ? 'semesterId' in query
-            ? await _getClassesForSemester(query.semesterId)
+            ? await Semester.of(query.semesterId).classes.getAll()
             : await _getClasses(query)
         : await activeSemesterClasses.getAll();
 
