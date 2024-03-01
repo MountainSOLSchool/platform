@@ -108,7 +108,7 @@
                                 ></span
                             >
                         }
-                        Use code <b>4SUMMER2023</b> at checkout when you select
+                        Use code <b>4SUMMER2024</b> at checkout when you select
                         4 summer camps to get 10% off!
                     </p>
                 }
@@ -136,7 +136,7 @@
         @defer (when filteredClassRows()) {
             @if (filteredClassRows(); as filteredClassRows) {
                 @if (filteredClassRows.length > 0) {
-                    @for (row of filteredClassRows; track row) {
+                    @for (row of filteredClassRows; track row.index) {
                         <div
                             style="
                                 border-radius: 5px;
