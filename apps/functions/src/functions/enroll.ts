@@ -185,7 +185,7 @@ export const enroll = Functions.endpoint
                 errors: transactionErrors,
             } = paymentMethod
                 ? await braintree.transact({
-                      amount: finalTotal,
+                      amount: Number(finalTotal.toFixed(2)),
                       nonce: paymentMethod.nonce,
                       customer: { email: enrollmentRecord.contactEmail },
                       deviceData: paymentMethod.deviceData,
