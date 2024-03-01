@@ -3,6 +3,8 @@ import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
 import { AuthUtility } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { Semester } from '@sol/firebase/classes/semester';
+import { _getClasses } from './_getClasses';
+import { _getSemestersAvailableToEnroll } from './_getSemestersAvailableToEnroll';
 
 export const createEnrollmentEmail = firestore
     .document('enrollment/{enrollmentId}')
@@ -10,13 +12,26 @@ export const createEnrollmentEmail = firestore
         const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
 
         if (
-            enrollmentRecord.status === 'enrolled' &&
-            (!!enrollmentRecord.transactionId ||
-                enrollmentRecord.finalCost === 0)
+            (enrollmentRecord.status === 'enrolled' &&
+                (!!enrollmentRecord.transactionId ||
+                    enrollmentRecord.finalCost === 0) &&
+                'classIds' in enrollmentRecord) ||
+            'classes' in enrollmentRecord
         ) {
-            const classes = await Semester.active().classes.getMany(
-                enrollmentRecord.classIds
+            const semesters = await _getSemestersAvailableToEnroll();
+            const semesterNamesById = semesters.reduce(
+                (acc, s) => ({ ...acc, [s.id]: s.name }),
+                {} as Record<string, string>
             );
+
+            const classes =
+                'classes' in enrollmentRecord
+                    ? Object.values(
+                          await _getClasses(enrollmentRecord.classes)
+                      ).flatMap((cl) => cl)
+                    : await Semester.active().classes.getMany(
+                          enrollmentRecord.classIds
+                      );
 
             const classesCost = classes.reduce((total, c) => total + c.cost, 0);
             const totalDiscounts = enrollmentRecord.discounts.reduce(
@@ -56,6 +71,9 @@ export const createEnrollmentEmail = firestore
                             Class Name
                           </th>
                           <th>
+                            Semester
+                          </th>
+                          <th>
                             Cost
                           </th>
                           </thead>
@@ -66,6 +84,9 @@ export const createEnrollmentEmail = firestore
                                         `<tr>
                             <td>
                                 ${c.title}
+                            </td>
+                            <td>
+                                ${semesterNamesById[c.semesterId] ?? '--'}
                             </td>
                             <td>
                                 $${c.cost}

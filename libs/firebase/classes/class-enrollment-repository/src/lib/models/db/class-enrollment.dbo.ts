@@ -1,4 +1,4 @@
-export interface ClassEnrollmentDbo {
+export type ClassEnrollmentDbo = {
     relatedId?: string;
     studentId?: string;
     userId: string;
@@ -12,7 +12,6 @@ export interface ClassEnrollmentDbo {
         amount: number;
         description: string;
     }>;
-    classIds: Array<string>;
     transactionId?: string;
     status: 'pending' | 'enrolled' | 'failed';
     failures?: Array<string>;
@@ -21,4 +20,12 @@ export interface ClassEnrollmentDbo {
         name: string;
         signature: string;
     }>;
-}
+} & (
+    | {
+          /** @deprecated Only old records have unqualified classes */
+          classIds: Array<string>;
+      }
+    | {
+          classes: Array<{ id: string; semesterId: string }>;
+      }
+);

@@ -19,26 +19,42 @@
         </p-panel>
     </div>
     <div>
-        <p-panel header="Fall 2023 Enrollment"
-            ><div style="width: 500px; margin-top: 10px">
-                @defer (when data() !== undefined) {
-                    <p-chart
-                        type="radar"
-                        [data]="data()"
-                        [options]="chartOptions"
-                        [style]="{ height: '200px' }"
-                    ></p-chart>
-                } @placeholder (minimum 1s) {
-                    <div
-                        style="
-                            margin-left: auto;
-                            margin-right: auto;
-                            width: fit-content;
-                        "
-                    >
-                        <p-progressSpinner></p-progressSpinner>
+        @if (semesters(); as semesters) {
+            <p-panel>
+                <ng-template pTemplate="header">
+                    <div style="display: flex; align-items: center; gap: 10px">
+                        <p-dropdown
+                            [options]="semesters"
+                            placeholder="Select a semester"
+                            optionLabel="name"
+                            optionValue="id"
+                            [showClear]="false"
+                            [ngModel]="selectedSemester()"
+                            (ngModelChange)="selectedSemester.set($event)"
+                        ></p-dropdown>
+                        <span class="font-bold">Enrollment</span>
                     </div>
-                }</div
-        ></p-panel>
+                </ng-template>
+                <div style="width: 500px; margin-top: 10px">
+                    @defer (when data() !== undefined) {
+                        <p-chart
+                            type="radar"
+                            [data]="data()"
+                            [options]="chartOptions"
+                            [style]="{ height: '200px' }"
+                        ></p-chart>
+                    } @placeholder (minimum 1s) {
+                        <div
+                            style="
+                                margin-left: auto;
+                                margin-right: auto;
+                                width: fit-content;
+                            "
+                        >
+                            <p-progressSpinner></p-progressSpinner>
+                        </div>
+                    }</div
+            ></p-panel>
+        }
     </div>
 </div>

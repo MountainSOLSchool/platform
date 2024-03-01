@@ -30,10 +30,11 @@ import { EnrollmentSkeletonViewComponent } from './enrollment-skeleton.view.comp
                     enrollment of sortEnrollments(enrollments);
                     track enrollment
                 ) {
-                    <sol-enrollment-view
-                        style="margin-top: 2rem"
-                        [enrollment]="enrollment"
-                    ></sol-enrollment-view>
+                    <div style="margin-top: 2rem">
+                        <sol-enrollment-view
+                            [enrollment]="enrollment"
+                        ></sol-enrollment-view>
+                    </div>
                 }
             } @else {
                 <p>You have no enrollments.</p>

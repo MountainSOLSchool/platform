@@ -1,5 +1,5 @@
 @if (allStepsComplete) {
-    <ng-container *rxLet="viewModel$; let vm">
+    <ng-container *rxLet="viewModel$; let vm; suspense: skeleton">
         <div class="section">
             <p-fieldset legend="Student" *rxLet="student$; let student">
                 <p>Name: {{ student?.firstName }} {{ student?.lastName }}</p>
@@ -10,8 +10,8 @@
         <div class="section">
             <p-fieldset legend="Class Cost Summary">
                 <sol-class-summary-table
-                    [classIds]="vm.enrollment.selectedClasses"
-                    [groupIds]="vm.selectedClassGroupIds"
+                    [classes]="vm.enrollment.selectedClasses"
+                    [groups]="selectedClassGroups() ?? []"
                     [userCostsToClassIds]="vm.userCostsToClassIds"
                 ></sol-class-summary-table>
             </p-fieldset>
@@ -104,17 +104,21 @@
 
         <div class="section">
             <p-fieldset legend="Payment Method">
-                <sol-checkout
-                    *rxLet="
-                        randomValueThatResetsPaymentCollector$;
-                        let randomValueThatResetsPaymentCollector
-                    "
-                    [randomValueThatResetsPaymentCollector]="
-                        randomValueThatResetsPaymentCollector
-                    "
-                    [interacted]="interacted"
-                    (validityChange)="validityChange.next($event)"
-                ></sol-checkout>
+                @if (finalTotal()) {
+                    <sol-checkout
+                        *rxLet="
+                            randomValueThatResetsPaymentCollector$;
+                            let randomValueThatResetsPaymentCollector
+                        "
+                        [randomValueThatResetsPaymentCollector]="
+                            randomValueThatResetsPaymentCollector
+                        "
+                        [interacted]="interacted"
+                        (validityChange)="validityChange.next($event)"
+                    ></sol-checkout>
+                } @else {
+                    <p>No payment method is required at this time.</p>
+                }
                 <div>
                     <p *rxLet="userEmail$; let email">
                         Receipt Email: {{ email }}
@@ -147,6 +151,19 @@
             </p-fieldset>
         </div>
     </ng-container>
+    <ng-template #skeleton>
+        <div style="width: 100%; margin-top: 1rem">
+            <div
+                style="
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: fit-content;
+                "
+            >
+                <p-progressSpinner></p-progressSpinner>
+            </div>
+        </div>
+    </ng-template>
 } @else {
     <p>Please complete all steps before submitting.</p>
 }

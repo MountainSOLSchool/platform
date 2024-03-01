@@ -10,8 +10,10 @@ import { Discount, EnrollmentUtility } from '@sol/classes/domain';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
-import { Semester } from '@sol/firebase/classes/semester';
 import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
+import { _getClasses } from './_getClasses';
+import { Semester } from '@sol/firebase/classes/semester';
+import { _getClassGroupsFromClasses } from './_getClassGroupsFromClasses';
 
 function _mapStudentFormToStudentDbEntry(
     form: StudentForm
@@ -88,12 +90,11 @@ export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .usingStrings(...Braintree.STRING_NAMES)
     .handle<{
-        selectedClasses: Array<string>;
-        selectedClassGroups: Array<string>;
+        selectedClasses: Array<{ id: string; semesterId: string }>;
         student: StudentForm;
         releaseSignatures: Array<{ name: string; signature: string }>;
         discountCodes: Array<string>;
-        paymentMethod: { nonce: string; deviceData: string };
+        paymentMethod?: { nonce: string; deviceData: string };
         userCostsToSelectedClassIds: Record<string, number | undefined>;
     }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
@@ -107,7 +108,7 @@ export const enroll = Functions.endpoint
             selectedClasses,
             student,
             discountCodes,
-            paymentMethod: { nonce, deviceData },
+            paymentMethod,
             releaseSignatures,
             userCostsToSelectedClassIds,
         } = request.body.data;
@@ -116,11 +117,9 @@ export const enroll = Functions.endpoint
             await _assertUserCanManageStudent(user, student.id, response);
         }
 
-        const semester = Semester.active();
-
-        const classesRepository = semester.classes;
-
-        const classes = await classesRepository.getMany(selectedClasses);
+        const classes = Object.values(
+            await _getClasses(selectedClasses)
+        ).flatMap((c) => c);
 
         const classesWithUserCostsApplied = EnrollmentUtility.applyUserCosts(
             classes,
@@ -132,8 +131,9 @@ export const enroll = Functions.endpoint
             return;
         }
 
-        const classGroups =
-            await semester.groups.getByClassIds(selectedClasses);
+        const classGroups = Object.values(
+            await _getClassGroupsFromClasses(selectedClasses)
+        ).flatMap((g) => g);
 
         const discounts = (
             await Promise.all(
@@ -162,7 +162,10 @@ export const enroll = Functions.endpoint
                 description: da.code,
                 amount: da.amount,
             })),
-            classIds: classes.map((c) => c.id),
+            classes: classes.map((c) => ({
+                id: c.id,
+                semesterId: c.semesterId,
+            })),
         };
 
         const studentEnrollmentId = await ClassEnrollmentRepository.create({
@@ -180,12 +183,18 @@ export const enroll = Functions.endpoint
                 success: transactionSuccess,
                 transaction: theTransaction,
                 errors: transactionErrors,
-            } = await braintree.transact({
-                amount: finalTotal,
-                nonce,
-                customer: { email: enrollmentRecord.contactEmail },
-                deviceData,
-            });
+            } = paymentMethod
+                ? await braintree.transact({
+                      amount: finalTotal,
+                      nonce: paymentMethod.nonce,
+                      customer: { email: enrollmentRecord.contactEmail },
+                      deviceData: paymentMethod.deviceData,
+                  })
+                : {
+                      success: false,
+                      transaction: undefined,
+                      errors: undefined,
+                  };
             success = transactionSuccess;
             transaction = theTransaction;
             errors = transactionErrors;
@@ -211,7 +220,7 @@ export const enroll = Functions.endpoint
 
             await Promise.all(
                 classes.map(async (c) => {
-                    await classesRepository.addStudentToClass(
+                    await Semester.of(c.semesterId).classes.addStudentToClass(
                         studentRef.id,
                         c.id
                     );

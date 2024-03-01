@@ -21,12 +21,11 @@ export class SolLoadedDirective<T> {
     private readonly viewContainer = inject(ViewContainerRef);
 
     @Input() set solLoaded(requestState: Requested<T> | null | undefined) {
+        this.viewContainer.clear();
         if (RequestedUtility.isLoaded(requestState)) {
             this.viewContainer.createEmbeddedView(this.templateRef, {
                 $implicit: requestState,
             });
-        } else {
-            this.viewContainer.clear();
         }
     }
 

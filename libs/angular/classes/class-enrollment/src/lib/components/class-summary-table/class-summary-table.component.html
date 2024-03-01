@@ -1,15 +1,15 @@
 <div>
     <p-table
-        *rxLet="classCostSummaryRows$; let rows; suspense: loading"
-        [value]="rows ?? []"
+        [value]="classCostSummaryRows() ?? []"
         [tableStyle]="{ width: '100%', 'min-width': '300px' }"
-        [loading]="!rows"
+        [loading]="isLoading()"
         responsiveLayout="stack"
         [breakpoint]="'900px'"
     >
         <ng-template pTemplate="header">
             <tr>
                 <th>Class</th>
+                <th>Semester</th>
                 <th>Date</th>
                 <th>Cost</th>
             </tr>
@@ -17,13 +17,10 @@
         <ng-template pTemplate="body" let-row>
             <tr style="width: 100%; min-width: 300px">
                 <td>{{ row.name }}</td>
+                <td>{{ row.semester }}</td>
                 <td>{{ row.date }}</td>
                 <td>{{ row.cost | currency }}</td>
             </tr>
         </ng-template>
     </p-table>
 </div>
-
-<ng-template #loading>
-    <p-progressSpinner></p-progressSpinner>
-</ng-template>

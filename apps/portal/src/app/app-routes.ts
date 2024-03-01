@@ -5,12 +5,13 @@ import { AdminGuard } from './admin.guard';
 import { LoginEffectModule } from './login.effects';
 import { UserGuard } from './user.guard';
 import { provideClassList } from '@sol/angular/classes/list';
+import { provideRequests } from '@sol/angular/request';
 
 export const appRoutes: Routes = [
     {
         path: '',
         component: HeaderComponent,
-        providers: [importProvidersFrom(LoginEffectModule)],
+        providers: [importProvidersFrom(LoginEffectModule), provideRequests()],
         children: [
             {
                 path: 'user',

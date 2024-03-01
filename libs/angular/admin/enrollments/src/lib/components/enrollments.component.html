@@ -18,11 +18,20 @@
     responsiveLayout="scroll"
     [loading]="(enrollments$ | async) === null"
     sortMode="single"
+    [paginator]="true"
+    [rows]="20"
+    [showCurrentPageReport]="true"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} enrollments"
+    [rowsPerPageOptions]="[5, 10, 20]"
 >
     <ng-template pTemplate="header">
         <tr>
             <th pSortableColumn="studentName">
                 Student Name <p-sortIcon field="studentName"></p-sortIcon>
+            </th>
+            <th pSortableColumn="date">
+                Date <p-sortIcon field="date"></p-sortIcon>
             </th>
             <th pSortableColumn="finalCost">
                 Final Cost <p-sortIcon field="finalCost"></p-sortIcon>
@@ -50,6 +59,7 @@
     <ng-template pTemplate="body" let-enrollment>
         <tr>
             <td>{{ enrollment.studentName }}</td>
+            <td>{{ enrollment.date | date }}</td>
             <td>{{ enrollment.finalCost | currency }}</td>
             @for (
                 discount of longestDiscounts$ | async;

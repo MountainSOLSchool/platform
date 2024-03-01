@@ -1,0 +1,212 @@
+<div
+    [ngStyle]="{
+        border: selected ? '.2rem solid #3c82f7' : '.2rem solid transparent',
+        'border-radius': '6px',
+        'border-top-right-radius': '80px',
+        'margin-bottom': '2em',
+        'box-sizing': 'border-box',
+        'margin-left': 'auto',
+        'margin-right': 'auto',
+        'min-width': '300px',
+        height: 'fit-content'
+    }"
+>
+    <p-card styleClass="class-card">
+        <ng-template pTemplate="header"></ng-template>
+        <div style="position: relative; margin-top: -2.5rem">
+            <div style="padding-right: 145px">
+                <h2>
+                    {{ classInfo.title
+                    }}{{ classInfo.pausedForEnrollment ? ' (Full)' : '' }}
+                </h2>
+            </div>
+            <!-- circular div with image -->
+            <div
+                [ngStyle]="{
+                    position: 'absolute',
+                    top: '-30px',
+                    right: '-25px',
+                    display: 'inline-block',
+                    width: '165px',
+                    height: '165px',
+                    background: 'url(' + classInfo.thumbnailUrl + ')',
+                    'background-position': '50% 50%',
+                    'background-size': 'cover',
+                    'border-radius': '50%',
+                    filter: classInfo.pausedForEnrollment
+                        ? 'grayscale(100%)'
+                        : '',
+                    border: '3px solid ' + (selected ? '#3c82f7' : 'black')
+                }"
+            ></div>
+        </div>
+        <div
+            class="flex flex-wrap align-items-center"
+            style="
+                margin-bottom: 1.5rem;
+                margin-top: 1rem;
+                gap: 3px;
+                padding-right: 145px;
+            "
+        >
+            <p-chip
+                [label]="classInfo.classDateTimes"
+                icon="pi pi-calendar"
+                styleClass="mr-2 custom-chip"
+            ></p-chip>
+            <p-chip
+                [label]="classInfo.weekday"
+                styleClass="mr-2 custom-chip"
+            ></p-chip>
+            <p-chip
+                [label]="classInfo.dailyTimes"
+                icon="pi pi-clock"
+                styleClass="mr-2 custom-chip"
+            ></p-chip>
+        </div>
+        <p>
+            <b>Class Type:</b>
+            {{ classInfo.classType }}<br />
+            <b>Grades:</b>
+            {{ classInfo.gradeRangeStart }}
+            -
+            {{ classInfo.gradeRangeEnd }}<br />
+            <b>Location:</b>
+            {{ classInfo.location }}<br />
+            @if (!classInfo.paymentRange) {
+                <b>Cost:</b>
+                ${{ classInfo.cost }}<br />
+            } @else {
+                <b>Sliding Scale Cost:</b>
+                ${{ classInfo.paymentRange?.lowest }}-${{
+                    classInfo.paymentRange?.highest
+                }}<br />
+            }
+            <b>Instructors:</b>
+            @for (
+                instructor of classInfo.instructors;
+                track instructor;
+                let isLast = $last
+            ) {
+                <span>
+                    {{ instructor.firstName }}
+                    {{ instructor.lastName }}{{ isLast ? '' : ', ' }}
+                </span>
+            }
+            <br />
+            <br />
+            <b>Description:</b>
+            <br />
+            <markdown>{{ classInfo.description }}</markdown>
+            <br />
+        </p>
+        <div style="margin-top: 2rem; margin-bottom: -1rem">
+            @if (classInfo.pausedForEnrollment) {
+                <div style="margin-bottom: 1rem">
+                    <b
+                        >This class is not accepting additional students at this
+                        time.</b
+                    >
+                </div>
+            }
+            <p-overlayPanel pAutoFocus #op>
+                <div>Sliding Scale Cost</div>
+                <div
+                    style="margin-top: 1rem; margin-bottom: 1rem; display: flex"
+                >
+                    <p-button
+                        icon="pi pi-minus"
+                        styleClass="p-button-outlined"
+                        [disabled]="
+                            classInfo.userCost <=
+                            (classInfo.paymentRange?.lowest ?? classInfo.cost)
+                        "
+                        (onClick)="classInfo.userCost = classInfo.userCost - 5"
+                    ></p-button>
+                    <div>
+                        <p-inputNumber
+                            mode="currency"
+                            currency="USD"
+                            [min]="
+                                classInfo.paymentRange?.lowest ?? classInfo.cost
+                            "
+                            [max]="
+                                classInfo.paymentRange?.highest ??
+                                classInfo.cost
+                            "
+                            [(ngModel)]="classInfo.userCost"
+                            class="w-full"
+                        />
+                        <p-slider
+                            [step]="5"
+                            [min]="
+                                classInfo.paymentRange?.lowest ?? classInfo.cost
+                            "
+                            [max]="
+                                classInfo.paymentRange?.highest ??
+                                classInfo.cost
+                            "
+                            [(ngModel)]="classInfo.userCost"
+                            class="w-full"
+                        ></p-slider>
+                    </div>
+                    <p-button
+                        icon="pi pi-plus"
+                        styleClass="p-button-outlined"
+                        [disabled]="
+                            classInfo.userCost >=
+                            (classInfo.paymentRange?.highest ?? classInfo.cost)
+                        "
+                        (onClick)="classInfo.userCost = classInfo.userCost + 5"
+                    ></p-button>
+                </div>
+                <p-button (click)="customCostSelected(classInfo.userCost, op)"
+                    >Confirm</p-button
+                >
+            </p-overlayPanel>
+            @if (classInfo.forInformationOnly) {
+                Contact
+                <a href="mailto:info@mountainsol.org"
+                    >info&#64;mountainsol.org</a
+                >
+                for more information.
+            } @else {
+                @if ((classInfo.paymentRange?.lowest ?? -1) >= 0) {
+                    @if (!selected) {
+                        <p-button
+                            [disabled]="classInfo.pausedForEnrollment"
+                            label="Select"
+                            styleClass="p-button-outlined"
+                            icon="pi pi-plus"
+                            (click)="op.toggle($event)"
+                        ></p-button>
+                    } @else {
+                        <p-button
+                            [disabled]="classInfo.pausedForEnrollment"
+                            [label]="'Selected ($' + classInfo.userCost + ')'"
+                            styleClass="p-button-primary"
+                            icon="pi pi-check"
+                            (click)="deselected()"
+                        ></p-button>
+                    }
+                } @else {
+                    <p-toggleButton
+                        [disabled]="classInfo.pausedForEnrollment"
+                        [inputId]="'select' + classInfo.id"
+                        styleClass="p-button-primary"
+                        [onIcon]="'pi pi-check'"
+                        onLabel="Selected"
+                        [offIcon]="'pi pi-plus'"
+                        [offLabel]="
+                            classInfo.pausedForEnrollment
+                                ? 'Class Full'
+                                : 'Select'
+                        "
+                        [(ngModel)]="selected"
+                        (ngModelChange)="selectionToggled()"
+                    ></p-toggleButton>
+                }
+            }
+        </div>
+    </p-card>
+</div>

@@ -1,5 +1,5 @@
 import { ComponentStore } from '@ngrx/component-store';
-import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 import { computed, inject, Injectable } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { Clipboard } from '@angular/cdk/clipboard';
@@ -12,11 +12,14 @@ import {
 } from '@sol/angular/request';
 import { ClassPrintoutRow } from '../models/class-printout-row.type';
 import { ClassListService } from '@sol/angular/classes/list';
+import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 
 interface ClassPrintoutsState {
     inProgressClassFormDownloads: Record<string, boolean>;
     inProgressCopyClassEmails: Record<string, boolean>;
     rows: Requested<Array<ClassPrintoutRow>>;
+    semesters: Array<{ id: string; name: string }>;
+    selectedSemester: string;
 }
 
 @Injectable()
@@ -25,8 +28,15 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
     private readonly functionsApi = inject(FirebaseFunctionsService);
     private readonly clipboard = inject(Clipboard);
     private readonly messageService = inject(MessageService);
+    private readonly classSemesterListService = inject(
+        ClassesSemesterListService
+    );
 
     readonly rows = computed(() => this.state().rows);
+    readonly selectedSelectedSemester = computed(
+        () => this.state().selectedSemester
+    );
+    readonly semesters = computed(() => this.state().semesters);
     readonly inProgressClassFormDownloads = computed(
         () => this.state().inProgressClassFormDownloads
     );
@@ -39,40 +49,74 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
             inProgressClassFormDownloads: {},
             inProgressCopyClassEmails: {},
             rows: RequestState.Empty,
+            semesters: [],
+            selectedSemester: '',
         });
     }
 
-    readonly loadClassRows = this.effect((call) => {
-        return call.pipe(
-            switchMap(() => {
-                return this.classListService.getCurrentSemesterClasses().pipe(
-                    map((classes) =>
-                        RequestedUtility.mapLoaded(classes, (cs) =>
-                            cs.map((c) => {
-                                const start = new Date(
-                                    c.startMs
-                                ).toLocaleDateString();
-                                const end = new Date(
-                                    c.endMs
-                                ).toLocaleDateString();
-                                return {
-                                    id: c.id,
-                                    title: c.title,
-                                    enrolledCount: String(c.enrolledCount),
-                                    start,
-                                    end,
-                                };
-                            })
-                        )
-                    ),
-                    tap((rows) => this.patchState({ rows }))
-                );
-            })
-        );
-    });
+    readonly loadClassRows = this.effect(
+        (selectedSemester: Observable<string>) => {
+            return selectedSemester.pipe(
+                tap((selectedSemester) =>
+                    this.patchState({ selectedSemester })
+                ),
+                switchMap((semester) => {
+                    return this.classListService
+                        .getClassesBySemesterIds([semester])
+                        .pipe(
+                            map((bySemester) =>
+                                RequestedUtility.mapLoaded(
+                                    bySemester,
+                                    (bs) => bs[semester]
+                                )
+                            ),
+                            map((classes) =>
+                                RequestedUtility.mapLoaded(classes, (cs) => {
+                                    const allClasses = [
+                                        ...cs.classes,
+                                        ...cs.groups.flatMap(
+                                            ({ classes }) => classes
+                                        ),
+                                    ];
+                                    return allClasses.map((c) => {
+                                        const start = new Date(
+                                            c.startMs
+                                        ).toLocaleDateString();
+                                        const end = new Date(
+                                            c.endMs
+                                        ).toLocaleDateString();
+                                        return {
+                                            id: c.id,
+                                            title: c.title,
+                                            enrolledCount: String(
+                                                c.enrolledCount
+                                            ),
+                                            start,
+                                            end,
+                                        };
+                                    });
+                                })
+                            ),
+                            tap((rows) => this.patchState({ rows }))
+                        );
+                })
+            );
+        }
+    );
 
-    private loadClassRowsOnInit = this.effect(() => {
-        return of(undefined).pipe(tap(() => this.loadClassRows()));
+    private readonly loadSemesters = this.effect(() => {
+        return this.classSemesterListService
+            .getAllSemestersWithCurrentFirst()
+            .pipe(
+                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                tap((semesters) => {
+                    this.patchState({
+                        semesters,
+                        selectedSemester: semesters[0].id,
+                    });
+                    this.loadClassRows(semesters[0].id);
+                })
+            );
     });
 
     readonly downloadClassForms = this.effect(
@@ -121,7 +165,9 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                     return this.functionsApi
                         .call<{
                             list: Array<string>;
-                        }>(`emails?classId=${semeseterClass.id}`)
+                        }>(
+                            `emails?classId=${semeseterClass.id}&semesterId=${this.get().selectedSemester}`
+                        )
                         .pipe(
                             RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                             map(({ list }) => list.join(', ')),
@@ -149,7 +195,11 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
 
     private openClassSignIn(classId: string) {
         return this.functionsApi
-            .call<{ html: string }>(`signIn?classId=${classId}`)
+            .call<{
+                html: string;
+            }>(
+                `signIn?classId=${classId}&semesterId=${this.get().selectedSemester}`
+            )
             .pipe(
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 tap(({ html }) => {
@@ -171,7 +221,11 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
 
     private openClassRoster(classId: string) {
         return this.functionsApi
-            .call<{ html: string }>(`roster?classId=${classId}`)
+            .call<{
+                html: string;
+            }>(
+                `roster?classId=${classId}&semesterId=${this.get().selectedSemester}`
+            )
             .pipe(
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 tap(({ html }) => {
@@ -191,7 +245,11 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
 
     private openStudentHealth(classId: string) {
         return this.functionsApi
-            .call<{ html: string }>(`studentHealth?classId=${classId}`)
+            .call<{
+                html: string;
+            }>(
+                `studentHealth?classId=${classId}&semesterId=${this.get().selectedSemester}`
+            )
             .pipe(
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 tap(({ html }) => {

@@ -5,31 +5,62 @@ import { Semester } from '@sol/firebase/classes/semester';
 
 export const calculateBasket = Functions.endpoint.handle<{
     codes: Array<string>;
-    classIds: Array<string>;
+    classes: Array<{ id: string; semesterId: string }>;
     userCostsToClassIds: Record<string, number | undefined>;
 }>(async (request, response) => {
-    const { codes, classIds, userCostsToClassIds } = request.body.data;
+    const {
+        codes,
+        classes: requestClasses,
+        userCostsToClassIds,
+    } = request.body.data;
     const discounts = (
         await Promise.all(
             codes.map(async (code) => await DiscountRepository.get(code))
         )
     ).filter((code): code is Discount<unknown> => !!code);
 
-    const groups = await Semester.active().groups.getByClassIds(classIds);
+    const classIds = requestClasses.map(({ id }) => id);
+    const semesterIds = Array.from(
+        new Set(requestClasses.map(({ semesterId }) => semesterId))
+    );
+    const groups = await Promise.all(
+        semesterIds.map(async (semesterId) => {
+            const groups =
+                await Semester.of(semesterId).groups.getByClassIds(classIds);
+            return groups;
+        })
+    ).then((groups) => groups.flat());
 
-    const idsOfStandaloneClasses = classIds.filter(
-        (id) =>
+    const standaloneClasses = requestClasses.filter(
+        (requestClass) =>
             !groups.some(
                 (group) =>
                     !group.classes.find(
-                        ({ id: groupClassId }) => groupClassId === id
+                        ({ id: groupClassId }) =>
+                            groupClassId === requestClass.id
                     )
             )
     );
 
-    const classes = await Semester.active().classes.getMany(
-        idsOfStandaloneClasses
+    const classIdsBySemesterId = standaloneClasses.reduce(
+        (acc, { id, semesterId }) => {
+            if (!acc[semesterId]) {
+                acc[semesterId] = [];
+            }
+            acc[semesterId].push(id);
+            return acc;
+        },
+        {} as Record<string, Array<string>>
     );
+    const classes = await Promise.all(
+        Object.entries(classIdsBySemesterId).map(
+            async ([semesterId, classIds]) => {
+                const classes =
+                    await Semester.of(semesterId).classes.getMany(classIds);
+                return classes;
+            }
+        )
+    ).then((classes) => classes.flat());
 
     const classesWithUserCostsApplied = EnrollmentUtility.applyUserCosts(
         classes,

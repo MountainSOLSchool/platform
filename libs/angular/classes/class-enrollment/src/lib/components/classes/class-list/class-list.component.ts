@@ -5,13 +5,28 @@ import {
     inject,
     Input,
     Output,
-    Signal,
     signal,
 } from '@angular/core';
-import { combineLatest, delay, map, merge, of, shareReplay, skip } from 'rxjs';
+import {
+    delay,
+    filter,
+    map,
+    merge,
+    of,
+    shareReplay,
+    skip,
+    switchMap,
+} from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
 import { CardModule } from 'primeng/card';
-import { AsyncPipe, CurrencyPipe, DatePipe, NgStyle } from '@angular/common';
+import {
+    AsyncPipe,
+    CurrencyPipe,
+    DatePipe,
+    KeyValuePipe,
+    NgStyle,
+    NgTemplateOutlet,
+} from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip';
@@ -22,19 +37,28 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SliderModule } from 'primeng/slider';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ClassListService } from '@sol/angular/classes/list';
-import { RequestedOperatorsUtility } from '@sol/angular/request';
+import {
+    Requested,
+    RequestedOperatorsUtility,
+    requestStateDirectives,
+} from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MarkdownComponent } from 'ngx-markdown';
+import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
+import { TabViewModule } from 'primeng/tabview';
+import { ClassCardComponent } from '../class-card/class-card.component';
+import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -61,6 +85,7 @@ interface ClassRow {
         ToggleButtonModule,
         ProgressSpinnerModule,
         DropdownModule,
+        MultiSelectModule,
         MessagesModule,
         MessageModule,
         ToastModule,
@@ -70,6 +95,12 @@ interface ClassRow {
         AutoFocusModule,
         InputNumberModule,
         MarkdownComponent,
+        requestStateDirectives,
+        KeyValuePipe,
+        TabViewModule,
+        ClassCardComponent,
+        NgTemplateOutlet,
+        ClassesSkeletonComponent,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -82,6 +113,7 @@ export class ClassesComponent {
         this._interacted.set(value);
     }
     private readonly classListService = inject(ClassListService);
+    private readonly semesterListService = inject(ClassesSemesterListService);
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
 
@@ -89,10 +121,10 @@ export class ClassesComponent {
 
     private gradeFilter = signal<[] | [number, number]>([]);
 
-    private isFakeSearchStarted$ = combineLatest([
+    private isFakeSearchStarted$ = merge(
         toObservable(this.search).pipe(skip(1)),
-        toObservable(this.gradeFilter).pipe(skip(1)),
-    ]).pipe(map(() => true));
+        toObservable(this.gradeFilter).pipe(skip(1))
+    ).pipe(map(() => true));
 
     readonly isFakeSearchLoading$ = merge(
         this.isFakeSearchStarted$,
@@ -101,10 +133,14 @@ export class ClassesComponent {
             map(() => false)
         ),
         of(false)
+    ).pipe();
+
+    selectedWorkflowClasses = this.workflow.selectSignal(
+        (state) => state.enrollment.selectedClasses
     );
 
-    selectedClassIds = this.workflow.selectSignal(
-        (state) => state.enrollment.selectedClasses
+    selectedClassIds = computed(() =>
+        this.selectedWorkflowClasses().map((c) => c.id)
     );
 
     isValid = computed(() => this.selectedClassIds().length > 0);
@@ -113,66 +149,112 @@ export class ClassesComponent {
 
     @Output() validityChange = toObservable(this.isValid);
 
-    classRows: Signal<Array<ClassRow> | undefined> = toSignal(
-        this.classListService.getAvailableEnrollmentClassesAndGroups().pipe(
+    readonly semesterOptions = toSignal(
+        this.semesterListService.getEnrollableSemesters().pipe(
             RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-            shareReplay(),
-            map(({ classes, groups }) => {
-                const classesAsClassRows = classes
-                    .map((c) => ({
-                        ...c,
-                        classDateTimes:
-                            c.startMs && c.endMs
-                                ? this.datePipe.transform(
-                                      new Date(c.startMs),
-                                      'shortDate'
-                                  ) +
-                                  ' - ' +
-                                  this.datePipe.transform(
-                                      new Date(c.endMs),
-                                      'shortDate'
-                                  )
-                                : '',
-                    }))
-                    .map((c) => ({
-                        classes: [c],
-                        start: new Date(c.startMs),
-                    }));
-                const groupsAsClassRows = groups.map((g) => ({
-                    classes: g.classes.map((c) => ({
-                        ...c,
-                        classDateTimes:
-                            c.startMs && c.endMs
-                                ? this.datePipe.transform(
-                                      new Date(c.startMs),
-                                      'shortDate'
-                                  ) +
-                                  ' - ' +
-                                  this.datePipe.transform(
-                                      new Date(c.endMs),
-                                      'shortDate'
-                                  )
-                                : '',
-                    })),
-                    group: g,
-                    start: new Date(g.classes[0].startMs),
-                }));
-                return [...classesAsClassRows, ...groupsAsClassRows]
-                    .sort((a, b) => a.start.getTime() - b.start.getTime())
-                    .map((row, index) => ({
-                        ...row,
-                        index,
-                    }));
-            })
-        ),
-        { initialValue: undefined }
+            map((semesters) => semesters.map(({ id, name }) => ({ id, name })))
+        )
     );
 
-    classes = computed(() =>
-        this.classRows()
-            ?.map((row) => row.classes)
-            .reduce((a, b) => a.concat(b), [])
+    readonly classRowsBySemesters = toSignal(
+        toObservable(this.semesterOptions).pipe(
+            filter((semesters) => !!semesters && semesters.length > 0),
+            map((semesters) => semesters as NonNullable<typeof semesters>),
+            map((semesters) => semesters.map((s) => s.id)),
+            switchMap((semesterIds) =>
+                this.classListService.getClassesBySemesterIds(semesterIds).pipe(
+                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                    shareReplay(),
+                    map((classesBySemester) => {
+                        return Object.fromEntries(
+                            Object.entries(classesBySemester).map(
+                                ([semesterId, { classes, groups }]) => {
+                                    const classesAsClassRows = classes
+                                        .map((c) => ({
+                                            ...c,
+                                            classDateTimes:
+                                                c.startMs && c.endMs
+                                                    ? this.datePipe.transform(
+                                                          new Date(c.startMs),
+                                                          'shortDate'
+                                                      ) +
+                                                      ' - ' +
+                                                      this.datePipe.transform(
+                                                          new Date(c.endMs),
+                                                          'shortDate'
+                                                      )
+                                                    : '',
+                                        }))
+                                        .map((c) => ({
+                                            classes: [c],
+                                            start: new Date(c.startMs),
+                                            selected: false,
+                                        }));
+                                    const groupsAsClassRows = groups.map(
+                                        (g) => ({
+                                            classes: g.classes.map((c) => ({
+                                                ...c,
+                                                classDateTimes:
+                                                    c.startMs && c.endMs
+                                                        ? this.datePipe.transform(
+                                                              new Date(
+                                                                  c.startMs
+                                                              ),
+                                                              'shortDate'
+                                                          ) +
+                                                          ' - ' +
+                                                          this.datePipe.transform(
+                                                              new Date(c.endMs),
+                                                              'shortDate'
+                                                          )
+                                                        : '',
+                                            })),
+                                            group: g,
+                                            start: new Date(
+                                                g.classes[0].startMs
+                                            ),
+                                            selected: false,
+                                        })
+                                    );
+                                    const combined: Array<
+                                        | (typeof classesAsClassRows)[number]
+                                        | (typeof groupsAsClassRows)[number]
+                                    > = [
+                                        ...classesAsClassRows,
+                                        ...groupsAsClassRows,
+                                    ];
+                                    return [
+                                        semesterId,
+                                        combined
+                                            .sort(
+                                                (a, b) =>
+                                                    a.start.getTime() -
+                                                    b.start.getTime()
+                                            )
+                                            .map((row, index) => ({
+                                                ...row,
+                                                selected: false,
+                                                index,
+                                            })),
+                                    ] as const;
+                                }
+                            )
+                        );
+                    })
+                )
+            )
+        )
     );
+
+    classes = computed(() => {
+        const classRowsBySemesters = this.classRowsBySemesters();
+        return classRowsBySemesters
+            ? Object.values(classRowsBySemesters)
+                  .flat()
+                  .map((row) => row.classes)
+                  .reduce((a, b) => a.concat(b), [])
+            : undefined;
+    });
 
     readonly filterOptions = computed(() => {
         const classes = this.classes();
@@ -206,44 +288,64 @@ export class ClassesComponent {
         (state) => state.enrollment.userCostsToSelectedClassIds
     );
 
-    filteredClassRows = computed(() => {
-        const searched = this.classRows()?.filter((row) => {
-            const search = this.search();
-            return !!row.classes.find(
-                (c) =>
-                    c.title.toLowerCase().includes(search.toLowerCase()) ||
-                    c.description
-                        .toLowerCase()
-                        .includes(search.toLowerCase()) ||
-                    c.location.toLowerCase().includes(search.toLowerCase()) ||
-                    c.classDateTimes
-                        .toLowerCase()
-                        .includes(search.toLowerCase())
-            );
-        });
-        const [startGrade, endGrade] = this.gradeFilter();
-        const filtered =
-            startGrade && endGrade
-                ? searched?.filter(
-                      (row) =>
-                          !!row.classes.find(
-                              (c) =>
-                                  c.gradeRangeStart === startGrade &&
-                                  c.gradeRangeEnd === endGrade
-                          )
+    filteredClassRowsBySemesters = computed(() => {
+        const classRowsBySemesters = this.classRowsBySemesters();
+        return classRowsBySemesters
+            ? Object.fromEntries(
+                  Object.entries(classRowsBySemesters).map(
+                      ([semesterId, classRows]) => {
+                          const searched = classRows.filter((row) => {
+                              const search = this.search();
+                              return !!row.classes.find(
+                                  (c) =>
+                                      c.title
+                                          .toLowerCase()
+                                          .includes(search.toLowerCase()) ||
+                                      c.description
+                                          ?.toLowerCase()
+                                          .includes(search.toLowerCase()) ||
+                                      c.location
+                                          ?.toLowerCase()
+                                          .includes(search.toLowerCase()) ||
+                                      c.classDateTimes
+                                          ?.toLowerCase()
+                                          .includes(search.toLowerCase())
+                              );
+                          });
+                          const [startGrade, endGrade] = this.gradeFilter();
+                          const filtered =
+                              startGrade && endGrade
+                                  ? searched?.filter(
+                                        (row) =>
+                                            !!row.classes.find(
+                                                (c) =>
+                                                    c.gradeRangeStart ===
+                                                        startGrade &&
+                                                    c.gradeRangeEnd === endGrade
+                                            )
+                                    )
+                                  : searched;
+                          const result = filtered?.map((row) => ({
+                              ...row,
+                              selected: row.classes.every((c) =>
+                                  this.selectedClassIds().includes(c.id)
+                              ),
+                              classes: row.classes.map((c) => ({
+                                  ...c,
+                                  selected: this.selectedClassIds().includes(
+                                      c.id
+                                  ),
+                                  userCost:
+                                      this.userCostsToSelectedClassIds()[
+                                          c.id
+                                      ] ?? c.cost,
+                              })),
+                          }));
+                          return [semesterId, result] as const;
+                      }
                   )
-                : searched;
-        return filtered?.map((row) => ({
-            ...row,
-            selected: row.classes.every((c) =>
-                this.selectedClassIds().includes(c.id)
-            ),
-            classes: row.classes.map((c) => ({
-                ...c,
-                selected: this.selectedClassIds().includes(c.id),
-                userCost: this.userCostsToSelectedClassIds()[c.id] ?? c.cost,
-            })),
-        }));
+              )
+            : undefined;
     });
 
     selectedClasses = computed(() => {
@@ -264,32 +366,32 @@ export class ClassesComponent {
         () => this.selectedSummerClasses().length > 0
     );
 
-    selectionChanged(
-        {
-            id: classId,
-            selected,
-            userCost,
-        }: {
-            id: string;
-            selected: boolean;
-            userCost?: number;
-        },
-        overlayPanel?: OverlayPanel
-    ) {
-        overlayPanel?.hide();
+    selectionChanged({
+        classSelection,
+        selected,
+        userCost,
+    }: {
+        classSelection: { id: string; semesterId: string };
+        selected: boolean;
+        userCost?: number;
+    }) {
         this.workflow.patchState((s) => ({
             enrollment: {
                 ...s.enrollment,
                 selectedClasses: selected
                     ? Array.from(
-                          new Set([...s.enrollment.selectedClasses, classId])
+                          new Set([
+                              ...s.enrollment.selectedClasses,
+                              classSelection,
+                          ])
                       )
                     : s.enrollment.selectedClasses.filter(
-                          (id) => id !== classId
+                          (selectedClass) =>
+                              selectedClass.id !== classSelection.id
                       ),
                 userCostsToSelectedClassIds: {
                     ...s.enrollment.userCostsToSelectedClassIds,
-                    [classId]: userCost,
+                    [classSelection.id]: userCost,
                 },
             },
         }));
@@ -320,11 +422,32 @@ export class ClassesComponent {
 
     rowSelectedChange(classRow: ClassRow, selected: boolean) {
         classRow.classes.forEach((c) =>
-            this.selectionChanged({ id: c.id, selected })
+            this.selectionChanged({
+                classSelection: {
+                    id: c.id,
+                    semesterId: c.semesterId,
+                },
+                selected,
+            })
         );
     }
 
     hasPausedClass(classRow: ClassRow): boolean {
         return classRow.classes.some((c) => c.pausedForEnrollment);
+    }
+
+    semesterName(
+        semesterId: string,
+        options: Requested<Array<{ id: string; name: string }>> | undefined
+    ) {
+        return (
+            (Array.isArray(options) &&
+                options?.find((o) => o.id === semesterId)?.name) ||
+            ''
+        );
+    }
+
+    hasGroup(row: object): row is { group: unknown } {
+        return 'group' in row;
     }
 }

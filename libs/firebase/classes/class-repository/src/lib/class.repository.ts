@@ -25,6 +25,7 @@ type ClassDbo = {
     paused_for_enrollment: boolean;
     daily_times: string;
     max_student_size: number;
+    for_information_only?: boolean;
 };
 
 export class ClassRepository {
@@ -59,7 +60,8 @@ export class ClassRepository {
         const now = new Date(Date.now());
         const query = await DatabaseUtility.fetchMatchingDocuments(
             await DatabaseUtility.getCollectionRef(await this.getClassesPath()),
-            ['registration_end_date', '>=', now],
+            // TODO: temporary for local dev, remove before merging
+            // ['registration_end_date', '>=', now],
             ['live', '==', true]
         );
         const classIds = query.map((doc) => doc.id);
@@ -134,6 +136,8 @@ export class ClassRepository {
             pausedForEnrollment: dbo.max_student_size
                 ? dbo.students.length > dbo.max_student_size
                 : false,
+            semesterId: await this.semester.getId(),
+            forInformationOnly: dbo.for_information_only ?? false,
         };
 
         if (!!dbo.payment_range_lowest || !!dbo.payment_range_highest) {

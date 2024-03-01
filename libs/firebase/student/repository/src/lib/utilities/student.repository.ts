@@ -1,17 +1,10 @@
 import { DatabaseUtility } from '@sol/firebase/database';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
-import {
-    ActiveSemesterRepository,
-    ClassRepository,
-    SemesterRepository,
-} from '@sol/classes/repository';
+import { ClassRepository, SemesterRepository } from '@sol/classes/repository';
 import { DocumentReference, DocumentData } from 'firebase-admin/firestore';
 
 export class StudentRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
-    static enrolledInActiveSemester(): StudentRepository {
-        return new StudentRepository(ActiveSemesterRepository.of());
-    }
     static of(semester: SemesterRepository): StudentRepository {
         return new StudentRepository(semester);
     }
