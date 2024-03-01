@@ -250,23 +250,35 @@
                                                     rowClass of row.classes;
                                                     track rowClass.id
                                                 ) {
-                                                    <sol-class-card
-                                                        [selected]="
-                                                            rowClass.selected
-                                                        "
-                                                        [width]="
-                                                            row.classes.length >
-                                                            1
-                                                                ? 'wider'
-                                                                : 'narrower'
-                                                        "
-                                                        [classInfo]="rowClass"
-                                                        (selectedChange)="
-                                                            selectionChanged(
-                                                                $event
-                                                            )
-                                                        "
-                                                    ></sol-class-card>
+                                                    <div
+                                                        [ngStyle]="{
+                                                            flex:
+                                                                row.classes
+                                                                    .length > 1
+                                                                    ? '1 0 calc(50% - 40px)'
+                                                                    : '1 0 calc(100% - 40px)'
+                                                        }"
+                                                    >
+                                                        <sol-class-card
+                                                            [selected]="
+                                                                rowClass.selected
+                                                            "
+                                                            [width]="
+                                                                row.classes
+                                                                    .length > 1
+                                                                    ? 'narrower'
+                                                                    : 'wider'
+                                                            "
+                                                            [classInfo]="
+                                                                rowClass
+                                                            "
+                                                            (selectedChange)="
+                                                                selectionChanged(
+                                                                    $event
+                                                                )
+                                                            "
+                                                        ></sol-class-card>
+                                                    </div>
                                                 }
                                             </div>
                                         </div>
