@@ -153,13 +153,13 @@ export class ClassesComponent {
         this.semesterListService.getEnrollableSemesters().pipe(
             RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
             map((semesters) => semesters.map(({ id, name }) => ({ id, name })))
-        ),
-        { initialValue: [] }
+        )
     );
 
     readonly classRowsBySemesters = toSignal(
         toObservable(this.semesterOptions).pipe(
-            filter((semesters) => semesters.length > 0),
+            filter((semesters) => !!semesters && semesters.length > 0),
+            map((semesters) => semesters as NonNullable<typeof semesters>),
             map((semesters) => semesters.map((s) => s.id)),
             switchMap((semesterIds) =>
                 this.classListService.getClassesBySemesterIds(semesterIds).pipe(

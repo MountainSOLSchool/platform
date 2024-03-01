@@ -2,8 +2,8 @@ import { StudentDbEntry } from '@sol/student/domain';
 import { Semester } from '@sol/firebase/classes/semester';
 
 export class StudentTshirtsGenerator {
-    static async createTshirtList() {
-        const students = await Semester.active().students.getAll();
+    static async createTshirtList(semseterId: string) {
+        const students = await Semester.of(semseterId).students.getAll();
         const uniqueStudentsByNameAndBirthdate: Map<string, StudentDbEntry> =
             students.reduce(
                 (unique, student) =>

@@ -1,4 +1,15 @@
-<h1>Student T-shirt Sizes</h1>
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px">
+    <h1>Student T-shirt sizes</h1>
+    <p-dropdown
+        [options]="semesterOptions() ?? []"
+        placeholder="Select a semester"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="false"
+        [ngModel]="selectedSemester()"
+        (ngModelChange)="selectedSemester.set($event)"
+    ></p-dropdown>
+</div>
 <h2>Size Counts</h2>
 <div style="margin-top: 20px">
     <div style="margin-bottom: 2rem">
