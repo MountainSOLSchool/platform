@@ -12,11 +12,10 @@ export const createEnrollmentEmail = firestore
         const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
 
         if (
-            (enrollmentRecord.status === 'enrolled' &&
-                (!!enrollmentRecord.transactionId ||
-                    enrollmentRecord.finalCost === 0) &&
-                'classIds' in enrollmentRecord) ||
-            'classes' in enrollmentRecord
+            enrollmentRecord.status === 'enrolled' &&
+            (!!enrollmentRecord.transactionId ||
+                enrollmentRecord.finalCost === 0) &&
+            ('classIds' in enrollmentRecord || 'classes' in enrollmentRecord)
         ) {
             const semesters = await _getSemestersAvailableToEnroll();
             const semesterNamesById = semesters.reduce(
