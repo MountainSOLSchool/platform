@@ -200,7 +200,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                             .pipe(
                                 tap((response) => {
                                     if (RequestedUtility.isLoaded(response)) {
-                                        if (response) {
+                                        if (response.success) {
                                             this.patchState({
                                                 status: 'enrolled',
                                             });
