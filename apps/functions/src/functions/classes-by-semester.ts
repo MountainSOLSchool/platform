@@ -16,7 +16,6 @@ export const classesBySemester = Functions.endpoint.handle<
     try {
         const semesterIds = request.body.data;
         for (const semesterId of semesterIds) {
-            console.log(semesterId);
             const { classesNotInGroups, groups } =
                 await _getCategorizedClasses(semesterId);
             theClassesBySemester[semesterId] = {

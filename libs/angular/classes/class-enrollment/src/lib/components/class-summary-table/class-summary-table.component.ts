@@ -4,7 +4,6 @@ import {
     computed,
     inject,
     Input,
-    OnInit,
     Signal,
     signal,
 } from '@angular/core';
@@ -26,7 +25,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
     imports: [CurrencyPipe, RxLet, TableModule, ProgressSpinnerModule],
     providers: [DatePipe],
 })
-export class ClassSummaryTableComponent implements OnInit {
+export class ClassSummaryTableComponent {
     private readonly classList = inject(ClassListService);
     private readonly datePipe = inject(DatePipe);
 
@@ -178,8 +177,4 @@ export class ClassSummaryTableComponent implements OnInit {
     });
 
     readonly isLoading = computed(() => !this.classCostSummaryRows());
-
-    ngOnInit() {
-        console.log('reinitialized class summary table component');
-    }
 }

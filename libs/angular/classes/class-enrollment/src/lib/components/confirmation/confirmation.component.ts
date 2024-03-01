@@ -77,13 +77,9 @@ export class ConfirmationComponent {
 
     @Output() validityChange = new Subject<boolean>();
 
-    private readonly enrollment$ = this.workflow
-        .select(({ enrollment }) => enrollment)
-        .pipe(
-            tap((enrollment) => {
-                console.log('forever', enrollment);
-            })
-        );
+    private readonly enrollment$ = this.workflow.select(
+        ({ enrollment }) => enrollment
+    );
     private readonly basketCosts$ = this.workflow.select(
         ({ basketCosts }) => basketCosts
     );
@@ -108,12 +104,9 @@ export class ConfirmationComponent {
     );
 
     private bySemester = toSignal(
-        this.classList.getAvailableEnrollmentClassesAndGroups().pipe(
-            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-            tap((by) => {
-                console.log('foreves', by);
-            })
-        )
+        this.classList
+            .getAvailableEnrollmentClassesAndGroups()
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
     );
 
     readonly finalTotal = toSignal(

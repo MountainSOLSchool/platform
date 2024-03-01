@@ -18,3 +18,4 @@ export { adminEnrollments } from './admin-enrollments';
 export { myEnrolledStudents } from './my-enrolled-students';
 export { getMyStudent } from './get-my-student';
 export { studentHealth } from './student-health';
+export { historicalSemesters } from './historical-semesters';

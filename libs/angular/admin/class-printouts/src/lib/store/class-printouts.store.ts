@@ -19,7 +19,7 @@ interface ClassPrintoutsState {
     inProgressCopyClassEmails: Record<string, boolean>;
     rows: Requested<Array<ClassPrintoutRow>>;
     semesters: Array<{ id: string; name: string }>;
-    selectedSelectedSemester: string;
+    selectedSemester: string;
 }
 
 @Injectable()
@@ -34,7 +34,7 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
 
     readonly rows = computed(() => this.state().rows);
     readonly selectedSelectedSemester = computed(
-        () => this.state().selectedSelectedSemester
+        () => this.state().selectedSemester
     );
     readonly semesters = computed(() => this.state().semesters);
     readonly inProgressClassFormDownloads = computed(
@@ -50,20 +50,35 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
             inProgressCopyClassEmails: {},
             rows: RequestState.Empty,
             semesters: [],
-            selectedSelectedSemester: '',
+            selectedSemester: '',
         });
     }
 
     readonly loadClassRows = this.effect(
         (selectedSemester: Observable<string>) => {
             return selectedSemester.pipe(
+                tap((selectedSemester) =>
+                    this.patchState({ selectedSemester })
+                ),
                 switchMap((semester) => {
                     return this.classListService
-                        .getCurrentSemesterClasses()
+                        .getClassesBySemesterIds([semester])
                         .pipe(
+                            map((bySemester) =>
+                                RequestedUtility.mapLoaded(
+                                    bySemester,
+                                    (bs) => bs[semester]
+                                )
+                            ),
                             map((classes) =>
-                                RequestedUtility.mapLoaded(classes, (cs) =>
-                                    cs.map((c) => {
+                                RequestedUtility.mapLoaded(classes, (cs) => {
+                                    const allClasses = [
+                                        ...cs.classes,
+                                        ...cs.groups.flatMap(
+                                            ({ classes }) => classes
+                                        ),
+                                    ];
+                                    return allClasses.map((c) => {
                                         const start = new Date(
                                             c.startMs
                                         ).toLocaleDateString();
@@ -79,8 +94,8 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                                             start,
                                             end,
                                         };
-                                    })
-                                )
+                                    });
+                                })
                             ),
                             tap((rows) => this.patchState({ rows }))
                         );
@@ -90,17 +105,18 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
     );
 
     private readonly loadSemesters = this.effect(() => {
-        // TODO: load all historical semesters
-        return this.classSemesterListService.getEnrollableSemesters().pipe(
-            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-            tap((semesters) => {
-                this.patchState({
-                    semesters,
-                    selectedSelectedSemester: semesters[0].id,
-                });
-                this.loadClassRows(semesters[0].id);
-            })
-        );
+        return this.classSemesterListService
+            .getAllSemestersWithCurrentFirst()
+            .pipe(
+                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                tap((semesters) => {
+                    this.patchState({
+                        semesters,
+                        selectedSemester: semesters[0].id,
+                    });
+                    this.loadClassRows(semesters[0].id);
+                })
+            );
     });
 
     readonly downloadClassForms = this.effect(
@@ -149,7 +165,9 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
                     return this.functionsApi
                         .call<{
                             list: Array<string>;
-                        }>(`emails?classId=${semeseterClass.id}`)
+                        }>(
+                            `emails?classId=${semeseterClass.id}&semesterId=${this.get().selectedSemester}`
+                        )
                         .pipe(
                             RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                             map(({ list }) => list.join(', ')),
@@ -177,7 +195,11 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
 
     private openClassSignIn(classId: string) {
         return this.functionsApi
-            .call<{ html: string }>(`signIn?classId=${classId}`)
+            .call<{
+                html: string;
+            }>(
+                `signIn?classId=${classId}&semesterId=${this.get().selectedSemester}`
+            )
             .pipe(
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 tap(({ html }) => {
@@ -199,7 +221,11 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
 
     private openClassRoster(classId: string) {
         return this.functionsApi
-            .call<{ html: string }>(`roster?classId=${classId}`)
+            .call<{
+                html: string;
+            }>(
+                `roster?classId=${classId}&semesterId=${this.get().selectedSemester}`
+            )
             .pipe(
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 tap(({ html }) => {
@@ -219,7 +245,11 @@ export class ClassPrintoutsStore extends ComponentStore<ClassPrintoutsState> {
 
     private openStudentHealth(classId: string) {
         return this.functionsApi
-            .call<{ html: string }>(`studentHealth?classId=${classId}`)
+            .call<{
+                html: string;
+            }>(
+                `studentHealth?classId=${classId}&semesterId=${this.get().selectedSemester}`
+            )
             .pipe(
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 tap(({ html }) => {

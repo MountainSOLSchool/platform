@@ -2,12 +2,14 @@ import { Functions, Role } from '@sol/firebase/functions';
 import { StudentRepository } from '@sol/student/repository';
 import { Semester } from '@sol/firebase/classes/semester';
 import { SignInTableFactory } from '@sol/student/reports';
+import { SpecificSemesterRepository } from '@sol/classes/repository';
 
-async function getClassSignInTable(classId: string) {
-    const students =
-        await StudentRepository.enrolledInActiveSemester().getInClass(classId);
+async function getClassSignInTable(classId: string, semesterId: string) {
+    const students = await StudentRepository.of(
+        SpecificSemesterRepository.of(semesterId)
+    ).getInClass(classId);
 
-    const className = await Semester.active()
+    const className = await Semester.of(semesterId)
         .classes.get(classId)
         .then((c) => c.title);
 
@@ -16,10 +18,13 @@ async function getClassSignInTable(classId: string) {
 
 export const signIn = Functions.endpoint
     .restrictedToRoles(Role.Admin)
-    .handle<unknown, { classId: string }>(async (request, response) => {
-        const classId = request.query.classId;
+    .handle<
+        unknown,
+        { classId: string; semesterId: string }
+    >(async (request, response) => {
+        const { classId, semesterId } = request.query;
 
-        const htmlTable = await getClassSignInTable(classId);
+        const htmlTable = await getClassSignInTable(classId, semesterId);
 
         response.send({ html: htmlTable });
     });
