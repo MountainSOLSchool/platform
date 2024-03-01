@@ -40,6 +40,7 @@ interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
     group?: SemesterClassGroup;
     start: Date;
+    index: number;
 }
 
 @Component({
@@ -156,9 +157,12 @@ export class ClassesComponent {
                     group: g,
                     start: new Date(g.classes[0].startMs),
                 }));
-                return [...classesAsClassRows, ...groupsAsClassRows].sort(
-                    (a, b) => a.start.getTime() - b.start.getTime()
-                );
+                return [...classesAsClassRows, ...groupsAsClassRows]
+                    .sort((a, b) => a.start.getTime() - b.start.getTime())
+                    .map((row, index) => ({
+                        ...row,
+                        index,
+                    }));
             })
         ),
         { initialValue: undefined }
