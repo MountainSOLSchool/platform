@@ -150,23 +150,17 @@ export class ClassesComponent {
     @Output() validityChange = toObservable(this.isValid);
 
     readonly semesterOptions = toSignal(
-        this.semesterListService
-            .getEnrollableSemesters()
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+        this.semesterListService.getEnrollableSemesters().pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+            map((semesters) => semesters.map(({ id, name }) => ({ id, name })))
+        ),
+        { initialValue: [] }
     );
 
-    private readonly selectedSemesterIds = computed(() => {
-        const semesterOptions = this.semesterOptions();
-        return (
-            (Array.isArray(semesterOptions) &&
-                semesterOptions.map(({ id }) => id)) ||
-            []
-        );
-    });
-
     readonly classRowsBySemesters = toSignal(
-        toObservable(this.selectedSemesterIds).pipe(
-            filter((semesterIds) => semesterIds?.length > 0),
+        toObservable(this.semesterOptions).pipe(
+            filter((semesters) => semesters.length > 0),
+            map((semesters) => semesters.map((s) => s.id)),
             switchMap((semesterIds) =>
                 this.classListService.getClassesBySemesterIds(semesterIds).pipe(
                     RequestedOperatorsUtility.ignoreAllStatesButLoaded(),

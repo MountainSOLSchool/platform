@@ -91,26 +91,22 @@
             @if (hasSelectedSummerClass()) {
                 @if (selectedSummerClasses()) {
                     <p>
-                        @if (
-                            selectedSummerClasses().length > 3;
-                            as hasSelectedEnough
-                        ) {
-                            <span
-                                [ngStyle]="{
-                                    color: hasSelectedEnough
+                        <span
+                            [ngStyle]="{
+                                color:
+                                    selectedSummerClasses().length > 3
                                         ? '#3c82f7'
                                         : 'black'
-                                }"
-                                ><b
-                                    >({{ selectedSummerClasses().length }}/4
-                                    selected
-                                    @if (hasSelectedEnough) {
-                                        🥳
-                                    }
-                                    )</b
-                                ></span
-                            >
-                        }
+                            }"
+                            ><b
+                                >({{ selectedSummerClasses().length }}/4
+                                selected
+                                @if (selectedSummerClasses().length > 3) {
+                                    🥳
+                                }
+                                )</b
+                            ></span
+                        >
                         Use code <b>4SUMMER2024</b> at checkout when you select
                         4 summer camps to get 10% off!
                     </p>
