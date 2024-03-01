@@ -64,6 +64,7 @@ interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
     group?: SemesterClassGroup;
     start: Date;
+    index: number;
 }
 
 @Component({
@@ -236,9 +237,10 @@ export class ClassesComponent {
                                                     a.start.getTime() -
                                                     b.start.getTime()
                                             )
-                                            .map((thingy) => ({
-                                                ...thingy,
+                                            .map((row, index) => ({
+                                                ...row,
                                                 selected: false,
+                                                index,
                                             })),
                                     ] as const;
                                 }

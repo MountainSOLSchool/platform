@@ -107,34 +107,32 @@ export const classesFeature = createFeature({
             classesActions.loadAvailableEnrollmentRequestChanged,
             (state, { request }) => {
                 if (RequestedUtility.isLoaded(request)) {
-                    console.log('request', request);
                     const semesters = Object.values(request);
                     const classes = semesters.flatMap((s) => s.classes);
                     const groups = semesters.flatMap((s) => s.groups);
 
+                    const classesById = classes.reduce(
+                        (acc, curr) => ({ ...acc, [curr.id]: curr }),
+                        {}
+                    );
+                    const groupsById = groups.reduce(
+                        (acc, curr) => ({ ...acc, [curr.id]: curr }),
+                        state.groups
+                    );
+                    const groupClassesByClassId = Object.fromEntries(
+                        groups
+                            .map((group) => group.classes)
+                            .flatMap((c) => c)
+                            .map((c) => [c.id, c] as const)
+                    );
                     return {
                         ...state,
                         classes: {
                             ...state.classes,
-                            ...classes.reduce(
-                                (acc, curr) => ({ ...acc, [curr.id]: curr }),
-                                {}
-                            ),
-                            ...groups.reduce(
-                                (classesFromGroups, group) => ({
-                                    ...classesFromGroups,
-                                    ...group.classes.reduce((acc, curr) => ({
-                                        ...acc,
-                                        [curr.id]: curr,
-                                    })),
-                                }),
-                                {}
-                            ),
+                            ...classesById,
+                            ...groupClassesByClassId,
                         },
-                        groups: groups.reduce(
-                            (acc, curr) => ({ ...acc, [curr.id]: curr }),
-                            state.groups
-                        ),
+                        groups: groupsById,
                         availableForEnrollment: Object.fromEntries(
                             Object.entries(request).map(
                                 ([id, { classes, groups }]) => [
@@ -245,20 +243,14 @@ export const selectClassesByIds = createSelector(
     (ids: Array<string>) => ids,
     (ids) =>
         createSelector(classesFeature.selectClasses, (classes) => {
-            const classEntriesForIds = Object.entries(classes).filter(([id]) =>
-                ids.includes(id)
-            );
+            const classesRequestsForIds = Object.entries(classes)
+                .filter(([id]) => ids.includes(id))
+                .map(([, c]) => c);
             let classesForIds: Requested<Array<SemesterClass>>;
-            if (
-                classEntriesForIds
-                    .map(([, r]) => r)
-                    .every(RequestedUtility.isLoaded)
-            ) {
-                classesForIds = Object.values(
-                    classes as Record<string, SemesterClass>
-                );
+            if (classesRequestsForIds.every(RequestedUtility.isLoaded)) {
+                classesForIds = classesRequestsForIds;
             } else {
-                classesForIds = Object.values(classes).includes(
+                classesForIds = classesRequestsForIds.includes(
                     RequestState.Loading
                 )
                     ? RequestState.Loading
