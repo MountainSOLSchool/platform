@@ -35,15 +35,6 @@ export const classesFeature = createFeature({
     name: 'classesFeature',
     reducer: createReducer(
         initialState,
-        // on(
-        //     classesActions.loadClassesStart,
-        //     classesActions.loadClassGroupsStart,
-        //     (state): Feature => ({
-        //         ...state,
-        //         classes: {},
-        //         groups: {},
-        //     })
-        // ),
         on(
             classesActions.loadClassesRequestChanged,
             (state, { query, classesBySemester }) => {
