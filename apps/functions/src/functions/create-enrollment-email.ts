@@ -102,7 +102,7 @@ export const createEnrollmentEmail = firestore
                                 ${d.description}
                             </td>
                             <td>
-                                -$${d.amount}
+                                -$${d.amount.toFixed(2)}
                             </td>
                             </tr>
                             `
@@ -126,7 +126,7 @@ export const createEnrollmentEmail = firestore
                               Total
                             </td>
                             <td>
-                              $${enrollmentRecord.finalCost}
+                              $${enrollmentRecord.finalCost.toFixed(2)}
                             </td>
                           </tr>
                           </tbody>
