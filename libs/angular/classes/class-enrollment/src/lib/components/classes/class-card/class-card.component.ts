@@ -4,6 +4,7 @@ import {
     EventEmitter,
     Input,
     Output,
+    signal,
 } from '@angular/core';
 
 import { DatePipe, NgStyle } from '@angular/common';
@@ -17,6 +18,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
 import { SliderModule } from 'primeng/slider';
 import { ToggleButtonModule } from 'primeng/togglebutton';
+import { SlidingScaleFormComponent } from '../sliding-scale-form/sliding-scale-form.component';
+import { AdditionalOptionsFormComponent } from '../additional-options-form/additional-options-form.component';
 
 @Component({
     standalone: true,
@@ -34,6 +37,8 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
         FormsModule,
         SliderModule,
         ToggleButtonModule,
+        SlidingScaleFormComponent,
+        AdditionalOptionsFormComponent,
     ],
     selector: 'sol-class-card',
     templateUrl: './class-card.component.html',
@@ -64,15 +69,25 @@ export class ClassCardComponent {
             lastName: string;
         }>;
         userCost: number;
+        additionalCost: number;
         semesterId: string;
         forInformationOnly: boolean;
+        additionalOptions: Array<{
+            description: string;
+            cost: number;
+            id: string;
+        }>;
     };
 
     @Output() selectedChange = new EventEmitter<{
         classSelection: { id: string; semesterId: string };
-        userCost?: number;
         selected: boolean;
+        userCost?: number;
+        selectedAdditionalOptionIds?: Array<string>;
     }>();
+
+    readonly customCost = signal<number | undefined>(undefined);
+    readonly selectedAdditionalOptionIds = signal<Array<string>>([]);
 
     selectionToggled() {
         this.selectedChange.emit({
@@ -84,15 +99,16 @@ export class ClassCardComponent {
         });
     }
 
-    customCostSelected(cost: number, panel: OverlayPanel) {
+    confirmedSelect(panel: OverlayPanel) {
         panel.hide();
         this.selectedChange.emit({
             classSelection: {
                 id: this.classInfo.id,
                 semesterId: this.classInfo.semesterId,
             },
-            userCost: cost,
+            userCost: this.customCost(),
             selected: true,
+            selectedAdditionalOptionIds: this.selectedAdditionalOptionIds(),
         });
     }
 
@@ -104,5 +120,20 @@ export class ClassCardComponent {
             },
             selected: false,
         });
+    }
+
+    requiresSlidingScaleCost(classInfo: typeof this.classInfo) {
+        return (classInfo.paymentRange?.lowest ?? -1) >= 0;
+    }
+
+    requiresAdditionalOptions(classInfo: typeof this.classInfo) {
+        return classInfo.additionalOptions.length > 0;
+    }
+
+    requiresPromptBeforeSelecting(classInfo: typeof this.classInfo) {
+        return (
+            this.requiresSlidingScaleCost(classInfo) ||
+            this.requiresAdditionalOptions(classInfo)
+        );
     }
 }
