@@ -12,14 +12,14 @@
     <p-card>
         <ng-template pTemplate="header"></ng-template>
         <div style="position: relative; margin-top: -2.5rem">
-            <h2>Summer Solstice Workday and Celebration</h2>
+            <h2>Summer Solstice Celebration and Skills Test</h2>
         </div>
         <div
             class="flex align-items-center"
             style="margin-bottom: 1.5rem; margin-top: 1rem"
         >
             <p-chip
-                label="June 17th"
+                label="June 22nd, 5pm-9pm"
                 icon="pi pi-calendar"
                 styleClass="mr-2 custom-chip"
             ></p-chip>
@@ -27,30 +27,27 @@
         <p>
             <b>Location:</b> Chestnut Ridge Park and Campground<br /><br />
             <b>Description:</b> <br />
-            Our Summer Solstice event will have two parts: a work day to support
-            Chestnut Ridge Park and our annual summer solstice potluck party.
-            You, your family, and any guests you would like to bring are welcome
-            to come to either or both parts of our summer solstice event!
-            <br /><br />
-            From 12-4pm we will have a project work day, led by Mountain SOL
-            staff and students but open to the public, in support of Chestnut
-            Ridge Park. We will be doing projects including gardening and
-            maintenance. <br /><br />
-            From 5-9pm more people will gather, and we will have our big summer
-            solstice party! There will be potluck food, music, fire, and
-            activities. This is a favorite event for building our Mountain SOL
-            community, as many new students and older Mountain SOL alums all
-            gather together to celebrate outdoors! <br />
+            Join us for a Mountain SOL community summer celebration! All
+            students, past alumni, staff, volunteers, parents, and new friends
+            are welcome! We will have potluck food, a music jam, activities, and
+            a campfire graduation ceremony for any students who are graduating
+            from a path. This year, we will also have a skills test, open to all
+            students, which will let students test out of units required for
+            their paths. Students will have the opportunity to complete various
+            challenges, which will count as credit for different units,
+            including fire, knots, tarp shelters, and more! <br /><br />
         </p>
         <div style="margin-top: 2rem; margin-bottom: -1rem">
-            <p-toggleButton
-                onIcon="pi pi-check"
-                onLabel="Signed up for email alerts"
-                offIcon="pi pi-plus"
-                offLabel="Sign up for email alerts"
-                [ngModel]="checked$ | async"
-                (onChange)="signupChanged($event)"
-            ></p-toggleButton>
+            <add-to-calendar-button
+                name="Summer Solstice Celebration and Skills Test"
+                options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+                location="Chestnut Ridge Park and Campground"
+                startDate="2024-06-22"
+                endDate="2024-06-22"
+                startTime="17:00"
+                endTime="21:00"
+                timeZone="America/New_York"
+            ></add-to-calendar-button>
         </div>
     </p-card>
 </div>
