@@ -82,6 +82,7 @@
                             else mustSelectStudent
                         "
                         [interacted]="studentInfo.interacted"
+                        [isStudentLoading]="isStudentLoading()"
                         (validityChange)="studentInfo.hasError = !$event"
                     ></sol-student-info>
                     <ng-container

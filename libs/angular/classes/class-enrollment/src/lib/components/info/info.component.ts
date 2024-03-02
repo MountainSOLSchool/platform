@@ -35,6 +35,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { RxIf } from '@rx-angular/template/if';
 import { NgStyle } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
     standalone: true,
@@ -60,6 +61,7 @@ import { NgStyle } from '@angular/common';
         DropdownModule,
         MessagesModule,
         RxIf,
+        ProgressSpinnerModule,
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
@@ -285,6 +287,7 @@ export class InfoComponent {
     @Input() set interacted(value: boolean) {
         this.interacted$.next(value);
     }
+    @Input() isStudentLoading = false;
 
     @Output() validityChange = this.errors$.pipe(
         map((errors) => Object.keys(errors).length === 0)

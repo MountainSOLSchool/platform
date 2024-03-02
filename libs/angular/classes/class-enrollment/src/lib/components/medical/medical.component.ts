@@ -34,6 +34,7 @@ import { RxFor } from '@rx-angular/template/for';
 import { MessagesModule } from 'primeng/messages';
 import { RxIf } from '@rx-angular/template/if';
 import { NgStyle } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
     standalone: true,
@@ -58,6 +59,7 @@ import { NgStyle } from '@angular/common';
         MessagesComponent,
         MessagesModule,
         RxIf,
+        ProgressSpinnerModule,
     ],
     selector: 'sol-medical',
     templateUrl: './medical.component.html',
@@ -244,6 +246,7 @@ export class MedicalComponent {
     @Input() set interacted(value: boolean) {
         this.interacted$.next(value);
     }
+    @Input() isStudentLoading = false;
 
     @Output() validityChange = this.errors$.pipe(
         map((errors) => Object.keys(errors).length === 0)
