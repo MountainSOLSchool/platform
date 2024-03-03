@@ -194,6 +194,7 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
             enrollment: {
                 selectedClasses: [],
                 userCostsToSelectedClassIds: {},
+                additionalOptionIdsToSelectedClassIds: {},
                 isSignedUpForSolsticeEmails: false,
                 paymentMethod: {
                     nonce: 'fake-valid-nonce-NOT',

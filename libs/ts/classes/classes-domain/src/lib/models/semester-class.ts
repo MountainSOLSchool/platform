@@ -28,4 +28,9 @@ export interface SemesterClass {
     students: Array<unknown>;
     semesterId: string;
     forInformationOnly: boolean;
+    additionalOptions: Array<{
+        id: string;
+        description: string;
+        cost: number;
+    }>;
 }
