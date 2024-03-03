@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import { ComponentStore, tapResponse } from '@ngrx/component-store';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { filter, pairwise, Subject, switchMap, take, tap } from 'rxjs';
@@ -149,6 +149,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
             userCostsToClassIds,
         })
     );
+    readonly isStudentLoading = computed(() => this.state().isLoadingStudent);
 
     readonly setStatusToDraft = this.updater((state) => ({
         ...state,

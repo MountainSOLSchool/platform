@@ -110,6 +110,8 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         filter((email): email is string => !!email)
     );
 
+    readonly isStudentLoading = this.store.isStudentLoading;
+
     readonly earlyBirdEnd = Date.parse('2023-04-01T23:59:59.999Z');
 
     readonly isNowBeforeEarlyBirdEnd$ = timer(0, 5000).pipe(
