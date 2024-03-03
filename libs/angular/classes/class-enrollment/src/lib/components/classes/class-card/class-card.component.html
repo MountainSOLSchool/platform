@@ -109,22 +109,58 @@
                     >
                 </div>
             }
-            <p-overlayPanel pAutoFocus #beforeSelectingForm>
-                @if (requiresSlidingScaleCost(classInfo)) {
-                    <sol-sliding-scale-form
-                        [classInfo]="classInfo"
-                        (selectedCostChange)="customCost.set($event)"
-                    ></sol-sliding-scale-form>
-                }
-                @if (requiresAdditionalOptions(classInfo)) {
-                    <sol-class-additional-options-form
-                        [options]="classInfo.additionalOptions"
-                        (selectedOptionIdsChange)="
-                            selectedAdditionalOptionIds.set($event)
+            <p-overlayPanel pAutoFocus #op>
+                <div>Sliding Scale Cost</div>
+                <div
+                    style="margin-top: 1rem; margin-bottom: 1rem; display: flex"
+                >
+                    <p-button
+                        icon="pi pi-minus"
+                        styleClass="p-button-outlined"
+                        [disabled]="
+                            classInfo.userCost <=
+                            (classInfo.paymentRange?.lowest ?? classInfo.cost)
                         "
-                    ></sol-class-additional-options-form>
-                }
-                <p-button (click)="confirmedSelect(beforeSelectingForm)"
+                        (onClick)="classInfo.userCost = classInfo.userCost - 5"
+                    ></p-button>
+                    <div>
+                        <p-inputNumber
+                            mode="currency"
+                            currency="USD"
+                            [min]="
+                                classInfo.paymentRange?.lowest ?? classInfo.cost
+                            "
+                            [max]="
+                                classInfo.paymentRange?.highest ??
+                                classInfo.cost
+                            "
+                            [(ngModel)]="classInfo.userCost"
+                            class="w-full"
+                        />
+                        <p-slider
+                            [step]="5"
+                            [min]="
+                                classInfo.paymentRange?.lowest ?? classInfo.cost
+                            "
+                            [max]="
+                                classInfo.paymentRange?.highest ??
+                                classInfo.cost
+                            "
+                            [(ngModel)]="classInfo.userCost"
+                            class="w-full"
+                        ></p-slider>
+                    </div>
+                    <p-button
+                        icon="pi pi-plus"
+                        styleClass="p-button-outlined"
+                        [disabled]="
+                            classInfo.userCost >=
+                            (classInfo.paymentRange?.highest ?? classInfo.cost)
+                        "
+                        (onClick)="classInfo.userCost = classInfo.userCost + 5"
+                    ></p-button>
+                </div>
+                <p-button (click)="customCostSelected(classInfo.userCost, op)"
                     >Confirm</p-button
                 >
             </p-overlayPanel>
@@ -135,24 +171,19 @@
                 >
                 for more information.
             } @else {
-                @if (requiresPromptBeforeSelecting(classInfo)) {
+                @if ((classInfo.paymentRange?.lowest ?? -1) >= 0) {
                     @if (!selected) {
                         <p-button
                             [disabled]="classInfo.pausedForEnrollment"
                             label="Select"
                             styleClass="p-button-outlined"
                             icon="pi pi-plus"
-                            (click)="beforeSelectingForm.toggle($event)"
+                            (click)="op.toggle($event)"
                         ></p-button>
                     } @else {
                         <p-button
                             [disabled]="classInfo.pausedForEnrollment"
-                            [label]="
-                                'Selected ($' +
-                                (classInfo.userCost +
-                                    classInfo.additionalCost) +
-                                ')'
-                            "
+                            [label]="'Selected ($' + classInfo.userCost + ')'"
                             styleClass="p-button-primary"
                             icon="pi pi-check"
                             (click)="deselected()"

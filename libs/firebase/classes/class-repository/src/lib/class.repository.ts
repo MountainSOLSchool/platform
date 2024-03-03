@@ -26,10 +26,6 @@ type ClassDbo = {
     daily_times: string;
     max_student_size: number;
     for_information_only?: boolean;
-    extra_hour_option?: {
-        type: 'before' | 'after';
-        cost: number;
-    };
 };
 
 export class ClassRepository {
@@ -142,7 +138,6 @@ export class ClassRepository {
                 : false,
             semesterId: await this.semester.getId(),
             forInformationOnly: dbo.for_information_only ?? false,
-            additionalOptions: this.getAdditionalOptions(dbo),
         };
 
         if (!!dbo.payment_range_lowest || !!dbo.payment_range_highest) {
@@ -152,23 +147,6 @@ export class ClassRepository {
             };
         }
         return domain;
-    }
-
-    private getAdditionalOptions(
-        dbo: ClassDbo
-    ): Array<SemesterClass['additionalOptions'][number]> {
-        return dbo.extra_hour_option
-            ? [
-                  {
-                      id: 'extra-hour-option',
-                      description:
-                          dbo.extra_hour_option.type === 'before'
-                              ? 'Add an hour before class starts'
-                              : 'Add an hour after class ends',
-                      cost: dbo.extra_hour_option.cost,
-                  },
-              ]
-            : [];
     }
 
     async addStudentToClass(studentId: string, classId: string): Promise<void> {

@@ -90,12 +90,7 @@ export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .usingStrings(...Braintree.STRING_NAMES)
     .handle<{
-        selectedClasses: Array<{
-            id: string;
-            semesterId: string;
-            // TODO: use this
-            selectedAdditionalOptions: Array<string>;
-        }>;
+        selectedClasses: Array<{ id: string; semesterId: string }>;
         student: StudentForm;
         releaseSignatures: Array<{ name: string; signature: string }>;
         discountCodes: Array<string>;

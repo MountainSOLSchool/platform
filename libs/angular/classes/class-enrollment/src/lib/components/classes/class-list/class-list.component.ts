@@ -59,8 +59,6 @@ import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { TabViewModule } from 'primeng/tabview';
 import { ClassCardComponent } from '../class-card/class-card.component';
 import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
-import { SlidingScaleFormComponent } from '../sliding-scale-form/sliding-scale-form.component';
-import { AdditionalOptionsFormComponent } from '../additional-options-form/additional-options-form.component';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -103,8 +101,6 @@ interface ClassRow {
         ClassCardComponent,
         NgTemplateOutlet,
         ClassesSkeletonComponent,
-        SlidingScaleFormComponent,
-        AdditionalOptionsFormComponent,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -292,10 +288,6 @@ export class ClassesComponent {
         (state) => state.enrollment.userCostsToSelectedClassIds
     );
 
-    private readonly selectedAdditionalOptionIds = this.workflow.selectSignal(
-        (state) => state.enrollment.additionalOptionIdsToSelectedClassIds
-    );
-
     filteredClassRowsBySemesters = computed(() => {
         const classRowsBySemesters = this.classRowsBySemesters();
         return classRowsBySemesters
@@ -347,24 +339,6 @@ export class ClassesComponent {
                                       this.userCostsToSelectedClassIds()[
                                           c.id
                                       ] ?? c.cost,
-                                  additionalCost: (() => {
-                                      const additional =
-                                          this.selectedAdditionalOptionIds();
-                                      return (
-                                          additional[c.id]?.reduce(
-                                              (agg, id) => {
-                                                  const option =
-                                                      c.additionalOptions.find(
-                                                          (o) => o.id === id
-                                                      );
-                                                  return option
-                                                      ? agg + option.cost
-                                                      : agg;
-                                              },
-                                              0
-                                          ) ?? 0
-                                      );
-                                  })(),
                               })),
                           }));
                           return [semesterId, result] as const;
@@ -396,12 +370,10 @@ export class ClassesComponent {
         classSelection,
         selected,
         userCost,
-        selectedAdditionalOptionIds,
     }: {
         classSelection: { id: string; semesterId: string };
         selected: boolean;
         userCost?: number;
-        selectedAdditionalOptionIds?: Array<string>;
     }) {
         this.workflow.patchState((s) => ({
             enrollment: {
@@ -420,10 +392,6 @@ export class ClassesComponent {
                 userCostsToSelectedClassIds: {
                     ...s.enrollment.userCostsToSelectedClassIds,
                     [classSelection.id]: userCost,
-                },
-                additionalOptionIdsToSelectedClassIds: {
-                    ...s.enrollment.additionalOptionIdsToSelectedClassIds,
-                    [classSelection.id]: selectedAdditionalOptionIds ?? [],
                 },
             },
         }));
@@ -481,39 +449,5 @@ export class ClassesComponent {
 
     hasGroup(row: object): row is { group: unknown } {
         return 'group' in row;
-    }
-
-    requiresNeitherSlidingScaleNorAdditionalOptions(classInfo: SemesterClass) {
-        return (
-            !this.requiresSlidingScaleCost(classInfo) &&
-            !this.requiresAdditionalOptions(classInfo)
-        );
-    }
-
-    requiresSlidingScaleCost(classInfo: SemesterClass) {
-        return (classInfo.paymentRange?.lowest ?? -1) >= 0;
-    }
-
-    requiresAdditionalOptions(classInfo: SemesterClass) {
-        return classInfo.additionalOptions.length > 0;
-    }
-
-    rowRequiresSlidingScaleCost(row: ClassRow) {
-        return row.classes.some((c) => (c.paymentRange?.lowest ?? -1) >= 0);
-    }
-
-    rowRequiresAdditionalOptions(row: ClassRow) {
-        return row.classes.some((c) => c.additionalOptions.length > 0);
-    }
-
-    requiresPromptBeforeSelecting(row: ClassRow) {
-        return (
-            this.rowRequiresSlidingScaleCost(row) ||
-            this.rowRequiresAdditionalOptions(row)
-        );
-    }
-
-    getRowCost(row: ClassRow) {
-        return row.classes.reduce((agg, c) => agg + c.cost, 0);
     }
 }
