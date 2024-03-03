@@ -17,6 +17,7 @@ type Enrollment = {
         semesterId: string;
     }>;
     userCostsToSelectedClassIds: Record<string, number | undefined>;
+    additionalOptionIdsToSelectedClassIds: Record<string, Array<string>>;
     paymentMethod:
         | {
               nonce: string;
@@ -37,6 +38,7 @@ const initialState = {
     enrollment: {
         selectedClasses: [],
         userCostsToSelectedClassIds: {},
+        additionalOptionIdsToSelectedClassIds: {},
         paymentMethod: undefined,
         discountCodes: [],
         isSignedUpForSolsticeEmails: false,

@@ -1,0 +1,22 @@
+<p-overlayPanel pAutoFocus #beforeSelectingForm>
+    @for (rowClass of row.classes; track rowClass.id) {
+        <h4>
+            {{ rowClass.title }}
+        </h4>
+        @if (requiresNeitherSlidingScaleNorAdditionalOptions(rowClass)) {
+            <p>No options</p>
+        }
+        @if (requiresSlidingScaleCost(rowClass)) {
+            <sol-sliding-scale-form
+                [classInfo]="rowClass"
+            ></sol-sliding-scale-form>
+        }
+        @if (requiresAdditionalOptions(rowClass)) {
+            <sol-class-additional-options-form
+                [options]="rowClass.additionalOptions"
+            ></sol-class-additional-options-form>
+        }
+    }
+
+    <p-button>Confirm</p-button>
+</p-overlayPanel>
