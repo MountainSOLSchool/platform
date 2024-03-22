@@ -1,7 +1,7 @@
 {
     "projects": {
-        "default": "mountain-sol-platform-dev",
-        "dev": "mountain-sol-platform-dev",
+        "default": "mountain-sol-platform",
+        "dev": "mountain-sol-platform",
         "prod": "mountain-sol-platform"
     }
 }
