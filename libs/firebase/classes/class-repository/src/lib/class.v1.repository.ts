@@ -62,8 +62,7 @@ export class V1ClassRepository {
             await V1DatabaseUtility.getCollectionRef(
                 await this.getClassesPath()
             ),
-            // TODO: temporary for local dev, remove before merging
-            // ['registration_end_date', '>=', now],
+            ['registration_end_date', '>=', now],
             ['live', '==', true]
         );
         const classIds = query.map((doc) => doc.id);
