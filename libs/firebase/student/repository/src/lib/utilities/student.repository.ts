@@ -1,4 +1,4 @@
-import { DatabaseUtility } from '@sol/firebase/database';
+import { V1DatabaseUtility } from '@sol/firebase/database';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
 import { ClassRepository, SemesterRepository } from '@sol/classes/repository';
 import { DocumentReference, DocumentData } from 'firebase-admin/firestore';
@@ -25,7 +25,7 @@ export class StudentRepository {
 
         return studentRef
             ? (
-                  await DatabaseUtility.getHydratedDocuments<StudentDbEntry>([
+                  await V1DatabaseUtility.getHydratedDocuments<StudentDbEntry>([
                       studentRef,
                   ])
               )[0]
@@ -44,7 +44,7 @@ export class StudentRepository {
         const students = this.database.collection('students');
 
         return (
-            await DatabaseUtility.fetchFirstMatchingDocument(
+            await V1DatabaseUtility.fetchFirstMatchingDocument(
                 students,
                 ['first_name', '==', firstName],
                 ['last_name', '==', lastName],
@@ -55,7 +55,7 @@ export class StudentRepository {
 
     static async get(id: string): Promise<StudentDbEntry | undefined> {
         return (
-            await DatabaseUtility.getHydratedDocuments<StudentDbEntry>([
+            await V1DatabaseUtility.getHydratedDocuments<StudentDbEntry>([
                 this.database.collection('students').doc(id),
             ])
         )[0];
@@ -76,7 +76,7 @@ export class StudentRepository {
     }
 
     private static get database() {
-        return DatabaseUtility.getDatabase();
+        return V1DatabaseUtility.getDatabase();
     }
 
     async getAll(): Promise<Array<StudentDbEntry>> {
@@ -86,7 +86,7 @@ export class StudentRepository {
         );
         const allStudentsFromEachClassInSemester = await Promise.all(
             allStudentsFromAllClassesRefs.map((studentRefs) =>
-                DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
+                V1DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
                     studentRefs
                 )
             )
@@ -106,7 +106,7 @@ export class StudentRepository {
 
         const classStudentRefs = theClass.students ?? [];
 
-        return await DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
+        return await V1DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
             classStudentRefs
         );
     }

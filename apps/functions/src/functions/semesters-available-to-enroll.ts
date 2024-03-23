@@ -1,7 +1,7 @@
-import { Functions } from '@sol/firebase/functions';
+import { V1Functions } from '@sol/firebase/functions';
 import { _getSemestersAvailableToEnroll } from './_getSemestersAvailableToEnroll';
 
-export const semestersAvailableToEnroll = Functions.endpoint.handle<
+export const semestersAvailableToEnroll = V1Functions.endpoint.handle<
     | {
           ids: Array<string>;
       }

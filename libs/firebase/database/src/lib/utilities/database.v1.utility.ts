@@ -3,9 +3,9 @@ import {
     Timestamp,
     CollectionReference,
     DocumentData,
-    QueryDocumentSnapshot,
     FieldPath,
     WhereFilterOp,
+    QueryDocumentSnapshot,
 } from 'firebase-admin/firestore';
 import { db } from './database.config';
 
@@ -24,7 +24,7 @@ type DocumentProperty = {
         | null;
 };
 
-export class DatabaseUtility {
+export class V1DatabaseUtility {
     public static getDatabase() {
         return db;
     }
@@ -42,7 +42,7 @@ export class DatabaseUtility {
     }
 
     public static async getHydratedCollection(
-        collectionRef: CollectionReference<DocumentData>
+        collectionRef: CollectionReference
     ): Promise<{ [collectionName: string]: Collection }> {
         const collectionDocs = (await collectionRef.get()).docs;
         const docValues = await Promise.all(
@@ -52,7 +52,7 @@ export class DatabaseUtility {
                 const hydratedCollections = await Promise.all(
                     subCollectionRefs.map(
                         async (subCollectionRef) =>
-                            await DatabaseUtility.getHydratedCollection(
+                            await V1DatabaseUtility.getHydratedCollection(
                                 subCollectionRef
                             )
                     )
@@ -74,9 +74,7 @@ export class DatabaseUtility {
 
     public static async getHydratedDocuments<
         DocumentValue extends { id: string },
-    >(
-        documentRefs: Array<DocumentReference<DocumentData>>
-    ): Promise<Array<DocumentValue>> {
+    >(documentRefs: Array<DocumentReference>): Promise<Array<DocumentValue>> {
         if (!documentRefs?.length) {
             return new Array<DocumentValue>();
         }
@@ -88,7 +86,7 @@ export class DatabaseUtility {
                 const collectionsList: Array<{
                     [collectionName: string]: Array<DocumentData>;
                 }> = await Promise.all(
-                    collectionRefs.map(DatabaseUtility.getHydratedCollection)
+                    collectionRefs.map(V1DatabaseUtility.getHydratedCollection)
                 );
 
                 const subCollectionsObject: {
@@ -128,7 +126,7 @@ export class DatabaseUtility {
         collection: CollectionReference,
         ...queries: Array<[string | FieldPath, WhereFilterOp, string]>
     ): Promise<QueryDocumentSnapshot | undefined> {
-        const documents = await DatabaseUtility.fetchMatchingDocuments(
+        const documents = await V1DatabaseUtility.fetchMatchingDocuments(
             collection,
             ...queries
         );

@@ -1,9 +1,9 @@
-import { Functions } from '@sol/firebase/functions';
+import { V1Functions } from '@sol/firebase/functions';
 
 import { Semester } from '@sol/firebase/classes/semester';
 import { _getClasses } from './_getClasses';
 
-export const classes = Functions.endpoint.handle<
+export const classes = V1Functions.endpoint.handle<
     | {
           query:
               | Array<{ id: string; semesterId: string }>

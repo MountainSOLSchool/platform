@@ -1,7 +1,7 @@
 import { firestore } from 'firebase-functions/v1';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
-import { AuthUtility } from '@sol/firebase/functions';
-import { DatabaseUtility } from '@sol/firebase/database';
+import { V1AuthUtility } from '@sol/firebase/functions';
+import { V1DatabaseUtility } from '@sol/firebase/database';
 import { Semester } from '@sol/firebase/classes/semester';
 import { _getClasses } from './_getClasses';
 import { _getSemestersAvailableToEnroll } from './_getSemestersAvailableToEnroll';
@@ -42,9 +42,9 @@ export const createEnrollmentEmail = firestore
                     enrollmentRecord.finalCost - (classesCost - totalDiscounts)
                 );
 
-            const user = await AuthUtility.getUser(enrollmentRecord.userId);
+            const user = await V1AuthUtility.getUser(enrollmentRecord.userId);
 
-            await DatabaseUtility.getDatabase()
+            await V1DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
                     to: user.email ?? enrollmentRecord.contactEmail,

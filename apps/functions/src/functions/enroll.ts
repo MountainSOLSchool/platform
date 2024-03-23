@@ -1,4 +1,4 @@
-import { AuthUtility, Functions } from '@sol/firebase/functions';
+import { V1AuthUtility, V1Functions } from '@sol/firebase/functions';
 import { Braintree } from '@sol/payments/braintree';
 import {
     NewStudentDbEntry,
@@ -7,7 +7,7 @@ import {
 } from '@sol/student/domain';
 import { DiscountRepository } from '@sol/classes/repository';
 import { Discount, EnrollmentUtility } from '@sol/classes/domain';
-import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
+import { V1ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
 import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
@@ -86,7 +86,7 @@ function _mapStudentFormToStudentDbEntry(
     return entry;
 }
 
-export const enroll = Functions.endpoint
+export const enroll = V1Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .usingStrings(...Braintree.STRING_NAMES)
     .handle<{
@@ -97,7 +97,7 @@ export const enroll = Functions.endpoint
         paymentMethod?: { nonce: string; deviceData: string };
         userCostsToSelectedClassIds: Record<string, number | undefined>;
     }>(async (request, response, secrets, strings) => {
-        const user = await AuthUtility.getUserFromRequest(request, response);
+        const user = await V1AuthUtility.getUserFromRequest(request, response);
 
         if (!user) {
             response.status(401).send({ error: 'User not found' });
@@ -168,7 +168,7 @@ export const enroll = Functions.endpoint
             })),
         };
 
-        const studentEnrollmentId = await ClassEnrollmentRepository.create({
+        const studentEnrollmentId = await V1ClassEnrollmentRepository.create({
             ...enrollmentRecord,
             status: 'pending',
         });
@@ -209,7 +209,7 @@ export const enroll = Functions.endpoint
                 ? StudentRepository.update(studentDbEntry)
                 : StudentRepository.create(studentDbEntry));
 
-            await ClassEnrollmentRepository.create({
+            await V1ClassEnrollmentRepository.create({
                 ...enrollmentRecord,
                 relatedId: studentEnrollmentId,
                 studentId: studentRef.id,
@@ -232,7 +232,7 @@ export const enroll = Functions.endpoint
                 email: student.contactEmail,
             });
         } else {
-            await ClassEnrollmentRepository.create({
+            await V1ClassEnrollmentRepository.create({
                 ...enrollmentRecord,
                 relatedId: studentEnrollmentId,
                 status: 'failed',

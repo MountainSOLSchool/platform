@@ -1,5 +1,5 @@
 import { StudentRepository } from '@sol/student/repository';
-import { Functions, Role } from '@sol/firebase/functions';
+import { V1Functions, V1Role } from '@sol/firebase/functions';
 import { Semester } from '@sol/firebase/classes/semester';
 import { RosterTableFactory } from '@sol/student/reports';
 import { SpecificSemesterRepository } from '@sol/classes/repository';
@@ -16,8 +16,8 @@ async function getClassRosterTable(classId: string, semesterId: string) {
     return new RosterTableFactory().build(students, [className]);
 }
 
-export const roster = Functions.endpoint
-    .restrictedToRoles(Role.Admin)
+export const roster = V1Functions.endpoint
+    .restrictedToRoles(V1Role.Admin)
     .handle<
         unknown,
         { classId: string; semesterId: string }

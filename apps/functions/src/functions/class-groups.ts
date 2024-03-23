@@ -1,8 +1,8 @@
-import { Functions } from '@sol/firebase/functions';
+import { V1Functions } from '@sol/firebase/functions';
 
 import { Semester } from '@sol/firebase/classes/semester';
 
-export const classGroups = Functions.endpoint.handle<{
+export const classGroups = V1Functions.endpoint.handle<{
     query: Array<{ id: string; semesterId: string }>;
 }>(async (request, response) => {
     const activeSemesterGroups = Semester.active().groups;
