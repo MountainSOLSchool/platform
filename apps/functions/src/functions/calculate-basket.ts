@@ -1,9 +1,9 @@
-import { Functions } from '@sol/firebase/functions';
+import { V1Functions } from '@sol/firebase/functions';
 import { DiscountRepository } from '@sol/classes/repository';
 import { Discount, EnrollmentUtility } from '@sol/classes/domain';
 import { Semester } from '@sol/firebase/classes/semester';
 
-export const calculateBasket = Functions.endpoint.handle<{
+export const calculateBasket = V1Functions.endpoint.handle<{
     codes: Array<string>;
     classes: Array<{ id: string; semesterId: string }>;
     userCostsToClassIds: Record<string, number | undefined>;

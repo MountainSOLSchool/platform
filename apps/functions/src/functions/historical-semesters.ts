@@ -1,14 +1,14 @@
-import { Functions } from '@sol/firebase/functions';
-import { DatabaseUtility } from '@sol/firebase/database';
+import { V1Functions } from '@sol/firebase/functions';
+import { V1DatabaseUtility } from '@sol/firebase/database';
 
-export const historicalSemesters = Functions.endpoint.handle<
+export const historicalSemesters = V1Functions.endpoint.handle<
     | {
           ids: Array<string>;
       }
     | undefined
 >(async (request, response) => {
     const semestersCollection =
-        await DatabaseUtility.getCollectionRef('semesters');
+        await V1DatabaseUtility.getCollectionRef('semesters');
     const semesters = await semestersCollection.get().then((snapshot) =>
         snapshot.docs.map((doc) => ({
             id: doc.id,
@@ -16,7 +16,7 @@ export const historicalSemesters = Functions.endpoint.handle<
         }))
     );
 
-    const currentSemester = await DatabaseUtility.getDocumentRef(
+    const currentSemester = await V1DatabaseUtility.getDocumentRef(
         `config/activeSemester`
     );
     const activeSemesterId = await currentSemester

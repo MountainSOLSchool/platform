@@ -1,4 +1,4 @@
-import { AuthUtility, Functions } from '@sol/firebase/functions';
+import { V1AuthUtility, V1Functions } from '@sol/firebase/functions';
 import { StudentDbEntry, StudentForm } from '@sol/student/domain';
 import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
 import { StudentRepository } from '@sol/student/repository';
@@ -69,9 +69,9 @@ function _mapStudentDbEntryToStudentForm(dbEntry: StudentDbEntry): StudentForm {
     return form;
 }
 
-export const getMyStudent = Functions.endpoint.handle<{ studentId: string }>(
+export const getMyStudent = V1Functions.endpoint.handle<{ studentId: string }>(
     async (request, response) => {
-        const user = await AuthUtility.getUserFromRequest(request, response);
+        const user = await V1AuthUtility.getUserFromRequest(request, response);
         if (!user) {
             response.send({ studentIds: [] });
             return;

@@ -1,4 +1,4 @@
-import { Functions, Role } from '@sol/firebase/functions';
+import { V1Functions, V1Role } from '@sol/firebase/functions';
 import { StudentRepository } from '@sol/student/repository';
 import { Semester } from '@sol/firebase/classes/semester';
 import { StudentHealthTableFactory } from '@sol/student/reports';
@@ -16,8 +16,8 @@ async function getClassStudentHealthTable(classId: string, semesterId: string) {
     return new StudentHealthTableFactory().build(students, [className]);
 }
 
-export const studentHealth = Functions.endpoint
-    .restrictedToRoles(Role.Admin)
+export const studentHealth = V1Functions.endpoint
+    .restrictedToRoles(V1Role.Admin)
     .handle<
         unknown,
         { classId: string; semesterId: string }

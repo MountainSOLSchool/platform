@@ -1,12 +1,11 @@
 import { ClassEnrollmentDbo } from '../models/db/class-enrollment.dbo';
-import { DatabaseUtility } from '@sol/firebase/database';
-import { AuthUtility } from '@sol/firebase/functions';
+import { V1DatabaseUtility } from '@sol/firebase/database';
+import { V1AuthUtility } from '@sol/firebase/functions';
 import { type Firestore } from 'firebase-admin/firestore';
-import { Request } from 'firebase-functions/v2/https';
-import * as express from 'express';
+import { type Request, type Response } from 'firebase-functions/v1';
 import { SemesterEnrollment } from '@sol/classes/domain';
 
-export class ClassEnrollmentRepository {
+export class V1ClassEnrollmentRepository {
     static async create(enrollment: ClassEnrollmentDbo): Promise<string> {
         const { id } = await this.database
             .collection('enrollment')
@@ -15,7 +14,7 @@ export class ClassEnrollmentRepository {
     }
 
     private static get database(): Firestore {
-        return DatabaseUtility.getDatabase();
+        return V1DatabaseUtility.getDatabase();
     }
 
     static async getCurrentSemesterEnrollments(): Promise<
@@ -43,9 +42,9 @@ export class ClassEnrollmentRepository {
 
     static async getCurrentUserCompletedEnrollments(
         request: Request,
-        response: express.Response
+        response: Response
     ): Promise<Array<SemesterEnrollment>> {
-        const user = await AuthUtility.getUserFromRequest(request, response);
+        const user = await V1AuthUtility.getUserFromRequest(request, response);
         if (!user) {
             return [];
         }

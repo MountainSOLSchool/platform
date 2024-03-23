@@ -1,8 +1,8 @@
-import { Functions } from '@sol/firebase/functions';
+import { V1Functions } from '@sol/firebase/functions';
 
 import { Semester } from '@sol/firebase/classes/semester';
 
-export const currentSemester = Functions.endpoint.handle<
+export const currentSemester = V1Functions.endpoint.handle<
     | {
           ids: Array<string>;
       }

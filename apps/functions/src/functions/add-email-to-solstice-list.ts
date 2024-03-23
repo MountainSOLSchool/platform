@@ -1,6 +1,6 @@
 import { firestore } from 'firebase-functions/v1';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
-import { DatabaseUtility } from '@sol/firebase/database';
+import { V1DatabaseUtility } from '@sol/firebase/database';
 import { FieldValue } from 'firebase-admin/firestore';
 
 export const addEmailToSolsticeList = firestore
@@ -12,7 +12,7 @@ export const addEmailToSolsticeList = firestore
             !!enrollmentRecord.transactionId &&
             enrollmentRecord.isSignedUpForSolsticeEmails === true
         ) {
-            await DatabaseUtility.getDatabase()
+            await V1DatabaseUtility.getDatabase()
                 .collection('mailing_lists')
                 .doc('summer_solstice_2023')
                 .update({

@@ -1,12 +1,12 @@
-import { DatabaseUtility } from '@sol/firebase/database';
+import { V1DatabaseUtility } from '@sol/firebase/database';
 
 export async function _getSemestersAvailableToEnroll() {
-    const activeSemesterDoc = await DatabaseUtility.getDocumentRef(
+    const activeSemesterDoc = await V1DatabaseUtility.getDocumentRef(
         `config/activeSemester`
     );
     const activeSemester = await activeSemesterDoc.get();
     const otherSemestersAvailableToEnrollDoc =
-        await DatabaseUtility.getDocumentRef(
+        await V1DatabaseUtility.getDocumentRef(
             `config/otherSemestersAvailableToEnroll`
         );
     const otherSemestersAvailableToEnroll =
@@ -19,7 +19,7 @@ export async function _getSemestersAvailableToEnroll() {
     const semesters = await Promise.all(
         [activeSemesterId, ...otherAvailableSemesterIds].map(
             async (semesterId) => {
-                const semesterDoc = await DatabaseUtility.getDocumentRef(
+                const semesterDoc = await V1DatabaseUtility.getDocumentRef(
                     `semesters/${semesterId}`
                 );
                 const semester = await semesterDoc.get();

@@ -1,4 +1,4 @@
-import { DatabaseUtility } from '@sol/firebase/database';
+import { V1DatabaseUtility } from '@sol/firebase/database';
 import { SemesterClassGroup } from '@sol/classes/domain';
 import { ClassRepository } from './class.repository';
 import { SemesterRepository } from './semester.repository';
@@ -17,10 +17,10 @@ export class ClassGroupRepository {
     }
 
     async get(id: string): Promise<SemesterClassGroup> {
-        const document = await DatabaseUtility.getDocumentRef(
+        const document = await V1DatabaseUtility.getDocumentRef(
             `${await this.getGroupsPath()}/${id}`
         );
-        const [data] = await DatabaseUtility.getHydratedDocuments([document]);
+        const [data] = await V1DatabaseUtility.getHydratedDocuments([document]);
         return await this.convertDboToDomain(data as SemesterClassGroupDbo);
     }
 
@@ -43,7 +43,7 @@ export class ClassGroupRepository {
         );
     }
     async getOpenForRegistration(): Promise<SemesterClassGroup[]> {
-        const groupsCollection = await DatabaseUtility.getCollectionRef(
+        const groupsCollection = await V1DatabaseUtility.getCollectionRef(
             await this.getGroupsPath()
         );
         const groupDocs = await groupsCollection.listDocuments();
@@ -61,7 +61,7 @@ export class ClassGroupRepository {
     async getByClassIds(
         classIds: Array<string>
     ): Promise<SemesterClassGroup[]> {
-        const groupsCollection = await DatabaseUtility.getCollectionRef(
+        const groupsCollection = await V1DatabaseUtility.getCollectionRef(
             await this.getGroupsPath()
         );
         const groupDocs = await groupsCollection.listDocuments();
