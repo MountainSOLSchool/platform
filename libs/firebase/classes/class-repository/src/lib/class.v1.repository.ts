@@ -1,7 +1,7 @@
 import { SemesterClass } from '@sol/classes/domain';
-import { DatabaseUtility } from '@sol/firebase/database';
-import { SemesterRepository } from './semester.repository';
+import { V1DatabaseUtility } from '@sol/firebase/database';
 import { firestore } from 'firebase-admin';
+import { SemesterRepository } from './semester.repository';
 
 type ClassDbo = {
     id: string;
@@ -28,10 +28,10 @@ type ClassDbo = {
     for_information_only?: boolean;
 };
 
-export class ClassRepository {
+export class V1ClassRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
-    static of(semester: SemesterRepository): ClassRepository {
-        return new ClassRepository(semester);
+    static of(semester: SemesterRepository): V1ClassRepository {
+        return new V1ClassRepository(semester);
     }
 
     private async getClassesPath(): Promise<string> {
@@ -42,10 +42,10 @@ export class ClassRepository {
     ): Promise<
         SemesterClass & { students: Array<firestore.DocumentReference> }
     > {
-        const document = await DatabaseUtility.getDocumentRef(
+        const document = await V1DatabaseUtility.getDocumentRef(
             `${await this.getClassesPath()}/${id}`
         );
-        const [data] = await DatabaseUtility.getHydratedDocuments([document]);
+        const [data] = await V1DatabaseUtility.getHydratedDocuments([document]);
         return await this.convertDboToDomain(data as ClassDbo);
     }
     async getMany(ids: Array<string>): Promise<SemesterClass[]> {
@@ -58,8 +58,10 @@ export class ClassRepository {
 
     async getOpenForRegistration(): Promise<SemesterClass[]> {
         const now = new Date(Date.now());
-        const query = await DatabaseUtility.fetchMatchingDocuments(
-            await DatabaseUtility.getCollectionRef(await this.getClassesPath()),
+        const query = await V1DatabaseUtility.fetchMatchingDocuments(
+            await V1DatabaseUtility.getCollectionRef(
+                await this.getClassesPath()
+            ),
             // TODO: temporary for local dev, remove before merging
             // ['registration_end_date', '>=', now],
             ['live', '==', true]
@@ -69,8 +71,10 @@ export class ClassRepository {
     }
 
     async getAll(): Promise<SemesterClass[]> {
-        const query = await DatabaseUtility.fetchMatchingDocuments(
-            await DatabaseUtility.getCollectionRef(await this.getClassesPath()),
+        const query = await V1DatabaseUtility.fetchMatchingDocuments(
+            await V1DatabaseUtility.getCollectionRef(
+                await this.getClassesPath()
+            ),
             ['live', '==', true]
         );
         const classIds = query.map((doc) => doc.id);
@@ -117,7 +121,7 @@ export class ClassRepository {
             cost: dbo.cost,
             location: dbo.location,
             instructors: (
-                (await DatabaseUtility.getHydratedDocuments(
+                (await V1DatabaseUtility.getHydratedDocuments(
                     dbo.instructors as unknown as Array<firestore.DocumentReference>
                 )) as Array<{
                     id: string;
@@ -150,10 +154,10 @@ export class ClassRepository {
     }
 
     async addStudentToClass(studentId: string, classId: string): Promise<void> {
-        const classRef = await DatabaseUtility.getDocumentRef(
+        const classRef = await V1DatabaseUtility.getDocumentRef(
             `${await this.getClassesPath()}/${classId}`
         );
-        const studentRef = await DatabaseUtility.getDocumentRef(
+        const studentRef = await V1DatabaseUtility.getDocumentRef(
             `students/${studentId}`
         );
         const enrolledStudents =

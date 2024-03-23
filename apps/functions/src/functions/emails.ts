@@ -1,8 +1,8 @@
-import { V1Functions, V1Role } from '@sol/firebase/functions';
+import { Functions, Role } from '@sol/firebase/functions';
 import { ClassEmailGenerator } from '@sol/student/reports';
 
-export const emails = V1Functions.endpoint
-    .restrictedToRoles(V1Role.Admin)
+export const emails = Functions.endpoint
+    .restrictedToRoles(Role.Admin)
     .handle<
         unknown,
         { classId: string; semesterId: string }

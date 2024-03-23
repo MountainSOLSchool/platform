@@ -1,7 +1,7 @@
 import { V1AuthUtility, V1Functions } from '@sol/firebase/functions';
 import { StudentDbEntry, StudentForm } from '@sol/student/domain';
 import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
-import { StudentRepository } from '@sol/student/repository';
+import { V1StudentRepository } from '@sol/student/repository';
 
 function _mapStudentDbEntryToStudentForm(dbEntry: StudentDbEntry): StudentForm {
     const form: StudentForm = {
@@ -80,7 +80,7 @@ export const getMyStudent = V1Functions.endpoint.handle<{ studentId: string }>(
 
         await _assertUserCanManageStudent(user, studentId, response);
 
-        const student = await StudentRepository.get(studentId);
+        const student = await V1StudentRepository.get(studentId);
 
         if (!student) {
             response.status(404).send();

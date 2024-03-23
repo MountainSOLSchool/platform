@@ -1,5 +1,5 @@
 import { V1AuthUtility, V1Functions } from '@sol/firebase/functions';
-import { StudentRepository } from '@sol/student/repository';
+import { V1StudentRepository } from '@sol/student/repository';
 
 export const myEnrolledStudents = V1Functions.endpoint.handle(
     async (request, response) => {
@@ -10,7 +10,7 @@ export const myEnrolledStudents = V1Functions.endpoint.handle(
         }
         const studentIds = await V1AuthUtility.getUserStudentIds(user);
         const studentOrEmptyLookups = await Promise.all(
-            studentIds.map(async (id) => await StudentRepository.get(id))
+            studentIds.map(async (id) => await V1StudentRepository.get(id))
         );
         const students = studentOrEmptyLookups
             .filter(

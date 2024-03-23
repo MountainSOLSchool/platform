@@ -9,7 +9,7 @@ import { DiscountRepository } from '@sol/classes/repository';
 import { Discount, EnrollmentUtility } from '@sol/classes/domain';
 import { V1ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
-import { StudentRepository } from '@sol/student/repository';
+import { V1StudentRepository } from '@sol/student/repository';
 import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
 import { _getClasses } from './_getClasses';
 import { Semester } from '@sol/firebase/classes/semester';
@@ -206,8 +206,8 @@ export const enroll = V1Functions.endpoint
             const studentDbEntry = _mapStudentFormToStudentDbEntry(student);
 
             const studentRef = await ('id' in studentDbEntry
-                ? StudentRepository.update(studentDbEntry)
-                : StudentRepository.create(studentDbEntry));
+                ? V1StudentRepository.update(studentDbEntry)
+                : V1StudentRepository.create(studentDbEntry));
 
             await V1ClassEnrollmentRepository.create({
                 ...enrollmentRecord,
