@@ -1,9 +1,9 @@
-import { firestore } from 'firebase-functions/v2';
+import { onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { FieldValue } from 'firebase-admin/firestore';
 
-export const addEmailToSolsticeList = firestore.onDocumentCreated(
+export const addEmailToSolsticeList = onDocumentCreated(
     'enrollment/{enrollmentId}',
     async (event) => {
         const enrollmentRecord =
