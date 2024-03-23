@@ -1,23 +1,23 @@
-import { V1Functions, V1Role } from '@sol/firebase/functions';
-import { V1StudentRepository } from '@sol/student/repository';
-import { V1Semester } from '@sol/firebase/classes/semester';
+import { Functions, Role } from '@sol/firebase/functions';
+import { StudentRepository } from '@sol/student/repository';
+import { Semester } from '@sol/firebase/classes/semester';
 import { SignInTableFactory } from '@sol/student/reports';
 import { SpecificSemesterRepository } from '@sol/classes/repository';
 
 async function getClassSignInTable(classId: string, semesterId: string) {
-    const students = await V1StudentRepository.of(
+    const students = await StudentRepository.of(
         SpecificSemesterRepository.of(semesterId)
     ).getInClass(classId);
 
-    const className = await V1Semester.of(semesterId)
+    const className = await Semester.of(semesterId)
         .classes.get(classId)
         .then((c) => c.title);
 
     return new SignInTableFactory().build(students, [className]);
 }
 
-export const signIn = V1Functions.endpoint
-    .restrictedToRoles(V1Role.Admin)
+export const signIn = Functions.endpoint
+    .restrictedToRoles(Role.Admin)
     .handle<
         unknown,
         { classId: string; semesterId: string }

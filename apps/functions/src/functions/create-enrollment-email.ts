@@ -1,17 +1,19 @@
-import { firestore } from 'firebase-functions/v1';
+import { firestore } from 'firebase-functions/v2';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
-import { V1AuthUtility } from '@sol/firebase/functions';
-import { V1DatabaseUtility } from '@sol/firebase/database';
-import { V1Semester } from '@sol/firebase/classes/semester';
+import { AuthUtility } from '@sol/firebase/functions';
+import { DatabaseUtility } from '@sol/firebase/database';
+import { Semester } from '@sol/firebase/classes/semester';
 import { _getClasses } from './_getClasses';
 import { _getSemestersAvailableToEnroll } from './_getSemestersAvailableToEnroll';
 
-export const createEnrollmentEmail = firestore
-    .document('enrollment/{enrollmentId}')
-    .onCreate(async (documentSnapshot) => {
-        const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
+export const createEnrollmentEmail = firestore.onDocumentCreated(
+    'enrollment/{enrollmentId}',
+    async (event) => {
+        const enrollmentRecord =
+            event.data && (event.data.data() as ClassEnrollmentDbo);
 
         if (
+            enrollmentRecord &&
             enrollmentRecord.status === 'enrolled' &&
             (!!enrollmentRecord.transactionId ||
                 enrollmentRecord.finalCost === 0) &&
@@ -28,7 +30,7 @@ export const createEnrollmentEmail = firestore
                     ? Object.values(
                           await _getClasses(enrollmentRecord.classes)
                       ).flatMap((cl) => cl)
-                    : await V1Semester.active().classes.getMany(
+                    : await Semester.active().classes.getMany(
                           enrollmentRecord.classIds
                       );
 
@@ -42,9 +44,9 @@ export const createEnrollmentEmail = firestore
                     enrollmentRecord.finalCost - (classesCost - totalDiscounts)
                 );
 
-            const user = await V1AuthUtility.getUser(enrollmentRecord.userId);
+            const user = await AuthUtility.getUser(enrollmentRecord.userId);
 
-            await V1DatabaseUtility.getDatabase()
+            await DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
                     to: user.email ?? enrollmentRecord.contactEmail,
@@ -137,4 +139,5 @@ export const createEnrollmentEmail = firestore
                     },
                 });
         }
-    });
+    }
+);

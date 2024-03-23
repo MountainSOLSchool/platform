@@ -1,11 +1,11 @@
-import { V1Functions } from '@sol/firebase/functions';
+import { Functions } from '@sol/firebase/functions';
 
-import { V1Semester } from '@sol/firebase/classes/semester';
+import { Semester } from '@sol/firebase/classes/semester';
 
-export const classGroups = V1Functions.endpoint.handle<{
+export const classGroups = Functions.endpoint.handle<{
     query: Array<{ id: string; semesterId: string }>;
 }>(async (request, response) => {
-    const activeSemesterGroups = V1Semester.active().groups;
+    const activeSemesterGroups = Semester.active().groups;
 
     const query = request.body.data.query;
 
@@ -27,7 +27,7 @@ export const classGroups = V1Functions.endpoint.handle<{
                       async ([semesterId, groupIds]) =>
                           [
                               semesterId,
-                              await V1Semester.of(semesterId).groups.getMany(
+                              await Semester.of(semesterId).groups.getMany(
                                   groupIds
                               ),
                           ] as const

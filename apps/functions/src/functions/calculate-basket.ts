@@ -1,9 +1,9 @@
-import { V1Functions } from '@sol/firebase/functions';
+import { Functions } from '@sol/firebase/functions';
 import { DiscountRepository } from '@sol/classes/repository';
 import { Discount, EnrollmentUtility } from '@sol/classes/domain';
-import { V1Semester } from '@sol/firebase/classes/semester';
+import { Semester } from '@sol/firebase/classes/semester';
 
-export const calculateBasket = V1Functions.endpoint.handle<{
+export const calculateBasket = Functions.endpoint.handle<{
     codes: Array<string>;
     classes: Array<{ id: string; semesterId: string }>;
     userCostsToClassIds: Record<string, number | undefined>;
@@ -26,7 +26,7 @@ export const calculateBasket = V1Functions.endpoint.handle<{
     const groups = await Promise.all(
         semesterIds.map(async (semesterId) => {
             const groups =
-                await V1Semester.of(semesterId).groups.getByClassIds(classIds);
+                await Semester.of(semesterId).groups.getByClassIds(classIds);
             return groups;
         })
     ).then((groups) => groups.flat());
@@ -56,7 +56,7 @@ export const calculateBasket = V1Functions.endpoint.handle<{
         Object.entries(classIdsBySemesterId).map(
             async ([semesterId, classIds]) => {
                 const classes =
-                    await V1Semester.of(semesterId).classes.getMany(classIds);
+                    await Semester.of(semesterId).classes.getMany(classIds);
                 return classes;
             }
         )

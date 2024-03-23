@@ -1,9 +1,9 @@
-import { V1Functions } from '@sol/firebase/functions';
+import { Functions } from '@sol/firebase/functions';
 
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { _getCategorizedClasses } from './_getCategorizedClasses';
 
-export const classesBySemester = V1Functions.endpoint.handle<
+export const classesBySemester = Functions.endpoint.handle<
     Array<string> // semester ids
 >(async (request, response) => {
     const theClassesBySemester: {

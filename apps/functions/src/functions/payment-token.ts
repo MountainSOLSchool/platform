@@ -1,11 +1,11 @@
-import { V1AuthUtility, V1Functions } from '@sol/firebase/functions';
+import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { Braintree } from '@sol/payments/braintree';
 
-export const paymentToken = V1Functions.endpoint
+export const paymentToken = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .usingStrings(...Braintree.STRING_NAMES)
     .handle(async (request, response, secrets, strings) => {
-        const user = await V1AuthUtility.getUserFromRequest(request, response);
+        const user = await AuthUtility.getUserFromRequest(request, response);
         if (!user) {
             response.status(401).send({ error: 'Unauthorized' });
             return;

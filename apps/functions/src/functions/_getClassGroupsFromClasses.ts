@@ -1,5 +1,5 @@
 import { SemesterClassGroup } from '@sol/classes/domain';
-import { V1Semester } from '@sol/firebase/classes/semester';
+import { Semester } from '@sol/firebase/classes/semester';
 
 export async function _getClassGroupsFromClasses(
     classQuery: Array<{ id: string; semesterId: string }>
@@ -21,7 +21,7 @@ export async function _getClassGroupsFromClasses(
                 async ([semesterId, classIds]) =>
                     [
                         semesterId,
-                        await V1Semester.of(semesterId).groups.getByClassIds(
+                        await Semester.of(semesterId).groups.getByClassIds(
                             classIds
                         ),
                     ] as const
