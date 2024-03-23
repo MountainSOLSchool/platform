@@ -12,7 +12,7 @@ import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { V1StudentRepository } from '@sol/student/repository';
 import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
 import { _getClasses } from './_getClasses';
-import { Semester } from '@sol/firebase/classes/semester';
+import { V1Semester } from '@sol/firebase/classes/semester';
 import { _getClassGroupsFromClasses } from './_getClassGroupsFromClasses';
 
 function _mapStudentFormToStudentDbEntry(
@@ -220,7 +220,7 @@ export const enroll = V1Functions.endpoint
 
             await Promise.all(
                 classes.map(async (c) => {
-                    await Semester.of(c.semesterId).classes.addStudentToClass(
+                    await V1Semester.of(c.semesterId).classes.addStudentToClass(
                         studentRef.id,
                         c.id
                     );

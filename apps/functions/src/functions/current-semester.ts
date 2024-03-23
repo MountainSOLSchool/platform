@@ -1,6 +1,6 @@
 import { V1Functions } from '@sol/firebase/functions';
 
-import { Semester } from '@sol/firebase/classes/semester';
+import { V1Semester } from '@sol/firebase/classes/semester';
 
 export const currentSemester = V1Functions.endpoint.handle<
     | {
@@ -8,7 +8,7 @@ export const currentSemester = V1Functions.endpoint.handle<
       }
     | undefined
 >(async (request, response) => {
-    const semesterClasses = Semester.active().classes;
+    const semesterClasses = V1Semester.active().classes;
     const classes = await (request.body.data
         ? semesterClasses.getMany(request.body.data.ids)
         : semesterClasses.getAll());

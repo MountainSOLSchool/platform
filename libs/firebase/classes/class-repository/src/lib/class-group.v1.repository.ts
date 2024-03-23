@@ -1,26 +1,26 @@
-import { DatabaseUtility } from '@sol/firebase/database';
+import { V1DatabaseUtility } from '@sol/firebase/database';
 import { SemesterClassGroup } from '@sol/classes/domain';
-import { ClassRepository } from './class.repository';
+import { V1ClassRepository } from './class.v1.repository';
 import { SemesterRepository } from './semester.repository';
 
 type SemesterClassGroupDbo = Omit<SemesterClassGroup, 'classes'> & {
     classIds: Array<string>;
 };
 
-export class ClassGroupRepository {
+export class V1ClassGroupRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
-    static of(semester: SemesterRepository): ClassGroupRepository {
-        return new ClassGroupRepository(semester);
+    static of(semester: SemesterRepository): V1ClassGroupRepository {
+        return new V1ClassGroupRepository(semester);
     }
     private async getGroupsPath(): Promise<string> {
         return `${await this.semester.getPath()}/groups`;
     }
 
     async get(id: string): Promise<SemesterClassGroup> {
-        const document = await DatabaseUtility.getDocumentRef(
+        const document = await V1DatabaseUtility.getDocumentRef(
             `${await this.getGroupsPath()}/${id}`
         );
-        const [data] = await DatabaseUtility.getHydratedDocuments([document]);
+        const [data] = await V1DatabaseUtility.getHydratedDocuments([document]);
         return await this.convertDboToDomain(data as SemesterClassGroupDbo);
     }
 
@@ -29,7 +29,7 @@ export class ClassGroupRepository {
     ): Promise<SemesterClassGroup> {
         return {
             ...dbo,
-            classes: await ClassRepository.of(this.semester).getMany(
+            classes: await V1ClassRepository.of(this.semester).getMany(
                 dbo.classIds
             ),
         };
@@ -43,7 +43,7 @@ export class ClassGroupRepository {
         );
     }
     async getOpenForRegistration(): Promise<SemesterClassGroup[]> {
-        const groupsCollection = await DatabaseUtility.getCollectionRef(
+        const groupsCollection = await V1DatabaseUtility.getCollectionRef(
             await this.getGroupsPath()
         );
         const groupDocs = await groupsCollection.listDocuments();
@@ -61,7 +61,7 @@ export class ClassGroupRepository {
     async getByClassIds(
         classIds: Array<string>
     ): Promise<SemesterClassGroup[]> {
-        const groupsCollection = await DatabaseUtility.getCollectionRef(
+        const groupsCollection = await V1DatabaseUtility.getCollectionRef(
             await this.getGroupsPath()
         );
         const groupDocs = await groupsCollection.listDocuments();

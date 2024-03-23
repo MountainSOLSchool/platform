@@ -2,7 +2,7 @@ import { firestore } from 'firebase-functions/v1';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
 import { V1AuthUtility } from '@sol/firebase/functions';
 import { V1DatabaseUtility } from '@sol/firebase/database';
-import { Semester } from '@sol/firebase/classes/semester';
+import { V1Semester } from '@sol/firebase/classes/semester';
 import { _getClasses } from './_getClasses';
 import { _getSemestersAvailableToEnroll } from './_getSemestersAvailableToEnroll';
 
@@ -28,7 +28,7 @@ export const createEnrollmentEmail = firestore
                     ? Object.values(
                           await _getClasses(enrollmentRecord.classes)
                       ).flatMap((cl) => cl)
-                    : await Semester.active().classes.getMany(
+                    : await V1Semester.active().classes.getMany(
                           enrollmentRecord.classIds
                       );
 

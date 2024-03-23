@@ -1,6 +1,6 @@
 import { V1Functions, V1Role } from '@sol/firebase/functions';
 import { V1StudentRepository } from '@sol/student/repository';
-import { Semester } from '@sol/firebase/classes/semester';
+import { V1Semester } from '@sol/firebase/classes/semester';
 import { SignInTableFactory } from '@sol/student/reports';
 import { SpecificSemesterRepository } from '@sol/classes/repository';
 
@@ -9,7 +9,7 @@ async function getClassSignInTable(classId: string, semesterId: string) {
         SpecificSemesterRepository.of(semesterId)
     ).getInClass(classId);
 
-    const className = await Semester.of(semesterId)
+    const className = await V1Semester.of(semesterId)
         .classes.get(classId)
         .then((c) => c.title);
 

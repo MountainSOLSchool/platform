@@ -1,5 +1,5 @@
 import { SemesterClass } from '@sol/classes/domain';
-import { Semester } from '@sol/firebase/classes/semester';
+import { V1Semester } from '@sol/firebase/classes/semester';
 
 export async function _getClasses(
     query: Array<{ id: string; semesterId: string }>
@@ -21,7 +21,9 @@ export async function _getClasses(
                 async ([semesterId, classIds]) =>
                     [
                         semesterId,
-                        await Semester.of(semesterId).classes.getMany(classIds),
+                        await V1Semester.of(semesterId).classes.getMany(
+                            classIds
+                        ),
                     ] as const
             )
         )
