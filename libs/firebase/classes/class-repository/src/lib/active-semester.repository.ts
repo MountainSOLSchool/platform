@@ -1,5 +1,5 @@
 import { SemesterRepository } from './semester.repository';
-import { DatabaseUtility } from '@sol/firebase/database';
+import { V1DatabaseUtility } from '@sol/firebase/database';
 
 export class ActiveSemesterRepository extends SemesterRepository {
     static of(): ActiveSemesterRepository {
@@ -7,7 +7,7 @@ export class ActiveSemesterRepository extends SemesterRepository {
     }
 
     async getId(): Promise<string> {
-        const activeSemesterDoc = await DatabaseUtility.getDocumentRef(
+        const activeSemesterDoc = await V1DatabaseUtility.getDocumentRef(
             `config/activeSemester`
         );
         const activeSemester = await activeSemesterDoc.get();
@@ -15,7 +15,7 @@ export class ActiveSemesterRepository extends SemesterRepository {
     }
 
     async getPath(): Promise<string> {
-        const activeSemesterDoc = await DatabaseUtility.getDocumentRef(
+        const activeSemesterDoc = await V1DatabaseUtility.getDocumentRef(
             `config/activeSemester`
         );
         const activeSemester = await activeSemesterDoc.get();

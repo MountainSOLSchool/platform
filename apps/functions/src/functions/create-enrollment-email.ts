@@ -1,25 +1,23 @@
-import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { firestore } from 'firebase-functions/v1';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
-import { AuthUtility } from '@sol/firebase/functions';
-import { DatabaseUtility } from '@sol/firebase/database';
-import { Semester } from '@sol/firebase/classes/semester';
-import { _getClasses } from './_getClasses';
-import { _getSemestersAvailableToEnroll } from './_getSemestersAvailableToEnroll';
+import { V1AuthUtility } from '@sol/firebase/functions';
+import { V1DatabaseUtility } from '@sol/firebase/database';
+import { V1Semester } from '@sol/firebase/classes/semester';
+import { _getSemestersAvailableToEnrollV1 } from './_getSemestersAvailableToEnroll.v1';
+import { _getClassesV1 } from './_getClasses.v1';
 
-export const createEnrollmentEmail = onDocumentCreated(
-    'enrollment/{enrollmentId}',
-    async (event) => {
-        const enrollmentRecord =
-            event.data && (event.data.data() as ClassEnrollmentDbo);
+export const createEnrollmentEmail = firestore
+    .document('enrollment/{enrollmentId}')
+    .onCreate(async (documentSnapshot) => {
+        const enrollmentRecord = documentSnapshot.data() as ClassEnrollmentDbo;
 
         if (
-            enrollmentRecord &&
             enrollmentRecord.status === 'enrolled' &&
             (!!enrollmentRecord.transactionId ||
                 enrollmentRecord.finalCost === 0) &&
             ('classIds' in enrollmentRecord || 'classes' in enrollmentRecord)
         ) {
-            const semesters = await _getSemestersAvailableToEnroll();
+            const semesters = await _getSemestersAvailableToEnrollV1();
             const semesterNamesById = semesters.reduce(
                 (acc, s) => ({ ...acc, [s.id]: s.name }),
                 {} as Record<string, string>
@@ -28,9 +26,9 @@ export const createEnrollmentEmail = onDocumentCreated(
             const classes =
                 'classes' in enrollmentRecord
                     ? Object.values(
-                          await _getClasses(enrollmentRecord.classes)
+                          await _getClassesV1(enrollmentRecord.classes)
                       ).flatMap((cl) => cl)
-                    : await Semester.active().classes.getMany(
+                    : await V1Semester.active().classes.getMany(
                           enrollmentRecord.classIds
                       );
 
@@ -44,9 +42,9 @@ export const createEnrollmentEmail = onDocumentCreated(
                     enrollmentRecord.finalCost - (classesCost - totalDiscounts)
                 );
 
-            const user = await AuthUtility.getUser(enrollmentRecord.userId);
+            const user = await V1AuthUtility.getUser(enrollmentRecord.userId);
 
-            await DatabaseUtility.getDatabase()
+            await V1DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
                     to: user.email ?? enrollmentRecord.contactEmail,
@@ -139,5 +137,4 @@ export const createEnrollmentEmail = onDocumentCreated(
                     },
                 });
         }
-    }
-);
+    });
