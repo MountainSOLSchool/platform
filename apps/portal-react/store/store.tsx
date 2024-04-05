@@ -9,6 +9,7 @@ import unitStore from './unitStore';
 import { loadUnits } from './unitEpic';
 import testStudent from './testStudent';
 import { loadTestStudent } from './testStudentEpic';
+import { submitLoginEpic } from '../app/login/login.epics';
 
 const epicMiddleware = createEpicMiddleware();
 
@@ -26,7 +27,8 @@ export const rootEpic = combineEpics<AnyAction>(
     loadPaths,
     load100,
     loadUnits,
-    loadTestStudent
+    loadTestStudent,
+    submitLoginEpic
 );
 
 epicMiddleware.run(rootEpic);

@@ -11,7 +11,7 @@ import { appRoutes } from './app/app-routes';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { provideFirebaseApp } from '@angular/fire/app';
 import {
     connectFunctionsEmulator,
     getFunctions,
@@ -21,8 +21,9 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import {
     provideFireAuth,
     provideFireFunctions,
-} from '@sol/ts/firebase/adapter';
+} from '@sol/angular/firebase/adapter';
 import { MarkdownModule } from 'ngx-markdown';
+import { solApp } from '@sol/ts/firebase/firebase-config';
 
 if (environment.production) {
     enableProdMode();
@@ -40,19 +41,7 @@ bootstrapApplication(AppComponent, {
         provideStoreDevtools({
             maxAge: 50,
         }),
-        importProvidersFrom(
-            provideFirebaseApp(() =>
-                initializeApp({
-                    apiKey: 'AIzaSyBxv66X_Ye4MXI5lt8Sjc1xz88rdWJJ0ho',
-                    authDomain: 'mountain-sol-platform.web.app',
-                    projectId: 'mountain-sol-platform',
-                    storageBucket: 'mountain-sol-platform.appspot.com',
-                    messagingSenderId: '319228048592',
-                    appId: '1:319228048592:web:2d418795ca948ba2665ad5',
-                    measurementId: 'G-QN03ENCDDC',
-                })
-            )
-        ),
+        importProvidersFrom(provideFirebaseApp(() => solApp)),
         importProvidersFrom(
             provideFunctions(() => {
                 const functions = getFunctions();

@@ -1,6 +1,1 @@
-export {
-    provideFireAuth,
-    provideFireFunctions,
-    FIRE_AUTH,
-    FIRE_FUNCTIONS,
-} from './lib/firebase-sdk-adapter';
+export { FirebaseAuthBasedServiceFactory } from './lib/utilities/firebase-auth-based-service.factory';
