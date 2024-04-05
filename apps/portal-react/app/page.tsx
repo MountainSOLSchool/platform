@@ -1,3 +1,4 @@
+'use client';
 import * as auth from 'firebase/auth';
 // import styles from './index.module.css';
 import { Button } from 'primereact/button';
@@ -13,7 +14,7 @@ import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit
 
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
 
-export function Index() {
+export function Page() {
     auth.getAuth().onAuthStateChanged((user) => {
         if (user) {
             console.log('user is signed in', user);
@@ -91,4 +92,4 @@ export function Index() {
     );
 }
 
-export default Index;
+export default Page;
