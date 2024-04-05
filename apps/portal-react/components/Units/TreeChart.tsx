@@ -69,7 +69,7 @@ function SmartTreeChart() {
                     // CHECK PREREQUISITES AND UNLOCK UNITS
                     if (
                         newUnit['prereqs'] === 'none' ||
-                        !newUnit['prereqs'].find(
+                        !newUnit['prereqs']?.find(
                             (req: string) => !completeUnits.includes(req)
                         )
                     ) {
