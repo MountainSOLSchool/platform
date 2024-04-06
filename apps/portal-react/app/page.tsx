@@ -14,7 +14,7 @@ import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit
 
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
 
-export function Page() {
+function Page() {
     auth.getAuth().onAuthStateChanged((user) => {
         if (user) {
             console.log('user is signed in', user);
