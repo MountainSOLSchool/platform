@@ -2,11 +2,7 @@ import React from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-
-export enum LoginMode {
-    SIGN_IN,
-    SIGN_UP,
-}
+import { LoginMode } from './login-view-model';
 
 export default function LoginView(props: {
     viewModel: {
@@ -31,6 +27,7 @@ export default function LoginView(props: {
         <span>
             <Button
                 label="Submit"
+                loading={props.viewModel.isSubmitInProgress}
                 icon="pi pi-check"
                 onClick={() => props.onLogin()}
             />

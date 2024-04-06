@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import LoginView, { LoginMode } from './login-view';
-import { loginSlice } from './login.slice';
+import LoginView from './login-view';
+import { loginSlice, selectLoginViewModel } from './login.slice';
+import { LoginMode } from './login-view-model';
 
 export function useLoginStore(): {
     viewModel: Parameters<typeof LoginView>[0]['viewModel'];
@@ -15,7 +16,7 @@ export function useLoginStore(): {
 
     return {
         viewModel,
-        login: () => dispatch(loginSlice.actions.logIn),
+        login: () => dispatch(loginSlice.actions.logIn()),
         sendPasswordResetEmail: () =>
             dispatch(loginSlice.actions.sendPasswordResetEmail),
         setEmail: (email) => dispatch(loginSlice.actions.setEmail(email)),

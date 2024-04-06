@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import testStore from './testStore';
+import login from '../app/login/login.slice';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { AnyAction } from 'redux';
 import { load100 } from './testStoreEpic';
@@ -19,6 +20,7 @@ export const store = configureStore({
         paths: paths,
         units: unitStore,
         student: testStudent,
+        login: login,
     },
     middleware: () => [epicMiddleware],
 });

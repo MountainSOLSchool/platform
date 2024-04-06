@@ -1,1 +1,1 @@
-export * from './lib/redux-request';
+export { type Requested, RequestState } from './lib/models/requested.type';

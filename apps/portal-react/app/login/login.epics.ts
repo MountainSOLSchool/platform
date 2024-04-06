@@ -1,23 +1,34 @@
-// features/login/loginEpics.js
 import { Epic, ofType } from 'redux-observable';
-import { of } from 'rxjs';
-import { mergeMap, map, catchError } from 'rxjs/operators';
-import { setRequestState, submit } from './login.slice';
+import { filter, of, switchMap, withLatestFrom } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { solAuthClient } from '@sol/ts/firebase/firebase-config';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
+import {
+    loginSlice,
+    selectLoginForm,
+    selectValidationErrors,
+} from './login.slice';
 
-export const submitLoginEpic: Epic = (action$) =>
+export const submitLoginEpic: Epic = (action$, state$) =>
     action$.pipe(
-        ofType(submit.type),
-        mergeMap((action: ReturnType<typeof submit>) =>
+        ofType(loginSlice.actions.logIn.type),
+        withLatestFrom(
+            state$.pipe(map(selectLoginForm)),
+            state$.pipe(map(selectValidationErrors))
+        ),
+        filter(
+            ([, , validationErrors]) =>
+                !validationErrors.email || !validationErrors.password
+        ),
+        switchMap(([, loginForm]) =>
             fromPromise(
                 solAuthClient.signInWithEmailAndPassword(
-                    action.payload.email,
-                    action.payload.password
+                    loginForm.email,
+                    loginForm.password
                 )
             ).pipe(
-                map(() => setRequestState('success')),
-                catchError(() => of(setRequestState('failure')))
+                map(() => loginSlice.actions.succeeded()),
+                catchError(() => of(loginSlice.actions.failed()))
             )
         )
     );
