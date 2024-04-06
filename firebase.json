@@ -8,7 +8,7 @@
     },
     "hosting": [
       {
-        "target": "mountain-sol-platform",
+        "site": "mountain-sol-platform",
         "public": "public",
         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
         "rewrites": [
@@ -88,7 +88,7 @@
       },
 
       {
-        "target": "mountain-sol-platform-students",
+        "site": "mountain-sol-platform-students",
         "public": "public",
         "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
         "rewrites": [
