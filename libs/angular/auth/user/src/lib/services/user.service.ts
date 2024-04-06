@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { filter, map, Observable, switchMap } from 'rxjs';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
-import { FIRE_AUTH } from '@sol/ts/firebase/adapter';
+import { FIRE_AUTH } from '@sol/angular/firebase/adapter';
 
 @Injectable({
     providedIn: 'root',

@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import testStore from './testStore';
+import login from '../app/login/login.slice';
 import { createEpicMiddleware, combineEpics } from 'redux-observable';
 import { AnyAction } from 'redux';
 import { load100 } from './testStoreEpic';
@@ -9,6 +10,7 @@ import unitStore from './unitStore';
 import { loadUnits } from './unitEpic';
 import testStudent from './testStudent';
 import { loadTestStudent } from './testStudentEpic';
+import { submitLoginEpic } from '../app/login/login.epics';
 
 const epicMiddleware = createEpicMiddleware();
 
@@ -18,6 +20,7 @@ export const store = configureStore({
         paths: paths,
         units: unitStore,
         student: testStudent,
+        login: login,
     },
     middleware: () => [epicMiddleware],
 });
@@ -26,7 +29,8 @@ export const rootEpic = combineEpics<AnyAction>(
     loadPaths,
     load100,
     loadUnits,
-    loadTestStudent
+    loadTestStudent,
+    submitLoginEpic
 );
 
 epicMiddleware.run(rootEpic);
