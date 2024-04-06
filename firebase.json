@@ -79,10 +79,6 @@
                 "function": "getMyStudent"
             },
             {
-                "source": "/portal2/**",
-                "destination": "/portal2/index.html"
-            },
-            {
                 "source": "**",
                 "destination": "/portal/index.html"
             }
