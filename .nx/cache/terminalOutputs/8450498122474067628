@@ -1,0 +1,629 @@
+
+Linting "portal-react"...
+Pages directory cannot be found at apps/portal-react/pages. If using a custom path, please configure with the `no-html-link-for-pages` rule in your eslint config file.
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\app\layout.tsx[24m[0m
+[0m   [2m1:14[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:23[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:20[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:66[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:50[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:20[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:36[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:67[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:13[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:15[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:27[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:64[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:28[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:60[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m22:28[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m23:20[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m24:16[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m25:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m26:2[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m27:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m28:27[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\app\page.tsx[24m[0m
+[0m   [2m1:14[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:39[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:44[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:44[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:52[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:56[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:49[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:68[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:75[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:1[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:29[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:1[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:107[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:1[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:79[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:1[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:25[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:50[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:20[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:52[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:17[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m22:50[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m23:10[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m24:8[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m25:1[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m26:65[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m27:1[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m28:36[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m29:74[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m30:69[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m31:66[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m32:74[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m33:1[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m34:22[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m35:21[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m36:25[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m37:23[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m38:22[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m39:23[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m40:19[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m41:30[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m42:24[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m43:11[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m44:8[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m45:1[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m46:13[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m47:14[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m48:18[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m49:23[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m50:33[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m51:24[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m52:75[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m53:75[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m54:81[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m55:24[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m56:67[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m57:51[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m58:18[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m59:52[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m60:26[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m61:24[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m62:35[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m63:34[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m64:45[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m65:49[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m66:63[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m67:31[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m68:26[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m69:22[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m70:18[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m71:34[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m72:26[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m73:23[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m74:19[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m75:77[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m76:36[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m77:18[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m78:24[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m79:62[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m80:37[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m81:79[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m82:60[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m83:23[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m84:19[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m85:19[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m86:66[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m87:68[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m88:40[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m89:30[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m90:31[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m91:15[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m92:7[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m93:2[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m94:1[22m    [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m95:21[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\components\Units\AnimatedTreeChart.tsx[24m[0m
+[0m    [2m2:10[22m  [33mwarning[39m  'AnimatedTreeChart' is defined but never used. Allowed unused vars must match /^_/u    [2munused-imports/no-unused-vars[22m[0m
+[0m    [2m2:10[22m  [33mwarning[39m  'AnimatedTreeChart' is defined but never used                                          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m   [2m83:33[22m  [33mwarning[39m  'd' is defined but never used. Allowed unused args must match /^_/u                    [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m109:15[22m  [33mwarning[39m  'nodeUpdate' is assigned a value but never used. Allowed unused vars must match /^_/u  [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m109:15[22m  [33mwarning[39m  'nodeUpdate' is assigned a value but never used                                        [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m117:15[22m  [33mwarning[39m  'nodeExit' is assigned a value but never used. Allowed unused vars must match /^_/u    [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m117:15[22m  [33mwarning[39m  'nodeExit' is assigned a value but never used                                          [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m121:33[22m  [33mwarning[39m  'd' is defined but never used. Allowed unused args must match /^_/u                    [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m132:25[22m  [33mwarning[39m  'd' is defined but never used. Allowed unused args must match /^_/u                    [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m144:25[22m  [33mwarning[39m  'd' is defined but never used. Allowed unused args must match /^_/u                    [2munused-imports/no-unused-vars[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\components\Units\BulkUpdateForSingleUnit\BulkUpdateForSingleUnit.tsx[24m[0m
+[0m   [2m1:54[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:59[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:44[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:13[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:14[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:38[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:38[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:80[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:15[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:2[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\components\Units\BulkUpdateForSingleUnit\StudentSelectionTool.tsx[24m[0m
+[0m   [2m1:14[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:50[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:44[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:44[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:27[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:10[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:31[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:29[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:31[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:10[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:31[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:29[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m22:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m23:66[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m24:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m25:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m26:47[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m27:56[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m28:60[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m29:60[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m30:14[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m31:22[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m32:12[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m33:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m34:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m35:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m36:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m37:51[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m38:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m39:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m40:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m41:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m42:44[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m43:43[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m44:53[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m45:22[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m46:17[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m47:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m48:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m49:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m50:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m51:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m52:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m53:13[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m54:14[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m55:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m56:27[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m57:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m58:70[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m59:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m60:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m61:43[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m62:54[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m63:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m64:81[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m65:79[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m66:28[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m67:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m68:44[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m69:46[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m70:38[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m71:23[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m72:28[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m73:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m74:51[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m75:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m76:23[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m77:29[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m78:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m79:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m80:67[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m81:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m82:15[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m83:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m84:2[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m85:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m86:37[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\components\Units\TreeChart.tsx[24m[0m
+[0m  [2m163:15[22m  [33mwarning[39m  'smartTreeData' is assigned a value but never used. Allowed unused vars must match /^_/u                                           [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m163:15[22m  [33mwarning[39m  'smartTreeData' is assigned a value but never used                                                                                 [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m272:22[22m  [33mwarning[39m  'd' is defined but never used. Allowed unused args must match /^_/u                                                                [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m309:19[22m  [33mwarning[39m  'nodeUpdate' is assigned a value but never used. Allowed unused vars must match /^_/u                                              [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m309:19[22m  [33mwarning[39m  'nodeUpdate' is assigned a value but never used                                                                                    [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m317:19[22m  [33mwarning[39m  'nodeExit' is assigned a value but never used. Allowed unused vars must match /^_/u                                                [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m317:19[22m  [33mwarning[39m  'nodeExit' is assigned a value but never used                                                                                      [2m@typescript-eslint/no-unused-vars[22m[0m
+[0m  [2m321:37[22m  [33mwarning[39m  'd' is defined but never used. Allowed unused args must match /^_/u                                                                [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m334:29[22m  [33mwarning[39m  'd' is defined but never used. Allowed unused args must match /^_/u                                                                [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m346:29[22m  [33mwarning[39m  'd' is defined but never used. Allowed unused args must match /^_/u                                                                [2munused-imports/no-unused-vars[22m[0m
+[0m  [2m532:8[22m   [33mwarning[39m  React Hook useEffect has missing dependencies: 'dispatch' and 'generateNodes'. Either include them or remove the dependency array  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\components\Units\UnitSelectionTool.tsx[24m[0m
+[0m  [2m1:38[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m2:49[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m3:2[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m4:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m5:34[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\firebase\app.tsx[24m[0m
+[0m   [2m1:46[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:55[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:49[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:56[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:39[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:56[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:4[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\firebase\database.tsx[24m[0m
+[0m  [2m1:51[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m2:29[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m3:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m4:37[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\index.d.ts[24m[0m
+[0m  [2m1:25[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m2:28[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m3:42[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m4:28[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m5:2[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\jest.config.ts[24m[0m
+[0m   [2m1:21[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:33[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:36[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:17[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:73[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:75[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:54[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:59[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:3[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:27[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\next-env.d.ts[24m[0m
+[0m  [2m1:31[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m2:50[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m3:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m4:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m5:79[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\next.config.js[24m[0m
+[0m   [2m1:12[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:56[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:4[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:60[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:5[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:21[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:10[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:58[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:50[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:21[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:3[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:37[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\specs\index.spec.tsx[24m[0m
+[0m   [2m1:27[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:49[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:26[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:45[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:50[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:42[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:8[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:4[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\store\paths.tsx[24m[0m
+[0m   [2m1:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:22[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:16[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:42[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:71[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:4[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:64[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:60[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\store\pathsEpic.tsx[24m[0m
+[0m   [2m1:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:53[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:43[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:58[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:58[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:63[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:24[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:57[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:65[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:36[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:33[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:75[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:80[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:61[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:77[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:45[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:59[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m22:62[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m23:58[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m24:36[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m25:42[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m26:37[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m27:63[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m28:45[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m29:31[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m30:27[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m31:22[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m32:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m33:14[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m34:10[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m35:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\store\store.tsx[24m[0m
+[0m   [2m1:51[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:37[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:71[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:43[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:29[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:37[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:53[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:47[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:38[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:15[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:28[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:22[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:26[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m22:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m23:4[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m24:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m25:49[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m26:15[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m27:13[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m28:15[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m29:20[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m30:3[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m31:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m32:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m33:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m34:59[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\store\testStore.tsx[24m[0m
+[0m   [2m1:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:39[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:21[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:20[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:16[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:81[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:84[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:81[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:55[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:43[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m22:80[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m23:33[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m24:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m25:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m26:27[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m27:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m28:4[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m29:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m30:64[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m31:15[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m32:15[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m33:15[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m34:23[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m35:23[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m36:13[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m37:23[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m38:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m39:34[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\store\testStoreEpic.tsx[24m[0m
+[0m   [2m1:60[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:58[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:43[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:50[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:56[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:58[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:24[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:73[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:55[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:57[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:14[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:10[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\store\testStudent.jsx[24m[0m
+[0m   [2m1:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:26[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:20[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:28[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:16[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:63[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:36[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:49[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:59[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:4[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:73[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m22:25[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m23:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m24:36[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\store\testStudentEpic.tsx[24m[0m
+[0m   [2m1:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:43[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:50[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:71[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:64[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:69[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:24[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:76[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:59[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:31[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:36[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:81[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:54[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:47[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:36[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m22:47[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m23:24[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m24:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m25:14[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m26:10[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m27:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\store\unitEpic.tsx[24m[0m
+[0m   [2m1:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:57[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:43[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:58[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:58[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:63[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:24[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:57[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:64[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:36[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:33[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:75[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:78[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:80[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:37[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:41[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m22:63[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m23:71[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m24:56[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m25:76[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m26:49[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m27:63[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m28:66[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m29:62[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m30:40[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m31:46[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m32:77[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m33:31[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m34:27[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m35:22[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m36:18[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m37:14[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m38:10[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m39:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[4mc:\Users\Nathan\Documents\GitHub\platform\apps\portal-react\store\unitStore.tsx[24m[0m
+[0m   [2m1:48[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m2:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m3:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m4:19[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m5:22[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m6:16[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m7:42[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m8:71[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m   [2m9:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m10:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m11:32[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m12:44[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m13:35[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m14:11[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m15:7[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m16:4[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m17:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m18:64[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m19:75[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m20:1[22m   [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m  [2m21:30[22m  [31merror[39m  Delete `␍`  [2mprettier/prettier[22m[0m
+[0m[0m
+[0m[31m[1m✖ 572 problems (551 errors, 21 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[31m[1m  551 errors and 0 warnings potentially fixable with the `--fix` option.[22m[39m[0m
+[0m[31m[1m[22m[39m[0m
+✖ 572 problems (551 errors, 21 warnings)
+
+  551 errors and 0 warnings are potentially fixable with the `--fix` option.
+

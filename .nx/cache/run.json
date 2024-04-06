@@ -1,0 +1,21 @@
+{
+  "run": {
+    "command": "nx affected:lint --files=apps/portal-react/components/Units/TreeChart.tsx",
+    "startTime": "2024-04-06T01:27:33.651Z",
+    "endTime": "2024-04-06T01:27:38.338Z",
+    "inner": false
+  },
+  "tasks": [
+    {
+      "taskId": "portal-react:lint",
+      "target": "lint",
+      "projectName": "portal-react",
+      "hash": "16514341034464492548",
+      "startTime": "2024-04-06T01:27:33.657Z",
+      "endTime": "2024-04-06T01:27:38.338Z",
+      "params": "",
+      "cacheStatus": "cache-miss",
+      "status": 1
+    }
+  ]
+}
