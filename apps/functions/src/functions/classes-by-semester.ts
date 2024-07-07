@@ -13,6 +13,8 @@ export const classesBySemester = Functions.endpoint.handle<
         };
     } = {};
 
+    console.log('hello');
+
     try {
         const semesterIds = request.body.data;
         for (const semesterId of semesterIds) {

@@ -1,9 +1,18 @@
 import { Semester } from '@sol/firebase/classes/semester';
 
-export async function _getCategorizedClasses(semesterId: string) {
+export async function _getCategorizedClasses(
+    semesterId: string,
+    config: {
+        onlyOpenForRegistration?: boolean;
+    } = {}
+) {
     const semester = await Semester.of(semesterId);
-    const classes = await semester.classes.getOpenForRegistration();
-    const groups = await semester.groups.getOpenForRegistration();
+    console.log(semester);
+    const getMethodName = config.onlyOpenForRegistration
+        ? 'getOpenForRegistration'
+        : 'getAll';
+    const classes = await semester.classes[getMethodName]();
+    const groups = await semester.groups[getMethodName]();
     const idsOfClassesInGroups = groups.flatMap((g) =>
         g.classes.map((c) => c.id)
     );
