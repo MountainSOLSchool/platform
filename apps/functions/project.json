@@ -11,12 +11,12 @@
                 "outputPath": "dist/apps/functions",
                 "main": "apps/functions/src/main.ts",
                 "tsConfig": "apps/functions/tsconfig.app.json",
-                "generatePackageJson": true,
+                "generatePackageJson": false,
                 "platform": "node",
                 "bundle": true,
                 "thirdParty": false,
                 "dependenciesFieldType": "dependencies",
-                "target": "node16",
+                "target": "node20",
                 "format": ["cjs"],
                 "esbuildOptions": {
                     "logLevel": "info"
