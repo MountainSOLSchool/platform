@@ -7,7 +7,6 @@ export async function _getCategorizedClasses(
     } = {}
 ) {
     const semester = await Semester.of(semesterId);
-    console.log(semester);
     const getMethodName = config.onlyOpenForRegistration
         ? 'getOpenForRegistration'
         : 'getAll';
