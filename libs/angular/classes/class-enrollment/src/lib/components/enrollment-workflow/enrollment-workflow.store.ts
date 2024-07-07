@@ -1,5 +1,6 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { ComponentStore, tapResponse } from '@ngrx/component-store';
+import { ComponentStore } from '@ngrx/component-store';
+import { tapResponse } from '@ngrx/operators';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { filter, pairwise, Subject, switchMap, take, tap } from 'rxjs';
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
