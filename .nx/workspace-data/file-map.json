@@ -1,0 +1,3397 @@
+{
+  "version": "6.0",
+  "nxVersion": "19.4.1",
+  "deps": {
+    "@angular-devkit/schematics": "17.2.3",
+    "@angular/animations": "17.2.4",
+    "@angular/cdk": "17.2.2",
+    "@angular/common": "17.2.4",
+    "@angular/compiler": "17.2.4",
+    "@angular/core": "17.2.4",
+    "@angular/fire": "^17.0.1",
+    "@angular/forms": "17.2.4",
+    "@angular/material": "17.2.2",
+    "@angular/platform-browser": "17.2.4",
+    "@angular/platform-browser-dynamic": "17.2.4",
+    "@angular/router": "17.2.4",
+    "@fullcalendar/angular": "^6.1.10",
+    "@fullcalendar/core": "^6.1.10",
+    "@fullcalendar/daygrid": "^6.1.10",
+    "@fullcalendar/interaction": "^6.1.10",
+    "@fullcalendar/timegrid": "^6.1.10",
+    "@fullcalendar/web-component": "^6.1.10",
+    "@ngrx/component-store": "17.0.1",
+    "@ngrx/effects": "17.0.1",
+    "@ngrx/store": "17.0.1",
+    "@ngrx/store-devtools": "17.0.1",
+    "@nx/angular": "18.1.2",
+    "@reduxjs/toolkit": "^1.9.3",
+    "@rx-angular/template": "^17.0.1",
+    "@types/braintree": "^3.3.10",
+    "@types/braintree-web": "^3.96.8",
+    "@types/braintree-web-drop-in": "^1.39.2",
+    "add-to-calendar-button": "^2.6.0",
+    "braintree": "^3.21.0",
+    "braintree-web": "^3.100.0",
+    "braintree-web-drop-in": "^1.42.0",
+    "chart.js": "^4.3.2",
+    "cors": "^2.8.5",
+    "firebase": "^10.8.0",
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^4.7.0",
+    "next": "14.0.4",
+    "ngx-markdown": "^17.1.1",
+    "primeflex": "^3.3.1",
+    "primeicons": "^6.0.1",
+    "primeng": "^17.7.0",
+    "primereact": "^9.2.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-redux": "^8.0.5",
+    "redux": "^4.2.1",
+    "redux-observable": "^2.0.0",
+    "rxjs": "^7.8.1",
+    "tslib": "^2.3.0",
+    "uuid": "^9.0.1",
+    "vest": "^5.2.8",
+    "zone.js": "0.14.4",
+    "@angular-devkit/architect": "0.1702.3",
+    "@angular-devkit/build-angular": "^17.2.2",
+    "@angular-devkit/core": "17.2.3",
+    "@angular-eslint/eslint-plugin": "^17.3.0",
+    "@angular-eslint/eslint-plugin-template": "^17.3.0",
+    "@angular-eslint/template-parser": "^17.3.0",
+    "@angular/cli": "~17.2.0",
+    "@angular/compiler-cli": "17.2.4",
+    "@angular/language-service": "17.2.4",
+    "@babel/core": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
+    "@nx/cypress": "18.1.2",
+    "@nx/esbuild": "18.1.2",
+    "@nx/eslint": "18.1.2",
+    "@nx/eslint-plugin": "18.1.2",
+    "@nx/jest": "18.1.2",
+    "@nx/js": "18.1.2",
+    "@nx/next": "18.1.2",
+    "@nx/node": "18.1.2",
+    "@nx/react": "18.1.2",
+    "@nx/workspace": "18.1.2",
+    "@schematics/angular": "17.2.3",
+    "@swc-node/register": "~1.8.0",
+    "@swc/core": "~1.3.85",
+    "@swc/helpers": "~0.5.2",
+    "@testing-library/react": "14.0.0",
+    "@types/cors": "^2.8.12",
+    "@types/d3": "^7.4.0",
+    "@types/html-pdf": "^2.2.1",
+    "@types/jest": "29.4.0",
+    "@types/node": "^18.16.9",
+    "@types/papaparse": "^5.3.1",
+    "@types/react": "18.2.24",
+    "@types/react-dom": "18.2.9",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "babel-jest": "^29.4.1",
+    "cypress": "^13.6.6",
+    "d3": "^7.8.2",
+    "dotenv": "10.0.0",
+    "env-cmd": "^10.1.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.1.4",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-cypress": "^2.15.1",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-ngrx": "^2.1.4",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-unused-imports": "^3.1.0",
+    "firebase-functions-test": "^0.3.3",
+    "husky": "^8.0.3",
+    "is-ci": "^3.0.1",
+    "jest": "^29.4.3",
+    "jest-environment-jsdom": "29.5.0",
+    "jest-environment-node": "^29.4.1",
+    "jest-preset-angular": "14.0.3",
+    "jsonc-eslint-parser": "^2.1.0",
+    "lint-staged": "^15.0.2",
+    "ng-packagr": "17.2.1",
+    "nx": "18.1.2",
+    "postcss": "^8.3.9",
+    "postcss-import": "14.1.0",
+    "postcss-preset-env": "7.5.0",
+    "postcss-url": "10.1.3",
+    "prettier": "^3.2.5",
+    "ts-jest": "29.1.0",
+    "ts-node": "10.9.1",
+    "typescript": "5.3.3",
+    "webpack-bundle-analyzer": "^4.4.2"
+  },
+  "pathMappings": {
+    "@sol/account": [
+      "libs/angular/account/src/index.ts"
+    ],
+    "@sol/admin/class-printouts": [
+      "libs/angular/admin/class-printouts/src/index.ts"
+    ],
+    "@sol/angular/admin/enrollments": [
+      "libs/angular/admin/enrollments/src/index.ts"
+    ],
+    "@sol/angular/auth/firebase": [
+      "libs/angular/auth/firebase/src/index.ts"
+    ],
+    "@sol/angular/classes/list": [
+      "libs/angular/classes/class-list/src/index.ts"
+    ],
+    "@sol/angular/classes/semester-list": [
+      "libs/angular/classes/class-semester-list/src/index.ts"
+    ],
+    "@sol/angular/request": [
+      "libs/angular/request/src/index.ts"
+    ],
+    "@sol/auth/interceptor": [
+      "libs/angular/auth/interceptor/src/index.ts"
+    ],
+    "@sol/auth/login": [
+      "libs/angular/auth/login/src/index.ts"
+    ],
+    "@sol/auth/user": [
+      "libs/angular/auth/user/src/index.ts"
+    ],
+    "@sol/calendar": [
+      "libs/angular/calendar/calendar/src/index.ts"
+    ],
+    "@sol/classes/calendar": [
+      "libs/angular/classes/class-calendar/src/index.ts"
+    ],
+    "@sol/classes/class-management": [
+      "libs/angular/classes/class-management/src/index.ts"
+    ],
+    "@sol/classes/domain": [
+      "libs/ts/classes/classes-domain/src/index.ts"
+    ],
+    "@sol/classes/enrollment": [
+      "libs/angular/classes/class-enrollment/src/index.ts"
+    ],
+    "@sol/classes/enrollment/repository": [
+      "libs/firebase/classes/class-enrollment-repository/src/index.ts"
+    ],
+    "@sol/classes/repository": [
+      "libs/firebase/classes/class-repository/src/index.ts"
+    ],
+    "@sol/firebase/classes/semester": [
+      "libs/firebase/classes/semester/src/index.ts"
+    ],
+    "@sol/firebase/database": [
+      "libs/firebase/database/src/index.ts"
+    ],
+    "@sol/firebase/functions": [
+      "libs/firebase/functions/src/index.ts"
+    ],
+    "@sol/firebase/functions-api": [
+      "libs/firebase/functions-api/src/index.ts"
+    ],
+    "@sol/form/validity": [
+      "libs/angular/form/validity/src/index.ts"
+    ],
+    "@sol/header": [
+      "libs/angular/header/src/index.ts"
+    ],
+    "@sol/paths": [
+      "libs/angular/paths/src/index.ts"
+    ],
+    "@sol/payments/braintree": [
+      "libs/firebase/braintree/src/index.ts"
+    ],
+    "@sol/payments/braintree-client": [
+      "libs/angular/braintree-client/src/index.ts"
+    ],
+    "@sol/payments/transactions": [
+      "libs/ts/transactions/src/index.ts"
+    ],
+    "@sol/record/domain": [
+      "libs/ts/record/domain/src/index.ts"
+    ],
+    "@sol/student/domain": [
+      "libs/ts/student/domain/src/index.ts"
+    ],
+    "@sol/student/import": [
+      "libs/ts/student/import/src/index.ts"
+    ],
+    "@sol/student/reports": [
+      "libs/firebase/student/reports/src/index.ts"
+    ],
+    "@sol/student/repository": [
+      "libs/firebase/student/repository/src/index.ts"
+    ],
+    "@sol/table/domain": [
+      "libs/ts/table/domain/src/index.ts"
+    ],
+    "@sol/table/html": [
+      "libs/ts/table/html/src/index.ts"
+    ],
+    "@sol/ts/firebase/adapter": [
+      "libs/ts/firebase/adapter/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": ".editorconfig",
+        "hash": "5443105041930014821"
+      },
+      {
+        "file": ".env.dev",
+        "hash": "3778561483049401591"
+      },
+      {
+        "file": ".env.prod",
+        "hash": "14635425634802734827"
+      },
+      {
+        "file": ".eslintrc.json",
+        "hash": "12963135057104465851"
+      },
+      {
+        "file": ".firebaserc",
+        "hash": "2119640977767920057"
+      },
+      {
+        "file": ".github/workflows/build-check.yml",
+        "hash": "12295244449955005367"
+      },
+      {
+        "file": ".github/workflows/firebase-functions-merge-dev.yml",
+        "hash": "14498740082482202409"
+      },
+      {
+        "file": ".github/workflows/firebase-functions-merge.yml",
+        "hash": "6668758462459132040"
+      },
+      {
+        "file": ".github/workflows/firebase-hosting-merge.yml",
+        "hash": "2752992812987274924"
+      },
+      {
+        "file": ".github/workflows/firebase-hosting-students-merge.yml",
+        "hash": "6224675349165598911"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "3010010856358360378"
+      },
+      {
+        "file": ".husky/.gitignore",
+        "hash": "10106645302852536800"
+      },
+      {
+        "file": ".husky/pre-commit",
+        "hash": "8189751726595803328"
+      },
+      {
+        "file": ".nxignore",
+        "hash": "10459612887462284015"
+      },
+      {
+        "file": ".prettierignore",
+        "hash": "1415311157632545333"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "10542950374267380932"
+      },
+      {
+        "file": ".vscode/extensions.json",
+        "hash": "10434507463596799948"
+      },
+      {
+        "file": ".vscode/settings.json",
+        "hash": "16202505252653960680"
+      },
+      {
+        "file": "CODEOWNERS",
+        "hash": "1385040252497101269"
+      },
+      {
+        "file": "README.md",
+        "hash": "1538323994679772707"
+      },
+      {
+        "file": "apps/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "babel.config.json",
+        "hash": "15419948787014016184"
+      },
+      {
+        "file": "decorate-angular-cli.js",
+        "hash": "1700564328351615500"
+      },
+      {
+        "file": "enrollment.md",
+        "hash": "2380043592729248027"
+      },
+      {
+        "file": "firebase.json",
+        "hash": "512592222051880985"
+      },
+      {
+        "file": "firestore.indexes.json",
+        "hash": "17405050654704100717"
+      },
+      {
+        "file": "firestore.rules",
+        "hash": "16474483727980079886"
+      },
+      {
+        "file": "jest.config.ts",
+        "hash": "16390282593243958225"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "9430166341120122740"
+      },
+      {
+        "file": "libs/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "lint-staged.config.js",
+        "hash": "8565113855767763590"
+      },
+      {
+        "file": "nx.json",
+        "hash": "2417875907493606939"
+      },
+      {
+        "file": "output.html",
+        "hash": "3605565722025448080"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "12534535481873591037"
+      },
+      {
+        "file": "package.json",
+        "hash": "4768637338505222769"
+      },
+      {
+        "file": "storage.rules",
+        "hash": "15153294454150120176"
+      },
+      {
+        "file": "tools/tsconfig.tools.json",
+        "hash": "113529236189617652"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "7529635776664037470"
+      }
+    ],
+    "projectFileMap": {
+      "table-html": [
+        {
+          "file": "libs/ts/table/html/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/ts/table/html/.eslintrc.json",
+          "hash": "11911253462176251707"
+        },
+        {
+          "file": "libs/ts/table/html/README.md",
+          "hash": "4479235081782586741"
+        },
+        {
+          "file": "libs/ts/table/html/jest.config.ts",
+          "hash": "1601250526484752422"
+        },
+        {
+          "file": "libs/ts/table/html/project.json",
+          "hash": "9967126787497065447"
+        },
+        {
+          "file": "libs/ts/table/html/src/index.ts",
+          "hash": "11006571518701722590"
+        },
+        {
+          "file": "libs/ts/table/html/src/lib/models/table-html.factory.ts",
+          "hash": "17501132758896644782",
+          "deps": [
+            "record-domain",
+            "table-domain"
+          ]
+        },
+        {
+          "file": "libs/ts/table/html/src/lib/table-html.ts",
+          "hash": "2289645051965817435"
+        },
+        {
+          "file": "libs/ts/table/html/src/lib/utilities/index.ts",
+          "hash": "3683496678629049466"
+        },
+        {
+          "file": "libs/ts/table/html/src/lib/utilities/table-html.utility.ts",
+          "hash": "15833175865308173677",
+          "deps": [
+            "table-domain",
+            "record-domain"
+          ]
+        },
+        {
+          "file": "libs/ts/table/html/tsconfig.json",
+          "hash": "12887655642523571033"
+        },
+        {
+          "file": "libs/ts/table/html/tsconfig.lib.json",
+          "hash": "7859327687877834288"
+        },
+        {
+          "file": "libs/ts/table/html/tsconfig.spec.json",
+          "hash": "13453863573576393203"
+        }
+      ],
+      "auth-login": [
+        {
+          "file": "libs/angular/auth/login/.browserslistrc",
+          "hash": "17600754102500844387"
+        },
+        {
+          "file": "libs/angular/auth/login/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/angular/auth/login/README.md",
+          "hash": "12755370883829015909"
+        },
+        {
+          "file": "libs/angular/auth/login/jest.config.ts",
+          "hash": "8380613712605957522"
+        },
+        {
+          "file": "libs/angular/auth/login/project.json",
+          "hash": "14842891198224543162"
+        },
+        {
+          "file": "libs/angular/auth/login/src/index.ts",
+          "hash": "625987675863157317"
+        },
+        {
+          "file": "libs/angular/auth/login/src/lib/auth-routes.ts",
+          "hash": "15093861613579375862"
+        },
+        {
+          "file": "libs/angular/auth/login/src/lib/components/login.component.html",
+          "hash": "10896807759701704518"
+        },
+        {
+          "file": "libs/angular/auth/login/src/lib/components/login.component.ts",
+          "hash": "14757987038821559583"
+        },
+        {
+          "file": "libs/angular/auth/login/src/lib/components/login.store.ts",
+          "hash": "702680387597020648",
+          "deps": [
+            "npm:rxjs",
+            "firebase-auth",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "libs/angular/auth/login/src/lib/components/login.suite.ts",
+          "hash": "8217139761753038150"
+        },
+        {
+          "file": "libs/angular/auth/login/src/lib/components/user-button.component.ts",
+          "hash": "13379461618826216715",
+          "deps": [
+            "auth-user",
+            "firebase-auth",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/angular/auth/login/src/lib/models/user.ts",
+          "hash": "17382368150046336747"
+        },
+        {
+          "file": "libs/angular/auth/login/src/lib/store/login.actions.ts",
+          "hash": "592789517126697904"
+        },
+        {
+          "file": "libs/angular/auth/login/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/auth/login/tsconfig.json",
+          "hash": "13083659465504864314"
+        },
+        {
+          "file": "libs/angular/auth/login/tsconfig.lib.json",
+          "hash": "14775784481872065598"
+        },
+        {
+          "file": "libs/angular/auth/login/tsconfig.spec.json",
+          "hash": "4667737154189760478"
+        }
+      ],
+      "form-validity": [
+        {
+          "file": "libs/angular/form/validity/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/angular/form/validity/README.md",
+          "hash": "14033389916208550561"
+        },
+        {
+          "file": "libs/angular/form/validity/jest.config.ts",
+          "hash": "17473740711405592400"
+        },
+        {
+          "file": "libs/angular/form/validity/project.json",
+          "hash": "10930562875684762594"
+        },
+        {
+          "file": "libs/angular/form/validity/src/index.ts",
+          "hash": "2904567177515687416"
+        },
+        {
+          "file": "libs/angular/form/validity/src/lib/components/messages.component.ts",
+          "hash": "9719456310044307779"
+        },
+        {
+          "file": "libs/angular/form/validity/src/lib/directives/valid.directive.ts",
+          "hash": "5166639943775189797"
+        },
+        {
+          "file": "libs/angular/form/validity/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/form/validity/tsconfig.json",
+          "hash": "2318222232607706801"
+        },
+        {
+          "file": "libs/angular/form/validity/tsconfig.lib.json",
+          "hash": "11893621470008674671"
+        },
+        {
+          "file": "libs/angular/form/validity/tsconfig.spec.json",
+          "hash": "6336885236090328364"
+        }
+      ],
+      "student-repository": [
+        {
+          "file": "libs/firebase/student/repository/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/firebase/student/repository/README.md",
+          "hash": "5601414461542796"
+        },
+        {
+          "file": "libs/firebase/student/repository/jest.config.ts",
+          "hash": "3021104237985904701"
+        },
+        {
+          "file": "libs/firebase/student/repository/project.json",
+          "hash": "10474016699083885734"
+        },
+        {
+          "file": "libs/firebase/student/repository/src/index.ts",
+          "hash": "12385366917290185293"
+        },
+        {
+          "file": "libs/firebase/student/repository/src/lib/utilities/student.repository.ts",
+          "hash": "17990693464127917489",
+          "deps": [
+            "firebase-database",
+            "student-domain",
+            "classes-class-repository"
+          ]
+        },
+        {
+          "file": "libs/firebase/student/repository/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/firebase/student/repository/tsconfig.json",
+          "hash": "13083659465504864314"
+        },
+        {
+          "file": "libs/firebase/student/repository/tsconfig.lib.json",
+          "hash": "14775784481872065598"
+        },
+        {
+          "file": "libs/firebase/student/repository/tsconfig.spec.json",
+          "hash": "4667737154189760478"
+        }
+      ],
+      "firebase-sdk-adapter": [
+        {
+          "file": "libs/ts/firebase/adapter/.eslintrc.json",
+          "hash": "15617728302470681659"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/README.md",
+          "hash": "573820968173366554"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/jest.config.ts",
+          "hash": "16287202731499504887"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/package.json",
+          "hash": "11514972447011811099",
+          "deps": [
+            "npm:tslib"
+          ]
+        },
+        {
+          "file": "libs/ts/firebase/adapter/project.json",
+          "hash": "15233586230602463706"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/src/index.ts",
+          "hash": "4814393087430555833"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/src/lib/firebase-sdk-adapter.ts",
+          "hash": "5059466714001149395"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/src/lib/models/firebase-sdk-method.type.ts",
+          "hash": "7097582998611051323"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/src/lib/models/firebase-service-method.type.ts",
+          "hash": "9545424264570307822"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/src/lib/utilities/firebase-service-factory.utility.ts",
+          "hash": "7621734963165861799"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/tsconfig.json",
+          "hash": "5998162236041833049"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/tsconfig.lib.json",
+          "hash": "2122081637586075627"
+        },
+        {
+          "file": "libs/ts/firebase/adapter/tsconfig.spec.json",
+          "hash": "2699874675909732208"
+        }
+      ],
+      "auth-user": [
+        {
+          "file": "libs/angular/auth/user/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/angular/auth/user/README.md",
+          "hash": "13211009195697483632"
+        },
+        {
+          "file": "libs/angular/auth/user/jest.config.ts",
+          "hash": "3273840708220367571"
+        },
+        {
+          "file": "libs/angular/auth/user/project.json",
+          "hash": "8140800770307193863"
+        },
+        {
+          "file": "libs/angular/auth/user/src/index.ts",
+          "hash": "8750349682178595791"
+        },
+        {
+          "file": "libs/angular/auth/user/src/lib/services/user.service.ts",
+          "hash": "16872013720747308548",
+          "deps": [
+            "firebase-functions-api",
+            "npm:rxjs",
+            "request",
+            "firebase-sdk-adapter"
+          ]
+        },
+        {
+          "file": "libs/angular/auth/user/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/auth/user/tsconfig.json",
+          "hash": "13083659465504864314"
+        },
+        {
+          "file": "libs/angular/auth/user/tsconfig.lib.json",
+          "hash": "14775784481872065598"
+        },
+        {
+          "file": "libs/angular/auth/user/tsconfig.spec.json",
+          "hash": "4667737154189760478"
+        }
+      ],
+      "class-list": [
+        {
+          "file": "libs/angular/classes/class-list/.eslintrc.json",
+          "hash": "15375180790127088757"
+        },
+        {
+          "file": "libs/angular/classes/class-list/README.md",
+          "hash": "909655672848592346"
+        },
+        {
+          "file": "libs/angular/classes/class-list/jest.config.ts",
+          "hash": "4930333393517413482"
+        },
+        {
+          "file": "libs/angular/classes/class-list/project.json",
+          "hash": "7717878584544526827"
+        },
+        {
+          "file": "libs/angular/classes/class-list/src/index.ts",
+          "hash": "15190005407565367487"
+        },
+        {
+          "file": "libs/angular/classes/class-list/src/lib/models/class-list-class.type.ts",
+          "hash": "6797715678613961367"
+        },
+        {
+          "file": "libs/angular/classes/class-list/src/lib/services/class-list.service.ts",
+          "hash": "5584103798699981584",
+          "deps": [
+            "npm:rxjs",
+            "request",
+            "classeses-domain",
+            "firebase-functions-api"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-list/src/lib/services/classes-api.service.ts",
+          "hash": "13219645473046303490",
+          "deps": [
+            "firebase-functions-api",
+            "classeses-domain",
+            "npm:rxjs",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-list/src/lib/store/classes.actions.ts",
+          "hash": "7648830126013584641",
+          "deps": [
+            "classeses-domain",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-list/src/lib/store/classes.effects.ts",
+          "hash": "711659303312356592",
+          "deps": [
+            "npm:rxjs",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-list/src/lib/store/classes.feature.ts",
+          "hash": "2721665542770470007",
+          "deps": [
+            "classeses-domain",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-list/src/lib/store/classes.provider.ts",
+          "hash": "998827934985626873"
+        },
+        {
+          "file": "libs/angular/classes/class-list/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/classes/class-list/tsconfig.json",
+          "hash": "1498554114897028437"
+        },
+        {
+          "file": "libs/angular/classes/class-list/tsconfig.lib.json",
+          "hash": "10265320593933949377"
+        },
+        {
+          "file": "libs/angular/classes/class-list/tsconfig.spec.json",
+          "hash": "11585948387249347404"
+        }
+      ],
+      "payments-braintree": [
+        {
+          "file": "libs/firebase/braintree/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/firebase/braintree/.eslintrc.json",
+          "hash": "15894602379150597832"
+        },
+        {
+          "file": "libs/firebase/braintree/README.md",
+          "hash": "14025902035465049321"
+        },
+        {
+          "file": "libs/firebase/braintree/jest.config.ts",
+          "hash": "16098337625385023605"
+        },
+        {
+          "file": "libs/firebase/braintree/project.json",
+          "hash": "17189343293329749756"
+        },
+        {
+          "file": "libs/firebase/braintree/src/index.ts",
+          "hash": "6026830741139700189"
+        },
+        {
+          "file": "libs/firebase/braintree/src/lib/braintree.utility.ts",
+          "hash": "3279497118515883561",
+          "deps": [
+            "npm:braintree",
+            "payments-transactions"
+          ]
+        },
+        {
+          "file": "libs/firebase/braintree/tsconfig.json",
+          "hash": "18420787794129039294"
+        },
+        {
+          "file": "libs/firebase/braintree/tsconfig.lib.json",
+          "hash": "7883895700055543982"
+        },
+        {
+          "file": "libs/firebase/braintree/tsconfig.spec.json",
+          "hash": "11197163607770841048"
+        }
+      ],
+      "semester-list": [
+        {
+          "file": "libs/angular/classes/class-semester-list/.eslintrc.json",
+          "hash": "15375180790127088757"
+        },
+        {
+          "file": "libs/angular/classes/class-semester-list/README.md",
+          "hash": "7369024813969559160"
+        },
+        {
+          "file": "libs/angular/classes/class-semester-list/jest.config.ts",
+          "hash": "10036483280173262275"
+        },
+        {
+          "file": "libs/angular/classes/class-semester-list/project.json",
+          "hash": "11834175476158497832"
+        },
+        {
+          "file": "libs/angular/classes/class-semester-list/src/index.ts",
+          "hash": "10982423045287706895"
+        },
+        {
+          "file": "libs/angular/classes/class-semester-list/src/lib/semester-list/services/classes-semester-list.service.ts",
+          "hash": "13131607998468791880",
+          "deps": [
+            "firebase-functions-api",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-semester-list/src/test-setup.ts",
+          "hash": "17260818988408329265"
+        },
+        {
+          "file": "libs/angular/classes/class-semester-list/tsconfig.json",
+          "hash": "1498554114897028437"
+        },
+        {
+          "file": "libs/angular/classes/class-semester-list/tsconfig.lib.json",
+          "hash": "10265320593933949377"
+        },
+        {
+          "file": "libs/angular/classes/class-semester-list/tsconfig.spec.json",
+          "hash": "17469298610339623914"
+        }
+      ],
+      "classes-class-enrollment-repository": [
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/.eslintrc.json",
+          "hash": "11911253462176251707"
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/README.md",
+          "hash": "8100481300868817950"
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/jest.config.ts",
+          "hash": "14321268056760077606"
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/project.json",
+          "hash": "4468241823553174286"
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/src/index.ts",
+          "hash": "4557376939619290790"
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/src/lib/models/db/class-enrollment.dbo.ts",
+          "hash": "732965714943294213"
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/src/lib/services/class-enrollment-repository.ts",
+          "hash": "17112639913704059470",
+          "deps": [
+            "firebase-database",
+            "firebase-functions",
+            "classeses-domain"
+          ]
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/tsconfig.json",
+          "hash": "14284726248770522100"
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/tsconfig.lib.json",
+          "hash": "7883895700055543982"
+        },
+        {
+          "file": "libs/firebase/classes/class-enrollment-repository/tsconfig.spec.json",
+          "hash": "11197163607770841048"
+        }
+      ],
+      "classes-calendar": [
+        {
+          "file": "libs/angular/classes/class-calendar/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/README.md",
+          "hash": "2306172716956712928"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/jest.config.ts",
+          "hash": "812701400335663048"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/project.json",
+          "hash": "7087661436186848655"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/src/index.ts",
+          "hash": "6318992749805026401"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/src/lib/calendar-routes.ts",
+          "hash": "18040198347242134641"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/src/lib/components/classes-calendar.component.html",
+          "hash": "17240527071419176828"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/src/lib/components/classes-calendar.component.ts",
+          "hash": "15020057781961953593",
+          "deps": [
+            "classeses-domain",
+            "firebase-functions-api",
+            "npm:rxjs",
+            "calendar",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/tsconfig.json",
+          "hash": "13083659465504864314"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/tsconfig.lib.json",
+          "hash": "4073053274751426369"
+        },
+        {
+          "file": "libs/angular/classes/class-calendar/tsconfig.spec.json",
+          "hash": "4667737154189760478"
+        }
+      ],
+      "header": [
+        {
+          "file": "libs/angular/header/.browserslistrc",
+          "hash": "17600754102500844387"
+        },
+        {
+          "file": "libs/angular/header/.eslintrc.json",
+          "hash": "3548470336325215220"
+        },
+        {
+          "file": "libs/angular/header/README.md",
+          "hash": "13734922352963814394"
+        },
+        {
+          "file": "libs/angular/header/jest.config.ts",
+          "hash": "11852155708189926762"
+        },
+        {
+          "file": "libs/angular/header/project.json",
+          "hash": "5387683414343216581"
+        },
+        {
+          "file": "libs/angular/header/src/index.ts",
+          "hash": "9055396038814222529"
+        },
+        {
+          "file": "libs/angular/header/src/lib/assets/sol-logo.png",
+          "hash": "15299486610183083928"
+        },
+        {
+          "file": "libs/angular/header/src/lib/components/header.component.ts",
+          "hash": "13516234669964675155",
+          "deps": [
+            "auth-login",
+            "auth-user",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/angular/header/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/header/tsconfig.json",
+          "hash": "10586757362735686014"
+        },
+        {
+          "file": "libs/angular/header/tsconfig.lib.json",
+          "hash": "10155135438817501641"
+        },
+        {
+          "file": "libs/angular/header/tsconfig.spec.json",
+          "hash": "9252234416757073029"
+        }
+      ],
+      "account": [
+        {
+          "file": "libs/angular/account/.eslintrc.json",
+          "hash": "16576083038414527946"
+        },
+        {
+          "file": "libs/angular/account/README.md",
+          "hash": "10702126471497097611"
+        },
+        {
+          "file": "libs/angular/account/jest.config.ts",
+          "hash": "6064667931711136980"
+        },
+        {
+          "file": "libs/angular/account/project.json",
+          "hash": "15408334374427120823"
+        },
+        {
+          "file": "libs/angular/account/src/index.ts",
+          "hash": "16391221744154906575"
+        },
+        {
+          "file": "libs/angular/account/src/lib/account.routes.ts",
+          "hash": "11755830374489653362",
+          "deps": [
+            "class-list"
+          ]
+        },
+        {
+          "file": "libs/angular/account/src/lib/components/enrollments/account-enrollments.component.ts",
+          "hash": "11307387188455852698"
+        },
+        {
+          "file": "libs/angular/account/src/lib/components/enrollments/account-enrollments.view.component.ts",
+          "hash": "2112619620901035875",
+          "deps": [
+            "classeses-domain",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/account/src/lib/components/enrollments/enrollment-skeleton.view.component.ts",
+          "hash": "7410378427184370012"
+        },
+        {
+          "file": "libs/angular/account/src/lib/components/enrollments/enrollment.view.component.ts",
+          "hash": "1581340867582188566",
+          "deps": [
+            "classeses-domain",
+            "classes-class-enrollment"
+          ]
+        },
+        {
+          "file": "libs/angular/account/src/lib/components/reset-password/manage-account.component.ts",
+          "hash": "15354695836102184329",
+          "deps": [
+            "auth-login",
+            "npm:rxjs",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "libs/angular/account/src/lib/services/account-enrollments-api.service.ts",
+          "hash": "10868024902828816431",
+          "deps": [
+            "firebase-functions-api",
+            "classeses-domain"
+          ]
+        },
+        {
+          "file": "libs/angular/account/src/lib/store/account-enrollments.store.ts",
+          "hash": "4852357348340237898",
+          "deps": [
+            "classeses-domain",
+            "request",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/angular/account/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/account/tsconfig.json",
+          "hash": "2952183243805677762"
+        },
+        {
+          "file": "libs/angular/account/tsconfig.lib.json",
+          "hash": "218083863737256922"
+        },
+        {
+          "file": "libs/angular/account/tsconfig.spec.json",
+          "hash": "6567195420710807385"
+        }
+      ],
+      "portal-react": [
+        {
+          "file": "apps/portal-react/.eslintrc.json",
+          "hash": "15410794495239426326"
+        },
+        {
+          "file": "apps/portal-react/app/index.module.css",
+          "hash": "4786619528779355986"
+        },
+        {
+          "file": "apps/portal-react/app/layout.tsx",
+          "hash": "11561090804973508754",
+          "deps": [
+            "npm:primereact",
+            "npm:react-redux"
+          ]
+        },
+        {
+          "file": "apps/portal-react/app/page.tsx",
+          "hash": "142610515106717645",
+          "deps": [
+            "npm:primereact",
+            "npm:react-redux"
+          ]
+        },
+        {
+          "file": "apps/portal-react/app/styles.css",
+          "hash": "17046087501703076931"
+        },
+        {
+          "file": "apps/portal-react/components/Units/BulkUpdateForSingleUnit/BulkUpdateForSingleUnit.tsx",
+          "hash": "16285260129912948869"
+        },
+        {
+          "file": "apps/portal-react/components/Units/BulkUpdateForSingleUnit/StudentSelectionTool.tsx",
+          "hash": "6067297408979311890",
+          "deps": [
+            "npm:primereact"
+          ]
+        },
+        {
+          "file": "apps/portal-react/components/Units/TreeChart.tsx",
+          "hash": "9764032380663403444",
+          "deps": [
+            "npm:d3",
+            "npm:react-redux"
+          ]
+        },
+        {
+          "file": "apps/portal-react/components/Units/UnitSelectionTool.tsx",
+          "hash": "8384626231391541901"
+        },
+        {
+          "file": "apps/portal-react/firebase/app.tsx",
+          "hash": "2108953034872455727"
+        },
+        {
+          "file": "apps/portal-react/firebase/database.tsx",
+          "hash": "17097293286850500941"
+        },
+        {
+          "file": "apps/portal-react/index.d.ts",
+          "hash": "17421683356445550627"
+        },
+        {
+          "file": "apps/portal-react/jest.config.ts",
+          "hash": "8541497449254170466"
+        },
+        {
+          "file": "apps/portal-react/next-env.d.ts",
+          "hash": "5909181270615354023"
+        },
+        {
+          "file": "apps/portal-react/next.config.js",
+          "hash": "2844898868958402587"
+        },
+        {
+          "file": "apps/portal-react/package.json",
+          "hash": "11082559760265462917",
+          "deps": [
+            "npm:@reduxjs/toolkit",
+            "npm:primereact",
+            "npm:react-redux",
+            "npm:redux",
+            "npm:redux-observable",
+            "npm:rxjs",
+            "npm:critters"
+          ]
+        },
+        {
+          "file": "apps/portal-react/project.json",
+          "hash": "14460239272639738621"
+        },
+        {
+          "file": "apps/portal-react/specs/index.spec.tsx",
+          "hash": "8394717058994361291"
+        },
+        {
+          "file": "apps/portal-react/store/paths.tsx",
+          "hash": "10429829326819640030",
+          "deps": [
+            "npm:@reduxjs/toolkit"
+          ]
+        },
+        {
+          "file": "apps/portal-react/store/pathsEpic.tsx",
+          "hash": "17680940295274960423",
+          "deps": [
+            "npm:rxjs",
+            "npm:redux"
+          ]
+        },
+        {
+          "file": "apps/portal-react/store/store.tsx",
+          "hash": "7715665487349137523",
+          "deps": [
+            "npm:@reduxjs/toolkit",
+            "npm:redux-observable",
+            "npm:redux"
+          ]
+        },
+        {
+          "file": "apps/portal-react/store/testStore.tsx",
+          "hash": "16329706243109003726",
+          "deps": [
+            "npm:@reduxjs/toolkit"
+          ]
+        },
+        {
+          "file": "apps/portal-react/store/testStoreEpic.tsx",
+          "hash": "12338935320009478152",
+          "deps": [
+            "npm:rxjs",
+            "npm:redux"
+          ]
+        },
+        {
+          "file": "apps/portal-react/store/testStudent.jsx",
+          "hash": "17698512954488512737",
+          "deps": [
+            "npm:@reduxjs/toolkit"
+          ]
+        },
+        {
+          "file": "apps/portal-react/store/testStudentEpic.tsx",
+          "hash": "9528123247718030537",
+          "deps": [
+            "npm:rxjs",
+            "npm:redux"
+          ]
+        },
+        {
+          "file": "apps/portal-react/store/unitEpic.tsx",
+          "hash": "5638688026307039243",
+          "deps": [
+            "npm:rxjs",
+            "npm:redux"
+          ]
+        },
+        {
+          "file": "apps/portal-react/store/unitStore.tsx",
+          "hash": "7878661015375658368",
+          "deps": [
+            "npm:@reduxjs/toolkit"
+          ]
+        },
+        {
+          "file": "apps/portal-react/tsconfig.json",
+          "hash": "3207062608070445560"
+        },
+        {
+          "file": "apps/portal-react/tsconfig.spec.json",
+          "hash": "484497571273276927"
+        }
+      ],
+      "table-domain": [
+        {
+          "file": "libs/ts/table/domain/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/ts/table/domain/.eslintrc.json",
+          "hash": "11911253462176251707"
+        },
+        {
+          "file": "libs/ts/table/domain/README.md",
+          "hash": "82201937311241672"
+        },
+        {
+          "file": "libs/ts/table/domain/jest.config.ts",
+          "hash": "4862453674708605007"
+        },
+        {
+          "file": "libs/ts/table/domain/project.json",
+          "hash": "8870072532998874470"
+        },
+        {
+          "file": "libs/ts/table/domain/src/index.ts",
+          "hash": "15615333373082850048"
+        },
+        {
+          "file": "libs/ts/table/domain/src/lib/models/cell-style-builder.type.ts",
+          "hash": "10161475787077563423"
+        },
+        {
+          "file": "libs/ts/table/domain/src/lib/models/cell-style.type.ts",
+          "hash": "11687097956630733616"
+        },
+        {
+          "file": "libs/ts/table/domain/src/lib/models/index.ts",
+          "hash": "7373450947267734951"
+        },
+        {
+          "file": "libs/ts/table/domain/src/lib/models/table-header.type.ts",
+          "hash": "6814074114864193074"
+        },
+        {
+          "file": "libs/ts/table/domain/src/lib/models/table-row.type.ts",
+          "hash": "1283958628528935264"
+        },
+        {
+          "file": "libs/ts/table/domain/src/lib/table-domain.ts",
+          "hash": "1847005611037269720"
+        },
+        {
+          "file": "libs/ts/table/domain/tsconfig.json",
+          "hash": "12887655642523571033"
+        },
+        {
+          "file": "libs/ts/table/domain/tsconfig.lib.json",
+          "hash": "7859327687877834288"
+        },
+        {
+          "file": "libs/ts/table/domain/tsconfig.spec.json",
+          "hash": "13453863573576393203"
+        }
+      ],
+      "firebase-functions": [
+        {
+          "file": "libs/firebase/functions/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/firebase/functions/.eslintrc.json",
+          "hash": "6593273727386121642"
+        },
+        {
+          "file": "libs/firebase/functions/README.md",
+          "hash": "18120005450540604373"
+        },
+        {
+          "file": "libs/firebase/functions/jest.config.ts",
+          "hash": "9487028852040421540"
+        },
+        {
+          "file": "libs/firebase/functions/project.json",
+          "hash": "706779524696874113"
+        },
+        {
+          "file": "libs/firebase/functions/src/index.ts",
+          "hash": "4609588317033060894"
+        },
+        {
+          "file": "libs/firebase/functions/src/lib/firebase-functions.ts",
+          "hash": "16912003092489827362"
+        },
+        {
+          "file": "libs/firebase/functions/src/lib/utilities/auth.utility.ts",
+          "hash": "6633905204620064162",
+          "deps": [
+            "firebase-database"
+          ]
+        },
+        {
+          "file": "libs/firebase/functions/src/lib/utilities/functions.utility.ts",
+          "hash": "10419356110661491362",
+          "deps": [
+            "npm:cors"
+          ]
+        },
+        {
+          "file": "libs/firebase/functions/src/lib/utilities/index.ts",
+          "hash": "4174406847094073873"
+        },
+        {
+          "file": "libs/firebase/functions/tsconfig.json",
+          "hash": "1861864473050275193"
+        },
+        {
+          "file": "libs/firebase/functions/tsconfig.lib.json",
+          "hash": "9023342264716900386"
+        },
+        {
+          "file": "libs/firebase/functions/tsconfig.spec.json",
+          "hash": "13453863573576393203"
+        }
+      ],
+      "student-import": [
+        {
+          "file": "libs/ts/student/import/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/ts/student/import/README.md",
+          "hash": "10118346447201320239"
+        },
+        {
+          "file": "libs/ts/student/import/jest.config.ts",
+          "hash": "250543241366149073"
+        },
+        {
+          "file": "libs/ts/student/import/project.json",
+          "hash": "11501131467686707256"
+        },
+        {
+          "file": "libs/ts/student/import/src/index.ts",
+          "hash": "8811886711368107672"
+        },
+        {
+          "file": "libs/ts/student/import/src/lib/models/enrollment-classes-map.ts",
+          "hash": "4963464722680350836"
+        },
+        {
+          "file": "libs/ts/student/import/src/lib/models/student-enrollment-csv-header-map.ts",
+          "hash": "7584964307359839244"
+        },
+        {
+          "file": "libs/ts/student/import/src/lib/models/student-enrollment-entry.interface.ts",
+          "hash": "10899249225212360355"
+        },
+        {
+          "file": "libs/ts/student/import/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/ts/student/import/tsconfig.json",
+          "hash": "9687586847130850781"
+        },
+        {
+          "file": "libs/ts/student/import/tsconfig.lib.json",
+          "hash": "14775784481872065598"
+        },
+        {
+          "file": "libs/ts/student/import/tsconfig.spec.json",
+          "hash": "4667737154189760478"
+        }
+      ],
+      "classeses-domain": [
+        {
+          "file": "libs/ts/classes/classes-domain/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/README.md",
+          "hash": "15560437544984717347"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/jest.config.ts",
+          "hash": "588183532808428101"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/project.json",
+          "hash": "9524208838532130238"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/index.ts",
+          "hash": "14960759964808194073"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/amount-before-date.ts",
+          "hash": "11172615439755079539"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/amount.ts",
+          "hash": "3724193124516480627"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/basket-discount.ts",
+          "hash": "14788151624978548441"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/buy-x-class-type-percent.discount.ts",
+          "hash": "923336553674446503"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/classes-discount.ts",
+          "hash": "5631614589831232950"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/classes-percent.ts",
+          "hash": "2205613140808627378"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/discount-evaluator.ts",
+          "hash": "3676851089737248457"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/discount.dbo.ts",
+          "hash": "2674006895967584006"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/discount.ts",
+          "hash": "8318141617418261118"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/free-classes-discount.ts",
+          "hash": "6020931196316974359"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/discount/percent.ts",
+          "hash": "14863561968949053696"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/semester-class-group.ts",
+          "hash": "474022823865591608"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/semester-class.ts",
+          "hash": "9074602169857166748"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/models/semester-enrollment.ts",
+          "hash": "186482014541498480"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/lib/utilities/enrollment.utility.ts",
+          "hash": "6736797304621096004"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/tsconfig.json",
+          "hash": "13083659465504864314"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/tsconfig.lib.json",
+          "hash": "14775784481872065598"
+        },
+        {
+          "file": "libs/ts/classes/classes-domain/tsconfig.spec.json",
+          "hash": "4667737154189760478"
+        }
+      ],
+      "firebase-auth": [
+        {
+          "file": "libs/angular/auth/firebase/.browserslistrc",
+          "hash": "17600754102500844387"
+        },
+        {
+          "file": "libs/angular/auth/firebase/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/angular/auth/firebase/README.md",
+          "hash": "13237225167899057318"
+        },
+        {
+          "file": "libs/angular/auth/firebase/jest.config.ts",
+          "hash": "4768422878242597360"
+        },
+        {
+          "file": "libs/angular/auth/firebase/project.json",
+          "hash": "10737852636895379404"
+        },
+        {
+          "file": "libs/angular/auth/firebase/src/index.ts",
+          "hash": "7408470407594633300"
+        },
+        {
+          "file": "libs/angular/auth/firebase/src/lib/firebase-auth.module.ts",
+          "hash": "13601227341252759113"
+        },
+        {
+          "file": "libs/angular/auth/firebase/src/lib/services/firebase-auth.service.ts",
+          "hash": "10963990366974174575",
+          "deps": [
+            "npm:rxjs",
+            "firebase-sdk-adapter"
+          ]
+        },
+        {
+          "file": "libs/angular/auth/firebase/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/auth/firebase/tsconfig.json",
+          "hash": "13083659465504864314"
+        },
+        {
+          "file": "libs/angular/auth/firebase/tsconfig.lib.json",
+          "hash": "14775784481872065598"
+        },
+        {
+          "file": "libs/angular/auth/firebase/tsconfig.spec.json",
+          "hash": "13661121994129282189"
+        }
+      ],
+      "classes-class-enrollment": [
+        {
+          "file": "libs/angular/classes/class-enrollment/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/README.md",
+          "hash": "4895698800678868400"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/jest.config.ts",
+          "hash": "16939514572192873350"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/project.json",
+          "hash": "10392532540907047565"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/index.ts",
+          "hash": "15735580846023438582"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/class-enrollment.ts",
+          "hash": "12000198212216184390",
+          "deps": [
+            "class-list"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/account/account.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/account/account.component.html",
+          "hash": "3129458193255233280"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/account/account.component.ts",
+          "hash": "12790211106551084070",
+          "deps": [
+            "auth-login",
+            "npm:rxjs",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/checkout/checkout.component.html",
+          "hash": "6134862342933754078"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/checkout/checkout.component.ts",
+          "hash": "16340562459841272063",
+          "deps": [
+            "payments-braintree-client",
+            "npm:braintree-web-drop-in",
+            "form-validity",
+            "npm:rxjs",
+            "firebase-functions-api",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/class-summary-table/class-summary-table.component.html",
+          "hash": "11233553118908239138"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/class-summary-table/class-summary-table.component.ts",
+          "hash": "6498208146891068343",
+          "deps": [
+            "npm:rxjs",
+            "class-list",
+            "request",
+            "semester-list"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/classes/calendar/classes-calendar.component.html",
+          "hash": "15124623314241693934"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/classes/calendar/classes-calendar.component.ts",
+          "hash": "8035685448425502836",
+          "deps": [
+            "classeses-domain",
+            "firebase-functions-api",
+            "npm:rxjs",
+            "calendar",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/classes/class-card/class-card.component.html",
+          "hash": "15645507877982602082"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/classes/class-card/class-card.component.ts",
+          "hash": "2635364326593188154"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/classes/class-list/class-list.component.css",
+          "hash": "16216430484700872316"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/classes/class-list/class-list.component.html",
+          "hash": "1448231729759472690"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/classes/class-list/class-list.component.ts",
+          "hash": "13244524008901584337",
+          "deps": [
+            "npm:rxjs",
+            "classeses-domain",
+            "class-list",
+            "request",
+            "semester-list"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/classes/classes-skeleton/classes-skeleton.component.html",
+          "hash": "14169795461141072702"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/classes/classes-skeleton/classes-skeleton.component.ts",
+          "hash": "6093453232246464451"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/confirmation/confirmation.component.css",
+          "hash": "4344064077517884371"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/confirmation/confirmation.component.html",
+          "hash": "5144513773699721689"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/confirmation/confirmation.component.ts",
+          "hash": "7223237791988706868",
+          "deps": [
+            "npm:rxjs",
+            "auth-user",
+            "class-list",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/enrollment-workflow/enrollment-workflow.component.html",
+          "hash": "855461121002154792"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/enrollment-workflow/enrollment-workflow.component.ts",
+          "hash": "11043794086952267563",
+          "deps": [
+            "npm:rxjs",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/enrollment-workflow/enrollment-workflow.store.ts",
+          "hash": "8208614491093931621",
+          "deps": [
+            "firebase-functions-api",
+            "npm:rxjs",
+            "npm:braintree-web-drop-in",
+            "student-domain",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/enrollment-workflow/pending-changes.guard.ts",
+          "hash": "2810683667915096871",
+          "deps": [
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/enrollment-workflow/vertical-steps.directive.ts",
+          "hash": "14080079817991905825"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/events/events.component.html",
+          "hash": "13052392648803986979"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/events/events.component.ts",
+          "hash": "13288855215040152574",
+          "deps": [
+            "npm:rxjs",
+            "npm:add-to-calendar-button"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/info/info.component.css",
+          "hash": "9987694918166449209"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/info/info.component.html",
+          "hash": "12789638545981154594"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/info/info.component.ts",
+          "hash": "8051483928002613825",
+          "deps": [
+            "npm:rxjs",
+            "form-validity",
+            "student-domain"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/medical/medical.component.css",
+          "hash": "1644972524951253173"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/medical/medical.component.html",
+          "hash": "18382890757251137774"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/medical/medical.component.ts",
+          "hash": "18057630851715523281",
+          "deps": [
+            "npm:rxjs",
+            "student-domain",
+            "form-validity"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/releases/releases.component.css",
+          "hash": "1644972524951253173"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/releases/releases.component.html",
+          "hash": "1672721085919696803"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/releases/releases.component.ts",
+          "hash": "15054642048763656252",
+          "deps": [
+            "npm:rxjs",
+            "form-validity"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/select-student/select-student.component.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/select-student/select-student.component.html",
+          "hash": "16839469536149318553"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/lib/components/select-student/select-student.component.ts",
+          "hash": "8355218215574839956",
+          "deps": [
+            "auth-login",
+            "npm:rxjs",
+            "firebase-functions-api",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/tsconfig.json",
+          "hash": "13083659465504864314"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/tsconfig.lib.json",
+          "hash": "14775784481872065598"
+        },
+        {
+          "file": "libs/angular/classes/class-enrollment/tsconfig.spec.json",
+          "hash": "4667737154189760478"
+        }
+      ],
+      "firebase-database": [
+        {
+          "file": "libs/firebase/database/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/firebase/database/.eslintrc.json",
+          "hash": "9711169714124487252"
+        },
+        {
+          "file": "libs/firebase/database/README.md",
+          "hash": "16856498009223651360"
+        },
+        {
+          "file": "libs/firebase/database/jest.config.ts",
+          "hash": "12988815450147370674"
+        },
+        {
+          "file": "libs/firebase/database/project.json",
+          "hash": "11962104815928270191"
+        },
+        {
+          "file": "libs/firebase/database/src/index.ts",
+          "hash": "5626160624491749010"
+        },
+        {
+          "file": "libs/firebase/database/src/lib/firebase-database.ts",
+          "hash": "4206472004933414031"
+        },
+        {
+          "file": "libs/firebase/database/src/lib/utilities/database.config.ts",
+          "hash": "15823479606762623486"
+        },
+        {
+          "file": "libs/firebase/database/src/lib/utilities/database.utility.ts",
+          "hash": "11057892570544081138"
+        },
+        {
+          "file": "libs/firebase/database/src/lib/utilities/index.ts",
+          "hash": "4030171516672260856"
+        },
+        {
+          "file": "libs/firebase/database/tsconfig.json",
+          "hash": "1861864473050275193"
+        },
+        {
+          "file": "libs/firebase/database/tsconfig.lib.json",
+          "hash": "7859327687877834288"
+        },
+        {
+          "file": "libs/firebase/database/tsconfig.spec.json",
+          "hash": "13453863573576393203"
+        }
+      ],
+      "classes-class-management": [
+        {
+          "file": "libs/angular/classes/class-management/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/angular/classes/class-management/README.md",
+          "hash": "9597419479702906218"
+        },
+        {
+          "file": "libs/angular/classes/class-management/jest.config.ts",
+          "hash": "2797865024178189614"
+        },
+        {
+          "file": "libs/angular/classes/class-management/project.json",
+          "hash": "6055415381020458943"
+        },
+        {
+          "file": "libs/angular/classes/class-management/src/index.ts",
+          "hash": "13241736608749203263"
+        },
+        {
+          "file": "libs/angular/classes/class-management/src/lib/class-management-routes.ts",
+          "hash": "3926311764015139930"
+        },
+        {
+          "file": "libs/angular/classes/class-management/src/lib/components/class-form.component.ts/class-form.component.ts",
+          "hash": "8847860670753962995",
+          "deps": [
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/angular/classes/class-management/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/classes/class-management/tsconfig.json",
+          "hash": "13083659465504864314"
+        },
+        {
+          "file": "libs/angular/classes/class-management/tsconfig.lib.json",
+          "hash": "14775784481872065598"
+        },
+        {
+          "file": "libs/angular/classes/class-management/tsconfig.spec.json",
+          "hash": "4667737154189760478"
+        }
+      ],
+      "angular-admin-class-printouts": [
+        {
+          "file": "libs/angular/admin/class-printouts/.eslintrc.json",
+          "hash": "14192837411254264173"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/README.md",
+          "hash": "8678267144554352972"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/jest.config.ts",
+          "hash": "3564171515533056510"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/project.json",
+          "hash": "2608643202898877912"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/src/index.ts",
+          "hash": "5253308027695167096"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/src/lib/components/class-printouts-component/class-printouts-loading.view.component.ts",
+          "hash": "1319847279751324692"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/src/lib/components/class-printouts-component/class-printouts.component.ts",
+          "hash": "1919295770776876687",
+          "deps": [
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/src/lib/components/class-printouts-component/class-printouts.view.component.ts",
+          "hash": "8826082029747207299",
+          "deps": [
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/src/lib/models/class-printout-row.type.ts",
+          "hash": "2833161218515109583"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/src/lib/store/class-printouts.store.ts",
+          "hash": "9210120631693744849",
+          "deps": [
+            "npm:rxjs",
+            "firebase-functions-api",
+            "request",
+            "class-list",
+            "semester-list"
+          ]
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/tsconfig.json",
+          "hash": "1498554114897028437"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/tsconfig.lib.json",
+          "hash": "3292367375231936576"
+        },
+        {
+          "file": "libs/angular/admin/class-printouts/tsconfig.spec.json",
+          "hash": "14789638818087400537"
+        }
+      ],
+      "calendar": [
+        {
+          "file": "libs/angular/calendar/calendar/.browserslistrc",
+          "hash": "17600754102500844387"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/README.md",
+          "hash": "2754725387526192393"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/jest.config.ts",
+          "hash": "280841267719695550"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/project.json",
+          "hash": "18033677543859218896"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/src/index.ts",
+          "hash": "12376463517294190689"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/src/lib/components/calendar.component.html",
+          "hash": "10274764028895294198"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/src/lib/components/calendar.component.ts",
+          "hash": "8756057616299908871",
+          "deps": [
+            "firebase-functions-api",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/angular/calendar/calendar/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/tsconfig.json",
+          "hash": "13083659465504864314"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/tsconfig.lib.json",
+          "hash": "8169281666260757997"
+        },
+        {
+          "file": "libs/angular/calendar/calendar/tsconfig.spec.json",
+          "hash": "4667737154189760478"
+        }
+      ],
+      "firebase-classes-semester": [
+        {
+          "file": "libs/firebase/classes/semester/.eslintrc.json",
+          "hash": "11911253462176251707"
+        },
+        {
+          "file": "libs/firebase/classes/semester/README.md",
+          "hash": "7872706082870088900"
+        },
+        {
+          "file": "libs/firebase/classes/semester/jest.config.ts",
+          "hash": "352094569192655886"
+        },
+        {
+          "file": "libs/firebase/classes/semester/project.json",
+          "hash": "15285652319182212664"
+        },
+        {
+          "file": "libs/firebase/classes/semester/src/index.ts",
+          "hash": "8824896721070481649"
+        },
+        {
+          "file": "libs/firebase/classes/semester/src/lib/semester.ts",
+          "hash": "15381054651524245777",
+          "deps": [
+            "student-repository",
+            "classes-class-repository"
+          ]
+        },
+        {
+          "file": "libs/firebase/classes/semester/tsconfig.json",
+          "hash": "2999145899314304170"
+        },
+        {
+          "file": "libs/firebase/classes/semester/tsconfig.lib.json",
+          "hash": "372997833216833356"
+        },
+        {
+          "file": "libs/firebase/classes/semester/tsconfig.spec.json",
+          "hash": "2699874675909732208"
+        }
+      ],
+      "angular-admin-enrollments": [
+        {
+          "file": "libs/angular/admin/enrollments/.eslintrc.json",
+          "hash": "1795081353410531232"
+        },
+        {
+          "file": "libs/angular/admin/enrollments/README.md",
+          "hash": "11173725413692751708"
+        },
+        {
+          "file": "libs/angular/admin/enrollments/jest.config.ts",
+          "hash": "13459643882075527112"
+        },
+        {
+          "file": "libs/angular/admin/enrollments/project.json",
+          "hash": "11359491703286618800"
+        },
+        {
+          "file": "libs/angular/admin/enrollments/src/index.ts",
+          "hash": "3952618547968307717"
+        },
+        {
+          "file": "libs/angular/admin/enrollments/src/lib/components/enrollments.component.html",
+          "hash": "8853141659222377043"
+        },
+        {
+          "file": "libs/angular/admin/enrollments/src/lib/components/enrollments.component.ts",
+          "hash": "6434361499789841097",
+          "deps": [
+            "firebase-functions-api",
+            "npm:rxjs",
+            "classeses-domain",
+            "request"
+          ]
+        },
+        {
+          "file": "libs/angular/admin/enrollments/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/admin/enrollments/tsconfig.json",
+          "hash": "1498554114897028437"
+        },
+        {
+          "file": "libs/angular/admin/enrollments/tsconfig.lib.json",
+          "hash": "10265320593933949377"
+        },
+        {
+          "file": "libs/angular/admin/enrollments/tsconfig.spec.json",
+          "hash": "11585948387249347404"
+        }
+      ],
+      "firebase-functions-api": [
+        {
+          "file": "libs/firebase/functions-api/.eslintrc.json",
+          "hash": "3548470336325215220"
+        },
+        {
+          "file": "libs/firebase/functions-api/README.md",
+          "hash": "8497624635468597384"
+        },
+        {
+          "file": "libs/firebase/functions-api/jest.config.ts",
+          "hash": "4242092900615461631"
+        },
+        {
+          "file": "libs/firebase/functions-api/project.json",
+          "hash": "7283600870482537581"
+        },
+        {
+          "file": "libs/firebase/functions-api/src/index.ts",
+          "hash": "4622965688273900933"
+        },
+        {
+          "file": "libs/firebase/functions-api/src/lib/services/functions.service.ts",
+          "hash": "4159148719846540673",
+          "deps": [
+            "request",
+            "npm:rxjs",
+            "firebase-sdk-adapter"
+          ]
+        },
+        {
+          "file": "libs/firebase/functions-api/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/firebase/functions-api/tsconfig.json",
+          "hash": "10586757362735686014"
+        },
+        {
+          "file": "libs/firebase/functions-api/tsconfig.lib.json",
+          "hash": "14775784481872065598"
+        },
+        {
+          "file": "libs/firebase/functions-api/tsconfig.spec.json",
+          "hash": "13661121994129282189"
+        }
+      ],
+      "portal": [
+        {
+          "file": "apps/portal/.browserslistrc",
+          "hash": "2519363244570020624"
+        },
+        {
+          "file": "apps/portal/.eslintrc.json",
+          "hash": "1558293343332960803"
+        },
+        {
+          "file": "apps/portal/jest.config.ts",
+          "hash": "12707197997811502464"
+        },
+        {
+          "file": "apps/portal/project.json",
+          "hash": "13715908564396508380"
+        },
+        {
+          "file": "apps/portal/src/app/admin.guard.ts",
+          "hash": "7781453936389660502",
+          "deps": [
+            "auth-user",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/portal/src/app/app-routes.ts",
+          "hash": "15091178901877851638",
+          "deps": [
+            "header",
+            "class-list",
+            "request",
+            [
+              "auth-login",
+              "dynamic"
+            ],
+            [
+              "account",
+              "dynamic"
+            ],
+            [
+              "angular-admin-class-printouts",
+              "dynamic"
+            ],
+            [
+              "angular-admin-enrollments",
+              "dynamic"
+            ],
+            [
+              "classes-class-management",
+              "dynamic"
+            ],
+            [
+              "classes-calendar",
+              "dynamic"
+            ],
+            [
+              "classes-class-enrollment",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "apps/portal/src/app/app.component.ts",
+          "hash": "2810416797356855587"
+        },
+        {
+          "file": "apps/portal/src/app/dashboard-component/dashboard-routes.ts",
+          "hash": "14327045106048234950"
+        },
+        {
+          "file": "apps/portal/src/app/dashboard-component/dashboard.component.html",
+          "hash": "13645664357176430007"
+        },
+        {
+          "file": "apps/portal/src/app/dashboard-component/dashboard.component.ts",
+          "hash": "11043676753652727907",
+          "deps": [
+            "firebase-functions-api",
+            "npm:rxjs",
+            "npm:chart.js",
+            "request",
+            "semester-list"
+          ]
+        },
+        {
+          "file": "apps/portal/src/app/down-page.html",
+          "hash": "7703911059908512912"
+        },
+        {
+          "file": "apps/portal/src/app/login.actions.ts",
+          "hash": "1248670813000798113"
+        },
+        {
+          "file": "apps/portal/src/app/login.effects.ts",
+          "hash": "14974894143320899950",
+          "deps": [
+            "npm:rxjs",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "apps/portal/src/app/tshirts-component/tshirt-routes.ts",
+          "hash": "13796974633176236251"
+        },
+        {
+          "file": "apps/portal/src/app/tshirts-component/tshirts.component.html",
+          "hash": "11676357641450664770"
+        },
+        {
+          "file": "apps/portal/src/app/tshirts-component/tshirts.component.ts",
+          "hash": "11816395049585207093",
+          "deps": [
+            "firebase-functions-api",
+            "npm:rxjs",
+            "request",
+            "semester-list"
+          ]
+        },
+        {
+          "file": "apps/portal/src/app/user.guard.ts",
+          "hash": "5120263522781387857",
+          "deps": [
+            "npm:rxjs",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "apps/portal/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/portal/src/birchleaves.jpg",
+          "hash": "17827032167985369080"
+        },
+        {
+          "file": "apps/portal/src/custom-theme.scss",
+          "hash": "9751792083730387044"
+        },
+        {
+          "file": "apps/portal/src/environments/environment.default.ts",
+          "hash": "2066651602957147701"
+        },
+        {
+          "file": "apps/portal/src/environments/environment.prod.ts",
+          "hash": "6105725216873900092"
+        },
+        {
+          "file": "apps/portal/src/environments/environment.ts",
+          "hash": "6786958597962073201"
+        },
+        {
+          "file": "apps/portal/src/favicon.ico",
+          "hash": "6793806601653808488"
+        },
+        {
+          "file": "apps/portal/src/index.html",
+          "hash": "15499125399896905850"
+        },
+        {
+          "file": "apps/portal/src/main.ts",
+          "hash": "1137001255785989391",
+          "deps": [
+            "auth-interceptor",
+            "firebase-sdk-adapter"
+          ]
+        },
+        {
+          "file": "apps/portal/src/polyfills.ts",
+          "hash": "2908177964561583612",
+          "deps": [
+            "npm:zone.js"
+          ]
+        },
+        {
+          "file": "apps/portal/src/styles.css",
+          "hash": "9768424727906267069"
+        },
+        {
+          "file": "apps/portal/src/test-setup.ts",
+          "hash": "4070709267685512792"
+        },
+        {
+          "file": "apps/portal/tsconfig.app.json",
+          "hash": "13647745286713079079"
+        },
+        {
+          "file": "apps/portal/tsconfig.editor.json",
+          "hash": "16683595971634110411"
+        },
+        {
+          "file": "apps/portal/tsconfig.json",
+          "hash": "9493413058755170648"
+        },
+        {
+          "file": "apps/portal/tsconfig.spec.json",
+          "hash": "5802467796006921340"
+        }
+      ],
+      "student-reports": [
+        {
+          "file": "libs/firebase/student/reports/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/firebase/student/reports/.eslintrc.json",
+          "hash": "11911253462176251707"
+        },
+        {
+          "file": "libs/firebase/student/reports/README.md",
+          "hash": "15944278267595702795"
+        },
+        {
+          "file": "libs/firebase/student/reports/jest.config.ts",
+          "hash": "7686049692891702507"
+        },
+        {
+          "file": "libs/firebase/student/reports/project.json",
+          "hash": "13749276169351841971"
+        },
+        {
+          "file": "libs/firebase/student/reports/src/index.ts",
+          "hash": "6079238865740940792"
+        },
+        {
+          "file": "libs/firebase/student/reports/src/lib/models/table-factory/roster-table.factory.ts",
+          "hash": "608609894540147321",
+          "deps": [
+            "student-domain",
+            "table-domain",
+            "record-domain",
+            "table-html"
+          ]
+        },
+        {
+          "file": "libs/firebase/student/reports/src/lib/models/table-factory/sign-in-table.factory.ts",
+          "hash": "18039002349325939329",
+          "deps": [
+            "student-domain",
+            "table-domain",
+            "record-domain",
+            "table-html"
+          ]
+        },
+        {
+          "file": "libs/firebase/student/reports/src/lib/models/table-factory/student-health-table.factory.ts",
+          "hash": "16751263198994693790",
+          "deps": [
+            "student-domain",
+            "table-domain",
+            "record-domain",
+            "table-html"
+          ]
+        },
+        {
+          "file": "libs/firebase/student/reports/src/lib/student-reports.ts",
+          "hash": "15638166534666341712"
+        },
+        {
+          "file": "libs/firebase/student/reports/src/lib/utilities/class-emails.utilities.ts",
+          "hash": "6552196703120147041",
+          "deps": [
+            "classes-class-repository",
+            "student-repository"
+          ]
+        },
+        {
+          "file": "libs/firebase/student/reports/src/lib/utilities/index.ts",
+          "hash": "7923986554856093005"
+        },
+        {
+          "file": "libs/firebase/student/reports/src/lib/utilities/student-tshirts.generator.ts",
+          "hash": "17970300187521506079",
+          "deps": [
+            "student-domain",
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "libs/firebase/student/reports/tsconfig.json",
+          "hash": "12887655642523571033"
+        },
+        {
+          "file": "libs/firebase/student/reports/tsconfig.lib.json",
+          "hash": "7859327687877834288"
+        },
+        {
+          "file": "libs/firebase/student/reports/tsconfig.spec.json",
+          "hash": "13453863573576393203"
+        }
+      ],
+      "classes-class-repository": [
+        {
+          "file": "libs/firebase/classes/class-repository/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/.eslintrc.json",
+          "hash": "11911253462176251707"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/README.md",
+          "hash": "14887202574895105370"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/jest.config.ts",
+          "hash": "17674455466494803461"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/project.json",
+          "hash": "8132530494326645645"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/src/index.ts",
+          "hash": "14889939111701612549"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/src/lib/active-semester.repository.ts",
+          "hash": "16361656611035743801",
+          "deps": [
+            "firebase-database"
+          ]
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/src/lib/class-group.repository.ts",
+          "hash": "465163239275881935",
+          "deps": [
+            "firebase-database",
+            "classeses-domain"
+          ]
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/src/lib/class.repository.ts",
+          "hash": "7997569311796439187",
+          "deps": [
+            "classeses-domain",
+            "firebase-database"
+          ]
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/src/lib/discount.repository.ts",
+          "hash": "11789229692528038747",
+          "deps": [
+            "classeses-domain",
+            "firebase-database"
+          ]
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/src/lib/semester.repository.ts",
+          "hash": "1869391192148978642"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/src/lib/specific-semester.repository.ts",
+          "hash": "2075137791805241383"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/tsconfig.json",
+          "hash": "14284726248770522100"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/tsconfig.lib.json",
+          "hash": "7883895700055543982"
+        },
+        {
+          "file": "libs/firebase/classes/class-repository/tsconfig.spec.json",
+          "hash": "11197163607770841048"
+        }
+      ],
+      "record-domain": [
+        {
+          "file": "libs/ts/record/domain/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/ts/record/domain/.eslintrc.json",
+          "hash": "11911253462176251707"
+        },
+        {
+          "file": "libs/ts/record/domain/README.md",
+          "hash": "1027902636997066604"
+        },
+        {
+          "file": "libs/ts/record/domain/jest.config.ts",
+          "hash": "301847917457509231"
+        },
+        {
+          "file": "libs/ts/record/domain/project.json",
+          "hash": "2189515194409046332"
+        },
+        {
+          "file": "libs/ts/record/domain/src/index.ts",
+          "hash": "18204243566046366783"
+        },
+        {
+          "file": "libs/ts/record/domain/src/lib/models/flat-record.type.ts",
+          "hash": "4230708363139391956"
+        },
+        {
+          "file": "libs/ts/record/domain/src/lib/models/index.ts",
+          "hash": "15939503621084080264"
+        },
+        {
+          "file": "libs/ts/record/domain/src/lib/record-domain.ts",
+          "hash": "17836070881496189697"
+        },
+        {
+          "file": "libs/ts/record/domain/tsconfig.json",
+          "hash": "12887655642523571033"
+        },
+        {
+          "file": "libs/ts/record/domain/tsconfig.lib.json",
+          "hash": "9023342264716900386"
+        },
+        {
+          "file": "libs/ts/record/domain/tsconfig.spec.json",
+          "hash": "13453863573576393203"
+        }
+      ],
+      "payments-transactions": [
+        {
+          "file": "libs/ts/transactions/.eslintrc.json",
+          "hash": "9711169714124487252"
+        },
+        {
+          "file": "libs/ts/transactions/README.md",
+          "hash": "13643377537210105138"
+        },
+        {
+          "file": "libs/ts/transactions/jest.config.ts",
+          "hash": "2276114963311698916"
+        },
+        {
+          "file": "libs/ts/transactions/project.json",
+          "hash": "11345767509548180082"
+        },
+        {
+          "file": "libs/ts/transactions/src/index.ts",
+          "hash": "4926285172646167297"
+        },
+        {
+          "file": "libs/ts/transactions/src/lib/transaction.interface.ts",
+          "hash": "15192262154927883887"
+        },
+        {
+          "file": "libs/ts/transactions/tsconfig.json",
+          "hash": "15394874861207803846"
+        },
+        {
+          "file": "libs/ts/transactions/tsconfig.lib.json",
+          "hash": "2160354230801561039"
+        },
+        {
+          "file": "libs/ts/transactions/tsconfig.spec.json",
+          "hash": "17039633079129052196"
+        }
+      ],
+      "paths": [
+        {
+          "file": "libs/angular/paths/.eslintrc.json",
+          "hash": "3548470336325215220"
+        },
+        {
+          "file": "libs/angular/paths/README.md",
+          "hash": "14618752653131139659"
+        },
+        {
+          "file": "libs/angular/paths/jest.config.ts",
+          "hash": "1493900603579047591"
+        },
+        {
+          "file": "libs/angular/paths/project.json",
+          "hash": "8511839852765881224"
+        },
+        {
+          "file": "libs/angular/paths/src/index.ts",
+          "hash": "3423801888814512358"
+        },
+        {
+          "file": "libs/angular/paths/src/lib/components/paths-page/paths-page.component.ts",
+          "hash": "14009217692421116692",
+          "deps": [
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/angular/paths/src/lib/models/path.ts",
+          "hash": "1626068763619669606"
+        },
+        {
+          "file": "libs/angular/paths/src/lib/paths.module.ts",
+          "hash": "6866683929083379921"
+        },
+        {
+          "file": "libs/angular/paths/src/lib/store/paths.reducer.ts",
+          "hash": "12105416316533324904"
+        },
+        {
+          "file": "libs/angular/paths/src/test-setup.ts",
+          "hash": "4070709267685512792"
+        },
+        {
+          "file": "libs/angular/paths/tsconfig.json",
+          "hash": "2566300077280361125"
+        },
+        {
+          "file": "libs/angular/paths/tsconfig.lib.json",
+          "hash": "8096358640706856504"
+        },
+        {
+          "file": "libs/angular/paths/tsconfig.spec.json",
+          "hash": "16382201131204448410"
+        }
+      ],
+      "auth-interceptor": [
+        {
+          "file": "libs/angular/auth/interceptor/.eslintrc.json",
+          "hash": "11943987721327632824"
+        },
+        {
+          "file": "libs/angular/auth/interceptor/README.md",
+          "hash": "11004078233223103968"
+        },
+        {
+          "file": "libs/angular/auth/interceptor/jest.config.ts",
+          "hash": "9018270757603733343"
+        },
+        {
+          "file": "libs/angular/auth/interceptor/project.json",
+          "hash": "8124092993422175950"
+        },
+        {
+          "file": "libs/angular/auth/interceptor/src/index.ts",
+          "hash": "8958778817226048998"
+        },
+        {
+          "file": "libs/angular/auth/interceptor/src/lib/interceptors/authenticate.interceptor.ts",
+          "hash": "16681460917029099446",
+          "deps": [
+            "npm:rxjs",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "libs/angular/auth/interceptor/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/auth/interceptor/tsconfig.json",
+          "hash": "12583863834911474172"
+        },
+        {
+          "file": "libs/angular/auth/interceptor/tsconfig.lib.json",
+          "hash": "11893621470008674671"
+        },
+        {
+          "file": "libs/angular/auth/interceptor/tsconfig.spec.json",
+          "hash": "6336885236090328364"
+        }
+      ],
+      "student-domain": [
+        {
+          "file": "libs/ts/student/domain/.babelrc",
+          "hash": "842855554653651022"
+        },
+        {
+          "file": "libs/ts/student/domain/.eslintrc.json",
+          "hash": "11911253462176251707"
+        },
+        {
+          "file": "libs/ts/student/domain/README.md",
+          "hash": "1430859601533996008"
+        },
+        {
+          "file": "libs/ts/student/domain/jest.config.ts",
+          "hash": "15999386175153582872"
+        },
+        {
+          "file": "libs/ts/student/domain/project.json",
+          "hash": "15015583765439958417"
+        },
+        {
+          "file": "libs/ts/student/domain/src/index.ts",
+          "hash": "4542649602632208605"
+        },
+        {
+          "file": "libs/ts/student/domain/src/lib/models/contact-db-entry.type.ts",
+          "hash": "16505010773539409547"
+        },
+        {
+          "file": "libs/ts/student/domain/src/lib/models/contact.type.ts",
+          "hash": "14710528027824660117"
+        },
+        {
+          "file": "libs/ts/student/domain/src/lib/models/index.ts",
+          "hash": "9737834713538488484"
+        },
+        {
+          "file": "libs/ts/student/domain/src/lib/models/student-db-entry.type.ts",
+          "hash": "12929933426266503644"
+        },
+        {
+          "file": "libs/ts/student/domain/src/lib/models/student-form.interface.ts",
+          "hash": "11739495955849556290"
+        },
+        {
+          "file": "libs/ts/student/domain/src/lib/models/student-record-property-names.ts",
+          "hash": "2513136284877262337"
+        },
+        {
+          "file": "libs/ts/student/domain/src/lib/models/student-record.type.ts",
+          "hash": "1499052131483934311",
+          "deps": [
+            "record-domain"
+          ]
+        },
+        {
+          "file": "libs/ts/student/domain/src/lib/models/student-sign-in-record-property-names.ts",
+          "hash": "5394272661764838320"
+        },
+        {
+          "file": "libs/ts/student/domain/src/lib/student-domain.ts",
+          "hash": "709474871743678536"
+        },
+        {
+          "file": "libs/ts/student/domain/tsconfig.json",
+          "hash": "12887655642523571033"
+        },
+        {
+          "file": "libs/ts/student/domain/tsconfig.lib.json",
+          "hash": "7859327687877834288"
+        },
+        {
+          "file": "libs/ts/student/domain/tsconfig.spec.json",
+          "hash": "13453863573576393203"
+        }
+      ],
+      "functions": [
+        {
+          "file": "apps/functions/.eslintrc.json",
+          "hash": "11902604076208507531"
+        },
+        {
+          "file": "apps/functions/jest.config.ts",
+          "hash": "10832681709102150742"
+        },
+        {
+          "file": "apps/functions/project.json",
+          "hash": "1619701695218448864"
+        },
+        {
+          "file": "apps/functions/src/functions/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/functions/src/functions/_assertUserCanManageStudent.ts",
+          "hash": "10480074309946531693",
+          "deps": [
+            "firebase-functions"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/_getCategorizedClasses.ts",
+          "hash": "9693827951577817466",
+          "deps": [
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/_getClassGroupsFromClasses.ts",
+          "hash": "10727525772777312538",
+          "deps": [
+            "classeses-domain",
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/_getClasses.ts",
+          "hash": "9786574123363104280",
+          "deps": [
+            "classeses-domain",
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/_getSemestersAvailableToEnroll.ts",
+          "hash": "7544678694719696713",
+          "deps": [
+            "firebase-database"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/add-email-to-solstice-list.ts",
+          "hash": "11165305461513242598",
+          "deps": [
+            "classes-class-enrollment-repository",
+            "firebase-database"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/admin-enrollments.ts",
+          "hash": "7450557742398071752",
+          "deps": [
+            "firebase-functions",
+            "classes-class-enrollment-repository"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/available-enrollment-classes.ts",
+          "hash": "6550416986803619796",
+          "deps": [
+            "firebase-functions"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/calculate-basket.ts",
+          "hash": "9371185620678951756",
+          "deps": [
+            "firebase-functions",
+            "classes-class-repository",
+            "classeses-domain",
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/class-groups.ts",
+          "hash": "15108055136707939086",
+          "deps": [
+            "firebase-functions",
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/classes-by-semester.ts",
+          "hash": "13132577156069617566",
+          "deps": [
+            "firebase-functions",
+            "classeses-domain"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/classes.ts",
+          "hash": "11373833844591876401",
+          "deps": [
+            "firebase-functions",
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/create-enrollment-email.ts",
+          "hash": "9874765292464102875",
+          "deps": [
+            "classes-class-enrollment-repository",
+            "firebase-functions",
+            "firebase-database",
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/current-semester.ts",
+          "hash": "7131661565211731515",
+          "deps": [
+            "firebase-functions",
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/emails.ts",
+          "hash": "6656750829932260377",
+          "deps": [
+            "firebase-functions",
+            "student-reports"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/enroll.ts",
+          "hash": "10064640010146515756",
+          "deps": [
+            "firebase-functions",
+            "payments-braintree",
+            "student-domain",
+            "classes-class-repository",
+            "classeses-domain",
+            "classes-class-enrollment-repository",
+            "npm:braintree",
+            "student-repository",
+            "firebase-classes-semester"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/enrollments.ts",
+          "hash": "14705330270669450119",
+          "deps": [
+            "firebase-functions",
+            "classes-class-enrollment-repository"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/get-my-student.ts",
+          "hash": "7224882794635170690",
+          "deps": [
+            "firebase-functions",
+            "student-domain",
+            "student-repository"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/historical-semesters.ts",
+          "hash": "9244567459561251425",
+          "deps": [
+            "firebase-functions",
+            "firebase-database"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/index.ts",
+          "hash": "16691199586429038286"
+        },
+        {
+          "file": "apps/functions/src/functions/my-enrolled-students.ts",
+          "hash": "2480644386230613624",
+          "deps": [
+            "firebase-functions",
+            "student-repository"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/payment-token.ts",
+          "hash": "9092187726184427074",
+          "deps": [
+            "firebase-functions",
+            "payments-braintree"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/roles.ts",
+          "hash": "1292333077871765746",
+          "deps": [
+            "firebase-functions"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/roster.ts",
+          "hash": "3043164240361430670",
+          "deps": [
+            "student-repository",
+            "firebase-functions",
+            "firebase-classes-semester",
+            "student-reports",
+            "classes-class-repository"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/semesters-available-to-enroll.ts",
+          "hash": "15201609258716591705",
+          "deps": [
+            "firebase-functions"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/sign-in.ts",
+          "hash": "15498684267691148996",
+          "deps": [
+            "firebase-functions",
+            "student-repository",
+            "firebase-classes-semester",
+            "student-reports",
+            "classes-class-repository"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/student-health.ts",
+          "hash": "11986758014309335088",
+          "deps": [
+            "firebase-functions",
+            "student-repository",
+            "firebase-classes-semester",
+            "student-reports",
+            "classes-class-repository"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/students-next-js-app.ts",
+          "hash": "13105414977781867538",
+          "deps": [
+            "firebase-functions"
+          ]
+        },
+        {
+          "file": "apps/functions/src/functions/tshirts.ts",
+          "hash": "9318226931980888692",
+          "deps": [
+            "firebase-functions",
+            "student-reports"
+          ]
+        },
+        {
+          "file": "apps/functions/src/main.ts",
+          "hash": "290550044101527157"
+        },
+        {
+          "file": "apps/functions/tsconfig.app.json",
+          "hash": "9818800466979096438"
+        },
+        {
+          "file": "apps/functions/tsconfig.json",
+          "hash": "15787543957214591055"
+        },
+        {
+          "file": "apps/functions/tsconfig.spec.json",
+          "hash": "13873860836305510845"
+        }
+      ],
+      "payments-braintree-client": [
+        {
+          "file": "libs/angular/braintree-client/.eslintrc.json",
+          "hash": "3548470336325215220"
+        },
+        {
+          "file": "libs/angular/braintree-client/README.md",
+          "hash": "17829816874668381784"
+        },
+        {
+          "file": "libs/angular/braintree-client/jest.config.ts",
+          "hash": "9278250299518148008"
+        },
+        {
+          "file": "libs/angular/braintree-client/project.json",
+          "hash": "10268939545055017679"
+        },
+        {
+          "file": "libs/angular/braintree-client/src/index.ts",
+          "hash": "8358591460440188016"
+        },
+        {
+          "file": "libs/angular/braintree-client/src/lib/components/payment-collector/payment-collector.component.html",
+          "hash": "6544660726823834346"
+        },
+        {
+          "file": "libs/angular/braintree-client/src/lib/components/payment-collector/payment-collector.component.ts",
+          "hash": "17098681695275818008",
+          "deps": [
+            "npm:braintree-web-drop-in",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/angular/braintree-client/src/lib/components/payment-collector/payment-collector.store.ts",
+          "hash": "130776595135123934",
+          "deps": [
+            "firebase-functions-api",
+            "npm:rxjs",
+            "npm:braintree-web-drop-in",
+            "npm:braintree-web",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "libs/angular/braintree-client/src/lib/services/payment.service.ts",
+          "hash": "17795163687170371925",
+          "deps": [
+            "firebase-functions-api",
+            "npm:rxjs",
+            "request",
+            "auth-user"
+          ]
+        },
+        {
+          "file": "libs/angular/braintree-client/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/braintree-client/tsconfig.json",
+          "hash": "10981728548994417783"
+        },
+        {
+          "file": "libs/angular/braintree-client/tsconfig.lib.json",
+          "hash": "11893621470008674671"
+        },
+        {
+          "file": "libs/angular/braintree-client/tsconfig.spec.json",
+          "hash": "6336885236090328364"
+        }
+      ],
+      "request": [
+        {
+          "file": "libs/angular/request/.eslintrc.json",
+          "hash": "15056681094256879895"
+        },
+        {
+          "file": "libs/angular/request/README.md",
+          "hash": "15189387071034580332"
+        },
+        {
+          "file": "libs/angular/request/jest.config.ts",
+          "hash": "18119360049568095862"
+        },
+        {
+          "file": "libs/angular/request/project.json",
+          "hash": "13883655129911898323"
+        },
+        {
+          "file": "libs/angular/request/src/index.ts",
+          "hash": "17516348933257724077"
+        },
+        {
+          "file": "libs/angular/request/src/lib/directives/empty-state.directive.ts",
+          "hash": "3890542653280049067"
+        },
+        {
+          "file": "libs/angular/request/src/lib/directives/error-state.directive.ts",
+          "hash": "12029956852224210029"
+        },
+        {
+          "file": "libs/angular/request/src/lib/directives/loaded-state.directive.ts",
+          "hash": "16453515597049251291"
+        },
+        {
+          "file": "libs/angular/request/src/lib/directives/loading-state.directive.ts",
+          "hash": "9931469751607723961"
+        },
+        {
+          "file": "libs/angular/request/src/lib/models/requested.type.ts",
+          "hash": "9533267300750143728"
+        },
+        {
+          "file": "libs/angular/request/src/lib/services/request.service.ts",
+          "hash": "6733320297665264350",
+          "deps": [
+            "npm:rxjs",
+            "npm:uuid"
+          ]
+        },
+        {
+          "file": "libs/angular/request/src/lib/store/request.actions.ts",
+          "hash": "14709422711380592447"
+        },
+        {
+          "file": "libs/angular/request/src/lib/store/request.feature.ts",
+          "hash": "599234434281166966"
+        },
+        {
+          "file": "libs/angular/request/src/lib/store/request.provider.ts",
+          "hash": "14639989043452200532"
+        },
+        {
+          "file": "libs/angular/request/src/lib/utilities/requested-operators.utility.ts",
+          "hash": "7564688204747611049",
+          "deps": [
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "libs/angular/request/src/lib/utilities/requested.utility.ts",
+          "hash": "14685120209931521926"
+        },
+        {
+          "file": "libs/angular/request/src/test-setup.ts",
+          "hash": "17711435995618823417"
+        },
+        {
+          "file": "libs/angular/request/tsconfig.json",
+          "hash": "9997820285603723826"
+        },
+        {
+          "file": "libs/angular/request/tsconfig.lib.json",
+          "hash": "12509280388318657009"
+        },
+        {
+          "file": "libs/angular/request/tsconfig.spec.json",
+          "hash": "15669378290596543376"
+        }
+      ]
+    }
+  }
+}
