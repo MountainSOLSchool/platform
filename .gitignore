@@ -54,7 +54,9 @@ migrations.json
 # Next.js
 .next
 
-.nx/cache# Nx-Firebase
+.nx/cache
+.nx/workspace-data
+# Nx-Firebase
 .runtimeconfig.json
 **/.emulators/*
 **/.firebase/*

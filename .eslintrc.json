@@ -45,12 +45,18 @@
         {
             "files": ["*.ts"],
             "extends": ["plugin:@nx/typescript"],
-            "rules": {}
+            "rules": {
+                "@typescript-eslint/no-extra-semi": "error",
+                "no-extra-semi": "off"
+            }
         },
         {
             "files": ["*.js", "*.jsx"],
             "extends": ["plugin:@nx/javascript"],
-            "rules": {}
+            "rules": {
+                "@typescript-eslint/no-extra-semi": "error",
+                "no-extra-semi": "off"
+            }
         },
         {
             "files": ["*.ts"],
@@ -61,9 +67,7 @@
         },
         {
             "files": ["*.ts", "*.tsx"],
-            "extends": [
-                "plugin:eslint-comments/recommended"
-            ],
+            "extends": ["plugin:eslint-comments/recommended"],
             "rules": {
                 "eslint-comments/no-use": [
                     "error",
