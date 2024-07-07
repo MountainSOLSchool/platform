@@ -58,6 +58,20 @@ export class ClassGroupRepository {
         return groupsWithAllClassesStartingAfter;
     }
 
+    async getAll(): Promise<SemesterClassGroup[]> {
+        const groupsCollection = await DatabaseUtility.getCollectionRef(
+            await this.getGroupsPath()
+        );
+        const groupDocs = await groupsCollection.listDocuments();
+        const groupIds = groupDocs.map((doc) => doc.id);
+        const groups = await this.getMany(groupIds);
+        return groups.filter((group) => {
+            return group.classes.every((classItem) => {
+                return classItem.live;
+            });
+        });
+    }
+
     async getByClassIds(
         classIds: Array<string>
     ): Promise<SemesterClassGroup[]> {

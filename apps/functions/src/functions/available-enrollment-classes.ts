@@ -9,7 +9,9 @@ export const availableEnrollmentClasses = Functions.endpoint.handle(
         const categorizedClassesBySemester = await Promise.all(
             semesters.map(async (semester) => {
                 const { classesNotInGroups: classes, groups } =
-                    await _getCategorizedClasses(semester.id);
+                    await _getCategorizedClasses(semester.id, {
+                        onlyOpenForRegistration: true,
+                    });
                 return [
                     semester.id,
                     {
