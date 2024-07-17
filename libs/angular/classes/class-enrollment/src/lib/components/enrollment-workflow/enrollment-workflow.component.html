@@ -33,7 +33,7 @@
                     ></ng-container></ng-container
             ></ng-template>
         </mat-step>
-        <mat-step *rxIf="true" #events label="Events">
+        <mat-step *rxIf="false" #events label="Events">
             <ng-template matStepContent>
                 <ng-container *rxIf="stepper.selected === events">
                     <h2>Events</h2>
