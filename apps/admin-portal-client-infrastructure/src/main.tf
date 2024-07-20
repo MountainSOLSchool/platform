@@ -47,7 +47,7 @@ resource "aws_amplify_app" "admin_portal" {
           phases:
             build:
               commands:
-                - cd ../
+                - cd ../../
                 - npm ci
                 - pwd && npx nx run portal-react:build:production
           artifacts:
