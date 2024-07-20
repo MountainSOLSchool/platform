@@ -33,6 +33,8 @@ resource "aws_amplify_app" "admin_portal" {
     AMPLIFY_MONOREPO_APP_ROOT = "apps/portal-react"
   }
 
+  iam_service_role_arn = "AmplifyAdminBot"
+
   build_spec = <<-EOT
     version: 1
     applications:
