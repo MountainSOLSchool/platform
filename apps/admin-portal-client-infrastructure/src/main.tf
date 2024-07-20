@@ -1,6 +1,7 @@
 variable "GITHUB_TOKEN" {}
 variable "AWS_ACCESS_KEY_ID" {}
 variable "AWS_SECRET_ACCESS_KEY" {}
+variable "AWS_AMPLIFY_APP_ROLE_ARN" {}
 
 terraform {
   cloud {
@@ -33,7 +34,8 @@ resource "aws_amplify_app" "admin_portal" {
     AMPLIFY_MONOREPO_APP_ROOT = "apps/portal-react"
   }
 
-  iam_service_role_arn = "AmplifyAdminBot"
+  # should come from a terraform resource for a service role
+  iam_service_role_arn = var.AWS_AMPLIFY_APP_ROLE_ARN
 
   build_spec = <<-EOT
     version: 1
