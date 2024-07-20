@@ -32,6 +32,8 @@ resource "aws_amplify_app" "admin_portal" {
 
   environment_variables = {
     AMPLIFY_MONOREPO_APP_ROOT = "apps/portal-react"
+    "_CUSTOM_IMAGE": "amplify:al2023",
+    "_LIVE_UPDATES": "[{\"pkg\":\"node\",\"type\":\"npm\",\"version\":\"20\"}]"
   }
 
   # should come from a terraform resource for a service role
