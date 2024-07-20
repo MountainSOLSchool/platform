@@ -51,7 +51,7 @@ resource "aws_amplify_app" "admin_portal" {
                 - npm ci
                 - pwd && npx nx run portal-react:build:production
           artifacts:
-            baseDirectory: ../../dist/portal-react/.next
+            baseDirectory: ../../dist/apps/portal-react/.next
             files:
               - '**/*'
           cache:
