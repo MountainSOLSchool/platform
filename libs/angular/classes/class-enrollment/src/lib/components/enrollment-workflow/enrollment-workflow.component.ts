@@ -28,7 +28,6 @@ import { MedicalComponent } from '../medical/medical.component';
 import { RxLet } from '@rx-angular/template/let';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
-import { ComponentCanDeactivate } from './pending-changes.guard';
 import { EventsComponent } from '../events/events.component';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
@@ -101,7 +100,7 @@ import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog
         `,
     ],
 })
-export class ClassEnrollmentComponent implements ComponentCanDeactivate {
+export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);
 
     private readonly user$ = inject(UserService).getUser().pipe(shareReplay());
