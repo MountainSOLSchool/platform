@@ -1,5 +1,5 @@
 export default {
-    displayName: 'portal',
+    displayName: 'enrollment-portal',
     preset: '../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
@@ -8,7 +8,7 @@ export default {
             stringifyContentPathRegex: '\\.(html|svg)$',
         },
     },
-    coverageDirectory: '../../coverage/apps/portal',
+    coverageDirectory: '../../coverage/apps/enrollment-portal',
     transform: {
         '^.+.(ts|mjs|js|html)$': 'jest-preset-angular',
     },

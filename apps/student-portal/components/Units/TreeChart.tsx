@@ -2,9 +2,12 @@
 import { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'apps/portal-react/store/store';
-import { requestPaths } from 'apps/portal-react/store/paths';
-import { requestUnits, overrideUnits } from 'apps/portal-react/store/unitStore';
+import { RootState } from 'apps/student-portal/store/store';
+import { requestPaths } from 'apps/student-portal/store/paths';
+import {
+    requestUnits,
+    overrideUnits,
+} from 'apps/student-portal/store/unitStore';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',

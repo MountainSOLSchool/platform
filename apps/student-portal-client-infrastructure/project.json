@@ -1,8 +1,8 @@
 {
-    "name": "admin-portal-client-infrastructure",
+    "name": "student-portal-client-infrastructure",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "projectType": "application",
-    "sourceRoot": "apps/admin-portal-client-infrastructure/src",
+    "sourceRoot": "apps/student-portal-client-infrastructure/src",
     "targets": {
         "plan": {
             "executor": "@nx-extend/terraform:plan",
