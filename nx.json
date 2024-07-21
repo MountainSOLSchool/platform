@@ -1,5 +1,5 @@
 {
-    "defaultProject": "portal",
+    "defaultProject": "enrollment-portal",
     "generators": {
         "@nx/angular:application": {
             "style": "css",

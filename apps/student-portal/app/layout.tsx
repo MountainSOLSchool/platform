@@ -16,7 +16,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
             <body>
                 <Provider store={store}>
                     <Head>
-                        <title>Welcome to portal-react!</title>
+                        <title>Welcome to student-portal!</title>
                     </Head>
                     <main className="app">{children}</main>
                 </Provider>

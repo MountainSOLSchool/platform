@@ -1,22 +1,22 @@
 {
-    "name": "portal",
+    "name": "enrollment-portal",
     "$schema": "../../node_modules/nx/schemas/project-schema.json",
     "projectType": "application",
-    "sourceRoot": "apps/portal/src",
+    "sourceRoot": "apps/enrollment-portal/src",
     "prefix": "sol",
     "targets": {
         "build": {
             "executor": "@angular-devkit/build-angular:browser",
             "outputs": ["{options.outputPath}"],
             "options": {
-                "outputPath": "dist/apps/portal",
-                "index": "apps/portal/src/index.html",
-                "main": "apps/portal/src/main.ts",
-                "polyfills": "apps/portal/src/polyfills.ts",
-                "tsConfig": "apps/portal/tsconfig.app.json",
+                "outputPath": "dist/apps/enrollment-portal",
+                "index": "apps/enrollment-portal/src/index.html",
+                "main": "apps/enrollment-portal/src/main.ts",
+                "polyfills": "apps/enrollment-portal/src/polyfills.ts",
+                "tsConfig": "apps/enrollment-portal/tsconfig.app.json",
                 "assets": [
-                    "apps/portal/src/favicon.ico",
-                    "apps/portal/src/assets",
+                    "apps/enrollment-portal/src/favicon.ico",
+                    "apps/enrollment-portal/src/assets",
                     {
                         "glob": "**/*",
                         "input": "libs/angular/header/src/lib/assets/",
@@ -24,8 +24,8 @@
                     }
                 ],
                 "styles": [
-                    "apps/portal/src/custom-theme.scss",
-                    "apps/portal/src/styles.css",
+                    "apps/enrollment-portal/src/custom-theme.scss",
+                    "apps/enrollment-portal/src/styles.css",
                     "node_modules/primeflex/primeflex.css",
                     "node_modules/primeicons/primeicons.css",
                     "node_modules/primeng/resources/primeng.min.css",
@@ -49,8 +49,8 @@
                     ],
                     "fileReplacements": [
                         {
-                            "replace": "apps/portal/src/environments/environment.ts",
-                            "with": "apps/portal/src/environments/environment.prod.ts"
+                            "replace": "apps/enrollment-portal/src/environments/environment.ts",
+                            "with": "apps/enrollment-portal/src/environments/environment.prod.ts"
                         }
                     ],
                     "outputHashing": "all"
@@ -74,8 +74,8 @@
                     "baseHref": "/",
                     "fileReplacements": [
                         {
-                            "replace": "apps/portal/src/environments/environment.ts",
-                            "with": "apps/portal/src/environments/environment.default.ts"
+                            "replace": "apps/enrollment-portal/src/environments/environment.ts",
+                            "with": "apps/enrollment-portal/src/environments/environment.default.ts"
                         }
                     ]
                 }
@@ -86,13 +86,13 @@
             "executor": "@angular-devkit/build-angular:dev-server",
             "configurations": {
                 "production": {
-                    "buildTarget": "portal:build:production"
+                    "buildTarget": "enrollment-portal:build:production"
                 },
                 "development": {
-                    "buildTarget": "portal:build:development"
+                    "buildTarget": "enrollment-portal:build:development"
                 },
                 "developmentRemoteFunctions": {
-                    "buildTarget": "portal:build:developmentRemoteFunctions"
+                    "buildTarget": "enrollment-portal:build:developmentRemoteFunctions"
                 }
             },
             "defaultConfiguration": "development"
@@ -100,7 +100,7 @@
         "extract-i18n": {
             "executor": "@angular-devkit/build-angular:extract-i18n",
             "options": {
-                "buildTarget": "portal:build"
+                "buildTarget": "enrollment-portal:build"
             }
         },
         "lint": {
@@ -109,9 +109,9 @@
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/apps/portal"],
+            "outputs": ["{workspaceRoot}/coverage/apps/enrollment-portal"],
             "options": {
-                "jestConfig": "apps/portal/jest.config.ts"
+                "jestConfig": "apps/enrollment-portal/jest.config.ts"
             }
         }
     },

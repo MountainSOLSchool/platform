@@ -13,6 +13,6 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - run: npm ci
-            - run: npx nx run portal:build:production
-            - run: npx nx run portal-react:build:production
+            - run: npx nx run enrollment-portal:build:production
+            - run: npx nx run student-portal:build:production
             - run: npx nx run functions:build

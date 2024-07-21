@@ -8,7 +8,7 @@ terraform {
     organization = "mountain-sol-platform"
 
     workspaces {
-      name = "admin-portal"
+      name = "student-portal"
     }
   }
   required_providers {
@@ -26,12 +26,12 @@ provider "aws" {
 }
 
 resource "aws_amplify_app" "admin_portal" {
-  name       = "admin_portal"
+  name       = "student_portal"
   repository = "https://github.com/MountainSOLSchool/platform"
   access_token = var.GITHUB_TOKEN
 
   environment_variables = {
-    AMPLIFY_MONOREPO_APP_ROOT = "apps/portal-react"
+    AMPLIFY_MONOREPO_APP_ROOT = "apps/student-portal"
     "_CUSTOM_IMAGE": "amplify:al2023",
     "_LIVE_UPDATES": "[{\"pkg\":\"node\",\"type\":\"nvm\",\"version\":\"20\"}]"
   }
@@ -42,16 +42,16 @@ resource "aws_amplify_app" "admin_portal" {
   build_spec = <<-EOT
     version: 1
     applications:
-      - appRoot: apps/portal-react
+      - appRoot: apps/student-portal
         frontend:
           phases:
             build:
               commands:
                 - cd ../../
                 - npm ci
-                - pwd && npx nx run portal-react:build:production
+                - pwd && npx nx run student-portal:build:production
           artifacts:
-            baseDirectory: ../../dist/apps/portal-react/.next
+            baseDirectory: ../../dist/apps/student-portal/.next
             files:
               - '**/*'
           cache:
