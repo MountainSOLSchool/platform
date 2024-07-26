@@ -1,7 +1,7 @@
 import { Functions } from '@sol/firebase/functions';
 
 import { Semester } from '@sol/firebase/classes/semester';
-import { _getClasses } from './_getClasses';
+import { _getClasses } from '../shared/_getClasses';
 
 export const classes = Functions.endpoint.handle<
     | {

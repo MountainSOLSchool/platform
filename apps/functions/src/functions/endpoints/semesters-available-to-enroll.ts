@@ -1,5 +1,5 @@
 import { Functions } from '@sol/firebase/functions';
-import { _getSemestersAvailableToEnroll } from './_getSemestersAvailableToEnroll';
+import { _getSemestersAvailableToEnroll } from '../shared/_getSemestersAvailableToEnroll';
 
 export const semestersAvailableToEnroll = Functions.endpoint.handle<
     | {

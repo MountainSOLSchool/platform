@@ -10,10 +10,10 @@ import { Discount, EnrollmentUtility } from '@sol/classes/domain';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
-import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
-import { _getClasses } from './_getClasses';
+import { _assertUserCanManageStudent } from '../shared/_assertUserCanManageStudent';
+import { _getClasses } from '../shared/_getClasses';
 import { Semester } from '@sol/firebase/classes/semester';
-import { _getClassGroupsFromClasses } from './_getClassGroupsFromClasses';
+import { _getClassGroupsFromClasses } from '../shared/_getClassGroupsFromClasses';
 
 function _mapStudentFormToStudentDbEntry(
     form: StudentForm
