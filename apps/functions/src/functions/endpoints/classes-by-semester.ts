@@ -1,7 +1,7 @@
 import { Functions } from '@sol/firebase/functions';
 
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
-import { _getCategorizedClasses } from './_getCategorizedClasses';
+import { _getCategorizedClasses } from '../shared/_getCategorizedClasses';
 
 export const classesBySemester = Functions.endpoint.handle<
     Array<string> // semester ids

@@ -1,6 +1,6 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { StudentDbEntry, StudentForm } from '@sol/student/domain';
-import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
+import { _assertUserCanManageStudent } from '../shared/_assertUserCanManageStudent';
 import { StudentRepository } from '@sol/student/repository';
 
 function _mapStudentDbEntryToStudentForm(dbEntry: StudentDbEntry): StudentForm {

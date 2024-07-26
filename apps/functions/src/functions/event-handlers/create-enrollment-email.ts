@@ -3,8 +3,8 @@ import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
 import { AuthUtility } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { Semester } from '@sol/firebase/classes/semester';
-import { _getClasses } from './_getClasses';
-import { _getSemestersAvailableToEnroll } from './_getSemestersAvailableToEnroll';
+import { _getClasses } from '../shared/_getClasses';
+import { _getSemestersAvailableToEnroll } from '../shared/_getSemestersAvailableToEnroll';
 
 export const createEnrollmentEmail = onDocumentCreated(
     'enrollment/{enrollmentId}',

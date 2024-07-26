@@ -1,6 +1,6 @@
 import { Functions } from '@sol/firebase/functions';
-import { _getCategorizedClasses } from './_getCategorizedClasses';
-import { _getSemestersAvailableToEnroll } from './_getSemestersAvailableToEnroll';
+import { _getCategorizedClasses } from '../shared/_getCategorizedClasses';
+import { _getSemestersAvailableToEnroll } from '../shared/_getSemestersAvailableToEnroll';
 
 export const availableEnrollmentClasses = Functions.endpoint.handle(
     async (request, response) => {

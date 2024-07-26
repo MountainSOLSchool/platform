@@ -1,5 +1,4 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
-import { _assertUserCanManageStudent } from './_assertUserCanManageStudent';
 import { DatabaseUtility } from '@sol/firebase/database';
 
 export const loadEnrollmentDraft = Functions.endpoint.handle(

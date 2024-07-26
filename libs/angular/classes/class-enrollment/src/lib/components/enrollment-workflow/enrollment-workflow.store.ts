@@ -104,19 +104,6 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         return this._ready$.asObservable();
     }
 
-    private readonly enrollmentPatch$ = new Subject<Partial<PaidEnrollment>>();
-
-    override patchState(
-        patchOrFn: Partial<State> | ((state: State) => Partial<State>)
-    ) {
-        const patch =
-            typeof patchOrFn === 'function' ? patchOrFn(this.get()) : patchOrFn;
-        super.patchState(patchOrFn);
-        if (patch.enrollment) {
-            this.enrollmentPatch$.next(patch.enrollment);
-        }
-    }
-
     get submitting$() {
         return this.select((state) => state.status === 'submitted');
     }
@@ -197,8 +184,9 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     });
 
     readonly saveDraft = this.effect(() => {
-        return this.enrollmentPatch$.pipe(
+        return this.select((state) => state.enrollment).pipe(
             debounceTime(500),
+            filter((enrollment) => enrollment !== initialState.enrollment),
             tap((enrollmentPatch) =>
                 this.functions.call<{
                     enrollmentPatch: Partial<PaidEnrollment>;
@@ -333,7 +321,8 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                         Math.random().toString(),
                 });
                 this.router.navigate(['/']);
-            })
+            }),
+            tap(() => this.functions.call('deleteEnrollmentDraft'))
         );
     });
 }
