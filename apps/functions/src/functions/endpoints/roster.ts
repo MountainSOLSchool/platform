@@ -1,8 +1,8 @@
-import { StudentRepository } from '../../../../../libs/firebase/student/repository/src';
+import { StudentRepository } from '@sol/student/repository';
 import { Functions, Role } from '@sol/firebase/functions';
 import { Semester } from '@sol/firebase/classes/semester';
-import { RosterTableFactory } from '../../../../../libs/firebase/student/reports/src';
-import { SpecificSemesterRepository } from '../../../../../libs/firebase/classes/class-repository/src';
+import { RosterTableFactory } from '@sol/student/reports';
+import { SpecificSemesterRepository } from '@sol/classes/repository';
 
 async function getClassRosterTable(classId: string, semesterId: string) {
     const students = await StudentRepository.of(
