@@ -116,6 +116,11 @@ export const appRoutes: Routes = [
                     },
                 ],
             },
+            {
+                path: '**',
+                redirectTo: 'classes/enrollment',
+                pathMatch: 'full',
+            },
         ],
     },
 ];
