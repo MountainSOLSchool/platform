@@ -44,6 +44,7 @@ resource "aws_amplify_app" "admin_portal" {
     applications:
       - appRoot: apps/student-portal
         frontend:
+          buildPath: apps/student-portal
           phases:
             build:
               commands:
