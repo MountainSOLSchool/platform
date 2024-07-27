@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { LoginStore } from '@sol/auth/login';
-import { provideComponentStore } from '@ngrx/component-store';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
+import { UserService } from '@sol/auth/user';
 
 @Component({
     standalone: true,
@@ -22,13 +21,13 @@ import { CommonModule } from '@angular/common';
                 (click)="sendResetLink()"
             ></button>
         </div>`,
-    imports: [CommonModule, ButtonModule, LoginStore],
+    imports: [AsyncPipe, ButtonModule, LoginStore],
 })
 export class ManageAccountComponent {
     private readonly loginStore = inject(LoginStore);
-    readonly email$ = inject(AngularFireAuth).user.pipe(
-        map((user) => user?.email)
-    );
+    readonly email$ = inject(UserService)
+        .getUser()
+        .pipe(map((user) => user?.email));
     sendResetLink() {
         this.loginStore.resetPassword();
     }

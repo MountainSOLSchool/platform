@@ -1,40 +1,47 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { EventApi, EventInput } from '@fullcalendar/core';
 import { SemesterClass } from '@sol/classes/domain';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { mergeMap, Observable, scan, Subject, map, startWith } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { CalendarComponent } from '@sol/calendar';
 import { CardModule } from 'primeng/card';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, CalendarComponent, CardModule],
+    imports: [AsyncPipe, CalendarComponent, CardModule],
     templateUrl: './classes-calendar.component.html',
 })
 export class SelectClassesCalendarComponent {
-    private readonly functionsApi = inject(FunctionsApi);
+    private readonly functionsApi = inject(FirebaseFunctionsService);
 
     public classSelected$ = new Subject<EventApi>();
 
     selectedClasses$ = this.classSelected$.pipe(
-        scan((selectedClasses, classThatToggledSelection) => {
-            const wasClassSelected = !selectedClasses.find(
-                (c) => c.id === classThatToggledSelection.id
-            );
-            return wasClassSelected
-                ? [
-                      ...selectedClasses,
-                      {
-                          id: classThatToggledSelection.id,
-                          name: classThatToggledSelection.title,
-                      },
-                  ]
-                : selectedClasses.filter(
-                      (c) => c.id !== classThatToggledSelection.id
-                  );
-        }, new Array<SemesterClass>())
+        scan(
+            (
+                selectedClasses,
+                classThatToggledSelection
+            ): Array<Pick<SemesterClass, 'id' | 'title'>> => {
+                const wasClassSelected = !selectedClasses.find(
+                    (c) => c.id === classThatToggledSelection.id
+                );
+                return wasClassSelected
+                    ? [
+                          ...selectedClasses,
+                          {
+                              id: classThatToggledSelection.id,
+                              title: classThatToggledSelection.title,
+                          },
+                      ]
+                    : selectedClasses.filter(
+                          (c) => c.id !== classThatToggledSelection.id
+                      );
+            },
+            new Array<Pick<SemesterClass, 'id' | 'title'>>()
+        )
     );
 
     #serverClassEvents$ = this.functionsApi
@@ -46,7 +53,10 @@ export class SelectClassesCalendarComponent {
                 id: string;
             }>;
         }>('classes')
-        .pipe(map((response) => response.classes));
+        .pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+            map((response) => response.classes)
+        );
 
     classEvents$: Observable<Array<EventInput>> = this.#serverClassEvents$.pipe(
         map((classes) =>

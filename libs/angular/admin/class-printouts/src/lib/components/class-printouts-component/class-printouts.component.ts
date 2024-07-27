@@ -1,89 +1,52 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
-import { combineLatest, map, shareReplay } from 'rxjs';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { FileUploadModule } from 'primeng/fileupload';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { TableModule } from 'primeng/table';
-import { CommonModule } from '@angular/common';
-import { ClassPrintoutsStore } from './class-printouts.store';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+} from '@angular/core';
+import { ClassPrintoutsStore } from '../../store/class-printouts.store';
 import { provideComponentStore } from '@ngrx/component-store';
-import { RxLet } from '@rx-angular/template/let';
-import { SemesterClass } from '@sol/classes/domain';
+import { ClassPrintoutsViewComponent } from './class-printouts.view.component';
+import { SolLoadingDirective } from '@sol/angular/request';
+import { ClassPrintoutRow } from '../../models/class-printout-row.type';
 
 @Component({
+    template: `@if (viewModel(); as viewModel) {
+        <sol-class-printouts-view
+            [rows]="viewModel.rows"
+            [isCopyEmailsInProgress]="viewModel.isCopyEmailsInProgress"
+            [isClassFormDownloadInProgress]="
+                viewModel.isClassFormDownloadInProgress
+            "
+            [semesters]="viewModel.semesters"
+            [selectedSemester]="viewModel.selectedSemester"
+            (selectedSemesterChange)="selectedSemesterChange($event)"
+            (downloadClick)="downloadClick($event)"
+            (copyEmailsClick)="copyEmailsClick($event)"
+        ></sol-class-printouts-view>
+    }`,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        CommonModule,
-        ButtonModule,
-        InputTextModule,
-        AutoCompleteModule,
-        FileUploadModule,
-        ProgressBarModule,
-        TableModule,
-        RxLet,
-    ],
+    imports: [ClassPrintoutsViewComponent, SolLoadingDirective],
     providers: [provideComponentStore(ClassPrintoutsStore)],
-    templateUrl: './class-printouts.component.html',
 })
 export class ClassPrintoutsComponent {
     private readonly store = inject(ClassPrintoutsStore);
-    readonly classes$ = inject(FunctionsApi)
-        .call<{
-            classes: Array<{
-                title: string;
-                startMs: number;
-                endMs: number;
-                id: string;
-                enrolledCount: string;
-            }>;
-        }>('classes')
-        .pipe(
-            map(({ classes }) =>
-                classes.map((c) => {
-                    const start = new Date(c.startMs).toLocaleDateString();
-                    const end = new Date(c.endMs).toLocaleDateString();
-                    return {
-                        id: c.id,
-                        title: c.title,
-                        enrolledCount: c.enrolledCount,
-                        start,
-                        end,
-                    };
-                })
-            ),
-            shareReplay()
-        );
 
-    readonly isClassFormDownloadInProgress$ = this.store.select(
-        (state) => state.inProgressClassFormDownloads
-    );
-    readonly isClassSignInFormDownloadsInProgress$ = this.store.select(
-        (state) => state.inProgressCopyClassEmails
-    );
+    readonly viewModel = computed(() => ({
+        rows: this.store.rows(),
+        isCopyEmailsInProgress: this.store.inProgressCopyClassEmails(),
+        isClassFormDownloadInProgress:
+            this.store.inProgressClassFormDownloads(),
+        semesters: this.store.semesters(),
+        selectedSemester: this.store.selectedSelectedSemester(),
+    }));
 
-    readonly viewModel$ = combineLatest([
-        this.classes$,
-        this.isClassSignInFormDownloadsInProgress$,
-        this.isClassFormDownloadInProgress$,
-    ]).pipe(
-        map(
-            ([
-                classes,
-                isClassSignInFormDownloadsInProgress,
-                isClassFormDownloadInProgress,
-            ]) => ({
-                classes,
-                isClassSignInFormDownloadsInProgress,
-                isClassFormDownloadInProgress,
-            })
-        )
-    );
+    selectedSemesterChange(semester: string) {
+        this.store.loadClassRows(semester);
+    }
 
-    copyEmailsClick(semesterClass: SemesterClass) {
+    copyEmailsClick(semesterClass: ClassPrintoutRow) {
         this.store.copyClassEmails(semesterClass);
     }
 

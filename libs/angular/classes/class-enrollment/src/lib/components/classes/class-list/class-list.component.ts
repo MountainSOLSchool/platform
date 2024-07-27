@@ -1,60 +1,80 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     inject,
     Input,
     Output,
+    signal,
 } from '@angular/core';
 import {
-    BehaviorSubject,
-    combineLatest,
     delay,
+    filter,
     map,
     merge,
-    Observable,
-    ObservedValueOf,
     of,
     shareReplay,
-    withLatestFrom,
+    skip,
+    switchMap,
 } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
 import { CardModule } from 'primeng/card';
-import { CommonModule, DatePipe } from '@angular/common';
+import {
+    AsyncPipe,
+    CurrencyPipe,
+    DatePipe,
+    KeyValuePipe,
+    NgStyle,
+    NgTemplateOutlet,
+} from '@angular/common';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormsModule } from '@angular/forms';
-import { ClassListService } from '../../../services/class-list.service';
 import { RxLet } from '@rx-angular/template/let';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { RxIf } from '@rx-angular/template/if';
 import { DropdownModule } from 'primeng/dropdown';
-import { RxFor } from '@rx-angular/template/for';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SliderModule } from 'primeng/slider';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ClassListService } from '@sol/angular/classes/list';
+import {
+    Requested,
+    RequestedOperatorsUtility,
+    requestStateDirectives,
+} from '@sol/angular/request';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { MarkdownComponent } from 'ngx-markdown';
+import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
+import { TabViewModule } from 'primeng/tabview';
+import { ClassCardComponent } from '../class-card/class-card.component';
+import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
     group?: SemesterClassGroup;
     start: Date;
+    index: number;
 }
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
+        AsyncPipe,
+        NgStyle,
+        CurrencyPipe,
         CardModule,
-        CommonModule,
         CheckboxModule,
         InputTextModule,
         ChipModule,
@@ -64,9 +84,8 @@ interface ClassRow {
         SelectButtonModule,
         ToggleButtonModule,
         ProgressSpinnerModule,
-        RxIf,
         DropdownModule,
-        RxFor,
+        MultiSelectModule,
         MessagesModule,
         MessageModule,
         ToastModule,
@@ -75,6 +94,13 @@ interface ClassRow {
         SliderModule,
         AutoFocusModule,
         InputNumberModule,
+        MarkdownComponent,
+        requestStateDirectives,
+        KeyValuePipe,
+        TabViewModule,
+        ClassCardComponent,
+        NgTemplateOutlet,
+        ClassesSkeletonComponent,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -82,24 +108,23 @@ interface ClassRow {
     providers: [DatePipe],
 })
 export class ClassesComponent {
-    private readonly interacted$ = new BehaviorSubject(false);
+    private readonly _interacted = signal(false);
     @Input() set interacted(value: boolean) {
-        this.interacted$.next(value);
+        this._interacted.set(value);
     }
     private readonly classListService = inject(ClassListService);
+    private readonly semesterListService = inject(ClassesSemesterListService);
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
 
-    private search$ = new BehaviorSubject('');
+    private search = signal('');
 
-    // emits true after a search has been performed, and emits false 500ms afterwards
+    private gradeFilter = signal<[] | [number, number]>([]);
 
-    private gradeFilter$ = new BehaviorSubject<[] | [number, number]>([]);
-
-    private isFakeSearchStarted$ = combineLatest([
-        this.search$,
-        this.gradeFilter$,
-    ]).pipe(map(() => true));
+    private isFakeSearchStarted$ = merge(
+        toObservable(this.search).pipe(skip(1)),
+        toObservable(this.gradeFilter).pipe(skip(1))
+    ).pipe(map(() => true));
 
     readonly isFakeSearchLoading$ = merge(
         this.isFakeSearchStarted$,
@@ -108,229 +133,276 @@ export class ClassesComponent {
             map(() => false)
         ),
         of(false)
-    );
+    ).pipe();
 
-    selectedClassIds$ = this.workflow.select(
+    selectedWorkflowClasses = this.workflow.selectSignal(
         (state) => state.enrollment.selectedClasses
     );
 
-    isValid$ = this.selectedClassIds$.pipe(
-        map((selectedClasses) => selectedClasses.length > 0),
-        shareReplay()
+    selectedClassIds = computed(() =>
+        this.selectedWorkflowClasses().map((c) => c.id)
     );
 
-    isInvalid$ = combineLatest([this.isValid$, this.interacted$]).pipe(
-        map(([isValid, interacted]) => !isValid && interacted)
-    );
+    isValid = computed(() => this.selectedClassIds().length > 0);
 
-    @Output() validityChange = this.isValid$.pipe();
+    isInvalid = computed(() => !this.isValid() && this._interacted());
 
-    classRows$: Observable<Array<ClassRow>> = this.classListService
-        .getAvailableEnrollmentClassesAndGroups()
-        .pipe(
-            shareReplay(),
-            map(({ classes, groups }) => {
-                const classesAsClassRows = classes
-                    .map((c) => ({
-                        ...c,
-                        classDateTimes:
-                            c.startMs && c.endMs
-                                ? this.datePipe.transform(
-                                      new Date(c.startMs),
-                                      'shortDate'
-                                  ) +
-                                  ' - ' +
-                                  this.datePipe.transform(
-                                      new Date(c.endMs),
-                                      'shortDate'
-                                  )
-                                : '',
-                    }))
-                    .map((c) => ({
-                        classes: [c],
-                        start: new Date(c.startMs),
-                    }));
-                const groupsAsClassRows = groups.map((g) => ({
-                    classes: g.classes.map((c) => ({
-                        ...c,
-                        classDateTimes:
-                            c.startMs && c.endMs
-                                ? this.datePipe.transform(
-                                      new Date(c.startMs),
-                                      'shortDate'
-                                  ) +
-                                  ' - ' +
-                                  this.datePipe.transform(
-                                      new Date(c.endMs),
-                                      'shortDate'
-                                  )
-                                : '',
-                    })),
-                    group: g,
-                    start: new Date(g.classes[0].startMs),
-                }));
-                return [...classesAsClassRows, ...groupsAsClassRows].sort(
-                    (a, b) => a.start.getTime() - b.start.getTime()
-                );
-            })
-        );
+    @Output() validityChange = toObservable(this.isValid);
 
-    classes$ = this.classRows$.pipe(
-        map((rows) =>
-            rows.map((row) => row.classes).reduce((a, b) => a.concat(b), [])
+    readonly semesterOptions = toSignal(
+        this.semesterListService.getEnrollableSemesters().pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+            map((semesters) => semesters.map(({ id, name }) => ({ id, name })))
         )
     );
 
-    readonly filterOptions$ = this.classes$.pipe(
-        map((classes) =>
-            [
-                ...classes
-                    .reduce(
-                        (map, c) =>
-                            map.set(
-                                `Grades ${c.gradeRangeStart}-${c.gradeRangeEnd}`,
-                                c
-                            ),
-                        new Map<
-                            `Grades ${number}-${number}`,
-                            ObservedValueOf<typeof this.classes$>[number]
-                        >()
-                    )
-                    .entries(),
-            ]
-                .sort(([a], [b]) => a.localeCompare(b))
-                .map(([label, { gradeRangeStart, gradeRangeEnd }]) => ({
-                    name: label,
-                    value: [gradeRangeStart, gradeRangeEnd],
-                }))
-        )
-    );
-
-    private readonly userCostsToSelectedClassIds$ = this.workflow.select(
-        (state) => state.enrollment.userCostsToSelectedClassIds
-    );
-
-    filteredClassRows$ = combineLatest([
-        this.classRows$,
-        this.search$,
-        this.gradeFilter$,
-        this.selectedClassIds$,
-        this.userCostsToSelectedClassIds$,
-    ]).pipe(
-        map(
-            ([
-                classRows,
-                search,
-                gradeFilter,
-                selectedClassIds,
-                userCostsToSelectedClassIds,
-            ]) => {
-                const searched = classRows.filter((row) => {
-                    return !!row.classes.find(
-                        (c) =>
-                            c.title
-                                .toLowerCase()
-                                .includes(search.toLowerCase()) ||
-                            c.description
-                                .toLowerCase()
-                                .includes(search.toLowerCase()) ||
-                            c.location
-                                .toLowerCase()
-                                .includes(search.toLowerCase()) ||
-                            c.classDateTimes
-                                .toLowerCase()
-                                .includes(search.toLowerCase())
-                    );
-                });
-                const [startGrade, endGrade] = gradeFilter;
-                const filtered =
-                    startGrade && endGrade
-                        ? searched.filter(
-                              (row) =>
-                                  !!row.classes.find(
-                                      (c) =>
-                                          c.gradeRangeStart === startGrade &&
-                                          c.gradeRangeEnd === endGrade
-                                  )
-                          )
-                        : searched;
-                return filtered.map((row) => ({
-                    ...row,
-                    selected: row.classes.every((c) =>
-                        selectedClassIds.includes(c.id)
-                    ),
-                    classes: row.classes.map((c) => ({
-                        ...c,
-                        selected: selectedClassIds.includes(c.id),
-                        userCost: userCostsToSelectedClassIds[c.id] ?? c.cost,
-                    })),
-                }));
-            }
-        )
-    );
-
-    selectedClasses$ = this.selectedClassIds$.pipe(
-        withLatestFrom(this.classes$),
-        map(([selectedIds, classes]) =>
-            classes.filter((c) => selectedIds.includes(c.id))
-        )
-    );
-
-    selectedSummerClasses$ = this.selectedClasses$.pipe(
-        map((classes) =>
-            classes.filter((c) =>
-                ['Summer Camp Full Day', 'Summer Camp Half Day'].includes(
-                    c.classType
+    readonly classRowsBySemesters = toSignal(
+        toObservable(this.semesterOptions).pipe(
+            filter((semesters) => !!semesters && semesters.length > 0),
+            map((semesters) => semesters as NonNullable<typeof semesters>),
+            map((semesters) => semesters.map((s) => s.id)),
+            switchMap((semesterIds) =>
+                this.classListService.getClassesBySemesterIds(semesterIds).pipe(
+                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                    shareReplay(),
+                    map((classesBySemester) => {
+                        return Object.fromEntries(
+                            Object.entries(classesBySemester).map(
+                                ([semesterId, { classes, groups }]) => {
+                                    const classesAsClassRows = classes
+                                        .map((c) => ({
+                                            ...c,
+                                            classDateTimes:
+                                                c.startMs && c.endMs
+                                                    ? this.datePipe.transform(
+                                                          new Date(c.startMs),
+                                                          'shortDate'
+                                                      ) +
+                                                      ' - ' +
+                                                      this.datePipe.transform(
+                                                          new Date(c.endMs),
+                                                          'shortDate'
+                                                      )
+                                                    : '',
+                                        }))
+                                        .map((c) => ({
+                                            classes: [c],
+                                            start: new Date(c.startMs),
+                                            selected: false,
+                                        }));
+                                    const groupsAsClassRows = groups.map(
+                                        (g) => ({
+                                            classes: g.classes.map((c) => ({
+                                                ...c,
+                                                classDateTimes:
+                                                    c.startMs && c.endMs
+                                                        ? this.datePipe.transform(
+                                                              new Date(
+                                                                  c.startMs
+                                                              ),
+                                                              'shortDate'
+                                                          ) +
+                                                          ' - ' +
+                                                          this.datePipe.transform(
+                                                              new Date(c.endMs),
+                                                              'shortDate'
+                                                          )
+                                                        : '',
+                                            })),
+                                            group: g,
+                                            start: new Date(
+                                                g.classes[0].startMs
+                                            ),
+                                            selected: false,
+                                        })
+                                    );
+                                    const combined: Array<
+                                        | (typeof classesAsClassRows)[number]
+                                        | (typeof groupsAsClassRows)[number]
+                                    > = [
+                                        ...classesAsClassRows,
+                                        ...groupsAsClassRows,
+                                    ];
+                                    return [
+                                        semesterId,
+                                        combined
+                                            .sort(
+                                                (a, b) =>
+                                                    a.start.getTime() -
+                                                    b.start.getTime()
+                                            )
+                                            .map((row, index) => ({
+                                                ...row,
+                                                selected: false,
+                                                index,
+                                            })),
+                                    ] as const;
+                                }
+                            )
+                        );
+                    })
                 )
             )
         )
     );
 
-    hasSelectedSummerClass$ = this.selectedSummerClasses$.pipe(
-        map((classes) => classes.length > 0)
+    classes = computed(() => {
+        const classRowsBySemesters = this.classRowsBySemesters();
+        return classRowsBySemesters
+            ? Object.values(classRowsBySemesters)
+                  .flat()
+                  .map((row) => row.classes)
+                  .reduce((a, b) => a.concat(b), [])
+            : undefined;
+    });
+
+    readonly filterOptions = computed(() => {
+        const classes = this.classes();
+        return classes
+            ? [
+                  ...classes
+                      .reduce(
+                          (map, c) =>
+                              map.set(
+                                  `Grades ${c.gradeRangeStart}-${c.gradeRangeEnd}`,
+                                  c
+                              ),
+                          new Map<
+                              `Grades ${number}-${number}`,
+                              NonNullable<
+                                  ReturnType<typeof this.classes>
+                              >[number]
+                          >()
+                      )
+                      .entries(),
+              ]
+                  .sort(([a], [b]) => a.localeCompare(b))
+                  .map(([label, { gradeRangeStart, gradeRangeEnd }]) => ({
+                      name: label,
+                      value: [gradeRangeStart, gradeRangeEnd],
+                  }))
+            : undefined;
+    });
+
+    private readonly userCostsToSelectedClassIds = this.workflow.selectSignal(
+        (state) => state.enrollment.userCostsToSelectedClassIds
     );
 
-    selectionChanged(
-        {
-            id: classId,
-            selected,
-            userCost,
-        }: {
-            id: string;
-            selected: boolean;
-            userCost?: number;
-        },
-        overlayPanel?: OverlayPanel
-    ) {
-        overlayPanel?.hide();
+    filteredClassRowsBySemesters = computed(() => {
+        const classRowsBySemesters = this.classRowsBySemesters();
+        return classRowsBySemesters
+            ? Object.fromEntries(
+                  Object.entries(classRowsBySemesters).map(
+                      ([semesterId, classRows]) => {
+                          const searched = classRows.filter((row) => {
+                              const search = this.search();
+                              return !!row.classes.find(
+                                  (c) =>
+                                      c.title
+                                          .toLowerCase()
+                                          .includes(search.toLowerCase()) ||
+                                      c.description
+                                          ?.toLowerCase()
+                                          .includes(search.toLowerCase()) ||
+                                      c.location
+                                          ?.toLowerCase()
+                                          .includes(search.toLowerCase()) ||
+                                      c.classDateTimes
+                                          ?.toLowerCase()
+                                          .includes(search.toLowerCase())
+                              );
+                          });
+                          const [startGrade, endGrade] = this.gradeFilter();
+                          const filtered =
+                              startGrade && endGrade
+                                  ? searched?.filter(
+                                        (row) =>
+                                            !!row.classes.find(
+                                                (c) =>
+                                                    c.gradeRangeStart ===
+                                                        startGrade &&
+                                                    c.gradeRangeEnd === endGrade
+                                            )
+                                    )
+                                  : searched;
+                          const result = filtered?.map((row) => ({
+                              ...row,
+                              selected: row.classes.every((c) =>
+                                  this.selectedClassIds().includes(c.id)
+                              ),
+                              classes: row.classes.map((c) => ({
+                                  ...c,
+                                  selected: this.selectedClassIds().includes(
+                                      c.id
+                                  ),
+                                  userCost:
+                                      this.userCostsToSelectedClassIds()[
+                                          c.id
+                                      ] ?? c.cost,
+                              })),
+                          }));
+                          return [semesterId, result] as const;
+                      }
+                  )
+              )
+            : undefined;
+    });
+
+    selectedClasses = computed(() => {
+        const selected = this.selectedClassIds();
+        return this.classes()?.filter((c) => selected.includes(c.id));
+    });
+
+    selectedSummerClasses = computed(
+        () =>
+            this.selectedClasses()?.filter((c) =>
+                ['Summer Camp Full Day', 'Summer Camp Half Day'].includes(
+                    c.classType
+                )
+            ) ?? []
+    );
+
+    hasSelectedSummerClass = computed(
+        () => this.selectedSummerClasses().length > 0
+    );
+
+    selectionChanged({
+        classSelection,
+        selected,
+        userCost,
+    }: {
+        classSelection: { id: string; semesterId: string };
+        selected: boolean;
+        userCost?: number;
+    }) {
         this.workflow.patchState((s) => ({
             enrollment: {
                 ...s.enrollment,
                 selectedClasses: selected
                     ? Array.from(
-                          new Set([...s.enrollment.selectedClasses, classId])
+                          new Set([
+                              ...s.enrollment.selectedClasses,
+                              classSelection,
+                          ])
                       )
                     : s.enrollment.selectedClasses.filter(
-                          (id) => id !== classId
+                          (selectedClass) =>
+                              selectedClass.id !== classSelection.id
                       ),
                 userCostsToSelectedClassIds: {
                     ...s.enrollment.userCostsToSelectedClassIds,
-                    [classId]: userCost,
+                    [classSelection.id]: userCost,
                 },
             },
         }));
     }
 
     searchChange(search: string) {
-        this.search$.next(search);
+        this.search.set(search);
     }
 
     filterChange(filter: [] | [number, number]) {
-        this.gradeFilter$.next(filter);
-    }
-
-    trackClassCard(index: number, classCard: { id: string }) {
-        return classCard.id;
+        this.gradeFilter.set(filter);
     }
 
     trackClassRow(index: number, classRow: ClassRow) {
@@ -350,11 +422,32 @@ export class ClassesComponent {
 
     rowSelectedChange(classRow: ClassRow, selected: boolean) {
         classRow.classes.forEach((c) =>
-            this.selectionChanged({ id: c.id, selected })
+            this.selectionChanged({
+                classSelection: {
+                    id: c.id,
+                    semesterId: c.semesterId,
+                },
+                selected,
+            })
         );
     }
 
     hasPausedClass(classRow: ClassRow): boolean {
         return classRow.classes.some((c) => c.pausedForEnrollment);
+    }
+
+    semesterName(
+        semesterId: string,
+        options: Requested<Array<{ id: string; name: string }>> | undefined
+    ) {
+        return (
+            (Array.isArray(options) &&
+                options?.find((o) => o.id === semesterId)?.name) ||
+            ''
+        );
+    }
+
+    hasGroup(row: object): row is { group: unknown } {
+        return 'group' in row;
     }
 }

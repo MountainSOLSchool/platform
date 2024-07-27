@@ -9,18 +9,11 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/firebase/functions-api"],
             "options": {
-                "jestConfig": "libs/firebase/functions-api/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/firebase/functions-api/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/firebase/functions-api/src/**/*.ts",
-                    "libs/firebase/functions-api/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": []

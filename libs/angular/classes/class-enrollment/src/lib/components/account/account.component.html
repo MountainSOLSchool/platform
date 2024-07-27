@@ -1,4 +1,4 @@
-<ng-container *ngIf="user$ | async as user; else login">
+@if (user$ | async; as user) {
     <p-card
         [style]="{
             width: '100%',
@@ -13,11 +13,10 @@
         ></i>
         <br /><br />Thank you for signing in with the account
         <b>{{ user.email }}</b
-        >!<br /><br />With an account, you will be able re-use your
-        students' information and your payment methods.</p-card
+        >!<br /><br />With an account, you will be able re-use your students'
+        information and your payment methods.</p-card
     >
-</ng-container>
-<ng-template #login>
+} @else {
     <p-messages [enableService]="false" severity="info">
         <ng-template pTemplate>
             <div class="ml-2">
@@ -33,4 +32,4 @@
             [standalone]="true"
         ></sol-login>
     </div>
-</ng-template>
+}

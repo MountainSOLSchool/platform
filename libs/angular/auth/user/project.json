@@ -7,20 +7,13 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/auth/user"],
+            "outputs": ["{workspaceRoot}/coverage/libs/angular/auth/user"],
             "options": {
-                "jestConfig": "libs/auth/user/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/angular/auth/user/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/auth/user/src/**/*.ts",
-                    "libs/auth/user/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": ["scope:auth", "type:api"]

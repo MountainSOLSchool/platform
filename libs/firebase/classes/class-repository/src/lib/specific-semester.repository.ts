@@ -9,6 +9,10 @@ export class SpecificSemesterRepository extends SemesterRepository {
         return new SpecificSemesterRepository(semesterId);
     }
 
+    async getId(): Promise<string> {
+        return this.id;
+    }
+
     async getPath(): Promise<string> {
         return `semesters/${this.id}`;
     }

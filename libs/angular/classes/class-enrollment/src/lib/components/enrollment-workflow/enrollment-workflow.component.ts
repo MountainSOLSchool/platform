@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    HostListener,
+    computed,
     inject,
+    viewChild,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { EnrollmentWorkflowStore } from './enrollment-workflow.store';
@@ -12,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { filter, map, of, shareReplay, timer } from 'rxjs';
+import { filter, map, of, shareReplay, take, timer } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
@@ -27,16 +28,17 @@ import { MedicalComponent } from '../medical/medical.component';
 import { RxLet } from '@rx-angular/template/let';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
-import { ComponentCanDeactivate } from './pending-changes.guard';
 import { EventsComponent } from '../events/events.component';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { RxIf } from '@rx-angular/template/if';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive';
 import { SelectStudentComponent } from '../select-student/select-student.component';
 import { ReleasesComponent } from '../releases/releases.component';
+import { UserService } from '@sol/auth/user';
+import { Dialog } from '@angular/cdk/dialog';
+import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog.component';
 
 @Component({
     standalone: true,
@@ -50,7 +52,8 @@ import { ReleasesComponent } from '../releases/releases.component';
     ],
     templateUrl: './enrollment-workflow.component.html',
     imports: [
-        CommonModule,
+        AsyncPipe,
+        NgTemplateOutlet,
         RouterModule,
         StepsModule,
         CdkStepperModule,
@@ -97,10 +100,10 @@ import { ReleasesComponent } from '../releases/releases.component';
         `,
     ],
 })
-export class ClassEnrollmentComponent implements ComponentCanDeactivate {
+export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);
 
-    private readonly user$ = inject(AngularFireAuth).user.pipe(shareReplay());
+    private readonly user$ = inject(UserService).getUser().pipe(shareReplay());
 
     readonly isUserLoggedIn$ = this.user$.pipe(map((user) => !!user));
 
@@ -108,6 +111,8 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         map((user) => user?.email),
         filter((email): email is string => !!email)
     );
+
+    readonly isStudentLoading = this.store.isStudentLoading;
 
     readonly earlyBirdEnd = Date.parse('2023-04-01T23:59:59.999Z');
 
@@ -132,6 +137,11 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
             routerLink: 'confirmation',
         },
     ];
+
+    readonly didLoadFromDraft = computed(
+        () => !!this.store.state().draftEnrollment
+    );
+
     readonly isSubmitting$ = this.store.submitting$;
     readonly failureDialogState$ = this.store.failed$.pipe(
         map(
@@ -172,14 +182,18 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         ...steps: Array<MatStep>
     ): boolean {
         return (
-            isUserLoggedIn &&
-            steps.every(
-                (step) =>
-                    !step.hasError &&
-                    // TODO: detect better
-                    (step.interacted || step.label === 'Confirm Enrollment')
-            )
+            isUserLoggedIn && steps.every((step) => this.isStepComplete(step))
         );
+    }
+
+    private isStepComplete(step: MatStep) {
+        const hasStepValidationBeenRun = step.hasError !== undefined;
+        const isStepValid = hasStepValidationBeenRun && !step.hasError;
+        const labelsOStepsNotRequiringInteraction = ['Confirm Enrollment'];
+        const hasStepRequiringInteractionBeenInteractedWith =
+            step.interacted ||
+            labelsOStepsNotRequiringInteraction.includes(step.label);
+        return isStepValid && hasStepRequiringInteractionBeenInteractedWith;
     }
 
     fillOutForTest() {
@@ -280,12 +294,20 @@ export class ClassEnrollmentComponent implements ComponentCanDeactivate {
         stepper.reset();
     }
 
-    @HostListener('window:beforeunload')
-    canDeactivate(): boolean {
-        return false;
-    }
-
     closeFailure() {
         this.store.setStatusToDraft();
+    }
+
+    private readonly dialog = inject(Dialog);
+    private readonly stepper = viewChild(CdkStepper);
+
+    showStartOverDialog() {
+        const { closed } = this.dialog.open(StartOverDialogComponent);
+        closed.pipe(take(1)).subscribe((confirmed) => {
+            if (confirmed) {
+                this.store.startOver();
+                this.stepper()?.reset();
+            }
+        });
     }
 }

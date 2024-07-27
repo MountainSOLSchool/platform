@@ -1,23 +1,23 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     inject,
     Output,
 } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { LoginComponent } from '@sol/auth/login';
 import { CardModule } from 'primeng/card';
 import { map } from 'rxjs';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
+import { UserService } from '@sol/auth/user';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        AsyncPipe,
         LoginComponent,
         CardModule,
         MessagesModule,
@@ -29,7 +29,7 @@ import { ToastModule } from 'primeng/toast';
     styleUrls: ['./account.component.css'],
 })
 export class AccountComponent {
-    user$ = inject(AngularFireAuth).user;
+    user$ = inject(UserService).getUser();
 
     @Output() validityChange = this.user$.pipe(map((user) => !!user));
 }

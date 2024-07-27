@@ -8,7 +8,7 @@ export default {
             stringifyContentPathRegex: '\\.(html|svg)$',
         },
     },
-    coverageDirectory: '../../../coverage/libs/classes/class-calendar',
+    coverageDirectory: '../../../coverage/libs/angular/classes/class-calendar',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
     },

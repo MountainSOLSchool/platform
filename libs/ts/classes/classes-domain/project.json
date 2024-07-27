@@ -7,20 +7,15 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/classes/classes-domain"],
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/ts/classes/classes-domain"
+            ],
             "options": {
-                "jestConfig": "libs/classes/classes-domain/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/ts/classes/classes-domain/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/classes/classes-domain/src/**/*.ts",
-                    "libs/classes/classes-domain/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": ["scope:classes"]

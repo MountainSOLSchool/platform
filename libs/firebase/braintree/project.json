@@ -5,18 +5,14 @@
     "projectType": "library",
     "targets": {
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "outputs": ["{options.outputFile}"],
-            "options": {
-                "lintFilePatterns": ["libs/payments/braintree/**/*.ts"]
-            }
+            "executor": "@nx/eslint:lint",
+            "outputs": ["{options.outputFile}"]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/payments/braintree"],
+            "outputs": ["{workspaceRoot}/coverage/libs/firebase/braintree"],
             "options": {
-                "jestConfig": "libs/payments/braintree/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/firebase/braintree/jest.config.ts"
             }
         }
     },

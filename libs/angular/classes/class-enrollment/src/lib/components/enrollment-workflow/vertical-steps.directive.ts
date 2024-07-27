@@ -1,4 +1,4 @@
-import { Directive, HostListener } from '@angular/core';
+import { Directive, HostListener, inject } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
 
 @Directive({
@@ -6,7 +6,7 @@ import { MatStepper } from '@angular/material/stepper';
     selector: 'mat-stepper',
 })
 export class MatVerticalStepperScrollerDirective {
-    constructor(private stepper: MatStepper) {}
+    private readonly stepper = inject(MatStepper);
 
     private firstAnimation = true;
 

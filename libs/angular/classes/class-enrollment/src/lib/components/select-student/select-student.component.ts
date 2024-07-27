@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -26,7 +25,7 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { RxLet } from '@rx-angular/template/let';
 import { DropdownModule } from 'primeng/dropdown';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
@@ -34,12 +33,13 @@ import { RxIf } from '@rx-angular/template/if';
 import { create, enforce, omitWhen, test } from 'vest';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         LoginComponent,
         CardModule,
         MessagesModule,
@@ -52,13 +52,14 @@ import { DialogModule } from 'primeng/dialog';
         RxIf,
         ButtonModule,
         DialogModule,
+        ProgressSpinnerModule,
     ],
     selector: 'sol-student-selection',
     templateUrl: './select-student.component.html',
     styleUrls: ['./select-student.component.css'],
 })
 export class SelectStudentComponent {
-    private api = inject(FunctionsApi);
+    private api = inject(FirebaseFunctionsService);
     private workflow = inject(EnrollmentWorkflowStore);
 
     private readonly validationSuite = create(
@@ -120,18 +121,21 @@ export class SelectStudentComponent {
             state.enrollment.isStudentNew === true
                 ? 'new'
                 : state.enrollment.isStudentNew === false
-                ? 'previous'
-                : undefined
+                  ? 'previous'
+                  : undefined
         );
 
     private selectedStudentId$: Observable<string | undefined> =
         this.workflow.select((state) => state.enrollment.student?.id);
 
     private students$ = this.api
-        .call<{ students: Array<{ id: string; name: string }> }>(
-            'myEnrolledStudents'
-        )
-        .pipe(map(({ students }) => students));
+        .call<{
+            students: Array<{ id: string; name: string }>;
+        }>('myEnrolledStudents')
+        .pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+            map(({ students }) => students)
+        );
 
     readonly viewModel$ = combineLatest([
         this.selectedStudentType$,
@@ -154,6 +158,7 @@ export class SelectStudentComponent {
                 selectedStudentId,
                 students,
                 showAsReadonlyBlock:
+                    selectedStudentType !== undefined &&
                     interacted &&
                     !transitionOccurredToNoErrors &&
                     !hasAnyErrors,

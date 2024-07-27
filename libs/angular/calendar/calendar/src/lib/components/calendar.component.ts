@@ -1,12 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    CUSTOM_ELEMENTS_SCHEMA,
     inject,
     Input,
     Output,
 } from '@angular/core';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import {
     mergeMap,
     Observable,
@@ -25,19 +24,19 @@ import {
     EventClickArg,
     CalendarOptions,
 } from '@fullcalendar/core';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, FullCalendarModule, SkeletonModule],
+    imports: [AsyncPipe, FullCalendarModule, SkeletonModule],
     selector: 'sol-calendar',
     templateUrl: './calendar.component.html',
 })
 export class CalendarComponent {
-    private readonly firebaseApi = inject(FunctionsApi);
+    private readonly firebaseApi = inject(FirebaseFunctionsService);
 
     @Input() set events(events: Array<EventInput> | null) {
         this.#events$.next(events);

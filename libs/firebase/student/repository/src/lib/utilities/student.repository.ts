@@ -1,20 +1,10 @@
 import { DatabaseUtility } from '@sol/firebase/database';
-import * as admin from 'firebase-admin';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
-import { firestore } from 'firebase-admin';
-import DocumentReference = firestore.DocumentReference;
-import {
-    ActiveSemesterRepository,
-    ClassRepository,
-    SemesterRepository,
-} from '@sol/classes/repository';
-import WriteResult = firestore.WriteResult;
+import { ClassRepository, SemesterRepository } from '@sol/classes/repository';
+import { DocumentReference, DocumentData } from 'firebase-admin/firestore';
 
 export class StudentRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
-    static enrolledInActiveSemester(): StudentRepository {
-        return new StudentRepository(ActiveSemesterRepository.of());
-    }
     static of(semester: SemesterRepository): StudentRepository {
         return new StudentRepository(semester);
     }
@@ -50,10 +40,7 @@ export class StudentRepository {
         firstName: string;
         lastName: string;
         birthDate: string;
-    }): Promise<
-        | admin.firestore.DocumentReference<admin.firestore.DocumentData>
-        | undefined
-    > {
+    }): Promise<DocumentReference<DocumentData> | undefined> {
         const students = this.database.collection('students');
 
         return (
@@ -95,12 +82,12 @@ export class StudentRepository {
     async getAll(): Promise<Array<StudentDbEntry>> {
         const allClasses = await ClassRepository.of(this.semester).getAll();
         const allStudentsFromAllClassesRefs = allClasses.map(
-            (theClass) => theClass.students
+            (theClass) => theClass.students as Array<DocumentReference>
         );
         const allStudentsFromEachClassInSemester = await Promise.all(
             allStudentsFromAllClassesRefs.map((studentRefs) =>
                 DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
-                    studentRefs as any
+                    studentRefs
                 )
             )
         );

@@ -5,7 +5,14 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, filter, map, shareReplay } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    filter,
+    map,
+    ObservedValueOf,
+    shareReplay,
+} from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
@@ -23,16 +30,17 @@ import { create, enforce, group, test } from 'vest';
 import { StudentForm } from '@sol/student/domain';
 import { RxLet } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
-import { CommonModule } from '@angular/common';
 import { RxFor } from '@rx-angular/template/for';
 import { MessagesModule } from 'primeng/messages';
 import { RxIf } from '@rx-angular/template/if';
+import { NgStyle } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        NgStyle,
         InputTextModule,
         CalendarModule,
         ButtonModule,
@@ -51,6 +59,7 @@ import { RxIf } from '@rx-angular/template/if';
         MessagesComponent,
         MessagesModule,
         RxIf,
+        ProgressSpinnerModule,
     ],
     selector: 'sol-medical',
     templateUrl: './medical.component.html',
@@ -237,6 +246,7 @@ export class MedicalComponent {
     @Input() set interacted(value: boolean) {
         this.interacted$.next(value);
     }
+    @Input() isStudentLoading = false;
 
     @Output() validityChange = this.errors$.pipe(
         map((errors) => Object.keys(errors).length === 0)
@@ -246,7 +256,9 @@ export class MedicalComponent {
         return index;
     }
 
-    updateStudentMedicalInfo(info: any): void {
+    updateStudentMedicalInfo(
+        info: ObservedValueOf<typeof this.student$>
+    ): void {
         this.workflow.patchState(({ enrollment }) => ({
             enrollment: {
                 ...enrollment,

@@ -5,18 +5,14 @@
     "projectType": "library",
     "targets": {
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": ["libs/student/domain/**/*.ts"]
-            },
+            "executor": "@nx/eslint:lint",
             "outputs": ["{options.outputFile}"]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/student/domain"],
+            "outputs": ["{workspaceRoot}/coverage/libs/ts/student/domain"],
             "options": {
-                "jestConfig": "libs/student/domain/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/ts/student/domain/jest.config.ts"
             }
         }
     },

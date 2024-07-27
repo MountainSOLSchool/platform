@@ -1,29 +1,32 @@
-import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { inject, Injectable } from '@angular/core';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { filter, map, Observable, switchMap } from 'rxjs';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { FIRE_AUTH } from '@sol/ts/firebase/adapter';
 
 @Injectable({
     providedIn: 'root',
 })
 export class UserService {
-    constructor(
-        private readonly afAuth: AngularFireAuth,
-        private readonly functions: FunctionsApi
-    ) {}
+    private readonly functions = inject(FirebaseFunctionsService);
+    private readonly user = inject(FIRE_AUTH).user();
 
     isLoggedIn(): Observable<boolean> {
-        return this.afAuth.user.pipe(map((u) => !!u));
+        return this.user.pipe(map((u) => !!u));
     }
 
-    getUser(): Observable<firebase.default.User | null> {
-        return this.afAuth.user.pipe();
+    getUser() {
+        return this.user.pipe();
     }
 
     private getRoles(): Observable<string[]> {
         return this.getUser().pipe(
             filter((u) => !!u),
-            switchMap(() => this.functions.call<Array<string>>('roles'))
+            switchMap(() =>
+                this.functions
+                    .call<Array<string>>('roles')
+                    .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+            )
         );
     }
 

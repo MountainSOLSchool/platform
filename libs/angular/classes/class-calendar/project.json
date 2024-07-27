@@ -7,20 +7,15 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/classes/class-calendar"],
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/angular/classes/class-calendar"
+            ],
             "options": {
-                "jestConfig": "libs/classes/class-calendar/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/angular/classes/class-calendar/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/classes/class-calendar/src/**/*.ts",
-                    "libs/classes/class-calendar/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": ["scope:classes"]

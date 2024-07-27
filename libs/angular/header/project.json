@@ -7,20 +7,13 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/header"],
+            "outputs": ["{workspaceRoot}/coverage/libs/angular/header"],
             "options": {
-                "jestConfig": "libs/header/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/angular/header/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/header/src/**/*.ts",
-                    "libs/header/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": ["scope:header"]

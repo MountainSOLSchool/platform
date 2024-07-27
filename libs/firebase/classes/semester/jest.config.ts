@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'firebase-classes-semester',
     preset: '../../../../jest.preset.js',

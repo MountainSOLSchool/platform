@@ -56,7 +56,14 @@
                 >
             </div>
         </ng-container>
-        <ng-template #skeleton> Loading students... </ng-template>
+        <ng-template #skeleton
+            ><div style="display: flex; align-items: center; gap: 10px">
+                <p-progressSpinner
+                    [style]="{ width: '20px', height: '20px' }"
+                ></p-progressSpinner>
+                <p>Loading students...</p>
+            </div>
+        </ng-template>
         <div class="field-checkbox" style="margin-top: 0.5rem">
             <p-radioButton
                 inputId="newStudent"

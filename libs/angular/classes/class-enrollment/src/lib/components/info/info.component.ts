@@ -12,6 +12,7 @@ import {
     map,
     shareReplay,
     switchMap,
+    ObservedValueOf,
 } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
@@ -28,7 +29,6 @@ import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { RxLet } from '@rx-angular/template/let';
 import { create, test, enforce, group, skipWhen } from 'vest';
-import { CommonModule } from '@angular/common';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { StudentForm } from '@sol/student/domain';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
@@ -36,7 +36,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { RxIf } from '@rx-angular/template/if';
 import { SemesterClass } from '@sol/classes/domain';
-import { ClassListService } from '../../services/class-list.service';
+import { NgStyle } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ClassListService } from '@sol/angular/classes/list';
 
 export const studentInfoValidationSuite = create(
     (student: Partial<StudentForm>, classes: Array<SemesterClass>) => {
@@ -85,8 +87,8 @@ export const studentInfoValidationSuite = create(
                                     ? 0
                                     : 1
                                 : wasStudentGradeCapturedInFirstHalfOfYear
-                                ? 1
-                                : 0;
+                                  ? 1
+                                  : 0;
 
                             const studentCurrentGrade =
                                 schoolGrade.initialGrade +
@@ -226,7 +228,7 @@ export const studentInfoValidationSuite = create(
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        NgStyle,
         InputTextModule,
         CalendarModule,
         ButtonModule,
@@ -246,6 +248,7 @@ export const studentInfoValidationSuite = create(
         DropdownModule,
         MessagesModule,
         RxIf,
+        ProgressSpinnerModule,
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
@@ -260,7 +263,7 @@ export class InfoComponent {
     authorized = true;
 
     readonly isUpdatingExistingStudent$ = this.workflow.select(
-        (state) => !state.enrollment.isStudentNew
+        (state) => state.enrollment.isStudentNew === false
     );
 
     readonly student$ = this.workflow
@@ -287,9 +290,7 @@ export class InfoComponent {
 
     private selectedClassList$ = this.workflow
         .select(({ enrollment: { selectedClasses } }) => selectedClasses)
-        .pipe(
-            switchMap((classIds) => this.classList.getClassesByIds(classIds))
-        );
+        .pipe(switchMap((classIds) => this.classList.getClasses(classIds)));
 
     private readonly validation$ = combineLatest([
         this.student$,
@@ -343,6 +344,7 @@ export class InfoComponent {
     @Input() set interacted(value: boolean) {
         this.interacted$.next(value);
     }
+    @Input() isStudentLoading = false;
 
     @Output() validityChange = this.errors$.pipe(
         map((errors) => Object.keys(errors).length === 0)
@@ -373,13 +375,9 @@ export class InfoComponent {
         { name: 'Adult 2XL', value: '2XL' },
     ];
 
-    trackByIndex(index: number) {
-        return index;
-    }
-
     @ViewChild('op') op!: OverlayPanel;
 
-    updateStudentInfo(info: any): void {
+    updateStudentInfo(info: ObservedValueOf<typeof this.student$>): void {
         this.workflow.patchState((s) => ({
             enrollment: {
                 ...s.enrollment,

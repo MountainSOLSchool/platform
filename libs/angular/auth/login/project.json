@@ -7,20 +7,13 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/auth/login"],
+            "outputs": ["{workspaceRoot}/coverage/libs/angular/auth/login"],
             "options": {
-                "jestConfig": "libs/auth/login/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/angular/auth/login/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/auth/login/src/**/*.ts",
-                    "libs/auth/login/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": ["scope:auth"]

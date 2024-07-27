@@ -1,0 +1,30 @@
+{
+    "name": "firebase-sdk-adapter",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/ts/firebase/adapter/src",
+    "projectType": "library",
+    "targets": {
+        "build": {
+            "executor": "@nx/js:tsc",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/libs/ts/firebase/adapter",
+                "main": "libs/ts/firebase/adapter/src/index.ts",
+                "tsConfig": "libs/ts/firebase/adapter/tsconfig.lib.json",
+                "assets": ["libs/ts/firebase/adapter/*.md"]
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint",
+            "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "libs/ts/firebase/adapter/jest.config.ts"
+            }
+        }
+    },
+    "tags": []
+}

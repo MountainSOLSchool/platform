@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import {
     catchError,
     filter,
@@ -31,7 +31,7 @@ export class PaymentCollectorStore extends ComponentStore<{
     paymentDetails: cardPaymentMethodPayload['details'] | undefined;
 }> {
     private readonly http = inject(HttpClient);
-    private readonly functions = inject(FunctionsApi);
+    private readonly functions = inject(FirebaseFunctionsService);
     private readonly user = inject(UserService);
     private readonly paymentService = inject(PaymentService);
 
@@ -123,9 +123,7 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     this.patchState({ dropInInstance });
                                     dropInInstance?.on(
                                         'paymentMethodRequestable',
-                                        (event) => {
-                                            this.prepare();
-                                        }
+                                        () => this.prepare()
                                     );
                                     dropInInstance?.on(
                                         'noPaymentMethodRequestable',

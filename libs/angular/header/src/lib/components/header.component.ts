@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UserButtonComponent } from '@sol/auth/login';
@@ -9,12 +8,14 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs';
 import { RxLet } from '@rx-angular/template/let';
+import { AsyncPipe, NgStyle } from '@angular/common';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        NgStyle,
+        AsyncPipe,
         ButtonModule,
         SidebarModule,
         ToolbarModule,
@@ -51,17 +52,16 @@ import { RxLet } from '@rx-angular/template/let';
                     </h2>
                 </div>
                 <div class="p-toolbar-group-right">
-                    <ng-container
-                        *ngIf="(isLoggedIn$ | async) && (isAdmin$ | async)"
-                    >
+                    @if ((isLoggedIn$ | async) && (isAdmin$ | async)) {
                         <div style="margin-right: 2rem">
                             <p-button
                                 type="text"
                                 (click)="display = true"
                                 icon="pi pi-bars"
                                 label="Menu"
-                            ></p-button></div
-                    ></ng-container>
+                            ></p-button>
+                        </div>
+                    }
                     <sol-user-button
                         [size]="assertSize(size)"
                     ></sol-user-button>

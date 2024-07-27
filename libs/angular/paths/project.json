@@ -7,22 +7,15 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/paths"],
+            "outputs": ["{workspaceRoot}/coverage/libs/angular/paths"],
             "options": {
-                "jestConfig": "libs/paths/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/angular/paths/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/paths/src/**/*.ts",
-                    "libs/paths/src/**/*.html"
-                ]
-            },
+            "executor": "@nx/eslint:lint",
             "outputs": ["{options.outputFile}"]
         }
     },
-    "tags": ["scope:libs/paths"]
+    "tags": ["scope:libs/angular/paths"]
 }

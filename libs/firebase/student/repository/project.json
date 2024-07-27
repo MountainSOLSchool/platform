@@ -7,20 +7,15 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/student/repository"],
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/firebase/student/repository"
+            ],
             "options": {
-                "jestConfig": "libs/student/repository/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/firebase/student/repository/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/student/repository/src/**/*.ts",
-                    "libs/student/repository/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": ["scope:student"]

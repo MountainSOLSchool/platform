@@ -7,20 +7,15 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/auth/interceptor"],
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/angular/auth/interceptor"
+            ],
             "options": {
-                "jestConfig": "libs/auth/interceptor/jest.config.ts",
-                "passWithNoTests": true
+                "jestConfig": "libs/angular/auth/interceptor/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/linter:eslint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/auth/interceptor/**/*.ts",
-                    "libs/auth/interceptor/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": []

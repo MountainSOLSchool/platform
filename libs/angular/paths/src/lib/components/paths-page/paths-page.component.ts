@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Path } from '../../models/path';
@@ -7,13 +7,14 @@ import { pathsFeature } from '../../store/paths.reducer';
 @Component({
     selector: 'sol-paths-page',
     template: `<div class="paths-container">
-        <div
-            *ngFor="let path of paths$ | async"
-            class="path-card"
-            [ngStyle]="{ 'background-color': path.color, color: 'white' }"
-        >
-            <div>{{ path.name }}</div>
-        </div>
+        @for (path of paths$ | async; track path) {
+            <div
+                class="path-card"
+                [ngStyle]="{ 'background-color': path.color, color: 'white' }"
+            >
+                <div>{{ path.name }}</div>
+            </div>
+        }
         <div></div>
     </div>`,
     styles: [
@@ -35,9 +36,9 @@ import { pathsFeature } from '../../store/paths.reducer';
     ],
 })
 export class PathsPageComponent implements OnInit {
-    public paths$: Observable<Array<Path>> | undefined;
+    private readonly store = inject(Store);
 
-    constructor(private readonly store: Store) {}
+    public paths$: Observable<Array<Path>> | undefined;
 
     public ngOnInit() {
         this.paths$ = this.store.select(pathsFeature.selectPaths);

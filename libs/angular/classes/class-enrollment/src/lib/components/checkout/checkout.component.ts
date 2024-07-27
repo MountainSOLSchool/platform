@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -16,14 +15,13 @@ import { MessagesComponent } from '@sol/form/validity';
 import { create, enforce, test } from 'vest';
 import { BehaviorSubject, combineLatest, map, skip, startWith } from 'rxjs';
 import { RxLet } from '@rx-angular/template/let';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { FunctionsApi } from '@sol/firebase/functions-api';
+import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
+import { UserService } from '@sol/auth/user';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         PaymentCollectorComponent,
         ButtonModule,
         InputTextModule,
@@ -36,8 +34,8 @@ import { FunctionsApi } from '@sol/firebase/functions-api';
 })
 export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
-    private readonly user$ = inject(AngularFireAuth).user;
-    private readonly functions = inject(FunctionsApi);
+    private readonly user$ = inject(UserService).getUser();
+    private readonly functions = inject(FirebaseFunctionsService);
 
     readonly discountCodes$ = this.workflow.select(
         (s) => s.enrollment.discountCodes

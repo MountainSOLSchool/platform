@@ -1,0 +1,38 @@
+{
+    "extends": ["../../../../.eslintrc.json"],
+    "ignorePatterns": ["!**/*"],
+    "overrides": [
+        {
+            "files": ["firebase-service-factory.utility.ts"],
+            "rules": {
+                "@typescript-eslint/no-explicit-any": "off"
+            }
+        },
+        {
+            "files": ["firebase-service-method.type.ts"],
+            "rules": {
+                "@typescript-eslint/no-unused-vars": "off",
+                "no-unused-vars": "off"
+            }
+        },
+        {
+            "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+            "rules": {}
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "rules": {}
+        },
+        {
+            "files": ["*.js", "*.jsx"],
+            "rules": {}
+        },
+        {
+            "files": ["*.json"],
+            "parser": "jsonc-eslint-parser",
+            "rules": {
+                "@nx/dependency-checks": "error"
+            }
+        }
+    ]
+}
