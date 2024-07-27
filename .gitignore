@@ -64,3 +64,4 @@ pubsub-debug.log
 firebase-export*
 
 .nx/cache
+.nx/workspace-data

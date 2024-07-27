@@ -213,7 +213,7 @@ export class InfoComponent {
     authorized = true;
 
     readonly isUpdatingExistingStudent$ = this.workflow.select(
-        (state) => !state.enrollment.isStudentNew
+        (state) => state.enrollment.isStudentNew === false
     );
 
     readonly student$ = this.workflow

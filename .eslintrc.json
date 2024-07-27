@@ -1,92 +1,96 @@
 {
-    "root": true,
-    "ignorePatterns": ["**/*"],
-    "plugins": ["@nx", "unused-imports"],
-    "overrides": [
-        {
-            "files": ["*.ts"],
-            "extends": [
-                "plugin:@angular-eslint/recommended",
-                "plugin:@angular-eslint/template/process-inline-templates",
-                "plugin:prettier/recommended"
-            ],
-            "rules": {
-                "@angular-eslint/component-selector": [
-                    "error",
-                    {
-                        "prefix": "app",
-                        "style": "kebab-case",
-                        "type": "element"
-                    }
-                ],
-                "@angular-eslint/directive-selector": [
-                    "warn",
-                    {
-                        "prefix": "app",
-                        "style": "camelCase",
-                        "type": "attribute"
-                    }
-                ],
-                "@nx/enforce-module-boundaries": [
-                    "error",
-                    {
-                        "enforceBuildableLibDependency": true,
-                        "allow": [],
-                        "depConstraints": [
-                            {
-                                "sourceTag": "*",
-                                "onlyDependOnLibsWithTags": ["*"]
-                            }
-                        ]
-                    }
-                ]
-            }
-        },
-        {
-            "files": ["*.ts"],
-            "extends": ["plugin:@nx/typescript"],
-            "rules": {}
-        },
-        {
-            "files": ["*.js", "*.jsx"],
-            "extends": ["plugin:@nx/javascript"],
-            "rules": {}
-        },
-        {
-            "files": ["*.ts"],
-            "parserOptions": {
-                "project": ["./tsconfig.base.json"]
-            },
-            "extends": ["plugin:ngrx/recommended"]
-        },
-        {
-            "files": ["*.ts", "*.tsx"],
-            "extends": [
-                "plugin:eslint-comments/recommended"
-            ],
-            "rules": {
-                "eslint-comments/no-use": [
-                    "error",
-                    {
-                        "allow": []
-                    }
-                ]
-            }
-        },
-        {
-            "files": ["*.ts", "*.tsx"],
-            "rules": {
-                "unused-imports/no-unused-imports": "error",
-                "unused-imports/no-unused-vars": [
-                    "warn",
-                    {
-                        "vars": "all",
-                        "varsIgnorePattern": "^_",
-                        "args": "after-used",
-                        "argsIgnorePattern": "^_"
-                    }
-                ]
-            }
-        }
-    ]
+  "root": true,
+  "ignorePatterns": ["**/*"],
+  "plugins": ["@nx", "unused-imports"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "prefix": "app",
+            "style": "kebab-case",
+            "type": "element"
+          }
+        ],
+        "@angular-eslint/directive-selector": [
+          "warn",
+          {
+            "prefix": "app",
+            "style": "camelCase",
+            "type": "attribute"
+          }
+        ],
+        "@nx/enforce-module-boundaries": [
+          "error",
+          {
+            "enforceBuildableLibDependency": true,
+            "allow": [],
+            "depConstraints": [
+              {
+                "sourceTag": "*",
+                "onlyDependOnLibsWithTags": ["*"]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.ts"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
+      }
+    },
+    {
+      "files": ["*.js", "*.jsx"],
+      "extends": ["plugin:@nx/javascript"],
+      "rules": {
+        "@typescript-eslint/no-extra-semi": "error",
+        "no-extra-semi": "off"
+      }
+    },
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["./tsconfig.base.json"]
+      },
+      "extends": ["plugin:ngrx/recommended"]
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:eslint-comments/recommended"],
+      "rules": {
+        "eslint-comments/no-use": [
+          "error",
+          {
+            "allow": []
+          }
+        ]
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": [
+          "warn",
+          {
+            "vars": "all",
+            "varsIgnorePattern": "^_",
+            "args": "after-used",
+            "argsIgnorePattern": "^_"
+          }
+        ]
+      }
+    }
+  ]
 }

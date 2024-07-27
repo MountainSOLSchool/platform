@@ -1,0 +1,39 @@
+name: Deploy Student Portal Client Infrastructure and App
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: hashicorp/setup-terraform@v3
+              with:
+                  cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Terraform
+              uses: hashicorp/setup-terraform@v2
+
+            - name: Terraform Init
+              run: terraform init
+              working-directory: ./apps/student-portal-client-infrastructure/src
+
+            - name: Terraform Apply
+              run: terraform apply -auto-approve
+              working-directory: ./apps/student-portal-client-infrastructure/src
+              env:
+                  TF_VAR_GITHUB_TOKEN: ${{ secrets.API_GITHUB_TOKEN }}
+                  TF_VAR_AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  TF_VAR_AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  TF_VAR_AWS_AMPLIFY_APP_ROLE_ARN: ${{ secrets.AWS_AMPLIFY_APP_ROLE_ARN }}
+
+            - name: AWS Amplify Build and Deploy
+              run: |
+                  URL="${{ secrets.AMPLIFY_DEPLOY_WEBHOOK_URL }}"
+                  curl -X POST -d {} "$URL" -H "Content-Type: application/json"
