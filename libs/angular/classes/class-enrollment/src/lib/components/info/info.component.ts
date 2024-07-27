@@ -40,190 +40,6 @@ import { NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ClassListService } from '@sol/angular/classes/list';
 
-export const studentInfoValidationSuite = create(
-    (student: Partial<StudentForm>, classes: Array<SemesterClass>) => {
-        group('student', () => {
-            test('firstName', 'First name is required', () => {
-                enforce(student.firstName).isNotEmpty();
-            });
-
-            test('lastName', 'Last name is required', () => {
-                enforce(student.lastName).isNotEmpty();
-            });
-
-            test('birthdate', 'Birthdate is required', () => {
-                enforce(student.birthdate).isNotBlank();
-            });
-
-            test('schoolGrade', 'Grade is required', () => {
-                enforce(student.schoolGrade?.initialGrade).isNotBlank();
-            });
-
-            skipWhen(
-                () => !student.schoolGrade,
-                () => {
-                    test(
-                        'schoolGrade',
-                        'Age range must be appropriate for class(es)',
-                        () => {
-                            const schoolGrade =
-                                student.schoolGrade as NonNullable<
-                                    typeof student.schoolGrade
-                                >;
-
-                            const today = new Date();
-                            const july = 6;
-
-                            const isCurrentlyFirstHalfOfYear =
-                                today.getMonth() < july;
-                            const yearsPassedSinceGradeWasEntered =
-                                today.getFullYear() -
-                                schoolGrade.atDate.getFullYear();
-                            const wasStudentGradeCapturedInFirstHalfOfYear =
-                                schoolGrade.atDate.getMonth() < july;
-
-                            const offset = isCurrentlyFirstHalfOfYear
-                                ? wasStudentGradeCapturedInFirstHalfOfYear
-                                    ? 0
-                                    : 1
-                                : wasStudentGradeCapturedInFirstHalfOfYear
-                                  ? 1
-                                  : 0;
-
-                            const studentCurrentGrade =
-                                schoolGrade.initialGrade +
-                                yearsPassedSinceGradeWasEntered +
-                                offset;
-
-                            classes.forEach(
-                                ({ gradeRangeStart, gradeRangeEnd }) =>
-                                    enforce(studentCurrentGrade).isBetween(
-                                        gradeRangeStart,
-                                        gradeRangeEnd
-                                    )
-                            );
-                        }
-                    );
-                }
-            );
-
-            test('pronouns', 'Pronouns are required', () => {
-                enforce(student.pronouns).isNotEmpty();
-            });
-
-            test('school', 'School is required', () => {
-                enforce(student.school).isNotEmpty();
-            });
-
-            test('tshirtSize', 'T-shirt size is required', () => {
-                enforce(student.tshirtSize).isNotEmpty();
-            });
-        });
-
-        group('contact', () => {
-            test('contactFirstName', 'First name is required', () => {
-                enforce(student.contactFirstName).isNotEmpty();
-            });
-
-            test('contactLastName', 'Last name is required', () => {
-                enforce(student.contactLastName).isNotEmpty();
-            });
-
-            test('contactEmail', 'Email is required', () => {
-                enforce(student.contactEmail).isNotEmpty();
-            });
-
-            test('contactPhone', 'Phone is required', () => {
-                enforce(student.contactPhone).isNotEmpty();
-            });
-
-            test('address', 'Address is required', () => {
-                enforce(student.address).isNotEmpty();
-            });
-
-            test('city', 'City is required', () => {
-                enforce(student.city).isNotEmpty();
-            });
-
-            test('state', 'State is required', () => {
-                enforce(student.state).isNotEmpty();
-            });
-
-            test('zip', 'Zip is required', () => {
-                enforce(student.zip).isNotEmpty();
-            });
-        });
-
-        group('privacy', () => {
-            test('photography', 'Photography privacy is required', () => {
-                enforce(student.photography).isNotUndefined();
-            });
-            test('deetspray', 'DEET bug spray choice is required', () => {
-                enforce(student.deetBugspray).isNotUndefined();
-            });
-            test('naturalspray', 'Natural bug spray choice is required', () => {
-                enforce(student.naturalBugspray).isNotUndefined();
-            });
-            test('sunscreen', 'Sunscreen choice is required', () => {
-                enforce(student.sunscreen).isNotUndefined();
-            });
-        });
-
-        group('guardians', () => {
-            student.guardians?.forEach((guardian, i) => {
-                test(`guardian_${i}_name`, 'Name is required', () => {
-                    enforce(guardian.guardianName).isNotEmpty();
-                });
-
-                test(`guardian_${i}_email`, 'Email is required', () => {
-                    enforce(guardian.guardianEmail).isNotEmpty();
-                });
-
-                test(`guardian_${i}_phone`, 'Phone is required', () => {
-                    enforce(guardian.guardianPhone).isNotEmpty();
-                });
-
-                test(
-                    `guardian_${i}_relationship`,
-                    'Relationship is required',
-                    () => {
-                        enforce(guardian.guardianRelationship).isNotEmpty();
-                    }
-                );
-
-                test(`guardian_${i}_residence`, 'Residence is required', () => {
-                    enforce(
-                        guardian.guardianResidesWithStudent
-                    ).isNotUndefined();
-                });
-            });
-        });
-
-        group('pickup', () => {
-            test('codeword', 'Codeword is required', () => {
-                enforce(student.pickupCodeword).isNotEmpty();
-            });
-
-            student.authorizedForPickup?.forEach((pickup, i) => {
-                test(`pickup_${i}_name`, 'Name is required', () => {
-                    enforce(pickup.name).isNotEmpty();
-                });
-
-                test(
-                    `pickup_${i}_relationship`,
-                    'Relationship is required',
-                    () => {
-                        enforce(pickup.relationship).isNotEmpty();
-                    }
-                );
-                test(`pickup_${i}_phone`, 'Phone is required', () => {
-                    enforce(pickup.phone).isNotEmpty();
-                });
-            });
-        });
-    }
-);
-
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -258,7 +74,197 @@ export class InfoComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly classList = inject(ClassListService);
 
-    private readonly validationSuite = studentInfoValidationSuite;
+    public readonly validationSuite = create(
+        (student: Partial<StudentForm>, classes: Array<SemesterClass>) => {
+            group('student', () => {
+                test('firstName', 'First name is required', () => {
+                    enforce(student.firstName).isNotEmpty();
+                });
+
+                test('lastName', 'Last name is required', () => {
+                    enforce(student.lastName).isNotEmpty();
+                });
+
+                test('birthdate', 'Birthdate is required', () => {
+                    enforce(student.birthdate).isNotBlank();
+                });
+
+                test('schoolGrade', 'Grade is required', () => {
+                    enforce(student.schoolGrade?.initialGrade).isNotBlank();
+                });
+
+                skipWhen(
+                    () => !student.schoolGrade,
+                    () => {
+                        test(
+                            'schoolGrade',
+                            'Age range must be appropriate for class(es)',
+                            () => {
+                                const schoolGrade =
+                                    student.schoolGrade as NonNullable<
+                                        typeof student.schoolGrade
+                                    >;
+
+                                const today = new Date();
+                                const july = 6;
+
+                                const isCurrentlyFirstHalfOfYear =
+                                    today.getMonth() < july;
+                                const yearsPassedSinceGradeWasEntered =
+                                    today.getFullYear() -
+                                    schoolGrade.atDate.getFullYear();
+                                const wasStudentGradeCapturedInFirstHalfOfYear =
+                                    schoolGrade.atDate.getMonth() < july;
+
+                                const offset = isCurrentlyFirstHalfOfYear
+                                    ? wasStudentGradeCapturedInFirstHalfOfYear
+                                        ? 0
+                                        : 1
+                                    : wasStudentGradeCapturedInFirstHalfOfYear
+                                      ? 1
+                                      : 0;
+
+                                const studentCurrentGrade =
+                                    schoolGrade.initialGrade +
+                                    yearsPassedSinceGradeWasEntered +
+                                    offset;
+
+                                classes.forEach(
+                                    ({ gradeRangeStart, gradeRangeEnd }) =>
+                                        enforce(studentCurrentGrade).isBetween(
+                                            gradeRangeStart,
+                                            gradeRangeEnd
+                                        )
+                                );
+                            }
+                        );
+                    }
+                );
+
+                test('pronouns', 'Pronouns are required', () => {
+                    enforce(student.pronouns).isNotEmpty();
+                });
+
+                test('school', 'School is required', () => {
+                    enforce(student.school).isNotEmpty();
+                });
+
+                test('tshirtSize', 'T-shirt size is required', () => {
+                    enforce(student.tshirtSize).isNotEmpty();
+                });
+            });
+
+            group('contact', () => {
+                test('contactFirstName', 'First name is required', () => {
+                    enforce(student.contactFirstName).isNotEmpty();
+                });
+
+                test('contactLastName', 'Last name is required', () => {
+                    enforce(student.contactLastName).isNotEmpty();
+                });
+
+                test('contactEmail', 'Email is required', () => {
+                    enforce(student.contactEmail).isNotEmpty();
+                });
+
+                test('contactPhone', 'Phone is required', () => {
+                    enforce(student.contactPhone).isNotEmpty();
+                });
+
+                test('address', 'Address is required', () => {
+                    enforce(student.address).isNotEmpty();
+                });
+
+                test('city', 'City is required', () => {
+                    enforce(student.city).isNotEmpty();
+                });
+
+                test('state', 'State is required', () => {
+                    enforce(student.state).isNotEmpty();
+                });
+
+                test('zip', 'Zip is required', () => {
+                    enforce(student.zip).isNotEmpty();
+                });
+            });
+
+            group('privacy', () => {
+                test('photography', 'Photography privacy is required', () => {
+                    enforce(student.photography).isNotUndefined();
+                });
+                test('deetspray', 'DEET bug spray choice is required', () => {
+                    enforce(student.deetBugspray).isNotUndefined();
+                });
+                test(
+                    'naturalspray',
+                    'Natural bug spray choice is required',
+                    () => {
+                        enforce(student.naturalBugspray).isNotUndefined();
+                    }
+                );
+                test('sunscreen', 'Sunscreen choice is required', () => {
+                    enforce(student.sunscreen).isNotUndefined();
+                });
+            });
+
+            group('guardians', () => {
+                student.guardians?.forEach((guardian, i) => {
+                    test(`guardian_${i}_name`, 'Name is required', () => {
+                        enforce(guardian.guardianName).isNotEmpty();
+                    });
+
+                    test(`guardian_${i}_email`, 'Email is required', () => {
+                        enforce(guardian.guardianEmail).isNotEmpty();
+                    });
+
+                    test(`guardian_${i}_phone`, 'Phone is required', () => {
+                        enforce(guardian.guardianPhone).isNotEmpty();
+                    });
+
+                    test(
+                        `guardian_${i}_relationship`,
+                        'Relationship is required',
+                        () => {
+                            enforce(guardian.guardianRelationship).isNotEmpty();
+                        }
+                    );
+
+                    test(
+                        `guardian_${i}_residence`,
+                        'Residence is required',
+                        () => {
+                            enforce(
+                                guardian.guardianResidesWithStudent
+                            ).isNotUndefined();
+                        }
+                    );
+                });
+            });
+
+            group('pickup', () => {
+                test('codeword', 'Codeword is required', () => {
+                    enforce(student.pickupCodeword).isNotEmpty();
+                });
+
+                student.authorizedForPickup?.forEach((pickup, i) => {
+                    test(`pickup_${i}_name`, 'Name is required', () => {
+                        enforce(pickup.name).isNotEmpty();
+                    });
+
+                    test(
+                        `pickup_${i}_relationship`,
+                        'Relationship is required',
+                        () => {
+                            enforce(pickup.relationship).isNotEmpty();
+                        }
+                    );
+                    test(`pickup_${i}_phone`, 'Phone is required', () => {
+                        enforce(pickup.phone).isNotEmpty();
+                    });
+                });
+            });
+        }
+    );
 
     authorized = true;
 
