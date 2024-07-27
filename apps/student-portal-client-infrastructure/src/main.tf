@@ -42,15 +42,16 @@ resource "aws_amplify_app" "admin_portal" {
     applications:
       - appRoot: apps/student-portal
         frontend:
-          buildPath: apps/student-portal
+          buildPath: /
           phases:
+            preBuild:
+              commands:
+                - npm ci
             build:
               commands:
-                - cd ../../
-                - npm ci
-                - pwd && npx nx run student-portal:build:production
+                - npx nx run student-portal:build:production
           artifacts:
-            baseDirectory: ../../dist/apps/student-portal/.next
+            baseDirectory: dist/apps/student-portal/.next
             files:
               - '**/*'
           cache:
