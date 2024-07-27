@@ -11,5 +11,8 @@ jobs:
     build:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v2
-            - run: npm ci && npm run build:portal && npm run build:portal2 && npm run build:functions
+            - uses: actions/checkout@v4
+            - run: npm ci
+            - run: npx nx run enrollment-portal:build:production
+            - run: npx nx run student-portal:build:production
+            - run: npx nx run functions:build

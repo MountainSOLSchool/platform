@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -35,12 +34,12 @@ import { create, enforce, omitWhen, test } from 'vest';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         LoginComponent,
         CardModule,
         MessagesModule,
@@ -53,6 +52,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
         RxIf,
         ButtonModule,
         DialogModule,
+        ProgressSpinnerModule,
     ],
     selector: 'sol-student-selection',
     templateUrl: './select-student.component.html',
@@ -129,9 +129,9 @@ export class SelectStudentComponent {
         this.workflow.select((state) => state.enrollment.student?.id);
 
     private students$ = this.api
-        .call<{ students: Array<{ id: string; name: string }> }>(
-            'myEnrolledStudents'
-        )
+        .call<{
+            students: Array<{ id: string; name: string }>;
+        }>('myEnrolledStudents')
         .pipe(
             RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
             map(({ students }) => students)
@@ -158,6 +158,7 @@ export class SelectStudentComponent {
                 selectedStudentId,
                 students,
                 showAsReadonlyBlock:
+                    selectedStudentType !== undefined &&
                     interacted &&
                     !transitionOccurredToNoErrors &&
                     !hasAnyErrors,

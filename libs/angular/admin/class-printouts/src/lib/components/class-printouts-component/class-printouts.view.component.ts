@@ -13,12 +13,26 @@ import {
     SolLoadingDirective,
 } from '@sol/angular/request';
 import { ClassPrintoutsLoadingViewComponent } from './class-printouts-loading.view.component';
-import { NgIf } from '@angular/common';
 import { ClassPrintoutRow } from '../../models/class-printout-row.type';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'sol-class-printouts-view',
-    template: `<h1>Class Forms and Contacts</h1>
+    template: `<div
+            style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px"
+        >
+            <h1>Class Forms and Contacts</h1>
+            <p-dropdown
+                [options]="semesters"
+                placeholder="Select a semester"
+                optionLabel="name"
+                optionValue="id"
+                [showClear]="false"
+                [ngModel]="selectedSemester"
+                (ngModelChange)="selectedSemesterChange.next($event)"
+            ></p-dropdown>
+        </div>
         <sol-class-printouts-skeleton-view
             *solLoading="rows"
         ></sol-class-printouts-skeleton-view>
@@ -46,47 +60,50 @@ import { ClassPrintoutRow } from '../../models/class-printout-row.type';
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-data>
-                    <tr *ngIf="assertSemesterClass(data) as row">
-                        <td>{{ row.title }}</td>
-                        <td>{{ row.enrolledCount }}</td>
-                        <td>{{ row.start }}</td>
-                        <td>{{ row.end }}</td>
-                        <td>
-                            <p-button
-                                class="sol-button"
-                                label="View/Print Class Forms"
-                                icon="pi pi-download"
-                                [id]="row.id + 'downloadBtn'"
-                                [loading]="
-                                    isClassFormDownloadInProgress[row.id]
-                                "
-                                (click)="downloadClick.emit(row.id)"
-                            >
-                            </p-button>
-                        </td>
-                        <td>
-                            <p-button
-                                class="sol-button"
-                                [id]="row.id + 'emailsBtn'"
-                                label="Copy Email Lists"
-                                [loading]="isCopyEmailsInProgress[row.id]"
-                                (click)="copyEmailsClick.emit(row)"
-                            >
-                            </p-button>
-                        </td>
-                    </tr>
+                    @if (assertSemesterClass(data); as row) {
+                        <tr>
+                            <td>{{ row.title }}</td>
+                            <td>{{ row.enrolledCount }}</td>
+                            <td>{{ row.start }}</td>
+                            <td>{{ row.end }}</td>
+                            <td>
+                                <p-button
+                                    class="sol-button"
+                                    label="View/Print Class Forms"
+                                    icon="pi pi-download"
+                                    [id]="row.id + 'downloadBtn'"
+                                    [loading]="
+                                        isClassFormDownloadInProgress[row.id]
+                                    "
+                                    (click)="downloadClick.emit(row.id)"
+                                >
+                                </p-button>
+                            </td>
+                            <td>
+                                <p-button
+                                    class="sol-button"
+                                    [id]="row.id + 'emailsBtn'"
+                                    label="Copy Email Lists"
+                                    [loading]="isCopyEmailsInProgress[row.id]"
+                                    (click)="copyEmailsClick.emit(row)"
+                                >
+                                </p-button>
+                            </td>
+                        </tr>
+                    }
                 </ng-template>
             </p-table>
         </div>`,
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgIf,
         ButtonModule,
         TableModule,
         SolLoadingDirective,
         SolLoadedDirective,
         ClassPrintoutsLoadingViewComponent,
+        DropdownModule,
+        FormsModule,
     ],
 })
 export class ClassPrintoutsViewComponent {
@@ -96,12 +113,19 @@ export class ClassPrintoutsViewComponent {
     isCopyEmailsInProgress!: Record<string, boolean>;
     @Input({ required: true })
     isClassFormDownloadInProgress!: Record<string, boolean>;
+    @Input({ required: true })
+    semesters!: Array<{ id: string; name: string }>;
+    @Input({ required: true })
+    selectedSemester!: string;
 
     @Output()
     copyEmailsClick = new EventEmitter<ClassPrintoutRow>();
 
     @Output()
     downloadClick = new EventEmitter<string>();
+
+    @Output()
+    selectedSemesterChange = new EventEmitter<string>();
 
     assertSemesterClass(obj: unknown): ClassPrintoutRow {
         return obj as ClassPrintoutRow;

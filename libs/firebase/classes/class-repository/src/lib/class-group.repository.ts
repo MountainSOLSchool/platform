@@ -3,6 +3,10 @@ import { SemesterClassGroup } from '@sol/classes/domain';
 import { ClassRepository } from './class.repository';
 import { SemesterRepository } from './semester.repository';
 
+type SemesterClassGroupDbo = Omit<SemesterClassGroup, 'classes'> & {
+    classIds: Array<string>;
+};
+
 export class ClassGroupRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
     static of(semester: SemesterRepository): ClassGroupRepository {
@@ -17,10 +21,12 @@ export class ClassGroupRepository {
             `${await this.getGroupsPath()}/${id}`
         );
         const [data] = await DatabaseUtility.getHydratedDocuments([document]);
-        return await this.convertDboToDomain(data);
+        return await this.convertDboToDomain(data as SemesterClassGroupDbo);
     }
 
-    private async convertDboToDomain(dbo: any): Promise<SemesterClassGroup> {
+    private async convertDboToDomain(
+        dbo: SemesterClassGroupDbo
+    ): Promise<SemesterClassGroup> {
         return {
             ...dbo,
             classes: await ClassRepository.of(this.semester).getMany(
@@ -50,6 +56,20 @@ export class ClassGroupRepository {
             });
         });
         return groupsWithAllClassesStartingAfter;
+    }
+
+    async getAll(): Promise<SemesterClassGroup[]> {
+        const groupsCollection = await DatabaseUtility.getCollectionRef(
+            await this.getGroupsPath()
+        );
+        const groupDocs = await groupsCollection.listDocuments();
+        const groupIds = groupDocs.map((doc) => doc.id);
+        const groups = await this.getMany(groupIds);
+        return groups.filter((group) => {
+            return group.classes.every((classItem) => {
+                return classItem.live;
+            });
+        });
     }
 
     async getByClassIds(

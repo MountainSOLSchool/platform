@@ -6,16 +6,13 @@
     "targets": {
         "lint": {
             "executor": "@nx/eslint:lint",
-            "options": {
-                "lintFilePatterns": ["libs/student/domain/**/*.ts"]
-            },
             "outputs": ["{options.outputFile}"]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/student/domain"],
+            "outputs": ["{workspaceRoot}/coverage/libs/ts/student/domain"],
             "options": {
-                "jestConfig": "libs/student/domain/jest.config.ts"
+                "jestConfig": "libs/ts/student/domain/jest.config.ts"
             }
         }
     },

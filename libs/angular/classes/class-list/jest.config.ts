@@ -1,5 +1,4 @@
-/* eslint-disable */
-export default {
+export const jestConfig = {
     displayName: 'class-list',
     preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
@@ -20,3 +19,5 @@ export default {
         'jest-preset-angular/build/serializers/html-comment',
     ],
 };
+
+export default jestConfig;

@@ -1,4 +1,5 @@
-import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { filter, map, mergeMap, switchMap } from 'rxjs';
@@ -6,7 +7,7 @@ import { classesActions } from './classes.actions';
 import {
     classesFeature,
     selectCurrentSemesterClasses,
-    selectLoadedClasses,
+    selectLoadingAndLoadedClassIds,
 } from './classes.feature';
 import { ClassesApiService } from '../services/classes-api.service';
 import { RequestedUtility } from '@sol/angular/request';
@@ -22,17 +23,19 @@ export class ClassesEffects {
     loadClasses$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(classesActions.loadClassesStart),
-            concatLatestFrom(() => this.store.select(selectLoadedClasses)),
-            map(([action, classes]) =>
-                action.ids.filter((id) => !classes?.[id])
+            concatLatestFrom(() =>
+                this.store.select(selectLoadingAndLoadedClassIds)
             ),
-            filter((idsOfClassesToLoad) => idsOfClassesToLoad.length > 0),
-            mergeMap((idsOfClassesToLoad) => {
-                return this.classesApi.getClassesByIds(idsOfClassesToLoad).pipe(
-                    map((request) =>
+            map(([action, classes]) => {
+                return action.query.filter(({ id }) => !classes.includes(id));
+            }),
+            filter((classesToLoad) => classesToLoad.length > 0),
+            mergeMap((classesToLoad) => {
+                return this.classesApi.getClasses(classesToLoad).pipe(
+                    map((classesBySemester) =>
                         classesActions.loadClassesRequestChanged({
-                            ids: idsOfClassesToLoad,
-                            classes: request,
+                            query: classesToLoad,
+                            classesBySemester,
                         })
                     )
                 );
@@ -84,21 +87,19 @@ export class ClassesEffects {
             concatLatestFrom(() =>
                 this.store.select(classesFeature.selectGroups)
             ),
-            map(([action, groups]) => action.ids.filter((id) => !groups[id])),
-            filter((idsOfGroupsToLoad) => idsOfGroupsToLoad.length > 0),
-            mergeMap((idsOfGroupsToLoad) => {
-                return this.classesApi
-                    .getCurrentSemesterClassGroups(idsOfGroupsToLoad)
-                    .pipe(
-                        map((request) => {
-                            return classesActions.loadClassGroupsRequestChanged(
-                                {
-                                    ids: idsOfGroupsToLoad,
-                                    groups: request,
-                                }
-                            );
-                        })
-                    );
+            map(([action, groups]) => {
+                return action.query.filter(({ id }) => !groups[id]);
+            }),
+            filter((groupsToLoad) => groupsToLoad.length > 0),
+            mergeMap((groupsToLoad) => {
+                return this.classesApi.getClassGroups(groupsToLoad).pipe(
+                    map((request) => {
+                        return classesActions.loadClassGroupsRequestChanged({
+                            query: groupsToLoad,
+                            groupsBySemester: request,
+                        });
+                    })
+                );
             })
         );
     });

@@ -1,3 +1,22 @@
+@if (didLoadFromDraft()) {
+    <p-messages severity="info" [closable]="false">
+        <ng-template pTemplate>
+            <div class="flex justify-content-between align-items-center w-full">
+                <div>
+                    We loaded your enrollment information from a previous
+                    session. Please review each step to ensure accuracy.
+                </div>
+                <div>
+                    <p-button
+                        label="Start Over"
+                        [outlined]="true"
+                        (click)="showStartOverDialog()"
+                    ></p-button>
+                </div>
+            </div>
+        </ng-template>
+    </p-messages>
+}
 <div
     style="width: 100%; background-color: yellow"
     *rxIf="isNowBeforeEarlyBirdEnd$"
@@ -11,9 +30,9 @@
         </ng-template>
     </p-messages>
 </div>
-<button *ngIf="showSecretAutofill$ | async" (click)="fillOutForTest()">
-    Fill out form for test
-</button>
+@if (showSecretAutofill$ | async) {
+    <button (click)="fillOutForTest()">Fill out form for test</button>
+}
 <ng-container *rxLet="isUserLoggedIn$; let isUserLoggedIn">
     <mat-stepper
         #stepper
@@ -82,6 +101,7 @@
                             else mustSelectStudent
                         "
                         [interacted]="studentInfo.interacted"
+                        [isStudentLoading]="isStudentLoading()"
                         (validityChange)="studentInfo.hasError = !$event"
                     ></sol-student-info>
                     <ng-container
@@ -160,38 +180,40 @@
 
         <ng-template #navigation let-first="first" let-last="last">
             <div style="margin-top: 2rem">
-                <button
-                    *ngIf="!first"
-                    pButton
-                    matStepperPrevious
-                    class="p-button-outlined"
-                >
-                    Previous
-                </button>
-                <ng-container *ngIf="!last; else submit">
+                @if (!first) {
+                    <button
+                        pButton
+                        matStepperPrevious
+                        class="p-button-outlined"
+                    >
+                        Previous
+                    </button>
+                }
+                @if (!last) {
                     <button pButton matStepperNext style="margin-left: 1rem">
                         Next
                     </button>
-                </ng-container>
-                <ng-template #submit>
-                    <button
-                        *ngIf="
-                            allStepsComplete(
-                                isUserLoggedIn,
-                                classSelection,
-                                studentInfo,
-                                medicalInfo,
-                                account,
-                                confirmation
-                            )
-                        "
-                        pButton
-                        style="margin-left: 1rem"
-                        (click)="complete()"
-                    >
-                        Submit
-                    </button></ng-template
-                >
+                } @else {
+                    @if (
+                        allStepsComplete(
+                            isUserLoggedIn,
+                            classSelection,
+                            studentInfo,
+                            medicalInfo,
+                            account,
+                            releases,
+                            confirmation
+                        )
+                    ) {
+                        <button
+                            pButton
+                            style="margin-left: 1rem"
+                            (click)="complete()"
+                        >
+                            Submit
+                        </button>
+                    }
+                }
             </div>
         </ng-template>
     </mat-stepper>

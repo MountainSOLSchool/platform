@@ -1,0 +1,60 @@
+<h1>Admin Dashboard</h1>
+<div style="display: flex; flex-wrap: wrap">
+    <div style="margin-right: 20px">
+        <p-panel header="Quick Navigation">
+            <ul style="font-size: 16px">
+                <li>
+                    <a routerLink="/admin/report">Class Forms and Contacts</a>
+                </li>
+                <li>
+                    <a routerLink="/admin/t-shirts">T-shirt Sizes</a>
+                </li>
+                <li>
+                    <a routerLink="/admin/enrollments">Enrollments</a>
+                </li>
+                <li>
+                    <a routerLink="/calendar/classes">Class Calendar</a>
+                </li>
+            </ul>
+        </p-panel>
+    </div>
+    <div>
+        @if (semesters(); as semesters) {
+            <p-panel>
+                <ng-template pTemplate="header">
+                    <div style="display: flex; align-items: center; gap: 10px">
+                        <p-dropdown
+                            [options]="semesters"
+                            placeholder="Select a semester"
+                            optionLabel="name"
+                            optionValue="id"
+                            [showClear]="false"
+                            [ngModel]="selectedSemester()"
+                            (ngModelChange)="selectedSemester.set($event)"
+                        ></p-dropdown>
+                        <span class="font-bold">Enrollment</span>
+                    </div>
+                </ng-template>
+                <div style="width: 500px; margin-top: 10px">
+                    @defer (when data() !== undefined) {
+                        <p-chart
+                            type="radar"
+                            [data]="data()"
+                            [options]="chartOptions"
+                            [style]="{ height: '200px' }"
+                        ></p-chart>
+                    } @placeholder (minimum 1s) {
+                        <div
+                            style="
+                                margin-left: auto;
+                                margin-right: auto;
+                                width: fit-content;
+                            "
+                        >
+                            <p-progressSpinner></p-progressSpinner>
+                        </div>
+                    }</div
+            ></p-panel>
+        }
+    </div>
+</div>

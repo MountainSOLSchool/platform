@@ -1,8 +1,10 @@
-import { type Request, type Response, runWith } from 'firebase-functions/v1';
 import CORS from 'cors';
 import { AuthUtility, Role } from './auth.utility';
 import { defineSecret, defineString } from 'firebase-functions/params';
 import { SecretParam, StringParam } from 'firebase-functions/lib/params/types';
+import { onRequest } from 'firebase-functions/v2/https';
+import { type Request } from 'firebase-functions/v2/https';
+import * as express from 'express';
 
 const cors = CORS({ origin: true });
 
@@ -55,40 +57,41 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
                 body: { data: RequestData };
                 query: QueryData;
             },
-            response: Response,
+            response: express.Response,
             secrets: Record<string, string>,
             strings: Record<string, string>
         ) => void
     ) {
-        return runWith({
-            secrets: Object.values(this.secrets),
-        }).https.onRequest(async (request, response) => {
-            cors(request, response, async () => {
-                this.roles.forEach((role) => {
-                    AuthUtility.validateRole(request, response, role);
+        return onRequest(
+            { secrets: Object.values(this.secrets) },
+            async (request, response) => {
+                cors(request, response, async () => {
+                    this.roles.forEach((role) => {
+                        AuthUtility.validateRole(request, response, role);
+                    });
+                    handler(
+                        request as Parameters<typeof handler>[0],
+                        {
+                            ...response,
+                            status: (code: number) => response.status(code),
+                            send: (data: unknown) => {
+                                response.send({ data });
+                            },
+                        } as express.Response,
+                        Object.fromEntries(
+                            Object.entries(this.secrets)
+                                .map((pair) => pair as [string, SecretParam])
+                                .map(([key, secret]) => [key, secret.value()])
+                        ),
+                        Object.fromEntries(
+                            Object.entries(this.strings)
+                                .map((pair) => pair as [string, StringParam])
+                                .map(([key, string]) => [key, string.value()])
+                        )
+                    );
                 });
-                handler(
-                    request as unknown as Parameters<typeof handler>[0],
-                    {
-                        ...response,
-                        status: (code: number) => response.status(code),
-                        send: (data: unknown) => {
-                            response.send({ data });
-                        },
-                    } as Response,
-                    Object.fromEntries(
-                        Object.entries(this.secrets)
-                            .map((pair) => pair as [string, SecretParam])
-                            .map(([key, secret]) => [key, secret.value()])
-                    ),
-                    Object.fromEntries(
-                        Object.entries(this.strings)
-                            .map((pair) => pair as [string, StringParam])
-                            .map(([key, string]) => [key, string.value()])
-                    )
-                );
-            });
-        });
+            }
+        );
     }
 }
 

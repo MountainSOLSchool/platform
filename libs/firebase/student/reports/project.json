@@ -6,16 +6,15 @@
     "targets": {
         "lint": {
             "executor": "@nx/eslint:lint",
-            "options": {
-                "lintFilePatterns": ["libs/student/reports/**/*.ts"]
-            },
             "outputs": ["{options.outputFile}"]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/student/reports"],
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/firebase/student/reports"
+            ],
             "options": {
-                "jestConfig": "libs/student/reports/jest.config.ts"
+                "jestConfig": "libs/firebase/student/reports/jest.config.ts"
             }
         }
     },

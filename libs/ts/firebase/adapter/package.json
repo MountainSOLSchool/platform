@@ -2,7 +2,9 @@
     "name": "@sol/ts/firebase/adapter",
     "version": "0.0.1",
     "dependencies": {
-        "tslib": "^2.3.0"
+        "tslib": "^2.3.0",
+        "@angular/fire": "^17.0.1",
+        "@angular/core": "17.1.3"
     },
     "type": "commonjs",
     "main": "./src/index.js",

@@ -5,11 +5,10 @@
                 *rxLet="!vm.hasErrorsByGroup['healthRelease']; let valid"
                 [solValid]="valid"
             >
-                Medical Release and Permission to Treat<ng-container
-                    *ngIf="!valid"
-                >
-                    ⚠️</ng-container
-                >
+                Medical Release and Permission to Treat
+                @if (!valid) {
+                    ⚠️
+                }
             </div>
         </ng-template>
         <form>
@@ -64,11 +63,10 @@
                 *rxLet="!vm.hasErrorsByGroup['liabilityRelease']; let valid"
                 [solValid]="valid"
             >
-                Release of Liability and Hold Harmless<ng-container
-                    *ngIf="!valid"
-                >
-                    ⚠️</ng-container
-                >
+                Release of Liability and Hold Harmless
+                @if (!valid) {
+                    ⚠️
+                }
             </div>
         </ng-template>
         <form>

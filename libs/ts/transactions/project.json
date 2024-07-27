@@ -6,16 +6,13 @@
     "targets": {
         "lint": {
             "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"],
-            "options": {
-                "lintFilePatterns": ["libs/payments/transactions/**/*.ts"]
-            }
+            "outputs": ["{options.outputFile}"]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/payments/transactions"],
+            "outputs": ["{workspaceRoot}/coverage/libs/ts/transactions"],
             "options": {
-                "jestConfig": "libs/payments/transactions/jest.config.ts"
+                "jestConfig": "libs/ts/transactions/jest.config.ts"
             }
         }
     },

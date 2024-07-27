@@ -3,6 +3,31 @@ import { DatabaseUtility } from '@sol/firebase/database';
 import { SemesterRepository } from './semester.repository';
 import { firestore } from 'firebase-admin';
 
+type ClassDbo = {
+    id: string;
+    description: string;
+    live: boolean;
+    cost: number;
+    location: string;
+    weekday: string;
+    thumbnailUrl: string;
+    payment_range_lowest?: number;
+    payment_range_highest?: number;
+    instructors: Array<firestore.DocumentReference>;
+    students: Array<firestore.DocumentReference>;
+    name: string;
+    start: { _seconds: number };
+    end: { _seconds: number };
+    registration_end_date: { _seconds: number };
+    class_type: string;
+    grade_range_start: number;
+    grade_range_end: number;
+    paused_for_enrollment: boolean;
+    daily_times: string;
+    max_student_size: number;
+    for_information_only?: boolean;
+};
+
 export class ClassRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
     static of(semester: SemesterRepository): ClassRepository {
@@ -21,7 +46,7 @@ export class ClassRepository {
             `${await this.getClassesPath()}/${id}`
         );
         const [data] = await DatabaseUtility.getHydratedDocuments([document]);
-        return await this.convertDboToDomain(data);
+        return await this.convertDboToDomain(data as ClassDbo);
     }
     async getMany(ids: Array<string>): Promise<SemesterClass[]> {
         return await Promise.all(
@@ -52,7 +77,7 @@ export class ClassRepository {
     }
 
     private async convertDboToDomain(
-        dbo: any
+        dbo: ClassDbo
     ): Promise<
         SemesterClass & { students: Array<firestore.DocumentReference> }
     > {
@@ -110,6 +135,8 @@ export class ClassRepository {
             pausedForEnrollment: dbo.max_student_size
                 ? dbo.students.length > dbo.max_student_size
                 : false,
+            semesterId: await this.semester.getId(),
+            forInformationOnly: dbo.for_information_only ?? false,
         };
 
         if (!!dbo.payment_range_lowest || !!dbo.payment_range_highest) {

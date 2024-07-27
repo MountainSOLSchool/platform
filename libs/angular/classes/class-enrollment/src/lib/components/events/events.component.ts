@@ -1,7 +1,8 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    CUSTOM_ELEMENTS_SCHEMA,
     inject,
     Output,
 } from '@angular/core';
@@ -14,12 +15,14 @@ import { TagModule } from 'primeng/tag';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { FormsModule } from '@angular/forms';
 import { ChipModule } from 'primeng/chip';
+import 'add-to-calendar-button';
 
 @Component({
     standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     imports: [
-        CommonModule,
+        AsyncPipe,
+        NgStyle,
         RxLet,
         CheckboxModule,
         CardModule,
@@ -38,6 +41,7 @@ import { ChipModule } from 'primeng/chip';
             }
         `,
     ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class EventsComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);

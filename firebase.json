@@ -4,79 +4,181 @@
         "indexes": "firestore.indexes.json"
     },
     "functions": {
-        "source": "/",
-        "predeploy": ["npm run lint:functions", "npm run build:functions"]
+        "source": "/"
     },
-    "hosting": {
-        "public": "public",
-        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-        "rewrites": [
-            {
-                "source": "/classes",
-                "function": "classes"
-            },
-            {
-                "source": "/roster",
-                "function": "roster"
-            },
-            {
-                "source": "/emails",
-                "function": "emails"
-            },
-            {
-                "source": "/tshirts",
-                "function": "tshirts"
-            },
-            {
-                "source": "/adminEnrollments",
-                "function": "adminEnrollments"
-            },
-            {
-                "source": "/signIn",
-                "function": "signIn"
-            },
-            {
-                "source": "/paymentToken",
-                "function": "paymentToken"
-            },
-            {
-                "source": "/enroll",
-                "function": "enroll"
-            },
-            {
-                "source": "/roles",
-                "function": "roles"
-            },
-            {
-                "source": "/enrollments",
-                "function": "enrollments"
-            },
-            {
-                "source": "/calculateBasket",
-                "function": "calculateBasket"
-            },
-            {
-                "source": "/availableEnrollmentClasses",
-                "function": "availableEnrollmentClasses"
-            },
-            {
-                "source": "/myEnrolledStudents",
-                "function": "myEnrolledStudents"
-            },
-            {
-                "source": "/getMyStudent",
-                "function": "getMyStudent"
-            },
-            {
-                "source": "/portal2/**",
-                "destination": "/portal2/index.html"
-            },
-            {
-                "source": "**",
-                "destination": "/portal/index.html"
-            }
-        ]
-    },
+    "hosting": [
+        {
+            "site": "mountain-sol-platform",
+            "public": "public",
+            "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+            "rewrites": [
+                {
+                    "source": "/classes",
+                    "function": "classes"
+                },
+                {
+                    "source": "/roster",
+                    "function": "roster"
+                },
+                {
+                    "source": "/emails",
+                    "function": "emails"
+                },
+                {
+                    "source": "/tshirts",
+                    "function": "tshirts"
+                },
+                {
+                    "source": "/adminEnrollments",
+                    "function": "adminEnrollments"
+                },
+                {
+                    "source": "/signIn",
+                    "function": "signIn"
+                },
+                {
+                    "source": "/paymentToken",
+                    "function": "paymentToken"
+                },
+                {
+                    "source": "/enroll",
+                    "function": "enroll"
+                },
+                {
+                    "source": "/roles",
+                    "function": "roles"
+                },
+                {
+                    "source": "/enrollments",
+                    "function": "enrollments"
+                },
+                {
+                    "source": "/calculateBasket",
+                    "function": "calculateBasket"
+                },
+                {
+                    "source": "/availableEnrollmentClasses",
+                    "function": "availableEnrollmentClasses"
+                },
+                {
+                    "source": "/classesBySemester",
+                    "function": "classesBySemester"
+                },
+                {
+                    "source": "/semestersAvailableToEnroll",
+                    "function": "semestersAvailableToEnroll"
+                },
+                {
+                    "source": "/historicalSemesters",
+                    "function": "historicalSemesters"
+                },
+                {
+                    "source": "/myEnrolledStudents",
+                    "function": "myEnrolledStudents"
+                },
+                {
+                    "source": "/getMyStudent",
+                    "function": "getMyStudent"
+                },
+                {
+                    "source": "/updateEnrollmentDraft",
+                    "function": "updateEnrollmentDraft"
+                },
+                {
+                    "source": "/loadEnrollmentDraft",
+                    "function": "loadEnrollmentDraft"
+                },
+                {
+                    "source": "/removeEnrollmentDraft",
+                    "function": "removeEnrollmentDraft"
+                },
+                {
+                    "source": "**",
+                    "destination": "/enrollment-portal/index.html"
+                }
+            ]
+        },
+
+        {
+            "site": "mountain-sol-platform-students",
+            "public": "public",
+            "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+            "rewrites": [
+                {
+                    "source": "/classes",
+                    "function": "classes"
+                },
+                {
+                    "source": "/roster",
+                    "function": "roster"
+                },
+                {
+                    "source": "/emails",
+                    "function": "emails"
+                },
+                {
+                    "source": "/tshirts",
+                    "function": "tshirts"
+                },
+                {
+                    "source": "/adminEnrollments",
+                    "function": "adminEnrollments"
+                },
+                {
+                    "source": "/signIn",
+                    "function": "signIn"
+                },
+                {
+                    "source": "/paymentToken",
+                    "function": "paymentToken"
+                },
+                {
+                    "source": "/enroll",
+                    "function": "enroll"
+                },
+                {
+                    "source": "/roles",
+                    "function": "roles"
+                },
+                {
+                    "source": "/enrollments",
+                    "function": "enrollments"
+                },
+                {
+                    "source": "/calculateBasket",
+                    "function": "calculateBasket"
+                },
+                {
+                    "source": "/availableEnrollmentClasses",
+                    "function": "availableEnrollmentClasses"
+                },
+                {
+                    "source": "/classesBySemester",
+                    "function": "classesBySemester"
+                },
+                {
+                    "source": "/semestersAvailableToEnroll",
+                    "function": "semestersAvailableToEnroll"
+                },
+                {
+                    "source": "/historicalSemesters",
+                    "function": "historicalSemesters"
+                },
+                {
+                    "source": "/myEnrolledStudents",
+                    "function": "myEnrolledStudents"
+                },
+                {
+                    "source": "/getMyStudent",
+                    "function": "getMyStudent"
+                },
+                {
+                    "source": "**",
+                    "destination": "studentsNextJsApp"
+                }
+            ]
+        }
+    ],
     "storage": {
         "rules": "storage.rules"
     },

@@ -11,7 +11,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
@@ -21,7 +21,7 @@ import { CardModule } from 'primeng/card';
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-login',
     imports: [
-        CommonModule,
+        AsyncPipe,
         LoginStore,
         FormsModule,
         ButtonModule,

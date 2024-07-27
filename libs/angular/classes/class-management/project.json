@@ -8,20 +8,14 @@
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": [
-                "{workspaceRoot}/coverage/libs/classes/class-management"
+                "{workspaceRoot}/coverage/libs/angular/classes/class-management"
             ],
             "options": {
-                "jestConfig": "libs/classes/class-management/jest.config.ts"
+                "jestConfig": "libs/angular/classes/class-management/jest.config.ts"
             }
         },
         "lint": {
-            "executor": "@nx/eslint:lint",
-            "options": {
-                "lintFilePatterns": [
-                    "libs/classes/class-management/src/**/*.ts",
-                    "libs/classes/class-management/src/**/*.html"
-                ]
-            }
+            "executor": "@nx/eslint:lint"
         }
     },
     "tags": ["scope:classes"]

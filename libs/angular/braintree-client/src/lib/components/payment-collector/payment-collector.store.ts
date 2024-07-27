@@ -123,9 +123,7 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     this.patchState({ dropInInstance });
                                     dropInInstance?.on(
                                         'paymentMethodRequestable',
-                                        (event) => {
-                                            this.prepare();
-                                        }
+                                        () => this.prepare()
                                     );
                                     dropInInstance?.on(
                                         'noPaymentMethodRequestable',

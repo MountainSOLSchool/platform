@@ -1,16 +1,26 @@
-import { inject, Injectable } from '@angular/core';
-import { ComponentStore, tapResponse } from '@ngrx/component-store';
+import { computed, inject, Injectable } from '@angular/core';
+import { ComponentStore } from '@ngrx/component-store';
+import { tapResponse } from '@ngrx/operators';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
-import { filter, pairwise, Subject, switchMap, take, tap } from 'rxjs';
+import {
+    debounceTime,
+    filter,
+    pairwise,
+    Subject,
+    switchMap,
+    take,
+    tap,
+} from 'rxjs';
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
-import { StudentForm } from '@sol/student/domain';
+import { Enrollment, StudentForm } from '@sol/student/domain';
 import { Router } from '@angular/router';
 import { createSelector } from '@ngrx/store';
-import { RequestedOperatorsUtility } from '@sol/angular/request';
+import {
+    RequestedOperatorsUtility,
+    RequestedUtility,
+} from '@sol/angular/request';
 
-type Enrollment = {
-    selectedClasses: Array<string>;
-    userCostsToSelectedClassIds: Record<string, number | undefined>;
+type PaidEnrollment = Enrollment & {
     paymentMethod:
         | {
               nonce: string;
@@ -18,16 +28,12 @@ type Enrollment = {
               paymentDetails: cardPaymentMethodPayload['details'];
           }
         | undefined;
-    discountCodes: Array<string>;
-    student: Partial<StudentForm> | undefined;
-    releaseSignatures: Array<{ name: string; signature: string }>;
-    isStudentNew: boolean | undefined;
-    isSignedUpForSolsticeEmails: boolean;
 };
 
 const initialState = {
     status: 'draft' as const,
     randomValueThatResetsPaymentCollector: Math.random().toString(),
+    draftEnrollment: undefined,
     enrollment: {
         selectedClasses: [],
         userCostsToSelectedClassIds: {},
@@ -71,7 +77,7 @@ const initialState = {
 };
 
 type State = {
-    enrollment: Enrollment;
+    enrollment: PaidEnrollment;
     randomValueThatResetsPaymentCollector: string;
     status: 'draft' | 'submitted' | 'failed' | 'enrolled';
     basketCosts: {
@@ -81,6 +87,7 @@ type State = {
     };
     isLoadingDiscounts: boolean;
     isLoadingStudent: boolean;
+    draftEnrollment: Partial<Enrollment> | undefined;
 };
 
 @Injectable()
@@ -121,11 +128,72 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         this.selectStudent,
         (student) => student?.id
     );
+    private readonly selectDiscountCodes = createSelector(
+        this.selectEnrollment,
+        (enrollment) => enrollment.discountCodes
+    );
+    private readonly selectSelectedClasses = createSelector(
+        this.selectEnrollment,
+        (enrollment) => enrollment.selectedClasses
+    );
+    private readonly selectUserCostsToSelectedClassIds = createSelector(
+        this.selectEnrollment,
+        (enrollment) => enrollment.userCostsToSelectedClassIds
+    );
+    private readonly selectBasktCostRequest = createSelector(
+        this.selectDiscountCodes,
+        this.selectSelectedClasses,
+        this.selectUserCostsToSelectedClassIds,
+        (codes, classes, userCostsToClassIds) => ({
+            codes,
+            classes,
+            userCostsToClassIds,
+        })
+    );
+    readonly isStudentLoading = computed(() => this.state().isLoadingStudent);
 
     readonly setStatusToDraft = this.updater((state) => ({
         ...state,
         status: 'draft',
     }));
+
+    readonly loadDraft = this.effect(() => {
+        return this.functions
+            .call<{
+                draft: Partial<Enrollment> | undefined;
+            }>('loadEnrollmentDraft')
+            .pipe(
+                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                tap(
+                    ({ draft }) =>
+                        draft &&
+                        Object.entries(draft).forEach(([key, value]) => {
+                            if (value !== undefined) {
+                                this.patchState((state) => ({
+                                    ...state,
+                                    draftEnrollment: draft,
+                                    enrollment: {
+                                        ...state.enrollment,
+                                        [key]: value,
+                                    },
+                                }));
+                            }
+                        })
+                )
+            );
+    });
+
+    readonly saveDraft = this.effect(() => {
+        return this.select((state) => state.enrollment).pipe(
+            debounceTime(500),
+            filter((enrollment) => enrollment !== initialState.enrollment),
+            tap((enrollmentPatch) =>
+                this.functions.call<{
+                    enrollmentPatch: Partial<PaidEnrollment>;
+                }>('updateEnrollmentDraft', enrollmentPatch)
+            )
+        );
+    });
 
     readonly loadStudent = this.effect(() => {
         return this.select(this.selectStudentId).pipe(
@@ -165,14 +233,13 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                     take(1),
                     switchMap(({ enrollment }) => {
                         return this.functions
-                            .call<{ email: string; success: boolean }>(
-                                'enroll',
-                                enrollment
-                            )
+                            .call<{
+                                email: string;
+                                success: boolean;
+                            }>('enroll', enrollment)
                             .pipe(
-                                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                                tapResponse(
-                                    (response) => {
+                                tap((response) => {
+                                    if (RequestedUtility.isLoaded(response)) {
                                         if (response.success) {
                                             this.patchState({
                                                 status: 'enrolled',
@@ -182,13 +249,14 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                                                 status: 'failed',
                                             });
                                         }
-                                    },
-                                    () => {
+                                    } else if (
+                                        RequestedUtility.isError(response)
+                                    ) {
                                         this.patchState({
                                             status: 'failed',
                                         });
                                     }
-                                )
+                                })
                             );
                     })
                 );
@@ -197,12 +265,13 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     });
 
     readonly calculateBasket = this.effect(() => {
-        return this.selectBasketCostRequest().pipe(
+        return this.select(this.selectBasktCostRequest).pipe(
             pairwise(),
+            filter((request) => Object.values(request).every(Boolean)),
             filter(
                 ([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)
             ),
-            switchMap(([, { codes, classIds, userCostsToClassIds }]) => {
+            switchMap(([, { codes, classes, userCostsToClassIds }]) => {
                 this.patchState({ isLoadingDiscounts: true });
                 return this.functions
                     .call<{
@@ -214,7 +283,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                         originalTotal: number;
                     }>('calculateBasket', {
                         codes,
-                        classIds,
+                        classes,
                         userCostsToClassIds,
                     })
                     .pipe(
@@ -252,15 +321,8 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                         Math.random().toString(),
                 });
                 this.router.navigate(['/']);
-            })
+            }),
+            tap(() => this.functions.call('deleteEnrollmentDraft'))
         );
     });
-
-    private selectBasketCostRequest() {
-        return this.select((state) => ({
-            codes: state.enrollment.discountCodes,
-            classIds: state.enrollment.selectedClasses,
-            userCostsToClassIds: state.enrollment.userCostsToSelectedClassIds,
-        }));
-    }
 }

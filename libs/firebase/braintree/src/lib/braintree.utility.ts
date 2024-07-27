@@ -58,7 +58,7 @@ export class Braintree {
 
     public async transact(transaction: PreparedTransaction) {
         return await this.gateway.transaction.sale({
-            amount: String(transaction.amount),
+            amount: transaction.amount.toFixed(2),
             paymentMethodNonce: transaction.nonce,
             options: {
                 submitForSettlement: true,

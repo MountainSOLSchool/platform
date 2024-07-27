@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    CUSTOM_ELEMENTS_SCHEMA,
     inject,
     Input,
     Output,
@@ -25,14 +24,14 @@ import {
     EventClickArg,
     CalendarOptions,
 } from '@fullcalendar/core';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, FullCalendarModule, SkeletonModule],
+    imports: [AsyncPipe, FullCalendarModule, SkeletonModule],
     selector: 'sol-calendar',
     templateUrl: './calendar.component.html',
 })

@@ -6,10 +6,7 @@ class _ClassesDiscount extends Discount<{
     classes: Array<SemesterClass>;
     groups: Array<SemesterClassGroup>;
 }> {
-    apply({
-        classes,
-        groups,
-    }: {
+    apply(_config: {
         classes: Array<SemesterClass>;
         groups: Array<SemesterClassGroup>;
     }): {
@@ -19,6 +16,7 @@ class _ClassesDiscount extends Discount<{
         };
         amount: number;
     } {
+        _config;
         throw new Error('Not implemented in private class');
     }
 }

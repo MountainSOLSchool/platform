@@ -2,7 +2,8 @@ import { ClassEnrollmentDbo } from '../models/db/class-enrollment.dbo';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { AuthUtility } from '@sol/firebase/functions';
 import { type Firestore } from 'firebase-admin/firestore';
-import { type Request, type Response } from 'firebase-functions/v1';
+import { Request } from 'firebase-functions/v2/https';
+import * as express from 'express';
 import { SemesterEnrollment } from '@sol/classes/domain';
 
 export class ClassEnrollmentRepository {
@@ -31,6 +32,7 @@ export class ClassEnrollmentRepository {
                     studentName: dbo.studentName,
                     finalCost: dbo.finalCost,
                     classIds: dbo.classIds,
+                    classes: dbo.classes,
                     transactionId: dbo.transactionId,
                     timestamp: dbo.timestamp,
                     discounts: dbo.discounts,
@@ -41,7 +43,7 @@ export class ClassEnrollmentRepository {
 
     static async getCurrentUserCompletedEnrollments(
         request: Request,
-        response: Response
+        response: express.Response
     ): Promise<Array<SemesterEnrollment>> {
         const user = await AuthUtility.getUserFromRequest(request, response);
         if (!user) {
@@ -60,6 +62,7 @@ export class ClassEnrollmentRepository {
                     studentName: dbo.studentName,
                     finalCost: dbo.finalCost,
                     classIds: dbo.classIds,
+                    classes: dbo.classes,
                     transactionId: dbo.transactionId,
                     timestamp: dbo.timestamp,
                     discounts: dbo.discounts,

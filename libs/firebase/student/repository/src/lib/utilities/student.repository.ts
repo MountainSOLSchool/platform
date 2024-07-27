@@ -1,17 +1,10 @@
 import { DatabaseUtility } from '@sol/firebase/database';
 import { NewStudentDbEntry, StudentDbEntry } from '@sol/student/domain';
-import {
-    ActiveSemesterRepository,
-    ClassRepository,
-    SemesterRepository,
-} from '@sol/classes/repository';
+import { ClassRepository, SemesterRepository } from '@sol/classes/repository';
 import { DocumentReference, DocumentData } from 'firebase-admin/firestore';
 
 export class StudentRepository {
     protected constructor(private readonly semester: SemesterRepository) {}
-    static enrolledInActiveSemester(): StudentRepository {
-        return new StudentRepository(ActiveSemesterRepository.of());
-    }
     static of(semester: SemesterRepository): StudentRepository {
         return new StudentRepository(semester);
     }
@@ -89,12 +82,12 @@ export class StudentRepository {
     async getAll(): Promise<Array<StudentDbEntry>> {
         const allClasses = await ClassRepository.of(this.semester).getAll();
         const allStudentsFromAllClassesRefs = allClasses.map(
-            (theClass) => theClass.students
+            (theClass) => theClass.students as Array<DocumentReference>
         );
         const allStudentsFromEachClassInSemester = await Promise.all(
             allStudentsFromAllClassesRefs.map((studentRefs) =>
                 DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
-                    studentRefs as any
+                    studentRefs
                 )
             )
         );

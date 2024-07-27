@@ -22,12 +22,16 @@ export class ClassesApiService {
             );
     }
 
-    getClassesByIds(
-        ids: Array<string>
-    ): Observable<Requested<Array<SemesterClass>>> {
+    getClasses(
+        query: Array<{ id: string; semesterId: string }>
+    ): Observable<Requested<{ [semesterId: string]: Array<SemesterClass> }>> {
         return this.functions
-            .call<{ classes: Array<SemesterClass> }>(this.classesResourcePath, {
-                ids,
+            .call<{
+                classes: {
+                    [semesterId: string]: Array<SemesterClass>;
+                };
+            }>(this.classesResourcePath, {
+                query,
             })
             .pipe(
                 map((response) =>
@@ -38,16 +42,20 @@ export class ClassesApiService {
 
     getClassesAvailableForEnrollment() {
         return this.functions.call<{
-            classes: Array<SemesterClass>;
-            groups: Array<SemesterClassGroup>;
+            [semesterId: string]: {
+                classes: Array<SemesterClass>;
+                groups: Array<SemesterClassGroup>;
+            };
         }>('availableEnrollmentClasses');
     }
 
-    getCurrentSemesterClassGroups(ids: Array<string>) {
+    getClassGroups(query: Array<{ id: string; semesterId: string }>) {
         return this.functions
             .call<{
-                groups: Array<SemesterClassGroup>;
-            }>('classGroups', ids)
+                groups: {
+                    [semesterId: string]: Array<SemesterClassGroup>;
+                };
+            }>('classGroups', query)
             .pipe(
                 map((response) =>
                     RequestedUtility.mapLoaded(response, (r) => r.groups)

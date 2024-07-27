@@ -24,17 +24,17 @@
             }
         },
         "serve": {
-            "executor": "@nx/js:node",
+            "executor": "nx:run-commands",
             "options": {
-                "buildTarget": "functions:build"
+                "commands": [
+                    "npx nx run functions:build --watch",
+                    "firebase serve --only functions --project=prod --port=5001"
+                ]
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"],
-            "options": {
-                "lintFilePatterns": ["apps/functions/**/*.ts"]
-            }
+            "outputs": ["{options.outputFile}"]
         },
         "test": {
             "executor": "@nx/jest:jest",

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -23,7 +22,6 @@ import { UserService } from '@sol/auth/user';
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
         PaymentCollectorComponent,
         ButtonModule,
         InputTextModule,

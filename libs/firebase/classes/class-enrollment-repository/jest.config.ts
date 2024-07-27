@@ -12,5 +12,5 @@ export default {
     },
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
     coverageDirectory:
-        '../../../coverage/libs/classes/class-enrollment-repository',
+        '../../../coverage/libs/firebase/classes/class-enrollment-repository',
 };

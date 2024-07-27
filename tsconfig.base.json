@@ -30,6 +30,9 @@
             "@sol/angular/classes/list": [
                 "libs/angular/classes/class-list/src/index.ts"
             ],
+            "@sol/angular/classes/semester-list": [
+                "libs/angular/classes/class-semester-list/src/index.ts"
+            ],
             "@sol/angular/request": ["libs/angular/request/src/index.ts"],
             "@sol/auth/interceptor": [
                 "libs/angular/auth/interceptor/src/index.ts"

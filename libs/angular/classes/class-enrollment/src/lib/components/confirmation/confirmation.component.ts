@@ -1,14 +1,15 @@
-import { CommonModule, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     inject,
     Input,
     Output,
 } from '@angular/core';
 import { RxLet } from '@rx-angular/template/let';
 import { ChipModule } from 'primeng/chip';
-import { combineLatest, filter, map, Subject } from 'rxjs';
+import { combineLatest, filter, map, Subject, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { RxFor } from '@rx-angular/template/for';
 import { FieldsetModule } from 'primeng/fieldset';
@@ -24,12 +25,14 @@ import { ClassSummaryTableComponent } from '../class-summary-table/class-summary
 import { UserService } from '@sol/auth/user';
 import { ClassListService } from '@sol/angular/classes/list';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        DatePipe,
+        CurrencyPipe,
         ChipModule,
         RxLet,
         RxFor,
@@ -43,8 +46,9 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
         TableModule,
         CheckoutComponent,
         ClassSummaryTableComponent,
+        DatePipe,
     ],
-    providers: [DatePipe],
+    providers: [],
     selector: 'sol-class-confirmation',
     templateUrl: './confirmation.component.html',
     styleUrls: ['./confirmation.component.css'],
@@ -52,7 +56,6 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
 export class ConfirmationComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly classList = inject(ClassListService);
-    private readonly datePipe = inject(DatePipe);
 
     readonly userEmail$ = inject(UserService)
         .getUser()
@@ -100,20 +103,49 @@ export class ConfirmationComponent {
         )
     );
 
-    private readonly selectedClassGroupIds$ = combineLatest([
+    private bySemester = toSignal(
         this.classList
             .getAvailableEnrollmentClassesAndGroups()
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
-        this.enrollment$,
-    ]).pipe(
-        map(([{ groups }, { selectedClasses }]) => {
-            return groups
-                .filter(({ classes }) =>
-                    classes.every(({ id }) => selectedClasses.includes(id))
-                )
-                .map((group) => group.id);
-        })
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
     );
+
+    readonly finalTotal = toSignal(
+        this.basketCosts$.pipe(
+            map(({ finalTotal }) => finalTotal),
+            tap((total) => {
+                if (!total) {
+                    this.validityChange.next(true);
+                }
+            })
+        )
+    );
+
+    private readonly enrollmentSignal = toSignal(this.enrollment$);
+
+    readonly selectedClassGroups = computed(() => {
+        const enrollment = this.enrollmentSignal();
+        const bySemester = this.bySemester();
+        return bySemester && enrollment
+            ? Object.entries(bySemester)
+                  .flatMap(([semesterId, { groups }]) =>
+                      groups.map((group) => ({ semesterId, group }))
+                  )
+                  .filter(({ group: { classes } }) =>
+                      classes.every(
+                          ({ id, semesterId }) =>
+                              !!enrollment.selectedClasses.find(
+                                  (selectedClass) =>
+                                      selectedClass.id === id &&
+                                      selectedClass.semesterId === semesterId
+                              )
+                      )
+                  )
+                  .map(({ semesterId, group }) => ({
+                      id: group.id,
+                      semesterId,
+                  }))
+            : undefined;
+    });
 
     private readonly userCostsToClassIds$ = this.workflow.select(
         ({ enrollment: { userCostsToSelectedClassIds } }) =>
@@ -126,7 +158,6 @@ export class ConfirmationComponent {
         this.validDiscountAmounts$,
         this.invalidDiscountCodes$,
         this.workflow.select(({ isLoadingDiscounts }) => isLoadingDiscounts),
-        this.selectedClassGroupIds$,
         this.userCostsToClassIds$,
     ]).pipe(
         map(
@@ -136,7 +167,6 @@ export class ConfirmationComponent {
                 validDiscountAmounts,
                 invalidCodes,
                 isLoadingDiscounts,
-                selectedClassGroupIds,
                 userCostsToClassIds,
             ]) => ({
                 enrollment,
@@ -144,7 +174,6 @@ export class ConfirmationComponent {
                 validDiscountAmounts,
                 invalidCodes,
                 isLoadingDiscounts,
-                selectedClassGroupIds,
                 userCostsToClassIds,
             })
         )

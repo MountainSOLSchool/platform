@@ -1,23 +1,26 @@
-import { DatabaseUtility } from '@sol/firebase/database';
+import * as admin from 'firebase-admin';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
-import { type Request, type Response } from 'firebase-functions/v1';
-import { type UserRecord, getAuth } from 'firebase-admin/auth';
-
-const auth = getAuth();
+import { Request } from 'firebase-functions/v2/https';
+import * as express from 'express';
+import { DatabaseUtility } from '@sol/firebase/database';
 
 export enum Role {
     Admin = 'admin',
 }
 
 export class AuthUtility {
-    static validateRole(request: Request, response: Response, role: Role) {
+    static validateRole(
+        request: Request,
+        response: express.Response,
+        role: Role
+    ) {
         switch (role) {
             case Role.Admin:
                 AuthUtility.validateIsAdmin(request, response);
                 break;
         }
     }
-    public static async validateIsAdmin(req: Request, res: Response) {
+    public static async validateIsAdmin(req: Request, res: express.Response) {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
             res.status(403).send('Unauthorized');
@@ -40,16 +43,8 @@ export class AuthUtility {
         return !!admin;
     }
 
-    public static async getUserRoles(user: UserRecord): Promise<Array<Role>> {
-        const roles = new Array<Role>();
-        if (await AuthUtility.isAdmin(user.uid)) {
-            roles.push(Role.Admin);
-        }
-        return roles;
-    }
-
     public static async getUserStudentIds(
-        user: UserRecord
+        user: admin.auth.UserRecord
     ): Promise<Array<string>> {
         const db = DatabaseUtility.getDatabase();
         const studentEnrollments = await db
@@ -63,26 +58,36 @@ export class AuthUtility {
         return Array.from(new Set(nonUniqueStudents));
     }
 
+    public static async getUserRoles(
+        user: admin.auth.UserRecord
+    ): Promise<Array<Role>> {
+        const roles = new Array<Role>();
+        if (await AuthUtility.isAdmin(user.uid)) {
+            roles.push(Role.Admin);
+        }
+        return roles;
+    }
+
     public static async getUserFromRequest(
         req: Request,
-        res: Response
-    ): Promise<UserRecord | void> {
+        res: express.Response
+    ): Promise<admin.auth.UserRecord | void> {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
             res.status(403).send('Unauthorized');
             return;
         } else {
-            return await auth.getUser(decoded.uid);
+            return await admin.auth().getUser(decoded.uid);
         }
     }
 
     public static async getUser(uid: string) {
-        return await auth.getUser(uid);
+        return await admin.auth().getUser(uid);
     }
 
     public static async validateFirebaseIdToken(
         req: Request,
-        res: Response
+        res: express.Response
     ): Promise<DecodedIdToken | void> {
         if (
             (!req.headers.authorization ||
@@ -116,7 +121,8 @@ export class AuthUtility {
         }
 
         try {
-            const decodedIdToken = await auth.verifyIdToken(idToken);
+            // TODO: validate user is admin, not just valid user
+            const decodedIdToken = await admin.auth().verifyIdToken(idToken);
             return decodedIdToken;
         } catch (error) {
             console.error('Error while verifying Firebase ID token:', error);

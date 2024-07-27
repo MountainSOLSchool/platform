@@ -6,7 +6,13 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, combineLatest, map, shareReplay } from 'rxjs';
+import {
+    BehaviorSubject,
+    combineLatest,
+    map,
+    ObservedValueOf,
+    shareReplay,
+} from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -22,19 +28,20 @@ import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { RxLet } from '@rx-angular/template/let';
 import { create, test, enforce, group } from 'vest';
-import { CommonModule } from '@angular/common';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { StudentForm } from '@sol/student/domain';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { RxIf } from '@rx-angular/template/if';
+import { NgStyle } from '@angular/common';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CommonModule,
+        NgStyle,
         InputTextModule,
         CalendarModule,
         ButtonModule,
@@ -54,6 +61,7 @@ import { RxIf } from '@rx-angular/template/if';
         DropdownModule,
         MessagesModule,
         RxIf,
+        ProgressSpinnerModule,
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
@@ -205,7 +213,7 @@ export class InfoComponent {
     authorized = true;
 
     readonly isUpdatingExistingStudent$ = this.workflow.select(
-        (state) => !state.enrollment.isStudentNew
+        (state) => state.enrollment.isStudentNew === false
     );
 
     readonly student$ = this.workflow
@@ -279,6 +287,7 @@ export class InfoComponent {
     @Input() set interacted(value: boolean) {
         this.interacted$.next(value);
     }
+    @Input() isStudentLoading = false;
 
     @Output() validityChange = this.errors$.pipe(
         map((errors) => Object.keys(errors).length === 0)
@@ -309,13 +318,9 @@ export class InfoComponent {
         { name: 'Adult 2XL', value: '2XL' },
     ];
 
-    trackByIndex(index: number) {
-        return index;
-    }
-
     @ViewChild('op') op!: OverlayPanel;
 
-    updateStudentInfo(info: any): void {
+    updateStudentInfo(info: ObservedValueOf<typeof this.student$>): void {
         this.workflow.patchState((s) => ({
             enrollment: {
                 ...s.enrollment,

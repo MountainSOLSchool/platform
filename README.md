@@ -10,22 +10,32 @@ This monorepository is home to apps and libraries that serve the Mountain SOL or
 
 ## Setup
 
+### Dependencies
+
 Run `npm ci`.
 
-## Functions
+### VSCode Extension Recommendations
 
-Run the Firebase functions locally with `npm run serve:functions`.
+-   [Nx Console](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console) enables you to run build and serve commands with a GUI
 
-## Portal
+## Firebase Functions
 
-Run the frontend portal with `npm run serve:portal` and view at http://localhost:4200/.
+Run the Firebase functions locally with `npx nx run functions:serve`.
 
-The default configuration uses remote addresses for Firebase functions. Run `npm run serve:dev:portal` to develop against locally served functions.
+## Enrollment Portal (Angular)
 
-## React Portal
+Run the frontend portal with `npx nx run enrollment-portal:serve:developmentRemoteFunctions` and view at http://localhost:4200/.
 
-Run the frontend portal with `npm run serve:portal2` and view at http://localhost:4200/.
+The default configuration uses remote addresses for Firebase functions. Run `npx nx run enrollment-portal:serve` to develop against locally served functions.
 
-### Deployed
+### Deployment
 
 `main` is continuously deployed to https://mountain-sol-platform.web.app/
+
+## Student Portal (React)
+
+Run the frontend portal with `npx nx run student-portal:serve` and view at http://localhost:4200/.
+
+### Deployment
+
+`main` is continuously deployed to https://main.dtpci3w8k8pee.amplifyapp.com/

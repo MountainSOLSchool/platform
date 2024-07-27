@@ -10,17 +10,18 @@
     <div class="p-input-icon-left" style="flex: 2; min-width: 200px">
         <i class="pi pi-search"></i>
         <span class="p-input-icon-right" style="width: 100%">
-            <i
-                *ngIf="searchInput.value.length > 0"
-                class="pi pi-times-circle"
-                (click)="searchChange((searchInput.value = ''))"
-                style="cursor: pointer"
-            ></i>
+            @if (searchInput.value.length > 0) {
+                <i
+                    class="pi pi-times-circle"
+                    (click)="searchChange((searchInput.value = ''))"
+                    style="cursor: pointer"
+                ></i>
+            }
             <input
                 #searchInput
                 type="text"
                 pInputText
-                placeholder="Search"
+                placeholder="Search for a class"
                 style="width: 100%"
                 (input)="searchChange(searchInput.value)"
             />
@@ -28,7 +29,7 @@
     </div>
     <div>
         <p-dropdown
-            [options]="(filterOptions$ | async) ?? []"
+            [options]="filterOptions()"
             placeholder="Select a grade range"
             optionLabel="name"
             [showClear]="true"
@@ -36,462 +37,272 @@
         ></p-dropdown>
     </div>
 </div>
-<div
-    *rxLet="selectedClasses$; let selected"
-    style="
-        position: sticky;
-        top: 10px;
-        margin: auto;
-        background: white;
-        padding: 0.5rem 2rem 0.5rem 2rem;
-        z-index: 1;
-        border-radius: 20px;
-        border: 1px solid lightgray;
-    "
->
-    <p>
-        <b>Selected classes ({{ selected?.length ?? 0 }})</b>
-    </p>
-    <div
-        *rxLet="{ showChips: false }; let view"
-        style="display: flex; gap: 4px; flex-wrap: wrap"
-    >
-        <ng-container *rxIf="view.showChips">
-            <div *rxFor="let class of selected; trackBy: trackClassCard">
-                <p-chip
-                    [label]="class.title"
-                    [removable]="true"
-                    (onRemove)="
-                        selectionChanged({ id: class.id, selected: false })
-                    "
-                ></p-chip></div
-        ></ng-container>
-        <p-button
-            *rxIf="selected.length > 0"
-            [label]="view.showChips ? 'Hide' : 'Show'"
-            (click)="view.showChips = !view.showChips"
-            styleClass="p-button-sm"
-        ></p-button>
-    </div>
-    <ng-container *rxIf="hasSelectedSummerClass$">
-        <ng-container
-            *rxLet="selectedSummerClasses$; let selectedSummerClasses"
+@if (selectedClasses(); as selectedClasses) {
+    @if (selectedClasses.length > 0) {
+        <div
+            style="
+                position: sticky;
+                top: 10px;
+                margin: auto;
+                background: white;
+                padding: 0.5rem 2rem 0.5rem 2rem;
+                z-index: 100;
+                border-radius: 20px;
+                border: 1px solid lightgray;
+            "
         >
             <p>
-                <ng-container
-                    *rxLet="
-                        selectedSummerClasses.length > 3;
-                        let hasSelectedEnough
-                    "
-                    ><span
-                        [ngStyle]="{
-                            color: hasSelectedEnough ? '#3c82f7' : 'black'
-                        }"
-                        ><b
-                            >({{ selectedSummerClasses?.length ?? 0 }}/4
-                            selected<ng-container *rxIf="hasSelectedEnough">
-                                🥳</ng-container
-                            >)</b
-                        ></span
-                    ></ng-container
-                >
-                Use code <b>4SUMMER2023</b> at checkout when you select 4 summer
-                camps to get 10% off!
+                <b>Selected classes ({{ selectedClasses.length }})</b>
             </p>
-        </ng-container>
-    </ng-container>
-</div>
-<div style="width: 100%" *rxIf="isInvalid$">
-    <p-messages severity="error">
-        <ng-template pTemplate>
-            <div class="ml-2">Please select at least one class.</div>
-        </ng-template>
-    </p-messages>
-</div>
-<div
-    *rxIf="isFakeSearchLoading$; else classList"
-    style="width: 100%; margin-top: 1rem"
->
-    <div style="margin-left: auto; margin-right: auto; width: fit-content">
-        <p-progressSpinner></p-progressSpinner>
-    </div>
-</div>
-<ng-template #classList>
-    <div style="margin-top: 1rem">
-        <ng-container
-            *rxLet="filteredClassRows$; let classRows; suspense: skeleton"
-        >
-            <ng-container *ngIf="classRows.length > 0; else noResults">
-                <div
-                    style="
-                        border-radius: 5px;
-                        margin: 2px;
-                        padding: 5px;
-                        display: flex;
-                        flex-wrap: wrap;
-                        width: 100%;
-                    "
-                    [ngStyle]="{}"
-                    *rxFor="let row of classRows; trackBy: trackClassRow"
-                >
-                    <div *rxIf="!!row.group">
-                        <h3>
-                            {{ row.group?.name }}
-                            <span
-                                *ngIf="getClassRowSavings(row) !== 0"
-                                style="color: #3c82f7"
-                            >
-                                (-{{ getClassRowSavings(row) | currency }}
-                                all-day discount)
-                            </span>
-                        </h3>
-
-                        <div
-                            style="
-                                margin-top: 1rem;
-                                margin-bottom: 1rem;
-                                margin-left: 1rem;
-                            "
-                        >
-                            <p-toggleButton
-                                *rxLet="hasPausedClass(row); let paused"
-                                [disabled]="paused"
-                                [inputId]="'select' + row.group?.id"
-                                [name]="'row_' + row.group?.id"
-                                onIcon="pi pi-check"
-                                onLabel="Selected all-day"
-                                offIcon="pi pi-plus"
-                                [offLabel]="
-                                    paused
-                                        ? 'One or more classes are full'
-                                        : 'Select all-day'
+            <div
+                *rxLet="{ showChips: false }; let view"
+                style="display: flex; gap: 4px; flex-wrap: wrap"
+            >
+                @if (view.showChips) {
+                    @for (
+                        selectedClass of selectedClasses;
+                        track selectedClass.id
+                    ) {
+                        <div>
+                            <p-chip
+                                [label]="selectedClass.title"
+                                [removable]="true"
+                                (onRemove)="
+                                    selectionChanged({
+                                        classSelection: {
+                                            id: selectedClass.id,
+                                            semesterId: selectedClass.semesterId
+                                        },
+                                        selected: false
+                                    })
                                 "
-                                [ngModel]="row.selected"
-                                (ngModelChange)="
-                                    rowSelectedChange(row, !row.selected)
-                                "
-                            ></p-toggleButton>
+                            ></p-chip>
                         </div>
-                    </div>
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px">
-                        <div
-                            *rxFor="
-                                let class of row.classes;
-                                trackBy: trackClassCard
-                            "
+                    }
+                }
+                @if (selectedClasses.length > 0) {
+                    <p-button
+                        [label]="view.showChips ? 'Hide' : 'Show'"
+                        (click)="view.showChips = !view.showChips"
+                        styleClass="p-button-sm"
+                    ></p-button>
+                }
+            </div>
+            @if (hasSelectedSummerClass()) {
+                @if (selectedSummerClasses()) {
+                    <p>
+                        <span
                             [ngStyle]="{
-                                border: class.selected
-                                    ? '.2rem solid #3c82f7'
-                                    : '.2rem solid transparent',
-                                'border-radius': '6px',
-                                'border-top-right-radius': '80px',
-                                'margin-bottom': '2em',
-                                'box-sizing': 'border-box',
-                                'margin-left': 'auto',
-                                'margin-right': 'auto',
-                                'min-width': '300px',
-                                flex:
-                                    row.classes.length > 1
-                                        ? '1 0 calc(50% - 40px)'
-                                        : '1 0 calc(100% - 40px)',
-                                height: 'fit-content'
+                                color:
+                                    selectedSummerClasses().length > 3
+                                        ? '#3c82f7'
+                                        : 'black'
                             }"
+                            ><b
+                                >({{ selectedSummerClasses().length }}/4
+                                selected
+                                @if (selectedSummerClasses().length > 3) {
+                                    🥳
+                                }
+                                )</b
+                            ></span
                         >
-                            <p-card styleClass="class-card">
-                                <ng-template pTemplate="header"></ng-template>
-                                <div
-                                    style="
-                                        position: relative;
-                                        margin-top: -2.5rem;
-                                    "
-                                >
-                                    <div style="padding-right: 145px">
-                                        <h2>
-                                            {{ class.title
-                                            }}{{
-                                                class.pausedForEnrollment
-                                                    ? ' (Full)'
-                                                    : ''
-                                            }}
-                                        </h2>
-                                    </div>
-                                    <!-- circular div with image -->
-                                    <div
-                                        [ngStyle]="{
-                                            position: 'absolute',
-                                            top: '-30px',
-                                            right: '-25px',
-                                            display: 'inline-block',
-                                            width: '165px',
-                                            height: '165px',
-                                            background:
-                                                'url(' +
-                                                class.thumbnailUrl +
-                                                ')',
-                                            'background-position': '50% 50%',
-                                            'background-size': 'cover',
-                                            'border-radius': '50%',
-                                            filter: class.pausedForEnrollment
-                                                ? 'grayscale(100%)'
-                                                : '',
-                                            border:
-                                                '3px solid ' +
-                                                (class.selected
-                                                    ? '#3c82f7'
-                                                    : 'black')
-                                        }"
-                                    ></div>
-                                </div>
-                                <div
-                                    class="flex flex-wrap align-items-center"
-                                    style="
-                                        margin-bottom: 1.5rem;
-                                        margin-top: 1rem;
-                                        gap: 3px;
-                                        padding-right: 145px;
-                                    "
-                                >
-                                    <p-chip
-                                        [label]="class.classDateTimes"
-                                        icon="pi pi-calendar"
-                                        styleClass="mr-2 custom-chip"
-                                    ></p-chip>
-                                    <p-chip
-                                        [label]="class.weekday"
-                                        styleClass="mr-2 custom-chip"
-                                    ></p-chip>
-                                    <p-chip
-                                        [label]="class.dailyTimes"
-                                        icon="pi pi-clock"
-                                        styleClass="mr-2 custom-chip"
-                                    ></p-chip>
-                                </div>
-                                <p>
-                                    <b>Class Type:</b> {{ class.classType
-                                    }}<br />
-                                    <b>Grades:</b>
-                                    {{ class.gradeRangeStart }} -
-                                    {{ class.gradeRangeEnd }}<br />
-                                    <b>Location:</b> {{ class.location }}<br />
-                                    <ng-container
-                                        *rxIf="
-                                            !class.paymentRange;
-                                            else paymentRange
-                                        "
-                                    >
-                                        <b>Cost:</b> ${{ class.cost }}<br />
-                                    </ng-container>
-                                    <ng-template #paymentRange>
-                                        <b>Sliding Scale Cost:</b> ${{
-                                            class.paymentRange?.lowest
-                                        }}-${{ class.paymentRange?.highest
-                                        }}<br />
-                                    </ng-template>
-                                    <b>Instructors:</b>
-                                    <span
-                                        *rxFor="
-                                            let instructor of class.instructors;
-                                            let isLast = last
-                                        "
-                                    >
-                                        {{ instructor.firstName }}
-                                        {{ instructor.lastName
-                                        }}{{ isLast ? '' : ', ' }}
-                                    </span>
-                                    <br />
-                                    <br />
-                                    <b>Description:</b> <br />
-                                    {{ class.description }}<br />
-                                </p>
-                                <div
-                                    style="
-                                        margin-top: 2rem;
-                                        margin-bottom: -1rem;
-                                    "
-                                >
-                                    <div
-                                        *rxIf="class.pausedForEnrollment"
-                                        style="margin-bottom: 1rem"
-                                    >
-                                        <b
-                                            >This class is not accepting
-                                            additional students at this time.</b
-                                        >
-                                    </div>
-                                    <p-overlayPanel pAutoFocus #op>
-                                        <div>Sliding Scale Cost</div>
+                        Use code <b>4SUMMER2024</b> at checkout when you select
+                        4 summer camps to get 10% off!
+                    </p>
+                }
+            }
+        </div>
+    }
+}
+@if (isInvalid()) {
+    <div style="width: 100%">
+        <p-messages severity="error">
+            <ng-template pTemplate>
+                <div class="ml-2">Please select at least one class.</div>
+            </ng-template>
+        </p-messages>
+    </div>
+}
+@defer (when semesterOptions()) {
+    <div style="margin-top: 1rem">
+        <p-tabView>
+            @for (
+                semester of semesterOptions();
+                track semester;
+                let first = $first;
+                let last = $last
+            ) {
+                <p-tabPanel [header]="semester.name">
+                    @if ((isFakeSearchLoading$ | async) === true) {
+                        <ng-container
+                            *ngTemplateOutlet="largeSpinner"
+                        ></ng-container>
+                    } @else {
+                        @defer (when filteredClassRowsBySemesters()) {
+                            @if (
+                                filteredClassRowsBySemesters();
+                                as classRowsBySemesters
+                            ) {
+                                @if (
+                                    classRowsBySemesters[semester.id] &&
+                                    classRowsBySemesters[semester.id].length > 0
+                                ) {
+                                    @for (
+                                        row of classRowsBySemesters[
+                                            semester.id
+                                        ];
+                                        track row.index
+                                    ) {
                                         <div
                                             style="
-                                                margin-top: 1rem;
-                                                margin-bottom: 1rem;
+                                                border-radius: 5px;
+                                                margin: 2px;
+                                                padding: 5px;
                                                 display: flex;
+                                                flex-wrap: wrap;
+                                                width: 100%;
                                             "
                                         >
-                                            <p-button
-                                                icon="pi pi-minus"
-                                                styleClass="p-button-outlined"
-                                                [disabled]="
-                                                    class.userCost <=
-                                                    (class.paymentRange
-                                                        ?.lowest ?? class.cost)
+                                            @if (hasGroup(row)) {
+                                                <div>
+                                                    <h3>
+                                                        {{ row.group.name }}
+                                                        @if (
+                                                            getClassRowSavings(
+                                                                row
+                                                            ) !== 0
+                                                        ) {
+                                                            <span
+                                                                style="
+                                                                    color: #3c82f7;
+                                                                "
+                                                            >
+                                                                (-{{
+                                                                    getClassRowSavings(
+                                                                        row
+                                                                    ) | currency
+                                                                }}
+                                                                all-day
+                                                                discount)
+                                                            </span>
+                                                        }
+                                                    </h3>
+
+                                                    <div
+                                                        style="
+                                                            margin-top: 1rem;
+                                                            margin-bottom: 1rem;
+                                                            margin-left: 1rem;
+                                                        "
+                                                    >
+                                                        <p-toggleButton
+                                                            *rxLet="
+                                                                hasPausedClass(
+                                                                    row
+                                                                );
+                                                                let paused
+                                                            "
+                                                            [disabled]="paused"
+                                                            [inputId]="
+                                                                'select' +
+                                                                row.group.id
+                                                            "
+                                                            [name]="
+                                                                'row_' +
+                                                                row.group.id
+                                                            "
+                                                            [onIcon]="
+                                                                'pi pi-check'
+                                                            "
+                                                            [onLabel]="
+                                                                'Selected all-day'
+                                                            "
+                                                            [offIcon]="
+                                                                'pi pi-plus'
+                                                            "
+                                                            [offLabel]="
+                                                                paused
+                                                                    ? 'One or more classes are full'
+                                                                    : 'Select all-day'
+                                                            "
+                                                            [ngModel]="
+                                                                row.selected
+                                                            "
+                                                            (ngModelChange)="
+                                                                rowSelectedChange(
+                                                                    row,
+                                                                    !row.selected
+                                                                )
+                                                            "
+                                                        ></p-toggleButton>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div
+                                                style="
+                                                    display: flex;
+                                                    flex-wrap: wrap;
+                                                    gap: 10px;
                                                 "
-                                                (onClick)="
-                                                    class.userCost =
-                                                        class.userCost - 5
-                                                "
-                                            ></p-button>
-                                            <div>
-                                                <p-inputNumber
-                                                    mode="currency"
-                                                    currency="USD"
-                                                    [min]="
-                                                        class.paymentRange
-                                                            ?.lowest ??
-                                                        class.cost
-                                                    "
-                                                    [max]="
-                                                        class.paymentRange
-                                                            ?.highest ??
-                                                        class.cost
-                                                    "
-                                                    [(ngModel)]="class.userCost"
-                                                    class="w-full"
-                                                />
-                                                <p-slider
-                                                    [step]="5"
-                                                    [min]="
-                                                        class.paymentRange
-                                                            ?.lowest ??
-                                                        class.cost
-                                                    "
-                                                    [max]="
-                                                        class.paymentRange
-                                                            ?.highest ??
-                                                        class.cost
-                                                    "
-                                                    [(ngModel)]="class.userCost"
-                                                    class="w-full"
-                                                ></p-slider>
+                                            >
+                                                @for (
+                                                    rowClass of row.classes;
+                                                    track rowClass.id
+                                                ) {
+                                                    <div
+                                                        [ngStyle]="{
+                                                            flex:
+                                                                row.classes
+                                                                    .length > 1
+                                                                    ? '1 0 calc(50% - 40px)'
+                                                                    : '1 0 calc(100% - 40px)'
+                                                        }"
+                                                    >
+                                                        <sol-class-card
+                                                            [selected]="
+                                                                rowClass.selected
+                                                            "
+                                                            [width]="
+                                                                row.classes
+                                                                    .length > 1
+                                                                    ? 'narrower'
+                                                                    : 'wider'
+                                                            "
+                                                            [classInfo]="
+                                                                rowClass
+                                                            "
+                                                            (selectedChange)="
+                                                                selectionChanged(
+                                                                    $event
+                                                                )
+                                                            "
+                                                        ></sol-class-card>
+                                                    </div>
+                                                }
                                             </div>
-                                            <p-button
-                                                icon="pi pi-plus"
-                                                styleClass="p-button-outlined"
-                                                [disabled]="
-                                                    class.userCost >=
-                                                    (class.paymentRange
-                                                        ?.highest ?? class.cost)
-                                                "
-                                                (onClick)="
-                                                    class.userCost =
-                                                        class.userCost + 5
-                                                "
-                                            ></p-button>
                                         </div>
-                                        <p-button
-                                            (click)="
-                                                selectionChanged(
-                                                    {
-                                                        id: class.id,
-                                                        selected: true,
-                                                        userCost: class.userCost
-                                                    },
-                                                    op
-                                                )
-                                            "
-                                            >Confirm</p-button
-                                        >
-                                    </p-overlayPanel>
-                                    <ng-container
-                                        *rxIf="
-                                            (class.paymentRange?.lowest ??
-                                                -1) >= 0;
-                                            else regularSelect
-                                        "
-                                    >
-                                        <p-button
-                                            *rxIf="
-                                                !class.selected;
-                                                else selectedRange
-                                            "
-                                            [disabled]="
-                                                class.pausedForEnrollment
-                                            "
-                                            label="Select"
-                                            styleClass="p-button-outlined"
-                                            icon="pi pi-plus"
-                                            (click)="op.toggle($event)"
-                                        ></p-button>
-                                        <ng-template #selectedRange>
-                                            <p-button
-                                                [disabled]="
-                                                    class.pausedForEnrollment
-                                                "
-                                                [label]="
-                                                    'Selected ($' +
-                                                    class.userCost +
-                                                    ')'
-                                                "
-                                                styleClass="p-button-primary"
-                                                icon="pi pi-check"
-                                                (click)="
-                                                    selectionChanged({
-                                                        id: class.id,
-                                                        selected: false
-                                                    })
-                                                "
-                                            ></p-button>
-                                        </ng-template>
-                                    </ng-container>
-                                    <ng-template #regularSelect>
-                                        <p-toggleButton
-                                            [disabled]="
-                                                class.pausedForEnrollment
-                                            "
-                                            [inputId]="'select' + class.id"
-                                            styleClass="p-button-primary"
-                                            onIcon="pi pi-check"
-                                            onLabel="Selected"
-                                            offIcon="pi pi-plus"
-                                            [offLabel]="
-                                                class.pausedForEnrollment
-                                                    ? 'Class Full'
-                                                    : 'Select'
-                                            "
-                                            [(ngModel)]="class.selected"
-                                            (ngModelChange)="
-                                                selectionChanged(class)
-                                            "
-                                        ></p-toggleButton>
-                                    </ng-template>
-                                </div>
-                            </p-card>
-                        </div>
-                    </div>
-                </div> </ng-container
-            ><ng-template #noResults>
-                There are no classes for the current search.
-            </ng-template></ng-container
-        >
+                                    }
+                                } @else {
+                                    There are no classes for the current search.
+                                }
+                            }
+                        } @placeholder (minimum 1s) {
+                            <sol-classes-skeleton></sol-classes-skeleton>
+                        }
+                    }
+                </p-tabPanel>
+            }
+        </p-tabView>
     </div>
-</ng-template>
-<ng-template #skeleton>
-    <div *rxFor="let i of [1, 2, 3]" class="custom-skeleton p-4">
-        <div class="flex mb-3">
-            <p-skeleton
-                shape="circle"
-                size="4rem"
-                styleClass="mr-2"
-            ></p-skeleton>
-            <div>
-                <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
-                <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
-                <p-skeleton height=".5rem"></p-skeleton>
-            </div>
-        </div>
-        <p-skeleton width="100%" height="150px"></p-skeleton>
-        <div class="flex justify-content-between mt-3">
-            <p-skeleton width="4rem" height="2rem"></p-skeleton>
-            <p-skeleton width="4rem" height="2rem"></p-skeleton>
+} @placeholder (minimum 500ms) {
+    <ng-container *ngTemplateOutlet="largeSpinner"></ng-container>
+}
+
+<ng-template #largeSpinner>
+    <div style="width: 100%; margin-top: 1rem">
+        <div style="margin-left: auto; margin-right: auto; width: fit-content">
+            <p-progressSpinner></p-progressSpinner>
         </div>
     </div>
 </ng-template>

@@ -1,21 +1,13 @@
-import { getApps, initializeApp } from 'firebase-admin/app';
 import {
     DocumentReference,
     Timestamp,
     CollectionReference,
     DocumentData,
+    QueryDocumentSnapshot,
     FieldPath,
     WhereFilterOp,
-    QueryDocumentSnapshot,
-    getFirestore,
 } from 'firebase-admin/firestore';
-import { config } from 'firebase-functions/v1';
-
-if (getApps().length === 0) {
-    initializeApp();
-}
-const db = getFirestore(config().firebase);
-db.settings({ ignoreUndefinedProperties: true });
+import { db } from './database.config';
 
 type Collection = Array<DocumentProperty>;
 
@@ -50,7 +42,7 @@ export class DatabaseUtility {
     }
 
     public static async getHydratedCollection(
-        collectionRef: CollectionReference
+        collectionRef: CollectionReference<DocumentData>
     ): Promise<{ [collectionName: string]: Collection }> {
         const collectionDocs = (await collectionRef.get()).docs;
         const docValues = await Promise.all(
@@ -82,7 +74,9 @@ export class DatabaseUtility {
 
     public static async getHydratedDocuments<
         DocumentValue extends { id: string },
-    >(documentRefs: Array<DocumentReference>): Promise<Array<DocumentValue>> {
+    >(
+        documentRefs: Array<DocumentReference<DocumentData>>
+    ): Promise<Array<DocumentValue>> {
         if (!documentRefs?.length) {
             return new Array<DocumentValue>();
         }

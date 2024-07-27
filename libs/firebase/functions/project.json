@@ -6,9 +6,6 @@
     "targets": {
         "lint": {
             "executor": "@nx/eslint:lint",
-            "options": {
-                "lintFilePatterns": ["libs/firebase/functions/**/*.ts"]
-            },
             "outputs": ["{options.outputFile}"]
         },
         "test": {
