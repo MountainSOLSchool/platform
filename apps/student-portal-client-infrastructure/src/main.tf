@@ -1,4 +1,3 @@
-variable "GITHUB_TOKEN" {}
 variable "AWS_ACCESS_KEY_ID" {}
 variable "AWS_SECRET_ACCESS_KEY" {}
 variable "AWS_AMPLIFY_APP_ROLE_ARN" {}
@@ -28,7 +27,6 @@ provider "aws" {
 resource "aws_amplify_app" "admin_portal" {
   name       = "student_portal"
   repository = "https://github.com/MountainSOLSchool/platform"
-  access_token = var.GITHUB_TOKEN
 
   environment_variables = {
     AMPLIFY_MONOREPO_APP_ROOT = "apps/student-portal"
