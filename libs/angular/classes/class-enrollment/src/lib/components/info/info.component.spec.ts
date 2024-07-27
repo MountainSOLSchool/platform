@@ -1,6 +1,6 @@
 import { StudentForm } from '@sol/student/domain';
-import { studentInfoValidationSuite } from './info.component';
 import { SemesterClass } from '@sol/classes/domain';
+import { InfoComponent } from './info.component';
 
 describe('Info Component', () => {
     describe('validation suite', () => {
@@ -23,7 +23,7 @@ describe('Info Component', () => {
                 const selectedClasses = [classThatStudentIsOutsideOfGradeRange];
 
                 // when wen wens there be snacks
-                const results = studentInfoValidationSuite(
+                const results = InfoComponent.validationSuite(
                     studentForm,
                     selectedClasses
                 );

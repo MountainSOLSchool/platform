@@ -75,7 +75,7 @@ export class InfoComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly classList = inject(ClassListService);
 
-    public readonly validationSuite = create(
+    static validationSuite = create(
         (student: Partial<StudentForm>, classes: Array<SemesterClass>) => {
             group('student', () => {
                 test('firstName', 'First name is required', () => {
@@ -307,7 +307,7 @@ export class InfoComponent {
         this.selectedClassList$,
     ]).pipe(
         map(([student, selectedClassList]) => {
-            return this.validationSuite(student, selectedClassList);
+            return InfoComponent.validationSuite(student, selectedClassList);
         }),
         shareReplay()
     );
