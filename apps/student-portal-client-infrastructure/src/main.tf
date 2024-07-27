@@ -26,7 +26,6 @@ provider "aws" {
 
 resource "aws_amplify_app" "student_portal" {
   name       = "student_portal"
-  repository = "https://github.com/MountainSOLSchool/platform"
 
   environment_variables = {
     AMPLIFY_MONOREPO_APP_ROOT = "apps/student-portal"
