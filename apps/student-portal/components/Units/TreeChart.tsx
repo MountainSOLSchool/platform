@@ -214,8 +214,8 @@ function SmartTreeChart() {
         const tree = d3.tree().nodeSize([dx, dy]);
         const diagonal = d3
             .linkHorizontal()
-            .x(([,y]) => y)
-            .y(([x]) => x);
+            .x((d) => (d as any).y)
+            .y((d) => (d as any).x);
 
         d3.select('.smart-tree-container');
         d3.selectAll('svg').remove();
