@@ -39,6 +39,7 @@ import { SemesterClass } from '@sol/classes/domain';
 import { NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ClassListService } from '@sol/angular/classes/list';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     standalone: true,
@@ -296,7 +297,10 @@ export class InfoComponent {
 
     private selectedClassList$ = this.workflow
         .select(({ enrollment: { selectedClasses } }) => selectedClasses)
-        .pipe(switchMap((classIds) => this.classList.getClasses(classIds)));
+        .pipe(
+            switchMap((classIds) => this.classList.getClasses(classIds)),
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded()
+        );
 
     private readonly validation$ = combineLatest([
         this.student$,
