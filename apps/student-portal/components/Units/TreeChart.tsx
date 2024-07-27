@@ -214,8 +214,8 @@ function SmartTreeChart() {
         const tree = d3.tree().nodeSize([dx, dy]);
         const diagonal = d3
             .linkHorizontal()
-            .x((d) => d.y)
-            .y((d) => d.x);
+            .x(([,y]) => y)
+            .y(([x]) => x);
 
         d3.select('.smart-tree-container');
         d3.selectAll('svg').remove();
@@ -268,7 +268,7 @@ function SmartTreeChart() {
                     left.x - marginTop,
                     width,
                     height,
-                ])
+                ] as any)
                 .tween(
                     'resize',
                     window.ResizeObserver
@@ -277,7 +277,7 @@ function SmartTreeChart() {
                 );
 
             // Update the nodes…
-            const node = gNode.selectAll('g').data(nodes, (d) => d.id);
+            const node = gNode.selectAll('g').data(nodes, (d: {id: string}) => d.id);
 
             // Enter any new nodes at the parent's previous position.
             const nodeEnter = node
@@ -290,7 +290,7 @@ function SmartTreeChart() {
                 .attr('fill-opacity', 0)
                 .attr('stroke-opacity', 0)
                 .on('click', (event, d) => {
-                    d.children = d.children ? null : d._children;
+                    d.children = d.children ? null : d['_children'];
                     update(event, d);
                 });
 
@@ -327,8 +327,8 @@ function SmartTreeChart() {
                 .append('text')
                 .attr('dy', '.35em')
                 .attr('dy', '0.31em')
-                .attr('x', (d) => (d._children ? -18 : 18))
-                .attr('text-anchor', (d) => (d._children ? 'end' : 'start'))
+                .attr('x', (d) => (d['_children'] ? -18 : 18))
+                .attr('text-anchor', (d) => (d['_children'] ? 'end' : 'start'))
                 .style('fill', (d: any) => {
                     switch (d.data.status) {
                         case 'ghost':
@@ -361,7 +361,7 @@ function SmartTreeChart() {
             // Update the links…
             const link = gLink
                 .selectAll('path')
-                .data(links, (d) => d.target.id);
+                .data(links, (d: {target: {id: string}}) => d.target.id);
 
             // Enter any new links at the parent's previous position.
             const linkEnter = link
@@ -369,7 +369,7 @@ function SmartTreeChart() {
                 .append('path')
                 .attr('d', (d) => {
                     const o = { x: source.x0, y: source.y0 };
-                    return diagonal({ source: o, target: o });
+                    return (diagonal as any)({ source: o, target: o });
                 })
                 .attr('stroke-opacity', (d: any) => {
                     switch (d.target.data.status) {
@@ -399,7 +399,7 @@ function SmartTreeChart() {
                 });
 
             // Transition links to their new position.
-            link.merge(linkEnter).transition(transition).attr('d', diagonal);
+            link.merge(linkEnter).transition(transition).attr('d', diagonal as any);
 
             // Transition exiting nodes to the parent's new position.
             link.exit()
@@ -407,23 +407,24 @@ function SmartTreeChart() {
                 .remove()
                 .attr('d', (d) => {
                     const o = { x: source.x, y: source.y };
-                    return diagonal({ source: o, target: o });
+                    return (diagonal as any)({ source: o, target: o });
                 });
 
             // Stash the old positions for transition.
             root.eachBefore((d) => {
-                d.x0 = d.x;
-                d.y0 = d.y;
+                d['x0'] = d.x;
+                d['y0'] = d.y;
             });
         }
 
         // Do the first update to the initial configuration of the tree — where a number of nodes
         // are open (arbitrarily selected as the root, plus nodes with 7 letters).
-        root.x0 = dy / 2;
-        root.y0 = 0;
+        root['x0'] = dy / 2;
+        root['y0'] = 0;
         root.descendants().forEach((d, i) => {
-            d.id = i;
-            d._children = d.children;
+            // @ts-ignore mutating id on purpose for now
+            d['id'] = i;
+            d['_children'] = d.children;
             if (d.data.status) {
                 if (d.data.status === 'locked') {
                     d.children = null;
