@@ -8,14 +8,14 @@ import {
     switchMap,
     tap,
 } from 'rxjs';
-import { ComponentStore, tapResponse } from '@ngrx/component-store';
+import { ComponentStore } from '@ngrx/component-store';
+import { tapResponse, concatLatestFrom } from '@ngrx/operators';
 import {
     FirebaseAuthService,
     FirebaseAuthModule,
 } from '@sol/angular/auth/firebase';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { concatLatestFrom } from '@ngrx/effects';
 import { loginSuite } from './login.suite';
 import { UserService } from '@sol/auth/user';
 

@@ -158,6 +158,7 @@ export class SelectStudentComponent {
                 selectedStudentId,
                 students,
                 showAsReadonlyBlock:
+                    selectedStudentType !== undefined &&
                     interacted &&
                     !transitionOccurredToNoErrors &&
                     !hasAnyErrors,
