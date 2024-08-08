@@ -21,11 +21,11 @@ $portal-warn: mat.m2-define-palette(mat.$m2-red-palette);
 // theming systems such as "color" or "typography".
 $portal-theme: mat.m2-define-light-theme(
     (
-      color: (
-        primary: $portal-primary,
-        accent: $portal-accent,
-        warn: $portal-warn,
-      ),
+        color: (
+            primary: $portal-primary,
+            accent: $portal-accent,
+            warn: $portal-warn,
+        ),
     )
 );
 
