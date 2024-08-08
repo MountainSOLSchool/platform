@@ -1,5 +1,10 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
+import {
+    HttpEvent,
+    HttpInterceptor,
+    HttpHandler,
+    HttpRequest,
+} from '@angular/common/http';
 
 import { filter, from, map, Observable, switchMap, take } from 'rxjs';
 import { UserService } from '@sol/auth/user';

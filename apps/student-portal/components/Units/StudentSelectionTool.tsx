@@ -3,44 +3,21 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-export function StudentSelectionTool() {
-    const tempStudents = [
-        {
-            firstName: 'John',
-            lastName: 'Doe',
-            studentID: '123',
-            unitCredit: false,
-        },
-        {
-            firstName: 'Jane',
-            lastName: 'Doe',
-            studentID: '456',
-            unitCredit: true,
-        },
-    ];
-    const [studentsArr, setStudentsArr] = useState(tempStudents);
+export function StudentSelectionTool(props: {
+    studentsArray: any;
+    multiSelect?: boolean;
+}) {
+    const [selectedStudent, setSelectedStudent] = useState(null);
 
     const selectStudent = (rowData) => {
         const selectedStudent = rowData.value;
-        const newStudentsArr = studentsArr.map((s) => {
-            if (s.studentID == selectedStudent.studentID) {
-                return { ...s, unitCredit: !s.unitCredit };
-            }
-            return s;
-        });
-        setStudentsArr(newStudentsArr);
-    };
-
-    const updateStudents = () => {
-        console.log('studentsArr: ', studentsArr);
-
-        // save updates to backend
+        setSelectedStudent(selectedStudent);
     };
 
     const checkboxTemplate = (rowData) => {
-        const unitCred = studentsArr.find(
+        const unitCred = props.studentsArray.find(
             (s) => s.studentID === rowData.studentID
         ).unitCredit;
         return (
@@ -54,7 +31,7 @@ export function StudentSelectionTool() {
         <div>
             <div>
                 <DataTable
-                    value={studentsArr}
+                    value={props.studentsArray}
                     tableStyle={{ width: '30rem', maxHeight: '500' }}
                     sortField="lastName"
                     sortOrder={-1}
@@ -77,7 +54,12 @@ export function StudentSelectionTool() {
                 </DataTable>
             </div>
             <div>
-                <Button label={'Save'} onClick={updateStudents} />
+                <Button
+                    label={'Save'}
+                    onClick={() => {
+                        /* updateStudents() */
+                    }}
+                />
             </div>
         </div>
     );

@@ -10,7 +10,7 @@ import { requestTestStudent, setTestStudent } from '../store/testStudent';
 
 import './index.module.css';
 
-import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit/BulkUpdateForSingleUnit';
+import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit';
 
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
 

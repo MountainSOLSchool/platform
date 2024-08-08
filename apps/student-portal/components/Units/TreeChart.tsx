@@ -277,7 +277,9 @@ function SmartTreeChart() {
                 );
 
             // Update the nodes…
-            const node = gNode.selectAll('g').data(nodes, (d: {id: string}) => d.id);
+            const node = gNode
+                .selectAll('g')
+                .data(nodes, (d: { id: string }) => d.id);
 
             // Enter any new nodes at the parent's previous position.
             const nodeEnter = node
@@ -361,7 +363,7 @@ function SmartTreeChart() {
             // Update the links…
             const link = gLink
                 .selectAll('path')
-                .data(links, (d: {target: {id: string}}) => d.target.id);
+                .data(links, (d: { target: { id: string } }) => d.target.id);
 
             // Enter any new links at the parent's previous position.
             const linkEnter = link
@@ -399,7 +401,9 @@ function SmartTreeChart() {
                 });
 
             // Transition links to their new position.
-            link.merge(linkEnter).transition(transition).attr('d', diagonal as any);
+            link.merge(linkEnter)
+                .transition(transition)
+                .attr('d', diagonal as any);
 
             // Transition exiting nodes to the parent's new position.
             link.exit()
