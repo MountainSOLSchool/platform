@@ -10,7 +10,7 @@ export function BulkUpdateForSingleUnit() {
             </div>
             <div>
                 And select students that you want to give credit for this unit:
-                <StudentSelectionTool />
+                <StudentSelectionTool studentsArray={[]} />
             </div>
         </div>
     );
