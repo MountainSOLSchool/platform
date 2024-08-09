@@ -23,3 +23,5 @@ export { updateEnrollmentDraft } from './endpoints/update-enrollment-draft';
 export { loadEnrollmentDraft } from './endpoints/load-enrollment-draft';
 export { onSuccessfulEnrollDeleteDraft } from './event-handlers/on-successful-enroll-delete-draft';
 export { deleteEnrollmentDraft } from './endpoints/delete-enrollment-draft';
+// TODO: uncomment when ready to publish
+// export { allStudents } from './endpoints/all-students';
