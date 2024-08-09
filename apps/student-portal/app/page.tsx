@@ -13,6 +13,7 @@ import './index.module.css';
 import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit';
 
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
+import { FirebaseFunctions } from '../functions/firebase-functions';
 
 function Page() {
     auth.getAuth().onAuthStateChanged((user) => {
@@ -43,8 +44,26 @@ function Page() {
         );
     });
 
+    const [students, setStudents] = useState([]);
+
+    useEffect(() => {
+        const fetchAndSetStudents = async () => {
+            const students = await FirebaseFunctions.getAllStudents();
+            console.log('students are ', students);
+            setStudents(students);
+        };
+        fetchAndSetStudents();
+    }, []);
+
     return (
         <div>
+            <div>
+                students is
+                {students
+                    .sort((a, b) => a.first_name.localeCompare(b.first_name))
+                    .map((student) => student.first_name)
+                    .join(', ')}
+            </div>
             <div>
                 <br />
                 data from store:

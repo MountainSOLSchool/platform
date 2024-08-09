@@ -110,4 +110,12 @@ export class StudentRepository {
             classStudentRefs
         );
     }
+
+    static async allStudentsOfAllTime(): Promise<Array<StudentDbEntry>> {
+        const studentsCollection = this.database.collection('students');
+
+        const studentDocuments = await studentsCollection.listDocuments();
+
+        return await DatabaseUtility.getHydratedDocuments(studentDocuments);
+    }
 }
