@@ -7,21 +7,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type RootState } from '../store/store';
 import { decrement, increment, trigger } from '../store/testStore';
 import { requestTestStudent, setTestStudent } from '../store/testStudent';
-import {
-    connectFunctionsEmulator,
-    getFunctions,
-    httpsCallable,
-} from 'firebase/functions';
 
 import './index.module.css';
 
 import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit';
 
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
-
-const functions = getFunctions();
-// TODO: remove this when we are done testing
-connectFunctionsEmulator(functions, 'localhost', 5001);
+import { FirebaseFunctions } from '../functions/firebase-functions';
 
 function Page() {
     auth.getAuth().onAuthStateChanged((user) => {
@@ -52,15 +44,15 @@ function Page() {
         );
     });
 
-    // load students from firebase function 'allStudents'
-
     const [students, setStudents] = useState([]);
 
     useEffect(() => {
-        const allStudents = httpsCallable(functions, 'allStudents');
-        allStudents()
-            .then((response) => response.data as any)
-            .then(({ students }) => setStudents(students));
+        const fetchAndSetStudents = async () => {
+            const students = await FirebaseFunctions.getAllStudents();
+            console.log('students are ', students);
+            setStudents(students);
+        };
+        fetchAndSetStudents();
     }, []);
 
     return (
