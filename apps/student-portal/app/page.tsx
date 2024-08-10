@@ -16,18 +16,24 @@ import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
 import { FirebaseFunctions } from '../functions/firebase-functions';
 import { useRouter } from 'next/navigation';
 
-function Page() {
+export default function PageWrapper() {
     const router = useRouter();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    auth.getAuth().onAuthStateChanged((user) => {
-        if (user) {
-            console.log('user is signed in', user);
-        } else {
-            console.log('user is not signed in');
-            router.push('/login');
-        }
+    useEffect(() => {
+        auth.getAuth().onAuthStateChanged((user) => {
+            if (user) {
+                setIsLoggedIn(true);
+            } else {
+                router.push('/login');
+            }
+        });
     });
 
+    return <>{isLoggedIn ? <Page /> : <></>}</>;
+}
+
+function Page() {
     const [showBulkUpdate, setShowBulkUpdate] = useState(false);
 
     const dispatch = useDispatch();
@@ -118,5 +124,3 @@ function Page() {
         </div>
     );
 }
-
-export default Page;
