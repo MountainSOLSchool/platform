@@ -1,17 +1,16 @@
 import {
-    Auth,
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signOut,
-    user,
-} from '@angular/fire/auth';
-import { FirebaseServiceFactoryUtility } from './utilities/firebase-service-factory.utility';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+} from 'firebase/auth';
+import { Auth, user } from '@angular/fire/auth';
+import { FirebaseAuthBasedServiceFactory } from '@sol/ts/firebase/adapter';
 import { inject, InjectionToken } from '@angular/core';
+import { Functions, httpsCallable } from '@angular/fire/functions';
 
 export const fireAuth = (auth: Auth) =>
-    FirebaseServiceFactoryUtility.create(auth, {
+    FirebaseAuthBasedServiceFactory.create(auth, {
         createUserWithEmailAndPassword,
         sendPasswordResetEmail,
         signInWithEmailAndPassword,
@@ -28,8 +27,8 @@ export const provideFireAuth = () => ({
     useFactory: () => fireAuth(inject(Auth)),
 });
 
-export const fireFunctions = (functions: Functions) =>
-    FirebaseServiceFactoryUtility.create(functions, {
+const fireFunctions = (functions: Functions) =>
+    FirebaseAuthBasedServiceFactory.create(functions, {
         httpsCallable,
     });
 

@@ -22,12 +22,12 @@ export const loadUnits = (action$: Observable<Action>) =>
                                 name: fields.name.stringValue,
                                 category: fields.category.stringValue,
                                 prereqs: fields.prereqs
-                                    ? fields.prereqs.arrayValue.values.map(
+                                    ? fields.prereqs.arrayValue.values?.map(
                                           (e) =>
                                               e.referenceValue
                                                   .match(/\w+$/i)
                                                   .toString()
-                                      )
+                                      ) ?? []
                                     : 'none',
                                 description: fields.description.stringValue,
                             };
