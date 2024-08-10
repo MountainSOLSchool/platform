@@ -1,0 +1,12 @@
+{
+    "name": "redux-request",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/react/request/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        }
+    }
+}
