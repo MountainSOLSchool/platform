@@ -12,7 +12,7 @@ export default function LoginWithRegisteredEpics() {
     return <Login />;
 }
 
-export function Login() {
+function Login() {
     const loginStore = useLoginStore();
 
     return (
