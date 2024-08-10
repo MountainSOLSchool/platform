@@ -8,17 +8,20 @@ import 'primereact/resources/primereact.min.css';
 // primereact icons
 import 'primeicons/primeicons.css';
 import { Provider } from 'react-redux';
-import { store } from '../store/store';
+import { addEpic, store } from '../store/store';
+import { AddEpicContext } from '@sharakai/use-redux-observable-epic';
 
 function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html>
             <body>
                 <Provider store={store}>
-                    <Head>
-                        <title>Welcome to student-portal!</title>
-                    </Head>
-                    <main className="app">{children}</main>
+                    <AddEpicContext.Provider value={addEpic}>
+                        <Head>
+                            <title>Welcome to student-portal!</title>
+                        </Head>
+                        <main className="app">{children}</main>
+                    </AddEpicContext.Provider>
                 </Provider>
             </body>
         </html>

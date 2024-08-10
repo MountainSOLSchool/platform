@@ -1,4 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import { solFirebaseConfig } from './sol-firebase-config';
 
-export const solApp = initializeApp(solFirebaseConfig);
+let _solApp: ReturnType<typeof initializeApp> | undefined;
+
+export const getSolApp = () => {
+    _solApp ??= initializeApp(solFirebaseConfig);
+    return _solApp;
+};

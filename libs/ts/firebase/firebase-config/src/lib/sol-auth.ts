@@ -1,4 +1,9 @@
 import * as auth from 'firebase/auth';
-import { solApp } from './sol-app';
+import { getSolApp } from './sol-app';
 
-export const solAuth = auth.getAuth(solApp);
+let _solAuth: auth.Auth | undefined;
+
+export const getSolAuth = () => {
+    _solAuth ??= auth.getAuth(getSolApp());
+    return _solAuth;
+};

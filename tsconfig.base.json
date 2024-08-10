@@ -95,6 +95,9 @@
             ],
             "@sol/ts/firebase/firebase-config": [
                 "libs/ts/firebase/firebase-config/src/index.ts"
+            ],
+            "@sharakai/use-redux-observable-epic": [
+                "libs/react/use-redux-observable-epic/src/index.ts"
             ]
         }
     },

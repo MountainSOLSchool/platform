@@ -59,8 +59,8 @@ export const loginSlice = createSlice({
             console.log('succeeded');
             state.requestState = undefined;
         },
-        failed: (state) => {
-            console.log('failed');
+        failed: (state, error: unknown) => {
+            console.log('failed', error);
             state.requestState = RequestState.Error;
         },
         logIn: (state) => {

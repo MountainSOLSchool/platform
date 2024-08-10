@@ -2,8 +2,17 @@
 import React from 'react';
 import LoginView from './login-view';
 import { useLoginStore } from './useLoginStore';
+import { submitLoginEpic } from './login.epics';
+import { useRouter } from 'next/navigation';
+import { useEpic } from '@sharakai/use-redux-observable-epic';
 
-export default function Login() {
+export default function LoginWithRegisteredEpics() {
+    useEpic(submitLoginEpic(useRouter()));
+
+    return <Login />;
+}
+
+export function Login() {
     const loginStore = useLoginStore();
 
     return (

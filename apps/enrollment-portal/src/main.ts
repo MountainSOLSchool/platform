@@ -27,7 +27,7 @@ import {
     provideFireFunctions,
 } from '@sol/angular/firebase/adapter';
 import { MarkdownModule } from 'ngx-markdown';
-import { solApp } from '@sol/ts/firebase/firebase-config';
+import { getSolApp } from '@sol/ts/firebase/firebase-config';
 
 if (environment.production) {
     enableProdMode();
@@ -45,7 +45,7 @@ bootstrapApplication(AppComponent, {
         provideStoreDevtools({
             maxAge: 50,
         }),
-        provideFirebaseApp(() => solApp),
+        provideFirebaseApp(getSolApp),
         provideFunctions(() => {
             const functions = getFunctions();
             if (!environment.remoteFunctions) {

@@ -22,11 +22,13 @@ export class FirebaseFunctions {
         return _functions;
     }
 
-    static getAllStudents(): Promise<Array<StudentDbEntry>> {
+    static getAllStudents(
+        fields: Array<keyof StudentDbEntry>
+    ): Promise<Array<StudentDbEntry>> {
         const allStudentsFn = httpsCallable<
-            void,
+            { fields: Array<keyof StudentDbEntry> },
             { students: Array<StudentDbEntry> }
         >(this.functions, 'allStudents');
-        return allStudentsFn().then((result) => result.data.students);
+        return allStudentsFn({ fields }).then((result) => result.data.students);
     }
 }

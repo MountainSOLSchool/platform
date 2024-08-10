@@ -1,4 +1,4 @@
 import { getFirestore } from 'firebase/firestore';
-import { app } from './app';
+import { getSolApp } from '@sol/ts/firebase/firebase-config';
 
-export const db = getFirestore(app);
+export const db = getFirestore(getSolApp());

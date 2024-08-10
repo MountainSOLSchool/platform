@@ -93,6 +93,10 @@
                     "function": "removeEnrollmentDraft"
                 },
                 {
+                    "source": "/allStudents",
+                    "function": "allStudents"
+                },
+                {
                     "source": "**",
                     "destination": "/enrollment-portal/index.html"
                 }

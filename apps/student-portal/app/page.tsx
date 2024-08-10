@@ -14,13 +14,17 @@ import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit
 
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
 import { FirebaseFunctions } from '../functions/firebase-functions';
+import { useRouter } from 'next/navigation';
 
 function Page() {
+    const router = useRouter();
+
     auth.getAuth().onAuthStateChanged((user) => {
         if (user) {
             console.log('user is signed in', user);
         } else {
             console.log('user is not signed in');
+            router.push('/login');
         }
     });
 
@@ -44,16 +48,20 @@ function Page() {
         );
     });
 
+    // -- EXAMPLE OF FETCHING STUDENTS FROM FIREBASE
     const [students, setStudents] = useState([]);
 
     useEffect(() => {
         const fetchAndSetStudents = async () => {
-            const students = await FirebaseFunctions.getAllStudents();
+            const students = await FirebaseFunctions.getAllStudents([
+                'first_name',
+            ]);
             console.log('students are ', students);
             setStudents(students);
         };
         fetchAndSetStudents();
     }, []);
+    // -- END EXAMPLE
 
     return (
         <div>
