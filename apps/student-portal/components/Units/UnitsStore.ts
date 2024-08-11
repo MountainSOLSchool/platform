@@ -1,6 +1,6 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { Requested, RequestState } from '@sol/react/request';
-import { UnitsViewModel } from './units-view-model';
+import { UpdateStudentUnitsProps } from './UpdateStudentUnits';
 
 type State = {
     students: Requested<
@@ -51,9 +51,9 @@ export const selectIsStudentLoadingInProgress = createSelector(
     (requestState) => requestState === RequestState.Loading
 );
 
-export const selectUnitsViewModel = createSelector(
+export const selectUpdateStudentUnitsProps = createSelector(
     [selectStudents],
-    (students): UnitsViewModel => {
+    (students): UpdateStudentUnitsProps => {
         return {
             students,
         };

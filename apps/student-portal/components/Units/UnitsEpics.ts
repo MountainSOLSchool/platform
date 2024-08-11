@@ -1,7 +1,7 @@
 import { Epic, ofType } from 'redux-observable';
 import { filter, of, switchMap, withLatestFrom } from 'rxjs';
 import { map, catchError, startWith } from 'rxjs/operators';
-import { unitsSlice, selectStudents } from './units.slice';
+import { unitsSlice, selectStudents } from './UnitsStore';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { FirebaseFunctions } from '../../functions/firebase-functions';
 import { RequestedUtility } from '@sol/react/request';

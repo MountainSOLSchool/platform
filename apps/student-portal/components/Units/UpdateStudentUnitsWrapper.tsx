@@ -16,7 +16,7 @@ function UpdateStudentUnitsWrapper() {
     return (
         <>
             <UpdateStudentUnits
-                viewModel={unitsStore.viewModel}
+                {...unitsStore.props}
             ></UpdateStudentUnits>
         </>
     );

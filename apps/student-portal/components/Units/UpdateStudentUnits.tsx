@@ -3,11 +3,18 @@ import { Button } from 'primereact/button';
 import { useEffect, useState } from 'react';
 import StudentSelectionTool from './StudentSelectionTool';
 import UpdateUnitsTool from './UpdateUnitsTool';
-import { UnitsViewModel } from './units-view-model';
+import { UnitsComponentProps } from './units-view-model';
 import { RequestedUtility } from '@sol/react/request';
 import { FirebaseFunctions } from 'apps/student-portal/functions/firebase-functions';
+import { Requested } from '@sol/react/request';
 
-export function UpdateStudentUnits(props: { viewModel: UnitsViewModel }) {
+export interface UpdateStudentUnitsProps {
+    students: Requested<
+    Array<{ first_name: string; last_name: string; id: string }>
+>;
+}
+
+export function UpdateStudentUnits(props: UpdateStudentUnitsProps) {
     const [isCompletedByUnitId, setIsCompletedByUnitId] = useState({});
     const [selectedStudent, setSelectedStudent] = useState('');
     const [completedUnits, setCompletedUnits] = useState([]);
