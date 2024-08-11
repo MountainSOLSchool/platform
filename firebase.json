@@ -97,6 +97,10 @@
                     "function": "allStudents"
                 },
                 {
+                    "source": "/fullUnitsAndPaths",
+                    "function": "fullUnitsAndPaths"
+                },
+                {
                     "source": "**",
                     "destination": "/enrollment-portal/index.html"
                 }

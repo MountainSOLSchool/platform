@@ -7,4 +7,6 @@ export * from './lib/models/discount/discount-evaluator';
 export * from './lib/models/discount/classes-discount';
 export * from './lib/models/discount/basket-discount';
 export * from './lib/models/semester-enrollment';
+export * from './lib/models/path/path-db-entry';
+export * from './lib/models/path/unit-db-entry';
 export * from './lib/utilities/enrollment.utility';
