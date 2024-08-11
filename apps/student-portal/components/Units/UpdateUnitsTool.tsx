@@ -2,6 +2,7 @@ import { Checkbox } from 'primereact/checkbox';
 import { TabView, TabPanel } from 'primereact/tabview';
 
 export function UpdateUnitsTool(props: {
+    student: string
     isCompletedByUnitId: { [unitId: string]: boolean };
     units: {
         [unitId: string]: {
@@ -47,7 +48,11 @@ export function UpdateUnitsTool(props: {
                         {path.unitIds.map((unitId) => (
                             <>
                                 <Checkbox
-                                    checked={false}
+                                    style={props.student == '' ? {display: 'none'} : ''}
+                                    checked={
+                                        // unitCredit
+                                        false
+                                    }
                                     onClick={props.onUnitsChanged}
                                 />
                                 {props.units[unitId]?.name ?? ''}

@@ -7,8 +7,8 @@ import { FirebaseFunctions } from 'apps/student-portal/functions/firebase-functi
 
 export function UpdateStudentUnits() {
     const [students, setStudents] = useState([]);
-    const [isCompletedByUnitId, setIsCompletedByUnitId] = useState({});
     const [selectedStudent, setSelectedStudent] = useState('')
+    const [completedUnits, setCompletedUnits] = useState([]);
 
     useEffect(() => {}, [selectedStudent]);
 
@@ -31,10 +31,18 @@ export function UpdateStudentUnits() {
     }, []);
 
     useEffect(() => {
-        const loadSelectedStudentsUnits = async () => {
-            // firebase function to get the student's units
+        if (selectedStudent !== ''){
+            const fetchCompletedUnits = async () => {
+                const completedUnitIds =
+                    await FirebaseFunctions.getCompletedUnitIds(
+                        selectedStudent
+                    );
+                console.log('completed units are ', completedUnitIds);
+                setCompletedUnits(completedUnitIds);
+            };
+            fetchCompletedUnits();
         }
-    }, [selectedStudent])
+    }, [selectedStudent]);
     
     const saveUpdatedUnits = (event) => {
 
@@ -97,15 +105,16 @@ export function UpdateStudentUnits() {
             </div>
             <div>
                 <UpdateUnitsTool
+                    student={selectedStudent}
                     isCompletedByUnitId={{}}
                     units={fakeUnits}
                     paths={fakePathsArr}
                     onUnitsChanged={handleUnitsUpdated}
                 />
                 {/* checkboxes appear by unit names if student is selected */}
-                <Button
+                <Button 
+                    style={selectedStudent == '' ? {display: 'none'} : ''}
                     label="Save Updates"
-                    hidden={!selectedStudent}
                     onClick={() => saveUpdatedUnits}
                 ></Button>
             </div>
