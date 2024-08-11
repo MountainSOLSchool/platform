@@ -67,7 +67,9 @@ export class StudentRepository {
         return await this.database.collection('students').add(student);
     }
 
-    static async update(student: StudentDbEntry): Promise<DocumentReference> {
+    static async update(
+        student: Partial<StudentDbEntry> & { id: string }
+    ): Promise<DocumentReference> {
         await this.database
             .collection('students')
             .doc(student.id)
