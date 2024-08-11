@@ -9,6 +9,7 @@ import { requestTestStudent, setTestStudent } from '../store/testStudent';
 import './index.module.css';
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
 import { FirebaseFunctions } from '../functions/firebase-functions';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
     const [showBulkUpdate, setShowBulkUpdate] = useState(false);
@@ -18,6 +19,8 @@ export default function Page() {
     const pathData = useSelector((state: RootState) => state.paths);
     const units = useSelector((state: RootState) => state.units);
     const testStudent = useSelector((state: RootState) => state.student);
+
+    const router = useRouter();
 
     useEffect(() => {
         console.log(

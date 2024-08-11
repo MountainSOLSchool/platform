@@ -3,42 +3,22 @@ import { Button } from 'primereact/button';
 import { useEffect, useState } from 'react';
 import StudentSelectionTool from './StudentSelectionTool';
 import UpdateUnitsTool from './UpdateUnitsTool';
-import { FirebaseFunctions } from 'apps/student-portal/functions/firebase-functions';
+import { UnitsViewModel } from './units-view-model';
+import { RequestedUtility } from '@sol/react/request';
 
-export function UpdateStudentUnits() {
-    const [students, setStudents] = useState([]);
+export function UpdateStudentUnits(props: { viewModel: UnitsViewModel }) {
     const [isCompletedByUnitId, setIsCompletedByUnitId] = useState({});
-    const [selectedStudent, setSelectedStudent] = useState('')
+    const [selectedStudent, setSelectedStudent] = useState('');
 
     useEffect(() => {}, [selectedStudent]);
 
     useEffect(() => {
-        const fetchAndSetStudents = async () => {
-            const students = await FirebaseFunctions.getAllStudents([
-                'first_name',
-                'last_name',
-                'id',
-            ]);
-            console.log('students are ', students);
-            setStudents(
-                students.map((student) => ({
-                    displayName: student.first_name + ' ' + student.last_name,
-                    studentId: student.id,
-                }))
-            );
-        };
-        fetchAndSetStudents();
-    }, []);
-
-    useEffect(() => {
         const loadSelectedStudentsUnits = async () => {
             // firebase function to get the student's units
-        }
-    }, [selectedStudent])
-    
-    const saveUpdatedUnits = (event) => {
+        };
+    }, [selectedStudent]);
 
-    };
+    const saveUpdatedUnits = (event) => {};
 
     const handleStudentSelected = (studentId) => {
         setSelectedStudent(studentId);
@@ -90,10 +70,15 @@ export function UpdateStudentUnits() {
         <div>
             <div>
                 Select a student to update their units:
-                <StudentSelectionTool
-                    students={students}
-                    onSelected={handleStudentSelected}
-                />
+                {RequestedUtility.isLoaded(props.viewModel.students) && (
+                    <StudentSelectionTool
+                        students={props.viewModel.students.map((student) => ({
+                            studentId: student.id,
+                            displayName: `${student.first_name} ${student.last_name}`,
+                        }))}
+                        onSelected={handleStudentSelected}
+                    />
+                )}
             </div>
             <div>
                 <UpdateUnitsTool
