@@ -14,24 +14,19 @@ export function UpdateUnitsTool(props: {
     // onUnitsChanged: (isCopmletedByUnitId: { [unitId: string]: boolean }) => void;
     onUnitsChanged: any;
 }) {
-    // Build unitsByCategory
-    const unitsByCategory: {
-        [category: string]: Array<{ name: string; description: string }>;
-    } = {};
-    Object.values(props.units ?? {}).forEach((unit) => {
-        if (!unitsByCategory[unit.category]) {
-            unitsByCategory[unit.category] = [];
-        }
-        unitsByCategory[unit.category].push(unit);
-    });
-
-    console.log('units by category: ', unitsByCategory);
+    const unitsByCategory = Object.values(props.units).reduce(
+        (agg, unit) => ({
+            ...agg,
+            [unit.category]: [...(agg[unit.category] ?? []), unit],
+        }),
+        {} as Record<string, Array<{ name: string; description: string }>>
+    );
 
     const unitsByCategoryJsx = (
         <>
             {Object.entries(unitsByCategory).map(([category, units]) => (
                 <div key={category}>
-                    <h2>{category}</h2>
+                    <h2>Category: {category}</h2>
                     {units.map((unit, index) => (
                         <div key={index}>
                             <h3>{unit.name}</h3>
