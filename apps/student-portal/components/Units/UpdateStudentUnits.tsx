@@ -5,6 +5,7 @@ import StudentSelectionTool from './StudentSelectionTool';
 import UpdateUnitsTool from './UpdateUnitsTool';
 import { UnitsViewModel } from './units-view-model';
 import { RequestedUtility } from '@sol/react/request';
+import { FirebaseFunctions } from 'apps/student-portal/functions/firebase-functions';
 
 export function UpdateStudentUnits(props: { viewModel: UnitsViewModel }) {
     const [isCompletedByUnitId, setIsCompletedByUnitId] = useState({});
@@ -20,7 +21,7 @@ export function UpdateStudentUnits(props: { viewModel: UnitsViewModel }) {
     }, [selectedStudent]);
 
     useEffect(() => {
-        if (selectedStudent !== ''){
+        if (selectedStudent !== '') {
             const fetchCompletedUnits = async () => {
                 const completedUnitIds =
                     await FirebaseFunctions.getCompletedUnitIds(
@@ -32,8 +33,6 @@ export function UpdateStudentUnits(props: { viewModel: UnitsViewModel }) {
             fetchCompletedUnits();
         }
     }, [selectedStudent]);
-    
-    const saveUpdatedUnits = (event) => {
 
     const saveUpdatedUnits = (event) => {};
 
@@ -106,8 +105,8 @@ export function UpdateStudentUnits(props: { viewModel: UnitsViewModel }) {
                     onUnitsChanged={handleUnitsUpdated}
                 />
                 {/* checkboxes appear by unit names if student is selected */}
-                <Button 
-                    style={selectedStudent == '' ? {display: 'none'} : ''}
+                <Button
+                    style={selectedStudent === '' ? { display: 'none' } : {}}
                     label="Save Updates"
                     onClick={() => saveUpdatedUnits}
                 ></Button>
