@@ -10,8 +10,13 @@ import 'primeicons/primeicons.css';
 import { Provider } from 'react-redux';
 import { addEpic, store } from '../store/store';
 import { AddEpicContext } from '@sharakai/use-redux-observable-epic';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import * as auth from 'firebase/auth';
 
 function RootLayout({ children }: { children: React.ReactNode }) {
+    const isLoggedIn = useIsLoggedIn();
+
     return (
         <html>
             <body>
@@ -20,7 +25,9 @@ function RootLayout({ children }: { children: React.ReactNode }) {
                         <Head>
                             <title>Welcome to student-portal!</title>
                         </Head>
-                        <main className="app">{children}</main>
+                        <main className="app">
+                            {isLoggedIn ? children : <></>}
+                        </main>
                     </AddEpicContext.Provider>
                 </Provider>
             </body>
@@ -29,3 +36,20 @@ function RootLayout({ children }: { children: React.ReactNode }) {
 }
 
 export default RootLayout;
+
+function useIsLoggedIn() {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const router = useRouter();
+
+    useEffect(() => {
+        auth.getAuth().onAuthStateChanged((user) => {
+            if (user) {
+                setIsLoggedIn(true);
+            } else {
+                router.push('/login');
+            }
+        });
+    });
+
+    return isLoggedIn;
+}

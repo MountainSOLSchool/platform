@@ -45,6 +45,8 @@ export type StudentDbEntry = {
     heightFeet: number;
     heightInches: number;
     parent_notes: string;
+    // it's an array of Firestore.DocumentReference, but that can't class can't be imported here
+    completed_units: Array<unknown>;
 };
 
 export type NewStudentDbEntry = Omit<StudentDbEntry, 'id'>;

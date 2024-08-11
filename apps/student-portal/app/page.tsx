@@ -1,5 +1,4 @@
 'use client';
-import * as auth from 'firebase/auth';
 // import styles from './index.module.css';
 import { Button } from 'primereact/button';
 import React, { useEffect, useState } from 'react';
@@ -14,26 +13,8 @@ import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit
 
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
 import { FirebaseFunctions } from '../functions/firebase-functions';
-import { useRouter } from 'next/navigation';
 
-export default function PageWrapper() {
-    const router = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    useEffect(() => {
-        auth.getAuth().onAuthStateChanged((user) => {
-            if (user) {
-                setIsLoggedIn(true);
-            } else {
-                router.push('/login');
-            }
-        });
-    });
-
-    return <>{isLoggedIn ? <Page /> : <></>}</>;
-}
-
-function Page() {
+export default function Page() {
     const [showBulkUpdate, setShowBulkUpdate] = useState(false);
 
     const dispatch = useDispatch();
