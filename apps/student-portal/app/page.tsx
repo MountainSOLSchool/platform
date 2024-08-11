@@ -69,13 +69,35 @@ function Page() {
     }, []);
     // -- END EXAMPLE
 
+    // -- EXAMPLE OF FETCHING PATHS FROM FIREBASE
+    const [paths, setPaths] = useState([]);
+
+    useEffect(() => {
+        const fetchAndSetPaths = async () => {
+            const { paths, units } =
+                await FirebaseFunctions.getFullUnitsAndPaths();
+            console.log('paths are ', paths);
+            setPaths(paths);
+        };
+        fetchAndSetPaths();
+    }, []);
+    // -- END EXAMPLE
+
     return (
         <div>
             <div>
-                students is
+                students is&nbsp;
                 {students
                     .sort((a, b) => a.first_name.localeCompare(b.first_name))
                     .map((student) => student.first_name)
+                    .join(', ')}
+            </div>
+            <br />
+            <div>
+                paths is&nbsp;
+                {paths
+                    // .sort((a, b) => a.first_name.localeCompare(b.first_name))
+                    .map((path) => path.name)
                     .join(', ')}
             </div>
             <div>
