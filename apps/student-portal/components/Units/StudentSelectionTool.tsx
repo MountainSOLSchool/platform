@@ -1,14 +1,28 @@
 'use client';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import { Dropdown } from 'primereact/dropdown';
 import { useState } from 'react';
-import { Checkbox } from 'primereact/checkbox';
 
 export function StudentSelectionTool(props: {
+    students: Array<{ displayName: string; studentId: string }>;
     onSelected: (studentId: string) => void;
 }) {
+    const [selectedStudent] = useState('');
 
-    return <></>
+    return (
+        <>
+            <Dropdown
+                editable
+                placeholder="Select a student..."
+                options={props.students}
+                optionLabel="displayName"
+                optionValue="studentId"
+                value={selectedStudent}
+                onChange={(e) => {
+                    props.onSelected(selectedStudent);
+                }}
+            ></Dropdown>
+        </>
+    );
 }
 
 export default StudentSelectionTool;

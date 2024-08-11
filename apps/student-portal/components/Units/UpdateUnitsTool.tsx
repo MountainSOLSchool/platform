@@ -3,22 +3,29 @@ import { TabView, TabPanel } from 'primereact/tabview';
 
 export function UpdateUnitsTool(props: {
     isCompletedByUnitId: { [unitId: string]: boolean };
-    units: { [unitId: string]: { name: string; description: string; category: string; } };
+    units: {
+        [unitId: string]: {
+            name: string;
+            description: string;
+            category: string;
+        };
+    };
     paths: Array<{ name: string; unitIds: Array<string> }>;
     // onUnitsChanged: (isCopmletedByUnitId: { [unitId: string]: boolean }) => void;
-    onUnitsChanged: any
+    onUnitsChanged: any;
 }) {
-
     // Build unitsByCategory
-    const unitsByCategory: { [category: string]: Array<{ name: string; description: string; }> } = {};
-    Object.values(props.units).forEach(unit => {
+    const unitsByCategory: {
+        [category: string]: Array<{ name: string; description: string }>;
+    } = {};
+    Object.values(props.units ?? {}).forEach((unit) => {
         if (!unitsByCategory[unit.category]) {
             unitsByCategory[unit.category] = [];
         }
         unitsByCategory[unit.category].push(unit);
     });
 
-    console.log('units by category: ', unitsByCategory)
+    console.log('units by category: ', unitsByCategory);
 
     const unitsByCategoryJsx = (
         <>
@@ -34,26 +41,28 @@ export function UpdateUnitsTool(props: {
                 </div>
             ))}
         </>
-    )
+    );
 
     const unitsByPathJsx = (
         <>
-        <div>
-        {props.paths.map(path => 
-            <div className='col'>
-                <big>path.name</big>
-                {path.unitIds.map(unitId =>  
-                    <>
-                        <Checkbox checked={false} onClick={props.onUnitsChanged}/>
-                        {props.units[unitId].name}
-                    </>
-            )}
+            <div>
+                {props.paths.map((path) => (
+                    <div className="col">
+                        <big>path.name</big>
+                        {path.unitIds.map((unitId) => (
+                            <>
+                                <Checkbox
+                                    checked={false}
+                                    onClick={props.onUnitsChanged}
+                                />
+                                {props.units[unitId]?.name ?? ''}
+                            </>
+                        ))}
+                    </div>
+                ))}
             </div>
-            )}
-        </div>
-            
         </>
-    )
+    );
 
     return (
         <div>
@@ -63,42 +72,40 @@ export function UpdateUnitsTool(props: {
                 <TabPanel header="View Units by Path">
                     {unitsByPathJsx}
                 </TabPanel>
-                <TabPanel header="Big Tree View">
-                    {unitsByCategoryJsx}
-                </TabPanel>
+                <TabPanel header="Big Tree View">{unitsByCategoryJsx}</TabPanel>
             </TabView>
         </div>
-        )
-    }
+    );
+}
 
-    // return (
-    //     <div>
-    //         <div>
-    //             some units in a nice table
-    //             {/* /* <DataTable
-    //                 value={props.studentsArray}
-    //                 tableStyle={{ width: '30rem', maxHeight: '500' }}
-    //                 sortField="lastName"
-    //                 sortOrder={-1}
-    //                 selectionMode="single"
-    //                 onSelectionChange={selectStudent}
-    //             >
-    //                 <Column key={1} field={'firstName'} header={'First Name'} />
-    //                 <Column key={2} field={'lastName'} header={'Last Name'} />
-    //                 <Column
-    //                     key={4}
-    //                     field={'studentID'}
-    //                     header={'Student ID'}
-    //                     hidden={true}
-    //                 />
-    //                 <Column
-    //                     key={3}
-    //                     header={'Credit for Unit'}
-    //                     body={checkboxTemplate}
-    //                 />
-    //             </DataTable> */ */}
-    //         </div>
-    //     </div>
-    // );
+// return (
+//     <div>
+//         <div>
+//             some units in a nice table
+//             {/* /* <DataTable
+//                 value={props.studentsArray}
+//                 tableStyle={{ width: '30rem', maxHeight: '500' }}
+//                 sortField="lastName"
+//                 sortOrder={-1}
+//                 selectionMode="single"
+//                 onSelectionChange={selectStudent}
+//             >
+//                 <Column key={1} field={'firstName'} header={'First Name'} />
+//                 <Column key={2} field={'lastName'} header={'Last Name'} />
+//                 <Column
+//                     key={4}
+//                     field={'studentID'}
+//                     header={'Student ID'}
+//                     hidden={true}
+//                 />
+//                 <Column
+//                     key={3}
+//                     header={'Credit for Unit'}
+//                     body={checkboxTemplate}
+//                 />
+//             </DataTable> */ */}
+//         </div>
+//     </div>
+// );
 
 export default UpdateUnitsTool;

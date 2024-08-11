@@ -6,11 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type RootState } from '../store/store';
 import { decrement, increment, trigger } from '../store/testStore';
 import { requestTestStudent, setTestStudent } from '../store/testStudent';
-
 import './index.module.css';
-
-import BulkUpdateForSingleUnit from '../components/Units/BulkUpdateForSingleUnit';
-
 import { SmartTreeChart, MtnMedicUnits } from '../components/Units/TreeChart';
 import { FirebaseFunctions } from '../functions/firebase-functions';
 
@@ -112,16 +108,13 @@ export default function Page() {
             some things you can do:
             <div>
                 <Button
-                    label="Bulk Update Students for One Unit"
+                    label="View Units, Update Student Units"
                     onClick={() => {
-                        console.log('testing bulkUpdate is ', showBulkUpdate);
-                        setShowBulkUpdate(!showBulkUpdate);
+                        router.push('/units');
                     }}
                 />
             </div>
-            {showBulkUpdate ? <BulkUpdateForSingleUnit /> : null}
             Welcome to our new unit portal!!! it is super exciting!
-            <BulkUpdateForSingleUnit />
             {/**NEW STUFF */}
             <SmartTreeChart />
         </div>
