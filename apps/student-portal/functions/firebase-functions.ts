@@ -39,6 +39,18 @@ export class FirebaseFunctions {
         >(this.functions, 'fullUnitsAndPaths');
         return getPathsFn().then((result) => result.data);
     }
+
+    static getCompletedUnitIds(studentId: string): Promise<Array<string>> {
+        const getCompletedUnitsFn = httpsCallable<
+            { studentId: string },
+            {
+                completedUnitIds: Array<string>;
+            }
+        >(this.functions, 'getCompletedUnits');
+        return getCompletedUnitsFn({ studentId }).then(
+            (result) => result.data.completedUnitIds
+        );
+    }
 }
 
 function getConfiguredFunctions() {
