@@ -25,3 +25,5 @@ export { onSuccessfulEnrollDeleteDraft } from './event-handlers/on-successful-en
 export { deleteEnrollmentDraft } from './endpoints/delete-enrollment-draft';
 export { allStudents } from './endpoints/all-students';
 export { fullUnitsAndPaths } from './endpoints/full-units-and-paths';
+export { getCompletedUnits } from './endpoints/get-completed-units';
+export { updateCompletedUnits } from './endpoints/update-completed-units';

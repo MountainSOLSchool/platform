@@ -60,6 +60,22 @@ export default function Page() {
     }, []);
     // -- END EXAMPLE
 
+    // -- EXAMPLE OF FETCHING COMPLETED UNITS FROM FIREBASE
+    const [completedUnits, setCompletedUnits] = useState([]);
+
+    useEffect(() => {
+        const fetchCompletedUnits = async () => {
+            const completedUnitIds =
+                await FirebaseFunctions.getCompletedUnitIds(
+                    'zWKUjbHAUOFJBKo38LYw'
+                );
+            console.log('completed units are ', completedUnitIds);
+            setCompletedUnits(completedUnitIds);
+        };
+        fetchCompletedUnits();
+    }, []);
+    // -- END EXAMPLE
+
     return (
         <div>
             <div>
@@ -76,6 +92,11 @@ export default function Page() {
                     // .sort((a, b) => a.first_name.localeCompare(b.first_name))
                     .map((path) => path.name)
                     .join(', ')}
+            </div>
+            <br />
+            <div>
+                completed units is&nbsp;
+                {completedUnits.join(', ')}
             </div>
             <div>
                 <br />
