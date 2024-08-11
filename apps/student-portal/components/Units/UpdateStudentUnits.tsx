@@ -6,26 +6,47 @@ import UpdateUnitsTool from './UpdateUnitsTool';
 import { FirebaseFunctions } from 'apps/student-portal/functions/firebase-functions';
 
 export function UpdateStudentUnits() {
-    const [selectedStudent, updateSelectedStudent] = useState(null);
-
-    const saveUpdatedUnits = (event) => {
-        // save student's units in firebase
-    };
+    const [students, setStudents] = useState([]);
+    const [isCompletedByUnitId, setIsCompletedByUnitId] = useState({});
+    const [selectedStudent, setSelectedStudent] = useState('')
 
     useEffect(() => {}, [selectedStudent]);
 
-    const handleStudentSelected = (event) => {
-        window.alert('eventing...');
-        console.log('data is: ', event.data);
-        updateSelectedStudent('asdf');
+    useEffect(() => {
+        const fetchAndSetStudents = async () => {
+            const students = await FirebaseFunctions.getAllStudents([
+                'first_name',
+                'last_name',
+                'id',
+            ]);
+            console.log('students are ', students);
+            setStudents(
+                students.map((student) => ({
+                    displayName: student.first_name + ' ' + student.last_name,
+                    studentId: student.id,
+                }))
+            );
+        };
+        fetchAndSetStudents();
+    }, []);
+
+    useEffect(() => {
+        const loadSelectedStudentsUnits = async () => {
+            // firebase function to get the student's units
+        }
+    }, [selectedStudent])
+    
+    const saveUpdatedUnits = (event) => {
+
+    };
+
+    const handleStudentSelected = (studentId) => {
+        setSelectedStudent(studentId);
     };
 
     const handleUnitsUpdated = (e) => {
         console.log('updating units with data: ', e.data);
     };
-
-    // firebase function to get all the student's units
-    const isCompletedByUnitId = {};
 
     // test data
     const fakeScoutPath = {
@@ -64,30 +85,6 @@ export function UpdateStudentUnits() {
             category: 'Fifth category',
         },
     };
-
-    const studentsArr = [
-        { displayName: 'Sally Andershon', studentId: '3aasdf' },
-    ];
-
-    const [students, setStudents] = useState([]);
-
-    useEffect(() => {
-        const fetchAndSetStudents = async () => {
-            const students = await FirebaseFunctions.getAllStudents([
-                'first_name',
-                'last_name',
-                'id',
-            ]);
-            console.log('students are ', students);
-            setStudents(
-                students.map((student) => ({
-                    displayName: student.first_name + ' ' + student.last_name,
-                    studentId: student.id,
-                }))
-            );
-        };
-        fetchAndSetStudents();
-    }, []);
 
     return (
         <div>

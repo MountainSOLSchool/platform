@@ -6,19 +6,22 @@ export function StudentSelectionTool(props: {
     students: Array<{ displayName: string; studentId: string }>;
     onSelected: (studentId: string) => void;
 }) {
-    const [selectedStudent] = useState('');
+    const [selectedStudent, setSelectedStudent] = useState('');
 
     return (
         <>
             <Dropdown
-                editable
+                filter
                 placeholder="Select a student..."
                 options={props.students}
                 optionLabel="displayName"
                 optionValue="studentId"
                 value={selectedStudent}
                 onChange={(e) => {
-                    props.onSelected(selectedStudent);
+                    if (e.value != ''){
+                        setSelectedStudent(e.value)
+                        props.onSelected(e.value);
+                    }
                 }}
             ></Dropdown>
         </>
