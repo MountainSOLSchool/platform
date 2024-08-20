@@ -38,4 +38,4 @@ Run the frontend portal with `npx nx run student-portal:serve` and view at http:
 
 ### Deployment
 
-`main` is continuously deployed to https://main.dtpci3w8k8pee.amplifyapp.com/
+`main` is continuously deployed to https://main.dyq0kzltftl6d.amplifyapp.com
