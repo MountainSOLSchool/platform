@@ -4,7 +4,7 @@ import {
     httpsCallable,
 } from 'firebase/functions';
 import { StudentDbEntry } from '@sol/student/domain';
-import { PathDbEntry, UnitDbEntry } from '@sol/classes/domain';
+import { UnitDbEntry } from '@sol/classes/domain';
 
 let _functions: ReturnType<typeof getFunctions> | undefined;
 
@@ -27,17 +27,40 @@ export class FirebaseFunctions {
     }
 
     static getFullUnitsAndPaths(): Promise<{
-        paths: Array<PathDbEntry>;
+        paths: Array<{
+            id: string;
+            name: string;
+            description: string;
+            unitIds: Array<string>;
+        }>;
         units: Record<string, UnitDbEntry>;
     }> {
         const getPathsFn = httpsCallable<
             void,
             {
-                paths: Array<PathDbEntry>;
+                paths: Array<{
+                    id: string;
+                    name: string;
+                    description: string;
+                    unitIds: Array<string>;
+                }>;
                 units: Record<string, UnitDbEntry>;
             }
         >(this.functions, 'fullUnitsAndPaths');
         return getPathsFn().then((result) => result.data);
+    }
+
+    static updateCompletedUnits(
+        studentId: string,
+        completedUnitIds: Array<string>
+    ): Promise<void> {
+        const updateCompletedUnitsFn = httpsCallable<
+            { studentId: string; completedUnitIds: Array<string> },
+            void
+        >(this.functions, 'updateCompletedUnits');
+        return updateCompletedUnitsFn({ studentId, completedUnitIds }).then(
+            () => undefined
+        );
     }
 
     static getCompletedUnitIds(studentId: string): Promise<Array<string>> {

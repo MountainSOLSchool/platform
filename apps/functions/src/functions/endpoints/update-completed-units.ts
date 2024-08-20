@@ -19,5 +19,5 @@ export const updateCompletedUnits = Functions.endpoint
             }),
         });
 
-        response.send();
+        response.send({ success: true });
     });

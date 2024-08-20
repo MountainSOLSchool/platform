@@ -2,10 +2,10 @@
 import { useEpic } from '@sharakai/use-redux-observable-epic';
 import UpdateStudentUnits from './UpdateStudentUnits';
 import { useUnitsStore } from './useUnitsStore';
-import { loadStudentsEpic } from './UnitsEpics';
+import { UnitsEpics } from './UnitsEpics';
 
 export default function UpdateStudentUnitsWrapperWithRegisteredEpics() {
-    useEpic(loadStudentsEpic);
+    useEpic(UnitsEpics);
 
     return <UpdateStudentUnitsWrapper />;
 }
@@ -15,7 +15,16 @@ function UpdateStudentUnitsWrapper() {
 
     return (
         <>
-            <UpdateStudentUnits {...unitsStore.props}></UpdateStudentUnits>
+            <UpdateStudentUnits
+                {...unitsStore.props}
+                selectedStudentChanged={(studentId) =>
+                    unitsStore.selectedStudentChanged(studentId)
+                }
+                unitCompletionChanged={(change) =>
+                    unitsStore.unitCompletionChanged(change)
+                }
+                saveClicked={() => unitsStore.saveChanges()}
+            ></UpdateStudentUnits>
         </>
     );
 }

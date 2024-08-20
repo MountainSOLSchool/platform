@@ -2,7 +2,7 @@ import { Checkbox } from 'primereact/checkbox';
 import { TabView, TabPanel } from 'primereact/tabview';
 
 export function UpdateUnitsTool(props: {
-    student: string
+    student: string;
     isCompletedByUnitId: { [unitId: string]: boolean };
     units: {
         [unitId: string]: {
@@ -12,8 +12,10 @@ export function UpdateUnitsTool(props: {
         };
     };
     paths: Array<{ name: string; unitIds: Array<string> }>;
-    // onUnitsChanged: (isCopmletedByUnitId: { [unitId: string]: boolean }) => void;
-    onUnitsChanged: any;
+    onUnitsChanged: (changedUnit: {
+        unitId: string;
+        isCompleted: boolean;
+    }) => void;
 }) {
     const unitsByCategory = Object.values(props.units).reduce(
         (agg, unit) => ({
@@ -43,17 +45,27 @@ export function UpdateUnitsTool(props: {
         <>
             <div>
                 {props.paths.map((path) => (
-                    <div className="col">
-                        <big>path.name</big>
+                    <div className="col" key={path.name}>
+                        <big>{path.name}</big>
                         {path.unitIds.map((unitId) => (
                             <>
                                 <Checkbox
-                                    style={props.student == '' ? {display: 'none'} : ''}
+                                    key={unitId}
+                                    style={
+                                        props.student == ''
+                                            ? { display: 'none' }
+                                            : {}
+                                    }
                                     checked={
-                                        // unitCredit
+                                        props.isCompletedByUnitId[unitId] ??
                                         false
                                     }
-                                    onClick={props.onUnitsChanged}
+                                    onClick={(checkboxChange) =>
+                                        props.onUnitsChanged({
+                                            unitId,
+                                            isCompleted: checkboxChange.checked,
+                                        })
+                                    }
                                 />
                                 {props.units[unitId]?.name ?? ''}
                             </>

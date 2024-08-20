@@ -1,121 +1,83 @@
 'use client';
 import { Button } from 'primereact/button';
-import { useEffect, useState } from 'react';
 import StudentSelectionTool from './StudentSelectionTool';
 import UpdateUnitsTool from './UpdateUnitsTool';
-import { UnitsComponentProps } from './units-view-model';
 import { RequestedUtility } from '@sol/react/request';
-import { FirebaseFunctions } from 'apps/student-portal/functions/firebase-functions';
 import { Requested } from '@sol/react/request';
 
 export interface UpdateStudentUnitsProps {
     students: Requested<
-    Array<{ first_name: string; last_name: string; id: string }>
->;
+        Array<{ first_name: string; last_name: string; id: string }>
+    >;
+    selectedStudentId: string | undefined;
+    completedUnitIds: Requested<Array<string>>;
+    // TODO: should implement as Requested to show loading states
+    units: {
+        [unitId: string]: {
+            name: string;
+            description: string;
+            category: string;
+        };
+    };
+    paths: Array<{ name: string; unitIds: Array<string> }>;
 }
 
-export function UpdateStudentUnits(props: UpdateStudentUnitsProps) {
-    const [isCompletedByUnitId, setIsCompletedByUnitId] = useState({});
-    const [selectedStudent, setSelectedStudent] = useState('');
-    const [completedUnits, setCompletedUnits] = useState([]);
-
-    useEffect(() => {}, [selectedStudent]);
-
-    useEffect(() => {
-        const loadSelectedStudentsUnits = async () => {
-            // firebase function to get the student's units
-        };
-    }, [selectedStudent]);
-
-    useEffect(() => {
-        if (selectedStudent !== '') {
-            const fetchCompletedUnits = async () => {
-                const completedUnitIds =
-                    await FirebaseFunctions.getCompletedUnitIds(
-                        selectedStudent
-                    );
-                console.log('completed units are ', completedUnitIds);
-                setCompletedUnits(completedUnitIds);
-            };
-            fetchCompletedUnits();
-        }
-    }, [selectedStudent]);
-
-    const saveUpdatedUnits = (event) => {};
-
-    const handleStudentSelected = (studentId) => {
-        setSelectedStudent(studentId);
-    };
-
-    const handleUnitsUpdated = (e) => {
-        console.log('updating units with data: ', e.data);
-    };
-
-    // test data
-    const fakeScoutPath = {
-        name: 'Scout',
-        unitIds: ['unitId1', 'unitId2', 'unitId3'],
-    };
-    const fakeProviderPath = {
-        name: 'Provider',
-        unitIds: ['unitId3', 'unitId4', 'unitId5'],
-    };
-    const fakePathsArr = [fakeScoutPath, fakeProviderPath];
-    const fakeUnits = {
-        unitId1: {
-            name: 'First Unit',
-            description: 'First description',
-            category: 'First category',
-        },
-        unitId2: {
-            name: 'Second Unit',
-            description: 'Second description',
-            category: 'Second category',
-        },
-        unitId3: {
-            name: 'Third Unit',
-            description: 'Third description',
-            category: 'Third category',
-        },
-        unitId4: {
-            name: 'Fourth Unit',
-            description: 'Fourth description',
-            category: 'Fourth category',
-        },
-        unitId5: {
-            name: 'Fifth Unit',
-            description: 'Fifth description',
-            category: 'Fifth category',
-        },
-    };
-
+export function UpdateStudentUnits(
+    props: UpdateStudentUnitsProps & {
+        selectedStudentChanged: (studentId: string) => void;
+        unitCompletionChanged: (change: {
+            unitId: string;
+            isCompleted: boolean;
+        }) => void;
+        saveClicked: () => void;
+    }
+) {
     return (
         <div>
             <div>
                 Select a student to update their units:
-                {RequestedUtility.isLoaded(props.viewModel.students) && (
+                {RequestedUtility.isLoaded(props.students) && (
                     <StudentSelectionTool
-                        students={props.viewModel.students.map((student) => ({
+                        students={props.students.map((student) => ({
                             studentId: student.id,
                             displayName: `${student.first_name} ${student.last_name}`,
                         }))}
-                        onSelected={handleStudentSelected}
+                        onSelected={(studentId) =>
+                            props.selectedStudentChanged(studentId)
+                        }
                     />
                 )}
             </div>
             <div>
                 <UpdateUnitsTool
-                    student={selectedStudent}
-                    isCompletedByUnitId={{}}
-                    units={fakeUnits}
-                    paths={fakePathsArr}
-                    onUnitsChanged={handleUnitsUpdated}
+                    student={props.selectedStudentId}
+                    isCompletedByUnitId={Object.fromEntries([
+                        ...(RequestedUtility.isLoaded(props.completedUnitIds)
+                            ? props.completedUnitIds
+                            : []
+                        ).map((unitId) => [unitId, true]),
+                        ...Object.keys(props.units).map((unitId) => [
+                            unitId,
+                            Array.isArray(props.completedUnitIds)
+                                ? props.completedUnitIds.includes(unitId)
+                                : false,
+                        ]),
+                    ])}
+                    units={props.units}
+                    paths={props.paths}
+                    onUnitsChanged={(change) =>
+                        props.unitCompletionChanged(change)
+                    }
                 />
                 {/* checkboxes appear by unit names if student is selected */}
                 <Button
-                    style={selectedStudent === '' ? { display: 'none' } : {}}
+                    style={
+                        props.selectedStudentId === ''
+                            ? { display: 'none' }
+                            : {}
+                    }
                     label="Save Updates"
-                    onClick={() => saveUpdatedUnits}
+                    onClick={() => props.saveClicked()}
                 ></Button>
             </div>
         </div>
