@@ -11,7 +11,6 @@ export const loadTestStudent = (action$: Observable<Action>) =>
         filter((action) => action.type === requestTestStudent.type),
         switchMap(() =>
             from(getDoc(doc(db, 'students', 'zWKUjbHAUOFJBKo38LYw'))).pipe(
-                //tap((doc) => console.log( doc.data() )),
                 map((doc) => {
                     let units = doc
                         .data()

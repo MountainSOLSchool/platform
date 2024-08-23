@@ -4,6 +4,7 @@ import StudentSelectionTool from './StudentSelectionTool';
 import UpdateUnitsTool from './UpdateUnitsTool';
 import { RequestedUtility } from '@sol/react/request';
 import { Requested } from '@sol/react/request';
+import { UnitsSkeleton } from './UnitsSkeleton';
 
 export interface UpdateStudentUnitsProps {
     students: Requested<
@@ -11,15 +12,15 @@ export interface UpdateStudentUnitsProps {
     >;
     selectedStudentId: string | undefined;
     completedUnitIds: Requested<Array<string>>;
-    // TODO: should implement as Requested to show loading states
-    units: {
+    units: Requested<{
         [unitId: string]: {
             name: string;
             description: string;
             category: string;
         };
-    };
-    paths: Array<{ name: string; unitIds: Array<string> }>;
+    }>;
+    paths: Requested<Array<{ name: string; unitIds: Array<string> }>>;
+    isSaveInProgress: boolean;
 }
 
 export function UpdateStudentUnits(
@@ -57,46 +58,72 @@ export function UpdateStudentUnits(
     return (
         <div>
             <h1>Update Student Units</h1>
-            <div>Student</div>
-            {studentOptions && (
-                <StudentSelectionTool
-                    students={studentOptions}
-                    onSelected={(studentId) =>
-                        props.selectedStudentChanged(studentId)
-                    }
-                />
-            )}
-            <div>
-                <UpdateUnitsTool
-                    student={props.selectedStudentId}
-                    isCompletedByUnitId={Object.fromEntries([
-                        ...(RequestedUtility.isLoaded(props.completedUnitIds)
-                            ? props.completedUnitIds
-                            : []
-                        ).map((unitId) => [unitId, true]),
-                        ...Object.keys(props.units).map((unitId) => [
-                            unitId,
-                            Array.isArray(props.completedUnitIds)
-                                ? props.completedUnitIds.includes(unitId)
-                                : false,
-                        ]),
-                    ])}
-                    units={props.units}
-                    paths={props.paths}
-                    onUnitsChanged={(change) =>
-                        props.unitCompletionChanged(change)
-                    }
-                />
-                {/* checkboxes appear by unit names if student is selected */}
-                <Button
-                    style={
-                        props.selectedStudentId === ''
-                            ? { display: 'none' }
-                            : {}
-                    }
-                    label="Save Updates"
-                    onClick={() => props.saveClicked()}
-                ></Button>
+            <div className="mb-2">Student</div>
+            <StudentSelectionTool
+                loading={RequestedUtility.isNotComplete(props.students)}
+                students={studentOptions || []}
+                onSelected={(studentId) =>
+                    props.selectedStudentChanged(studentId)
+                }
+            />
+            <div className="mt-5">
+                {props.selectedStudentId ? (
+                    <>
+                        {RequestedUtility.isLoaded(props.paths) &&
+                        RequestedUtility.isLoaded(props.units) &&
+                        RequestedUtility.isLoaded(props.completedUnitIds) ? (
+                            <div>
+                                <UpdateUnitsTool
+                                    student={props.selectedStudentId}
+                                    isCompletedByUnitId={Object.fromEntries([
+                                        ...(RequestedUtility.isLoaded(
+                                            props.completedUnitIds
+                                        )
+                                            ? props.completedUnitIds
+                                            : []
+                                        ).map((unitId) => [unitId, true]),
+                                        ...Object.keys(props.units).map(
+                                            (unitId) => [
+                                                unitId,
+                                                Array.isArray(
+                                                    props.completedUnitIds
+                                                )
+                                                    ? props.completedUnitIds.includes(
+                                                          unitId
+                                                      )
+                                                    : false,
+                                            ]
+                                        ),
+                                    ])}
+                                    units={props.units}
+                                    paths={props.paths}
+                                    onUnitsChanged={(change) =>
+                                        props.unitCompletionChanged(change)
+                                    }
+                                />
+                                {/* checkboxes appear by unit names if student is selected */}
+                                <Button
+                                    loading={props.isSaveInProgress}
+                                    style={
+                                        props.selectedStudentId === ''
+                                            ? { display: 'none' }
+                                            : {}
+                                    }
+                                    label="Save Updates"
+                                    onClick={() => props.saveClicked()}
+                                ></Button>
+                            </div>
+                        ) : (
+                            <UnitsSkeleton />
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <div>
+                            Select a student to update their completed units.
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );

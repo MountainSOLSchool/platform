@@ -30,7 +30,8 @@ export const loadStudentsEpic: Epic = (action$, state$) =>
                 ),
                 catchError((error) =>
                     of(unitsSlice.actions.studentLoadFailed(error))
-                )
+                ),
+                startWith(unitsSlice.actions.studentLoadStarted())
             );
         })
     );
@@ -53,6 +54,9 @@ export const loadStudentCompletedUnitIdsEpic: Epic = (action$) =>
                             error
                         )
                     )
+                ),
+                startWith(
+                    unitsSlice.actions.studentCompletedUnitIdsLoadStarted()
                 )
             );
         })
@@ -75,7 +79,8 @@ export const loadPathsAndUnitsEpic: Epic = (action$) =>
                         ),
                         unitsSlice.actions.unitsLoadFailed(error)
                     )
-                )
+                ),
+                startWith(unitsSlice.actions.unitsLoadStarted())
             );
         })
     );
@@ -87,6 +92,9 @@ export const saveCompletedUnitsEpic: Epic = (action$, state$) =>
             state$.pipe(map(selectSelectedStudentId)),
             state$.pipe(map(selectCompletedAndChangedCompletedUnitIds))
         ),
+        filter((args): args is [unknown, string, string[]] =>
+            RequestedUtility.isLoaded(args[2])
+        ),
         switchMap(([, studentId, completedUnitIds]) => {
             return fromPromise(
                 FirebaseFunctions.updateCompletedUnits(
@@ -95,8 +103,9 @@ export const saveCompletedUnitsEpic: Epic = (action$, state$) =>
                 )
             ).pipe(
                 // TODO: track success in state
-                tap(() => console.log('Saved!')),
                 map(() => unitsSlice.actions.saveCompletedUnitsSucceeded()),
+                // TODO: should use a toast
+                tap(() => alert('Saved!')),
                 catchError((error) => {
                     console.error('Error saving completed units', error);
                     return of(

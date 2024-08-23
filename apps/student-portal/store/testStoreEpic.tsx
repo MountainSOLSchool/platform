@@ -1,4 +1,4 @@
-import { filter, mapTo, switchMap, from, tap } from 'rxjs';
+import { filter, mapTo, switchMap, from } from 'rxjs';
 import { loadedFromBackend, trigger } from './testStore';
 import { Action } from 'redux';
 import { Observable } from 'rxjs';
@@ -10,7 +10,6 @@ export const load100 = (action$: Observable<Action>) =>
         filter((action) => action.type === trigger.type),
         switchMap(() =>
             from(getDoc(doc(db, 'paths', 'IJ9LKndreKUve8D9LMXk'))).pipe(
-                tap((doc) => console.log(doc.data())),
                 mapTo(loadedFromBackend({ value: 100 }))
             )
         )

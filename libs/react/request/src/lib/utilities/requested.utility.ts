@@ -26,6 +26,13 @@ export class RequestedUtility {
             RequestedUtility.isLoaded(state) || RequestedUtility.isError(state)
         );
     }
+    static areAllComplete<T extends Array<unknown>>(states: {
+        [k in keyof T]: Requested<T[k]> | null | undefined;
+    }): states is {
+        [k in keyof T]: T[k];
+    } {
+        return states.every(RequestedUtility.isComplete);
+    }
     static isNotComplete<T>(
         state: Requested<T> | null | undefined
     ): state is typeof RequestState.Loading | typeof RequestState.Empty {

@@ -1,11 +1,12 @@
 'use client';
-import Head from 'next/head';
 // primereact theme
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 // primereact core
 import 'primereact/resources/primereact.min.css';
 // primereact icons
 import 'primeicons/primeicons.css';
+import 'primeflex/primeflex.css';
+import Head from 'next/head';
 import { Provider } from 'react-redux';
 import { addEpic, store } from '../store/store';
 import { AddEpicContext } from '@sharakai/use-redux-observable-epic';
@@ -13,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import * as auth from 'firebase/auth';
 import { PrimeReactProvider } from 'primereact/api';
+import LoginWithRegisteredEpics from './login/page';
 
 function RootLayout({ children }: { children: React.ReactNode }) {
     // TODO: add to provider
@@ -27,7 +29,13 @@ function RootLayout({ children }: { children: React.ReactNode }) {
                             <Head>
                                 <title>Mountain SOL Student Portal</title>
                             </Head>
-                            <main className="app">{children}</main>
+                            <main className="app">
+                                {isLoggedIn ? (
+                                    children
+                                ) : (
+                                    <LoginWithRegisteredEpics />
+                                )}
+                            </main>
                         </AddEpicContext.Provider>
                     </Provider>
                 </PrimeReactProvider>
@@ -47,7 +55,7 @@ function useIsLoggedIn() {
             if (user) {
                 setIsLoggedIn(true);
             } else {
-                router.push('/login');
+                // router.push('/login');
             }
         });
     });

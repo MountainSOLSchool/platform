@@ -131,7 +131,6 @@ function SmartTreeChart() {
                         });
                     }
                 }
-                console.log(category);
             });
 
             // CHECK COMPLETION OF CATEGORIES
@@ -175,8 +174,6 @@ function SmartTreeChart() {
             }
         });
 
-        //console.log("PATHS", treePaths)
-
         const smartTreeData = {
             name: studentName,
             children: treePaths,
@@ -187,15 +184,10 @@ function SmartTreeChart() {
             children: animatedTreePaths,
         };
 
-        //console.log("tree data => ", smartTreeData)
-        //console.log("units => ", treeUnits)
-
         render(animatedTreeData);
     }
 
     function render(data) {
-        console.log(data);
-
         // Specify the charts’ dimensions. The height is variable, depending on the layout.
         const width = 1200;
         const marginTop = 20;
@@ -319,7 +311,6 @@ function SmartTreeChart() {
                     if (nodeData.status === 'ghost') {
                         return;
                     }
-                    console.log(nodeData);
                     d3.selectAll('circle').classed('tree-node-selected', false);
                     // TODO ADD CONDITION FOR DESELCTING BRANCHES
                     d3.select(e.target).classed('tree-node-selected', true);
@@ -451,7 +442,6 @@ function SmartTreeChart() {
         let nodeCount: number = 0;
 
         data.children.forEach((path) => {
-            console.log(path);
             path.children.forEach((category) => {
                 if (Object.hasOwn(category, 'children')) {
                     category['children'].forEach(() => {
@@ -461,7 +451,6 @@ function SmartTreeChart() {
                     nodeCount++;
                 }
             });
-            console.log(nodeCount);
         });
 
         const margin = { top: 20, right: 350, bottom: 20, left: 80 };
@@ -559,7 +548,6 @@ function SmartTreeChart() {
                     if (Object.hasOwn(e, 'lockedChildren')) {
                         if (e.name === path.name && e.children.length === 0) {
                             e.children = e['lockedChildren'];
-                            console.log(data);
                         } else {
                             e.children = [];
                         }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Checkbox } from 'primereact/checkbox';
 import { TabView, TabPanel } from 'primereact/tabview';
 
+// TODO: the styling classes are haphazardly applied here
 export function UpdateUnitsTool(props: {
     student: string;
     isCompletedByUnitId: { [unitId: string]: boolean };
@@ -34,60 +35,80 @@ export function UpdateUnitsTool(props: {
 
     const unitsByCategoryJsx = (
         <>
-            {Object.entries(unitsByCategory).map(([category, units]) => (
-                <div key={category} className="mb-8">
-                    <h2 className="text-xl font-bold mb-4">
-                        Category: {category}
-                    </h2>
-                    {units.map((unit) => (
-                        <div key={unit.id} className="mb-4">
-                            <h3 className="text-lg font-semibold">
-                                {unit.name}
-                            </h3>
-                            <p>{unit.description}</p>
-                        </div>
-                    ))}
-                </div>
-            ))}
+            {Object.entries(unitsByCategory)
+                // TODO: idk why undefined is a string here
+                .filter(([category]) => category !== 'undefined')
+                .concat()
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([category, units]) => (
+                    <div key={category} className="mb-8">
+                        <h2 className="text-xl font-bold mb-4">
+                            Category:{' '}
+                            {category.charAt(0).toUpperCase() +
+                                category.slice(1)}
+                        </h2>
+                        {units.map((unit) => (
+                            <div key={unit.id} className="mb-4">
+                                <h3 className="text-lg font-semibold">
+                                    {unit.name}
+                                </h3>
+                                <p>{unit.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                ))}
         </>
     );
 
+    const sortedPaths = props.paths.concat().sort((a, b) => {
+        if (a.name === 'Ranger') return -1;
+    });
+
     const unitsByPathJsx = (
         <div className="space-y-8">
-            {props.paths.map((path) => (
-                <div key={path.name} className="border rounded-lg p-6">
-                    <h2 className="text-2xl font-bold mb-6">{path.name}</h2>
-                    <div className="grid grid-cols-3 gap-6">
-                        {path.unitIds.map((unitId) => (
-                            // TODO: Primereact class names are not working
-                            <div
-                                key={unitId}
-                                className="flex items-center space-x-3"
-                            >
-                                <Checkbox
-                                    inputId={unitId}
-                                    className={
-                                        props.student === '' ? 'hidden' : ''
-                                    }
-                                    checked={
-                                        props.isCompletedByUnitId[unitId] ??
-                                        false
-                                    }
-                                    onChange={(e) =>
-                                        props.onUnitsChanged({
-                                            unitId,
-                                            isCompleted: e.checked,
-                                        })
-                                    }
-                                />
-                                <label
-                                    htmlFor={unitId}
-                                    className="cursor-pointer text-lg"
-                                >
-                                    {props.units[unitId]?.name ?? ''}
-                                </label>
-                            </div>
-                        ))}
+            {sortedPaths.map((path) => (
+                <div key={path.name} className="border rounded-lg">
+                    <h2
+                        className={`text-2xl font-bold ${
+                            path.name === sortedPaths[0].name ? 'mt-0' : 'mt-5'
+                        } mb-2`}
+                    >
+                        {path.name}
+                    </h2>
+                    <div>
+                        {path.unitIds
+                            .concat()
+                            .sort((a, b) => {
+                                return props.units[a]?.name.localeCompare(
+                                    props.units[b]?.name
+                                );
+                            })
+                            .map((unitId) => (
+                                <div key={unitId} className="flex items-center">
+                                    <div className="flex items-center mt-1">
+                                        <Checkbox
+                                            inputId={unitId}
+                                            checked={
+                                                props.isCompletedByUnitId[
+                                                    unitId
+                                                ] ?? false
+                                            }
+                                            onChange={(e) =>
+                                                props.onUnitsChanged({
+                                                    unitId,
+                                                    isCompleted: e.checked,
+                                                })
+                                            }
+                                        />
+                                        <label
+                                            htmlFor={unitId}
+                                            className="cursor-pointer ml-1 text-sm"
+                                        >
+                                            {props.units[unitId]?.name ?? ''}
+                                        </label>
+                                    </div>
+                                </div>
+                            ))}
                     </div>
                 </div>
             ))}
@@ -95,46 +116,18 @@ export function UpdateUnitsTool(props: {
     );
 
     return (
-        <div className="p-6">
-            <h2 className="text-3xl font-bold mb-6">Completed Units</h2>
+        <div>
+            <h2 className="text-3xl font-bold mb-3">Completed Units</h2>
             <TabView>
-                <TabPanel header="View Units by Path">
+                <TabPanel header="Update Units by Path">
                     {unitsByPathJsx}
                 </TabPanel>
-                <TabPanel header="Big Tree View">{unitsByCategoryJsx}</TabPanel>
+                <TabPanel header="View Descriptions by Category">
+                    {unitsByCategoryJsx}
+                </TabPanel>
             </TabView>
         </div>
     );
 }
-
-// return (
-//     <div>
-//         <div>
-//             some units in a nice table
-//             {/* /* <DataTable
-//                 value={props.studentsArray}
-//                 tableStyle={{ width: '30rem', maxHeight: '500' }}
-//                 sortField="lastName"
-//                 sortOrder={-1}
-//                 selectionMode="single"
-//                 onSelectionChange={selectStudent}
-//             >
-//                 <Column key={1} field={'firstName'} header={'First Name'} />
-//                 <Column key={2} field={'lastName'} header={'Last Name'} />
-//                 <Column
-//                     key={4}
-//                     field={'studentID'}
-//                     header={'Student ID'}
-//                     hidden={true}
-//                 />
-//                 <Column
-//                     key={3}
-//                     header={'Credit for Unit'}
-//                     body={checkboxTemplate}
-//                 />
-//             </DataTable> */ */}
-//         </div>
-//     </div>
-// );
 
 export default UpdateUnitsTool;

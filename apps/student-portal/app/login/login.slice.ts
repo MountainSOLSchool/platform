@@ -56,15 +56,12 @@ export const loginSlice = createSlice({
             state.requestState = action.payload;
         },
         succeeded: (state) => {
-            console.log('succeeded');
             state.requestState = undefined;
         },
         failed: (state, error: unknown) => {
-            console.log('failed', error);
             state.requestState = RequestState.Error;
         },
         logIn: (state) => {
-            console.log('login');
             state.requestState = RequestState.Loading;
         },
         sendPasswordResetEmail: (state) => state,
