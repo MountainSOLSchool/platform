@@ -32,22 +32,40 @@ export function UpdateStudentUnits(
         saveClicked: () => void;
     }
 ) {
+    const studentOptions =
+        RequestedUtility.isLoaded(props.students) &&
+        props.students
+            .map((student) => ({
+                studentId: student.id,
+                displayName: `${student.first_name} ${student.last_name}`,
+            }))
+            .reduce((acc, student) => {
+                const baseDisplayName = student.displayName;
+                const count = acc.filter((s) =>
+                    s.displayName.startsWith(baseDisplayName)
+                ).length;
+
+                const newDisplayName =
+                    count === 0
+                        ? baseDisplayName
+                        : `${baseDisplayName} (${count + 1})`;
+
+                return [...acc, { ...student, displayName: newDisplayName }];
+            }, [])
+            .sort((a, b) => a.displayName.localeCompare(b.displayName));
+
     return (
         <div>
-            <div>
-                Select a student to update their units:
-                {RequestedUtility.isLoaded(props.students) && (
-                    <StudentSelectionTool
-                        students={props.students.map((student) => ({
-                            studentId: student.id,
-                            displayName: `${student.first_name} ${student.last_name}`,
-                        }))}
-                        onSelected={(studentId) =>
-                            props.selectedStudentChanged(studentId)
-                        }
-                    />
-                )}
-            </div>
+            <h1>Update Student Units</h1>
+            <div>Student</div>
+            {studentOptions && (
+                <StudentSelectionTool
+                    students={studentOptions}
+                    onSelected={(studentId) =>
+                        props.selectedStudentChanged(studentId)
+                    }
+                />
+            )}
             <div>
                 <UpdateUnitsTool
                     student={props.selectedStudentId}

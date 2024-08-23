@@ -1,3 +1,4 @@
+import React from 'react';
 import { Checkbox } from 'primereact/checkbox';
 import { TabView, TabPanel } from 'primereact/tabview';
 
@@ -17,22 +18,32 @@ export function UpdateUnitsTool(props: {
         isCompleted: boolean;
     }) => void;
 }) {
-    const unitsByCategory = Object.values(props.units).reduce(
-        (agg, unit) => ({
+    const unitsByCategory = Object.entries(props.units).reduce(
+        (agg, [unitId, unit]) => ({
             ...agg,
-            [unit.category]: [...(agg[unit.category] ?? []), unit],
+            [unit.category]: [
+                ...(agg[unit.category] ?? []),
+                { ...unit, id: unitId },
+            ],
         }),
-        {} as Record<string, Array<{ name: string; description: string }>>
+        {} as Record<
+            string,
+            Array<{ id: string; name: string; description: string }>
+        >
     );
 
     const unitsByCategoryJsx = (
         <>
             {Object.entries(unitsByCategory).map(([category, units]) => (
-                <div key={category}>
-                    <h2>Category: {category}</h2>
-                    {units.map((unit, index) => (
-                        <div key={index}>
-                            <h3>{unit.name}</h3>
+                <div key={category} className="mb-8">
+                    <h2 className="text-xl font-bold mb-4">
+                        Category: {category}
+                    </h2>
+                    {units.map((unit) => (
+                        <div key={unit.id} className="mb-4">
+                            <h3 className="text-lg font-semibold">
+                                {unit.name}
+                            </h3>
                             <p>{unit.description}</p>
                         </div>
                     ))}
@@ -42,44 +53,50 @@ export function UpdateUnitsTool(props: {
     );
 
     const unitsByPathJsx = (
-        <>
-            <div>
-                {props.paths.map((path) => (
-                    <div className="col" key={path.name}>
-                        <big>{path.name}</big>
+        <div className="space-y-8">
+            {props.paths.map((path) => (
+                <div key={path.name} className="border rounded-lg p-6">
+                    <h2 className="text-2xl font-bold mb-6">{path.name}</h2>
+                    <div className="grid grid-cols-3 gap-6">
                         {path.unitIds.map((unitId) => (
-                            <>
+                            // TODO: Primereact class names are not working
+                            <div
+                                key={unitId}
+                                className="flex items-center space-x-3"
+                            >
                                 <Checkbox
-                                    key={unitId}
-                                    style={
-                                        props.student == ''
-                                            ? { display: 'none' }
-                                            : {}
+                                    inputId={unitId}
+                                    className={
+                                        props.student === '' ? 'hidden' : ''
                                     }
                                     checked={
                                         props.isCompletedByUnitId[unitId] ??
                                         false
                                     }
-                                    onClick={(checkboxChange) =>
+                                    onChange={(e) =>
                                         props.onUnitsChanged({
                                             unitId,
-                                            isCompleted: checkboxChange.checked,
+                                            isCompleted: e.checked,
                                         })
                                     }
                                 />
-                                {props.units[unitId]?.name ?? ''}
-                            </>
+                                <label
+                                    htmlFor={unitId}
+                                    className="cursor-pointer text-lg"
+                                >
+                                    {props.units[unitId]?.name ?? ''}
+                                </label>
+                            </div>
                         ))}
                     </div>
-                ))}
-            </div>
-        </>
+                </div>
+            ))}
+        </div>
     );
 
     return (
-        <div>
-            <big>Behold all of the Mountain SOL Units!</big>
-            <div>Click on each unit to see the unit description.</div>;
+        <div className="p-6">
+            <h2 className="text-3xl font-bold mb-6">Completed Units</h2>
             <TabView>
                 <TabPanel header="View Units by Path">
                     {unitsByPathJsx}
