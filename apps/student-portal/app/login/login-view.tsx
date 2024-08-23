@@ -27,7 +27,6 @@ export default function LoginView(props: {
             <Button
                 label="Submit"
                 loading={props.viewModel.isSubmitInProgress}
-                icon="pi pi-check"
                 onClick={() => props.onLogin()}
             />
             {props.viewModel.shouldShowResetSuggestion && (

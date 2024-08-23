@@ -15,20 +15,19 @@ import * as auth from 'firebase/auth';
 import { PrimeReactProvider } from 'primereact/api';
 
 function RootLayout({ children }: { children: React.ReactNode }) {
+    // TODO: add to provider
     const isLoggedIn = useIsLoggedIn();
 
     return (
         <html>
-            <body>
+            <body style={{ margin: 5 }}>
                 <PrimeReactProvider>
                     <Provider store={store}>
                         <AddEpicContext.Provider value={addEpic}>
                             <Head>
                                 <title>Mountain SOL Student Portal</title>
                             </Head>
-                            <main className="app">
-                                {isLoggedIn ? children : <></>}
-                            </main>
+                            <main className="app">{children}</main>
                         </AddEpicContext.Provider>
                     </Provider>
                 </PrimeReactProvider>
