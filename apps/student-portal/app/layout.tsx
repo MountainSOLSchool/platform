@@ -55,7 +55,7 @@ function useIsLoggedIn() {
             if (user) {
                 setIsLoggedIn(true);
             } else {
-                // router.push('/login');
+                router.push('/login');
             }
         });
     });
