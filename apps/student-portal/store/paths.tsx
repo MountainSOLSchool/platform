@@ -5,7 +5,6 @@ export const paths = createSlice({
     initialState: [],
     reducers: {
         loadedPaths: (state, action) => {
-            //console.log("loaded => ",action.payload, " => ",action);
             return action.payload;
         },
         requestPaths: () => {},

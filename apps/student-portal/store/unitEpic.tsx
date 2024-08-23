@@ -10,7 +10,6 @@ export const loadUnits = (action$: Observable<Action>) =>
         filter((action) => action.type === requestUnits.type),
         switchMap(() =>
             from(getDocs(collection(db, 'units'))).pipe(
-                //tap((collection) => console.log(collection)),
                 map((collection) =>
                     loadedUnits(
                         collection['_snapshot'].docChanges.map((unit) => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card } from 'primereact/card';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
@@ -28,7 +27,6 @@ export default function LoginView(props: {
             <Button
                 label="Submit"
                 loading={props.viewModel.isSubmitInProgress}
-                icon="pi pi-check"
                 onClick={() => props.onLogin()}
             />
             {props.viewModel.shouldShowResetSuggestion && (

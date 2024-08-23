@@ -1,35 +1,44 @@
 'use client';
-import Head from 'next/head';
-import './styles.css';
 // primereact theme
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 // primereact core
 import 'primereact/resources/primereact.min.css';
 // primereact icons
 import 'primeicons/primeicons.css';
+import 'primeflex/primeflex.css';
+import Head from 'next/head';
 import { Provider } from 'react-redux';
 import { addEpic, store } from '../store/store';
 import { AddEpicContext } from '@sharakai/use-redux-observable-epic';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import * as auth from 'firebase/auth';
+import { PrimeReactProvider } from 'primereact/api';
+import LoginWithRegisteredEpics from './login/page';
 
 function RootLayout({ children }: { children: React.ReactNode }) {
+    // TODO: add to provider
     const isLoggedIn = useIsLoggedIn();
 
     return (
         <html>
-            <body>
-                <Provider store={store}>
-                    <AddEpicContext.Provider value={addEpic}>
-                        <Head>
-                            <title>Welcome to student-portal!</title>
-                        </Head>
-                        <main className="app">
-                            {isLoggedIn ? children : <></>}
-                        </main>
-                    </AddEpicContext.Provider>
-                </Provider>
+            <body style={{ margin: 5 }}>
+                <PrimeReactProvider>
+                    <Provider store={store}>
+                        <AddEpicContext.Provider value={addEpic}>
+                            <Head>
+                                <title>Mountain SOL Student Portal</title>
+                            </Head>
+                            <main className="app">
+                                {isLoggedIn ? (
+                                    children
+                                ) : (
+                                    <LoginWithRegisteredEpics />
+                                )}
+                            </main>
+                        </AddEpicContext.Provider>
+                    </Provider>
+                </PrimeReactProvider>
             </body>
         </html>
     );

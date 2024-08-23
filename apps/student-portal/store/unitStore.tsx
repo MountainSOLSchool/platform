@@ -5,7 +5,6 @@ export const units = createSlice({
     initialState: [],
     reducers: {
         loadedUnits: (state, action) => {
-            //console.log("loaded => ",action.payload, " => ",action);
             return action.payload;
         },
         requestUnits: () => {},

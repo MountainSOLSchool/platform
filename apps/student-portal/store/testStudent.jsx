@@ -8,12 +8,9 @@ export const testStudent = createSlice({
     },
     reducers: {
         loadedTestStudent: (state, action) => {
-            console.log('loaded student => ', action.payload);
             return action.payload;
         },
-        requestTestStudent: () => {
-            console.log('loading test student');
-        },
+        requestTestStudent: () => {},
         setTestStudent: (state, action) => action.payload,
     },
 });

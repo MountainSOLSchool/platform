@@ -19,6 +19,7 @@ type State = {
     >;
     units: Requested<Record<string, UnitDbEntry>>;
     changedUnitCompletions: Record<string, boolean>;
+    saveChanges: Requested<void>;
 };
 
 const initialState: State = {
@@ -28,6 +29,7 @@ const initialState: State = {
     units: RequestState.Empty,
     paths: RequestState.Empty,
     changedUnitCompletions: {},
+    saveChanges: RequestState.Empty,
 };
 
 export const unitsSlice = createSlice({
@@ -75,6 +77,19 @@ export const unitsSlice = createSlice({
         ) => {
             state.paths = action.payload;
         },
+        // pending reducers
+        studentLoadStarted: (state) => {
+            state.students = RequestState.Loading;
+        },
+        studentCompletedUnitIdsLoadStarted: (state) => {
+            state.selectedStudentCompletedUnitIds = RequestState.Loading;
+        },
+        unitsLoadStarted: (state) => {
+            state.units = RequestState.Loading;
+        },
+        pathsLoadStarted: (state) => {
+            state.paths = RequestState.Loading;
+        },
         studentLoadFailed: (state) => {
             state.students = RequestState.Error;
         },
@@ -90,6 +105,7 @@ export const unitsSlice = createSlice({
         setSelectedStudentId: (state, action: { payload: string }) => {
             state.selectedStudentId = action.payload;
             state.selectedStudentCompletedUnitIds = RequestState.Loading;
+            state.changedUnitCompletions = {};
         },
         setUnitCompletion: (
             state,
@@ -103,13 +119,13 @@ export const unitsSlice = createSlice({
             state.units = RequestState.Loading;
         },
         saveChanges: (state) => {
-            // TODO: track the request state
+            state.saveChanges = RequestState.Loading;
         },
         saveCompletedUnitsSucceeded: (state) => {
-            // TODO: track the request state
+            state.saveChanges = undefined;
         },
         saveCompletedUnitsFailed: (state) => {
-            // TODO: track the request state
+            state.saveChanges = RequestState.Error;
         },
     },
 });
@@ -148,26 +164,33 @@ export const selectCompletedAndChangedCompletedUnitIds = createSelector(
     (completedUnitIds, changedCompletedUnitIds) => {
         const hasLoadedCompletedUnitIds =
             RequestedUtility.isLoaded(completedUnitIds);
-        const addedCompletedUnitIds = hasLoadedCompletedUnitIds
-            ? Object.entries(changedCompletedUnitIds)
-                  .filter(
-                      ([unitId, isCompleted]) =>
-                          isCompleted && !completedUnitIds.includes(unitId)
-                  )
-                  .map(([unitId]) => unitId)
-            : new Array<string>();
-        const uncompletedUnitIds = hasLoadedCompletedUnitIds
-            ? completedUnitIds.filter(
-                  (unitId) => changedCompletedUnitIds[unitId] === false
-              )
-            : [];
-        const updatedCompletedUnitIds = hasLoadedCompletedUnitIds
-            ? completedUnitIds.filter(
-                  (unitId) => !uncompletedUnitIds.includes(unitId)
-              )
-            : [];
-        return Array.from(
-            new Set([...updatedCompletedUnitIds, ...addedCompletedUnitIds])
+        const addedCompletedUnitIds =
+            hasLoadedCompletedUnitIds &&
+            Object.entries(changedCompletedUnitIds)
+                .filter(
+                    ([unitId, isCompleted]) =>
+                        isCompleted && !completedUnitIds.includes(unitId)
+                )
+                .map(([unitId]) => unitId);
+        const uncompletedUnitIds =
+            hasLoadedCompletedUnitIds &&
+            completedUnitIds.filter(
+                (unitId) => changedCompletedUnitIds[unitId] === false
+            );
+        const updatedCompletedUnitIds =
+            hasLoadedCompletedUnitIds &&
+            completedUnitIds.filter(
+                (unitId) => !uncompletedUnitIds.includes(unitId)
+            );
+        return (
+            (hasLoadedCompletedUnitIds &&
+                Array.from(
+                    new Set([
+                        ...updatedCompletedUnitIds,
+                        ...addedCompletedUnitIds,
+                    ])
+                )) ||
+            completedUnitIds
         );
     }
 );
@@ -192,6 +215,11 @@ export const selectIsUnitsLoadingInProgress = createSelector(
     (requestState) => requestState === RequestState.Loading
 );
 
+export const selectIsSaveInProgress = createSelector(
+    [selectState],
+    (state) => state.saveChanges === RequestState.Loading
+);
+
 export const selectUpdateStudentUnitsProps = createSelector(
     [
         selectStudents,
@@ -199,20 +227,23 @@ export const selectUpdateStudentUnitsProps = createSelector(
         selectCompletedAndChangedCompletedUnitIds,
         selectUnits,
         selectPaths,
+        selectIsSaveInProgress,
     ],
     (
         students,
         selectedStudentId,
         completedUnitIds,
         units,
-        paths
+        paths,
+        isSaveInProgress
     ): UpdateStudentUnitsProps => {
         return {
             students,
             selectedStudentId,
             completedUnitIds,
-            units: RequestedUtility.isLoaded(units) ? units : {},
-            paths: RequestedUtility.isLoaded(paths) ? paths : [],
+            units,
+            paths,
+            isSaveInProgress,
         };
     }
 );

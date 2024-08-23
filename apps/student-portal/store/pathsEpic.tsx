@@ -10,7 +10,6 @@ export const loadPaths = (action$: Observable<Action>) =>
         filter((action) => action.type === requestPaths.type),
         switchMap(() =>
             from(getDocs(collection(db, 'paths'))).pipe(
-                //tap((collection) =>  console.log(collection)),
                 map((collection) =>
                     loadedPaths(
                         collection['_snapshot'].docChanges.map((path) => {
