@@ -1,7 +1,8 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { Requested, RequestedUtility, RequestState } from '@sol/react/request';
-import { UpdateStudentUnitsProps } from './UpdateStudentUnits';
+import { UpdateStudentUnitsViewProps } from './UpdateStudentUnitsView';
 import { UnitDbEntry } from '@sol/classes/domain';
+import { Path } from '../../models/path.type';
 
 type State = {
     students: Requested<
@@ -9,14 +10,7 @@ type State = {
     >;
     selectedStudentId: string | undefined;
     selectedStudentCompletedUnitIds: Requested<Array<string>>;
-    paths: Requested<
-        Array<{
-            id: string;
-            name: string;
-            description: string;
-            unitIds: Array<string>;
-        }>
-    >;
+    paths: Requested<Array<Path>>;
     units: Requested<Record<string, UnitDbEntry>>;
     changedUnitCompletions: Record<string, boolean>;
     saveChanges: Requested<void>;
@@ -67,12 +61,7 @@ export const unitsSlice = createSlice({
             state,
             action: {
                 // TODO: make this a re-usable type for a "frontend path model"
-                payload: Array<{
-                    id: string;
-                    name: string;
-                    description: string;
-                    unitIds: Array<string>;
-                }>;
+                payload: Array<Path>;
             }
         ) => {
             state.paths = action.payload;
@@ -236,7 +225,7 @@ export const selectUpdateStudentUnitsProps = createSelector(
         units,
         paths,
         isSaveInProgress
-    ): UpdateStudentUnitsProps => {
+    ): UpdateStudentUnitsViewProps => {
         return {
             students,
             selectedStudentId,

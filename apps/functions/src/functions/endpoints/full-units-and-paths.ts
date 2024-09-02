@@ -19,6 +19,16 @@ export const fullUnitsAndPaths = Functions.endpoint.handle(
                             | Array<DocumentReference>
                             | undefined
                     )?.map((reference) => reference.id) ?? [],
+                electives:
+                    path.electives?.map((elective) => ({
+                        name: elective.name,
+                        unitIds:
+                            (
+                                elective.options as
+                                    | Array<DocumentReference>
+                                    | undefined
+                            )?.map((reference) => reference.id) ?? [],
+                    })) ?? [],
             })),
             units: units
                 .map((unit) => ({

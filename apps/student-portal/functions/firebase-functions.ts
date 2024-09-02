@@ -5,6 +5,7 @@ import {
 } from 'firebase/functions';
 import { StudentDbEntry } from '@sol/student/domain';
 import { UnitDbEntry } from '@sol/classes/domain';
+import { Path } from '../models/path.type';
 
 let _functions: ReturnType<typeof getFunctions> | undefined;
 
@@ -27,23 +28,13 @@ export class FirebaseFunctions {
     }
 
     static getFullUnitsAndPaths(): Promise<{
-        paths: Array<{
-            id: string;
-            name: string;
-            description: string;
-            unitIds: Array<string>;
-        }>;
+        paths: Array<Path>;
         units: Record<string, UnitDbEntry>;
     }> {
         const getPathsFn = httpsCallable<
             void,
             {
-                paths: Array<{
-                    id: string;
-                    name: string;
-                    description: string;
-                    unitIds: Array<string>;
-                }>;
+                paths: Array<Path>;
                 units: Record<string, UnitDbEntry>;
             }
         >(this.functions, 'fullUnitsAndPaths');
