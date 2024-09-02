@@ -65,6 +65,20 @@ export class FirebaseFunctions {
             (result) => result.data.completedUnitIds
         );
     }
+
+    static historicalSemesters(): Promise<{
+        semesters: Array<{ id: string; name: string }>;
+        activeSemesterId: string;
+    }> {
+        const historicalSemestersFn = httpsCallable<
+            void,
+            {
+                semesters: Array<{ id: string; name: string }>;
+                activeSemesterId: string;
+            }
+        >(this.functions, 'historicalSemesters');
+        return historicalSemestersFn().then((result) => result.data);
+    }
 }
 
 function getConfiguredFunctions() {
