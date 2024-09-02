@@ -1,6 +1,8 @@
 import React from 'react';
 import { Checkbox } from 'primereact/checkbox';
 import { TabView, TabPanel } from 'primereact/tabview';
+import { PathElective } from 'apps/student-portal/models/path-elective.type';
+import { Card } from 'primereact/card';
 
 // TODO: the styling classes are haphazardly applied here
 export function UpdateUnitsTool(props: {
@@ -13,7 +15,11 @@ export function UpdateUnitsTool(props: {
             category: string;
         };
     };
-    paths: Array<{ name: string; unitIds: Array<string> }>;
+    paths: Array<{
+        name: string;
+        unitIds: Array<string>;
+        electives: Array<PathElective>;
+    }>;
     onUnitsChanged: (changedUnit: {
         unitId: string;
         isCompleted: boolean;
@@ -67,50 +73,90 @@ export function UpdateUnitsTool(props: {
     const unitsByPathJsx = (
         <div className="space-y-8">
             {sortedPaths.map((path) => (
-                <div key={path.name} className="border rounded-lg">
-                    <h2
-                        className={`text-2xl font-bold ${
-                            path.name === sortedPaths[0].name ? 'mt-0' : 'mt-5'
-                        } mb-2`}
-                    >
-                        {path.name}
-                    </h2>
-                    <div>
-                        {path.unitIds
-                            .concat()
-                            .sort((a, b) => {
-                                return props.units[a]?.name.localeCompare(
-                                    props.units[b]?.name
-                                );
-                            })
-                            .map((unitId) => (
-                                <div key={unitId} className="flex items-center">
-                                    <div className="flex items-center mt-1">
-                                        <Checkbox
-                                            inputId={unitId}
-                                            checked={
-                                                props.isCompletedByUnitId[
-                                                    unitId
-                                                ] ?? false
-                                            }
-                                            onChange={(e) =>
-                                                props.onUnitsChanged({
-                                                    unitId,
-                                                    isCompleted: e.checked,
-                                                })
-                                            }
-                                        />
-                                        <label
-                                            htmlFor={unitId}
-                                            className="cursor-pointer ml-1 text-sm"
-                                        >
-                                            {props.units[unitId]?.name ?? ''}
-                                        </label>
+                <Card className="mb-4" key={path.name} title={path.name}>
+                    <div key={path.name} className="border rounded-lg">
+                        <div>
+                            {path.unitIds
+                                .concat()
+                                .sort((a, b) => {
+                                    return props.units[a]?.name.localeCompare(
+                                        props.units[b]?.name
+                                    );
+                                })
+                                .map((unitId) => (
+                                    <div
+                                        key={unitId}
+                                        className="flex items-center"
+                                    >
+                                        <div className="flex items-center mt-1">
+                                            <Checkbox
+                                                inputId={unitId}
+                                                checked={
+                                                    props.isCompletedByUnitId[
+                                                        unitId
+                                                    ] ?? false
+                                                }
+                                                onChange={(e) =>
+                                                    props.onUnitsChanged({
+                                                        unitId,
+                                                        isCompleted: e.checked,
+                                                    })
+                                                }
+                                            />
+                                            <label
+                                                htmlFor={unitId}
+                                                className="cursor-pointer ml-1 text-sm"
+                                            >
+                                                {props.units[unitId]?.name ??
+                                                    ''}
+                                            </label>
+                                        </div>
                                     </div>
+                                ))}
+                        </div>
+                        {path.electives.map((elective) => (
+                            <div key={elective.name}>
+                                <h3 className="text-lg font-semibold">
+                                    {elective.name}
+                                </h3>
+                                <div>
+                                    {elective.unitIds.map((unitId) => (
+                                        <div
+                                            key={unitId}
+                                            className="flex items-center"
+                                        >
+                                            <div className="flex items-center mt-1">
+                                                <Checkbox
+                                                    inputId={unitId}
+                                                    checked={
+                                                        props
+                                                            .isCompletedByUnitId[
+                                                            unitId
+                                                        ] ?? false
+                                                    }
+                                                    onChange={(e) =>
+                                                        props.onUnitsChanged({
+                                                            unitId,
+                                                            isCompleted:
+                                                                e.checked,
+                                                        })
+                                                    }
+                                                />
+                                                <label
+                                                    htmlFor={unitId}
+                                                    className="cursor-pointer ml-1 text-sm"
+                                                >
+                                                    {props.units[unitId]
+                                                        ?.name ?? ''}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            </div>
+                        ))}
                     </div>
-                </div>
+                </Card>
             ))}
         </div>
     );
