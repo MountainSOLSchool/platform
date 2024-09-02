@@ -17,8 +17,15 @@ jobs:
             - uses: actions/checkout@v4
             - run: npm ci
             - run: npx nx run functions:build
+            - name: Prepare functions list
+              id: prepare_functions
+              run: |
+                  FUNCTIONS=$(echo "${{ matrix.functions-set }}" | sed 's/,/,functions:/g')
+                  FUNCTIONS="functions:${FUNCTIONS}"
+                  echo "functions_list=${FUNCTIONS}" >> $GITHUB_OUTPUT
+
             - uses: w9jds/firebase-action@v13.4.0
               with:
-                  args: deploy --only functions:${{ matrix.functions-set }} --project prod
+                  args: deploy --only ${{ steps.prepare_functions.outputs.functions_list }} --project prod
               env:
                   GCP_SA_KEY: ${{ secrets.FIREBASE_GCP_SA_KEY }}
