@@ -3,6 +3,7 @@ import { Checkbox } from 'primereact/checkbox';
 import { TabView, TabPanel } from 'primereact/tabview';
 import { PathElective } from 'apps/student-portal/models/path-elective.type';
 import { Card } from 'primereact/card';
+import { Tooltip } from 'primereact/tooltip';
 
 // TODO: the styling classes are haphazardly applied here
 export function UpdateUnitsTool(props: {
@@ -84,34 +85,25 @@ export function UpdateUnitsTool(props: {
                                     );
                                 })
                                 .map((unitId) => (
-                                    <div
+                                    <_UnitCheckboxWithTooltip
                                         key={unitId}
-                                        className="flex items-center"
-                                    >
-                                        <div className="flex items-center mt-1">
-                                            <Checkbox
-                                                inputId={unitId}
-                                                checked={
-                                                    props.isCompletedByUnitId[
-                                                        unitId
-                                                    ] ?? false
-                                                }
-                                                onChange={(e) =>
-                                                    props.onUnitsChanged({
-                                                        unitId,
-                                                        isCompleted: e.checked,
-                                                    })
-                                                }
-                                            />
-                                            <label
-                                                htmlFor={unitId}
-                                                className="cursor-pointer ml-1 text-sm"
-                                            >
-                                                {props.units[unitId]?.name ??
-                                                    ''}
-                                            </label>
-                                        </div>
-                                    </div>
+                                        unitId={unitId}
+                                        name={props.units[unitId]?.name ?? ''}
+                                        description={
+                                            props.units[unitId]?.description ??
+                                            ''
+                                        }
+                                        isCompleted={
+                                            props.isCompletedByUnitId[unitId] ??
+                                            false
+                                        }
+                                        onToggle={(unitId, isCompleted) =>
+                                            props.onUnitsChanged({
+                                                unitId,
+                                                isCompleted,
+                                            })
+                                        }
+                                    ></_UnitCheckboxWithTooltip>
                                 ))}
                         </div>
                         {path.electives.map((elective) => (
@@ -121,36 +113,28 @@ export function UpdateUnitsTool(props: {
                                 </h3>
                                 <div>
                                     {elective.unitIds.map((unitId) => (
-                                        <div
+                                        <_UnitCheckboxWithTooltip
                                             key={unitId}
-                                            className="flex items-center"
-                                        >
-                                            <div className="flex items-center mt-1">
-                                                <Checkbox
-                                                    inputId={unitId}
-                                                    checked={
-                                                        props
-                                                            .isCompletedByUnitId[
-                                                            unitId
-                                                        ] ?? false
-                                                    }
-                                                    onChange={(e) =>
-                                                        props.onUnitsChanged({
-                                                            unitId,
-                                                            isCompleted:
-                                                                e.checked,
-                                                        })
-                                                    }
-                                                />
-                                                <label
-                                                    htmlFor={unitId}
-                                                    className="cursor-pointer ml-1 text-sm"
-                                                >
-                                                    {props.units[unitId]
-                                                        ?.name ?? ''}
-                                                </label>
-                                            </div>
-                                        </div>
+                                            unitId={unitId}
+                                            name={
+                                                props.units[unitId]?.name ?? ''
+                                            }
+                                            description={
+                                                props.units[unitId]
+                                                    ?.description ?? ''
+                                            }
+                                            isCompleted={
+                                                props.isCompletedByUnitId[
+                                                    unitId
+                                                ] ?? false
+                                            }
+                                            onToggle={(unitId, isCompleted) =>
+                                                props.onUnitsChanged({
+                                                    unitId,
+                                                    isCompleted,
+                                                })
+                                            }
+                                        ></_UnitCheckboxWithTooltip>
                                     ))}
                                 </div>
                             </div>
@@ -172,6 +156,47 @@ export function UpdateUnitsTool(props: {
                     {unitsByCategoryJsx}
                 </TabPanel>
             </TabView>
+        </div>
+    );
+}
+
+function _UnitCheckboxWithTooltip(props: {
+    unitId: string;
+    name: string;
+    description: string;
+    isCompleted: boolean;
+    onToggle: (unitId: string, isCompleted: boolean) => void;
+}) {
+    return (
+        <div key={props.unitId} className="flex items-center">
+            <Tooltip
+                target={`.checkbox-${props.unitId}`}
+                position="right"
+                event="both"
+            >
+                {props.description.split(' -').map((line, index) => (
+                    <div key={index} className="text-sm">
+                        {line.startsWith('-') ? line : `- ${line}`}
+                    </div>
+                ))}
+            </Tooltip>
+            <div
+                className={`checkbox-${props.unitId} flex items-center mt-1 pr-2`}
+            >
+                <Checkbox
+                    inputId={props.unitId}
+                    checked={props.isCompleted ?? false}
+                    onChange={(e) =>
+                        props.onToggle(props.unitId, e.checked ?? false)
+                    }
+                />
+                <label
+                    htmlFor={props.unitId}
+                    className="cursor-pointer ml-1 text-sm"
+                >
+                    {props.name ?? ''}
+                </label>
+            </div>
         </div>
     );
 }
