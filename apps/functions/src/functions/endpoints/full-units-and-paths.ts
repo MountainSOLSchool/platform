@@ -41,10 +41,13 @@ export const fullUnitsAndPaths = Functions.endpoint.handle(
                             unit.prereqs as Array<DocumentReference> | undefined
                         )?.map((reference) => reference.id) ?? [],
                 }))
-                .reduce((acc, unit) => ({
-                    ...acc,
-                    [unit.id]: unit,
-                })),
+                .reduce(
+                    (acc, unit) => ({
+                        ...acc,
+                        [unit.id]: unit,
+                    }),
+                    {}
+                ),
         });
     }
 );
