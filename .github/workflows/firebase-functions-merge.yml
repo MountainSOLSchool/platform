@@ -62,12 +62,11 @@ jobs:
                   START=$(( ((${{ matrix.group }} - 1) * PER_GROUP) ))
                   END=$(( START + PER_GROUP ))
 
-                  # Extract the functions for this group
-                  GROUP_FUNCTIONS=$(IFS=,; echo "${FUNC_ARRAY[*]:START:PER_GROUP}")
+                  # Extract the functions for this group and prefix each with 'functions:'
+                  GROUP_FUNCTIONS=$(printf "functions:%s," "${FUNC_ARRAY[@]:START:PER_GROUP}")
 
-                  # Prepare the functions list for Firebase deployment
-                  DEPLOY_FUNCTIONS=$(echo "$GROUP_FUNCTIONS" | sed 's/ /,functions:/g')
-                  DEPLOY_FUNCTIONS="functions:${DEPLOY_FUNCTIONS}"
+                  # Remove the trailing comma
+                  DEPLOY_FUNCTIONS=${GROUP_FUNCTIONS%,}
 
                   echo "functions_list=${DEPLOY_FUNCTIONS}" >> $GITHUB_OUTPUT
 
