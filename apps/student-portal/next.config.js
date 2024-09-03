@@ -20,6 +20,16 @@ const nextConfig = {
             },
         ];
     },
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'www.mountainsol.org',
+                port: '',
+                pathname: '/wp-content/uploads/**',
+            },
+        ],
+    },
 };
 
 module.exports = withNx(nextConfig);
