@@ -15,7 +15,10 @@ import { useEffect, useState } from 'react';
 import * as auth from 'firebase/auth';
 import { PrimeReactProvider } from 'primereact/api';
 import LoginWithRegisteredEpics from './login/page';
-import Header from '../components/Header';
+import dynamic from 'next/dynamic';
+
+// TODO: preventing SSR temporarily beacuse something goes wrong with prerendering (likely useMediaQuery)
+const Header = dynamic(() => import('../components/Header'), { ssr: false });
 
 function RootLayout({ children }: { children: React.ReactNode }) {
     // TODO: add to provider
