@@ -52,7 +52,7 @@ jobs:
               id: prepare_functions
               run: |
                   # Convert multi-line string to array
-                  IFS=$'\n' read -rd '' -a FUNC_ARRAY <<< "$FUNCTIONS"
+                  FUNC_ARRAY=(${FUNCTIONS})
 
                   # Calculate the number of functions per group
                   TOTAL=${#FUNC_ARRAY[@]}
