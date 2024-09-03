@@ -1,18 +1,49 @@
 name: Deploy Firebase Functions on merge
-'on':
+
+on:
     push:
         branches:
             - main
+
+env:
+    FUNCTIONS: >-
+        adminEnrollments
+        allStudents
+        availableEnrollmentClasses
+        calculateBasket
+        classGroups
+        classesBySemester
+        classes
+        currentSemester
+        deleteEnrollmentDraft
+        emails
+        enroll
+        enrollments
+        fullUnitsAndPaths
+        getCompletedUnits
+        getMyStudent
+        historicalSemesters
+        loadEnrollmentDraft
+        myEnrolledStudents
+        paymentToken
+        roles
+        roster
+        semestersAvailableToEnroll
+        signIn
+        studentHealth
+        tshirts
+        updateCompletedUnits
+        updateEnrollmentDraft
+        addEmailToSolsticeList
+        createEnrollmentEmail
+        onSuccessfulEnrollDeleteDraft
 
 jobs:
     build_and_deploy:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                functions-set:
-                    - adminEnrollments,allStudents,availableEnrollmentClasses,calculateBasket,classGroups,classesBySemester,classes,currentSemester,deleteEnrollmentDraft
-                    - emails,enroll,enrollments,fullUnitsAndPaths,getCompletedUnits,getMyStudent,historicalSemesters,loadEnrollmentDraft,myEnrolledStudents,paymentToken
-                    - roles,roster,semestersAvailableToEnroll,signIn,studentHealth,tshirts,updateCompletedUnits,updateEnrollmentDraft,addEmailToSolsticeList,createEnrollmentEmail,onSuccessfulEnrollDeleteDraft
+                group: [1, 2, 3, 4]
         steps:
             - uses: actions/checkout@v4
             - run: npm ci
@@ -20,9 +51,25 @@ jobs:
             - name: Prepare functions list
               id: prepare_functions
               run: |
-                  FUNCTIONS=$(echo "${{ matrix.functions-set }}" | sed 's/,/,functions:/g')
-                  FUNCTIONS="functions:${FUNCTIONS}"
-                  echo "functions_list=${FUNCTIONS}" >> $GITHUB_OUTPUT
+                  # Convert multi-line string to array
+                  IFS=$'\n' read -rd '' -a FUNC_ARRAY <<< "$FUNCTIONS"
+
+                  # Calculate the number of functions per group
+                  TOTAL=${#FUNC_ARRAY[@]}
+                  PER_GROUP=$(( (TOTAL + ${{ matrix.group }} - 1) / ${{ strategy.job-total }} ))
+
+                  # Calculate start and end indices for this group
+                  START=$(( ((${{ matrix.group }} - 1) * PER_GROUP) ))
+                  END=$(( START + PER_GROUP ))
+
+                  # Extract the functions for this group
+                  GROUP_FUNCTIONS=$(IFS=,; echo "${FUNC_ARRAY[*]:START:PER_GROUP}")
+
+                  # Prepare the functions list for Firebase deployment
+                  DEPLOY_FUNCTIONS=$(echo "$GROUP_FUNCTIONS" | sed 's/ /,functions:/g')
+                  DEPLOY_FUNCTIONS="functions:${DEPLOY_FUNCTIONS}"
+
+                  echo "functions_list=${DEPLOY_FUNCTIONS}" >> $GITHUB_OUTPUT
 
             - uses: w9jds/firebase-action@v13.4.0
               with:
