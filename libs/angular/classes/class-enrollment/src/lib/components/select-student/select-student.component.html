@@ -16,110 +16,26 @@
     </ng-template>
     <div class="mt-4 flex flex-wrap gap-3">
         @if (vm.students === undefined) {
-            <p-card
-                [style]="{
-                    width: '16rem',
-                    height: '20rem',
-                    margin: 'auto'
-                }"
-            >
-                <div style="display: flex; align-items: center; gap: 10px">
-                    <p-progressSpinner
-                        [style]="{ width: '20px', height: '20px' }"
-                    ></p-progressSpinner>
-                    <p>Loading previously enrolled students...</p>
-                </div>
-            </p-card>
+            <sol-student-selection-card
+                [disabled]="vm.showAsReadonlyBlock"
+                [loading]="true"
+            ></sol-student-selection-card>
         } @else {
             @for (student of vm.students; track student) {
-                <div
-                    [ngStyle]="{
-                        border:
-                            student.id === vm.selectedStudentId
-                                ? '.2rem solid #3c82f7'
-                                : '.2rem solid transparent',
-                        'border-radius': '6px',
-                        'box-sizing': 'border-box',
-                        height: 'fit-content'
-                    }"
-                >
-                    <p-card
-                        [header]="student.name"
-                        [style]="{
-                            width: '16rem',
-                            height: '20rem',
-                            margin: 'auto'
-                        }"
-                    >
-                        <ng-template pTemplate="subHeader">
-                            <h3>Birthday</h3>
-                            <p>{{ student.birthday }}</p>
-                        </ng-template>
-                        <ng-template pTemplate="footer">
-                            <button
-                                pButton
-                                class="w-full mt-3"
-                                [disabled]="vm.showAsReadonlyBlock"
-                                [ngClass]="{
-                                    'p-button-outlined':
-                                        vm.selectedStudentId !== student.id
-                                }"
-                                [label]="
-                                    vm.selectedStudentId === student.id
-                                        ? 'Selected'
-                                        : 'Select'
-                                "
-                                (click)="selectedStudent(student.id)"
-                            ></button>
-                        </ng-template>
-                    </p-card>
-                </div>
+                <sol-student-selection-card
+                    [student]="student"
+                    [selected]="student.id === vm.selectedStudentId"
+                    [disabled]="vm.showAsReadonlyBlock"
+                    (clicked)="selectedStudent(student.id)"
+                ></sol-student-selection-card>
             }
         }
-        <div
-            [ngStyle]="{
-                border:
-                    vm.selectedStudentType === 'new'
-                        ? '.2rem solid #3c82f7'
-                        : '.2rem solid transparent',
-                'border-radius': '6px',
-                'box-sizing': 'border-box',
-                height: 'fit-content'
-            }"
-        >
-            <p-card
-                header="New Student"
-                [style]="{
-                    width: '16rem',
-                    height: '20rem'
-                }"
-            >
-                <div class="w-full flex justify-content-center">
-                    <div>
-                        <span style="font-size: 6rem" class="pi pi-user"></span>
-                    </div>
-                </div>
-
-                <ng-template pTemplate="footer">
-                    <button
-                        pButton
-                        [disabled]="vm.showAsReadonlyBlock"
-                        [ngClass]="{
-                            'w-full': true,
-                            'mt-3': true,
-                            'p-button-outlined':
-                                vm.selectedStudentType !== 'new'
-                        }"
-                        [label]="
-                            vm.selectedStudentType === 'new'
-                                ? 'Selected'
-                                : 'Select'
-                        "
-                        (click)="selectedStudentType('new')"
-                    ></button>
-                </ng-template>
-            </p-card>
-        </div>
+        <sol-student-selection-card
+            [disabled]="vm.showAsReadonlyBlock"
+            [selected]="vm.selectedStudentType === 'new'"
+            icon="pi-user-plus"
+            (clicked)="selectedStudentType('new')"
+        ></sol-student-selection-card>
     </div>
 </ng-container>
 

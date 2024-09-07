@@ -36,6 +36,7 @@ import { DialogModule } from 'primeng/dialog';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { NgClass, NgStyle } from '@angular/common';
+import { SelectStudentCardComponent } from '../select-student-card/select-student-card.component';
 
 @Component({
     standalone: true,
@@ -56,6 +57,7 @@ import { NgClass, NgStyle } from '@angular/common';
         ProgressSpinnerModule,
         NgClass,
         NgStyle,
+        SelectStudentCardComponent,
     ],
     selector: 'sol-student-selection',
     templateUrl: './select-student.component.html',
@@ -208,7 +210,13 @@ export class SelectStudentComponent {
             enrollment: {
                 ...state.enrollment,
                 isStudentNew: type === 'new',
-                student: type === 'new' ? {} : state.enrollment.student,
+                student:
+                    type === 'new'
+                        ? {
+                              ...state.enrollment.student,
+                              id: undefined,
+                          }
+                        : state.enrollment.student,
             },
         }));
     }
