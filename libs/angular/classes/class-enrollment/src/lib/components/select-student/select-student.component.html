@@ -1,10 +1,6 @@
 <ng-container *rxLet="viewModel$; let vm">
-    <div
-        *rxIf="!vm.showAsReadonlyBlock; else readonlyExplanation"
-        style="margin-bottom: 2rem"
-    >
-        Select whether to enroll a new student or a student which you've
-        previously enrolled on this portal.
+    <div *rxIf="!vm.showAsReadonlyBlock; else readonlyExplanation">
+        Select a student to enroll.
     </div>
     <ng-template #readonlyExplanation>
         <div style="margin-bottom: 1rem">
@@ -18,62 +14,111 @@
             (click)="startOverIntent()"
         ></button>
     </ng-template>
-    <div class="flex flex-column gap-3">
-        <div class="field-checkbox">
-            <p-radioButton
-                inputId="previousStudent"
-                name="studentSelection"
-                value="previous"
-                [ngModel]="vm.selectedStudentType"
-                [disabled]="vm.showAsReadonlyBlock"
-                (onClick)="selectedStudentType($event.value)"
-            ></p-radioButton>
-            <label for="previousStudent" class="ml-2"
-                >Previously Enrolled Student</label
+    <div class="mt-4 flex flex-wrap gap-3">
+        @if (vm.students === undefined) {
+            <p-card
+                [style]="{
+                    width: '16rem',
+                    height: '20rem',
+                    margin: 'auto'
+                }"
             >
-        </div>
-        <ng-container *rxIf="vm.selectedStudentType === 'previous'">
-            <div
-                style="margin-top: -0.5rem; margin-bottom: 1rem"
-                *rxIf="vm.students !== undefined; else skeleton"
-            >
-                <p-dropdown
-                    *rxIf="vm.students.length > 0; else noStudents"
-                    [options]="vm.students"
-                    placeholder="Select a student"
-                    optionLabel="name"
-                    optionValue="id"
-                    [ngModel]="vm.selectedStudentId"
-                    [showClear]="true"
-                    [disabled]="vm.showAsReadonlyBlock"
-                    (onChange)="selectedStudent($event.value)"
-                ></p-dropdown>
-                <ng-template #noStudents
-                    ><div>
-                        There were no previous student enrollments found for
-                        your account.
-                    </div></ng-template
+                <div style="display: flex; align-items: center; gap: 10px">
+                    <p-progressSpinner
+                        [style]="{ width: '20px', height: '20px' }"
+                    ></p-progressSpinner>
+                    <p>Loading previously enrolled students...</p>
+                </div>
+            </p-card>
+        } @else {
+            @for (student of vm.students; track student) {
+                <div
+                    [ngStyle]="{
+                        border:
+                            student.id === vm.selectedStudentId
+                                ? '.2rem solid #3c82f7'
+                                : '.2rem solid transparent',
+                        'border-radius': '6px',
+                        'box-sizing': 'border-box',
+                        height: 'fit-content'
+                    }"
                 >
-            </div>
-        </ng-container>
-        <ng-template #skeleton
-            ><div style="display: flex; align-items: center; gap: 10px">
-                <p-progressSpinner
-                    [style]="{ width: '20px', height: '20px' }"
-                ></p-progressSpinner>
-                <p>Loading students...</p>
-            </div>
-        </ng-template>
-        <div class="field-checkbox" style="margin-top: 0.5rem">
-            <p-radioButton
-                inputId="newStudent"
-                name="studentSelection"
-                value="new"
-                [ngModel]="vm.selectedStudentType"
-                [disabled]="vm.showAsReadonlyBlock"
-                (onClick)="selectedStudentType($event.value)"
-            ></p-radioButton>
-            <label for="newStudent" class="ml-2">New Student</label>
+                    <p-card
+                        [header]="student.name"
+                        [style]="{
+                            width: '16rem',
+                            height: '20rem',
+                            margin: 'auto'
+                        }"
+                    >
+                        <ng-template pTemplate="subHeader">
+                            <h3>Birthday</h3>
+                            <p>{{ student.birthday }}</p>
+                        </ng-template>
+                        <ng-template pTemplate="footer">
+                            <button
+                                pButton
+                                class="w-full mt-3"
+                                [disabled]="vm.showAsReadonlyBlock"
+                                [ngClass]="{
+                                    'p-button-outlined':
+                                        vm.selectedStudentId !== student.id
+                                }"
+                                [label]="
+                                    vm.selectedStudentId === student.id
+                                        ? 'Selected'
+                                        : 'Select'
+                                "
+                                (click)="selectedStudent(student.id)"
+                            ></button>
+                        </ng-template>
+                    </p-card>
+                </div>
+            }
+        }
+        <div
+            [ngStyle]="{
+                border:
+                    vm.selectedStudentType === 'new'
+                        ? '.2rem solid #3c82f7'
+                        : '.2rem solid transparent',
+                'border-radius': '6px',
+                'box-sizing': 'border-box',
+                height: 'fit-content'
+            }"
+        >
+            <p-card
+                header="New Student"
+                [style]="{
+                    width: '16rem',
+                    height: '20rem'
+                }"
+            >
+                <div class="w-full flex justify-content-center">
+                    <div>
+                        <span style="font-size: 6rem" class="pi pi-user"></span>
+                    </div>
+                </div>
+
+                <ng-template pTemplate="footer">
+                    <button
+                        pButton
+                        [disabled]="vm.showAsReadonlyBlock"
+                        [ngClass]="{
+                            'w-full': true,
+                            'mt-3': true,
+                            'p-button-outlined':
+                                vm.selectedStudentType !== 'new'
+                        }"
+                        [label]="
+                            vm.selectedStudentType === 'new'
+                                ? 'Selected'
+                                : 'Select'
+                        "
+                        (click)="selectedStudentType('new')"
+                    ></button>
+                </ng-template>
+            </p-card>
         </div>
     </div>
 </ng-container>

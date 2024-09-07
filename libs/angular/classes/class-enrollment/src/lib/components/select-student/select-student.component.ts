@@ -35,6 +35,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { NgClass, NgStyle } from '@angular/common';
 
 @Component({
     standalone: true,
@@ -53,6 +54,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         ButtonModule,
         DialogModule,
         ProgressSpinnerModule,
+        NgClass,
+        NgStyle,
     ],
     selector: 'sol-student-selection',
     templateUrl: './select-student.component.html',
@@ -130,7 +133,7 @@ export class SelectStudentComponent {
 
     private students$ = this.api
         .call<{
-            students: Array<{ id: string; name: string }>;
+            students: Array<{ id: string; name: string; birthday: string }>;
         }>('myEnrolledStudents')
         .pipe(
             RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
@@ -187,9 +190,11 @@ export class SelectStudentComponent {
     }
 
     selectedStudent(id: string) {
+        this.selectedStudentType('previous');
         this.workflow.patchState((state) => ({
             enrollment: {
                 ...state.enrollment,
+                isStudentNew: false,
                 student: {
                     ...state.enrollment.student,
                     id,
@@ -203,6 +208,7 @@ export class SelectStudentComponent {
             enrollment: {
                 ...state.enrollment,
                 isStudentNew: type === 'new',
+                student: type === 'new' ? {} : state.enrollment.student,
             },
         }));
     }
