@@ -55,7 +55,7 @@ export const createEnrollmentEmail = onDocumentCreated(
                         html: `<p>Thank you for enrolling ${
                             enrollmentRecord.studentName
                         } for classes with us!</p>
-                        <p>You can view all of your enrollments here by logging in with the account you created: <a href="https://mountain-sol-platform.web.app/account/enrollments">https://mountain-sol-platform.web.app/account/enrollments</a>.</p>
+                        <p>You can view all of your enrollments here by logging in with the account you created: <a href="https://enrollment.mountainsol.org/account/enrollments">https://enrollment.mountainsol.org/account/enrollments</a>.</p>
                         <p>Every student is encouraged to wear good hiking shoes and bring the following items in a backpack:
                         <ul>
                           <li>Water bottle</li>
