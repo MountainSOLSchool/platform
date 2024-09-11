@@ -4,6 +4,7 @@ import { TabView, TabPanel } from 'primereact/tabview';
 import { PathElective } from 'apps/student-portal/models/path-elective.type';
 import { Card } from 'primereact/card';
 import { Tooltip } from 'primereact/tooltip';
+import UpdateStudentUnitsChanges from './UpdateStudentUnitsChanges';
 
 // TODO: the styling classes are haphazardly applied here
 export function UpdateUnitsTool(props: {
@@ -86,7 +87,7 @@ export function UpdateUnitsTool(props: {
                                 })
                                 .map((unitId) => (
                                     <_UnitCheckboxWithTooltip
-                                        key={unitId}
+                                        key={`${path.name}-${unitId}`}
                                         unitId={unitId}
                                         name={props.units[unitId]?.name ?? ''}
                                         description={
@@ -114,7 +115,7 @@ export function UpdateUnitsTool(props: {
                                 <div>
                                     {elective.unitIds.map((unitId) => (
                                         <_UnitCheckboxWithTooltip
-                                            key={unitId}
+                                            key={`${path.name}-${elective.name}-${unitId}`}
                                             unitId={unitId}
                                             name={
                                                 props.units[unitId]?.name ?? ''
@@ -151,6 +152,7 @@ export function UpdateUnitsTool(props: {
             <TabView>
                 <TabPanel header="Update Units by Path">
                     {unitsByPathJsx}
+                    <UpdateStudentUnitsChanges />
                 </TabPanel>
                 <TabPanel header="View Descriptions by Category">
                     {unitsByCategoryJsx}
