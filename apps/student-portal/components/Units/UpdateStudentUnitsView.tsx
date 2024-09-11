@@ -108,9 +108,10 @@ export function UpdateStudentUnitsView(
                                         props.unitCompletionChanged(change)
                                     }
                                 />
-                                {/* checkboxes appear by unit names if student is selected */}
+
                                 <Button
                                     loading={props.isSaveInProgress}
+                                    className={'mt-4'}
                                     style={
                                         props.selectedStudentId === ''
                                             ? { display: 'none' }

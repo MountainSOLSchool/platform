@@ -30,7 +30,6 @@ export const unitsSlice = createSlice({
     name: 'updateUnits',
     initialState,
     reducers: {
-        // TODO: should track loading states of these requests, too
         studentLoadSucceeded: (
             state,
             action: {
@@ -60,13 +59,11 @@ export const unitsSlice = createSlice({
         pathsLoadSucceeded: (
             state,
             action: {
-                // TODO: make this a re-usable type for a "frontend path model"
                 payload: Array<Path>;
             }
         ) => {
             state.paths = action.payload;
         },
-        // pending reducers
         studentLoadStarted: (state) => {
             state.students = RequestState.Loading;
         },
@@ -100,8 +97,15 @@ export const unitsSlice = createSlice({
             state,
             action: { payload: { unitId: string; isCompleted: boolean } }
         ) => {
-            state.changedUnitCompletions[action.payload.unitId] =
-                action.payload.isCompleted;
+            if (
+                state.changedUnitCompletions[action.payload.unitId] ===
+                undefined
+            ) {
+                state.changedUnitCompletions[action.payload.unitId] =
+                    action.payload.isCompleted;
+            } else {
+                delete state.changedUnitCompletions[action.payload.unitId];
+            }
         },
         ready: (state) => {
             state.students = RequestState.Loading;
@@ -112,6 +116,11 @@ export const unitsSlice = createSlice({
         },
         saveCompletedUnitsSucceeded: (state) => {
             state.saveChanges = undefined;
+            state.selectedStudentCompletedUnitIds =
+                selectCompletedAndChangedCompletedUnitIds({
+                    updateUnits: state,
+                });
+            state.changedUnitCompletions = {};
         },
         saveCompletedUnitsFailed: (state) => {
             state.saveChanges = RequestState.Error;
@@ -207,6 +216,20 @@ export const selectIsUnitsLoadingInProgress = createSelector(
 export const selectIsSaveInProgress = createSelector(
     [selectState],
     (state) => state.saveChanges === RequestState.Loading
+);
+
+export const selectUnitNameAndCompletionChange = createSelector(
+    [selectUnits, selectChangedUnitCompletions],
+    (units, changedUnitCompletions) => {
+        return Object.entries(changedUnitCompletions).map(
+            ([unitId, isCompleted]) => {
+                return {
+                    name: units[unitId].name,
+                    added: isCompleted,
+                };
+            }
+        );
+    }
 );
 
 export const selectUpdateStudentUnitsProps = createSelector(
