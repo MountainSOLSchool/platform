@@ -6,6 +6,10 @@ export function useUnitsStore() {
 
     return {
         props: useSelector(selectUpdateStudentUnitsProps),
+        selectedSemesterChanged: (semesterId: string) =>
+            dispatch(unitsSlice.actions.setSelectedSemesterId(semesterId)),
+        selectedClassChanged: (classId: string) =>
+            dispatch(unitsSlice.actions.setSelectedClassId(classId)),
         selectedStudentChanged: (studentId: string) =>
             dispatch(unitsSlice.actions.setSelectedStudentId(studentId)),
         unitCompletionChanged: (change: {

@@ -8,6 +8,10 @@ type State = {
     students: Requested<
         Array<{ first_name: string; last_name: string; id: string }>
     >;
+    semesters: Requested<Array<{ displayName: string; semesterId: string }>>;
+    classes: Requested<Array<{ displayName: string; classId: string }>>;
+    selectedSemesterId: string | undefined;
+    selectedClassId: string | undefined;
     selectedStudentId: string | undefined;
     selectedStudentCompletedUnitIds: Requested<Array<string>>;
     paths: Requested<Array<Path>>;
@@ -18,6 +22,10 @@ type State = {
 
 const initialState: State = {
     students: RequestState.Empty,
+    semesters: RequestState.Empty,
+    classes: RequestState.Empty,
+    selectedSemesterId: undefined,
+    selectedClassId: undefined,
     selectedStudentId: undefined,
     selectedStudentCompletedUnitIds: RequestState.Empty,
     units: RequestState.Empty,
@@ -30,6 +38,22 @@ export const unitsSlice = createSlice({
     name: 'updateUnits',
     initialState,
     reducers: {
+        semestersLoadSucceeded: (
+            state,
+            action: {
+                payload: Array<{ displayName: string; semesterId: string }>;
+            }
+        ) => {
+            state.semesters = action.payload;
+        },
+        classesLoadSucceeded: (
+            state,
+            action: {
+                payload: Array<{ displayName: string; classId: string }>;
+            }
+        ) => {
+            state.classes = action.payload;
+        },
         studentLoadSucceeded: (
             state,
             action: {
@@ -64,6 +88,12 @@ export const unitsSlice = createSlice({
         ) => {
             state.paths = action.payload;
         },
+        semestersLoadStarted: (state) => {
+            state.semesters = RequestState.Loading;
+        },
+        classesLoadStarted: (state) => {
+            state.classes = RequestState.Loading;
+        },
         studentLoadStarted: (state) => {
             state.students = RequestState.Loading;
         },
@@ -76,6 +106,12 @@ export const unitsSlice = createSlice({
         pathsLoadStarted: (state) => {
             state.paths = RequestState.Loading;
         },
+        semestersLoadFailed: (state) => {
+            state.semesters = RequestState.Error;
+        },
+        classesLoadFailed: (state) => {
+            state.classes = RequestState.Error;
+        },
         studentLoadFailed: (state) => {
             state.students = RequestState.Error;
         },
@@ -87,6 +123,15 @@ export const unitsSlice = createSlice({
         },
         pathsLoadFailed: (state) => {
             state.paths = RequestState.Error;
+        },
+        setSelectedSemesterId: (state, action: { payload: string }) => {
+            state.selectedSemesterId = action.payload;
+            state.selectedClassId = undefined;
+            resetSelectedStudent(state);
+        },
+        setSelectedClassId: (state, action: { payload: string }) => {
+            state.selectedClassId = action.payload;
+            resetSelectedStudent(state);
         },
         setSelectedStudentId: (state, action: { payload: string }) => {
             state.selectedStudentId = action.payload;
@@ -128,6 +173,12 @@ export const unitsSlice = createSlice({
     },
 });
 
+function resetSelectedStudent(state: State) {
+    state.selectedStudentId = undefined;
+    state.selectedStudentCompletedUnitIds = RequestState.Empty;
+    state.changedUnitCompletions = {};
+}
+
 export default unitsSlice.reducer;
 
 const selectState = (state: { updateUnits: State }) => state.updateUnits;
@@ -137,9 +188,24 @@ export const selectStudents = createSelector(
     (state) => state.students
 );
 
+export const selectSemesters = createSelector(
+    [selectState],
+    (state) => state.semesters
+);
+
+export const selectClasses = createSelector(
+    [selectState],
+    (state) => state.classes
+);
+
 export const selectIsStudentLoadingInProgress = createSelector(
     [selectStudents],
     (requestState) => requestState === RequestState.Loading
+);
+
+export const selectSelectedSemesterId = createSelector(
+    [selectState],
+    (state) => state.selectedSemesterId
 );
 
 export const selectSelectedStudentId = createSelector(
@@ -235,6 +301,8 @@ export const selectUnitNameAndCompletionChange = createSelector(
 export const selectUpdateStudentUnitsProps = createSelector(
     [
         selectStudents,
+        selectSemesters,
+        selectClasses,
         selectSelectedStudentId,
         selectCompletedAndChangedCompletedUnitIds,
         selectUnits,
@@ -243,6 +311,8 @@ export const selectUpdateStudentUnitsProps = createSelector(
     ],
     (
         students,
+        semesters,
+        classes,
         selectedStudentId,
         completedUnitIds,
         units,
@@ -251,6 +321,8 @@ export const selectUpdateStudentUnitsProps = createSelector(
     ): UpdateStudentUnitsViewProps => {
         return {
             students,
+            semesters,
+            classes,
             selectedStudentId,
             completedUnitIds,
             units,
