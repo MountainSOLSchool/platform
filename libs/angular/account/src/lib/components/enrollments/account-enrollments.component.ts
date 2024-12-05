@@ -6,19 +6,26 @@ import {
 } from '@angular/core';
 
 import { AccountEnrollmentsViewComponent } from './account-enrollments.view.component';
-import { provideComponentStore } from '@ngrx/component-store';
-import { AccountEnrollmentsStore } from '../../store/account-enrollments.store';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { AccountEnrollmentsApiService } from '../../services/account-enrollments-api.service';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     template:
-        '<sol-account-enrollments-view [enrollments]="viewModel().enrollments()"></sol-account-enrollments-view>',
+        '<sol-account-enrollments-view [enrollments]="enrollments()"></sol-account-enrollments-view>',
     imports: [AccountEnrollmentsViewComponent],
-    providers: [provideComponentStore(AccountEnrollmentsStore)],
 })
 export class AccountEnrollmentsComponent {
-    private readonly store = inject(AccountEnrollmentsStore);
-    readonly viewModel = computed(() => ({
-        enrollments: this.store.enrollments,
+    private readonly accountEnrollmentsApiService = inject(
+        AccountEnrollmentsApiService
+    );
+
+    readonly enrollmentsResource = rxResource({
+        loader: () => this.accountEnrollmentsApiService.getAll(),
+    });
+
+    readonly enrollments = computed(() => ({
+        value: this.enrollmentsResource.value(),
+        status: this.enrollmentsResource.status(),
     }));
 }
