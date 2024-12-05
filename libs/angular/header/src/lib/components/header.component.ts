@@ -11,7 +11,6 @@ import { RxLet } from '@rx-angular/template/let';
 import { AsyncPipe, NgStyle } from '@angular/common';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
@@ -105,7 +104,7 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                     >
                 </li>
             </ul>
-        </p-sidebar>`,
+        </p-sidebar>`
 })
 export class HeaderComponent {
     private readonly userService = inject(UserService);

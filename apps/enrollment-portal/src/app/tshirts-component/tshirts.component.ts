@@ -17,7 +17,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,
@@ -27,7 +26,7 @@ import { FormsModule } from '@angular/forms';
         DropdownModule,
         FormsModule,
     ],
-    templateUrl: './tshirts.component.html',
+    templateUrl: './tshirts.component.html'
 })
 export class TshirtsComponent {
     private readonly functionsApi = inject(FirebaseFunctionsService);

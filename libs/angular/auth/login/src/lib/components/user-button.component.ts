@@ -15,7 +15,6 @@ import { MenuModule } from 'primeng/menu';
 import { map, Observable } from 'rxjs';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,
@@ -49,7 +48,7 @@ import { map, Observable } from 'rxjs';
                 [label]="size === 'default' ? 'Register / Sign In' : 'Account'"
                 styleClass="p-button-md"
             ></p-button>
-        }`,
+        }`
 })
 export class UserButtonComponent implements OnInit {
     private readonly auth = inject(FirebaseAuthService);

@@ -94,7 +94,6 @@ import { FormsModule } from '@angular/forms';
                 </ng-template>
             </p-table>
         </div>`,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ButtonModule,
@@ -104,7 +103,7 @@ import { FormsModule } from '@angular/forms';
         ClassPrintoutsLoadingViewComponent,
         DropdownModule,
         FormsModule,
-    ],
+    ]
 })
 export class ClassPrintoutsViewComponent {
     @Input({ required: true })

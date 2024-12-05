@@ -19,7 +19,6 @@ import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { UserService } from '@sol/auth/user';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         PaymentCollectorComponent,
@@ -30,7 +29,7 @@ import { UserService } from '@sol/auth/user';
         RxLet,
     ],
     selector: 'sol-checkout',
-    templateUrl: './checkout.component.html',
+    templateUrl: './checkout.component.html'
 })
 export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);

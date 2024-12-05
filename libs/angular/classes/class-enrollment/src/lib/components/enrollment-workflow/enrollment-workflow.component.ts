@@ -41,7 +41,6 @@ import { Dialog } from '@angular/cdk/dialog';
 import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog.component';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         provideComponentStore(EnrollmentWorkflowStore),
@@ -98,7 +97,7 @@ import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog
                 border: none;
             }
         `,
-    ],
+    ]
 })
 export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);

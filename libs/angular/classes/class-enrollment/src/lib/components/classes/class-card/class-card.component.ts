@@ -19,7 +19,6 @@ import { SliderModule } from 'primeng/slider';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
@@ -36,7 +35,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
         ToggleButtonModule,
     ],
     selector: 'sol-class-card',
-    templateUrl: './class-card.component.html',
+    templateUrl: './class-card.component.html'
 })
 export class ClassCardComponent {
     @Input() selected = false;

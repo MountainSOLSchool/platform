@@ -37,7 +37,6 @@ import { NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
@@ -63,7 +62,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ],
     selector: 'sol-medical',
     templateUrl: './medical.component.html',
-    styleUrls: ['./medical.component.css'],
+    styleUrls: ['./medical.component.css']
 })
 export class MedicalComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);

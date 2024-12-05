@@ -12,7 +12,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { NgClass, NgStyle } from '@angular/common';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CardModule,
@@ -22,7 +21,7 @@ import { NgClass, NgStyle } from '@angular/common';
         NgStyle,
     ],
     selector: 'sol-student-selection-card',
-    templateUrl: './select-student-card.component.html',
+    templateUrl: './select-student-card.component.html'
 })
 export class SelectStudentCardComponent {
     selected = input<boolean>();

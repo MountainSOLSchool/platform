@@ -39,7 +39,6 @@ import { NgClass, NgStyle } from '@angular/common';
 import { SelectStudentCardComponent } from '../select-student-card/select-student-card.component';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         LoginComponent,
@@ -61,7 +60,7 @@ import { SelectStudentCardComponent } from '../select-student-card/select-studen
     ],
     selector: 'sol-student-selection',
     templateUrl: './select-student.component.html',
-    styleUrls: ['./select-student.component.css'],
+    styleUrls: ['./select-student.component.css']
 })
 export class SelectStudentComponent {
     private api = inject(FirebaseFunctionsService);

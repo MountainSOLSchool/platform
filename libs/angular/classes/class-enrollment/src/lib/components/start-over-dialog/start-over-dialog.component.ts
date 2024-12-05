@@ -4,7 +4,6 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
-    standalone: true,
     template: `<p-dialog
         #startOverDialog
         header="Start over?"
@@ -32,7 +31,7 @@ import { ButtonModule } from 'primeng/button';
             ></button>
         </div>
     </p-dialog> `,
-    imports: [DialogModule, ButtonModule],
+    imports: [DialogModule, ButtonModule]
 })
 export class StartOverDialogComponent {
     private readonly dialogRef = inject(DialogRef);

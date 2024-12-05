@@ -24,7 +24,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         RxLet,
@@ -36,7 +35,7 @@ import { FormsModule } from '@angular/forms';
         DropdownModule,
         FormsModule,
     ],
-    templateUrl: './dashboard.component.html',
+    templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
     private readonly functionsApi = inject(FirebaseFunctionsService);

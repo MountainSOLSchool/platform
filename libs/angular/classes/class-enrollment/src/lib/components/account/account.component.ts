@@ -14,7 +14,6 @@ import { ToastModule } from 'primeng/toast';
 import { UserService } from '@sol/auth/user';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,
@@ -26,7 +25,7 @@ import { UserService } from '@sol/auth/user';
     ],
     selector: 'sol-class-account',
     templateUrl: './account.component.html',
-    styleUrls: ['./account.component.css'],
+    styleUrls: ['./account.component.css']
 })
 export class AccountComponent {
     user$ = inject(UserService).getUser();

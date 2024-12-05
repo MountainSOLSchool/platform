@@ -31,8 +31,7 @@ import { CardModule } from 'primeng/card';
         ></sol-class-summary-table>
     </p-card>`,
     imports: [ClassSummaryTableComponent, CurrencyPipe, CardModule, DatePipe],
-    standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EnrollmentViewComponent {
     @Input({ required: true })

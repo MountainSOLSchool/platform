@@ -40,7 +40,6 @@ import { EnrollmentSkeletonViewComponent } from './enrollment-skeleton.view.comp
                 <p>You have no enrollments.</p>
             }
         </ng-container>`,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         SolEmptyDirective,
@@ -50,7 +49,7 @@ import { EnrollmentSkeletonViewComponent } from './enrollment-skeleton.view.comp
         SolLoadedDirective,
         EnrollmentViewComponent,
         EnrollmentSkeletonViewComponent,
-    ],
+    ]
 })
 export class AccountEnrollmentsViewComponent {
     @Input({ required: true })

@@ -10,12 +10,10 @@ import { provideComponentStore } from '@ngrx/component-store';
 import { AccountEnrollmentsStore } from '../../store/account-enrollments.store';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    template:
-        '<sol-account-enrollments-view [enrollments]="viewModel().enrollments()"></sol-account-enrollments-view>',
+    template: '<sol-account-enrollments-view [enrollments]="viewModel().enrollments()"></sol-account-enrollments-view>',
     imports: [AccountEnrollmentsViewComponent],
-    providers: [provideComponentStore(AccountEnrollmentsStore)],
+    providers: [provideComponentStore(AccountEnrollmentsStore)]
 })
 export class AccountEnrollmentsComponent {
     private readonly store = inject(AccountEnrollmentsStore);

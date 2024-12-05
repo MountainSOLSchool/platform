@@ -6,7 +6,6 @@ import { AsyncPipe } from '@angular/common';
 import { UserService } from '@sol/auth/user';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: ` <h2>Manage Account</h2>
         <div style="margin-top: 2rem">
@@ -21,7 +20,7 @@ import { UserService } from '@sol/auth/user';
                 (click)="sendResetLink()"
             ></button>
         </div>`,
-    imports: [AsyncPipe, ButtonModule, LoginStore],
+    imports: [AsyncPipe, ButtonModule, LoginStore]
 })
 export class ManageAccountComponent {
     private readonly loginStore = inject(LoginStore);

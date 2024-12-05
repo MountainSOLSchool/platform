@@ -17,7 +17,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-login',
     imports: [
@@ -42,7 +41,7 @@ import { CardModule } from 'primeng/card';
                 color: black;
             }
         `,
-    ],
+    ]
 })
 export class LoginComponent implements OnInit {
     @Input() isCreatingNewAccount = false;

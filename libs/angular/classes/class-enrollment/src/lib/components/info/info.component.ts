@@ -38,7 +38,6 @@ import { NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
@@ -65,7 +64,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
-    styleUrls: ['./info.component.css'],
+    styleUrls: ['./info.component.css']
 })
 export class InfoComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);

@@ -10,7 +10,6 @@ import { RippleModule } from 'primeng/ripple';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,
@@ -21,7 +20,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
         RippleModule,
         DatePipe,
     ],
-    templateUrl: './enrollments.component.html',
+    templateUrl: './enrollments.component.html'
 })
 export class EnrollmentsComponent {
     readonly enrollments$ = inject(FirebaseFunctionsService)

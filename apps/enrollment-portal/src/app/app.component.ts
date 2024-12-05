@@ -4,7 +4,6 @@ import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ToastModule, MessageModule, RouterModule],
     selector: 'sol-root',
@@ -25,6 +24,6 @@ import { ToastModule } from 'primeng/toast';
                 >
             </p>
         </footer>`,
-    styles: [``],
+    styles: [``]
 })
 export class AppComponent {}
