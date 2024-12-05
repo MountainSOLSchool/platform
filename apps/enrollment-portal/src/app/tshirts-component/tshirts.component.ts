@@ -26,7 +26,7 @@ import { FormsModule } from '@angular/forms';
         DropdownModule,
         FormsModule,
     ],
-    templateUrl: './tshirts.component.html'
+    templateUrl: './tshirts.component.html',
 })
 export class TshirtsComponent {
     private readonly functionsApi = inject(FirebaseFunctionsService);

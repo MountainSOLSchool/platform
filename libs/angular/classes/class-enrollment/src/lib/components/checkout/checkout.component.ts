@@ -29,7 +29,7 @@ import { UserService } from '@sol/auth/user';
         RxLet,
     ],
     selector: 'sol-checkout',
-    templateUrl: './checkout.component.html'
+    templateUrl: './checkout.component.html',
 })
 export class CheckoutComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);

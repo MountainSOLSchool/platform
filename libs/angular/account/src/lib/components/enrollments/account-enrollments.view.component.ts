@@ -49,7 +49,7 @@ import { EnrollmentSkeletonViewComponent } from './enrollment-skeleton.view.comp
         SolLoadedDirective,
         EnrollmentViewComponent,
         EnrollmentSkeletonViewComponent,
-    ]
+    ],
 })
 export class AccountEnrollmentsViewComponent {
     @Input({ required: true })

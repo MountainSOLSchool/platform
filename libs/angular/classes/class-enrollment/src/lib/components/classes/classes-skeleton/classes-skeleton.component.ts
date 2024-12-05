@@ -6,6 +6,6 @@ import { SkeletonModule } from 'primeng/skeleton';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [SkeletonModule],
     selector: 'sol-classes-skeleton',
-    templateUrl: './classes-skeleton.component.html'
+    templateUrl: './classes-skeleton.component.html',
 })
 export class ClassesSkeletonComponent {}

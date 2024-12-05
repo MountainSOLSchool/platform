@@ -21,7 +21,7 @@ import { NgClass, NgStyle } from '@angular/common';
         NgStyle,
     ],
     selector: 'sol-student-selection-card',
-    templateUrl: './select-student-card.component.html'
+    templateUrl: './select-student-card.component.html',
 })
 export class SelectStudentCardComponent {
     selected = input<boolean>();

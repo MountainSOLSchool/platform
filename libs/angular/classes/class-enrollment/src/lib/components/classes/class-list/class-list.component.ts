@@ -104,7 +104,7 @@ interface ClassRow {
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
     styleUrls: ['./class-list.component.css'],
-    providers: [DatePipe]
+    providers: [DatePipe],
 })
 export class ClassesComponent {
     private readonly _interacted = signal(false);

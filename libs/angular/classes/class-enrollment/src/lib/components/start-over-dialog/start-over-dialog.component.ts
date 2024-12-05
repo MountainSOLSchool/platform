@@ -31,7 +31,7 @@ import { ButtonModule } from 'primeng/button';
             ></button>
         </div>
     </p-dialog> `,
-    imports: [DialogModule, ButtonModule]
+    imports: [DialogModule, ButtonModule],
 })
 export class StartOverDialogComponent {
     private readonly dialogRef = inject(DialogRef);

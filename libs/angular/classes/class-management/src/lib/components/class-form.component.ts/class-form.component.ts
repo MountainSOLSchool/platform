@@ -128,7 +128,7 @@ import { TooltipModule } from 'primeng/tooltip';
                     <p-dropdown id="teachers"></p-dropdown>
                 </div>
             </div>
-        </form>`
+        </form>`,
 })
 export class ClassFormComponent {
     public isUnitsPanelVisible$ = new Subject<boolean>();

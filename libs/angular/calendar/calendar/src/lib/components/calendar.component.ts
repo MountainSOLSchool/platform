@@ -32,7 +32,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AsyncPipe, FullCalendarModule, SkeletonModule],
     selector: 'sol-calendar',
-    templateUrl: './calendar.component.html'
+    templateUrl: './calendar.component.html',
 })
 export class CalendarComponent {
     private readonly firebaseApi = inject(FirebaseFunctionsService);

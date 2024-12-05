@@ -20,7 +20,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
         RippleModule,
         DatePipe,
     ],
-    templateUrl: './enrollments.component.html'
+    templateUrl: './enrollments.component.html',
 })
 export class EnrollmentsComponent {
     readonly enrollments$ = inject(FirebaseFunctionsService)

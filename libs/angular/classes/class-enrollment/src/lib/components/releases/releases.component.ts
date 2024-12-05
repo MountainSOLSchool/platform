@@ -52,7 +52,7 @@ import { RxFor } from '@rx-angular/template/for';
     ],
     selector: 'sol-releases',
     templateUrl: './releases.component.html',
-    styleUrls: ['./releases.component.css']
+    styleUrls: ['./releases.component.css'],
 })
 export class ReleasesComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);

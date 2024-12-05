@@ -62,7 +62,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ],
     selector: 'sol-medical',
     templateUrl: './medical.component.html',
-    styleUrls: ['./medical.component.css']
+    styleUrls: ['./medical.component.css'],
 })
 export class MedicalComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);

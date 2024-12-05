@@ -40,7 +40,7 @@ import 'add-to-calendar-button';
             }
         `,
     ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class EventsComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);

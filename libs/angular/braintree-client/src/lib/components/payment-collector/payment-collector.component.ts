@@ -26,7 +26,7 @@ export type PaymentCollector = {
     imports: [AsyncPipe, SkeletonModule],
     selector: 'sol-payment-collector',
     templateUrl: './payment-collector.component.html',
-    providers: [provideComponentStore(PaymentCollectorStore)]
+    providers: [provideComponentStore(PaymentCollectorStore)],
 })
 export class PaymentCollectorComponent implements OnInit {
     store = inject(PaymentCollectorStore);

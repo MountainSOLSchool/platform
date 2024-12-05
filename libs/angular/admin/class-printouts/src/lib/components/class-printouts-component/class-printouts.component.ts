@@ -27,7 +27,7 @@ import { ClassPrintoutRow } from '../../models/class-printout-row.type';
     }`,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ClassPrintoutsViewComponent, SolLoadingDirective],
-    providers: [provideComponentStore(ClassPrintoutsStore)]
+    providers: [provideComponentStore(ClassPrintoutsStore)],
 })
 export class ClassPrintoutsComponent {
     private readonly store = inject(ClassPrintoutsStore);

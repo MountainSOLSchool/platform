@@ -11,7 +11,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AsyncPipe, CalendarComponent, CardModule],
-    templateUrl: './classes-calendar.component.html'
+    templateUrl: './classes-calendar.component.html',
 })
 export class SelectClassesCalendarComponent {
     private readonly functionsApi = inject(FirebaseFunctionsService);

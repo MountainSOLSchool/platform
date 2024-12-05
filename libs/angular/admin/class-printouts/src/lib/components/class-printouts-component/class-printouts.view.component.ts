@@ -103,7 +103,7 @@ import { FormsModule } from '@angular/forms';
         ClassPrintoutsLoadingViewComponent,
         DropdownModule,
         FormsModule,
-    ]
+    ],
 })
 export class ClassPrintoutsViewComponent {
     @Input({ required: true })

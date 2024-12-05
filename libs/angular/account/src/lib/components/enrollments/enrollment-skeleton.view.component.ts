@@ -17,6 +17,6 @@ import { SkeletonModule } from 'primeng/skeleton';
             <p-skeleton width="4rem" height="2rem"></p-skeleton>
         </div>`,
     imports: [SkeletonModule],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnrollmentSkeletonViewComponent {}

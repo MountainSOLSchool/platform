@@ -41,7 +41,7 @@ import { CardModule } from 'primeng/card';
                 color: black;
             }
         `,
-    ]
+    ],
 })
 export class LoginComponent implements OnInit {
     @Input() isCreatingNewAccount = false;

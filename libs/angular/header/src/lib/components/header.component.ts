@@ -104,7 +104,7 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                     >
                 </li>
             </ul>
-        </p-sidebar>`
+        </p-sidebar>`,
 })
 export class HeaderComponent {
     private readonly userService = inject(UserService);

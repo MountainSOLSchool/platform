@@ -35,7 +35,7 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
         ToggleButtonModule,
     ],
     selector: 'sol-class-card',
-    templateUrl: './class-card.component.html'
+    templateUrl: './class-card.component.html',
 })
 export class ClassCardComponent {
     @Input() selected = false;

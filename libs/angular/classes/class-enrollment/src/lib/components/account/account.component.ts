@@ -25,7 +25,7 @@ import { UserService } from '@sol/auth/user';
     ],
     selector: 'sol-class-account',
     templateUrl: './account.component.html',
-    styleUrls: ['./account.component.css']
+    styleUrls: ['./account.component.css'],
 })
 export class AccountComponent {
     user$ = inject(UserService).getUser();

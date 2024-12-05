@@ -50,7 +50,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
     providers: [],
     selector: 'sol-class-confirmation',
     templateUrl: './confirmation.component.html',
-    styleUrls: ['./confirmation.component.css']
+    styleUrls: ['./confirmation.component.css'],
 })
 export class ConfirmationComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);

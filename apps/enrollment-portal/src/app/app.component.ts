@@ -24,6 +24,6 @@ import { ToastModule } from 'primeng/toast';
                 >
             </p>
         </footer>`,
-    styles: [``]
+    styles: [``],
 })
 export class AppComponent {}

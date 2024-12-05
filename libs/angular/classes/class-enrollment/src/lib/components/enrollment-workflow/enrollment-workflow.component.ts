@@ -97,7 +97,7 @@ import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog
                 border: none;
             }
         `,
-    ]
+    ],
 })
 export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);

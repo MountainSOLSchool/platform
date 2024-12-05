@@ -22,7 +22,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
     selector: 'sol-class-summary-table',
     templateUrl: './class-summary-table.component.html',
     imports: [CurrencyPipe, RxLet, TableModule, ProgressSpinnerModule],
-    providers: [DatePipe]
+    providers: [DatePipe],
 })
 export class ClassSummaryTableComponent {
     private readonly classList = inject(ClassListService);

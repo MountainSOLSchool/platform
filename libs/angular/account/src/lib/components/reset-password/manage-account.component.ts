@@ -20,7 +20,7 @@ import { UserService } from '@sol/auth/user';
                 (click)="sendResetLink()"
             ></button>
         </div>`,
-    imports: [AsyncPipe, ButtonModule, LoginStore]
+    imports: [AsyncPipe, ButtonModule, LoginStore],
 })
 export class ManageAccountComponent {
     private readonly loginStore = inject(LoginStore);

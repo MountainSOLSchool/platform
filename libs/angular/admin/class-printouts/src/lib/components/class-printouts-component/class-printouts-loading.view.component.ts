@@ -27,6 +27,6 @@ import { TableModule } from 'primeng/table';
         </ng-template>
     </p-table>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TableModule]
+    imports: [TableModule],
 })
 export class ClassPrintoutsLoadingViewComponent {}
