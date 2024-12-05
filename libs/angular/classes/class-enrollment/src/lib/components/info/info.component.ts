@@ -10,8 +10,9 @@ import {
     BehaviorSubject,
     combineLatest,
     map,
-    ObservedValueOf,
     shareReplay,
+    switchMap,
+    ObservedValueOf,
 } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
@@ -27,15 +28,18 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { RxLet } from '@rx-angular/template/let';
-import { create, test, enforce, group } from 'vest';
+import { create, test, enforce, group, skipWhen } from 'vest';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { StudentForm } from '@sol/student/domain';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
 import { RxIf } from '@rx-angular/template/if';
+import { SemesterClass } from '@sol/classes/domain';
 import { NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ClassListService } from '@sol/angular/classes/list';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -68,9 +72,10 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 })
 export class InfoComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
+    private readonly classList = inject(ClassListService);
 
-    private readonly validationSuite = create(
-        (student: Partial<StudentForm>) => {
+    static validationSuite = create(
+        (student: Partial<StudentForm>, classes: Array<SemesterClass>) => {
             group('student', () => {
                 test('firstName', 'First name is required', () => {
                     enforce(student.firstName).isNotEmpty();
@@ -83,6 +88,58 @@ export class InfoComponent {
                 test('birthdate', 'Birthdate is required', () => {
                     enforce(student.birthdate).isNotBlank();
                 });
+
+                test('schoolGrade', 'Grade is required', () => {
+                    enforce(student.schoolGrade?.initialGrade).isNotBlank();
+                });
+
+                skipWhen(
+                    () => !student.schoolGrade,
+                    () => {
+                        test(
+                            'schoolGrade',
+                            'Age range must be appropriate for class(es)',
+                            () => {
+                                const schoolGrade =
+                                    student.schoolGrade as NonNullable<
+                                        typeof student.schoolGrade
+                                    >;
+
+                                const today = new Date();
+                                const july = 6;
+
+                                const isCurrentlyFirstHalfOfYear =
+                                    today.getMonth() < july;
+                                const yearsPassedSinceGradeWasEntered =
+                                    today.getFullYear() -
+                                    schoolGrade.atDate.getFullYear();
+                                const wasStudentGradeCapturedInFirstHalfOfYear =
+                                    schoolGrade.atDate.getMonth() < july;
+
+                                const offset = isCurrentlyFirstHalfOfYear
+                                    ? wasStudentGradeCapturedInFirstHalfOfYear
+                                        ? 0
+                                        : 1
+                                    : wasStudentGradeCapturedInFirstHalfOfYear
+                                      ? 1
+                                      : 0;
+
+                                const studentCurrentGrade =
+                                    schoolGrade.initialGrade +
+                                    yearsPassedSinceGradeWasEntered +
+                                    offset;
+
+                                classes.forEach(
+                                    ({ gradeRangeStart, gradeRangeEnd }) =>
+                                        enforce(studentCurrentGrade).isBetween(
+                                            gradeRangeStart,
+                                            gradeRangeEnd
+                                        )
+                                );
+                            }
+                        );
+                    }
+                );
 
                 test('pronouns', 'Pronouns are required', () => {
                     enforce(student.pronouns).isNotEmpty();
@@ -237,9 +294,19 @@ export class InfoComponent {
 
     private readonly interacted$ = new BehaviorSubject(false);
 
-    private readonly validation$ = this.student$.pipe(
-        map((student) => {
-            return this.validationSuite(student);
+    private selectedClassList$ = this.workflow
+        .select(({ enrollment: { selectedClasses } }) => selectedClasses)
+        .pipe(
+            switchMap((classIds) => this.classList.getClasses(classIds)),
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded()
+        );
+
+    private readonly validation$ = combineLatest([
+        this.student$,
+        this.selectedClassList$,
+    ]).pipe(
+        map(([student, selectedClassList]) => {
+            return InfoComponent.validationSuite(student, selectedClassList);
         }),
         shareReplay()
     );
