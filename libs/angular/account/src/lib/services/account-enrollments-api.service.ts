@@ -9,6 +9,6 @@ export class AccountEnrollmentsApiService {
     private readonly functions = inject(FirebaseFunctionsService);
 
     getAll() {
-        return this.functions.call<Array<SemesterEnrollment>>('enrollments');
+        return this.functions.callFn<Array<SemesterEnrollment>>('enrollments');
     }
 }
