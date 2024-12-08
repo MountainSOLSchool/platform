@@ -1,15 +1,72 @@
 import { combineEpics, Epic, ofType } from 'redux-observable';
-import { filter, of, switchMap, withLatestFrom } from 'rxjs';
+import {
+    distinctUntilChanged,
+    filter,
+    of,
+    switchMap,
+    withLatestFrom,
+} from 'rxjs';
 import { map, catchError, startWith, mergeMap, tap } from 'rxjs/operators';
 import {
     unitsSlice,
     selectStudents,
     selectSelectedStudentId,
     selectCompletedAndChangedCompletedUnitIds,
+    selectSemesters,
+    selectSelectedSemesterId,
 } from './UnitsStore';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { FirebaseFunctions } from '../../functions/firebase-functions';
 import { RequestedUtility } from '@sol/react/request';
+
+export const loadSemestersEpic: Epic = (action$, state$) =>
+    action$.pipe(
+        startWith(unitsSlice.actions.ready()),
+        ofType(unitsSlice.actions.ready.type),
+        withLatestFrom(state$.pipe(map(selectSemesters))),
+        filter(([, semesters]) => RequestedUtility.isNotComplete(semesters)),
+        switchMap(() => {
+            return fromPromise(FirebaseFunctions.getSemesters()).pipe(
+                map((semesters) =>
+                    unitsSlice.actions.semestersLoadSucceeded(
+                        semesters.map(({ name, id }) => ({
+                            displayName: name,
+                            semesterId: id,
+                        }))
+                    )
+                ),
+                catchError((error) =>
+                    of(unitsSlice.actions.semestersLoadFailed(error))
+                ),
+                startWith(unitsSlice.actions.semestersLoadStarted())
+            );
+        })
+    );
+
+export const loadClassesForSemesterEpic: Epic = (_, state$) =>
+    state$.pipe(
+        map(selectSelectedSemesterId),
+        distinctUntilChanged(),
+        filter((semesterId) => semesterId !== undefined),
+        switchMap((semesterId) => {
+            return fromPromise(
+                FirebaseFunctions.getClassesForSemester(semesterId)
+            ).pipe(
+                map((classes) =>
+                    unitsSlice.actions.classesLoadSucceeded(
+                        classes.map(({ title, id }) => ({
+                            displayName: title,
+                            classId: id,
+                        }))
+                    )
+                ),
+                catchError((error) =>
+                    of(unitsSlice.actions.classesLoadFailed(error))
+                ),
+                startWith(unitsSlice.actions.classesLoadStarted())
+            );
+        })
+    );
 
 export const loadStudentsEpic: Epic = (action$, state$) =>
     action$.pipe(
@@ -117,6 +174,8 @@ export const saveCompletedUnitsEpic: Epic = (action$, state$) =>
     );
 
 export const UnitsEpics = combineEpics(
+    loadSemestersEpic,
+    loadClassesForSemesterEpic,
     loadStudentsEpic,
     loadStudentCompletedUnitIdsEpic,
     loadPathsAndUnitsEpic,

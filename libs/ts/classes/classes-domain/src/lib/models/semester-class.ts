@@ -24,8 +24,7 @@ export interface SemesterClass {
     enrolledCount: number;
     live: boolean;
     pausedForEnrollment: boolean;
-    // it's an array of Firestore.DocumentReference, but that can't class can't be imported here
-    students: Array<unknown>;
+    studentIds: Array<string>;
     semesterId: string;
     forInformationOnly: boolean;
 }
