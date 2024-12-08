@@ -98,18 +98,25 @@ export function UpdateStudentUnitsView(
                             props.selectedSemesterChanged(semesterId)
                         }
                     />
-                    <div className="mt-2 mb-2">Class</div>
-                    <ClassSelectionDropdown
-                        loading={RequestedUtility.isNotComplete(props.classes)}
-                        classes={
-                            RequestedUtility.isLoaded(props.classes)
-                                ? props.classes
-                                : []
-                        }
-                        onSelected={(classId) =>
-                            props.selectedClassChanged(classId)
-                        }
-                    />
+                    {!RequestedUtility.isEmpty(props.classes) && (
+                        <>
+                            <div className="mt-2 mb-2">Class</div>
+
+                            <ClassSelectionDropdown
+                                loading={RequestedUtility.isNotComplete(
+                                    props.classes
+                                )}
+                                classes={
+                                    RequestedUtility.isLoaded(props.classes)
+                                        ? props.classes
+                                        : []
+                                }
+                                onSelected={(classId) =>
+                                    props.selectedClassChanged(classId)
+                                }
+                            />
+                        </>
+                    )}
                 </>
             )}
             <div className="mt-2 mb-2">Student</div>
