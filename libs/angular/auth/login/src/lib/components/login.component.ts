@@ -17,7 +17,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-login',
     imports: [

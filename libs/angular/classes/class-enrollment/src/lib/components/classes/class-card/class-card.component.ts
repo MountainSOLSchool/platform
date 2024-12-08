@@ -19,7 +19,6 @@ import { SliderModule } from 'primeng/slider';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,

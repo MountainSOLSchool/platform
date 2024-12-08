@@ -38,7 +38,6 @@ import { NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,

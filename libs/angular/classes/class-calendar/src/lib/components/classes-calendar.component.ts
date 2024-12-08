@@ -9,7 +9,6 @@ import { CardModule } from 'primeng/card';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AsyncPipe, CalendarComponent, CardModule],
     templateUrl: './classes-calendar.component.html',

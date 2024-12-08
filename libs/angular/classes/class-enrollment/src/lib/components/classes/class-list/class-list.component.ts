@@ -68,7 +68,6 @@ interface ClassRow {
 }
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,

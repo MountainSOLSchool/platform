@@ -12,7 +12,6 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { NgClass, NgStyle } from '@angular/common';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         CardModule,

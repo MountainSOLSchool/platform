@@ -39,7 +39,6 @@ import { NgClass, NgStyle } from '@angular/common';
 import { SelectStudentCardComponent } from '../select-student-card/select-student-card.component';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         LoginComponent,

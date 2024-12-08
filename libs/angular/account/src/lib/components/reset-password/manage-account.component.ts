@@ -6,7 +6,6 @@ import { AsyncPipe } from '@angular/common';
 import { UserService } from '@sol/auth/user';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: ` <h2>Manage Account</h2>
         <div style="margin-top: 2rem">

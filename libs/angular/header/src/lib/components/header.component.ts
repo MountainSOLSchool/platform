@@ -11,7 +11,6 @@ import { RxLet } from '@rx-angular/template/let';
 import { AsyncPipe, NgStyle } from '@angular/common';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
