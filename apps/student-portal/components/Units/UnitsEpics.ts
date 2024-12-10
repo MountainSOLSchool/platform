@@ -9,7 +9,7 @@ import {
 import { map, catchError, startWith, mergeMap, tap } from 'rxjs/operators';
 import {
     unitsSlice,
-    selectStudents,
+    selectAllStudents,
     selectSelectedStudentId,
     selectCompletedAndChangedCompletedUnitIds,
     selectSemesters,
@@ -54,9 +54,10 @@ export const loadClassesForSemesterEpic: Epic = (_, state$) =>
             ).pipe(
                 map((classes) =>
                     unitsSlice.actions.classesLoadSucceeded(
-                        classes.map(({ title, id }) => ({
+                        classes.map(({ title, id, studentIds }) => ({
                             displayName: title,
                             classId: id,
+                            studentIds,
                         }))
                     )
                 ),
@@ -72,7 +73,7 @@ export const loadStudentsEpic: Epic = (action$, state$) =>
     action$.pipe(
         startWith(unitsSlice.actions.ready()),
         ofType(unitsSlice.actions.ready.type),
-        withLatestFrom(state$.pipe(map(selectStudents))),
+        withLatestFrom(state$.pipe(map(selectAllStudents))),
         filter(([, students]) => RequestedUtility.isNotComplete(students)),
         switchMap(() => {
             return fromPromise(

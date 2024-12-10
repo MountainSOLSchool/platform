@@ -1,14 +1,12 @@
 'use client';
 import { Dropdown } from 'primereact/dropdown';
-import { useState } from 'react';
 
 export function ClassSelectionDropdown(props: {
+    selectedClassId: string;
     classes: Array<{ displayName: string; classId: string }>;
     loading: boolean;
     onSelected: (classId: string) => void;
 }) {
-    const [selectedClass, setSelectedClass] = useState('');
-
     return (
         <>
             <Dropdown
@@ -18,10 +16,9 @@ export function ClassSelectionDropdown(props: {
                 options={props.classes}
                 optionLabel="displayName"
                 optionValue="classId"
-                value={selectedClass}
+                value={props.selectedClassId}
                 onChange={(e) => {
                     if (e.value != '') {
-                        setSelectedClass(e.value);
                         props.onSelected(e.value);
                     }
                 }}

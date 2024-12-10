@@ -1,14 +1,11 @@
 'use client';
-import { useState } from 'react';
 import { SelectButton } from 'primereact/selectbutton';
-
-export type StudentSelectionType = 'byClass' | 'all';
+import { StudentSelectionType } from './StudentSelectionType.type';
 
 export function StudentSelectionTypePicker(props: {
+    type: StudentSelectionType;
     onSelected: (type: StudentSelectionType) => void;
 }) {
-    const [selectedType, setSelectedType] = useState<StudentSelectionType>();
-
     return (
         <>
             <SelectButton
@@ -16,9 +13,8 @@ export function StudentSelectionTypePicker(props: {
                     { label: 'By Class', value: 'byClass' },
                     { label: 'All', value: 'all' },
                 ]}
-                value={selectedType}
+                value={props.type}
                 onChange={(e) => {
-                    setSelectedType(e.value);
                     props.onSelected(e.value);
                 }}
             />

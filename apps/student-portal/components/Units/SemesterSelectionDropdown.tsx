@@ -1,14 +1,12 @@
 'use client';
 import { Dropdown } from 'primereact/dropdown';
-import { useState } from 'react';
 
 export function SemesterSelectionDropdown(props: {
+    selectedSemesterId: string;
     semesters: Array<{ displayName: string; semesterId: string }>;
     loading: boolean;
     onSelected: (semesterId: string) => void;
 }) {
-    const [selectedSemester, setSelectedSemester] = useState('');
-
     return (
         <>
             <Dropdown
@@ -18,10 +16,9 @@ export function SemesterSelectionDropdown(props: {
                 options={props.semesters}
                 optionLabel="displayName"
                 optionValue="semesterId"
-                value={selectedSemester}
+                value={props.selectedSemesterId}
                 onChange={(e) => {
                     if (e.value != '') {
-                        setSelectedSemester(e.value);
                         props.onSelected(e.value);
                     }
                 }}

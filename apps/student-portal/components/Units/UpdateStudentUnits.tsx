@@ -17,6 +17,9 @@ function UpdateStudentUnits() {
         <>
             <UpdateStudentUnitsView
                 {...unitsStore.props}
+                selectionTypeChanged={(type) =>
+                    unitsStore.selectionTypeChanged(type)
+                }
                 selectedSemesterChanged={(semesterId) =>
                     unitsStore.selectedSemesterChanged(semesterId)
                 }

@@ -1,11 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUpdateStudentUnitsProps, unitsSlice } from './UnitsStore';
+import { StudentSelectionType } from './StudentSelectionType.type';
 
 export function useUnitsStore() {
     const dispatch = useDispatch();
 
     return {
         props: useSelector(selectUpdateStudentUnitsProps),
+        selectionTypeChanged: (type: StudentSelectionType) =>
+            dispatch(unitsSlice.actions.setSelectionType(type)),
         selectedSemesterChanged: (semesterId: string) =>
             dispatch(unitsSlice.actions.setSelectedSemesterId(semesterId)),
         selectedClassChanged: (classId: string) =>
