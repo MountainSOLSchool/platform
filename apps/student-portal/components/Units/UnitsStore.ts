@@ -362,23 +362,13 @@ export const selectSelectionType = createSelector(
     (state) => state.selectionType
 );
 
-export const selectedSemesterId = createSelector(
-    [selectState],
-    (state) => state.selectedSemesterId
-);
-
-export const selectedClassId = createSelector(
-    [selectState],
-    (state) => state.selectedClassId
-);
-
 export const selectUpdateStudentUnitsProps = createSelector(
     [
         selectQueriedStudents,
         selectSemesters,
         selectClasses,
-        selectedSemesterId,
-        selectedClassId,
+        selectSelectedSemesterId,
+        selectSelectedClassId,
         selectSelectedStudentId,
         selectCompletedAndChangedCompletedUnitIds,
         selectUnits,
