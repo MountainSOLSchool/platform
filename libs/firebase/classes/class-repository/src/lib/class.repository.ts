@@ -37,11 +37,7 @@ export class ClassRepository {
     private async getClassesPath(): Promise<string> {
         return `${await this.semester.getPath()}/classes`;
     }
-    async get(
-        id: string
-    ): Promise<
-        SemesterClass & { students: Array<firestore.DocumentReference> }
-    > {
+    async get(id: string): Promise<SemesterClass> {
         const document = await DatabaseUtility.getDocumentRef(
             `${await this.getClassesPath()}/${id}`
         );
@@ -76,11 +72,7 @@ export class ClassRepository {
         return await this.getMany(classIds);
     }
 
-    private async convertDboToDomain(
-        dbo: ClassDbo
-    ): Promise<
-        SemesterClass & { students: Array<firestore.DocumentReference> }
-    > {
+    private async convertDboToDomain(dbo: ClassDbo): Promise<SemesterClass> {
         const domain: Awaited<ReturnType<typeof this.convertDboToDomain>> = {
             title: dbo.name,
             startMs:
@@ -131,7 +123,7 @@ export class ClassRepository {
             dailyTimes: dbo.daily_times,
             weekday: dbo.weekday,
             thumbnailUrl: dbo.thumbnailUrl,
-            students: dbo.students,
+            studentIds: dbo.students.map((ref) => ref.id),
             pausedForEnrollment: dbo.max_student_size
                 ? dbo.students.length > dbo.max_student_size
                 : false,

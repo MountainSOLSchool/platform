@@ -1,16 +1,25 @@
 'use client';
 import { Button } from 'primereact/button';
-import StudentSelectionTool from './StudentSelectionTool';
+import StudentSelectionDropdown from './StudentSelectionDropdown';
 import UpdateUnitsTool from './UpdateUnitsTool';
 import { RequestedUtility } from '@sol/react/request';
 import { Requested } from '@sol/react/request';
 import { UnitsSkeleton } from './UnitsSkeleton';
 import { PathElective } from 'apps/student-portal/models/path-elective.type';
+import SemesterSelectionDropdown from './SemesterSelectionDropdown';
+import ClassSelectionDropdown from './ClassSelectionDropdown';
+import StudentSelectionTypePicker from './StudentSelectionTypePicker';
+import { StudentSelectionType } from './StudentSelectionType.type';
 
 export interface UpdateStudentUnitsViewProps {
     students: Requested<
         Array<{ first_name: string; last_name: string; id: string }>
     >;
+    semesters: Requested<Array<{ displayName: string; semesterId: string }>>;
+    selectionType: StudentSelectionType;
+    classes: Requested<Array<{ displayName: string; classId: string }>>;
+    selectedSemesterId: string;
+    selectedClassId: string;
     selectedStudentId: string | undefined;
     completedUnitIds: Requested<Array<string>>;
     units: Requested<{
@@ -32,6 +41,9 @@ export interface UpdateStudentUnitsViewProps {
 
 export function UpdateStudentUnitsView(
     props: UpdateStudentUnitsViewProps & {
+        selectionTypeChanged: (type: StudentSelectionType) => void;
+        selectedSemesterChanged: (semesterId: string) => void;
+        selectedClassChanged: (classId: string) => void;
         selectedStudentChanged: (studentId: string) => void;
         unitCompletionChanged: (change: {
             unitId: string;
@@ -65,14 +77,62 @@ export function UpdateStudentUnitsView(
     return (
         <div>
             <h1>Update Student Units</h1>
-            <div className="mb-2">Student</div>
-            <StudentSelectionTool
-                loading={RequestedUtility.isNotComplete(props.students)}
-                students={studentOptions || []}
-                onSelected={(studentId) =>
-                    props.selectedStudentChanged(studentId)
-                }
+            <div className="mb-2">Find Students</div>
+            <StudentSelectionTypePicker
+                type={props.selectionType}
+                onSelected={(type) => props.selectionTypeChanged(type)}
             />
+            {props.selectionType === 'byClass' && (
+                <>
+                    <div className="mt-2 mb-2">Semester</div>
+                    <SemesterSelectionDropdown
+                        selectedSemesterId={props.selectedSemesterId}
+                        loading={RequestedUtility.isNotComplete(
+                            props.semesters
+                        )}
+                        semesters={
+                            RequestedUtility.isLoaded(props.semesters)
+                                ? props.semesters
+                                : []
+                        }
+                        onSelected={(semesterId) =>
+                            props.selectedSemesterChanged(semesterId)
+                        }
+                    />
+                    {!RequestedUtility.isEmpty(props.classes) && (
+                        <>
+                            <div className="mt-2 mb-2">Class</div>
+
+                            <ClassSelectionDropdown
+                                selectedClassId={props.selectedClassId}
+                                loading={RequestedUtility.isNotComplete(
+                                    props.classes
+                                )}
+                                classes={
+                                    RequestedUtility.isLoaded(props.classes)
+                                        ? props.classes
+                                        : []
+                                }
+                                onSelected={(classId) =>
+                                    props.selectedClassChanged(classId)
+                                }
+                            />
+                        </>
+                    )}
+                </>
+            )}
+            {(props.selectionType === 'all' || props.selectedClassId) && (
+                <>
+                    <div className="mt-2 mb-2">Student</div>
+                    <StudentSelectionDropdown
+                        loading={RequestedUtility.isNotComplete(props.students)}
+                        students={studentOptions || []}
+                        onSelected={(studentId) =>
+                            props.selectedStudentChanged(studentId)
+                        }
+                    />
+                </>
+            )}
             <div className="mt-5">
                 {props.selectedStudentId ? (
                     <>
