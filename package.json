@@ -33,44 +33,44 @@
     },
     "private": true,
     "overrides": {
-      "@angular/fire": {
-        "@angular/common": "^19.0.0",
-        "@angular/core": "^19.0.0",
-        "@angular/platform-browser": "^19.0.0",
-        "@angular/platform-browser-dynamic": "^19.0.0"
-      },
-      "primeng": {
-        "@angular/common": "^19.0.0",
-        "@angular/core": "^19.0.0",
-        "@angular/forms": "^19.0.0",
-        "zone.js": "~0.15.0"
-      },
-      "@rx-angular/cdk": {
-        "@angular/core": "^19.0.0",
-        "@angular/common": "^19.0.0"
-      },
-      "@rx-angular/template": {
-        "@angular/core": "^19.0.0",
-        "@angular/common": "^19.0.0"
-      },
-      "@ngrx/store": {
-        "@angular/core": "^19.0.0"
-      },
-      "@ngrx/effects": {
-        "@angular/core": "^19.0.0"
-      },
-      "@ngrx/entity": {
-        "@angular/core": "^19.0.0"
-      },
-      "@ngrx/component-store": {
-        "@angular/core": "^19.0.0"
-      },
-      "@ngrx/store-devtools": {
-        "@angular/core": "^19.0.0"
-      },
-      "@ngrx/operators": {
-        "@angular/core": "^19.0.0"
-      }
+        "@angular/fire": {
+            "@angular/common": "^19.0.0",
+            "@angular/core": "^19.0.0",
+            "@angular/platform-browser": "^19.0.0",
+            "@angular/platform-browser-dynamic": "^19.0.0"
+        },
+        "primeng": {
+            "@angular/common": "^19.0.0",
+            "@angular/core": "^19.0.0",
+            "@angular/forms": "^19.0.0",
+            "zone.js": "~0.15.0"
+        },
+        "@rx-angular/cdk": {
+            "@angular/core": "^19.0.0",
+            "@angular/common": "^19.0.0"
+        },
+        "@rx-angular/template": {
+            "@angular/core": "^19.0.0",
+            "@angular/common": "^19.0.0"
+        },
+        "@ngrx/store": {
+            "@angular/core": "^19.0.0"
+        },
+        "@ngrx/effects": {
+            "@angular/core": "^19.0.0"
+        },
+        "@ngrx/entity": {
+            "@angular/core": "^19.0.0"
+        },
+        "@ngrx/component-store": {
+            "@angular/core": "^19.0.0"
+        },
+        "@ngrx/store-devtools": {
+            "@angular/core": "^19.0.0"
+        },
+        "@ngrx/operators": {
+            "@angular/core": "^19.0.0"
+        }
     },
     "dependencies": {
         "@angular-devkit/schematics": "19.0.3",
@@ -98,7 +98,7 @@
         "@ngrx/store": "^18.1.1",
         "@ngrx/store-devtools": "^18.1.1",
         "@nx-extend/terraform": "^6.0.5",
-        "@nx/angular": "20.2.0-canary.20241204-75b2080",
+        "@nx/angular": "20.2.2",
         "@reduxjs/toolkit": "^1.9.3",
         "@rx-angular/cdk": "^18.0.0",
         "@rx-angular/template": "^18.0.3",
@@ -138,24 +138,24 @@
         "@angular-devkit/architect": "0.1900.3",
         "@angular-devkit/build-angular": "19.0.3",
         "@angular-devkit/core": "19.0.3",
-        "@angular-eslint/eslint-plugin": "19.0.0",
-        "@angular-eslint/eslint-plugin-template": "19.0.0",
-        "@angular-eslint/template-parser": "19.0.0",
+        "@angular-eslint/eslint-plugin": "19.0.2",
+        "@angular-eslint/eslint-plugin-template": "19.0.2",
+        "@angular-eslint/template-parser": "19.0.2",
         "@angular/cli": "~19.0.0",
         "@angular/compiler-cli": "19.0.3",
         "@angular/language-service": "19.0.3",
         "@babel/core": "^7.14.5",
         "@babel/preset-react": "^7.14.5",
-        "@nx/cypress": "20.2.0-canary.20241204-75b2080",
-        "@nx/esbuild": "20.2.0-canary.20241204-75b2080",
-        "@nx/eslint": "20.2.0-canary.20241204-75b2080",
-        "@nx/eslint-plugin": "20.2.0-canary.20241204-75b2080",
-        "@nx/jest": "20.2.0-canary.20241204-75b2080",
-        "@nx/js": "20.2.0-canary.20241204-75b2080",
-        "@nx/next": "20.2.0-canary.20241204-75b2080",
-        "@nx/node": "20.2.0-canary.20241204-75b2080",
-        "@nx/react": "20.2.0-canary.20241204-75b2080",
-        "@nx/workspace": "20.2.0-canary.20241204-75b2080",
+        "@nx/cypress": "20.2.2",
+        "@nx/esbuild": "20.2.2",
+        "@nx/eslint": "20.2.2",
+        "@nx/eslint-plugin": "20.2.2",
+        "@nx/jest": "20.2.2",
+        "@nx/js": "20.2.2",
+        "@nx/next": "20.2.2",
+        "@nx/node": "20.2.2",
+        "@nx/react": "20.2.2",
+        "@nx/workspace": "20.2.2",
         "@schematics/angular": "19.0.3",
         "@swc-node/register": "1.9.2",
         "@swc/core": "1.5.7",
@@ -200,7 +200,7 @@
         "jsonc-eslint-parser": "^2.1.0",
         "lint-staged": "^15.0.2",
         "ng-packagr": "19.0.1",
-        "nx": "20.2.0-canary.20241204-75b2080",
+        "nx": "20.2.2",
         "postcss": "8.4.38",
         "postcss-import": "14.1.0",
         "postcss-preset-env": "7.5.0",
