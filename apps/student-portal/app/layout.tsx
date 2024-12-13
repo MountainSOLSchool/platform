@@ -17,7 +17,7 @@ import { PrimeReactProvider } from 'primereact/api';
 import LoginWithRegisteredEpics from './login/page';
 import dynamic from 'next/dynamic';
 
-// TODO: preventing SSR temporarily beacuse something goes wrong with prerendering (likely useMediaQuery)
+// TODO: preventing SSR temporarily because something goes wrong with pre-rendering (likely useMediaQuery)
 const Header = dynamic(() => import('../components/Header'), { ssr: false });
 
 function RootLayout({ children }: { children: React.ReactNode }) {

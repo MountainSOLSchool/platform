@@ -2,7 +2,7 @@
 import { Dropdown } from 'primereact/dropdown';
 import { useState } from 'react';
 
-export function StudentSelectionTool(props: {
+export function StudentSelectionDropdown(props: {
     students: Array<{ displayName: string; studentId: string }>;
     loading: boolean;
     onSelected: (studentId: string) => void;
@@ -30,4 +30,4 @@ export function StudentSelectionTool(props: {
     );
 }
 
-export default StudentSelectionTool;
+export default StudentSelectionDropdown;

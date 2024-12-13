@@ -4,32 +4,70 @@ import { UpdateStudentUnitsViewProps } from './UpdateStudentUnitsView';
 import { UnitDbEntry } from '@sol/classes/domain';
 import { Path } from '../../models/path.type';
 
+import { StudentSelectionType } from './StudentSelectionType.type';
+
 type State = {
     students: Requested<
         Array<{ first_name: string; last_name: string; id: string }>
     >;
+    semesters: Requested<Array<{ displayName: string; semesterId: string }>>;
+    classes: Requested<
+        Array<{
+            displayName: string;
+            classId: string;
+            studentIds: Array<string>;
+        }>
+    >;
+    selectedSemesterId: string | undefined;
+    selectedClassId: string | undefined;
     selectedStudentId: string | undefined;
     selectedStudentCompletedUnitIds: Requested<Array<string>>;
     paths: Requested<Array<Path>>;
     units: Requested<Record<string, UnitDbEntry>>;
     changedUnitCompletions: Record<string, boolean>;
     saveChanges: Requested<void>;
+    selectionType: StudentSelectionType;
 };
 
 const initialState: State = {
     students: RequestState.Empty,
+    semesters: RequestState.Empty,
+    classes: RequestState.Empty,
+    selectedSemesterId: undefined,
+    selectedClassId: undefined,
     selectedStudentId: undefined,
     selectedStudentCompletedUnitIds: RequestState.Empty,
     units: RequestState.Empty,
     paths: RequestState.Empty,
     changedUnitCompletions: {},
     saveChanges: RequestState.Empty,
+    selectionType: 'all',
 };
 
 export const unitsSlice = createSlice({
     name: 'updateUnits',
     initialState,
     reducers: {
+        semestersLoadSucceeded: (
+            state,
+            action: {
+                payload: Array<{ displayName: string; semesterId: string }>;
+            }
+        ) => {
+            state.semesters = action.payload;
+        },
+        classesLoadSucceeded: (
+            state,
+            action: {
+                payload: Array<{
+                    displayName: string;
+                    classId: string;
+                    studentIds: Array<string>;
+                }>;
+            }
+        ) => {
+            state.classes = action.payload;
+        },
         studentLoadSucceeded: (
             state,
             action: {
@@ -64,6 +102,12 @@ export const unitsSlice = createSlice({
         ) => {
             state.paths = action.payload;
         },
+        semestersLoadStarted: (state) => {
+            state.semesters = RequestState.Loading;
+        },
+        classesLoadStarted: (state) => {
+            state.classes = RequestState.Loading;
+        },
         studentLoadStarted: (state) => {
             state.students = RequestState.Loading;
         },
@@ -76,6 +120,12 @@ export const unitsSlice = createSlice({
         pathsLoadStarted: (state) => {
             state.paths = RequestState.Loading;
         },
+        semestersLoadFailed: (state) => {
+            state.semesters = RequestState.Error;
+        },
+        classesLoadFailed: (state) => {
+            state.classes = RequestState.Error;
+        },
         studentLoadFailed: (state) => {
             state.students = RequestState.Error;
         },
@@ -87,6 +137,24 @@ export const unitsSlice = createSlice({
         },
         pathsLoadFailed: (state) => {
             state.paths = RequestState.Error;
+        },
+        setSelectionType: (
+            state,
+            action: { payload: StudentSelectionType }
+        ) => {
+            state.selectionType = action.payload;
+            state.selectedSemesterId = undefined;
+            state.selectedClassId = undefined;
+            state.selectedStudentId = undefined;
+        },
+        setSelectedSemesterId: (state, action: { payload: string }) => {
+            state.selectedSemesterId = action.payload;
+            state.selectedClassId = undefined;
+            resetSelectedStudent(state);
+        },
+        setSelectedClassId: (state, action: { payload: string }) => {
+            state.selectedClassId = action.payload;
+            resetSelectedStudent(state);
         },
         setSelectedStudentId: (state, action: { payload: string }) => {
             state.selectedStudentId = action.payload;
@@ -128,18 +196,34 @@ export const unitsSlice = createSlice({
     },
 });
 
+function resetSelectedStudent(state: State) {
+    state.selectedStudentId = undefined;
+    state.selectedStudentCompletedUnitIds = RequestState.Empty;
+    state.changedUnitCompletions = {};
+}
+
 export default unitsSlice.reducer;
 
 const selectState = (state: { updateUnits: State }) => state.updateUnits;
 
-export const selectStudents = createSelector(
+export const selectAllStudents = createSelector(
     [selectState],
     (state) => state.students
 );
 
-export const selectIsStudentLoadingInProgress = createSelector(
-    [selectStudents],
-    (requestState) => requestState === RequestState.Loading
+export const selectSemesters = createSelector(
+    [selectState],
+    (state) => state.semesters
+);
+
+export const selectClasses = createSelector(
+    [selectState],
+    (state) => state.classes
+);
+
+export const selectSelectedSemesterId = createSelector(
+    [selectState],
+    (state) => state.selectedSemesterId
 );
 
 export const selectSelectedStudentId = createSelector(
@@ -193,11 +277,6 @@ export const selectCompletedAndChangedCompletedUnitIds = createSelector(
     }
 );
 
-export const selectIsStudentCompletedUnitIdsLoadingInProgress = createSelector(
-    [selectSelectedStudentCompletedUnitIds],
-    (requestState) => requestState === RequestState.Loading
-);
-
 export const selectUnits = createSelector(
     [selectState],
     (state) => state.units
@@ -206,11 +285,6 @@ export const selectUnits = createSelector(
 export const selectPaths = createSelector(
     [selectState],
     (state) => state.paths
-);
-
-export const selectIsUnitsLoadingInProgress = createSelector(
-    [selectUnits],
-    (requestState) => requestState === RequestState.Loading
 );
 
 export const selectIsSaveInProgress = createSelector(
@@ -232,25 +306,96 @@ export const selectUnitNameAndCompletionChange = createSelector(
     }
 );
 
+export const selectSelectedClassId = createSelector(
+    [selectState],
+    (state) => state.selectedClassId
+);
+
+export const selectSelectedClassStudents = createSelector(
+    [selectClasses, selectSelectedClassId],
+    (classes, selectedClassId): Requested<Array<string>> => {
+        return RequestedUtility.mapLoaded(classes, (classez) => {
+            const selectedClass = classez.find(
+                (clazz) => clazz.classId === selectedClassId
+            );
+            return selectedClass?.studentIds ?? [];
+        });
+    }
+);
+
+export const selectQueriedStudents = createSelector(
+    [
+        selectAllStudents,
+        selectSelectedClassStudents,
+        selectSelectedSemesterId,
+        selectSelectedClassId,
+    ],
+    (
+        allStudents,
+        selectedClassStudents,
+        selectedSemesterId,
+        selectedClassId
+    ) => {
+        // If no semester/class is selected, show all students
+        if (!selectedSemesterId && !selectedClassId) {
+            return allStudents;
+        }
+
+        // If we have a selection but data is loading/error, preserve that state
+        if (!RequestedUtility.isLoaded(selectedClassStudents)) {
+            return selectedClassStudents;
+        }
+
+        if (!RequestedUtility.isLoaded(allStudents)) {
+            return allStudents;
+        }
+
+        // Filter students based on class selection
+        return allStudents.filter((student) =>
+            selectedClassStudents.includes(student.id)
+        );
+    }
+);
+
+export const selectSelectionType = createSelector(
+    [selectState],
+    (state) => state.selectionType
+);
+
 export const selectUpdateStudentUnitsProps = createSelector(
     [
-        selectStudents,
+        selectQueriedStudents,
+        selectSemesters,
+        selectClasses,
+        selectSelectedSemesterId,
+        selectSelectedClassId,
         selectSelectedStudentId,
         selectCompletedAndChangedCompletedUnitIds,
         selectUnits,
         selectPaths,
         selectIsSaveInProgress,
+        selectSelectionType,
     ],
     (
-        students,
+        queriedStudents,
+        semesters,
+        classes,
+        selectedSemesterId,
+        selectedClassId,
         selectedStudentId,
         completedUnitIds,
         units,
         paths,
-        isSaveInProgress
+        isSaveInProgress,
+        selectionType
     ): UpdateStudentUnitsViewProps => {
         return {
-            students,
+            students: queriedStudents,
+            semesters,
+            selectionType,
+            classes,
+            selectedSemesterId,
+            selectedClassId,
             selectedStudentId,
             completedUnitIds,
             units,

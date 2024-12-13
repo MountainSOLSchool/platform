@@ -1,5 +1,7 @@
 import { Requested, RequestState } from '../models/requested.type';
 
+type UnwrapRequested<T> = T extends Requested<infer U> ? U : never;
+
 export class RequestedUtility {
     static isLoaded<T>(state: Requested<T> | null | undefined): state is T {
         return !!state && !Object.values(RequestState).includes(state);
@@ -45,5 +47,21 @@ export class RequestedUtility {
         return RequestedUtility.isLoaded(state)
             ? map(state)
             : (state as Requested<U>);
+    }
+    static mapAllLoaded<T extends readonly unknown[], U>(
+        states: readonly [...{ [K in keyof T]: Requested<T[K]> }],
+        map: (...args: T) => U
+    ): Requested<U> {
+        const allLoaded = states.every((state) =>
+            RequestedUtility.isLoaded(state)
+        );
+
+        if (allLoaded) {
+            return map(...(states as T));
+        }
+
+        return states.find(
+            (state) => !RequestedUtility.isLoaded(state)
+        ) as Requested<U>;
     }
 }
