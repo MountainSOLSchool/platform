@@ -1,5 +1,6 @@
 'use client';
 import { Button } from 'primereact/button';
+import { SelectButton } from 'primereact/selectbutton';
 import StudentSelectionDropdown from './StudentSelectionDropdown';
 import UpdateUnitsTool from './UpdateUnitsTool';
 import { RequestedUtility } from '@sol/react/request';
@@ -10,6 +11,15 @@ import SemesterSelectionDropdown from './SemesterSelectionDropdown';
 import ClassSelectionDropdown from './ClassSelectionDropdown';
 import StudentSelectionTypePicker from './StudentSelectionTypePicker';
 import { StudentSelectionType } from './StudentSelectionType.type';
+import { useState } from 'react';
+
+type Units = {
+    [unitId: string]: {
+        name: string;
+        description: string;
+        category: string;
+    };
+};
 
 export interface UpdateStudentUnitsViewProps {
     students: Requested<
@@ -20,15 +30,10 @@ export interface UpdateStudentUnitsViewProps {
     classes: Requested<Array<{ displayName: string; classId: string }>>;
     selectedSemesterId: string;
     selectedClassId: string;
+    selectedClassUnitIds: Array<string>;
     selectedStudentId: string | undefined;
     completedUnitIds: Requested<Array<string>>;
-    units: Requested<{
-        [unitId: string]: {
-            name: string;
-            description: string;
-            category: string;
-        };
-    }>;
+    units: Requested<Units>;
     paths: Requested<
         Array<{
             name: string;
@@ -52,6 +57,13 @@ export function UpdateStudentUnitsView(
         saveClicked: () => void;
     }
 ) {
+    const [showOnlyClassUnits, setShowOnlyClassUnits] = useState(true);
+
+    const unitFilterOptions = [
+        { label: 'Class Units Only', value: true },
+        { label: 'All Units', value: false },
+    ];
+
     const studentOptions =
         RequestedUtility.isLoaded(props.students) &&
         props.students
@@ -73,6 +85,23 @@ export function UpdateStudentUnitsView(
                 return [...acc, { ...student, displayName: newDisplayName }];
             }, [])
             .sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    const getFilteredUnits = () => {
+        if (!RequestedUtility.isLoaded(props.units)) {
+            return {};
+        }
+        if (!showOnlyClassUnits || !props.selectedClassId) {
+            return props.units;
+        }
+
+        const filteredUnits = Object.fromEntries(
+            Object.entries(props.units).filter(([unitId]) =>
+                props.selectedClassUnitIds.includes(unitId)
+            )
+        );
+
+        return filteredUnits;
+    };
 
     return (
         <div>
@@ -102,7 +131,6 @@ export function UpdateStudentUnitsView(
                     {!RequestedUtility.isEmpty(props.classes) && (
                         <>
                             <div className="mt-2 mb-2">Class</div>
-
                             <ClassSelectionDropdown
                                 selectedClassId={props.selectedClassId}
                                 loading={RequestedUtility.isNotComplete(
@@ -133,6 +161,16 @@ export function UpdateStudentUnitsView(
                     />
                 </>
             )}
+            {props.selectedStudentId && (
+                <div className="mt-2">
+                    <SelectButton
+                        value={showOnlyClassUnits}
+                        onChange={(e) => setShowOnlyClassUnits(e.value)}
+                        options={unitFilterOptions}
+                        className="w-full"
+                    />
+                </div>
+            )}
             <div className="mt-5">
                 {props.selectedStudentId ? (
                     <>
@@ -162,7 +200,7 @@ export function UpdateStudentUnitsView(
                                             ]
                                         ),
                                     ])}
-                                    units={props.units}
+                                    units={getFilteredUnits()}
                                     paths={props.paths}
                                     onUnitsChanged={(change) =>
                                         props.unitCompletionChanged(change)
@@ -171,7 +209,7 @@ export function UpdateStudentUnitsView(
 
                                 <Button
                                     loading={props.isSaveInProgress}
-                                    className={'mt-4'}
+                                    className="mt-4"
                                     style={
                                         props.selectedStudentId === ''
                                             ? { display: 'none' }
@@ -179,18 +217,14 @@ export function UpdateStudentUnitsView(
                                     }
                                     label="Save Updates"
                                     onClick={() => props.saveClicked()}
-                                ></Button>
+                                />
                             </div>
                         ) : (
                             <UnitsSkeleton />
                         )}
                     </>
                 ) : (
-                    <>
-                        <div>
-                            Select a student to update their completed units.
-                        </div>
-                    </>
+                    <div>Select a student to update their completed units.</div>
                 )}
             </div>
         </div>

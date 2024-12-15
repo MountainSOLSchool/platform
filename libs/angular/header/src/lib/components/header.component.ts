@@ -103,6 +103,11 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                         >Class Calendar</a
                     >
                 </li>
+                <li>
+                    <a href="https://students.mountainsol.org/units" onClick={() => setDisplay(false)}>
+                        Student Units
+                    </a>
+                </li>
             </ul>
         </p-sidebar>`,
 })

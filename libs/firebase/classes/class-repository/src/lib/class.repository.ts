@@ -15,6 +15,7 @@ type ClassDbo = {
     payment_range_highest?: number;
     instructors: Array<firestore.DocumentReference>;
     students: Array<firestore.DocumentReference>;
+    units?: Array<firestore.DocumentReference>;
     name: string;
     start: { _seconds: number };
     end: { _seconds: number };
@@ -129,6 +130,7 @@ export class ClassRepository {
                 : false,
             semesterId: await this.semester.getId(),
             forInformationOnly: dbo.for_information_only ?? false,
+            unitIds: dbo.units?.map((ref) => ref.id),
         };
 
         if (!!dbo.payment_range_lowest || !!dbo.payment_range_highest) {

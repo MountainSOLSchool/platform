@@ -74,48 +74,27 @@ export function UpdateUnitsTool(props: {
 
     const unitsByPathJsx = (
         <div className="space-y-8">
-            {sortedPaths.map((path) => (
-                <Card className="mb-4" key={path.name} title={path.name}>
-                    <div key={path.name} className="border rounded-lg">
-                        <div>
-                            {path.unitIds
-                                .concat()
-                                .sort((a, b) => {
-                                    return props.units[a]?.name.localeCompare(
-                                        props.units[b]?.name
-                                    );
-                                })
-                                .map((unitId) => (
-                                    <_UnitCheckboxWithTooltip
-                                        key={`${path.name}-${unitId}`}
-                                        unitId={unitId}
-                                        name={props.units[unitId]?.name ?? ''}
-                                        description={
-                                            props.units[unitId]?.description ??
-                                            ''
-                                        }
-                                        isCompleted={
-                                            props.isCompletedByUnitId[unitId] ??
-                                            false
-                                        }
-                                        onToggle={(unitId, isCompleted) =>
-                                            props.onUnitsChanged({
-                                                unitId,
-                                                isCompleted,
-                                            })
-                                        }
-                                    ></_UnitCheckboxWithTooltip>
-                                ))}
-                        </div>
-                        {path.electives.map((elective) => (
-                            <div key={elective.name}>
-                                <h3 className="text-lg font-semibold">
-                                    {elective.name}
-                                </h3>
-                                <div>
-                                    {elective.unitIds.map((unitId) => (
+            {sortedPaths
+                .filter((path) =>
+                    path.unitIds.some((unitId) => !!props.units[unitId])
+                )
+                .map((path) => (
+                    <Card className="mb-4" key={path.name} title={path.name}>
+                        <div key={path.name} className="border rounded-lg">
+                            <div>
+                                {path.unitIds
+                                    .concat()
+                                    .filter((unitId) => !!props.units[unitId])
+                                    .sort((a, b) => {
+                                        return props.units[
+                                            a
+                                        ]?.name.localeCompare(
+                                            props.units[b]?.name
+                                        );
+                                    })
+                                    .map((unitId) => (
                                         <_UnitCheckboxWithTooltip
-                                            key={`${path.name}-${elective.name}-${unitId}`}
+                                            key={`${path.name}-${unitId}`}
                                             unitId={unitId}
                                             name={
                                                 props.units[unitId]?.name ?? ''
@@ -137,12 +116,62 @@ export function UpdateUnitsTool(props: {
                                             }
                                         ></_UnitCheckboxWithTooltip>
                                     ))}
-                                </div>
                             </div>
-                        ))}
-                    </div>
-                </Card>
-            ))}
+                            {path.electives
+                                .filter((elective) =>
+                                    elective.unitIds.some(
+                                        (unitId) => !!props.units[unitId]
+                                    )
+                                )
+                                .map((elective) => (
+                                    <div key={elective.name}>
+                                        <h3 className="text-lg font-semibold">
+                                            {elective.name}
+                                        </h3>
+                                        <div>
+                                            {elective.unitIds
+                                                .filter(
+                                                    (unitId) =>
+                                                        !!props.units[unitId]
+                                                )
+                                                .map((unitId) => (
+                                                    <_UnitCheckboxWithTooltip
+                                                        key={`${path.name}-${elective.name}-${unitId}`}
+                                                        unitId={unitId}
+                                                        name={
+                                                            props.units[unitId]
+                                                                ?.name ?? ''
+                                                        }
+                                                        description={
+                                                            props.units[unitId]
+                                                                ?.description ??
+                                                            ''
+                                                        }
+                                                        isCompleted={
+                                                            props
+                                                                .isCompletedByUnitId[
+                                                                unitId
+                                                            ] ?? false
+                                                        }
+                                                        onToggle={(
+                                                            unitId,
+                                                            isCompleted
+                                                        ) =>
+                                                            props.onUnitsChanged(
+                                                                {
+                                                                    unitId,
+                                                                    isCompleted,
+                                                                }
+                                                            )
+                                                        }
+                                                    ></_UnitCheckboxWithTooltip>
+                                                ))}
+                                        </div>
+                                    </div>
+                                ))}
+                        </div>
+                    </Card>
+                ))}
         </div>
     );
 

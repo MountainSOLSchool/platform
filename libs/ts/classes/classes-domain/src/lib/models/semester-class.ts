@@ -27,4 +27,5 @@ export interface SemesterClass {
     studentIds: Array<string>;
     semesterId: string;
     forInformationOnly: boolean;
+    unitIds?: Array<string>;
 }

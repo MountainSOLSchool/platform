@@ -54,10 +54,11 @@ export const loadClassesForSemesterEpic: Epic = (_, state$) =>
             ).pipe(
                 map((classes) =>
                     unitsSlice.actions.classesLoadSucceeded(
-                        classes.map(({ title, id, studentIds }) => ({
+                        classes.map(({ title, id, studentIds, unitIds }) => ({
                             displayName: title,
                             classId: id,
                             studentIds,
+                            unitIds,
                         }))
                     )
                 ),

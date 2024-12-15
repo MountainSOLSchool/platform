@@ -16,6 +16,7 @@ type State = {
             displayName: string;
             classId: string;
             studentIds: Array<string>;
+            unitIds: Array<string>;
         }>
     >;
     selectedSemesterId: string | undefined;
@@ -63,6 +64,7 @@ export const unitsSlice = createSlice({
                     displayName: string;
                     classId: string;
                     studentIds: Array<string>;
+                    unitIds: Array<string>;
                 }>;
             }
         ) => {
@@ -362,6 +364,25 @@ export const selectSelectionType = createSelector(
     (state) => state.selectionType
 );
 
+export const selectSelectedClass = createSelector(
+    [selectClasses, selectSelectedClassId],
+    (classes, selectedClassId) => {
+        return RequestedUtility.mapLoaded(classes, (classez) =>
+            classez.filter((clazz) => clazz.classId === selectedClassId)
+        );
+    }
+);
+
+export const selectSelectedClassUnitIds = createSelector(
+    [selectSelectedClass],
+    (clazz) => {
+        const unitIds = RequestedUtility.mapLoaded(clazz, (classez) =>
+            classez.flatMap((clazz) => clazz.unitIds)
+        );
+        return RequestedUtility.isLoaded(unitIds) ? unitIds : [];
+    }
+);
+
 export const selectUpdateStudentUnitsProps = createSelector(
     [
         selectQueriedStudents,
@@ -369,6 +390,7 @@ export const selectUpdateStudentUnitsProps = createSelector(
         selectClasses,
         selectSelectedSemesterId,
         selectSelectedClassId,
+        selectSelectedClassUnitIds,
         selectSelectedStudentId,
         selectCompletedAndChangedCompletedUnitIds,
         selectUnits,
@@ -382,6 +404,7 @@ export const selectUpdateStudentUnitsProps = createSelector(
         classes,
         selectedSemesterId,
         selectedClassId,
+        selectedClassUnitIds,
         selectedStudentId,
         completedUnitIds,
         units,
@@ -396,6 +419,7 @@ export const selectUpdateStudentUnitsProps = createSelector(
             classes,
             selectedSemesterId,
             selectedClassId,
+            selectedClassUnitIds,
             selectedStudentId,
             completedUnitIds,
             units,

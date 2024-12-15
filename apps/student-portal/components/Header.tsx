@@ -55,7 +55,7 @@ const Header = () => {
                 <ul className="text-base">
                     <li>
                         <a
-                            href="/classes/enrollment"
+                            href="https://enrollment.mountainsol.org/classes/enrollment"
                             onClick={() => setDisplay(false)}
                         >
                             Class Registration
@@ -63,13 +63,16 @@ const Header = () => {
                     </li>
                     <h4 className="font-semibold mt-4 mb-1">Admin</h4>
                     <li>
-                        <a href="/admin" onClick={() => setDisplay(false)}>
+                        <a
+                            href="https://enrollment.mountainsol.org/admin"
+                            onClick={() => setDisplay(false)}
+                        >
                             Dashboard
                         </a>
                     </li>
                     <li>
                         <a
-                            href="/admin/report"
+                            href="https://enrollment.mountainsol.org/admin/report"
                             onClick={() => setDisplay(false)}
                         >
                             Class Forms and Contacts
@@ -77,7 +80,7 @@ const Header = () => {
                     </li>
                     <li>
                         <a
-                            href="/admin/t-shirts"
+                            href="https://enrollment.mountainsol.org/admin/t-shirts"
                             onClick={() => setDisplay(false)}
                         >
                             T-shirt Sizes
@@ -85,7 +88,7 @@ const Header = () => {
                     </li>
                     <li>
                         <a
-                            href="/admin/enrollments"
+                            href="https://enrollment.mountainsol.org/admin/enrollments"
                             onClick={() => setDisplay(false)}
                         >
                             Enrollments
@@ -93,10 +96,15 @@ const Header = () => {
                     </li>
                     <li>
                         <a
-                            href="/calendar/classes"
+                            href="https://enrollment.mountainsol.org/calendar/classes"
                             onClick={() => setDisplay(false)}
                         >
                             Class Calendar
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/units" onClick={() => setDisplay(false)}>
+                            Student Units
                         </a>
                     </li>
                 </ul>
