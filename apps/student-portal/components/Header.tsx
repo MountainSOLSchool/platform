@@ -7,12 +7,14 @@ import { Toolbar } from 'primereact/toolbar';
 import { Button } from 'primereact/button';
 import { Sidebar } from 'primereact/sidebar';
 import { useMediaQuery } from 'react-responsive';
+import UserButton from '../app/login/UserButton';
+import { useAuth } from '../app/login/UseAuth';
 
 const Header = () => {
     const [display, setDisplay] = useState(false);
     const isDefault = useMediaQuery({ minWidth: 600 });
-    // const { isLoggedIn, isAdmin } = useUser();
     const router = useRouter();
+    const { isLoggedIn, isAdmin } = useAuth();
 
     const leftContents = (
         <div
@@ -31,15 +33,15 @@ const Header = () => {
     );
 
     const rightContents = (
-        <div className="flex items-center">
-            {
+        <div className="flex items-center gap-4">
+            {isLoggedIn && isAdmin && (
                 <Button
                     icon="pi pi-bars"
                     label="Menu"
                     onClick={() => setDisplay(true)}
                 />
-            }
-            {/* <UserButton size={isDefault ? 'default' : 'small'} /> */}
+            )}
+            <UserButton size={isDefault ? 'default' : 'small'} />
         </div>
     );
 
