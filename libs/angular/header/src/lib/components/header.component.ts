@@ -104,7 +104,10 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                     >
                 </li>
                 <li>
-                    <a href="https://students.mountainsol.org/units" onClick={() => setDisplay(false)}>
+                    <a
+                        href="https://students.mountainsol.org/units"
+                        (click)="display = false"
+                    >
                         Student Units
                     </a>
                 </li>
