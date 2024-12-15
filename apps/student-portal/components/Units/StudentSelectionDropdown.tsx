@@ -12,6 +12,7 @@ export function StudentSelectionDropdown(props: {
         <>
             <Dropdown
                 filter
+                filterInputAutoFocus={true}
                 disabled={props.disabled}
                 loading={props.loading}
                 placeholder="Select a student..."
