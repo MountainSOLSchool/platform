@@ -5,6 +5,8 @@ import { PathElective } from 'apps/student-portal/models/path-elective.type';
 import { Card } from 'primereact/card';
 import { Tooltip } from 'primereact/tooltip';
 import UpdateStudentUnitsChanges from './UpdateStudentUnitsChanges';
+import { useSelector } from 'react-redux';
+import { selectUnitNameAndCompletionChange } from './UnitsStore';
 
 // TODO: the styling classes are haphazardly applied here
 export function UpdateUnitsTool(props: {
@@ -82,7 +84,7 @@ export function UpdateUnitsTool(props: {
                                             );
                                         })
                                         .map((unitId) => (
-                                            <_UnitCheckboxWithTooltip
+                                            <UnitCheckboxWithTooltip
                                                 key={`${path.name}-${unitId}`}
                                                 unitId={unitId}
                                                 name={units[unitId]?.name ?? ''}
@@ -125,7 +127,7 @@ export function UpdateUnitsTool(props: {
                                                             !!units[unitId]
                                                     )
                                                     .map((unitId) => (
-                                                        <_UnitCheckboxWithTooltip
+                                                        <UnitCheckboxWithTooltip
                                                             key={`${path.name}-${elective.name}-${unitId}`}
                                                             unitId={unitId}
                                                             name={
@@ -227,15 +229,18 @@ export function UpdateUnitsTool(props: {
     );
 }
 
-function _UnitCheckboxWithTooltip(props: {
+function UnitCheckboxWithTooltip(props: {
     unitId: string;
     name: string;
     description: string;
     isCompleted: boolean;
     onToggle: (unitId: string, isCompleted: boolean) => void;
 }) {
+    const changedUnits = useSelector(selectUnitNameAndCompletionChange);
+    const change = changedUnits.find((unit) => unit.name === props.name);
+
     return (
-        <div key={props.unitId} className="flex items-center">
+        <div key={props.unitId} className="flex items-center group">
             <Tooltip
                 target={`.checkbox-${props.unitId}`}
                 position="right"
@@ -259,9 +264,15 @@ function _UnitCheckboxWithTooltip(props: {
                 />
                 <label
                     htmlFor={props.unitId}
-                    className="cursor-pointer ml-1 text-sm"
+                    className="cursor-pointer ml-1 text-sm flex items-center gap-2"
                 >
-                    {props.name ?? ''}
+                    <span>{props.name ?? ''}</span>
+                    {change && (
+                        <i
+                            className={`pi ${change.added ? 'pi-plus-circle text-green-600' : 'pi-minus-circle text-red-600'}`}
+                            style={{ fontSize: '0.875rem' }}
+                        />
+                    )}
                 </label>
             </div>
         </div>
