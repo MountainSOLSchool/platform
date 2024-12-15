@@ -5,12 +5,14 @@ export function ClassSelectionDropdown(props: {
     selectedClassId: string;
     classes: Array<{ displayName: string; classId: string }>;
     loading: boolean;
+    disabled?: boolean;
     onSelected: (classId: string) => void;
 }) {
     return (
         <>
             <Dropdown
                 filter
+                disabled={props.disabled}
                 loading={props.loading}
                 placeholder="Select a class..."
                 options={props.classes}

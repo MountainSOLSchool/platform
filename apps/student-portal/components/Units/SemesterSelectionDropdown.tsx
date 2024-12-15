@@ -43,6 +43,7 @@ export function SemesterSelectionDropdown(props: {
     selectedSemesterId: string;
     semesters: Array<SemesterOption>;
     loading: boolean;
+    disabled?: boolean;
     onSelected: (semesterId: string) => void;
 }) {
     const sortedSemesters = [...props.semesters]
@@ -52,6 +53,7 @@ export function SemesterSelectionDropdown(props: {
     return (
         <Dropdown
             filter
+            disabled={props.disabled}
             loading={props.loading}
             placeholder="Select a semester..."
             options={sortedSemesters}

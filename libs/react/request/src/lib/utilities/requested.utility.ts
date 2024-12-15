@@ -40,6 +40,11 @@ export class RequestedUtility {
     ): state is typeof RequestState.Loading | typeof RequestState.Empty {
         return !RequestedUtility.isComplete(state);
     }
+    static isLoading<T>(
+        state: Requested<T> | null | undefined
+    ): state is typeof RequestState.Loading {
+        return state === RequestState.Loading;
+    }
     static mapLoaded<T, U>(
         state: Requested<T>,
         map: (t: T) => U

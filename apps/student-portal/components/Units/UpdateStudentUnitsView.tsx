@@ -1,6 +1,5 @@
 'use client';
 import { Button } from 'primereact/button';
-import { SelectButton } from 'primereact/selectbutton';
 import StudentSelectionDropdown from './StudentSelectionDropdown';
 import UpdateUnitsTool from './UpdateUnitsTool';
 import { RequestedUtility } from '@sol/react/request';
@@ -11,7 +10,6 @@ import SemesterSelectionDropdown from './SemesterSelectionDropdown';
 import ClassSelectionDropdown from './ClassSelectionDropdown';
 import StudentSelectionTypePicker from './StudentSelectionTypePicker';
 import { StudentSelectionType } from './StudentSelectionType.type';
-import { useState } from 'react';
 
 type Units = {
     [unitId: string]: {
@@ -57,13 +55,6 @@ export function UpdateStudentUnitsView(
         saveClicked: () => void;
     }
 ) {
-    const [showOnlyClassUnits, setShowOnlyClassUnits] = useState(true);
-
-    const unitFilterOptions = [
-        { label: 'Class Units Only', value: true },
-        { label: 'All Units', value: false },
-    ];
-
     const studentOptions =
         RequestedUtility.isLoaded(props.students) &&
         props.students
@@ -86,54 +77,44 @@ export function UpdateStudentUnitsView(
             }, [])
             .sort((a, b) => a.displayName.localeCompare(b.displayName));
 
-    const getFilteredUnits = () => {
-        if (!RequestedUtility.isLoaded(props.units)) {
-            return {};
-        }
-        if (!showOnlyClassUnits || !props.selectedClassId) {
-            return props.units;
-        }
-
-        const filteredUnits = Object.fromEntries(
-            Object.entries(props.units).filter(([unitId]) =>
-                props.selectedClassUnitIds.includes(unitId)
-            )
-        );
-
-        return filteredUnits;
-    };
-
     return (
         <div>
             <h1>Update Student Units</h1>
-            <div className="mb-2">Find Students</div>
-            <StudentSelectionTypePicker
-                type={props.selectionType}
-                onSelected={(type) => props.selectionTypeChanged(type)}
-            />
-            {props.selectionType === 'byClass' && (
-                <>
-                    <div className="mt-2 mb-2">Semester</div>
-                    <SemesterSelectionDropdown
-                        selectedSemesterId={props.selectedSemesterId}
-                        loading={RequestedUtility.isNotComplete(
-                            props.semesters
-                        )}
-                        semesters={
-                            RequestedUtility.isLoaded(props.semesters)
-                                ? props.semesters
-                                : []
-                        }
-                        onSelected={(semesterId) =>
-                            props.selectedSemesterChanged(semesterId)
-                        }
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 ml-0">
+                <div>
+                    <div className="font-medium mb-2">Selection Type</div>
+                    <StudentSelectionTypePicker
+                        type={props.selectionType}
+                        onSelected={(type) => props.selectionTypeChanged(type)}
                     />
-                    {!RequestedUtility.isEmpty(props.classes) && (
-                        <>
-                            <div className="mt-2 mb-2">Class</div>
+                </div>
+
+                {props.selectionType === 'byClass' && (
+                    <>
+                        <div>
+                            <div className="font-medium mb-2">Semester</div>
+                            <SemesterSelectionDropdown
+                                selectedSemesterId={props.selectedSemesterId}
+                                loading={RequestedUtility.isNotComplete(
+                                    props.semesters
+                                )}
+                                semesters={
+                                    RequestedUtility.isLoaded(props.semesters)
+                                        ? props.semesters
+                                        : []
+                                }
+                                onSelected={(semesterId) =>
+                                    props.selectedSemesterChanged(semesterId)
+                                }
+                                disabled={props.selectionType !== 'byClass'}
+                            />
+                        </div>
+
+                        <div>
+                            <div className="font-medium mb-2">Class</div>
                             <ClassSelectionDropdown
                                 selectedClassId={props.selectedClassId}
-                                loading={RequestedUtility.isNotComplete(
+                                loading={RequestedUtility.isLoading(
                                     props.classes
                                 )}
                                 classes={
@@ -144,33 +125,32 @@ export function UpdateStudentUnitsView(
                                 onSelected={(classId) =>
                                     props.selectedClassChanged(classId)
                                 }
+                                disabled={
+                                    props.selectionType !== 'byClass' ||
+                                    !props.selectedSemesterId
+                                }
                             />
-                        </>
-                    )}
-                </>
-            )}
-            {(props.selectionType === 'all' || props.selectedClassId) && (
-                <>
-                    <div className="mt-2 mb-2">Student</div>
+                        </div>
+                    </>
+                )}
+
+                <div className="md:col-span-2">
+                    <div className="font-medium mb-2">Student</div>
                     <StudentSelectionDropdown
+                        selectedStudentId={props.selectedStudentId}
                         loading={RequestedUtility.isNotComplete(props.students)}
                         students={studentOptions || []}
                         onSelected={(studentId) =>
                             props.selectedStudentChanged(studentId)
                         }
-                    />
-                </>
-            )}
-            {props.selectedStudentId && (
-                <div className="mt-2">
-                    <SelectButton
-                        value={showOnlyClassUnits}
-                        onChange={(e) => setShowOnlyClassUnits(e.value)}
-                        options={unitFilterOptions}
-                        className="w-full"
+                        disabled={
+                            props.selectionType === 'byClass' &&
+                            !props.selectedClassId
+                        }
                     />
                 </div>
-            )}
+            </div>
+
             <div className="mt-5">
                 {props.selectedStudentId ? (
                     <>
@@ -200,7 +180,10 @@ export function UpdateStudentUnitsView(
                                             ]
                                         ),
                                     ])}
-                                    units={getFilteredUnits()}
+                                    units={props.units}
+                                    selectedClassUnitIds={
+                                        props.selectedClassUnitIds
+                                    }
                                     paths={props.paths}
                                     onUnitsChanged={(change) =>
                                         props.unitCompletionChanged(change)
