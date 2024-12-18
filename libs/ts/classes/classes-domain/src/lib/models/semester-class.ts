@@ -20,7 +20,7 @@ export interface SemesterClass {
     }>;
     dailyTimes: string;
     weekday: string;
-    thumbnailUrl: string;
+    thumbnailUrl?: string;
     enrolledCount: number;
     live: boolean;
     pausedForEnrollment: boolean;
