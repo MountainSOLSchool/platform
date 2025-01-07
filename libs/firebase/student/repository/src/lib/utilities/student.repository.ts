@@ -67,7 +67,9 @@ export class StudentRepository {
         return await this.database.collection('students').add(student);
     }
 
-    static async update(student: StudentDbEntry): Promise<DocumentReference> {
+    static async update(
+        student: Partial<StudentDbEntry> & { id: string }
+    ): Promise<DocumentReference> {
         await this.database
             .collection('students')
             .doc(student.id)
@@ -81,11 +83,16 @@ export class StudentRepository {
 
     async getAll(): Promise<Array<StudentDbEntry>> {
         const allClasses = await ClassRepository.of(this.semester).getAll();
-        const allStudentsFromAllClassesRefs = allClasses.map(
-            (theClass) => theClass.students as Array<DocumentReference>
+        const allStudentIdsFromAllClasses = allClasses.map(
+            (theClass) => theClass.studentIds
+        );
+        const studentRefs = allStudentIdsFromAllClasses.map((ids) =>
+            ids.map((id) =>
+                DatabaseUtility.getDatabase().collection('students').doc(id)
+            )
         );
         const allStudentsFromEachClassInSemester = await Promise.all(
-            allStudentsFromAllClassesRefs.map((studentRefs) =>
+            studentRefs.map((studentRefs) =>
                 DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
                     studentRefs
                 )
@@ -104,10 +111,20 @@ export class StudentRepository {
     async getInClass(classId: string): Promise<Array<StudentDbEntry>> {
         const theClass = await ClassRepository.of(this.semester).get(classId);
 
-        const classStudentRefs = theClass.students ?? [];
+        const classStudentRefs = theClass.studentIds.map((id) =>
+            DatabaseUtility.getDatabase().collection('students').doc(id)
+        );
 
         return await DatabaseUtility.getHydratedDocuments<StudentDbEntry>(
             classStudentRefs
         );
+    }
+
+    static async allStudentsOfAllTime(): Promise<Array<StudentDbEntry>> {
+        const studentsCollection = this.database.collection('students');
+
+        const studentDocuments = await studentsCollection.listDocuments();
+
+        return await DatabaseUtility.getHydratedDocuments(studentDocuments);
     }
 }

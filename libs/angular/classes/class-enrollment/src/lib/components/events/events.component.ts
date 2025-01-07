@@ -18,7 +18,6 @@ import { ChipModule } from 'primeng/chip';
 import 'add-to-calendar-button';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.Default,
     imports: [
         AsyncPipe,

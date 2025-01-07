@@ -28,7 +28,6 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         DatePipe,

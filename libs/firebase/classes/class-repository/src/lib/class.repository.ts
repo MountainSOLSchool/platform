@@ -15,6 +15,7 @@ type ClassDbo = {
     payment_range_highest?: number;
     instructors: Array<firestore.DocumentReference>;
     students: Array<firestore.DocumentReference>;
+    units?: Array<firestore.DocumentReference>;
     name: string;
     start: { _seconds: number };
     end: { _seconds: number };
@@ -41,11 +42,7 @@ export class ClassRepository {
     private async getClassesPath(): Promise<string> {
         return `${await this.semester.getPath()}/classes`;
     }
-    async get(
-        id: string
-    ): Promise<
-        SemesterClass & { students: Array<firestore.DocumentReference> }
-    > {
+    async get(id: string): Promise<SemesterClass> {
         const document = await DatabaseUtility.getDocumentRef(
             `${await this.getClassesPath()}/${id}`
         );
@@ -64,8 +61,7 @@ export class ClassRepository {
         const now = new Date(Date.now());
         const query = await DatabaseUtility.fetchMatchingDocuments(
             await DatabaseUtility.getCollectionRef(await this.getClassesPath()),
-            // TODO: temporary for local dev, remove before merging
-            // ['registration_end_date', '>=', now],
+            ['registration_end_date', '>=', now],
             ['live', '==', true]
         );
         const classIds = query.map((doc) => doc.id);
@@ -81,11 +77,7 @@ export class ClassRepository {
         return await this.getMany(classIds);
     }
 
-    private async convertDboToDomain(
-        dbo: ClassDbo
-    ): Promise<
-        SemesterClass & { students: Array<firestore.DocumentReference> }
-    > {
+    private async convertDboToDomain(dbo: ClassDbo): Promise<SemesterClass> {
         const domain: Awaited<ReturnType<typeof this.convertDboToDomain>> = {
             title: dbo.name,
             startMs:
@@ -136,12 +128,13 @@ export class ClassRepository {
             dailyTimes: dbo.daily_times,
             weekday: dbo.weekday,
             thumbnailUrl: dbo.thumbnailUrl,
-            students: dbo.students,
+            studentIds: dbo.students.map((ref) => ref.id),
             pausedForEnrollment: dbo.max_student_size
                 ? dbo.students.length > dbo.max_student_size
                 : false,
             semesterId: await this.semester.getId(),
             forInformationOnly: dbo.for_information_only ?? false,
+            unitIds: dbo.units?.map((ref) => ref.id),
             additionalOptions: this.getAdditionalOptions(dbo),
         };
 

@@ -1,18 +1,78 @@
 name: Deploy Firebase Functions on merge
-'on':
+
+on:
     push:
         branches:
             - main
 
+env:
+    FUNCTIONS: >-
+        adminEnrollments
+        allStudents
+        availableEnrollmentClasses
+        calculateBasket
+        classGroups
+        classesBySemester
+        classes
+        currentSemester
+        deleteEnrollmentDraft
+        emails
+        enroll
+        enrollments
+        fullUnitsAndPaths
+        getCompletedUnits
+        getMyStudent
+        historicalSemesters
+        loadEnrollmentDraft
+        myEnrolledStudents
+        paymentToken
+        roles
+        roster
+        semestersAvailableToEnroll
+        signIn
+        studentHealth
+        tshirts
+        updateCompletedUnits
+        updateEnrollmentDraft
+        addEmailToSolsticeList
+        createEnrollmentEmail
+        onSuccessfulEnrollDeleteDraft
+
 jobs:
     build_and_deploy:
         runs-on: ubuntu-latest
+        strategy:
+            max-parallel: 1
+            matrix:
+                group: [1, 2, 3, 4, 5, 6]
         steps:
             - uses: actions/checkout@v4
             - run: npm ci
             - run: npx nx run functions:build
-            - uses: w9jds/firebase-action@master
+            - name: Prepare functions list
+              id: prepare_functions
+              run: |
+                  # Convert multi-line string to array
+                  FUNC_ARRAY=(${FUNCTIONS})
+
+                  # Calculate the number of functions per group
+                  TOTAL=${#FUNC_ARRAY[@]}
+                  PER_GROUP=$(( (TOTAL + ${{ matrix.group }} - 1) / ${{ strategy.job-total }} ))
+
+                  # Calculate start and end indices for this group
+                  START=$(( ((${{ matrix.group }} - 1) * PER_GROUP) ))
+                  END=$(( START + PER_GROUP ))
+
+                  # Extract the functions for this group and prefix each with 'functions:'
+                  GROUP_FUNCTIONS=$(printf "functions:%s," "${FUNC_ARRAY[@]:START:PER_GROUP}")
+
+                  # Remove the trailing comma
+                  DEPLOY_FUNCTIONS=${GROUP_FUNCTIONS%,}
+
+                  echo "functions_list=${DEPLOY_FUNCTIONS}" >> $GITHUB_OUTPUT
+
+            - uses: w9jds/firebase-action@v13.4.0
               with:
-                  args: deploy --only functions --project prod
+                  args: deploy --only ${{ steps.prepare_functions.outputs.functions_list }} --project prod
               env:
                   GCP_SA_KEY: ${{ secrets.FIREBASE_GCP_SA_KEY }}

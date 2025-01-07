@@ -1,4 +1,5 @@
-import { Actions, concatLatestFrom, createEffect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { concatLatestFrom } from '@ngrx/operators';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { filter, map, mergeMap, switchMap } from 'rxjs';

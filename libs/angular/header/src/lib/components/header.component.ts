@@ -11,7 +11,6 @@ import { RxLet } from '@rx-angular/template/let';
 import { AsyncPipe, NgStyle } from '@angular/common';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
@@ -103,6 +102,11 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                     <a routerLink="/calendar/classes" (click)="display = false"
                         >Class Calendar</a
                     >
+                </li>
+                <li>
+                    <a href="https://students.mountainsol.org/units">
+                        Student Units
+                    </a>
                 </li>
             </ul>
         </p-sidebar>`,

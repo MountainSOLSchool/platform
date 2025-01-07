@@ -38,7 +38,6 @@ import { NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
@@ -213,7 +212,7 @@ export class InfoComponent {
     authorized = true;
 
     readonly isUpdatingExistingStudent$ = this.workflow.select(
-        (state) => !state.enrollment.isStudentNew
+        (state) => state.enrollment.isStudentNew === false
     );
 
     readonly student$ = this.workflow

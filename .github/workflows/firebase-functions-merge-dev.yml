@@ -1,8 +1,9 @@
 name: Deploy Firebase Functions Dev on merge
 'on':
-    push:
-        branches:
-            - main
+    workflow_call:
+        # TODO: implement dev environment
+        #  branches:
+        #  - main
 
 jobs:
     build_and_deploy:

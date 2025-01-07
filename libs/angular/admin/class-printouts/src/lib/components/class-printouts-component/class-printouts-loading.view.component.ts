@@ -26,7 +26,6 @@ import { TableModule } from 'primeng/table';
             </tr>
         </ng-template>
     </p-table>`,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TableModule],
 })

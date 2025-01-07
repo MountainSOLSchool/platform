@@ -1,4 +1,4 @@
-import { inject, Injectable, NgModule } from '@angular/core';
+import { computed, inject, Injectable, NgModule } from '@angular/core';
 import {
     BehaviorSubject,
     combineLatest,
@@ -8,19 +8,24 @@ import {
     switchMap,
     tap,
 } from 'rxjs';
-import { ComponentStore, tapResponse } from '@ngrx/component-store';
+import { ComponentStore } from '@ngrx/component-store';
+import { tapResponse, concatLatestFrom } from '@ngrx/operators';
 import {
     FirebaseAuthService,
     FirebaseAuthModule,
 } from '@sol/angular/auth/firebase';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { concatLatestFrom } from '@ngrx/effects';
 import { loginSuite } from './login.suite';
 import { UserService } from '@sol/auth/user';
 
 export type Login = { email: string; password: string };
-type LoginState = Login & { isCreatingNewAccount: boolean };
+export enum AccountCreationMethod {
+    Email = 'email',
+}
+type LoginState = Login & {
+    newAccountCreation: { method?: AccountCreationMethod } | undefined;
+};
 
 enum RequestState {
     Idle,
@@ -45,7 +50,7 @@ export class LoginStore extends ComponentStore<LoginState> {
         super({
             email: '',
             password: '',
-            isCreatingNewAccount: false,
+            newAccountCreation: undefined,
         });
     }
 
@@ -82,8 +87,8 @@ export class LoginStore extends ComponentStore<LoginState> {
                 return true;
             }),
             concatLatestFrom(() => this.state$),
-            switchMap(([, { email, password, isCreatingNewAccount }]) =>
-                (isCreatingNewAccount
+            switchMap(([, { email, password, newAccountCreation }]) =>
+                (newAccountCreation
                     ? this.authService.emailSignup(email, password)
                     : this.authService.login(email, password)
                 ).pipe(
@@ -91,7 +96,7 @@ export class LoginStore extends ComponentStore<LoginState> {
                         () => {
                             // this.router.navigate(['/']);
                             this.messageService.add({
-                                detail: isCreatingNewAccount
+                                detail: newAccountCreation
                                     ? 'Created account!'
                                     : 'Logged in!',
                                 summary: 'Success',
@@ -102,7 +107,7 @@ export class LoginStore extends ComponentStore<LoginState> {
                         (error: { code: string }) => {
                             this.messageService.add({
                                 detail: `Failed to ${
-                                    isCreatingNewAccount
+                                    newAccountCreation
                                         ? 'create account'
                                         : 'log in'
                                 }: ${error.code}`,
@@ -123,7 +128,7 @@ export class LoginStore extends ComponentStore<LoginState> {
     }
 
     selectIsCreatingNewAccount(): Observable<boolean> {
-        return this.state$.pipe(map((state) => state.isCreatingNewAccount));
+        return this.state$.pipe(map((state) => !!state.newAccountCreation));
     }
 
     selectIsReadyForPasswordReset(): Observable<boolean> {
@@ -133,7 +138,7 @@ export class LoginStore extends ComponentStore<LoginState> {
             ),
             this.state$.pipe(map(({ email }) => !!email)),
             this.state$.pipe(
-                map(({ isCreatingNewAccount }) => isCreatingNewAccount)
+                map(({ newAccountCreation }) => !!newAccountCreation)
             ),
         ]).pipe(
             map(
@@ -142,6 +147,12 @@ export class LoginStore extends ComponentStore<LoginState> {
             )
         );
     }
+
+    newAccountCreation = computed(() => this.state().newAccountCreation);
+
+    newAccountCreationMethod = computed(
+        () => this.newAccountCreation()?.method
+    );
 
     private selectValidation() {
         return this.state$.pipe(

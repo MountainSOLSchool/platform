@@ -25,7 +25,6 @@ import { ClassPrintoutRow } from '../../models/class-printout-row.type';
             (copyEmailsClick)="copyEmailsClick($event)"
         ></sol-class-printouts-view>
     }`,
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ClassPrintoutsViewComponent, SolLoadingDirective],
     providers: [provideComponentStore(ClassPrintoutsStore)],

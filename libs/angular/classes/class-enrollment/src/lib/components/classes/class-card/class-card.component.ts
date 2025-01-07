@@ -22,7 +22,6 @@ import { SlidingScaleFormComponent } from '../sliding-scale-form/sliding-scale-f
 import { AdditionalOptionsFormComponent } from '../additional-options-form/additional-options-form.component';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
@@ -51,7 +50,7 @@ export class ClassCardComponent {
         title: string;
         description: string;
         pausedForEnrollment: boolean;
-        thumbnailUrl: string;
+        thumbnailUrl?: string;
         classDateTimes: string;
         weekday: string;
         dailyTimes: string;
@@ -88,6 +87,9 @@ export class ClassCardComponent {
 
     readonly customCost = signal<number | undefined>(undefined);
     readonly selectedAdditionalOptionIds = signal<Array<string>>([]);
+
+    readonly fallbackImageUrl =
+        'https://firebasestorage.googleapis.com/v0/b/mountain-sol-platform.appspot.com/o/default_class.png?alt=media&token=258cef64-a8b9-416b-855c-51bb57a86b37';
 
     selectionToggled() {
         this.selectedChange.emit({

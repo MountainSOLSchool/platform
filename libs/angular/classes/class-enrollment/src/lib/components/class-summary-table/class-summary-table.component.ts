@@ -18,7 +18,6 @@ import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-class-summary-table',
     templateUrl: './class-summary-table.component.html',

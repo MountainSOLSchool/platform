@@ -31,7 +31,6 @@ import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { RxFor } from '@rx-angular/template/for';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         InputTextModule,

@@ -5,7 +5,7 @@ import {
     Input,
     OnInit,
 } from '@angular/core';
-import { Login, LoginStore } from './login.store';
+import { AccountCreationMethod, Login, LoginStore } from './login.store';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -17,7 +17,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-login',
     imports: [
@@ -58,26 +57,30 @@ export class LoginComponent implements OnInit {
         this.loginStore.selectIsReadyForPasswordReset();
     readonly isCreatingNewAccount$ =
         this.loginStore.selectIsCreatingNewAccount();
+    readonly newAccountCreationMethod =
+        this.loginStore.newAccountCreationMethod;
     readonly errors$ = this.loginStore.selectErrors();
 
     ngOnInit() {
         this.loginStore.setState({
             email: '',
             password: '',
-            isCreatingNewAccount:
-                this.route.snapshot.data['create'] || this.isCreatingNewAccount,
+            newAccountCreation:
+                this.route.snapshot.data['create'] || this.isCreatingNewAccount
+                    ? {}
+                    : undefined,
         });
     }
 
     useSignIn(): void {
         this.loginStore.patchState({
-            isCreatingNewAccount: false,
+            newAccountCreation: undefined,
         });
     }
 
     useCreation(): void {
         this.loginStore.patchState({
-            isCreatingNewAccount: true,
+            newAccountCreation: {},
         });
     }
 
@@ -97,5 +100,19 @@ export class LoginComponent implements OnInit {
 
     onResetPassword() {
         this.loginStore.resetPassword();
+    }
+
+    createWithEmail() {
+        this.loginStore.patchState({
+            newAccountCreation: { method: AccountCreationMethod.Email },
+        });
+    }
+
+    changeCreationMethod() {
+        this.loginStore.patchState({
+            newAccountCreation: {},
+            email: '',
+            password: '',
+        });
     }
 }
