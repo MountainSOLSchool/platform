@@ -23,7 +23,6 @@ import {
     AsyncPipe,
     CurrencyPipe,
     DatePipe,
-    KeyValuePipe,
     NgStyle,
     NgTemplateOutlet,
 } from '@angular/common';
@@ -43,7 +42,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { SliderModule } from 'primeng/slider';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -54,7 +53,6 @@ import {
     requestStateDirectives,
 } from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { MarkdownComponent } from 'ngx-markdown';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { TabViewModule } from 'primeng/tabview';
 import { ClassCardComponent } from '../class-card/class-card.component';
@@ -95,9 +93,7 @@ interface ClassRow {
         SliderModule,
         AutoFocusModule,
         InputNumberModule,
-        MarkdownComponent,
         requestStateDirectives,
-        KeyValuePipe,
         TabViewModule,
         ClassCardComponent,
         NgTemplateOutlet,
@@ -292,7 +288,7 @@ export class ClassesComponent {
     );
 
     private readonly selectedAdditionalOptionIds = this.workflow.selectSignal(
-        (state) => state.enrollment.additionalOptionIdsToSelectedClassIds
+        (state) => state.enrollment.additionalOptionIds
     );
 
     filteredClassRowsBySemesters = computed(() => {
@@ -350,18 +346,14 @@ export class ClassesComponent {
                                       const additional =
                                           this.selectedAdditionalOptionIds();
                                       return (
-                                          additional[c.id]?.reduce(
-                                              (agg, id) => {
-                                                  const option =
-                                                      c.additionalOptions.find(
-                                                          (o) => o.id === id
-                                                      );
-                                                  return option
-                                                      ? agg + option.cost
-                                                      : agg;
-                                              },
-                                              0
-                                          ) ?? 0
+                                          c.additionalOptions
+                                              .filter((option) =>
+                                                  additional.includes(option.id)
+                                              )
+                                              .reduce(
+                                                  (agg, o) => agg + o.cost,
+                                                  0
+                                              ) ?? 0
                                       );
                                   })(),
                               })),
@@ -393,14 +385,14 @@ export class ClassesComponent {
 
     selectionChanged({
         classSelection,
+        selectedAdditionalOptionIds,
         selected,
         userCost,
-        selectedAdditionalOptionIds,
     }: {
         classSelection: { id: string; semesterId: string };
+        selectedAdditionalOptionIds: Array<string>;
         selected: boolean;
         userCost?: number;
-        selectedAdditionalOptionIds?: Array<string>;
     }) {
         this.workflow.patchState((s) => ({
             enrollment: {
@@ -420,10 +412,16 @@ export class ClassesComponent {
                     ...s.enrollment.userCostsToSelectedClassIds,
                     [classSelection.id]: userCost,
                 },
-                additionalOptionIdsToSelectedClassIds: {
-                    ...s.enrollment.additionalOptionIdsToSelectedClassIds,
-                    [classSelection.id]: selectedAdditionalOptionIds ?? [],
-                },
+                additionalOptionIds: selected
+                    ? Array.from(
+                          new Set([
+                              ...s.enrollment.additionalOptionIds,
+                              ...selectedAdditionalOptionIds,
+                          ])
+                      )
+                    : s.enrollment.additionalOptionIds.filter(
+                          (id) => !selectedAdditionalOptionIds.includes(id)
+                      ),
             },
         }));
     }
@@ -451,7 +449,14 @@ export class ClassesComponent {
         return savings;
     }
 
-    rowSelectedChange(classRow: ClassRow, selected: boolean) {
+    rowSelectedChange(
+        classRow: ClassRow,
+        selected: boolean,
+        extra?: {
+            classUserCosts: Record<string, number>;
+            selectedAdditionalOptionIds: Array<string>;
+        }
+    ) {
         classRow.classes.forEach((c) =>
             this.selectionChanged({
                 classSelection: {
@@ -459,6 +464,8 @@ export class ClassesComponent {
                     semesterId: c.semesterId,
                 },
                 selected,
+                selectedAdditionalOptionIds:
+                    extra?.selectedAdditionalOptionIds ?? [],
             })
         );
     }
@@ -484,7 +491,7 @@ export class ClassesComponent {
 
     confirmedRowSelect(panel: OverlayPanel) {
         panel.hide();
-        this.selectedChange.emit({
+        this.rowSelectedChange({
             classSelection: {
                 id: this.classInfo.id,
                 semesterId: this.classInfo.semesterId,

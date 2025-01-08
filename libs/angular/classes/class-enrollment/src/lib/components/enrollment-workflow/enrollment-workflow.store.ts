@@ -37,7 +37,7 @@ const initialState = {
     enrollment: {
         selectedClasses: [],
         userCostsToSelectedClassIds: {},
-        additionalOptionIdsToSelectedClassIds: {},
+        additionalOptionIds: [],
         paymentMethod: undefined,
         discountCodes: [],
         isSignedUpForSolsticeEmails: false,

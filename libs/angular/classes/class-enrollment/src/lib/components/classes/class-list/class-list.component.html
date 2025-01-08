@@ -73,6 +73,7 @@
                                             id: selectedClass.id,
                                             semesterId: selectedClass.semesterId
                                         },
+                                        selectedAdditionalOptionIds: [],
                                         selected: false
                                     })
                                 "
@@ -107,7 +108,7 @@
                                 )</b
                             ></span
                         >
-                        Use code <b>4SUMMER2024</b> at checkout when you select
+                        Use code <b>4SUMMER2025</b> at checkout when you select
                         4 summer camps to get 10% off!
                     </p>
                 }
@@ -239,11 +240,15 @@
                                                                         [options]="
                                                                             rowClass.additionalOptions
                                                                         "
+                                                                        (selectedOptionIdsChange)="
+                                                                            selectedAdditionalOptionIds.set(
+                                                                                $event
+                                                                            )"
                                                                     ></sol-class-additional-options-form>
                                                                 }
                                                             }
 
-                                                            <p-button
+                                                            <p-button (onClick)="confirmedRowSelect(beforeSelectingForm)"
                                                                 >Confirm</p-button
                                                             >
                                                         </p-overlayPanel>

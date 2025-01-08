@@ -93,14 +93,13 @@ export const enroll = Functions.endpoint
         selectedClasses: Array<{
             id: string;
             semesterId: string;
-            // TODO: use this
-            selectedAdditionalOptions: Array<string>;
         }>;
         student: StudentForm;
         releaseSignatures: Array<{ name: string; signature: string }>;
         discountCodes: Array<string>;
         paymentMethod?: { nonce: string; deviceData: string };
         userCostsToSelectedClassIds: Record<string, number | undefined>;
+        additionalOptionIds: Array<string>;
     }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
 
@@ -116,6 +115,7 @@ export const enroll = Functions.endpoint
             paymentMethod,
             releaseSignatures,
             userCostsToSelectedClassIds,
+            additionalOptionIds,
         } = request.body.data;
 
         if (student?.id) {
@@ -171,6 +171,7 @@ export const enroll = Functions.endpoint
                 id: c.id,
                 semesterId: c.semesterId,
             })),
+            additionalOptionIds,
         };
 
         const studentEnrollmentId = await ClassEnrollmentRepository.create({
@@ -221,6 +222,7 @@ export const enroll = Functions.endpoint
                 transactionId: transaction?.id ?? '',
                 status: 'enrolled',
                 releaseSignatures,
+                additionalOptionIds,
             });
 
             await Promise.all(

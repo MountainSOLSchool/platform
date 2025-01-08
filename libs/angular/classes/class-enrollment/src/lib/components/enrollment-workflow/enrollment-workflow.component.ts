@@ -200,7 +200,7 @@ export class ClassEnrollmentComponent {
             enrollment: {
                 selectedClasses: [],
                 userCostsToSelectedClassIds: {},
-                additionalOptionIdsToSelectedClassIds: {},
+                additionalOptionIds: [],
                 isSignedUpForSolsticeEmails: false,
                 paymentMethod: {
                     nonce: 'fake-valid-nonce-NOT',

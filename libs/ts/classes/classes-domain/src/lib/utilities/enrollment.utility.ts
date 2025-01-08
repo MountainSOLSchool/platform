@@ -10,6 +10,12 @@ import { Discount } from '../models/discount/discount';
 import { SemesterClass } from '../models/semester-class';
 import { SemesterClassGroup } from '../models/semester-class-group';
 
+export type EnrollmentCostResult = {
+    finalTotal: number;
+    discountAmounts: Array<{ code: string; amount: number }>;
+    originalTotal: number;
+};
+
 export class EnrollmentUtility {
     static applyUserCosts(
         classes: Array<SemesterClass>,
@@ -38,8 +44,9 @@ export class EnrollmentUtility {
     static getEnrollmentCost(
         discounts: Discount<unknown>[],
         classes: SemesterClass[],
-        classGroups: Awaited<SemesterClassGroup>[]
-    ) {
+        classGroups: Awaited<SemesterClassGroup>[],
+        additionalCosts: Array<number> = []
+    ): EnrollmentCostResult {
         const activeDiscounts = discounts.filter((d) => d.active);
 
         const classesDiscounts = activeDiscounts.filter(
@@ -89,10 +96,17 @@ export class EnrollmentUtility {
             (c) => !classIdsOfClassesInGroups.includes(c.id)
         );
 
-        const basketTotal = [...classesNotInGroups, ...updatedGroups].reduce(
-            (total, { cost }) => total + (cost ?? 0),
+        const classesCostsTotal = [
+            ...classesNotInGroups,
+            ...updatedGroups,
+        ].reduce((total, { cost }) => total + (cost ?? 0), 0);
+
+        const additionalCostsTotal = additionalCosts.reduce(
+            (total, cost) => total + cost,
             0
         );
+
+        const basketTotal = classesCostsTotal + additionalCostsTotal;
 
         const [finalTotal, basketDiscountAmounts] = basketDiscounts.reduce(
             ([updated, amounts], discount) => {
@@ -123,8 +137,6 @@ export class EnrollmentUtility {
         const originalTotal = classGroupsTotal + classesNotInGroupsTotal;
 
         return {
-            updatedClasses,
-            updatedGroups,
             finalTotal,
             discountAmounts: [
                 ...classDiscountAmounts,

@@ -7,7 +7,7 @@ import {
     signal,
 } from '@angular/core';
 
-import { DatePipe, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
 import { MarkdownModule } from 'ngx-markdown';
@@ -25,7 +25,6 @@ import { AdditionalOptionsFormComponent } from '../additional-options-form/addit
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
-        DatePipe,
         CardModule,
         ChipModule,
         MarkdownModule,
@@ -80,9 +79,9 @@ export class ClassCardComponent {
 
     @Output() selectedChange = new EventEmitter<{
         classSelection: { id: string; semesterId: string };
+        selectedAdditionalOptionIds: Array<string>;
         selected: boolean;
         userCost?: number;
-        selectedAdditionalOptionIds?: Array<string>;
     }>();
 
     readonly customCost = signal<number | undefined>(undefined);
@@ -97,6 +96,7 @@ export class ClassCardComponent {
                 id: this.classInfo.id,
                 semesterId: this.classInfo.semesterId,
             },
+            selectedAdditionalOptionIds: [],
             selected: this.selected,
         });
     }
@@ -120,6 +120,7 @@ export class ClassCardComponent {
                 id: this.classInfo.id,
                 semesterId: this.classInfo.semesterId,
             },
+            selectedAdditionalOptionIds: [],
             selected: false,
         });
     }
