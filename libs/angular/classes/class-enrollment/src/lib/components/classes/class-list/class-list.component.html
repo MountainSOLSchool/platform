@@ -71,9 +71,10 @@
                                     selectionChanged({
                                         classSelection: {
                                             id: selectedClass.id,
-                                            semesterId: selectedClass.semesterId
+                                            semesterId:
+                                                selectedClass.semesterId,
                                         },
-                                        selected: false
+                                        selected: false,
                                     })
                                 "
                             ></p-chip>
@@ -96,7 +97,7 @@
                                 color:
                                     selectedSummerClasses().length > 3
                                         ? '#3c82f7'
-                                        : 'black'
+                                        : 'black',
                             }"
                             ><b
                                 >({{ selectedSummerClasses().length }}/4
@@ -160,12 +161,12 @@
                                                 margin: 2px;
                                                 padding: 5px;
                                                 display: flex;
-                                                flex-wrap: wrap;
+                                                flex-direction: column;
                                                 width: 100%;
                                             "
                                         >
                                             @if (hasGroup(row)) {
-                                                <div>
+                                                <div class="group-header">
                                                     <h3>
                                                         {{ row.group.name }}
                                                         @if (
@@ -193,7 +194,6 @@
                                                         style="
                                                             margin-top: 1rem;
                                                             margin-bottom: 1rem;
-                                                            margin-left: 1rem;
                                                         "
                                                     >
                                                         <p-toggleButton
@@ -216,7 +216,7 @@
                                                                 'pi pi-check'
                                                             "
                                                             [onLabel]="
-                                                                'Selected all-day'
+                                                                'Selected all'
                                                             "
                                                             [offIcon]="
                                                                 'pi pi-plus'
@@ -224,7 +224,7 @@
                                                             [offLabel]="
                                                                 paused
                                                                     ? 'One or more classes are full'
-                                                                    : 'Select all-day'
+                                                                    : 'Select all'
                                                             "
                                                             [ngModel]="
                                                                 row.selected
@@ -256,7 +256,7 @@
                                                                 row.classes
                                                                     .length > 1
                                                                     ? '1 0 calc(50% - 40px)'
-                                                                    : '1 0 calc(100% - 40px)'
+                                                                    : '1 0 calc(100% - 40px)',
                                                         }"
                                                     >
                                                         <sol-class-card
