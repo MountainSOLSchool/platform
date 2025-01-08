@@ -14,7 +14,7 @@ type ClassDbo = {
     payment_range_lowest?: number;
     payment_range_highest?: number;
     instructors: Array<firestore.DocumentReference>;
-    students: Array<firestore.DocumentReference>;
+    students?: Array<firestore.DocumentReference>;
     units?: Array<firestore.DocumentReference>;
     name: string;
     start: { _seconds: number };
@@ -128,9 +128,9 @@ export class ClassRepository {
             dailyTimes: dbo.daily_times,
             weekday: dbo.weekday,
             thumbnailUrl: dbo.thumbnailUrl,
-            studentIds: dbo.students.map((ref) => ref.id),
+            studentIds: dbo.students?.map((ref) => ref.id) ?? [],
             pausedForEnrollment: dbo.max_student_size
-                ? dbo.students.length > dbo.max_student_size
+                ? (dbo.students ?? []).length > dbo.max_student_size
                 : false,
             semesterId: await this.semester.getId(),
             forInformationOnly: dbo.for_information_only ?? false,
@@ -149,7 +149,7 @@ export class ClassRepository {
 
     private getAdditionalOptions(
         dbo: ClassDbo
-    ): Array<SemesterClass['additionalOptions'][number]> {
+    ): Array<NonNullable<SemesterClass['additionalOptions']>[number]> {
         return dbo.extra_hour_option
             ? [
                   {
