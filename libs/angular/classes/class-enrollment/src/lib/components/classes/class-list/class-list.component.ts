@@ -21,9 +21,7 @@ import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-wo
 import { CardModule } from 'primeng/card';
 import {
     AsyncPipe,
-    CurrencyPipe,
     DatePipe,
-    KeyValuePipe,
     NgStyle,
     NgTemplateOutlet,
 } from '@angular/common';
@@ -54,11 +52,10 @@ import {
     requestStateDirectives,
 } from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { MarkdownComponent } from 'ngx-markdown';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { TabViewModule } from 'primeng/tabview';
-import { ClassCardComponent } from '../class-card/class-card.component';
 import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
+import { ClassRowComponent } from '../class-row/class-row.component';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -72,7 +69,6 @@ interface ClassRow {
     imports: [
         AsyncPipe,
         NgStyle,
-        CurrencyPipe,
         CardModule,
         CheckboxModule,
         InputTextModule,
@@ -93,13 +89,11 @@ interface ClassRow {
         SliderModule,
         AutoFocusModule,
         InputNumberModule,
-        MarkdownComponent,
         requestStateDirectives,
-        KeyValuePipe,
         TabViewModule,
-        ClassCardComponent,
         NgTemplateOutlet,
         ClassesSkeletonComponent,
+        ClassRowComponent,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
