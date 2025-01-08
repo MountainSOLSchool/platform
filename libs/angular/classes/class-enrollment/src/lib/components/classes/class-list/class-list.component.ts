@@ -21,9 +21,7 @@ import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-wo
 import { CardModule } from 'primeng/card';
 import {
     AsyncPipe,
-    CurrencyPipe,
     DatePipe,
-    KeyValuePipe,
     NgStyle,
     NgTemplateOutlet,
 } from '@angular/common';
@@ -49,16 +47,14 @@ import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ClassListService } from '@sol/angular/classes/list';
 import {
-    Requested,
     RequestedOperatorsUtility,
     requestStateDirectives,
 } from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { MarkdownComponent } from 'ngx-markdown';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { TabViewModule } from 'primeng/tabview';
-import { ClassCardComponent } from '../class-card/class-card.component';
 import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
+import { ClassRowComponent } from '../class-row/class-row.component';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -72,7 +68,6 @@ interface ClassRow {
     imports: [
         AsyncPipe,
         NgStyle,
-        CurrencyPipe,
         CardModule,
         CheckboxModule,
         InputTextModule,
@@ -93,13 +88,11 @@ interface ClassRow {
         SliderModule,
         AutoFocusModule,
         InputNumberModule,
-        MarkdownComponent,
         requestStateDirectives,
-        KeyValuePipe,
         TabViewModule,
-        ClassCardComponent,
         NgTemplateOutlet,
         ClassesSkeletonComponent,
+        ClassRowComponent,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -402,51 +395,5 @@ export class ClassesComponent {
 
     filterChange(filter: [] | [number, number]) {
         this.gradeFilter.set(filter);
-    }
-
-    trackClassRow(index: number, classRow: ClassRow) {
-        return classRow.group?.id ?? classRow.classes[0].id;
-    }
-
-    getClassRowSavings(classRow: ClassRow) {
-        const classesCost = classRow.classes.reduce(
-            // TODO: cost is a string, but should be a number
-            (agg, aClass) => agg + Number(aClass.cost),
-            0
-        );
-        const groupCost = classRow.group?.cost ?? 0;
-        const savings = classesCost - groupCost;
-        return savings;
-    }
-
-    rowSelectedChange(classRow: ClassRow, selected: boolean) {
-        classRow.classes.forEach((c) =>
-            this.selectionChanged({
-                classSelection: {
-                    id: c.id,
-                    semesterId: c.semesterId,
-                },
-                selected,
-            })
-        );
-    }
-
-    hasPausedClass(classRow: ClassRow): boolean {
-        return classRow.classes.some((c) => c.pausedForEnrollment);
-    }
-
-    semesterName(
-        semesterId: string,
-        options: Requested<Array<{ id: string; name: string }>> | undefined
-    ) {
-        return (
-            (Array.isArray(options) &&
-                options?.find((o) => o.id === semesterId)?.name) ||
-            ''
-        );
-    }
-
-    hasGroup(row: object): row is { group: unknown } {
-        return 'group' in row;
     }
 }
