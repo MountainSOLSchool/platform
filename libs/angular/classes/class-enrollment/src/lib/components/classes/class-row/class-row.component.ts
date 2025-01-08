@@ -2,7 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
-    Input,
+    input,
     Output,
 } from '@angular/core';
 import { CurrencyPipe, NgStyle } from '@angular/common';
@@ -64,7 +64,7 @@ interface ClassRow {
     standalone: true,
 })
 export class ClassRowComponent {
-    @Input({ required: true }) row!: ClassRow;
+    readonly row = input.required<ClassRow>();
 
     @Output() classSelection = new EventEmitter<{
         classSelection: { id: string; semesterId: string };
@@ -73,20 +73,21 @@ export class ClassRowComponent {
     }>();
 
     getClassRowSavings(): number {
-        const classesCost = this.row.classes.reduce(
+        const row = this.row();
+        const classesCost = row.classes.reduce(
             (agg, aClass) => agg + Number(aClass.cost),
             0
         );
-        const groupCost = this.row.group?.cost ?? 0;
+        const groupCost = row.group?.cost ?? 0;
         return classesCost - groupCost;
     }
 
     hasPausedClass(): boolean {
-        return this.row.classes.some((c) => c.pausedForEnrollment);
+        return this.row().classes.some((c) => c.pausedForEnrollment);
     }
 
     rowSelectedChange(selected: boolean) {
-        this.row.classes.forEach((c) =>
+        this.row().classes.forEach((c) =>
             this.classSelection.emit({
                 classSelection: {
                     id: c.id,

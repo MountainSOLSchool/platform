@@ -8,10 +8,11 @@
         width: 100%;
     "
 >
-    @if (row.group) {
+    @let rowValue = row();
+    @if (rowValue.group) {
         <div class="group-header">
             <h3>
-                {{ row.group.name }}
+                {{ rowValue.group.name }}
                 @if (getClassRowSavings() !== 0) {
                     <span style="color: #3c82f7">
                         (-{{ getClassRowSavings() | currency }}
@@ -26,8 +27,8 @@
                 <p-toggleButton
                     *rxLet="hasPausedClass(); let paused"
                     [disabled]="paused"
-                    [inputId]="'select' + row.group.id"
-                    [name]="'row_' + row.group.id"
+                    [inputId]="'select' + rowValue.group.id"
+                    [name]="'row_' + rowValue.group.id"
                     [onIcon]="'pi pi-check'"
                     [onLabel]="'Selected all'"
                     [offIcon]="'pi pi-plus'"
@@ -36,25 +37,25 @@
                             ? 'One or more classes are full'
                             : 'Select all'
                     "
-                    [ngModel]="row.selected"
-                    (ngModelChange)="rowSelectedChange(!row.selected)"
+                    [ngModel]="rowValue.selected"
+                    (ngModelChange)="rowSelectedChange(!rowValue.selected)"
                 ></p-toggleButton>
             </div>
         </div>
     }
     <div style="display: flex; flex-wrap: wrap; gap: 10px">
-        @for (rowClass of row.classes; track rowClass.id) {
+        @for (rowClass of rowValue.classes; track rowClass.id) {
             <div
                 [ngStyle]="{
                     flex:
-                        row.classes.length > 1
+                    rowValue.classes.length > 1
                             ? '1 0 calc(50% - 40px)'
                             : '1 0 calc(100% - 40px)',
                 }"
             >
                 <sol-class-card
                     [selected]="rowClass.selected"
-                    [width]="row.classes.length > 1 ? 'narrower' : 'wider'"
+                    [width]="rowValue.classes.length > 1 ? 'narrower' : 'wider'"
                     [classInfo]="rowClass"
                     (selectedChange)="selectionChanged($event)"
                 ></sol-class-card>
