@@ -37,6 +37,12 @@ interface ClassRow {
         userCost: number;
         semesterId: string;
         forInformationOnly: boolean;
+        additionalCost: number;
+        additionalOptions?: Array<{
+            description: string;
+            cost: number;
+            id: string;
+        }>;
         selected: boolean;
     }>;
     group?: {
@@ -69,6 +75,7 @@ export class ClassRowComponent {
     @Output() classSelection = new EventEmitter<{
         classSelection: { id: string; semesterId: string };
         selected: boolean;
+        selectedAdditionalOptionIds?: Array<string>;
         userCost?: number;
     }>();
 

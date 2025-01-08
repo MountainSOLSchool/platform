@@ -67,10 +67,10 @@ export class ClassCardComponent {
             lastName: string;
         }>;
         userCost: number;
-        additionalCost: number;
         semesterId: string;
         forInformationOnly: boolean;
-        additionalOptions: Array<{
+        additionalCost: number;
+        additionalOptions?: Array<{
             description: string;
             cost: number;
             id: string;
@@ -129,14 +129,14 @@ export class ClassCardComponent {
         return (classInfo.paymentRange?.lowest ?? -1) >= 0;
     }
 
-    requiresAdditionalOptions(classInfo: typeof this.classInfo) {
-        return classInfo.additionalOptions.length > 0;
+    getAdditionalOptions(classInfo: typeof this.classInfo) {
+        return classInfo.additionalOptions;
     }
 
     requiresPromptBeforeSelecting(classInfo: typeof this.classInfo) {
         return (
             this.requiresSlidingScaleCost(classInfo) ||
-            this.requiresAdditionalOptions(classInfo)
+            this.getAdditionalOptions(classInfo)
         );
     }
 }

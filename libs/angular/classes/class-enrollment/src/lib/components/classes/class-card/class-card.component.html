@@ -116,9 +116,9 @@
                         (selectedCostChange)="customCost.set($event)"
                     ></sol-sliding-scale-form>
                 }
-                @if (requiresAdditionalOptions(classInfo)) {
+                @if (getAdditionalOptions(classInfo); as additionalOptions) {
                     <sol-class-additional-options-form
-                        [options]="classInfo.additionalOptions"
+                        [options]="additionalOptions"
                         (selectedOptionIdsChange)="
                             selectedAdditionalOptionIds.set($event)
                         "

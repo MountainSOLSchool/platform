@@ -41,7 +41,7 @@ import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SliderModule } from 'primeng/slider';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -339,7 +339,7 @@ export class ClassesComponent {
                                       const additional =
                                           this.selectedAdditionalOptionIds();
                                       return (
-                                          c.additionalOptions
+                                          (c.additionalOptions ?? [])
                                               .filter((option) =>
                                                   additional.includes(option.id)
                                               )
@@ -383,8 +383,8 @@ export class ClassesComponent {
         userCost,
     }: {
         classSelection: { id: string; semesterId: string };
-        selectedAdditionalOptionIds: Array<string>;
         selected: boolean;
+        selectedAdditionalOptionIds?: Array<string>;
         userCost?: number;
     }) {
         this.workflow.patchState((s) => ({
@@ -409,11 +409,12 @@ export class ClassesComponent {
                     ? Array.from(
                           new Set([
                               ...s.enrollment.additionalOptionIds,
-                              ...selectedAdditionalOptionIds,
+                              ...(selectedAdditionalOptionIds ?? []),
                           ])
                       )
                     : s.enrollment.additionalOptionIds.filter(
-                          (id) => !selectedAdditionalOptionIds.includes(id)
+                          (id) =>
+                              !(selectedAdditionalOptionIds ?? []).includes(id)
                       ),
             },
         }));
@@ -461,71 +462,5 @@ export class ClassesComponent {
                     extra?.selectedAdditionalOptionIds ?? [],
             })
         );
-    }
-
-    hasPausedClass(classRow: ClassRow): boolean {
-        return classRow.classes.some((c) => c.pausedForEnrollment);
-    }
-
-    semesterName(
-        semesterId: string,
-        options: Requested<Array<{ id: string; name: string }>> | undefined
-    ) {
-        return (
-            (Array.isArray(options) &&
-                options?.find((o) => o.id === semesterId)?.name) ||
-            ''
-        );
-    }
-
-    hasGroup(row: object): row is { group: unknown } {
-        return 'group' in row;
-    }
-
-    confirmedRowSelect(panel: OverlayPanel) {
-        panel.hide();
-        this.rowSelectedChange({
-            classSelection: {
-                id: this.classInfo.id,
-                semesterId: this.classInfo.semesterId,
-            },
-            userCost: this.customCost(),
-            selected: true,
-            selectedAdditionalOptionIds: this.selectedAdditionalOptionIds(),
-        });
-    }
-
-    requiresNeitherSlidingScaleNorAdditionalOptions(classInfo: SemesterClass) {
-        return (
-            !this.requiresSlidingScaleCost(classInfo) &&
-            !this.requiresAdditionalOptions(classInfo)
-        );
-    }
-
-    requiresSlidingScaleCost(classInfo: SemesterClass) {
-        return (classInfo.paymentRange?.lowest ?? -1) >= 0;
-    }
-
-    requiresAdditionalOptions(classInfo: SemesterClass) {
-        return classInfo.additionalOptions.length > 0;
-    }
-
-    rowRequiresSlidingScaleCost(row: ClassRow) {
-        return row.classes.some((c) => (c.paymentRange?.lowest ?? -1) >= 0);
-    }
-
-    rowRequiresAdditionalOptions(row: ClassRow) {
-        return row.classes.some((c) => c.additionalOptions.length > 0);
-    }
-
-    requiresPromptBeforeSelecting(row: ClassRow) {
-        return (
-            this.rowRequiresSlidingScaleCost(row) ||
-            this.rowRequiresAdditionalOptions(row)
-        );
-    }
-
-    getRowCost(row: ClassRow) {
-        return row.classes.reduce((agg, c) => agg + c.cost, 0);
     }
 }
