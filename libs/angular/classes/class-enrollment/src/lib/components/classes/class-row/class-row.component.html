@@ -4,12 +4,12 @@
         margin: 2px;
         padding: 5px;
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
         width: 100%;
     "
 >
     @if (row.group) {
-        <div>
+        <div class="group-header">
             <h3>
                 {{ row.group.name }}
                 @if (getClassRowSavings() !== 0) {
@@ -29,12 +29,12 @@
                     [inputId]="'select' + row.group.id"
                     [name]="'row_' + row.group.id"
                     [onIcon]="'pi pi-check'"
-                    [onLabel]="'Selected all-day'"
+                    [onLabel]="'Selected all'"
                     [offIcon]="'pi pi-plus'"
                     [offLabel]="
                         paused
                             ? 'One or more classes are full'
-                            : 'Select all-day'
+                            : 'Select all'
                     "
                     [ngModel]="row.selected"
                     (ngModelChange)="rowSelectedChange(!row.selected)"
