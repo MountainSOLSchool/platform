@@ -1,11 +1,11 @@
 import {
     BasketDiscount,
     isBasketDiscount,
-} from '../models/discount/basket-discount';
+} from '../models/discount/basket-discount.abstract';
 import {
     ClassesDiscount,
     isClassesDiscount,
-} from '../models/discount/classes-discount';
+} from '../models/discount/classes-discount.abstract';
 import { Discount } from '../models/discount/discount';
 import { SemesterClass } from '../models/semester-class';
 import { SemesterClassGroup } from '../models/semester-class-group';

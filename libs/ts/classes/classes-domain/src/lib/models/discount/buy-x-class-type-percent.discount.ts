@@ -1,6 +1,6 @@
 import { SemesterClass } from '../semester-class';
 import { SemesterClassGroup } from '../semester-class-group';
-import { ClassesDiscount } from './classes-discount';
+import { ClassesDiscount } from './classes-discount.abstract';
 
 /**
  * Discounts the cost of every class by a percent when there are X or more classes of the same type

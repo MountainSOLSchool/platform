@@ -1,5 +1,5 @@
 import { SemesterClass } from '../semester-class';
-import { ClassesDiscount } from './classes-discount';
+import { ClassesDiscount } from './classes-discount.abstract';
 import { SemesterClassGroup } from '../semester-class-group';
 
 export class FreeClassesDiscount extends ClassesDiscount {
