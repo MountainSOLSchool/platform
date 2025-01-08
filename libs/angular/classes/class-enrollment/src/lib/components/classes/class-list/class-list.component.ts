@@ -47,7 +47,6 @@ import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ClassListService } from '@sol/angular/classes/list';
 import {
-    Requested,
     RequestedOperatorsUtility,
     requestStateDirectives,
 } from '@sol/angular/request';
@@ -396,51 +395,5 @@ export class ClassesComponent {
 
     filterChange(filter: [] | [number, number]) {
         this.gradeFilter.set(filter);
-    }
-
-    trackClassRow(index: number, classRow: ClassRow) {
-        return classRow.group?.id ?? classRow.classes[0].id;
-    }
-
-    getClassRowSavings(classRow: ClassRow) {
-        const classesCost = classRow.classes.reduce(
-            // TODO: cost is a string, but should be a number
-            (agg, aClass) => agg + Number(aClass.cost),
-            0
-        );
-        const groupCost = classRow.group?.cost ?? 0;
-        const savings = classesCost - groupCost;
-        return savings;
-    }
-
-    rowSelectedChange(classRow: ClassRow, selected: boolean) {
-        classRow.classes.forEach((c) =>
-            this.selectionChanged({
-                classSelection: {
-                    id: c.id,
-                    semesterId: c.semesterId,
-                },
-                selected,
-            })
-        );
-    }
-
-    hasPausedClass(classRow: ClassRow): boolean {
-        return classRow.classes.some((c) => c.pausedForEnrollment);
-    }
-
-    semesterName(
-        semesterId: string,
-        options: Requested<Array<{ id: string; name: string }>> | undefined
-    ) {
-        return (
-            (Array.isArray(options) &&
-                options?.find((o) => o.id === semesterId)?.name) ||
-            ''
-        );
-    }
-
-    hasGroup(row: object): row is { group: unknown } {
-        return 'group' in row;
     }
 }
