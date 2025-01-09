@@ -1,15 +1,21 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     EventEmitter,
     input,
     Output,
 } from '@angular/core';
 import { CurrencyPipe, NgStyle } from '@angular/common';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { RxLet } from '@rx-angular/template/let';
-import { ClassCardComponent } from '../class-card/class-card.component';
+import {
+    ClassCardComponent,
+    ClassCardInfo,
+} from '../class-card/class-card.component';
 import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { BeforeSelectOptionsComponent } from '../before-select-options/before-select-options.component';
 
 interface ClassRow {
     classes: Array<{
@@ -59,11 +65,13 @@ interface ClassRow {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
+        ButtonModule,
         ToggleButtonModule,
-        RxLet,
         ClassCardComponent,
         FormsModule,
         CurrencyPipe,
+        OverlayPanelModule,
+        BeforeSelectOptionsComponent,
     ],
     selector: 'sol-class-row',
     templateUrl: './class-row.component.html',
@@ -78,6 +86,26 @@ export class ClassRowComponent {
         selectedAdditionalOptionIds?: Array<string>;
         userCost?: number;
     }>();
+
+    readonly beforeSelectOptionsByClass = computed(() => {
+        const classInfo = this.row().classes.map((c) => ({
+            classId: c.id,
+            className: c.title,
+            slidingScale: c.paymentRange
+                ? {
+                      paymentRange: c.paymentRange,
+                      userCost: c.userCost,
+                  }
+                : undefined,
+            additionalOptions: c.additionalOptions
+                ? {
+                      options: c.additionalOptions,
+                      selected: [],
+                  }
+                : undefined,
+        }));
+        return classInfo;
+    });
 
     getClassRowSavings(): number {
         const row = this.row();
@@ -99,6 +127,7 @@ export class ClassRowComponent {
                 classSelection: { id: c.id, semesterId: c.semesterId },
                 selected,
                 userCost: c.userCost,
+                // selectedAdditionalOptionIds: c.additionalOptions,
             })
         );
     }
@@ -107,7 +136,35 @@ export class ClassRowComponent {
         classSelection: { id: string; semesterId: string };
         selected: boolean;
         userCost?: number;
+        selectedAdditionalOptionIds?: Array<string>;
     }) {
         this.classSelection.emit(event);
+    }
+
+    requiresPromptBeforeSelecting(classesInfo: Array<ClassCardInfo>) {
+        return classesInfo.some(
+            (c) => !!c.paymentRange || c.additionalOptions?.length
+        );
+    }
+
+    confirmed(
+        overlayRef: OverlayPanel,
+        optionsConfirmation: {
+            [classId: string]: {
+                userCost?: number;
+                selectedOptionIds?: Array<string>;
+            };
+        }
+    ) {
+        overlayRef.hide();
+        this.row().classes.forEach((c) =>
+            this.selectionChanged({
+                classSelection: { id: c.id, semesterId: c.semesterId },
+                selected: true,
+                userCost: optionsConfirmation[c.id]?.userCost,
+                selectedAdditionalOptionIds:
+                    optionsConfirmation[c.id]?.selectedOptionIds ?? [],
+            })
+        );
     }
 }

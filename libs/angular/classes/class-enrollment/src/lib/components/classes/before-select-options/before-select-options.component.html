@@ -1,24 +1,32 @@
 @let userCostsByClassValue = userCostsByClass();
 @let optionsByClassValue = optionsByClass();
 @for (clazz of optionsByClassValue; track clazz.className) {
-    @if (optionsByClassValue.length > 1) {
+    @if (
+        clazz.slidingScale ||
+        (clazz.additionalOptions && clazz.additionalOptions.options.length > 0)
+    ) {
         <h4>
             {{ clazz.className }}
         </h4>
-    }
-    @if (clazz.slidingScale) {
-        <sol-sliding-scale-form
-            [paymentRange]="clazz.slidingScale.paymentRange"
-            [userCost]="userCostsByClassValue[clazz.classId]"
-            (selectedCostChange)="userCostChanged(clazz.classId, $event)"
-        ></sol-sliding-scale-form>
-    }
-    @if (clazz.additionalOptions && clazz.additionalOptions.options.length > 0) {
-        <sol-class-additional-options-form
-            [options]="clazz.additionalOptions.options"
-            [selected]="clazz.additionalOptions.selected"
-            (selectedOptionIdsChange)="selectedAdditionalOptionsChanged(clazz.classId, $event)"
-        ></sol-class-additional-options-form>
+        @if (clazz.slidingScale) {
+            <sol-sliding-scale-form
+                [paymentRange]="clazz.slidingScale.paymentRange"
+                [userCost]="userCostsByClassValue[clazz.classId]"
+                (selectedCostChange)="userCostChanged(clazz.classId, $event)"
+            ></sol-sliding-scale-form>
+        }
+        @if (
+            clazz.additionalOptions &&
+            clazz.additionalOptions.options.length > 0
+        ) {
+            <sol-class-additional-options-form
+                [options]="clazz.additionalOptions.options"
+                [selected]="clazz.additionalOptions.selected"
+                (selectedOptionIdsChange)="
+                    selectedAdditionalOptionsChanged(clazz.classId, $event)
+                "
+            ></sol-class-additional-options-form>
+        }
     }
 }
 

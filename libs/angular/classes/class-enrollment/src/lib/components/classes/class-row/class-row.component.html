@@ -24,22 +24,50 @@
             <div
                 style="margin-top: 1rem; margin-bottom: 1rem; margin-left: 1rem"
             >
-                <p-toggleButton
-                    *rxLet="hasPausedClass(); let paused"
-                    [disabled]="paused"
-                    [inputId]="'select' + rowValue.group.id"
-                    [name]="'row_' + rowValue.group.id"
-                    [onIcon]="'pi pi-check'"
-                    [onLabel]="'Selected all'"
-                    [offIcon]="'pi pi-plus'"
-                    [offLabel]="
-                        paused
-                            ? 'One or more classes are full'
-                            : 'Select all'
-                    "
-                    [ngModel]="rowValue.selected"
-                    (ngModelChange)="rowSelectedChange(!rowValue.selected)"
-                ></p-toggleButton>
+                <p-overlayPanel pAutoFocus #beforeSelectingForm>
+                    <sol-class-before-select-options-form
+                        [optionsByClass]="beforeSelectOptionsByClass()"
+                        (confirmed)="confirmed(beforeSelectingForm, $event)"
+                    ></sol-class-before-select-options-form>
+                </p-overlayPanel>
+
+                @let paused = hasPausedClass();
+
+                @if (requiresPromptBeforeSelecting(rowValue.classes)) {
+                    @if (!rowValue.selected) {
+                        <p-button
+                            [disabled]="paused"
+                            label="Select all"
+                            styleClass="p-button-outlined"
+                            icon="pi pi-plus"
+                            (click)="beforeSelectingForm.toggle($event)"
+                        ></p-button>
+                    } @else {
+                        <p-button
+                            [disabled]="paused"
+                            label="Selected all"
+                            styleClass="p-button-primary"
+                            icon="pi pi-check"
+                            (click)="rowSelectedChange(false)"
+                        ></p-button>
+                    }
+                } @else {
+                    <p-toggleButton
+                        [disabled]="paused"
+                        [inputId]="'select' + rowValue.group.id"
+                        [name]="'row_' + rowValue.group.id"
+                        [onIcon]="'pi pi-check'"
+                        [onLabel]="'Selected all'"
+                        [offIcon]="'pi pi-plus'"
+                        [offLabel]="
+                            paused
+                                ? 'One or more classes are full'
+                                : 'Select all'
+                        "
+                        [ngModel]="rowValue.selected"
+                        (ngModelChange)="rowSelectedChange(!rowValue.selected)"
+                    ></p-toggleButton>
+                }
             </div>
         </div>
     }
@@ -48,7 +76,7 @@
             <div
                 [ngStyle]="{
                     flex:
-                    rowValue.classes.length > 1
+                        rowValue.classes.length > 1
                             ? '1 0 calc(50% - 40px)'
                             : '1 0 calc(100% - 40px)',
                 }"

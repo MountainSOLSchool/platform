@@ -22,7 +22,7 @@ import { SliderModule } from 'primeng/slider';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { BeforeSelectOptionsComponent } from '../before-select-options/before-select-options.component';
 
-interface ClassCardInfo {
+export interface ClassCardInfo {
     id: string;
     title: string;
     description: string;
