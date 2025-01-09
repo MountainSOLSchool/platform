@@ -101,7 +101,12 @@ export class ClassCardComponent {
                           userCost: classInfo.userCost,
                       }
                     : undefined,
-                additionalOptions: classInfo.additionalOptions,
+                additionalOptions: classInfo.additionalOptions
+                    ? {
+                          options: classInfo.additionalOptions,
+                          selected: this.selectedAdditionalOptionIds(),
+                      }
+                    : undefined,
             },
         ];
     });
@@ -118,21 +123,6 @@ export class ClassCardComponent {
             },
             selectedAdditionalOptionIds: [],
             selected: this.selected,
-        });
-    }
-
-    confirmedSelect(panel: OverlayPanel) {
-        panel.hide();
-
-        const classInfo = this.classInfo();
-        this.selectedChange.emit({
-            classSelection: {
-                id: classInfo.id,
-                semesterId: classInfo.semesterId,
-            },
-            userCost: this.customCost(),
-            selected: true,
-            selectedAdditionalOptionIds: this.selectedAdditionalOptionIds(),
         });
     }
 

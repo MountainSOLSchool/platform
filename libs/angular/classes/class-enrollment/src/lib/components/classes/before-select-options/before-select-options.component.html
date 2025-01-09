@@ -13,9 +13,10 @@
             (selectedCostChange)="userCostChanged(clazz.classId, $event)"
         ></sol-sliding-scale-form>
     }
-    @if (clazz.additionalOptions && clazz.additionalOptions.length > 0) {
+    @if (clazz.additionalOptions && clazz.additionalOptions.options.length > 0) {
         <sol-class-additional-options-form
-            [options]="clazz.additionalOptions"
+            [options]="clazz.additionalOptions.options"
+            [selected]="clazz.additionalOptions.selected"
             (selectedOptionIdsChange)="selectedAdditionalOptionsChanged(clazz.classId, $event)"
         ></sol-class-additional-options-form>
     }

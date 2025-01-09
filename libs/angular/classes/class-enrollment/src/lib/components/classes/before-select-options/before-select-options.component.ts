@@ -45,7 +45,10 @@ export class BeforeSelectOptionsComponent {
                 };
                 userCost: number;
             };
-            additionalOptions?: Array<AdditionalOption>;
+            additionalOptions?: {
+                options: Array<AdditionalOption>;
+                selected: Array<string>;
+            };
         }>
     >();
 
@@ -65,15 +68,12 @@ export class BeforeSelectOptionsComponent {
     readonly selectedOptionIdsByClass = linkedSignal<{
         [classId: string]: Array<string>;
     }>(() => {
-        return this.optionsByClass().reduce(
-            (acc, { classId, additionalOptions }) => {
-                return {
-                    ...acc,
-                    [classId]: additionalOptions?.map((option) => option.id),
-                };
-            },
-            {}
-        );
+        return this.optionsByClass().reduce((acc, { classId }) => {
+            return {
+                ...acc,
+                [classId]: [],
+            };
+        }, {});
     });
 
     readonly confirmed = output<{
@@ -84,9 +84,11 @@ export class BeforeSelectOptionsComponent {
     }>();
 
     readonly selectedOptionsByClass = computed(() => {
-        return [
-            ...Object.entries(this.userCostsByClass()),
-            ...Object.entries(this.selectedOptionIdsByClass()),
+        const userCostsByClass = this.userCostsByClass();
+        const selectedOptionIdsByClass = this.selectedOptionIdsByClass();
+        const thing = [
+            ...Object.entries(userCostsByClass),
+            ...Object.entries(selectedOptionIdsByClass),
         ].reduce(
             (acc, [classId, options]) => {
                 const property = Array.isArray(options)
@@ -107,6 +109,7 @@ export class BeforeSelectOptionsComponent {
                 };
             }
         );
+        return thing;
     });
 
     readonly selectedOptionIds = signal<Array<string>>([]);

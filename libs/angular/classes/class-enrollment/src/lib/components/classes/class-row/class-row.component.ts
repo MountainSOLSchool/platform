@@ -95,12 +95,10 @@ export class ClassRowComponent {
 
     rowSelectedChange(selected: boolean) {
         this.row().classes.forEach((c) =>
-            this.classSelection.emit({
-                classSelection: {
-                    id: c.id,
-                    semesterId: c.semesterId,
-                },
+            this.selectionChanged({
+                classSelection: { id: c.id, semesterId: c.semesterId },
                 selected,
+                userCost: c.userCost,
             })
         );
     }
