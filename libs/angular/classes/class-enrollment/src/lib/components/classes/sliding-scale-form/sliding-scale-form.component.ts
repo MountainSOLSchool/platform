@@ -1,9 +1,8 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    Input,
-    Output,
+    input,
+    output,
 } from '@angular/core';
 
 import { AutoFocusModule } from 'primeng/autofocus';
@@ -26,17 +25,13 @@ import { SliderModule } from 'primeng/slider';
     templateUrl: './sliding-scale-form.component.html',
 })
 export class SlidingScaleFormComponent {
-    @Input({ required: true }) classInfo!: {
-        paymentRange?: {
-            lowest?: number;
-            highest?: number;
-        };
-        cost: number;
-        userCost: number;
-        semesterId: string;
-    };
+    readonly paymentRange = input.required<{
+        lowest: number;
+        highest: number;
+    }>();
+    readonly userCost = input.required<number>();
 
-    @Output() selectedCostChange = new EventEmitter<number>();
+    readonly selectedCostChange = output<number>();
 
     customCostSelected(cost: number) {
         this.selectedCostChange.emit(cost);

@@ -26,8 +26,8 @@ interface ClassRow {
         gradeRangeEnd: number;
         location: string;
         paymentRange?: {
-            lowest?: number;
-            highest?: number;
+            lowest: number;
+            highest: number;
         };
         cost: number;
         instructors: Array<{

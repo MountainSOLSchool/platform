@@ -10,8 +10,8 @@ export interface SemesterClass {
     description: string;
     cost: number;
     paymentRange?: {
-        lowest?: number;
-        highest?: number;
+        lowest: number;
+        highest: number;
     };
     location: string;
     instructors: Array<{

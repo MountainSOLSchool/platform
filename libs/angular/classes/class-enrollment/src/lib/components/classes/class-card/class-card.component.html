@@ -8,19 +8,19 @@
         'margin-left': 'auto',
         'margin-right': 'auto',
         'min-width': '300px',
-        height: 'fit-content'
+        height: 'fit-content',
     }"
 >
+    @let classInfoValue = classInfo();
     <p-card styleClass="class-card">
         <ng-template pTemplate="header"></ng-template>
         <div style="position: relative; margin-top: -2.5rem">
             <div style="padding-right: 145px">
                 <h2>
-                    {{ classInfo.title
-                    }}{{ classInfo.pausedForEnrollment ? ' (Full)' : '' }}
+                    {{ classInfoValue.title
+                    }}{{ classInfoValue.pausedForEnrollment ? ' (Full)' : '' }}
                 </h2>
             </div>
-            <!-- circular div with image -->
             <div
                 [ngStyle]="{
                     position: 'absolute',
@@ -29,14 +29,17 @@
                     display: 'inline-block',
                     width: '165px',
                     height: '165px',
-                    background: 'url(' + (classInfo.thumbnailUrl ?? fallbackImageUrl)  + ')',
+                    background:
+                        'url(' +
+                        (classInfoValue.thumbnailUrl ?? fallbackImageUrl) +
+                        ')',
                     'background-position': '50% 50%',
                     'background-size': 'cover',
                     'border-radius': '50%',
-                    filter: classInfo.pausedForEnrollment
+                    filter: classInfoValue.pausedForEnrollment
                         ? 'grayscale(100%)'
                         : '',
-                    border: '3px solid ' + (selected ? '#3c82f7' : 'black')
+                    border: '3px solid ' + (selected ? '#3c82f7' : 'black'),
                 }"
             ></div>
         </div>
@@ -50,41 +53,41 @@
             "
         >
             <p-chip
-                [label]="classInfo.classDateTimes"
+                [label]="classInfoValue.classDateTimes"
                 icon="pi pi-calendar"
                 styleClass="mr-2 custom-chip"
             ></p-chip>
             <p-chip
-                [label]="classInfo.weekday"
+                [label]="classInfoValue.weekday"
                 styleClass="mr-2 custom-chip"
             ></p-chip>
             <p-chip
-                [label]="classInfo.dailyTimes"
+                [label]="classInfoValue.dailyTimes"
                 icon="pi pi-clock"
                 styleClass="mr-2 custom-chip"
             ></p-chip>
         </div>
         <p>
             <b>Class Type:</b>
-            {{ classInfo.classType }}<br />
+            {{ classInfoValue.classType }}<br />
             <b>Grades:</b>
-            {{ classInfo.gradeRangeStart }}
+            {{ classInfoValue.gradeRangeStart }}
             -
-            {{ classInfo.gradeRangeEnd }}<br />
+            {{ classInfoValue.gradeRangeEnd }}<br />
             <b>Location:</b>
-            {{ classInfo.location }}<br />
-            @if (!classInfo.paymentRange) {
+            {{ classInfoValue.location }}<br />
+            @if (!classInfoValue.paymentRange) {
                 <b>Cost:</b>
-                ${{ classInfo.cost }}<br />
+                ${{ classInfoValue.cost }}<br />
             } @else {
                 <b>Sliding Scale Cost:</b>
-                ${{ classInfo.paymentRange?.lowest }}-${{
-                    classInfo.paymentRange?.highest
+                ${{ classInfoValue.paymentRange.lowest }}-${{
+                    classInfoValue.paymentRange.highest
                 }}<br />
             }
             <b>Instructors:</b>
             @for (
-                instructor of classInfo.instructors;
+                instructor of classInfoValue.instructors;
                 track instructor;
                 let isLast = $last
             ) {
@@ -97,11 +100,11 @@
             <br />
             <b>Description:</b>
             <br />
-            <markdown>{{ classInfo.description }}</markdown>
+            <markdown>{{ classInfoValue.description }}</markdown>
             <br />
         </p>
         <div style="margin-top: 2rem; margin-bottom: -1rem">
-            @if (classInfo.pausedForEnrollment) {
+            @if (classInfoValue.pausedForEnrollment) {
                 <div style="margin-bottom: 1rem">
                     <b
                         >This class is not accepting additional students at this
@@ -110,35 +113,22 @@
                 </div>
             }
             <p-overlayPanel pAutoFocus #beforeSelectingForm>
-                @if (requiresSlidingScaleCost(classInfo)) {
-                    <sol-sliding-scale-form
-                        [classInfo]="classInfo"
-                        (selectedCostChange)="customCost.set($event)"
-                    ></sol-sliding-scale-form>
-                }
-                @if (getAdditionalOptions(classInfo); as additionalOptions) {
-                    <sol-class-additional-options-form
-                        [options]="additionalOptions"
-                        (selectedOptionIdsChange)="
-                            selectedAdditionalOptionIds.set($event)
-                        "
-                    ></sol-class-additional-options-form>
-                }
-                <p-button (click)="confirmedSelect(beforeSelectingForm)"
-                    >Confirm</p-button
-                >
+                <sol-class-before-select-options-form
+                    [optionsByClass]="beforeSelectOptionsByClass()"
+                    (confirmed)="confirmed(beforeSelectingForm, $event)"
+                ></sol-class-before-select-options-form>
             </p-overlayPanel>
-            @if (classInfo.forInformationOnly) {
+            @if (classInfoValue.forInformationOnly) {
                 Contact
                 <a href="mailto:info@mountainsol.org"
                     >info&#64;mountainsol.org</a
                 >
                 for more information.
             } @else {
-                @if (requiresPromptBeforeSelecting(classInfo)) {
+                @if (requiresPromptBeforeSelecting(classInfoValue)) {
                     @if (!selected) {
                         <p-button
-                            [disabled]="classInfo.pausedForEnrollment"
+                            [disabled]="classInfoValue.pausedForEnrollment"
                             label="Select"
                             styleClass="p-button-outlined"
                             icon="pi pi-plus"
@@ -146,11 +136,11 @@
                         ></p-button>
                     } @else {
                         <p-button
-                            [disabled]="classInfo.pausedForEnrollment"
+                            [disabled]="classInfoValue.pausedForEnrollment"
                             [label]="
                                 'Selected ($' +
-                                (classInfo.userCost +
-                                    classInfo.additionalCost) +
+                                (classInfoValue.userCost +
+                                    classInfoValue.additionalCost) +
                                 ')'
                             "
                             styleClass="p-button-primary"
@@ -160,14 +150,14 @@
                     }
                 } @else {
                     <p-toggleButton
-                        [disabled]="classInfo.pausedForEnrollment"
-                        [inputId]="'select' + classInfo.id"
+                        [disabled]="classInfoValue.pausedForEnrollment"
+                        [inputId]="'select' + classInfoValue.id"
                         styleClass="p-button-primary"
                         [onIcon]="'pi pi-check'"
                         onLabel="Selected"
                         [offIcon]="'pi pi-plus'"
                         [offLabel]="
-                            classInfo.pausedForEnrollment
+                            classInfoValue.pausedForEnrollment
                                 ? 'Class Full'
                                 : 'Select'
                         "

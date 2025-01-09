@@ -1,22 +1,24 @@
-<p-overlayPanel pAutoFocus #beforeSelectingForm>
-    @for (rowClass of row.classes; track rowClass.id) {
+@let userCostsByClassValue = userCostsByClass();
+@let optionsByClassValue = optionsByClass();
+@for (clazz of optionsByClassValue; track clazz.className) {
+    @if (optionsByClassValue.length > 1) {
         <h4>
-            {{ rowClass.title }}
+            {{ clazz.className }}
         </h4>
-        @if (requiresNeitherSlidingScaleNorAdditionalOptions(rowClass)) {
-            <p>No options</p>
-        }
-        @if (requiresSlidingScaleCost(rowClass)) {
-            <sol-sliding-scale-form
-                [classInfo]="rowClass"
-            ></sol-sliding-scale-form>
-        }
-        @if (requiresAdditionalOptions(rowClass)) {
-            <sol-class-additional-options-form
-                [options]="rowClass.additionalOptions"
-            ></sol-class-additional-options-form>
-        }
     }
+    @if (clazz.slidingScale) {
+        <sol-sliding-scale-form
+            [paymentRange]="clazz.slidingScale.paymentRange"
+            [userCost]="userCostsByClassValue[clazz.classId]"
+            (selectedCostChange)="userCostChanged(clazz.classId, $event)"
+        ></sol-sliding-scale-form>
+    }
+    @if (clazz.additionalOptions && clazz.additionalOptions.length > 0) {
+        <sol-class-additional-options-form
+            [options]="clazz.additionalOptions"
+            (selectedOptionIdsChange)="selectedAdditionalOptionsChanged(clazz.classId, $event)"
+        ></sol-class-additional-options-form>
+    }
+}
 
-    <p-button>Confirm</p-button>
-</p-overlayPanel>
+<p-button (click)="confirmed.emit(selectedOptionsByClass())">Confirm</p-button>

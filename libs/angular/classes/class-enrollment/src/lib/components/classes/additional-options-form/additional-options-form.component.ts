@@ -1,9 +1,8 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    Input,
-    Output,
+    input,
+    output,
     signal,
 } from '@angular/core';
 
@@ -25,9 +24,9 @@ type AdditionalOption = {
     templateUrl: './additional-options-form.component.html',
 })
 export class AdditionalOptionsFormComponent {
-    @Input({ required: true }) options!: Array<AdditionalOption>;
+    readonly options = input.required<Array<AdditionalOption>>();
 
-    @Output() selectedOptionIdsChange = new EventEmitter<Array<string>>();
+    readonly selectedOptionIdsChange = output<Array<string>>();
 
     readonly selectedOptionIds = signal<Array<string>>([]);
 

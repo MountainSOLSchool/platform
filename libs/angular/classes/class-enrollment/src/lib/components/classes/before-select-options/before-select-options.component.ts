@@ -1,15 +1,18 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    Input,
-    Output,
+    computed,
+    input,
+    linkedSignal,
+    output,
     signal,
 } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { CheckboxModule } from 'primeng/checkbox';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { SlidingScaleFormComponent } from '../sliding-scale-form/sliding-scale-form.component';
+import { AdditionalOptionsFormComponent } from '../additional-options-form/additional-options-form.component';
 
 type AdditionalOption = {
     description: string;
@@ -20,14 +23,91 @@ type AdditionalOption = {
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CheckboxModule, ButtonModule, FormsModule],
+    imports: [
+        OverlayPanelModule,
+        ButtonModule,
+        FormsModule,
+        SlidingScaleFormComponent,
+        AdditionalOptionsFormComponent,
+    ],
     selector: 'sol-class-before-select-options-form',
     templateUrl: './before-select-options.component.html',
 })
-export class AdditionalOptionsFormComponent {
-    @Input({ required: true }) options!: Array<AdditionalOption>;
+export class BeforeSelectOptionsComponent {
+    optionsByClass = input.required<
+        Array<{
+            classId: string;
+            className: string;
+            slidingScale?: {
+                paymentRange: {
+                    lowest: number;
+                    highest: number;
+                };
+                userCost: number;
+            };
+            additionalOptions?: Array<AdditionalOption>;
+        }>
+    >();
 
-    @Output() selectedOptionIdsChange = new EventEmitter<Array<string>>();
+    readonly userCostsByClass = linkedSignal<{ [classId: string]: number }>(
+        () => {
+            return this.optionsByClass().reduce(
+                (acc, { classId, slidingScale }) => {
+                    return {
+                        ...acc,
+                        [classId]: slidingScale?.userCost,
+                    };
+                },
+                {}
+            );
+        }
+    );
+    readonly selectedOptionIdsByClass = linkedSignal<{
+        [classId: string]: Array<string>;
+    }>(() => {
+        return this.optionsByClass().reduce(
+            (acc, { classId, additionalOptions }) => {
+                return {
+                    ...acc,
+                    [classId]: additionalOptions?.map((option) => option.id),
+                };
+            },
+            {}
+        );
+    });
+
+    readonly confirmed = output<{
+        [classId: string]: {
+            userCost?: number;
+            selectedOptionIds?: Array<string>;
+        };
+    }>();
+
+    readonly selectedOptionsByClass = computed(() => {
+        return [
+            ...Object.entries(this.userCostsByClass()),
+            ...Object.entries(this.selectedOptionIdsByClass()),
+        ].reduce(
+            (acc, [classId, options]) => {
+                const property = Array.isArray(options)
+                    ? 'selectedOptionIds'
+                    : 'userCost';
+                return {
+                    ...acc,
+                    [classId]: {
+                        ...acc[classId],
+                        [property]: options,
+                    },
+                };
+            },
+            {} as {
+                [classId: string]: {
+                    userCost?: number;
+                    selectedOptionIds?: Array<string>;
+                };
+            }
+        );
+    });
 
     readonly selectedOptionIds = signal<Array<string>>([]);
 
@@ -35,10 +115,20 @@ export class AdditionalOptionsFormComponent {
         return `${option.description} ($${option.cost})`;
     }
 
-    optionSelected(optionId: string, selected: boolean) {
-        this.selectedOptionIds.update((ids) =>
-            selected ? [...ids, optionId] : ids.filter((id) => id !== optionId)
-        );
-        this.selectedOptionIdsChange.emit(this.selectedOptionIds());
+    userCostChanged(classId: string, userCost: number) {
+        this.userCostsByClass.update((costs) => ({
+            ...costs,
+            [classId]: userCost,
+        }));
+    }
+
+    selectedAdditionalOptionsChanged(
+        classId: string,
+        selectedOptionIds: Array<string>
+    ) {
+        this.selectedOptionIdsByClass.update((ids) => ({
+            ...ids,
+            [classId]: selectedOptionIds,
+        }));
     }
 }
