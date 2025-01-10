@@ -3,7 +3,6 @@ import {
     Component,
     computed,
     input,
-    linkedSignal,
     output,
     signal,
 } from '@angular/core';
@@ -43,38 +42,18 @@ export class BeforeSelectOptionsComponent {
                     lowest: number;
                     highest: number;
                 };
-                userCost: number;
+                initialCost: number;
             };
             additionalOptions?: {
                 options: Array<AdditionalOption>;
-                selected: Array<string>;
             };
         }>
     >();
 
-    readonly userCostsByClass = linkedSignal<{ [classId: string]: number }>(
-        () => {
-            return this.optionsByClass().reduce(
-                (acc, { classId, slidingScale }) => {
-                    return {
-                        ...acc,
-                        [classId]: slidingScale?.userCost,
-                    };
-                },
-                {}
-            );
-        }
-    );
-    readonly selectedOptionIdsByClass = linkedSignal<{
+    readonly userCostsByClass = signal<{ [classId: string]: number }>({});
+    readonly selectedOptionIdsByClass = signal<{
         [classId: string]: Array<string>;
-    }>(() => {
-        return this.optionsByClass().reduce((acc, { classId }) => {
-            return {
-                ...acc,
-                [classId]: [],
-            };
-        }, {});
-    });
+    }>({});
 
     readonly confirmed = output<{
         [classId: string]: {

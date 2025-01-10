@@ -25,10 +25,14 @@
                 style="margin-top: 1rem; margin-bottom: 1rem; margin-left: 1rem"
             >
                 <p-overlayPanel pAutoFocus #beforeSelectingForm>
-                    <sol-class-before-select-options-form
-                        [optionsByClass]="beforeSelectOptionsByClass()"
-                        (confirmed)="confirmed(beforeSelectingForm, $event)"
-                    ></sol-class-before-select-options-form>
+                    @if (beforeSelectingForm.overlayVisible) {
+                        <sol-class-before-select-options-form
+                            [optionsByClass]="beforeSelectOptionsByClass()"
+                            (confirmed)="
+                                confirmedExtras(beforeSelectingForm, $event)
+                            "
+                        ></sol-class-before-select-options-form>
+                    }
                 </p-overlayPanel>
 
                 @let paused = hasPausedClass();

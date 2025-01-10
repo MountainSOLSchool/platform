@@ -3,6 +3,7 @@ import {
     Component,
     input,
     output,
+    signal,
 } from '@angular/core';
 
 import { ButtonModule } from 'primeng/button';
@@ -25,9 +26,9 @@ type AdditionalOption = {
 export class AdditionalOptionsFormComponent {
     readonly options = input.required<Array<AdditionalOption>>();
 
-    readonly selected = input.required<Array<string>>();
-
     readonly selectedOptionIdsChange = output<Array<string>>();
+
+    readonly selected = signal<Array<string>>([]);
 
     getLabel(option: AdditionalOption) {
         return `${option.description} ($${option.cost})`;
@@ -37,6 +38,7 @@ export class AdditionalOptionsFormComponent {
         const updated = selected
             ? [...this.selected(), optionId]
             : this.selected().filter((id) => id !== optionId);
+        this.selected.set(updated);
         this.selectedOptionIdsChange.emit(updated);
     }
 }

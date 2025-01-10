@@ -40,9 +40,10 @@ interface ClassRow {
             firstName: string;
             lastName: string;
         }>;
-        userCost: number;
         semesterId: string;
         forInformationOnly: boolean;
+        userCost?: number;
+        initialCost: number;
         additionalCost: number;
         additionalOptions?: Array<{
             description: string;
@@ -87,6 +88,10 @@ export class ClassRowComponent {
         userCost?: number;
     }>();
 
+    getRandomNumber() {
+        return Math.random();
+    }
+
     readonly beforeSelectOptionsByClass = computed(() => {
         const classInfo = this.row().classes.map((c) => ({
             classId: c.id,
@@ -94,7 +99,7 @@ export class ClassRowComponent {
             slidingScale: c.paymentRange
                 ? {
                       paymentRange: c.paymentRange,
-                      userCost: c.userCost,
+                      initialCost: c.initialCost,
                   }
                 : undefined,
             additionalOptions: c.additionalOptions
@@ -126,8 +131,6 @@ export class ClassRowComponent {
             this.selectionChanged({
                 classSelection: { id: c.id, semesterId: c.semesterId },
                 selected,
-                userCost: c.userCost,
-                // selectedAdditionalOptionIds: c.additionalOptions,
             })
         );
     }
@@ -142,12 +145,12 @@ export class ClassRowComponent {
     }
 
     requiresPromptBeforeSelecting(classesInfo: Array<ClassCardInfo>) {
-        return classesInfo.some(
-            (c) => !!c.paymentRange || c.additionalOptions?.length
-        );
+        return classesInfo.some((c) => {
+            return !!c.paymentRange || c.additionalOptions?.length;
+        });
     }
 
-    confirmed(
+    confirmedExtras(
         overlayRef: OverlayPanel,
         optionsConfirmation: {
             [classId: string]: {

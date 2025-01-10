@@ -44,9 +44,10 @@ export interface ClassCardInfo {
         firstName: string;
         lastName: string;
     }>;
-    userCost: number;
     semesterId: string;
     forInformationOnly: boolean;
+    userCost?: number;
+    initialCost: number;
     additionalCost: number;
     additionalOptions?: Array<{
         description: string;
@@ -98,7 +99,7 @@ export class ClassCardComponent {
                 slidingScale: classInfo.paymentRange
                     ? {
                           paymentRange: classInfo.paymentRange,
-                          userCost: classInfo.userCost,
+                          initialCost: classInfo.initialCost,
                       }
                     : undefined,
                 additionalOptions: classInfo.additionalOptions

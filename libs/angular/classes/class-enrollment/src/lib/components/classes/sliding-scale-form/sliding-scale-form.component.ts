@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     input,
+    linkedSignal,
     output,
 } from '@angular/core';
 
@@ -29,11 +30,15 @@ export class SlidingScaleFormComponent {
         lowest: number;
         highest: number;
     }>();
-    readonly userCost = input.required<number>();
+
+    readonly initialCost = input.required<number>();
 
     readonly selectedCostChange = output<number>();
 
+    readonly userCost = linkedSignal<number>(() => this.initialCost());
+
     customCostSelected(cost: number) {
+        this.userCost.set(cost);
         this.selectedCostChange.emit(cost);
     }
 }

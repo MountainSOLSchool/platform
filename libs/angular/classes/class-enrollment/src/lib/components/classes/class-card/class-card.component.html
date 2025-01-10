@@ -113,10 +113,12 @@
                 </div>
             }
             <p-overlayPanel pAutoFocus #beforeSelectingForm>
-                <sol-class-before-select-options-form
-                    [optionsByClass]="beforeSelectOptionsByClass()"
-                    (confirmed)="confirmed(beforeSelectingForm, $event)"
-                ></sol-class-before-select-options-form>
+                @if (beforeSelectingForm.overlayVisible) {
+                    <sol-class-before-select-options-form
+                        [optionsByClass]="beforeSelectOptionsByClass()"
+                        (confirmed)="confirmed(beforeSelectingForm, $event)"
+                    ></sol-class-before-select-options-form>
+                }
             </p-overlayPanel>
             @if (classInfoValue.forInformationOnly) {
                 Contact
@@ -139,7 +141,8 @@
                             [disabled]="classInfoValue.pausedForEnrollment"
                             [label]="
                                 'Selected ($' +
-                                (classInfoValue.userCost +
+                                ((classInfoValue.userCost ??
+                                    classInfoValue.initialCost) +
                                     classInfoValue.additionalCost) +
                                 ')'
                             "

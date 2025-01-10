@@ -1,17 +1,19 @@
-@let userCostsByClassValue = userCostsByClass();
 @let optionsByClassValue = optionsByClass();
+@let hasMoreThanOneClass = optionsByClassValue.length > 1;
 @for (clazz of optionsByClassValue; track clazz.className) {
     @if (
         clazz.slidingScale ||
         (clazz.additionalOptions && clazz.additionalOptions.options.length > 0)
     ) {
-        <h4>
-            {{ clazz.className }}
-        </h4>
+        @if (hasMoreThanOneClass) {
+            <h3>
+                {{ clazz.className }}
+            </h3>
+        }
         @if (clazz.slidingScale) {
             <sol-sliding-scale-form
+                [initialCost]="clazz.slidingScale.initialCost"
                 [paymentRange]="clazz.slidingScale.paymentRange"
-                [userCost]="userCostsByClassValue[clazz.classId]"
                 (selectedCostChange)="userCostChanged(clazz.classId, $event)"
             ></sol-sliding-scale-form>
         }
@@ -21,7 +23,6 @@
         ) {
             <sol-class-additional-options-form
                 [options]="clazz.additionalOptions.options"
-                [selected]="clazz.additionalOptions.selected"
                 (selectedOptionIdsChange)="
                     selectedAdditionalOptionsChanged(clazz.classId, $event)
                 "

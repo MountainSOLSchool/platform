@@ -280,9 +280,10 @@ export class ClassesComponent {
         (state) => state.enrollment.userCostsToSelectedClassIds
     );
 
-    private readonly selectedAdditionalOptionIds = this.workflow.selectSignal(
-        (state) => state.enrollment.additionalOptionIds
-    );
+    private readonly selectedAdditionalOptionIdsByClassId =
+        this.workflow.selectSignal(
+            (state) => state.enrollment.additionalOptionIdsByClassId
+        );
 
     filteredClassRowsBySemesters = computed(() => {
         const classRowsBySemesters = this.classRowsBySemesters();
@@ -332,12 +333,13 @@ export class ClassesComponent {
                                       c.id
                                   ),
                                   userCost:
-                                      this.userCostsToSelectedClassIds()[
-                                          c.id
-                                      ] ?? c.cost,
+                                      this.userCostsToSelectedClassIds()[c.id],
+                                  initialCost: c.cost,
                                   additionalCost: (() => {
                                       const additional =
-                                          this.selectedAdditionalOptionIds();
+                                          this.selectedAdditionalOptionIdsByClassId()[
+                                              c.id
+                                          ] ?? [];
                                       return (
                                           (c.additionalOptions ?? [])
                                               .filter((option) =>
@@ -405,17 +407,16 @@ export class ClassesComponent {
                     ...s.enrollment.userCostsToSelectedClassIds,
                     [classSelection.id]: userCost,
                 },
-                additionalOptionIds: selected
-                    ? Array.from(
-                          new Set([
-                              ...s.enrollment.additionalOptionIds,
-                              ...(selectedAdditionalOptionIds ?? []),
-                          ])
-                      )
-                    : s.enrollment.additionalOptionIds.filter(
-                          (id) =>
-                              !(selectedAdditionalOptionIds ?? []).includes(id)
-                      ),
+                additionalOptionIdsByClassId: selected
+                    ? {
+                          ...s.enrollment.additionalOptionIdsByClassId,
+                          [classSelection.id]:
+                              selectedAdditionalOptionIds ?? [],
+                      }
+                    : {
+                          ...s.enrollment.additionalOptionIdsByClassId,
+                          [classSelection.id]: [],
+                      },
             },
         }));
     }
