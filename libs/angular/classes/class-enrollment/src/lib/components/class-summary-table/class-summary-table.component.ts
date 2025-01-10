@@ -34,7 +34,10 @@ export class ClassSummaryTableComponent {
     private readonly _groups = signal(
         new Array<{ id: string; semesterId: string }>()
     );
-    private readonly _userCostsToClassIds = signal<
+    private readonly _finalCostsToClassIds = signal<
+        Record<string, number | undefined> | undefined
+    >(undefined);
+    private readonly _finalCostsToGroupIds = signal<
         Record<string, number | undefined> | undefined
     >(undefined);
     private readonly enrollableSemesters = toSignal(
@@ -85,17 +88,31 @@ export class ClassSummaryTableComponent {
             this._groups.set(groups);
         }
     }
-    @Input() set userCostsToClassIds(
-        userCostsToClassIds:
+    @Input() set finalCostsToClassIds(
+        finalCostsToClassIds:
             | Record<string, number | undefined>
             | null
             | undefined
     ) {
         if (
-            userCostsToClassIds &&
-            userCostsToClassIds !== this._userCostsToClassIds()
+            finalCostsToClassIds &&
+            finalCostsToClassIds !== this._finalCostsToClassIds()
         ) {
-            this._userCostsToClassIds.set(userCostsToClassIds);
+            this._finalCostsToClassIds.set(finalCostsToClassIds);
+        }
+    }
+
+    @Input() set finalCostsToGroupIds(
+        finalCostsToGroupIds:
+            | Record<string, number | undefined>
+            | null
+            | undefined
+    ) {
+        if (
+            finalCostsToGroupIds &&
+            finalCostsToGroupIds !== this._finalCostsToGroupIds()
+        ) {
+            this._finalCostsToGroupIds.set(finalCostsToGroupIds);
         }
     }
 
@@ -124,7 +141,7 @@ export class ClassSummaryTableComponent {
                               'shortDate'
                           )
                         : '',
-                cost: group.cost,
+                cost: this._finalCostsToGroupIds()?.[group.id] ?? group.cost,
             }));
     });
 
@@ -158,7 +175,7 @@ export class ClassSummaryTableComponent {
                               'shortDate'
                           )
                         : '',
-                cost: this._userCostsToClassIds()?.[c.id] ?? c.cost,
+                cost: this._finalCostsToClassIds()?.[c.id] ?? c.cost,
             }));
     });
 

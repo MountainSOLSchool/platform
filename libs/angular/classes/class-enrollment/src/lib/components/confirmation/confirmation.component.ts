@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, JsonPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -46,6 +46,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
         CheckoutComponent,
         ClassSummaryTableComponent,
         DatePipe,
+        JsonPipe,
     ],
     providers: [],
     selector: 'sol-class-confirmation',
@@ -146,10 +147,122 @@ export class ConfirmationComponent {
             : undefined;
     });
 
-    private readonly userCostsToClassIds$ = this.workflow.select(
-        ({ enrollment: { userCostsToSelectedClassIds } }) =>
-            userCostsToSelectedClassIds
-    );
+    private selectedClasses = computed(() => {
+        const enrollment = this.enrollmentSignal();
+        const bySemester = this.bySemester();
+        return bySemester && enrollment
+            ? Object.entries(bySemester)
+                  .flatMap(([semesterId, { classes }]) =>
+                      classes.map((aClass) => ({ semesterId, aClass }))
+                  )
+                  .filter(({ aClass: { id, semesterId } }) =>
+                      enrollment.selectedClasses.some(
+                          (selectedClass) =>
+                              selectedClass.id === id &&
+                              selectedClass.semesterId === semesterId
+                      )
+                  )
+                  .map(({ aClass }) => aClass)
+            : undefined;
+    });
+
+    private selectedGroups = computed(() => {
+        const enrollment = this.enrollmentSignal();
+        const bySemester = this.bySemester();
+        return bySemester && enrollment
+            ? Object.entries(bySemester)
+                  .flatMap(([semesterId, { groups }]) =>
+                      groups.map((group) => ({ semesterId, group }))
+                  )
+                  .filter(({ group: { classes } }) =>
+                      classes.every(
+                          ({ id, semesterId }) =>
+                              !!enrollment.selectedClasses.find(
+                                  (selectedClass) =>
+                                      selectedClass.id === id &&
+                                      selectedClass.semesterId === semesterId
+                              )
+                      )
+                  )
+                  .map(({ group }) => group)
+            : undefined;
+    });
+
+    readonly additionalCostsToClassIds = computed(() => {
+        const selectedClasses = this.selectedClasses();
+        const additionalOptionIdsByClassId = this.workflow.selectSignal(
+            ({ enrollment: { additionalOptionIdsByClassId } }) =>
+                additionalOptionIdsByClassId
+        )();
+        return (selectedClasses ?? []).reduce(
+            (acc, { id, additionalOptions }) => ({
+                ...acc,
+                [id]: additionalOptionIdsByClassId[id]
+                    ? additionalOptionIdsByClassId[id]
+                          .map((id) =>
+                              additionalOptions?.find((o) => o.id === id)
+                          )
+                          .reduce((agg, o) => agg + (o?.cost ?? 0), 0)
+                    : 0,
+            }),
+            {} as Record<string, number>
+        );
+    });
+
+    readonly finalCostsToClassIds = computed(() => {
+        const selectedClasses = this.selectedClasses();
+        const additionalCostsToClassIds = this.additionalCostsToClassIds();
+        const userCostsToSelectedClassIds = this.workflow.selectSignal(
+            ({ enrollment: { userCostsToSelectedClassIds } }) =>
+                userCostsToSelectedClassIds
+        )();
+        return userCostsToSelectedClassIds
+            ? Object.entries(userCostsToSelectedClassIds).reduce(
+                  (acc, [classId, userCost]) => ({
+                      ...acc,
+                      [classId]:
+                          (selectedClasses?.find((c) => c.id === classId)
+                              ?.cost ?? 0) +
+                          (userCost ?? 0) +
+                          (additionalCostsToClassIds[classId] ?? 0),
+                  }),
+                  {}
+              )
+            : undefined;
+    });
+
+    readonly finalCostsToGroupIds = computed(() => {
+        const selectedGroups = this.selectedGroups();
+        const additionalOptionIdsByClassId = this.workflow.selectSignal(
+            ({ enrollment: { additionalOptionIdsByClassId } }) =>
+                additionalOptionIdsByClassId
+        )();
+        return (selectedGroups ?? []).reduce(
+            (acc, { id, classes, cost }) => {
+                return {
+                    ...acc,
+                    [id]: classes.reduce((agg, { id, additionalOptions }) => {
+                        return (
+                            agg +
+                            (additionalOptionIdsByClassId[id]
+                                ? additionalOptionIdsByClassId[id]
+                                      .map((id) =>
+                                          additionalOptions?.find(
+                                              (o) => o.id === id
+                                          )
+                                      )
+                                      .reduce(
+                                          (agg, o) => agg + (o?.cost ?? 0),
+                                          0
+                                      )
+                                : 0)
+                        );
+                    }, cost),
+                };
+            },
+            {} as Record<string, number>
+        );
+    });
 
     readonly viewModel$ = combineLatest([
         this.enrollment$,
@@ -157,7 +270,6 @@ export class ConfirmationComponent {
         this.validDiscountAmounts$,
         this.invalidDiscountCodes$,
         this.workflow.select(({ isLoadingDiscounts }) => isLoadingDiscounts),
-        this.userCostsToClassIds$,
     ]).pipe(
         map(
             ([
@@ -166,14 +278,12 @@ export class ConfirmationComponent {
                 validDiscountAmounts,
                 invalidCodes,
                 isLoadingDiscounts,
-                userCostsToClassIds,
             ]) => ({
                 enrollment,
                 basketCosts,
                 validDiscountAmounts,
                 invalidCodes,
                 isLoadingDiscounts,
-                userCostsToClassIds,
             })
         )
     );

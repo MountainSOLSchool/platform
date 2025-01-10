@@ -87,6 +87,7 @@
             >
                 <sol-class-card
                     [selected]="rowClass.selected"
+                    [showOnlyAddedCost]="rowValue.classes.length > 1"
                     [width]="rowValue.classes.length > 1 ? 'narrower' : 'wider'"
                     [classInfo]="rowClass"
                     (selectedChange)="selectionChanged($event)"

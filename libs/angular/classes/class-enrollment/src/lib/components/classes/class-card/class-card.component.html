@@ -140,10 +140,14 @@
                         <p-button
                             [disabled]="classInfoValue.pausedForEnrollment"
                             [label]="
-                                'Selected ($' +
-                                ((classInfoValue.userCost ??
-                                    classInfoValue.initialCost) +
-                                    classInfoValue.additionalCost) +
+                                'Selected (' +
+                                (showOnlyAddedCost ? '+' : '') +
+                                '$' +
+                                (showOnlyAddedCost
+                                    ? classInfoValue.additionalCost
+                                    : (classInfoValue.userCost ??
+                                          classInfoValue.initialCost) +
+                                      classInfoValue.additionalCost) +
                                 ')'
                             "
                             styleClass="p-button-primary"

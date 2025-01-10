@@ -12,7 +12,8 @@
                 <sol-class-summary-table
                     [classes]="vm.enrollment.selectedClasses"
                     [groups]="selectedClassGroups() ?? []"
-                    [userCostsToClassIds]="vm.userCostsToClassIds"
+                    [finalCostsToClassIds]="finalCostsToClassIds()"
+                    [finalCostsToGroupIds]="finalCostsToGroupIds()"
                 ></sol-class-summary-table>
             </p-fieldset>
         </div>

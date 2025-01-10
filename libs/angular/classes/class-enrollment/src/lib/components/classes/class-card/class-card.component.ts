@@ -77,6 +77,7 @@ export interface ClassCardInfo {
 })
 export class ClassCardComponent {
     @Input() selected = false;
+    @Input() showOnlyAddedCost = false;
     @Input() width: 'wider' | 'narrower' = 'narrower';
     readonly classInfo = input.required<ClassCardInfo>();
 
