@@ -14,6 +14,9 @@
                     [groups]="selectedClassGroups() ?? []"
                     [finalCostsToClassIds]="finalCostsToClassIds()"
                     [finalCostsToGroupIds]="finalCostsToGroupIds()"
+                    [additionalOptionIdsByClassId]="
+                        vm.enrollment.additionalOptionIdsByClassId
+                    "
                 ></sol-class-summary-table>
             </p-fieldset>
         </div>
