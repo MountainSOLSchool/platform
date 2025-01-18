@@ -62,10 +62,7 @@ export const createEnrollmentEmail = onDocumentCreated(
                 0
             );
             const differenceBetweenFinalCostAndOriginalCostWithDiscounts =
-                Math.abs(
-                    enrollmentRecord.finalCost - (classesCost - totalDiscounts)
-                );
-
+                enrollmentRecord.finalCost - (classesCost - totalDiscounts);
             const user = await AuthUtility.getUser(enrollmentRecord.userId);
 
             const styles = `
@@ -152,7 +149,7 @@ export const createEnrollmentEmail = onDocumentCreated(
                                   ? `
                             <tr class="discount-row">
                                 <td colspan="3">Other Adjustments</td>
-                                <td>-$${differenceBetweenFinalCostAndOriginalCostWithDiscounts}</td>
+                                <td>${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0 ? '+' : '-'}$${Math.abs(differenceBetweenFinalCostAndOriginalCostWithDiscounts)}</td>
                             </tr>`
                                   : ''
                           }

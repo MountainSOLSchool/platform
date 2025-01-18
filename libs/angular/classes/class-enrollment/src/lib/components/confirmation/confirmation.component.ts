@@ -220,8 +220,10 @@ export class ConfirmationComponent {
                   (acc, [classId, userCost]) => ({
                       ...acc,
                       [classId]:
-                          (selectedClasses?.find((c) => c.id === classId)
-                              ?.cost ?? 0) + (userCost ?? 0),
+                          userCost ??
+                          selectedClasses?.find((c) => c.id === classId)
+                              ?.cost ??
+                          0,
                   }),
                   {}
               )
