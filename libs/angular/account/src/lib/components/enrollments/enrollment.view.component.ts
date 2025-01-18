@@ -10,10 +10,11 @@ import { CardModule } from 'primeng/card';
     template: `<p-card [header]="enrollment.studentName">
         <p>
             <b>Final cost:</b>
-            {{ enrollment.finalCost | currency }}
+            <br />{{ enrollment.finalCost | currency }} (Includes additional
+            options and discounts)
         </p>
         <p>
-            <b>Date:</b>
+            <b>Date:</b><br />
             {{ enrollment.timestamp._seconds * 1000 | date: 'short' }}
         </p>
         <p>

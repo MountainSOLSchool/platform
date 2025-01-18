@@ -34,29 +34,59 @@ export const createEnrollmentEmail = onDocumentCreated(
                           enrollmentRecord.classIds
                       );
 
-            const classesCost = classes.reduce((total, c) => total + c.cost, 0);
+            const classesWithOptions = classes.map((c) => {
+                const optionDetails =
+                    c.additionalOptions?.filter((option) =>
+                        enrollmentRecord.additionalOptionIdsByClassId[
+                            c.id
+                        ]?.includes(option.id)
+                    ) || [];
+                return {
+                    ...c,
+                    additionalOptions: optionDetails,
+                };
+            });
+            const classesCost = classesWithOptions.reduce((total, c) => {
+                const optionsCost = c.additionalOptions.reduce(
+                    (sum, opt) => sum + (opt.cost || 0),
+                    0
+                );
+                return total + c.cost + optionsCost;
+            }, 0);
+
             const totalDiscounts = enrollmentRecord.discounts.reduce(
                 (total, d) => total + d.amount,
                 0
             );
             const differenceBetweenFinalCostAndOriginalCostWithDiscounts =
-                Math.abs(
-                    enrollmentRecord.finalCost - (classesCost - totalDiscounts)
-                );
-
+                enrollmentRecord.finalCost - (classesCost - totalDiscounts);
             const user = await AuthUtility.getUser(enrollmentRecord.userId);
+
+            const styles = `
+                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+                th { background-color: #f5f5f5; }
+                .indent { padding-left: 20px; color: #666; }
+                .total-row td { font-weight: bold; border-top: 2px solid #333; }
+                .discount-row { color: #2d862d; }
+            `;
 
             await DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
                     to: user.email ?? enrollmentRecord.contactEmail,
                     message: {
-                        subject: `Enrollment confirmation for ${enrollmentRecord.studentName}`,
-                        html: `<p>Thank you for enrolling ${
-                            enrollmentRecord.studentName
-                        } for classes with us!</p>
-                        <p>You can view all of your enrollments here by logging in with the account you created: <a href="https://enrollment.mountainsol.org/account/enrollments">https://enrollment.mountainsol.org/account/enrollments</a>.</p>
-                        <p>Every student is encouraged to wear good hiking shoes and bring the following items in a backpack:
+                        subject: `Class confirmation for ${enrollmentRecord.studentName}`,
+                        html: `
+                        <style>${styles}</style>
+                        <p>Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!</p>
+
+                        <p>You can check out all your enrollments anytime by logging in here: 
+                            <a href="https://enrollment.mountainsol.org/account/enrollments">https://enrollment.mountainsol.org/account/enrollments</a>
+                        </p>
+
+                        <p>Here's a quick reminder of what your student should bring in their backpack:
                         <ul>
                           <li>Water bottle</li>
                           <li>Peanut-free snack</li>
@@ -64,78 +94,70 @@ export const createEnrollmentEmail = onDocumentCreated(
                           <li>Rain jacket</li>
                         </ul>
                         </p>
-                        <p>Please feel free to reach out to your class instructor or reply to this email with any questions!</p>
-                        <p>Below is your receipt for the classes in which they are enrolled:</p>
-                        <table style="text-align: left">
+
+                        <p>Got questions? Just reply to this email or reach out to your instructor directly!</p>
+
+                        <p>Here's your receipt:</p>
+
+                        <table>
                           <thead>
-                          <th>
-                            Class Name
-                          </th>
-                          <th>
-                            Semester
-                          </th>
-                          <th>
-                            Cost
-                          </th>
+                          <tr>
+                            <th>Class</th>
+                            <th>Semester</th>
+                            <th>Details</th>
+                            <th>Cost</th>
+                          </tr>
                           </thead>
                           <tbody>
-                            ${classes
+                            ${classesWithOptions
                                 .map(
-                                    (c) =>
-                                        `<tr>
-                            <td>
-                                ${c.title}
-                            </td>
-                            <td>
-                                ${semesterNamesById[c.semesterId] ?? '--'}
-                            </td>
-                            <td>
-                                $${c.cost}
-                            </td>
+                                    (c) => `
+                            <tr>
+                                <td>${c.title}</td>
+                                <td>${semesterNamesById[c.semesterId] ?? '--'}</td>
+                                <td>Base registration</td>
+                                <td>$${c.cost}</td>
+                            </tr>
+                            ${c.additionalOptions
+                                .map(
+                                    (opt) => `
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td class="indent">+ ${opt.description}</td>
+                                <td>$${opt.cost}</td>
                             </tr>`
                                 )
+                                .join('')}`
+                                )
                                 .join('')}
-                          <tr>
                           ${enrollmentRecord.discounts
                               .map(
-                                  (d) =>
-                                      `<tr>
-                            <td>
-                                ${d.description}
-                            </td>
-                            <td>
-                                -$${d.amount.toFixed(2)}
-                            </td>
-                            </tr>
-                            `
+                                  (d) => `
+                            <tr class="discount-row">
+                                <td colspan="3">${d.description}</td>
+                                <td>-$${d.amount.toFixed(2)}</td>
+                            </tr>`
                               )
                               .join('')}
                           ${
                               differenceBetweenFinalCostAndOriginalCostWithDiscounts >
                               0
-                                  ? `<tr>
-                            <td>
-                            Other Adjustments
-                            </td>
-                            <td>
-                            -$${differenceBetweenFinalCostAndOriginalCostWithDiscounts}
-                            </td>
-                          </tr>`
-                                  : ``
+                                  ? `
+                            <tr class="discount-row">
+                                <td colspan="3">Other Adjustments</td>
+                                <td>${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0 ? '+' : '-'}$${Math.abs(differenceBetweenFinalCostAndOriginalCostWithDiscounts)}</td>
+                            </tr>`
+                                  : ''
                           }
-                          <tr>
-                            <td>
-                              Total
-                            </td>
-                            <td>
-                              $${enrollmentRecord.finalCost.toFixed(2)}
-                            </td>
+                          <tr class="total-row">
+                            <td colspan="3">Total</td>
+                            <td>$${enrollmentRecord.finalCost.toFixed(2)}</td>
                           </tr>
                           </tbody>
                         </table>
-                        <p>Transaction ID: ${
-                            enrollmentRecord.transactionId
-                        }</p>`,
+
+                        <p>Transaction ID: ${enrollmentRecord.transactionId || 'N/A'}</p>`,
                     },
                 });
         }

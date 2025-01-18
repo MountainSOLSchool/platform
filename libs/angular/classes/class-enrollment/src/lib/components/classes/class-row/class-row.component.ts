@@ -1,15 +1,21 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     EventEmitter,
     input,
     Output,
 } from '@angular/core';
 import { CurrencyPipe, NgStyle } from '@angular/common';
 import { ToggleButtonModule } from 'primeng/togglebutton';
-import { RxLet } from '@rx-angular/template/let';
-import { ClassCardComponent } from '../class-card/class-card.component';
+import {
+    ClassCardComponent,
+    ClassCardInfo,
+} from '../class-card/class-card.component';
 import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { BeforeSelectOptionsComponent } from '../before-select-options/before-select-options.component';
 
 interface ClassRow {
     classes: Array<{
@@ -26,17 +32,24 @@ interface ClassRow {
         gradeRangeEnd: number;
         location: string;
         paymentRange?: {
-            lowest?: number;
-            highest?: number;
+            lowest: number;
+            highest: number;
         };
         cost: number;
         instructors: Array<{
             firstName: string;
             lastName: string;
         }>;
-        userCost: number;
         semesterId: string;
         forInformationOnly: boolean;
+        userCost?: number;
+        initialCost: number;
+        additionalCost: number;
+        additionalOptions?: Array<{
+            description: string;
+            cost: number;
+            id: string;
+        }>;
         selected: boolean;
     }>;
     group?: {
@@ -53,11 +66,13 @@ interface ClassRow {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
+        ButtonModule,
         ToggleButtonModule,
-        RxLet,
         ClassCardComponent,
         FormsModule,
         CurrencyPipe,
+        OverlayPanelModule,
+        BeforeSelectOptionsComponent,
     ],
     selector: 'sol-class-row',
     templateUrl: './class-row.component.html',
@@ -69,8 +84,33 @@ export class ClassRowComponent {
     @Output() classSelection = new EventEmitter<{
         classSelection: { id: string; semesterId: string };
         selected: boolean;
+        selectedAdditionalOptionIds?: Array<string>;
         userCost?: number;
     }>();
+
+    getRandomNumber() {
+        return Math.random();
+    }
+
+    readonly beforeSelectOptionsByClass = computed(() => {
+        const classInfo = this.row().classes.map((c) => ({
+            classId: c.id,
+            className: c.title,
+            slidingScale: c.paymentRange
+                ? {
+                      paymentRange: c.paymentRange,
+                      initialCost: c.initialCost,
+                  }
+                : undefined,
+            additionalOptions: c.additionalOptions
+                ? {
+                      options: c.additionalOptions,
+                      selected: [],
+                  }
+                : undefined,
+        }));
+        return classInfo;
+    });
 
     getClassRowSavings(): number {
         const row = this.row();
@@ -88,11 +128,8 @@ export class ClassRowComponent {
 
     rowSelectedChange(selected: boolean) {
         this.row().classes.forEach((c) =>
-            this.classSelection.emit({
-                classSelection: {
-                    id: c.id,
-                    semesterId: c.semesterId,
-                },
+            this.selectionChanged({
+                classSelection: { id: c.id, semesterId: c.semesterId },
                 selected,
             })
         );
@@ -102,7 +139,35 @@ export class ClassRowComponent {
         classSelection: { id: string; semesterId: string };
         selected: boolean;
         userCost?: number;
+        selectedAdditionalOptionIds?: Array<string>;
     }) {
         this.classSelection.emit(event);
+    }
+
+    requiresPromptBeforeSelecting(classesInfo: Array<ClassCardInfo>) {
+        return classesInfo.some((c) => {
+            return !!c.paymentRange || c.additionalOptions?.length;
+        });
+    }
+
+    confirmedExtras(
+        overlayRef: OverlayPanel,
+        optionsConfirmation: {
+            [classId: string]: {
+                userCost?: number;
+                selectedOptionIds?: Array<string>;
+            };
+        }
+    ) {
+        overlayRef.hide();
+        this.row().classes.forEach((c) =>
+            this.selectionChanged({
+                classSelection: { id: c.id, semesterId: c.semesterId },
+                selected: true,
+                userCost: optionsConfirmation[c.id]?.userCost,
+                selectedAdditionalOptionIds:
+                    optionsConfirmation[c.id]?.selectedOptionIds ?? [],
+            })
+        );
     }
 }

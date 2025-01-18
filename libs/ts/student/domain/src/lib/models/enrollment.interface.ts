@@ -11,4 +11,5 @@ export interface Enrollment {
     releaseSignatures: Array<{ name: string; signature: string }>;
     isStudentNew: boolean | undefined;
     isSignedUpForSolsticeEmails: boolean;
+    additionalOptionIdsByClassId: { [classId: string]: Array<string> };
 }

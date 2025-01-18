@@ -280,6 +280,11 @@ export class ClassesComponent {
         (state) => state.enrollment.userCostsToSelectedClassIds
     );
 
+    private readonly selectedAdditionalOptionIdsByClassId =
+        this.workflow.selectSignal(
+            (state) => state.enrollment.additionalOptionIdsByClassId
+        );
+
     filteredClassRowsBySemesters = computed(() => {
         const classRowsBySemesters = this.classRowsBySemesters();
         return classRowsBySemesters
@@ -328,9 +333,24 @@ export class ClassesComponent {
                                       c.id
                                   ),
                                   userCost:
-                                      this.userCostsToSelectedClassIds()[
-                                          c.id
-                                      ] ?? c.cost,
+                                      this.userCostsToSelectedClassIds()[c.id],
+                                  initialCost: c.cost,
+                                  additionalCost: (() => {
+                                      const additional =
+                                          this.selectedAdditionalOptionIdsByClassId()[
+                                              c.id
+                                          ] ?? [];
+                                      return (
+                                          (c.additionalOptions ?? [])
+                                              .filter((option) =>
+                                                  additional.includes(option.id)
+                                              )
+                                              .reduce(
+                                                  (agg, o) => agg + o.cost,
+                                                  0
+                                              ) ?? 0
+                                      );
+                                  })(),
                               })),
                           }));
                           return [semesterId, result] as const;
@@ -360,11 +380,13 @@ export class ClassesComponent {
 
     selectionChanged({
         classSelection,
+        selectedAdditionalOptionIds,
         selected,
         userCost,
     }: {
         classSelection: { id: string; semesterId: string };
         selected: boolean;
+        selectedAdditionalOptionIds?: Array<string>;
         userCost?: number;
     }) {
         this.workflow.patchState((s) => ({
@@ -385,6 +407,16 @@ export class ClassesComponent {
                     ...s.enrollment.userCostsToSelectedClassIds,
                     [classSelection.id]: userCost,
                 },
+                additionalOptionIdsByClassId: selected
+                    ? {
+                          ...s.enrollment.additionalOptionIdsByClassId,
+                          [classSelection.id]:
+                              selectedAdditionalOptionIds ?? [],
+                      }
+                    : {
+                          ...s.enrollment.additionalOptionIdsByClassId,
+                          [classSelection.id]: [],
+                      },
             },
         }));
     }
@@ -395,5 +427,41 @@ export class ClassesComponent {
 
     filterChange(filter: [] | [number, number]) {
         this.gradeFilter.set(filter);
+    }
+
+    trackClassRow(index: number, classRow: ClassRow) {
+        return classRow.group?.id ?? classRow.classes[0].id;
+    }
+
+    getClassRowSavings(classRow: ClassRow) {
+        const classesCost = classRow.classes.reduce(
+            // TODO: cost is a string, but should be a number
+            (agg, aClass) => agg + Number(aClass.cost),
+            0
+        );
+        const groupCost = classRow.group?.cost ?? 0;
+        const savings = classesCost - groupCost;
+        return savings;
+    }
+
+    rowSelectedChange(
+        classRow: ClassRow,
+        selected: boolean,
+        extra?: {
+            classUserCosts: Record<string, number>;
+            selectedAdditionalOptionIds: Array<string>;
+        }
+    ) {
+        classRow.classes.forEach((c) =>
+            this.selectionChanged({
+                classSelection: {
+                    id: c.id,
+                    semesterId: c.semesterId,
+                },
+                selected,
+                selectedAdditionalOptionIds:
+                    extra?.selectedAdditionalOptionIds ?? [],
+            })
+        );
     }
 }

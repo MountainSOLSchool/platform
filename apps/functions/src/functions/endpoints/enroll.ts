@@ -90,12 +90,16 @@ export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .usingStrings(...Braintree.STRING_NAMES)
     .handle<{
-        selectedClasses: Array<{ id: string; semesterId: string }>;
+        selectedClasses: Array<{
+            id: string;
+            semesterId: string;
+        }>;
         student: StudentForm;
         releaseSignatures: Array<{ name: string; signature: string }>;
         discountCodes: Array<string>;
         paymentMethod?: { nonce: string; deviceData: string };
         userCostsToSelectedClassIds: Record<string, number | undefined>;
+        additionalOptionIdsByClassId: { [classId: string]: Array<string> };
     }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
 
@@ -111,6 +115,7 @@ export const enroll = Functions.endpoint
             paymentMethod,
             releaseSignatures,
             userCostsToSelectedClassIds,
+            additionalOptionIdsByClassId,
         } = request.body.data;
 
         if (student?.id) {
@@ -143,11 +148,16 @@ export const enroll = Functions.endpoint
             )
         ).filter((d): d is Discount<unknown> => !!d);
 
+        const additionalOptionIds = Object.values(
+            additionalOptionIdsByClassId
+        ).flat();
+
         const { finalTotal, discountAmounts } =
             EnrollmentUtility.getEnrollmentCost(
                 discounts,
                 classesWithUserCostsApplied,
-                classGroups
+                classGroups,
+                additionalOptionIds
             );
 
         const enrollmentRecord = {
@@ -166,6 +176,7 @@ export const enroll = Functions.endpoint
                 id: c.id,
                 semesterId: c.semesterId,
             })),
+            additionalOptionIdsByClassId,
         };
 
         const studentEnrollmentId = await ClassEnrollmentRepository.create({
@@ -214,15 +225,16 @@ export const enroll = Functions.endpoint
                 relatedId: studentEnrollmentId,
                 studentId: studentRef.id,
                 transactionId: transaction?.id ?? '',
-                status: 'enrolled',
                 releaseSignatures,
+                status: 'enrolled',
             });
 
             await Promise.all(
                 classes.map(async (c) => {
                     await Semester.of(c.semesterId).classes.addStudentToClass(
                         studentRef.id,
-                        c.id
+                        c.id,
+                        additionalOptionIdsByClassId[c.id] ?? []
                     );
                 })
             );
@@ -235,9 +247,9 @@ export const enroll = Functions.endpoint
             await ClassEnrollmentRepository.create({
                 ...enrollmentRecord,
                 relatedId: studentEnrollmentId,
-                status: 'failed',
                 failures: errors?.deepErrors().map((e) => e.message) ?? [],
                 releaseSignatures,
+                status: 'failed',
             });
             response.send({ success, errors: errors?.deepErrors() ?? [] });
         }
