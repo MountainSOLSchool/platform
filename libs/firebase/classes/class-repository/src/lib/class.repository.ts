@@ -81,7 +81,6 @@ export class ClassRepository {
     }
 
     private async convertDboToDomain(dbo: ClassDbo): Promise<SemesterClass> {
-        console.log('converting dbo', dbo.additional_options);
         const domain: Awaited<ReturnType<typeof this.convertDboToDomain>> = {
             title: dbo.name,
             startMs:
