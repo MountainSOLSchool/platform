@@ -211,7 +211,6 @@ export class ConfirmationComponent {
 
     readonly finalCostsToClassIds = computed(() => {
         const selectedClasses = this.selectedClasses();
-        const additionalCostsToClassIds = this.additionalCostsToClassIds();
         const userCostsToSelectedClassIds = this.workflow.selectSignal(
             ({ enrollment: { userCostsToSelectedClassIds } }) =>
                 userCostsToSelectedClassIds
@@ -222,9 +221,7 @@ export class ConfirmationComponent {
                       ...acc,
                       [classId]:
                           (selectedClasses?.find((c) => c.id === classId)
-                              ?.cost ?? 0) +
-                          (userCost ?? 0) +
-                          (additionalCostsToClassIds[classId] ?? 0),
+                              ?.cost ?? 0) + (userCost ?? 0),
                   }),
                   {}
               )

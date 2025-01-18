@@ -1,4 +1,12 @@
 {
     "editor.formatOnSave": true,
-    "workbench.colorCustomizations": {}
+    "workbench.colorCustomizations": {},
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "debug.javascript.autoAttachFilter": "smart",
+    "debug.javascript.terminalOptions": {
+        "skipFiles": [
+            "<node_internals>/**",
+            "${workspaceFolder}/node_modules/**"
+        ]
+    }
 }

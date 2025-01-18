@@ -6,7 +6,6 @@
         [scrollable]="true"
         responsiveLayout="stack"
     >
-        <!-- Header Template -->
         <ng-template pTemplate="header">
             <tr>
                 <th>Name</th>
@@ -16,17 +15,11 @@
             </tr>
         </ng-template>
 
-        <!-- Body Template -->
         <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-            <tr
-                [ttRow]="rowNode"
-                [ngClass]="{ 'option-row': rowData.isOption }"
-            >
+            <tr [ttRow]="rowNode" [ngClass]="{ 'option-row': rowData.isOption }">
                 <td>
-                    @if (!rowData.isOption) {
-                        <p-treeTableToggler
-                            [rowNode]="rowNode"
-                        ></p-treeTableToggler>
+                    @if (!rowData.isOption && (rowNode.children?.length > 0 || rowData.hasChildren)) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
                     }
                     <span [ngClass]="{ 'ml-4': rowData.isOption }">
                         @if (rowData.isOption) {

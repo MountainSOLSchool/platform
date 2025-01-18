@@ -7,6 +7,7 @@ export class ActiveSemesterRepository extends SemesterRepository {
     }
 
     async getId(): Promise<string> {
+        return 'summer2025';
         const activeSemesterDoc = await DatabaseUtility.getDocumentRef(
             `config/activeSemester`
         );

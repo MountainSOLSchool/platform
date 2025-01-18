@@ -20,7 +20,7 @@ export type ClassEnrollmentDbo = {
         name: string;
         signature: string;
     }>;
-    additionalOptionIds: Array<string>;
+    additionalOptionIdsByClassId: Record<string, Array<string>>;
 } & (
     | {
           /** @deprecated Only old records have unqualified classes */

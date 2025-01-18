@@ -141,13 +141,28 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         this.selectEnrollment,
         (enrollment) => enrollment.userCostsToSelectedClassIds
     );
+    private readonly selectAdditionalOptionIdsByClassId = createSelector(
+        this.selectEnrollment,
+        (enrollment) => enrollment.additionalOptionIdsByClassId
+    );
     private readonly selectBasktCostRequest = createSelector(
         this.selectDiscountCodes,
         this.selectSelectedClasses,
         this.selectUserCostsToSelectedClassIds,
-        (codes, classes, userCostsToClassIds) => ({
+        this.selectAdditionalOptionIdsByClassId,
+        (
             codes,
             classes,
+            userCostsToClassIds,
+            selectedAdditionalOptionIdsByClassId
+        ) => ({
+            codes,
+            classes: classes.map(({ id, semesterId }) => ({
+                id,
+                semesterId,
+                additionalOptionIds:
+                    selectedAdditionalOptionIdsByClassId[id] ?? [],
+            })),
             userCostsToClassIds,
         })
     );

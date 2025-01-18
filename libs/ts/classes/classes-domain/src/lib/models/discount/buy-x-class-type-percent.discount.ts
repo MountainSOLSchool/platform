@@ -30,8 +30,9 @@ export class BuyXClassTypePercentDiscount extends ClassesDiscount {
         groups: Array<SemesterClassGroup>;
     }) {
         const hasMinimum =
-            classes.filter((c) => this.classTypes.includes(c.classType))
-                .length >= this.minimum;
+            [...classes, ...groups.flatMap((group) => group.classes)].filter(
+                (c) => this.classTypes.includes(c.classType)
+            ).length >= this.minimum;
         if (hasMinimum) {
             const updatedClasses = classes.map((c) => {
                 return {
