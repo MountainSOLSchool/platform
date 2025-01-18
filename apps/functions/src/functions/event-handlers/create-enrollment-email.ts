@@ -34,21 +34,18 @@ export const createEnrollmentEmail = onDocumentCreated(
                           enrollmentRecord.classIds
                       );
 
-            const classesWithOptions = await Promise.all(
-                classes.map(async (c) => {
-                    const optionDetails =
-                        c.additionalOptions?.filter((option) =>
-                            enrollmentRecord.additionalOptionIdsByClassId[
-                                c.id
-                            ]?.includes(option.id)
-                        ) || [];
-                    return {
-                        ...c,
-                        additionalOptions: optionDetails,
-                    };
-                })
-            );
-
+            const classesWithOptions = classes.map((c) => {
+                const optionDetails =
+                    c.additionalOptions?.filter((option) =>
+                        enrollmentRecord.additionalOptionIdsByClassId[
+                            c.id
+                        ]?.includes(option.id)
+                    ) || [];
+                return {
+                    ...c,
+                    additionalOptions: optionDetails,
+                };
+            });
             const classesCost = classesWithOptions.reduce((total, c) => {
                 const optionsCost = c.additionalOptions.reduce(
                     (sum, opt) => sum + (opt.cost || 0),
