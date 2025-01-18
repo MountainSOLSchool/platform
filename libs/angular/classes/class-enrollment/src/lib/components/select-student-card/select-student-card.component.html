@@ -1,0 +1,57 @@
+<div
+    [ngStyle]="{
+        border: selected() ? '.2rem solid #3c82f7' : '.2rem solid transparent',
+        'border-radius': '6px',
+        'box-sizing': 'border-box',
+        height: 'fit-content'
+    }"
+>
+    <p-card
+        [header]="
+            !!student() ? student()?.name : loading() ? '' : 'New Student'
+        "
+        [style]="{
+            width: '16rem',
+            height: '20rem',
+            margin: 'auto'
+        }"
+    >
+        @if (student()?.birthday) {
+            <ng-template pTemplate="subHeader">
+                <h3>Birthday</h3>
+                <p>{{ student()?.birthday }}</p>
+            </ng-template>
+        }
+        @if (!!loading()) {
+            <div style="display: flex; align-items: center; gap: 10px">
+                <p-progressSpinner
+                    [style]="{ width: '20px', height: '20px' }"
+                ></p-progressSpinner>
+                <p>Loading previously enrolled students...</p>
+            </div>
+        } @else {
+            @if (icon()) {
+                <div class="w-full flex justify-content-center">
+                    <div>
+                        <span
+                            style="font-size: 6rem"
+                            [ngClass]="iconNgClass()"
+                        ></span>
+                    </div>
+                </div>
+            }
+            <ng-template pTemplate="footer">
+                <button
+                    pButton
+                    class="w-full mt-3"
+                    [disabled]="disabled()"
+                    [ngClass]="{
+                        'p-button-outlined': !selected()
+                    }"
+                    [label]="selected() ? 'Selected' : 'Select'"
+                    (click)="clicked.emit()"
+                ></button>
+            </ng-template>
+        }
+    </p-card>
+</div>

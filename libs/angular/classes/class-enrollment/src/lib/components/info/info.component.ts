@@ -42,7 +42,6 @@ import { ClassListService } from '@sol/angular/classes/list';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,

@@ -23,3 +23,7 @@ export { updateEnrollmentDraft } from './endpoints/update-enrollment-draft';
 export { loadEnrollmentDraft } from './endpoints/load-enrollment-draft';
 export { onSuccessfulEnrollDeleteDraft } from './event-handlers/on-successful-enroll-delete-draft';
 export { deleteEnrollmentDraft } from './endpoints/delete-enrollment-draft';
+export { allStudents } from './endpoints/all-students';
+export { fullUnitsAndPaths } from './endpoints/full-units-and-paths';
+export { getCompletedUnits } from './endpoints/get-completed-units';
+export { updateCompletedUnits } from './endpoints/update-completed-units';

@@ -20,7 +20,6 @@ export const testStore = createSlice({
             state.value += action.payload;
         },
         loadedFromBackend: (state, action: { payload: { value: number } }) => {
-            console.log(action);
             state.value = action.payload.value;
         },
         trigger: () => {},

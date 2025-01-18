@@ -6,7 +6,8 @@
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -21,11 +22,11 @@ $portal-warn: mat.m2-define-palette(mat.$m2-red-palette);
 // theming systems such as "color" or "typography".
 $portal-theme: mat.m2-define-light-theme(
     (
-      color: (
-        primary: $portal-primary,
-        accent: $portal-accent,
-        warn: $portal-warn,
-      ),
+        color: (
+            primary: $portal-primary,
+            accent: $portal-accent,
+            warn: $portal-warn,
+        ),
     )
 );
 

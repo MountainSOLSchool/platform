@@ -25,7 +25,7 @@ provider "aws" {
   secret_key = var.AWS_SECRET_ACCESS_KEY
 }
 
-resource "aws_amplify_app" "admin_portal" {
+resource "aws_amplify_app" "student_portal" {
   name       = "student_portal"
   repository = "https://github.com/MountainSOLSchool/platform"
   access_token = var.GITHUB_TOKEN
@@ -44,14 +44,16 @@ resource "aws_amplify_app" "admin_portal" {
     applications:
       - appRoot: apps/student-portal
         frontend:
+          buildPath: /
           phases:
+            preBuild:
+              commands:
+                - npm ci
             build:
               commands:
-                - cd ../../
-                - npm ci
-                - pwd && npx nx run student-portal:build:production
+                - npx nx run student-portal:build:production
           artifacts:
-            baseDirectory: ../../dist/apps/student-portal/.next
+            baseDirectory: dist/apps/student-portal/.next
             files:
               - '**/*'
           cache:
@@ -63,7 +65,7 @@ resource "aws_amplify_app" "admin_portal" {
 }
 
 resource "aws_amplify_branch" "main" {
-  app_id      = aws_amplify_app.admin_portal.id
+  app_id      = aws_amplify_app.student_portal.id
   branch_name = "main"
   enable_auto_build = false
 
@@ -71,7 +73,7 @@ resource "aws_amplify_branch" "main" {
 }
 
 resource "aws_amplify_webhook" "main" {
-  app_id      = aws_amplify_app.admin_portal.id
+  app_id      = aws_amplify_app.student_portal.id
   branch_name = aws_amplify_branch.main.branch_name
   description = "triggermain"
 }

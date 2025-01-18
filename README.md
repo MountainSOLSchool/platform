@@ -30,7 +30,7 @@ The default configuration uses remote addresses for Firebase functions. Run `npx
 
 ### Deployment
 
-`main` is continuously deployed to https://mountain-sol-platform.web.app/
+`main` is continuously deployed to https://enrollment.mountainsol.org/
 
 ## Student Portal (React)
 
@@ -38,4 +38,4 @@ Run the frontend portal with `npx nx run student-portal:serve` and view at http:
 
 ### Deployment
 
-`main` is continuously deployed to https://main.dtpci3w8k8pee.amplifyapp.com/
+`main` is continuously deployed to https://students.mountainsol.org/

@@ -4,7 +4,6 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { ButtonModule } from 'primeng/button';
 
 @Component({
-    standalone: true,
     template: `<p-dialog
         #startOverDialog
         header="Start over?"

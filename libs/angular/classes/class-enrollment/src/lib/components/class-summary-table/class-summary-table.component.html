@@ -1,26 +1,37 @@
 <div>
-    <p-table
+    <p-treeTable
         [value]="classCostSummaryRows() ?? []"
         [tableStyle]="{ width: '100%', 'min-width': '300px' }"
         [loading]="isLoading()"
+        [scrollable]="true"
         responsiveLayout="stack"
-        [breakpoint]="'900px'"
     >
         <ng-template pTemplate="header">
             <tr>
-                <th>Class</th>
+                <th>Name</th>
                 <th>Semester</th>
                 <th>Date</th>
                 <th>Cost</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-row>
-            <tr style="width: 100%; min-width: 300px">
-                <td>{{ row.name }}</td>
-                <td>{{ row.semester }}</td>
-                <td>{{ row.date }}</td>
-                <td>{{ row.cost | currency }}</td>
+
+        <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+            <tr [ttRow]="rowNode" [ngClass]="{ 'option-row': rowData.isOption }">
+                <td>
+                    @if (!rowData.isOption && (rowNode.children?.length > 0 || rowData.hasChildren)) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                    }
+                    <span [ngClass]="{ 'ml-4': rowData.isOption }">
+                        @if (rowData.isOption) {
+                            <i class="pi pi-plus-circle mr-2"></i>
+                        }
+                        {{ rowData.name }}
+                    </span>
+                </td>
+                <td>{{ rowData.semester }}</td>
+                <td>{{ rowData.date }}</td>
+                <td>{{ rowData.cost | currency }}</td>
             </tr>
         </ng-template>
-    </p-table>
+    </p-treeTable>
 </div>

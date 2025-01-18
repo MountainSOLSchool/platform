@@ -1,0 +1,98 @@
+<div
+    style="
+        border-radius: 5px;
+        margin: 2px;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    "
+>
+    @let rowValue = row();
+    @if (rowValue.group) {
+        <div class="group-header">
+            <h3>
+                {{ rowValue.group.name }}
+                @if (getClassRowSavings() !== 0) {
+                    <span style="color: #3c82f7">
+                        (-{{ getClassRowSavings() | currency }}
+                        all-day discount)
+                    </span>
+                }
+            </h3>
+
+            <div
+                style="margin-top: 1rem; margin-bottom: 1rem; margin-left: 1rem"
+            >
+                <p-overlayPanel pAutoFocus #beforeSelectingForm>
+                    @if (beforeSelectingForm.overlayVisible) {
+                        <sol-class-before-select-options-form
+                            [optionsByClass]="beforeSelectOptionsByClass()"
+                            (confirmed)="
+                                confirmedExtras(beforeSelectingForm, $event)
+                            "
+                        ></sol-class-before-select-options-form>
+                    }
+                </p-overlayPanel>
+
+                @let paused = hasPausedClass();
+
+                @if (requiresPromptBeforeSelecting(rowValue.classes)) {
+                    @if (!rowValue.selected) {
+                        <p-button
+                            [disabled]="paused"
+                            label="Select all"
+                            styleClass="p-button-outlined"
+                            icon="pi pi-plus"
+                            (click)="beforeSelectingForm.toggle($event)"
+                        ></p-button>
+                    } @else {
+                        <p-button
+                            [disabled]="paused"
+                            label="Selected all"
+                            styleClass="p-button-primary"
+                            icon="pi pi-check"
+                            (click)="rowSelectedChange(false)"
+                        ></p-button>
+                    }
+                } @else {
+                    <p-toggleButton
+                        [disabled]="paused"
+                        [inputId]="'select' + rowValue.group.id"
+                        [name]="'row_' + rowValue.group.id"
+                        [onIcon]="'pi pi-check'"
+                        [onLabel]="'Selected all'"
+                        [offIcon]="'pi pi-plus'"
+                        [offLabel]="
+                            paused
+                                ? 'One or more classes are full'
+                                : 'Select all'
+                        "
+                        [ngModel]="rowValue.selected"
+                        (ngModelChange)="rowSelectedChange(!rowValue.selected)"
+                    ></p-toggleButton>
+                }
+            </div>
+        </div>
+    }
+    <div style="display: flex; flex-wrap: wrap; gap: 10px">
+        @for (rowClass of rowValue.classes; track rowClass.id) {
+            <div
+                [ngStyle]="{
+                    flex:
+                        rowValue.classes.length > 1
+                            ? '1 0 calc(50% - 40px)'
+                            : '1 0 calc(100% - 40px)',
+                }"
+            >
+                <sol-class-card
+                    [selected]="rowClass.selected"
+                    [showOnlyAddedCost]="rowValue.classes.length > 1"
+                    [width]="rowValue.classes.length > 1 ? 'narrower' : 'wider'"
+                    [classInfo]="rowClass"
+                    (selectedChange)="selectionChanged($event)"
+                ></sol-class-card>
+            </div>
+        }
+    </div>
+</div>

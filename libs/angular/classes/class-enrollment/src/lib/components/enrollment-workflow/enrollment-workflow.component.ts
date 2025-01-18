@@ -41,7 +41,6 @@ import { Dialog } from '@angular/cdk/dialog';
 import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog.component';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         provideComponentStore(EnrollmentWorkflowStore),
@@ -201,6 +200,7 @@ export class ClassEnrollmentComponent {
             enrollment: {
                 selectedClasses: [],
                 userCostsToSelectedClassIds: {},
+                additionalOptionIdsByClassId: {},
                 isSignedUpForSolsticeEmails: false,
                 paymentMethod: {
                     nonce: 'fake-valid-nonce-NOT',

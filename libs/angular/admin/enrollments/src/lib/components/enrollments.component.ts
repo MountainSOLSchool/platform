@@ -10,7 +10,6 @@ import { RippleModule } from 'primeng/ripple';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,

@@ -10,7 +10,6 @@ export const loadUnits = (action$: Observable<Action>) =>
         filter((action) => action.type === requestUnits.type),
         switchMap(() =>
             from(getDocs(collection(db, 'units'))).pipe(
-                //tap((collection) => console.log(collection)),
                 map((collection) =>
                     loadedUnits(
                         collection['_snapshot'].docChanges.map((unit) => {
@@ -22,12 +21,12 @@ export const loadUnits = (action$: Observable<Action>) =>
                                 name: fields.name.stringValue,
                                 category: fields.category.stringValue,
                                 prereqs: fields.prereqs
-                                    ? fields.prereqs.arrayValue.values.map(
+                                    ? fields.prereqs.arrayValue.values?.map(
                                           (e) =>
                                               e.referenceValue
                                                   .match(/\w+$/i)
                                                   .toString()
-                                      )
+                                      ) ?? []
                                     : 'none',
                                 description: fields.description.stringValue,
                             };

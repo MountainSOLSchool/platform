@@ -26,6 +26,13 @@ const MtnMedicUnits = [
     'HHwX56kM8sqwQVAFGEUp',
 ];
 
+const Colors = {
+    locked: '#ade8f4',
+    unlocked: '#48cae4',
+    complete: '#0077b6',
+    text: 'black',
+};
+
 function SmartTreeChart() {
     const dispatch = useDispatch();
 
@@ -45,6 +52,7 @@ function SmartTreeChart() {
     const [completeUnits, setCompleteUnits] = useState([]);
 
     function generateNodes() {
+        const animatedTreePaths = [];
         const treePaths = [];
 
         // MERGE DATA FROM PATHS AND UNITS
@@ -77,7 +85,9 @@ function SmartTreeChart() {
                             (req: string) => !completeUnits.includes(req)
                         )
                     ) {
-                        newUnit.status = 'unlocked';
+                        if (newPath.status !== 'locked') {
+                            newUnit.status = 'unlocked';
+                        }
                     }
                 }
                 newPath.children.push(newUnit);
@@ -95,25 +105,44 @@ function SmartTreeChart() {
                     category = {
                         name: unit['category'],
                         children: [unit],
-                        status: 'locked',
+                        status: (() => {
+                            if (newPath.status === 'locked') {
+                                return 'locked';
+                            } else {
+                                return 'unlocked';
+                            }
+                        })(),
                     };
                     categories.push(category);
                 }
             });
-            // BREAK DOWN CATEGORIES WITH ONLY ONE UNIT
+
+            // ADD GHOST NODES TO OFFSET CATEGORIES WITH ONE UNIT
             categories.forEach((category, index) => {
                 if (category['children'].length === 1) {
-                    categories[index] = category['children'][0];
-                }
-                // CHECK COMPLETION OF REMAINING CATEGORIES
-                else {
-                    if (
-                        !category['children'].find(
-                            (unit) => unit.status !== 'complete'
-                        )
-                    ) {
-                        categories[index].status = 'complete';
+                    // OFFSET UP OR DOWN
+                    if (index >= categories.length / 2) {
+                        category.children.push({
+                            status: 'ghost',
+                        });
+                    } else {
+                        category.children.unshift({
+                            status: 'ghost',
+                        });
                     }
+                }
+            });
+
+            // CHECK COMPLETION OF CATEGORIES
+            categories.forEach((category, index) => {
+                if (
+                    !category['children'].find(
+                        (unit) =>
+                            unit.status !== 'complete' &&
+                            unit.status !== 'ghost'
+                    )
+                ) {
+                    categories[index].status = 'complete';
                 }
             });
             newPath['children'] = categories;
@@ -131,9 +160,11 @@ function SmartTreeChart() {
                 ) {
                     newPath.status = 'complete';
                 }
+                animatedTreePaths.push(newPath);
                 treePaths.push(newPath);
             } else {
                 // INACTIVE PATHS
+                animatedTreePaths.push(newPath);
                 let lockedChildren = [...newPath.children];
                 newPath = Object.assign({}, newPath, {
                     children: [],
@@ -143,19 +174,265 @@ function SmartTreeChart() {
             }
         });
 
-        //console.log("PATHS", treePaths)
-
         const smartTreeData = {
             name: studentName,
             children: treePaths,
         };
 
-        //console.log("tree data => ", smartTreeData)
-        //console.log("units => ", treeUnits)
+        const animatedTreeData = {
+            name: studentName,
+            children: animatedTreePaths,
+        };
 
-        render(smartTreeData);
+        render(animatedTreeData);
     }
 
+    function render(data) {
+        // Specify the charts’ dimensions. The height is variable, depending on the layout.
+        const width = 1200;
+        const marginTop = 20;
+        const marginRight = 50;
+        const marginBottom = 20;
+        const marginLeft = 70;
+
+        // Rows are separated by dx pixels, columns by dy pixels. These names can be counter-intuitive
+        // (dx is a height, and dy a width). This because the tree must be viewed with the root at the
+        // “bottom”, in the data domain. The width of a column is based on the tree’s height.
+        const root = d3.hierarchy(data);
+        const dx = 37.5;
+        const dy = (width - marginRight - marginLeft) / (1 + root.height);
+
+        // Define the tree layout and the shape for links.
+        const tree = d3.tree().nodeSize([dx, dy]);
+        const diagonal = d3
+            .linkHorizontal()
+            .x((d) => (d as any).y)
+            .y((d) => (d as any).x);
+
+        d3.select('.smart-tree-container');
+        d3.selectAll('svg').remove();
+        // Create the SVG container, a layer for the links and a layer for the nodes.
+        const svg = d3
+            .select('.smart-tree-container')
+            .append('svg')
+            .attr('width', width)
+            .attr('height', dx)
+            .attr('viewBox', [-marginLeft, -marginTop, width, dx])
+            .attr(
+                'style',
+                'max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;'
+            );
+
+        const gLink = svg
+            .append('g')
+            .attr('fill', 'none')
+            .attr('stroke', '#555')
+            .attr('stroke-width', 12);
+
+        const gNode = svg
+            .append('g')
+            .attr('cursor', 'pointer')
+            .attr('pointer-events', 'all');
+
+        function update(event, source) {
+            const duration = event?.altKey ? 2500 : 250; // hold the alt key to slow down the transition
+            const nodes = root.descendants().reverse();
+            const links = root.links();
+
+            // Compute the new tree layout.
+            tree(root);
+
+            let left = root;
+            let right = root;
+            root.eachBefore((node) => {
+                if (node.x < left.x) left = node;
+                if (node.x > right.x) right = node;
+            });
+
+            const height = right.x - left.x + marginTop + marginBottom;
+
+            const transition = svg
+                .transition()
+                .duration(duration)
+                .attr('height', height)
+                .attr('viewBox', [
+                    -marginLeft,
+                    left.x - marginTop,
+                    width,
+                    height,
+                ] as any)
+                .tween(
+                    'resize',
+                    window.ResizeObserver
+                        ? null
+                        : () => () => svg.dispatch('toggle')
+                );
+
+            // Update the nodes…
+            const node = gNode
+                .selectAll('g')
+                .data(nodes, (d: { id: string }) => d.id);
+
+            // Enter any new nodes at the parent's previous position.
+            const nodeEnter = node
+                .enter()
+                .append('g')
+                .attr(
+                    'transform',
+                    (d) => `translate(${source.y0},${source.x0})`
+                )
+                .attr('fill-opacity', 0)
+                .attr('stroke-opacity', 0)
+                .on('click', (event, d) => {
+                    d.children = d.children ? null : d['_children'];
+                    update(event, d);
+                });
+
+            nodeEnter
+                .append('circle')
+                .attr('r', 15)
+                .attr('fill', (d: any) => {
+                    switch (d.data.status) {
+                        case 'ghost':
+                            return '#00000000';
+                        case 'locked':
+                            return Colors.locked;
+                        case 'unlocked':
+                            return Colors.unlocked;
+                        case 'complete':
+                            return Colors.complete;
+                        default:
+                            return Colors.unlocked;
+                    }
+                })
+                .attr('stroke-width', 10)
+                .on('click', (e: any) => {
+                    let nodeData = e.target['__data__'].data;
+                    if (nodeData.status === 'ghost') {
+                        return;
+                    }
+                    d3.selectAll('circle').classed('tree-node-selected', false);
+                    // TODO ADD CONDITION FOR DESELCTING BRANCHES
+                    d3.select(e.target).classed('tree-node-selected', true);
+                });
+
+            nodeEnter
+                .append('text')
+                .attr('dy', '.35em')
+                .attr('dy', '0.31em')
+                .attr('x', (d) => (d['_children'] ? -18 : 18))
+                .attr('text-anchor', (d) => (d['_children'] ? 'end' : 'start'))
+                .style('fill', (d: any) => {
+                    switch (d.data.status) {
+                        case 'ghost':
+                            return '#00000000';
+                        default:
+                            return Colors.text;
+                    }
+                })
+                .style('font-weight', '500')
+                .style('font-size', 15)
+                .text((d) => d.data.name);
+
+            // Transition nodes to their new position.
+            const nodeUpdate = node
+                .merge(nodeEnter)
+                .transition(transition)
+                .attr('transform', (d) => `translate(${d.y},${d.x})`)
+                .attr('fill-opacity', 1)
+                .attr('stroke-opacity', 1);
+
+            // Transition exiting nodes to the parent's new position.
+            const nodeExit = node
+                .exit()
+                .transition(transition)
+                .remove()
+                .attr('transform', (d) => `translate(${source.y},${source.x})`)
+                .attr('fill-opacity', 0)
+                .attr('stroke-opacity', 0);
+
+            // Update the links…
+            const link = gLink
+                .selectAll('path')
+                .data(links, (d: { target: { id: string } }) => d.target.id);
+
+            // Enter any new links at the parent's previous position.
+            const linkEnter = link
+                .enter()
+                .append('path')
+                .attr('d', (d) => {
+                    const o = { x: source.x0, y: source.y0 };
+                    return (diagonal as any)({ source: o, target: o });
+                })
+                .attr('stroke-opacity', (d: any) => {
+                    switch (d.target.data.status) {
+                        case 'unlocked':
+                            return 0.4;
+                        case 'locked':
+                            return 0.8;
+                        case 'completed':
+                            return 0.8;
+                        default:
+                            return 0.8;
+                    }
+                })
+                .style('stroke', (d: any) => {
+                    switch (d.target.data.status) {
+                        case 'ghost':
+                            return '#00000000';
+                        case 'locked':
+                            return Colors.locked;
+                        case 'unlocked':
+                            return Colors.unlocked;
+                        case 'complete':
+                            return Colors.complete;
+                        default:
+                            return Colors.unlocked;
+                    }
+                });
+
+            // Transition links to their new position.
+            link.merge(linkEnter)
+                .transition(transition)
+                .attr('d', diagonal as any);
+
+            // Transition exiting nodes to the parent's new position.
+            link.exit()
+                .transition(transition)
+                .remove()
+                .attr('d', (d) => {
+                    const o = { x: source.x, y: source.y };
+                    return (diagonal as any)({ source: o, target: o });
+                });
+
+            // Stash the old positions for transition.
+            root.eachBefore((d) => {
+                d['x0'] = d.x;
+                d['y0'] = d.y;
+            });
+        }
+
+        // Do the first update to the initial configuration of the tree — where a number of nodes
+        // are open (arbitrarily selected as the root, plus nodes with 7 letters).
+        root['x0'] = dy / 2;
+        root['y0'] = 0;
+        root.descendants().forEach((d, i) => {
+            // @ts-ignore mutating id on purpose for now
+            d['id'] = i;
+            d['_children'] = d.children;
+            if (d.data.status) {
+                if (d.data.status === 'locked') {
+                    d.children = null;
+                }
+            }
+        });
+
+        update(null, root);
+
+        return svg.node();
+    }
+
+    /*
     function render(fromData: {
         name: string;
         children: Array<{ name: string; children: Array<{}> }>;
@@ -178,7 +455,7 @@ function SmartTreeChart() {
 
         const margin = { top: 20, right: 350, bottom: 20, left: 80 };
 
-        const chartHeight = nodeCount * 40 - margin.top - margin.bottom;
+        const chartHeight = nodeCount * 60 - margin.top - margin.bottom;
         const chartWidth = 1000 - margin.left - margin.right;
         const treemap = d3.tree().size([chartHeight, chartWidth]);
         let nodes = d3.hierarchy(data, (d: any) => d.children);
@@ -203,6 +480,8 @@ function SmartTreeChart() {
             .attr('class', 'link')
             .style('stroke', (d: any) => {
                 switch (d.data.status) {
+                    case 'ghost':
+                        return '#00000000';
                     case 'unlocked':
                         return '#00aaaa40';
                     case 'complete':
@@ -234,30 +513,41 @@ function SmartTreeChart() {
 
         node.append('circle')
             .attr('r', 15)
-            .style('cursor', 'pointer')
+            .style('cursor', (d: any) => {
+                switch (d.data.status) {
+                    case 'ghost':
+                        return 'default';
+                    default:
+                        return 'pointer';
+                }
+            })
             .style('fill', (d: any) => {
                 switch (d.data.status) {
+                    case 'ghost':
+                        return '#00000000';
                     case 'locked':
                         return '#aaaaaa';
                     case 'unlocked':
                         return '#aaffff';
                     case 'complete':
                         return '#00aaaa';
+                    default:
+                        return '#000000aa';
                 }
             })
             .on('click', (e: any) => {
                 let nodeData = e.target['__data__'].data;
+                if (nodeData.status === 'ghost') {
+                    return;
+                }
                 let path = data.children.find(
                     (path) => path.name === nodeData.name
                 );
-
-                //console.log(nodeData, path)
 
                 data.children = data.children.map((e) => {
                     if (Object.hasOwn(e, 'lockedChildren')) {
                         if (e.name === path.name && e.children.length === 0) {
                             e.children = e['lockedChildren'];
-                            console.log(data);
                         } else {
                             e.children = [];
                         }
@@ -277,10 +567,19 @@ function SmartTreeChart() {
             .attr('x', (d) => (d.children ? -15 : 20))
             .attr('y', (d) => (d.children && d.depth !== 0 ? -15 : 0))
             .style('text-anchor', (d) => (d.children ? 'end' : 'start'))
-            .style('fill', 'black')
+            .style('fill', (d: any) => {
+                switch (d.data.status) {
+                    case 'ghost':
+                        return '#00000000';
+                    default:
+                        return 'black';
+                }
+            })
             .style('font-weight', '500')
             .text((d) => d.data.name);
     }
+    */
+
     useEffect(() => {
         if (paths.length > 0 && units.length > 0) {
             setCompleteUnits(student['completedUnits']);

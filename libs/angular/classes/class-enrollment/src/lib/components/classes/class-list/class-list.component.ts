@@ -21,9 +21,7 @@ import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-wo
 import { CardModule } from 'primeng/card';
 import {
     AsyncPipe,
-    CurrencyPipe,
     DatePipe,
-    KeyValuePipe,
     NgStyle,
     NgTemplateOutlet,
 } from '@angular/common';
@@ -49,16 +47,14 @@ import { AutoFocusModule } from 'primeng/autofocus';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ClassListService } from '@sol/angular/classes/list';
 import {
-    Requested,
     RequestedOperatorsUtility,
     requestStateDirectives,
 } from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { MarkdownComponent } from 'ngx-markdown';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { TabViewModule } from 'primeng/tabview';
-import { ClassCardComponent } from '../class-card/class-card.component';
 import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
+import { ClassRowComponent } from '../class-row/class-row.component';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -68,12 +64,10 @@ interface ClassRow {
 }
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,
         NgStyle,
-        CurrencyPipe,
         CardModule,
         CheckboxModule,
         InputTextModule,
@@ -94,13 +88,11 @@ interface ClassRow {
         SliderModule,
         AutoFocusModule,
         InputNumberModule,
-        MarkdownComponent,
         requestStateDirectives,
-        KeyValuePipe,
         TabViewModule,
-        ClassCardComponent,
         NgTemplateOutlet,
         ClassesSkeletonComponent,
+        ClassRowComponent,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -288,6 +280,11 @@ export class ClassesComponent {
         (state) => state.enrollment.userCostsToSelectedClassIds
     );
 
+    private readonly selectedAdditionalOptionIdsByClassId =
+        this.workflow.selectSignal(
+            (state) => state.enrollment.additionalOptionIdsByClassId
+        );
+
     filteredClassRowsBySemesters = computed(() => {
         const classRowsBySemesters = this.classRowsBySemesters();
         return classRowsBySemesters
@@ -336,9 +333,24 @@ export class ClassesComponent {
                                       c.id
                                   ),
                                   userCost:
-                                      this.userCostsToSelectedClassIds()[
-                                          c.id
-                                      ] ?? c.cost,
+                                      this.userCostsToSelectedClassIds()[c.id],
+                                  initialCost: c.cost,
+                                  additionalCost: (() => {
+                                      const additional =
+                                          this.selectedAdditionalOptionIdsByClassId()[
+                                              c.id
+                                          ] ?? [];
+                                      return (
+                                          (c.additionalOptions ?? [])
+                                              .filter((option) =>
+                                                  additional.includes(option.id)
+                                              )
+                                              .reduce(
+                                                  (agg, o) => agg + o.cost,
+                                                  0
+                                              ) ?? 0
+                                      );
+                                  })(),
                               })),
                           }));
                           return [semesterId, result] as const;
@@ -368,11 +380,13 @@ export class ClassesComponent {
 
     selectionChanged({
         classSelection,
+        selectedAdditionalOptionIds,
         selected,
         userCost,
     }: {
         classSelection: { id: string; semesterId: string };
         selected: boolean;
+        selectedAdditionalOptionIds?: Array<string>;
         userCost?: number;
     }) {
         this.workflow.patchState((s) => ({
@@ -393,6 +407,16 @@ export class ClassesComponent {
                     ...s.enrollment.userCostsToSelectedClassIds,
                     [classSelection.id]: userCost,
                 },
+                additionalOptionIdsByClassId: selected
+                    ? {
+                          ...s.enrollment.additionalOptionIdsByClassId,
+                          [classSelection.id]:
+                              selectedAdditionalOptionIds ?? [],
+                      }
+                    : {
+                          ...s.enrollment.additionalOptionIdsByClassId,
+                          [classSelection.id]: [],
+                      },
             },
         }));
     }
@@ -420,7 +444,14 @@ export class ClassesComponent {
         return savings;
     }
 
-    rowSelectedChange(classRow: ClassRow, selected: boolean) {
+    rowSelectedChange(
+        classRow: ClassRow,
+        selected: boolean,
+        extra?: {
+            classUserCosts: Record<string, number>;
+            selectedAdditionalOptionIds: Array<string>;
+        }
+    ) {
         classRow.classes.forEach((c) =>
             this.selectionChanged({
                 classSelection: {
@@ -428,26 +459,9 @@ export class ClassesComponent {
                     semesterId: c.semesterId,
                 },
                 selected,
+                selectedAdditionalOptionIds:
+                    extra?.selectedAdditionalOptionIds ?? [],
             })
         );
-    }
-
-    hasPausedClass(classRow: ClassRow): boolean {
-        return classRow.classes.some((c) => c.pausedForEnrollment);
-    }
-
-    semesterName(
-        semesterId: string,
-        options: Requested<Array<{ id: string; name: string }>> | undefined
-    ) {
-        return (
-            (Array.isArray(options) &&
-                options?.find((o) => o.id === semesterId)?.name) ||
-            ''
-        );
-    }
-
-    hasGroup(row: object): row is { group: unknown } {
-        return 'group' in row;
     }
 }

@@ -29,7 +29,6 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AsyncPipe, FullCalendarModule, SkeletonModule],
     selector: 'sol-calendar',

@@ -5,7 +5,11 @@ import { Semester } from '@sol/firebase/classes/semester';
 
 export const calculateBasket = Functions.endpoint.handle<{
     codes: Array<string>;
-    classes: Array<{ id: string; semesterId: string }>;
+    classes: Array<{
+        id: string;
+        semesterId: string;
+        additionalOptionIds: Array<string>;
+    }>;
     userCostsToClassIds: Record<string, number | undefined>;
 }>(async (request, response) => {
     const {
@@ -35,9 +39,9 @@ export const calculateBasket = Functions.endpoint.handle<{
         (requestClass) =>
             !groups.some(
                 (group) =>
-                    !group.classes.find(
-                        ({ id: groupClassId }) =>
-                            groupClassId === requestClass.id
+                    group.classes.some((c) => c.id === requestClass.id) &&
+                    group.classes.every((groupClass) =>
+                        requestClasses.some((rc) => rc.id === groupClass.id)
                     )
             )
     );
@@ -76,7 +80,10 @@ export const calculateBasket = Functions.endpoint.handle<{
         EnrollmentUtility.getEnrollmentCost(
             discounts,
             classesWithUserCostsApplied,
-            groups
+            groups,
+            requestClasses.flatMap(
+                ({ additionalOptionIds }) => additionalOptionIds
+            )
         );
     response.send({ discountAmounts, finalTotal, originalTotal });
 });

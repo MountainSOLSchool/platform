@@ -3,7 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { from } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 
-import { FIRE_AUTH } from '@sol/ts/firebase/adapter';
+import { FIRE_AUTH } from '@sol/angular/firebase/adapter';
 
 @NgModule({
     imports: [RouterModule],
