@@ -233,7 +233,8 @@ export const enroll = Functions.endpoint
                 classes.map(async (c) => {
                     await Semester.of(c.semesterId).classes.addStudentToClass(
                         studentRef.id,
-                        c.id
+                        c.id,
+                        additionalOptionIdsByClassId[c.id] ?? []
                     );
                 })
             );

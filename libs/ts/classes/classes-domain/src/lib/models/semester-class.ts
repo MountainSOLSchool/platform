@@ -32,5 +32,6 @@ export interface SemesterClass {
         id: string;
         description: string;
         cost: number;
+        studentsIds?: Array<string>;
     }>;
 }

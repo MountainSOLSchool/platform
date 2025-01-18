@@ -12,11 +12,9 @@ export async function _getSemestersAvailableToEnroll() {
     const otherSemestersAvailableToEnroll =
         await otherSemestersAvailableToEnrollDoc.get();
 
-    // const activeSemesterId: string = activeSemester.data()?.id;
-    // const otherAvailableSemesterIds: Array<string> =
-    //     otherSemestersAvailableToEnroll.data()?.list ?? [];
-    const activeSemesterId = 'summer2025';
-    const otherAvailableSemesterIds: Array<string> = [];
+    const activeSemesterId: string = activeSemester.data()?.id;
+    const otherAvailableSemesterIds: Array<string> =
+        otherSemestersAvailableToEnroll.data()?.list ?? [];
 
     const semesters = await Promise.all(
         [activeSemesterId, ...otherAvailableSemesterIds].map(

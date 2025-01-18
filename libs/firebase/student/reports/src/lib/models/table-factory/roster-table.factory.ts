@@ -14,14 +14,15 @@ export type StudentRecordPropertyNames =
     | 'medications'
     | 'sunscreenBugSpray'
     | 'allergies'
-    | 'okToPhotographAndUseName';
+    | 'okToPhotographAndUseName'
+    | 'additionalOptions';
 
 type TitleArgs = [className: string];
 
 type Metadata = { isImportant: boolean };
 
 export class RosterTableFactory extends TableHtmlFactory<
-    StudentDbEntry,
+    StudentDbEntry & { additionalOptions?: Array<{ description: string }> },
     StudentRecordPropertyNames,
     TitleArgs,
     Metadata
@@ -76,11 +77,19 @@ export class RosterTableFactory extends TableHtmlFactory<
                 title: 'OK to Photograph?',
                 propertyName: 'okToPhotographAndUseName',
             },
+            {
+                title: 'Additional Options',
+                propertyName: 'additionalOptions',
+            },
         ];
     }
 
     protected getRecords(
-        students: Array<StudentDbEntry>
+        students: Array<
+            StudentDbEntry & {
+                additionalOptions?: Array<{ description: string }>;
+            }
+        >
     ): Array<FlatRecord<StudentRecordPropertyNames, Metadata>> {
         return students
             .map((student) => ({
@@ -151,6 +160,12 @@ export class RosterTableFactory extends TableHtmlFactory<
                             ? ', but no name'
                             : ''
                     }`,
+                },
+                additionalOptions: {
+                    value:
+                        student.additionalOptions
+                            ?.map((o) => o.description)
+                            .join(',\n') ?? '',
                 },
             }))
             .sort((a, b) => {
