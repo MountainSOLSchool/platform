@@ -10,8 +10,8 @@ export interface SemesterClass {
     description: string;
     cost: number;
     paymentRange?: {
-        lowest?: number;
-        highest?: number;
+        lowest: number;
+        highest: number;
     };
     location: string;
     instructors: Array<{
@@ -20,12 +20,18 @@ export interface SemesterClass {
     }>;
     dailyTimes: string;
     weekday: string;
-    thumbnailUrl: string;
+    thumbnailUrl?: string;
     enrolledCount: number;
     live: boolean;
     pausedForEnrollment: boolean;
-    // it's an array of Firestore.DocumentReference, but that can't class can't be imported here
-    students: Array<unknown>;
+    studentIds: Array<string>;
     semesterId: string;
     forInformationOnly: boolean;
+    unitIds?: Array<string>;
+    additionalOptions?: Array<{
+        id: string;
+        description: string;
+        cost: number;
+        studentsIds?: Array<string>;
+    }>;
 }

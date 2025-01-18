@@ -14,7 +14,6 @@ import { ToastModule } from 'primeng/toast';
 import { UserService } from '@sol/auth/user';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,

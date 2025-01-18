@@ -71,8 +71,10 @@
                                     selectionChanged({
                                         classSelection: {
                                             id: selectedClass.id,
-                                            semesterId: selectedClass.semesterId
+                                            semesterId:
+                                                selectedClass.semesterId,
                                         },
+                                        selectedAdditionalOptionIds: [],
                                         selected: false
                                     })
                                 "
@@ -96,7 +98,7 @@
                                 color:
                                     selectedSummerClasses().length > 3
                                         ? '#3c82f7'
-                                        : 'black'
+                                        : 'black',
                             }"
                             ><b
                                 >({{ selectedSummerClasses().length }}/4
@@ -107,7 +109,7 @@
                                 )</b
                             ></span
                         >
-                        Use code <b>4SUMMER2024</b> at checkout when you select
+                        Use code <b>4SUMMER2025</b> at checkout when you select
                         4 summer camps to get 10% off!
                     </p>
                 }
@@ -154,134 +156,12 @@
                                         ];
                                         track row.index
                                     ) {
-                                        <div
-                                            style="
-                                                border-radius: 5px;
-                                                margin: 2px;
-                                                padding: 5px;
-                                                display: flex;
-                                                flex-wrap: wrap;
-                                                width: 100%;
+                                        <sol-class-row
+                                            [row]="row"
+                                            (classSelection)="
+                                                selectionChanged($event)
                                             "
-                                        >
-                                            @if (hasGroup(row)) {
-                                                <div>
-                                                    <h3>
-                                                        {{ row.group.name }}
-                                                        @if (
-                                                            getClassRowSavings(
-                                                                row
-                                                            ) !== 0
-                                                        ) {
-                                                            <span
-                                                                style="
-                                                                    color: #3c82f7;
-                                                                "
-                                                            >
-                                                                (-{{
-                                                                    getClassRowSavings(
-                                                                        row
-                                                                    ) | currency
-                                                                }}
-                                                                all-day
-                                                                discount)
-                                                            </span>
-                                                        }
-                                                    </h3>
-
-                                                    <div
-                                                        style="
-                                                            margin-top: 1rem;
-                                                            margin-bottom: 1rem;
-                                                            margin-left: 1rem;
-                                                        "
-                                                    >
-                                                        <p-toggleButton
-                                                            *rxLet="
-                                                                hasPausedClass(
-                                                                    row
-                                                                );
-                                                                let paused
-                                                            "
-                                                            [disabled]="paused"
-                                                            [inputId]="
-                                                                'select' +
-                                                                row.group.id
-                                                            "
-                                                            [name]="
-                                                                'row_' +
-                                                                row.group.id
-                                                            "
-                                                            [onIcon]="
-                                                                'pi pi-check'
-                                                            "
-                                                            [onLabel]="
-                                                                'Selected all-day'
-                                                            "
-                                                            [offIcon]="
-                                                                'pi pi-plus'
-                                                            "
-                                                            [offLabel]="
-                                                                paused
-                                                                    ? 'One or more classes are full'
-                                                                    : 'Select all-day'
-                                                            "
-                                                            [ngModel]="
-                                                                row.selected
-                                                            "
-                                                            (ngModelChange)="
-                                                                rowSelectedChange(
-                                                                    row,
-                                                                    !row.selected
-                                                                )
-                                                            "
-                                                        ></p-toggleButton>
-                                                    </div>
-                                                </div>
-                                            }
-                                            <div
-                                                style="
-                                                    display: flex;
-                                                    flex-wrap: wrap;
-                                                    gap: 10px;
-                                                "
-                                            >
-                                                @for (
-                                                    rowClass of row.classes;
-                                                    track rowClass.id
-                                                ) {
-                                                    <div
-                                                        [ngStyle]="{
-                                                            flex:
-                                                                row.classes
-                                                                    .length > 1
-                                                                    ? '1 0 calc(50% - 40px)'
-                                                                    : '1 0 calc(100% - 40px)'
-                                                        }"
-                                                    >
-                                                        <sol-class-card
-                                                            [selected]="
-                                                                rowClass.selected
-                                                            "
-                                                            [width]="
-                                                                row.classes
-                                                                    .length > 1
-                                                                    ? 'narrower'
-                                                                    : 'wider'
-                                                            "
-                                                            [classInfo]="
-                                                                rowClass
-                                                            "
-                                                            (selectedChange)="
-                                                                selectionChanged(
-                                                                    $event
-                                                                )
-                                                            "
-                                                        ></sol-class-card>
-                                                    </div>
-                                                }
-                                            </div>
-                                        </div>
+                                        ></sol-class-row>
                                     }
                                 } @else {
                                     There are no classes for the current search.

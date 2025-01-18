@@ -1,48 +1,57 @@
 {
-    "name": "functions",
-    "$schema": "../../node_modules/nx/schemas/project-schema.json",
-    "sourceRoot": "apps/functions/src",
-    "projectType": "application",
-    "targets": {
-        "build": {
-            "executor": "@nx/esbuild:esbuild",
-            "outputs": ["{options.outputPath}"],
-            "options": {
-                "outputPath": "dist/apps/functions",
-                "main": "apps/functions/src/main.ts",
-                "tsConfig": "apps/functions/tsconfig.app.json",
-                "generatePackageJson": true,
-                "platform": "node",
-                "bundle": true,
-                "thirdParty": false,
-                "dependenciesFieldType": "dependencies",
-                "target": "node16",
-                "format": ["cjs"],
-                "esbuildOptions": {
-                    "logLevel": "info"
-                }
-            }
-        },
-        "serve": {
-            "executor": "nx:run-commands",
-            "options": {
-                "commands": [
-                    "npx nx run functions:build --watch",
-                    "firebase serve --only functions --project=prod --port=5001"
-                ]
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/apps/functions"],
-            "options": {
-                "jestConfig": "apps/functions/jest.config.ts"
-            }
+  "name": "functions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/functions/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/apps/functions",
+        "main": "apps/functions/src/main.ts",
+        "tsConfig": "apps/functions/tsconfig.app.json",
+        "generatePackageJson": true,
+        "platform": "node",
+        "bundle": true,
+        "thirdParty": false,
+        "dependenciesFieldType": "dependencies",
+        "target": "node16",
+        "format": [
+          "cjs"
+        ],
+        "esbuildOptions": {
+          "sourcemap": true,
+          "logLevel": "info"
         }
+      }
     },
-    "tags": []
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run functions:build --watch",
+          "firebase serve --only functions --project=prod --port=5001"
+        ]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/apps/functions"
+      ],
+      "options": {
+        "jestConfig": "apps/functions/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
 }

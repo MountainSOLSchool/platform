@@ -5,6 +5,7 @@ import {
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signOut,
+    onAuthStateChanged,
 } from 'firebase/auth';
 
 let _solAuthClient:
@@ -17,6 +18,7 @@ export const getSolAuthClient = () => {
         sendPasswordResetEmail,
         signInWithEmailAndPassword,
         signOut,
+        onAuthStateChanged,
     });
     return _solAuthClient;
 };

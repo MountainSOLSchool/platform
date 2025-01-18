@@ -15,7 +15,6 @@ import { MenuModule } from 'primeng/menu';
 import { map, Observable } from 'rxjs';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,

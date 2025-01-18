@@ -1,0 +1,36 @@
+<div>Sliding Scale Cost</div>
+<div style="margin-top: 1rem; margin-bottom: 1rem; display: flex">
+    @let paymentRangeValue = paymentRange();
+    @let userCostValue = userCost();
+    <p-button
+        icon="pi pi-minus"
+        styleClass="p-button-outlined"
+        [disabled]="userCostValue <= paymentRangeValue.lowest"
+        (onClick)="customCostSelected(userCostValue - 5)"
+    ></p-button>
+    <div>
+        <p-inputNumber
+            mode="currency"
+            currency="USD"
+            [min]="paymentRangeValue.lowest"
+            [max]="paymentRangeValue.highest"
+            [ngModel]="userCostValue"
+            (ngModelChange)="customCostSelected($event)"
+            class="w-full"
+        />
+        <p-slider
+            [step]="5"
+            [min]="paymentRangeValue.lowest"
+            [max]="paymentRangeValue.highest"
+            [ngModel]="userCostValue"
+            (ngModelChange)="customCostSelected($event)"
+            class="w-full"
+        ></p-slider>
+    </div>
+    <p-button
+        icon="pi pi-plus"
+        styleClass="p-button-outlined"
+        [disabled]="userCostValue >= paymentRangeValue.highest"
+        (onClick)="customCostSelected(userCostValue + 5)"
+    ></p-button>
+</div>

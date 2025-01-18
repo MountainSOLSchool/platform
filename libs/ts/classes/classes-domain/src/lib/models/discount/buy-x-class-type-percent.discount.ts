@@ -1,6 +1,6 @@
 import { SemesterClass } from '../semester-class';
 import { SemesterClassGroup } from '../semester-class-group';
-import { ClassesDiscount } from './classes-discount';
+import { ClassesDiscount } from './classes-discount.abstract';
 
 /**
  * Discounts the cost of every class by a percent when there are X or more classes of the same type
@@ -30,8 +30,9 @@ export class BuyXClassTypePercentDiscount extends ClassesDiscount {
         groups: Array<SemesterClassGroup>;
     }) {
         const hasMinimum =
-            classes.filter((c) => this.classTypes.includes(c.classType))
-                .length >= this.minimum;
+            [...classes, ...groups.flatMap((group) => group.classes)].filter(
+                (c) => this.classTypes.includes(c.classType)
+            ).length >= this.minimum;
         if (hasMinimum) {
             const updatedClasses = classes.map((c) => {
                 return {

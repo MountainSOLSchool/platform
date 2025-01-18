@@ -4,7 +4,8 @@ import {
     httpsCallable,
 } from 'firebase/functions';
 import { StudentDbEntry } from '@sol/student/domain';
-import { UnitDbEntry } from '@sol/classes/domain';
+import { SemesterClass, UnitDbEntry } from '@sol/classes/domain';
+import { Path } from '../models/path.type';
 
 let _functions: ReturnType<typeof getFunctions> | undefined;
 
@@ -16,41 +17,58 @@ export class FirebaseFunctions {
         return _functions;
     }
 
-    static getAllStudents(
+    static async getSemesters(): Promise<Array<{ name: string; id: string }>> {
+        const getSemestersFn = httpsCallable<
+            void,
+            {
+                semesters: Array<{ name: string; id: string }>;
+                currentSemesterId: string;
+            }
+        >(this.functions, 'historicalSemesters');
+        const result = await getSemestersFn();
+        return result.data.semesters;
+    }
+
+    static async getClassesForSemester(
+        semesterId: string
+    ): Promise<Array<SemesterClass>> {
+        const getClassesForSemesterFn = httpsCallable<
+            { query: { semesterId: string } },
+            {
+                classes: Array<SemesterClass>;
+            }
+        >(this.functions, 'classes');
+        const result = await getClassesForSemesterFn({ query: { semesterId } });
+        return result.data.classes;
+    }
+
+    static async getAllStudents(
         fields: Array<keyof StudentDbEntry>
     ): Promise<Array<StudentDbEntry>> {
         const allStudentsFn = httpsCallable<
             { fields: Array<keyof StudentDbEntry> },
             { students: Array<StudentDbEntry> }
         >(this.functions, 'allStudents');
-        return allStudentsFn({ fields }).then((result) => result.data.students);
+        const result = await allStudentsFn({ fields });
+        return result.data.students;
     }
 
-    static getFullUnitsAndPaths(): Promise<{
-        paths: Array<{
-            id: string;
-            name: string;
-            description: string;
-            unitIds: Array<string>;
-        }>;
+    static async getFullUnitsAndPaths(): Promise<{
+        paths: Array<Path>;
         units: Record<string, UnitDbEntry>;
     }> {
         const getPathsFn = httpsCallable<
             void,
             {
-                paths: Array<{
-                    id: string;
-                    name: string;
-                    description: string;
-                    unitIds: Array<string>;
-                }>;
+                paths: Array<Path>;
                 units: Record<string, UnitDbEntry>;
             }
         >(this.functions, 'fullUnitsAndPaths');
-        return getPathsFn().then((result) => result.data);
+        const result = await getPathsFn();
+        return result.data;
     }
 
-    static updateCompletedUnits(
+    static async updateCompletedUnits(
         studentId: string,
         completedUnitIds: Array<string>
     ): Promise<void> {
@@ -58,21 +76,21 @@ export class FirebaseFunctions {
             { studentId: string; completedUnitIds: Array<string> },
             void
         >(this.functions, 'updateCompletedUnits');
-        return updateCompletedUnitsFn({ studentId, completedUnitIds }).then(
-            () => undefined
-        );
+        await updateCompletedUnitsFn({ studentId, completedUnitIds });
+        return undefined;
     }
 
-    static getCompletedUnitIds(studentId: string): Promise<Array<string>> {
+    static async getCompletedUnitIds(
+        studentId: string
+    ): Promise<Array<string>> {
         const getCompletedUnitsFn = httpsCallable<
             { studentId: string },
             {
                 completedUnitIds: Array<string>;
             }
         >(this.functions, 'getCompletedUnits');
-        return getCompletedUnitsFn({ studentId }).then(
-            (result) => result.data.completedUnitIds
-        );
+        const result = await getCompletedUnitsFn({ studentId });
+        return result.data.completedUnitIds;
     }
 }
 

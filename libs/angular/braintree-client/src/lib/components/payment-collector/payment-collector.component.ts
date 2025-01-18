@@ -22,7 +22,6 @@ export type PaymentCollector = {
 };
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AsyncPipe, SkeletonModule],
     selector: 'sol-payment-collector',

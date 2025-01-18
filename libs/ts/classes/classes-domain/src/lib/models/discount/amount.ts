@@ -1,4 +1,4 @@
-import { BasketDiscount } from './basket-discount';
+import { BasketDiscount } from './basket-discount.abstract';
 
 export class AmountDiscount extends BasketDiscount {
     override type = 'amount';

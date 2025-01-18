@@ -9,11 +9,20 @@ async function getClassRosterTable(classId: string, semesterId: string) {
         SpecificSemesterRepository.of(semesterId)
     ).getInClass(classId);
 
-    const className = await Semester.of(semesterId)
-        .classes.get(classId)
-        .then((c) => c.title);
+    const theClass = await Semester.of(semesterId).classes.get(classId);
 
-    return new RosterTableFactory().build(students, [className]);
+    const className = theClass.title;
+
+    const studentsWithAdditionalOptions = students.map((student) => ({
+        ...student,
+        additionalOptions: theClass.additionalOptions?.filter((option) =>
+            option.studentsIds?.includes(student.id)
+        ),
+    }));
+
+    return new RosterTableFactory().build(studentsWithAdditionalOptions, [
+        className,
+    ]);
 }
 
 export const roster = Functions.endpoint

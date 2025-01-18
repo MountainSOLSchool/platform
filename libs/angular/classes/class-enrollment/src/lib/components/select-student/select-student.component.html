@@ -1,10 +1,6 @@
 <ng-container *rxLet="viewModel$; let vm">
-    <div
-        *rxIf="!vm.showAsReadonlyBlock; else readonlyExplanation"
-        style="margin-bottom: 2rem"
-    >
-        Select whether to enroll a new student or a student which you've
-        previously enrolled on this portal.
+    <div *rxIf="!vm.showAsReadonlyBlock; else readonlyExplanation">
+        Select a student to enroll.
     </div>
     <ng-template #readonlyExplanation>
         <div style="margin-bottom: 1rem">
@@ -18,63 +14,28 @@
             (click)="startOverIntent()"
         ></button>
     </ng-template>
-    <div class="flex flex-column gap-3">
-        <div class="field-checkbox">
-            <p-radioButton
-                inputId="previousStudent"
-                name="studentSelection"
-                value="previous"
-                [ngModel]="vm.selectedStudentType"
+    <div class="mt-4 flex flex-wrap gap-3">
+        @if (vm.students === undefined) {
+            <sol-student-selection-card
                 [disabled]="vm.showAsReadonlyBlock"
-                (onClick)="selectedStudentType($event.value)"
-            ></p-radioButton>
-            <label for="previousStudent" class="ml-2"
-                >Previously Enrolled Student</label
-            >
-        </div>
-        <ng-container *rxIf="vm.selectedStudentType === 'previous'">
-            <div
-                style="margin-top: -0.5rem; margin-bottom: 1rem"
-                *rxIf="vm.students !== undefined; else skeleton"
-            >
-                <p-dropdown
-                    *rxIf="vm.students.length > 0; else noStudents"
-                    [options]="vm.students"
-                    placeholder="Select a student"
-                    optionLabel="name"
-                    optionValue="id"
-                    [ngModel]="vm.selectedStudentId"
-                    [showClear]="true"
+                [loading]="true"
+            ></sol-student-selection-card>
+        } @else {
+            @for (student of vm.students; track student) {
+                <sol-student-selection-card
+                    [student]="student"
+                    [selected]="student.id === vm.selectedStudentId"
                     [disabled]="vm.showAsReadonlyBlock"
-                    (onChange)="selectedStudent($event.value)"
-                ></p-dropdown>
-                <ng-template #noStudents
-                    ><div>
-                        There were no previous student enrollments found for
-                        your account.
-                    </div></ng-template
-                >
-            </div>
-        </ng-container>
-        <ng-template #skeleton
-            ><div style="display: flex; align-items: center; gap: 10px">
-                <p-progressSpinner
-                    [style]="{ width: '20px', height: '20px' }"
-                ></p-progressSpinner>
-                <p>Loading students...</p>
-            </div>
-        </ng-template>
-        <div class="field-checkbox" style="margin-top: 0.5rem">
-            <p-radioButton
-                inputId="newStudent"
-                name="studentSelection"
-                value="new"
-                [ngModel]="vm.selectedStudentType"
-                [disabled]="vm.showAsReadonlyBlock"
-                (onClick)="selectedStudentType($event.value)"
-            ></p-radioButton>
-            <label for="newStudent" class="ml-2">New Student</label>
-        </div>
+                    (clicked)="selectedStudent(student.id)"
+                ></sol-student-selection-card>
+            }
+        }
+        <sol-student-selection-card
+            [disabled]="vm.showAsReadonlyBlock"
+            [selected]="vm.selectedStudentType === 'new'"
+            icon="pi-user-plus"
+            (clicked)="selectedStudentType('new')"
+        ></sol-student-selection-card>
     </div>
 </ng-container>
 

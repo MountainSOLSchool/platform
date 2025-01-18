@@ -1,27 +1,27 @@
 'use client';
 import { Dropdown } from 'primereact/dropdown';
-import { useState } from 'react';
 
-export function StudentSelectionTool(props: {
+export function StudentSelectionDropdown(props: {
+    selectedStudentId: string;
     students: Array<{ displayName: string; studentId: string }>;
     loading: boolean;
+    disabled?: boolean;
     onSelected: (studentId: string) => void;
 }) {
-    const [selectedStudent, setSelectedStudent] = useState('');
-
     return (
         <>
             <Dropdown
                 filter
+                filterInputAutoFocus={true}
+                disabled={props.disabled}
                 loading={props.loading}
                 placeholder="Select a student..."
                 options={props.students}
                 optionLabel="displayName"
                 optionValue="studentId"
-                value={selectedStudent}
+                value={props.selectedStudentId}
                 onChange={(e) => {
                     if (e.value != '') {
-                        setSelectedStudent(e.value);
                         props.onSelected(e.value);
                     }
                 }}
@@ -30,4 +30,4 @@ export function StudentSelectionTool(props: {
     );
 }
 
-export default StudentSelectionTool;
+export default StudentSelectionDropdown;

@@ -14,7 +14,6 @@ import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         AsyncPipe,
         ButtonModule,

@@ -19,7 +19,6 @@ import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { UserService } from '@sol/auth/user';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         PaymentCollectorComponent,

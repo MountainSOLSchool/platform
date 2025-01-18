@@ -1,5 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { Requested, RequestState } from '@sol/angular/request';
+import {
+    Requested,
+    RequestedOperatorsUtility,
+    RequestState,
+} from '@sol/angular/request';
 import { catchError, from, map, Observable, of, startWith } from 'rxjs';
 import { FIRE_FUNCTIONS } from '@sol/angular/firebase/adapter';
 
@@ -18,6 +22,12 @@ export class FirebaseFunctionsService {
             map(({ data }) => data as T),
             catchError(() => of(RequestState.Error)),
             startWith(RequestState.Loading)
+        );
+    }
+
+    public callFn<T>(resourcePath: string, request?: unknown): Observable<T> {
+        return this.call<T>(resourcePath, request).pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded()
         );
     }
 }

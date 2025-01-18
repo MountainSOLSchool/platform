@@ -1,14 +1,20 @@
 import {
     BasketDiscount,
     isBasketDiscount,
-} from '../models/discount/basket-discount';
+} from '../models/discount/basket-discount.abstract';
 import {
     ClassesDiscount,
     isClassesDiscount,
-} from '../models/discount/classes-discount';
+} from '../models/discount/classes-discount.abstract';
 import { Discount } from '../models/discount/discount';
 import { SemesterClass } from '../models/semester-class';
 import { SemesterClassGroup } from '../models/semester-class-group';
+
+export type EnrollmentCostResult = {
+    finalTotal: number;
+    discountAmounts: Array<{ code: string; amount: number }>;
+    originalTotal: number;
+};
 
 export class EnrollmentUtility {
     static applyUserCosts(
@@ -38,8 +44,9 @@ export class EnrollmentUtility {
     static getEnrollmentCost(
         discounts: Discount<unknown>[],
         classes: SemesterClass[],
-        classGroups: Awaited<SemesterClassGroup>[]
-    ) {
+        classGroups: SemesterClassGroup[],
+        additionalOptionIds: Array<string>
+    ): EnrollmentCostResult {
         const activeDiscounts = discounts.filter((d) => d.active);
 
         const classesDiscounts = activeDiscounts.filter(
@@ -78,6 +85,12 @@ export class EnrollmentUtility {
             ]
         );
 
+        const additionalCosts = additionalOptionIds.flatMap((id) =>
+            [...classes, ...classGroups.flatMap((cg) => cg.classes)].flatMap(
+                (c) => c.additionalOptions?.find((o) => o.id === id)?.cost ?? 0
+            )
+        );
+
         const basketDiscounts = activeDiscounts.filter(
             (d): d is BasketDiscount => isBasketDiscount(d)
         );
@@ -85,14 +98,21 @@ export class EnrollmentUtility {
         const classIdsOfClassesInGroups = classGroups.flatMap((g) =>
             g.classes.map((c) => c.id)
         );
-        const classesNotInGroups = updatedClasses.filter(
+        const updatedClassesNotInGroups = updatedClasses.filter(
             (c) => !classIdsOfClassesInGroups.includes(c.id)
         );
 
-        const basketTotal = [...classesNotInGroups, ...updatedGroups].reduce(
-            (total, { cost }) => total + (cost ?? 0),
+        const classesCostsTotal = [
+            ...updatedClassesNotInGroups,
+            ...updatedGroups,
+        ].reduce((total, { cost }) => total + (cost ?? 0), 0);
+
+        const additionalCostsTotal = additionalCosts.reduce(
+            (total, cost) => total + cost,
             0
         );
+
+        const basketTotal = classesCostsTotal + additionalCostsTotal;
 
         const [finalTotal, basketDiscountAmounts] = basketDiscounts.reduce(
             ([updated, amounts], discount) => {
@@ -111,20 +131,25 @@ export class EnrollmentUtility {
             ] satisfies [number, Array<{ code: string; amount: number }>]
         );
 
-        const classGroupsTotal = classGroups.reduce(
+        const originalClassGroupsTotal = classGroups.reduce(
             (total, { cost }) => total + (cost ?? 0),
             0
         );
-        const classesNotInGroupsTotal = classesNotInGroups.reduce(
-            (total, { cost }) => total + (cost ?? 0),
-            0
+        const originalClassesNotInGroups = classes.filter(
+            (c) => !classIdsOfClassesInGroups.includes(c.id)
         );
+        const originalClassesNotInGroupsTotal =
+            originalClassesNotInGroups.reduce(
+                (total, { cost }) => total + (cost ?? 0),
+                0
+            );
 
-        const originalTotal = classGroupsTotal + classesNotInGroupsTotal;
+        const originalTotal =
+            originalClassGroupsTotal +
+            originalClassesNotInGroupsTotal +
+            additionalCostsTotal;
 
         return {
-            updatedClasses,
-            updatedGroups,
             finalTotal,
             discountAmounts: [
                 ...classDiscountAmounts,

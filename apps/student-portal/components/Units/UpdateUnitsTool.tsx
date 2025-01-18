@@ -1,6 +1,12 @@
 import React from 'react';
 import { Checkbox } from 'primereact/checkbox';
 import { TabView, TabPanel } from 'primereact/tabview';
+import { PathElective } from 'apps/student-portal/models/path-elective.type';
+import { Card } from 'primereact/card';
+import { Tooltip } from 'primereact/tooltip';
+import UpdateStudentUnitsChanges from './UpdateStudentUnitsChanges';
+import { useSelector } from 'react-redux';
+import { selectUnitNameAndCompletionChange } from './UnitsStore';
 
 // TODO: the styling classes are haphazardly applied here
 export function UpdateUnitsTool(props: {
@@ -13,7 +19,12 @@ export function UpdateUnitsTool(props: {
             category: string;
         };
     };
-    paths: Array<{ name: string; unitIds: Array<string> }>;
+    paths: Array<{
+        name: string;
+        unitIds: Array<string>;
+        electives: Array<PathElective>;
+    }>;
+    selectedClassUnitIds?: Array<string>;
     onUnitsChanged: (changedUnit: {
         unitId: string;
         isCompleted: boolean;
@@ -32,6 +43,130 @@ export function UpdateUnitsTool(props: {
             Array<{ id: string; name: string; description: string }>
         >
     );
+
+    const getFilteredUnits = (classOnly: boolean) => {
+        if (!classOnly || !props.selectedClassUnitIds) {
+            return props.units;
+        }
+        return Object.fromEntries(
+            Object.entries(props.units).filter(([unitId]) =>
+                props.selectedClassUnitIds?.includes(unitId)
+            )
+        );
+    };
+
+    const renderPathContent = (units: typeof props.units) => {
+        const sortedPaths = props.paths.concat().sort((a, b) => {
+            if (a.name === 'Ranger') return -1;
+            return 0;
+        });
+
+        return (
+            <div className="space-y-8">
+                {sortedPaths
+                    .filter((path) =>
+                        path.unitIds.some((unitId) => !!units[unitId])
+                    )
+                    .map((path) => (
+                        <Card
+                            className="mb-4"
+                            key={path.name}
+                            title={path.name}
+                        >
+                            <div className="border rounded-lg">
+                                <div>
+                                    {path.unitIds
+                                        .concat()
+                                        .filter((unitId) => !!units[unitId])
+                                        .sort((a, b) => {
+                                            return units[a]?.name.localeCompare(
+                                                units[b]?.name
+                                            );
+                                        })
+                                        .map((unitId) => (
+                                            <UnitCheckboxWithTooltip
+                                                key={`${path.name}-${unitId}`}
+                                                unitId={unitId}
+                                                name={units[unitId]?.name ?? ''}
+                                                description={
+                                                    units[unitId]
+                                                        ?.description ?? ''
+                                                }
+                                                isCompleted={
+                                                    props.isCompletedByUnitId[
+                                                        unitId
+                                                    ] ?? false
+                                                }
+                                                onToggle={(
+                                                    unitId,
+                                                    isCompleted
+                                                ) =>
+                                                    props.onUnitsChanged({
+                                                        unitId,
+                                                        isCompleted,
+                                                    })
+                                                }
+                                            />
+                                        ))}
+                                </div>
+                                {path.electives
+                                    .filter((elective) =>
+                                        elective.unitIds.some(
+                                            (unitId) => !!units[unitId]
+                                        )
+                                    )
+                                    .map((elective) => (
+                                        <div key={elective.name}>
+                                            <h3 className="text-lg font-semibold">
+                                                {elective.name}
+                                            </h3>
+                                            <div>
+                                                {elective.unitIds
+                                                    .filter(
+                                                        (unitId) =>
+                                                            !!units[unitId]
+                                                    )
+                                                    .map((unitId) => (
+                                                        <UnitCheckboxWithTooltip
+                                                            key={`${path.name}-${elective.name}-${unitId}`}
+                                                            unitId={unitId}
+                                                            name={
+                                                                units[unitId]
+                                                                    ?.name ?? ''
+                                                            }
+                                                            description={
+                                                                units[unitId]
+                                                                    ?.description ??
+                                                                ''
+                                                            }
+                                                            isCompleted={
+                                                                props
+                                                                    .isCompletedByUnitId[
+                                                                    unitId
+                                                                ] ?? false
+                                                            }
+                                                            onToggle={(
+                                                                unitId,
+                                                                isCompleted
+                                                            ) =>
+                                                                props.onUnitsChanged(
+                                                                    {
+                                                                        unitId,
+                                                                        isCompleted,
+                                                                    }
+                                                                )
+                                                            }
+                                                        />
+                                                    ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                            </div>
+                        </Card>
+                    ))}
+            </div>
+        );
+    };
 
     const unitsByCategoryJsx = (
         <>
@@ -60,72 +195,86 @@ export function UpdateUnitsTool(props: {
         </>
     );
 
-    const sortedPaths = props.paths.concat().sort((a, b) => {
-        if (a.name === 'Ranger') return -1;
-    });
+    const tabVisibilityByIndex = [
+        props.selectedClassUnitIds?.length > 0,
+        true,
+        true,
+    ];
 
-    const unitsByPathJsx = (
-        <div className="space-y-8">
-            {sortedPaths.map((path) => (
-                <div key={path.name} className="border rounded-lg">
-                    <h2
-                        className={`text-2xl font-bold ${
-                            path.name === sortedPaths[0].name ? 'mt-0' : 'mt-5'
-                        } mb-2`}
-                    >
-                        {path.name}
-                    </h2>
-                    <div>
-                        {path.unitIds
-                            .concat()
-                            .sort((a, b) => {
-                                return props.units[a]?.name.localeCompare(
-                                    props.units[b]?.name
-                                );
-                            })
-                            .map((unitId) => (
-                                <div key={unitId} className="flex items-center">
-                                    <div className="flex items-center mt-1">
-                                        <Checkbox
-                                            inputId={unitId}
-                                            checked={
-                                                props.isCompletedByUnitId[
-                                                    unitId
-                                                ] ?? false
-                                            }
-                                            onChange={(e) =>
-                                                props.onUnitsChanged({
-                                                    unitId,
-                                                    isCompleted: e.checked,
-                                                })
-                                            }
-                                        />
-                                        <label
-                                            htmlFor={unitId}
-                                            className="cursor-pointer ml-1 text-sm"
-                                        >
-                                            {props.units[unitId]?.name ?? ''}
-                                        </label>
-                                    </div>
-                                </div>
-                            ))}
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
+    const activeTabIndex = tabVisibilityByIndex.findIndex((visible) => visible);
 
     return (
         <div>
             <h2 className="text-3xl font-bold mb-3">Completed Units</h2>
-            <TabView>
-                <TabPanel header="Update Units by Path">
-                    {unitsByPathJsx}
+            <TabView activeIndex={activeTabIndex}>
+                <TabPanel
+                    header="Class Units"
+                    visible={tabVisibilityByIndex[0]}
+                >
+                    {renderPathContent(getFilteredUnits(true))}
+                    <UpdateStudentUnitsChanges />
                 </TabPanel>
-                <TabPanel header="View Descriptions by Category">
+                <TabPanel header="All Units" visible={tabVisibilityByIndex[1]}>
+                    {renderPathContent(getFilteredUnits(false))}
+                    <UpdateStudentUnitsChanges />
+                </TabPanel>
+                <TabPanel
+                    header="Unit Descriptions"
+                    visible={tabVisibilityByIndex[2]}
+                >
                     {unitsByCategoryJsx}
                 </TabPanel>
             </TabView>
+        </div>
+    );
+}
+
+function UnitCheckboxWithTooltip(props: {
+    unitId: string;
+    name: string;
+    description: string;
+    isCompleted: boolean;
+    onToggle: (unitId: string, isCompleted: boolean) => void;
+}) {
+    const changedUnits = useSelector(selectUnitNameAndCompletionChange);
+    const change = changedUnits.find((unit) => unit.name === props.name);
+
+    return (
+        <div key={props.unitId} className="flex items-center group">
+            <Tooltip
+                target={`.checkbox-${props.unitId}`}
+                position="right"
+                event="both"
+            >
+                {props.description.split(' -').map((line, index) => (
+                    <div key={index} className="text-sm">
+                        {line.startsWith('-') ? line : `- ${line}`}
+                    </div>
+                ))}
+            </Tooltip>
+            <div
+                className={`checkbox-${props.unitId} flex items-center mt-1 pr-2`}
+            >
+                <Checkbox
+                    inputId={props.unitId}
+                    checked={props.isCompleted ?? false}
+                    onChange={(e) =>
+                        props.onToggle(props.unitId, e.checked ?? false)
+                    }
+                />
+                <label
+                    htmlFor={props.unitId}
+                    className="cursor-pointer ml-1 text-sm flex items-center gap-2"
+                >
+                    <span>{props.name ?? ''}</span>
+                    {change && (
+                        <i
+                            className={`pi ${change.added ? 'pi-plus-circle text-green-600' : 'pi-minus-circle text-red-600'}`}
+                            style={{ fontSize: '0.875rem' }}
+                        />
+                    )}
+                </label>
+            </div>
         </div>
     );
 }

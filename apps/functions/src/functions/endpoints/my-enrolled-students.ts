@@ -16,10 +16,12 @@ export const myEnrolledStudents = Functions.endpoint.handle(
             .filter(
                 (student): student is NonNullable<typeof student> => !!student
             )
-            .map(({ id, first_name, last_name }) => ({
+            .map(({ id, first_name, last_name, birth_date }) => ({
                 id,
                 name: `${first_name} ${last_name}`,
+                birthday: birth_date,
             }));
+
         response.send({ students });
     }
 );

@@ -1,6 +1,6 @@
 'use client';
 // primereact theme
-import 'primereact/resources/themes/lara-light-indigo/theme.css';
+import 'primereact/resources/themes/lara-light-blue/theme.css';
 // primereact core
 import 'primereact/resources/primereact.min.css';
 // primereact icons
@@ -15,6 +15,10 @@ import { useEffect, useState } from 'react';
 import * as auth from 'firebase/auth';
 import { PrimeReactProvider } from 'primereact/api';
 import LoginWithRegisteredEpics from './login/page';
+import dynamic from 'next/dynamic';
+
+// TODO: preventing SSR temporarily because something goes wrong with pre-rendering (likely useMediaQuery)
+const Header = dynamic(() => import('../components/Header'), { ssr: false });
 
 function RootLayout({ children }: { children: React.ReactNode }) {
     // TODO: add to provider
@@ -22,10 +26,11 @@ function RootLayout({ children }: { children: React.ReactNode }) {
 
     return (
         <html>
-            <body style={{ margin: 5 }}>
+            <body style={{ margin: 0 }}>
                 <PrimeReactProvider>
                     <Provider store={store}>
                         <AddEpicContext.Provider value={addEpic}>
+                            <Header />
                             <Head>
                                 <title>Mountain SOL Student Portal</title>
                             </Head>
