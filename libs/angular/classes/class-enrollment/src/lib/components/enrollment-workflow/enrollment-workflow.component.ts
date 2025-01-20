@@ -32,13 +32,15 @@ import { EventsComponent } from '../events/events.component';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
-import { RxIf } from '@rx-angular/template/if';
 import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive';
 import { SelectStudentComponent } from '../select-student/select-student.component';
 import { ReleasesComponent } from '../releases/releases.component';
 import { UserService } from '@sol/auth/user';
 import { Dialog } from '@angular/cdk/dialog';
 import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog.component';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { FirebaseRemoteConfigService } from '@sol/firebase/remote-config-api';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,7 +73,6 @@ import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog
         MessagesModule,
         MessageModule,
         ToastModule,
-        RxIf,
         MatVerticalStepperScrollerDirective,
         SelectStudentComponent,
         ReleasesComponent,
@@ -101,6 +102,7 @@ import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog
 })
 export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);
+    private readonly remoteConfig = inject(FirebaseRemoteConfigService);
 
     private readonly user$ = inject(UserService).getUser().pipe(shareReplay());
 
@@ -124,6 +126,14 @@ export class ClassEnrollmentComponent {
         .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
 
     readonly showSecretAutofill$ = of(false);
+
+    readonly shouldShowEventsStep = rxResource({
+        loader: () =>
+            this.remoteConfig.getValue('show_events_step').pipe(
+                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                map((value) => value.asBoolean())
+            ),
+    });
 
     readonly steps = [
         { label: 'Class Selection', routerLink: 'classes' },

@@ -24,6 +24,7 @@ import {
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import {
     provideFireAuth,
+    provideFireConfig,
     provideFireFunctions,
 } from '@sol/angular/firebase/adapter';
 import { MarkdownModule } from 'ngx-markdown';
@@ -56,6 +57,7 @@ bootstrapApplication(AppComponent, {
         provideAuth(() => getAuth()),
         provideFireAuth(),
         provideFireFunctions(),
+        provideFireConfig(),
         provideHttpClient(withInterceptorsFromDi()),
         httpInterceptorProviders,
         provideStore(),
