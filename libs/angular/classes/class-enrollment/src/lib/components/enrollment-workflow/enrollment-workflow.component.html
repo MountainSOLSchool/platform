@@ -17,19 +17,18 @@
         </ng-template>
     </p-messages>
 }
-<div
-    style="width: 100%; background-color: yellow"
-    *rxIf="isNowBeforeEarlyBirdEnd$"
->
-    <p-messages severity="early-bird">
-        <ng-template pTemplate>
-            <div class="ml-2">
-                You're an early bird! Use the discount code
-                <b>EARLYBIRD23</b> at checkout for $20 off.
-            </div>
-        </ng-template>
-    </p-messages>
-</div>
+@if ((isNowBeforeEarlyBirdEnd$ | async) === true) {
+    <div style="width: 100%; background-color: yellow">
+        <p-messages severity="early-bird">
+            <ng-template pTemplate>
+                <div class="ml-2">
+                    You're an early bird! Use the discount code
+                    <b>EARLYBIRD23</b> at checkout for $20 off.
+                </div>
+            </ng-template>
+        </p-messages>
+    </div>
+}
 @if (showSecretAutofill$ | async) {
     <button (click)="fillOutForTest()">Fill out form for test</button>
 }
@@ -41,7 +40,7 @@
     >
         <mat-step #classSelection label="Class Selection">
             <ng-template matStepContent>
-                <ng-container *rxIf="stepper.selected === classSelection">
+                @if (stepper.selected === classSelection) {
                     <h2>Class Selection</h2>
                     <sol-class-picker
                         [interacted]="classSelection.interacted"
@@ -49,103 +48,108 @@
                     ></sol-class-picker>
                     <ng-container
                         *ngTemplateOutlet="navigation; context: { first: true }"
-                    ></ng-container></ng-container
-            ></ng-template>
+                    ></ng-container>
+                }
+            </ng-template>
         </mat-step>
-        <mat-step *rxIf="false" #events label="Events">
-            <ng-template matStepContent>
-                <ng-container *rxIf="stepper.selected === events">
-                    <h2>Events</h2>
-                    <sol-event-selection
-                        (validityChange)="events.hasError = !$event"
-                    ></sol-event-selection>
-                    <ng-container
-                        *ngTemplateOutlet="navigation"
-                    ></ng-container></ng-container
-            ></ng-template>
-        </mat-step>
+        @let shouldShowEvents = shouldShowEventsStep.value();
+        @if (shouldShowEvents) {
+            <mat-step #events label="Events">
+                <ng-template matStepContent>
+                    @if (stepper.selected === events) {
+                        <h2>Events</h2>
+                        <sol-event-selection
+                            (validityChange)="events.hasError = !$event"
+                        ></sol-event-selection>
+                        <ng-container
+                            *ngTemplateOutlet="navigation"
+                        ></ng-container>
+                    }
+                </ng-template>
+            </mat-step>
+        }
         <mat-step #account label="Account">
             <ng-template matStepContent>
-                <ng-container *rxIf="stepper.selected === account">
+                @if (stepper.selected === account) {
                     <h2>Account</h2>
                     <sol-class-account
                         (validityChange)="account.hasError = !$event"
                     ></sol-class-account>
 
-                    <ng-container
-                        *ngTemplateOutlet="navigation"
-                    ></ng-container></ng-container
-            ></ng-template>
+                    <ng-container *ngTemplateOutlet="navigation"></ng-container>
+                }
+            </ng-template>
         </mat-step>
         <mat-step #selectStudent label="Student Selection">
             <ng-template matStepContent>
-                <ng-container *rxIf="stepper.selected === selectStudent">
+                @if (stepper.selected === selectStudent) {
                     <h2>Student Selection</h2>
                     <sol-student-selection
-                        *rxIf="isUserLoggedIn; else mustBeLoggedIn"
                         [interacted]="selectStudent.interacted"
                         (validityChange)="selectStudent.hasError = !$event"
                     ></sol-student-selection>
-                    <ng-container
-                        *ngTemplateOutlet="navigation"
-                    ></ng-container></ng-container
-            ></ng-template>
+                    <ng-container *ngTemplateOutlet="navigation"></ng-container>
+                }
+            </ng-template>
         </mat-step>
         <mat-step #studentInfo label="Student Info" disabled>
             <ng-template matStepContent>
-                <ng-container *rxIf="stepper.selected === studentInfo">
+                @if (stepper.selected === studentInfo) {
                     <h2>Student Info</h2>
-                    <sol-student-info
-                        *rxIf="
-                            allStepsComplete(isUserLoggedIn, selectStudent);
-                            else mustSelectStudent
-                        "
-                        [interacted]="studentInfo.interacted"
-                        [isStudentLoading]="isStudentLoading()"
-                        (validityChange)="studentInfo.hasError = !$event"
-                    ></sol-student-info>
-                    <ng-container
-                        *ngTemplateOutlet="navigation"
-                    ></ng-container> </ng-container
-            ></ng-template>
+                    @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
+                        <sol-student-info
+                            [interacted]="studentInfo.interacted"
+                            [isStudentLoading]="isStudentLoading()"
+                            (validityChange)="studentInfo.hasError = !$event"
+                        ></sol-student-info>
+                    } @else {
+                        <ng-container
+                            *ngTemplateOutlet="mustSelectStudent"
+                        ></ng-container>
+                    }
+                    <ng-container *ngTemplateOutlet="navigation"></ng-container>
+                }
+            </ng-template>
         </mat-step>
         <mat-step #medicalInfo label="Medical Info">
             <ng-template matStepContent>
-                <ng-container *rxIf="stepper.selected === medicalInfo">
+                @if (stepper.selected === medicalInfo) {
                     <h2>Medical Info</h2>
-                    <sol-medical
-                        *rxIf="
-                            allStepsComplete(isUserLoggedIn, selectStudent);
-                            else mustSelectStudent
-                        "
-                        [interacted]="medicalInfo.interacted"
-                        (validityChange)="medicalInfo.hasError = !$event"
-                    ></sol-medical>
-                    <ng-container
-                        *ngTemplateOutlet="navigation"
-                    ></ng-container> </ng-container
-            ></ng-template>
+                    @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
+                        <sol-medical
+                            [interacted]="medicalInfo.interacted"
+                            (validityChange)="medicalInfo.hasError = !$event"
+                        ></sol-medical>
+                    } @else {
+                        <ng-container
+                            *ngTemplateOutlet="mustSelectStudent"
+                        ></ng-container>
+                    }
+                    <ng-container *ngTemplateOutlet="navigation"></ng-container>
+                }
+            </ng-template>
         </mat-step>
         <mat-step #releases label="Releases">
             <ng-template matStepContent>
-                <ng-container *rxIf="stepper.selected === releases">
+                @if (stepper.selected === releases) {
                     <h2>Releases</h2>
-                    <sol-releases
-                        *rxIf="
-                            allStepsComplete(isUserLoggedIn, selectStudent);
-                            else mustSelectStudent
-                        "
-                        [interacted]="releases.interacted"
-                        (validityChange)="releases.hasError = !$event"
-                    ></sol-releases>
-                    <ng-container
-                        *ngTemplateOutlet="navigation"
-                    ></ng-container> </ng-container
-            ></ng-template>
+                    @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
+                        <sol-releases
+                            [interacted]="releases.interacted"
+                            (validityChange)="releases.hasError = !$event"
+                        ></sol-releases>
+                    } @else {
+                        <ng-container
+                            *ngTemplateOutlet="mustSelectStudent"
+                        ></ng-container>
+                    }
+                    <ng-container *ngTemplateOutlet="navigation"></ng-container>
+                }
+            </ng-template>
         </mat-step>
         <mat-step #confirmation label="Confirm Enrollment">
             <ng-template matStepContent>
-                <ng-container *rxIf="stepper.selected === confirmation">
+                @if (stepper.selected === confirmation) {
                     <h2>Confirm Enrollment</h2>
                     <sol-class-confirmation
                         [allStepsComplete]="
@@ -163,8 +167,9 @@
                     ></sol-class-confirmation>
                     <ng-container
                         *ngTemplateOutlet="navigation; context: { last: true }"
-                    ></ng-container></ng-container
-            ></ng-template>
+                    ></ng-container>
+                }
+            </ng-template>
         </mat-step>
 
         <ng-template #mustSelectStudent>
@@ -227,19 +232,21 @@
     >
         <p-progressSpinner></p-progressSpinner>
     </p-dialog>
-    <p-dialog
-        header="Something went wrong"
-        *rxIf="failureDialogState$; let failureDialogState"
-        [closable]="true"
-        [(visible)]="failureDialogState.visible"
-        [modal]="true"
-        [draggable]="false"
-        (onHide)="closeFailure()"
-    >
-        Something went wrong while submitting your enrollment. Please try again
-        or contact
-        <a href="mailto:info@mountainsol.org">info&#64;mountainsol.org</a>.
-    </p-dialog>
+    @let failureDialogState = failureDialogState$ | async;
+    @if (failureDialogState) {
+        <p-dialog
+            header="Something went wrong"
+            [closable]="true"
+            [(visible)]="failureDialogState.visible"
+            [modal]="true"
+            [draggable]="false"
+            (onHide)="closeFailure()"
+        >
+            Something went wrong while submitting your enrollment. Please try
+            again or contact
+            <a href="mailto:info@mountainsol.org">info&#64;mountainsol.org</a>.
+        </p-dialog>
+    }
 
     <p-dialog
         header="Successfully enrolled!"

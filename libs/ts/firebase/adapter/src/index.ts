@@ -1,1 +1,1 @@
-export { FirebaseAuthBasedServiceFactory } from './lib/utilities/firebase-auth-based-service.factory';
+export { FirebaseServiceFactory } from './lib/utilities/firebase-auth-based-service.factory';
