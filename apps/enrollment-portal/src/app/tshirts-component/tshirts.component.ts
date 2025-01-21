@@ -1,57 +1,50 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     inject,
-    signal,
+    linkedSignal,
 } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
-import { map, shareReplay, switchMap, tap } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { map } from 'rxjs';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
-import { RxLet } from '@rx-angular/template/let';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        AsyncPipe,
-        ProgressBarModule,
-        TableModule,
-        RxLet,
-        DropdownModule,
-        FormsModule,
-    ],
+    imports: [ProgressBarModule, TableModule, DropdownModule, FormsModule],
     templateUrl: './tshirts.component.html',
 })
 export class TshirtsComponent {
-    private readonly functionsApi = inject(FirebaseFunctionsService);
+    readonly #functionsApi = inject(FirebaseFunctionsService);
+    readonly #classesSemesterListService = inject(ClassesSemesterListService);
 
-    readonly selectedSemester = signal('');
+    readonly semesterOptions = rxResource({
+        loader: () =>
+            this.#classesSemesterListService
+                .getAllSemestersWithCurrentFirst()
+                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
+    });
 
-    readonly semesterOptions = toSignal(
-        inject(ClassesSemesterListService)
-            .getAllSemestersWithCurrentFirst()
-            .pipe(
-                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                tap(([first]) => this.selectedSemester.set(first.id))
-            )
+    readonly selectedSemester = linkedSignal(
+        () => this.semesterOptions.value()?.[0]?.id ?? ''
     );
 
-    students$ = toObservable(this.selectedSemester).pipe(
-        switchMap((selectedSemester) =>
-            this.functionsApi
+    readonly students = rxResource({
+        loader: () =>
+            this.#functionsApi
                 .call<{
                     list: Array<{
                         firstName: string;
                         lastName: string;
                         size: string;
                     }>;
-                }>('tshirts', { semesterId: selectedSemester })
+                }>('tshirts', { semesterId: this.selectedSemester() })
                 .pipe(
                     RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                     map(({ list }) =>
@@ -63,20 +56,18 @@ export class TshirtsComponent {
                                 ? a.firstName.localeCompare(b.firstName)
                                 : lastNameDiff;
                         })
-                    ),
-                    shareReplay()
-                )
-        )
-    );
+                    )
+                ),
+    });
 
-    sizeCounts$ = this.students$.pipe(
-        map((students) => {
-            return ['XS', 'S', 'M', 'L', 'XL'].map((size) => ({
-                size,
-                count: this.getSizeCount(size, students),
-            }));
-        })
-    );
+    readonly sizeCounts = computed(() => {
+        const students = this.students.value();
+        if (!students) return undefined;
+        return ['XS', 'S', 'M', 'L', 'XL'].map((size) => ({
+            size,
+            count: this.getSizeCount(size, students),
+        }));
+    });
 
     getSizeCount(size: string, students: Array<{ size: string }>) {
         return students.filter((student) => student.size === size).length;

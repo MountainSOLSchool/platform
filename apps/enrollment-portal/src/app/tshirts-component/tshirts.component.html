@@ -1,7 +1,7 @@
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px">
     <h1>Student T-shirt sizes</h1>
     <p-dropdown
-        [options]="semesterOptions() ?? []"
+        [options]="semesterOptions.value() ?? []"
         placeholder="Select a semester"
         optionLabel="name"
         optionValue="id"
@@ -14,9 +14,9 @@
 <div style="margin-top: 20px">
     <div style="margin-bottom: 2rem">
         <p-table
-            [value]="(sizeCounts$ | async) ?? []"
+            [value]="sizeCounts() ?? []"
             responsiveLayout="scroll"
-            [loading]="(sizeCounts$ | async) === null"
+            [loading]="!sizeCounts()"
             sortMode="single"
         >
             <ng-template pTemplate="header">
@@ -41,9 +41,9 @@
     </div>
     <h2>Students</h2>
     <p-table
-        [value]="(students$ | async) ?? []"
+        [value]="students.value() ?? []"
         responsiveLayout="scroll"
-        [loading]="(students$ | async) === null"
+        [loading]="students.isLoading()"
         sortMode="single"
     >
         <ng-template pTemplate="header">
