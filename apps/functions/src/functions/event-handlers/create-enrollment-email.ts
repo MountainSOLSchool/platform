@@ -141,12 +141,12 @@ export const createEnrollmentEmail = onDocumentCreated(
                               )
                               .join('')}
                           ${
-                              differenceBetweenFinalCostAndOriginalCostWithDiscounts >
+                              differenceBetweenFinalCostAndOriginalCostWithDiscounts !=
                               0
                                   ? `
                             <tr class="discount-row">
                                 <td colspan="3">Other Adjustments</td>
-                                <td>${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0 ? '+' : '-'}$${Math.abs(differenceBetweenFinalCostAndOriginalCostWithDiscounts)}</td>
+                                <td>${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0 ? '+' : '-'}$${Math.abs(differenceBetweenFinalCostAndOriginalCostWithDiscounts).toFixed(2)}</td>
                             </tr>`
                                   : ''
                           }
