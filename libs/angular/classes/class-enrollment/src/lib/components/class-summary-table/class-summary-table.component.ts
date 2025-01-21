@@ -351,27 +351,17 @@ function createSemesterNode([semester, items]: [
     string,
     ClassCostSummary[],
 ]): TreeNode {
-    const totalCost = calculateTotalCost(items);
-
     return {
         key: semester,
         data: {
             name: semester,
-            semester,
-            date: items[0].date,
-            cost: totalCost,
+            semester: '',
+            date: '',
+            cost: '',
         },
         children: items.map((item) => createClassNode(semester, item)),
         expanded: true,
     };
-}
-
-function calculateTotalCost(items: ClassCostSummary[]): number {
-    return items.reduce((sum, item) => {
-        const baseCost = item.isPartOfGroup ? 0 : item.cost || 0;
-        const optionsCost = calculateOptionsCost(item.additionalOptions);
-        return sum + baseCost + optionsCost;
-    }, 0);
 }
 
 function createClassNode(semester: string, item: ClassCostSummary): TreeNode {
@@ -389,7 +379,7 @@ function createClassNode(semester: string, item: ClassCostSummary): TreeNode {
             name: item.name,
             semester: item.semester,
             date: item.date,
-            cost: classCost + optionsCost,
+            cost: classCost,
             hasChildren: hasOptions,
         },
         children: allOptions,
