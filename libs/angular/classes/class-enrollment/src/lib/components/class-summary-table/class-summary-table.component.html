@@ -21,16 +21,13 @@
                     @if (!rowData.isOption && (rowNode.children?.length > 0 || rowData.hasChildren)) {
                         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
                     }
-                    <span [ngClass]="{ 'ml-4': rowData.isOption }">
-                        @if (rowData.isOption) {
-                            <i class="pi pi-plus-circle mr-2"></i>
-                        }
+                    <span [ngClass]="{ 'ml-6': rowData.isOption }">
                         {{ rowData.name }}
                     </span>
                 </td>
                 <td>{{ rowData.semester }}</td>
                 <td>{{ rowData.date }}</td>
-                <td>{{ rowData.cost | currency }}</td>
+                <td>{{ rowData.isOption ? '+' : '' }}{{ rowData.cost | currency }}</td>
             </tr>
         </ng-template>
     </p-treeTable>
