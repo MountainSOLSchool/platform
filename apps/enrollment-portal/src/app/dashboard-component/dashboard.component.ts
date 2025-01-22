@@ -40,13 +40,14 @@ export class DashboardComponent {
                 .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
     });
 
-    readonly selectedSemester = linkedSignal(
-        () => this.semesters.value()?.[0]?.id ?? ''
-    );
+    readonly selectedSemester = linkedSignal(() => {
+        const semesters = this.semesters.value();
+        return semesters?.[0]?.id ?? '';
+    });
 
     readonly semesterEnrollmentChartData = rxResource({
-        loader: () => {
-            const semesterId = this.selectedSemester();
+        request: () => this.selectedSemester(),
+        loader: ({ request: semesterId }) => {
             if (!semesterId) {
                 return of(undefined);
             }
