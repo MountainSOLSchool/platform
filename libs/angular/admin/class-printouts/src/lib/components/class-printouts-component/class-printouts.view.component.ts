@@ -1,18 +1,12 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
-    Input,
-    Output,
+    input,
+    output,
 } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import {
-    Requested,
-    SolLoadedDirective,
-    SolLoadingDirective,
-} from '@sol/angular/request';
-import { ClassPrintoutsLoadingViewComponent } from './class-printouts-loading.view.component';
+import { ClassPrintoutsLoadingComponent } from './class-printouts-loading.component';
 import { ClassPrintoutRow } from '../../models/class-printout-row.type';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
@@ -23,108 +17,114 @@ import { FormsModule } from '@angular/forms';
             style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px"
         >
             <h1>Class Forms and Contacts</h1>
+            @let selectedSemesterValue = selectedSemester();
             <p-dropdown
-                [options]="semesters"
+                [options]="semesters()"
                 placeholder="Select a semester"
                 optionLabel="name"
                 optionValue="id"
+                [loading]="!selectedSemesterValue"
                 [showClear]="false"
-                [ngModel]="selectedSemester"
-                (ngModelChange)="selectedSemesterChange.next($event)"
+                [ngModel]="selectedSemesterValue"
+                (ngModelChange)="selectedSemesterChange.emit($event)"
             ></p-dropdown>
         </div>
-        <sol-class-printouts-skeleton-view
-            *solLoading="rows"
-        ></sol-class-printouts-skeleton-view>
-        <div *solLoaded="rows" style="margin-top: 20px">
-            <p-table [value]="rows" responsiveLayout="scroll" sortMode="single">
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="title" style="width: 40%">
-                            Name <p-sortIcon field="title"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="enrolledCount">
-                            # Enrolled Students
-                            <p-sortIcon field="enrolledCount"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="start">
-                            Start
-                            <p-sortIcon field="start"></p-sortIcon>
-                        </th>
-                        <th pSortableColumn="end">
-                            End
-                            <p-sortIcon field="end"></p-sortIcon>
-                        </th>
-                        <th style="width: 20%"></th>
-                        <th style="width: 15%"></th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-data>
-                    @if (assertSemesterClass(data); as row) {
+        @let rowsValue = rows();
+        @if (!rowsValue) {
+            <sol-class-printouts-skeleton-view></sol-class-printouts-skeleton-view>
+        } @else {
+            <div style="margin-top: 20px">
+                <p-table
+                    [value]="rowsValue"
+                    responsiveLayout="scroll"
+                    sortMode="single"
+                >
+                    <ng-template pTemplate="header">
                         <tr>
-                            <td>{{ row.title }}</td>
-                            <td>{{ row.enrolledCount }}</td>
-                            <td>{{ row.start }}</td>
-                            <td>{{ row.end }}</td>
-                            <td>
-                                <p-button
-                                    class="sol-button"
-                                    label="View/Print Class Forms"
-                                    icon="pi pi-download"
-                                    [id]="row.id + 'downloadBtn'"
-                                    [loading]="
-                                        isClassFormDownloadInProgress[row.id]
-                                    "
-                                    (click)="downloadClick.emit(row.id)"
-                                >
-                                </p-button>
-                            </td>
-                            <td>
-                                <p-button
-                                    class="sol-button"
-                                    [id]="row.id + 'emailsBtn'"
-                                    label="Copy Email Lists"
-                                    [loading]="isCopyEmailsInProgress[row.id]"
-                                    (click)="copyEmailsClick.emit(row)"
-                                >
-                                </p-button>
-                            </td>
+                            <th pSortableColumn="title" style="width: 40%">
+                                Name <p-sortIcon field="title"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="enrolledCount">
+                                # Enrolled Students
+                                <p-sortIcon field="enrolledCount"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="start">
+                                Start
+                                <p-sortIcon field="start"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="end">
+                                End
+                                <p-sortIcon field="end"></p-sortIcon>
+                            </th>
+                            <th style="width: 20%"></th>
+                            <th style="width: 15%"></th>
                         </tr>
-                    }
-                </ng-template>
-            </p-table>
-        </div>`,
+                    </ng-template>
+                    <ng-template pTemplate="body" let-data>
+                        @if (assertSemesterClass(data); as row) {
+                            <tr>
+                                <td>{{ row.title }}</td>
+                                <td>{{ row.enrolledCount }}</td>
+                                <td>{{ row.start }}</td>
+                                <td>{{ row.end }}</td>
+                                <td>
+                                    <p-button
+                                        class="sol-button"
+                                        label="View/Print Class Forms"
+                                        icon="pi pi-download"
+                                        [id]="row.id + 'downloadBtn'"
+                                        [loading]="
+                                            classIdOfFormsBeingDownloaded() ===
+                                            row.id
+                                        "
+                                        (click)="downloadClick.emit(row.id)"
+                                    >
+                                    </p-button>
+                                </td>
+                                <td>
+                                    <p-button
+                                        class="sol-button"
+                                        [id]="row.id + 'emailsBtn'"
+                                        label="Copy Email Lists"
+                                        [loading]="
+                                            classIdOfEmailsBeingCopied() ===
+                                            row.id
+                                        "
+                                        (click)="copyEmailsClick.emit(row)"
+                                    >
+                                    </p-button>
+                                </td>
+                            </tr>
+                        }
+                    </ng-template>
+                </p-table>
+            </div>
+        }`,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         ButtonModule,
         TableModule,
-        SolLoadingDirective,
-        SolLoadedDirective,
-        ClassPrintoutsLoadingViewComponent,
+        ClassPrintoutsLoadingComponent,
         DropdownModule,
         FormsModule,
     ],
 })
 export class ClassPrintoutsViewComponent {
-    @Input({ required: true })
-    rows!: Requested<Array<ClassPrintoutRow>>;
-    @Input({ required: true })
-    isCopyEmailsInProgress!: Record<string, boolean>;
-    @Input({ required: true })
-    isClassFormDownloadInProgress!: Record<string, boolean>;
-    @Input({ required: true })
-    semesters!: Array<{ id: string; name: string }>;
-    @Input({ required: true })
-    selectedSemester!: string;
+    readonly rows = input.required<Array<ClassPrintoutRow> | undefined>();
+    readonly classIdOfEmailsBeingCopied = input.required<string | undefined>();
+    readonly classIdOfFormsBeingDownloaded = input.required<
+        string | undefined
+    >();
+    readonly semesters = input.required<
+        Array<{ id: string; name: string }> | undefined
+    >();
+    readonly selectedSemester = input.required<string | undefined>();
 
-    @Output()
-    copyEmailsClick = new EventEmitter<ClassPrintoutRow>();
+    copyEmailsClick = output<ClassPrintoutRow>();
 
-    @Output()
-    downloadClick = new EventEmitter<string>();
+    downloadClick = output<string>();
 
-    @Output()
-    selectedSemesterChange = new EventEmitter<string>();
+    selectedSemesterChange = output<string>();
 
     assertSemesterClass(obj: unknown): ClassPrintoutRow {
         return obj as ClassPrintoutRow;

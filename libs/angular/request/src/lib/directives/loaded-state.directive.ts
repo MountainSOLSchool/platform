@@ -30,7 +30,7 @@ export class SolLoadedDirective<T> {
 
     static ngTemplateGuard_solLoaded<T>(
         dir: SolLoadedDirective<T>,
-        state: Requested<T>
+        state: Requested<T> | null | undefined
     ): state is T {
         return true;
     }
