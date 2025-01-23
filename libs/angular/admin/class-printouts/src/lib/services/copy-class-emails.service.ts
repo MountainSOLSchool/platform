@@ -3,13 +3,15 @@ import { inject, Injectable } from '@angular/core';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { MessageService } from 'primeng/api';
-import { map, tap } from 'rxjs';
+import { delay, EMPTY, expand, finalize, last, map, of, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CopyClassEmailsService {
     readonly #functionsApi = inject(FirebaseFunctionsService);
     readonly #clipboard = inject(Clipboard);
     readonly #messageService = inject(MessageService);
+
+    readonly #ANGULAR_CDK_COPY_RENDERER_DELAY = 0;
 
     copyClassEmails({
         classId,
@@ -27,23 +29,34 @@ export class CopyClassEmailsService {
             .pipe(
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 map(({ list }) => list.join(', ')),
-                tap((emails) => {
-                    const pending = this.#clipboard.beginCopy(emails);
-                    let remainingAttempts = 3;
-                    const attempt = () => {
-                        const result = pending.copy();
-                        if (!result && --remainingAttempts) {
-                            setTimeout(attempt);
-                        } else {
-                            if (result)
-                                this.#messageService.add({
-                                    severity: 'success',
-                                    summary: `Copied emails for ${classTitle}`,
-                                });
-                            pending.destroy();
-                        }
-                    };
-                    attempt();
+                map((emails) => ({
+                    pending: this.#clipboard.beginCopy(emails),
+                    attempts: 0,
+                    success: false,
+                })),
+                delay(this.#ANGULAR_CDK_COPY_RENDERER_DELAY),
+                expand(({ pending, attempts, success }) =>
+                    success || attempts > 5
+                        ? EMPTY.pipe(finalize(() => pending.destroy()))
+                        : of({
+                              pending,
+                              attempts: attempts + 1,
+                              success: pending.copy(),
+                          }).pipe(delay(this.#ANGULAR_CDK_COPY_RENDERER_DELAY))
+                ),
+                last(),
+                tap(({ success }) => {
+                    if (success) {
+                        this.#messageService.add({
+                            severity: 'success',
+                            summary: `Copied emails for ${classTitle}`,
+                        });
+                    } else {
+                        this.#messageService.add({
+                            severity: 'error',
+                            summary: 'Something went wrong copying emails.',
+                        });
+                    }
                 })
             );
     }
