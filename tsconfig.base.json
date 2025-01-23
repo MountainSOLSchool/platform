@@ -24,6 +24,9 @@
             "@sol/admin/class-printouts": [
                 "libs/angular/admin/class-printouts/src/index.ts"
             ],
+            "@sol/angular/admin/class-management": [
+                "libs/angular/admin/class-management/src/index.ts"
+            ],
             "@sol/angular/admin/enrollments": [
                 "libs/angular/admin/enrollments/src/index.ts"
             ],
@@ -72,6 +75,9 @@
             "@sol/firebase/functions-api": [
                 "libs/firebase/functions-api/src/index.ts"
             ],
+            "@sol/firebase/remote-config-api": [
+                "libs/firebase/remote-config-api/src/index.ts"
+            ],
             "@sol/form/validity": ["libs/angular/form/validity/src/index.ts"],
             "@sol/header": ["libs/angular/header/src/index.ts"],
             "@sol/paths": ["libs/angular/paths/src/index.ts"],
@@ -98,9 +104,6 @@
             ],
             "@sol/ts/firebase/firebase-config": [
                 "libs/ts/firebase/firebase-config/src/index.ts"
-            ],
-            "@sol/firebase/remote-config-api": [
-                "libs/firebase/remote-config-api/src/index.ts"
             ]
         }
     },

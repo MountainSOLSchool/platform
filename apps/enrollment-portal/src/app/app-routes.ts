@@ -86,6 +86,13 @@ export const appRoutes: Routes = [
                                             },
                                         ],
                                     },
+                                    {
+                                        path: 'manage-classes',
+                                        loadChildren: () =>
+                                            import(
+                                                '@sol/angular/admin/class-management'
+                                            ).then((m) => m.routes),
+                                    },
                                 ],
                             },
                         ],
