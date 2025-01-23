@@ -36,7 +36,8 @@ export class TshirtsComponent {
     );
 
     readonly students = rxResource({
-        loader: () =>
+        request: () => this.selectedSemester(),
+        loader: ({ request: selectedSemester }) =>
             this.#functionsApi
                 .call<{
                     list: Array<{
@@ -44,7 +45,7 @@ export class TshirtsComponent {
                         lastName: string;
                         size: string;
                     }>;
-                }>('tshirts', { semesterId: this.selectedSemester() })
+                }>('tshirts', { semesterId: selectedSemester })
                 .pipe(
                     RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                     map(({ list }) =>
