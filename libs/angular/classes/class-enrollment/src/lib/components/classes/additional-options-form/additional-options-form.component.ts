@@ -17,7 +17,6 @@ type AdditionalOption = {
 };
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CheckboxModule, ButtonModule, FormsModule],
     selector: 'sol-class-additional-options-form',

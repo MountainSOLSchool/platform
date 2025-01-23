@@ -1,33 +1,22 @@
-import { inject, Injectable, NgModule } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { map, tap } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { userLoginInitiated } from './login.actions';
 import { UserService } from '@sol/auth/user';
 
-@Injectable({ providedIn: 'root' })
-export class UserGuard {
-    private readonly router = inject(Router);
-    private readonly user = inject(UserService).getUser();
-    private readonly store = inject(Store);
+export const userGuard: CanActivateFn = () => {
+    const router = inject(Router);
+    const user = inject(UserService).getUser();
+    const store = inject(Store);
 
-    canActivate(): Observable<boolean | UrlTree> {
-        return this.user.pipe(
-            map((u) =>
-                u
-                    ? true
-                    : (() => {
-                          this.store.dispatch(
-                              userLoginInitiated(window.location.pathname)
-                          );
-                          return this.router.parseUrl('/user/login');
-                      })()
-            )
-        );
-    }
-}
-
-@NgModule({
-    providers: [UserGuard],
-})
-export class UserGuardModule {}
+    return user.pipe(
+        map((user) => !!user),
+        tap(
+            (isLoggedIn) =>
+                !isLoggedIn &&
+                store.dispatch(userLoginInitiated(window.location.pathname))
+        ),
+        map((isLoggedIn) => isLoggedIn || router.parseUrl('/user/login'))
+    );
+};

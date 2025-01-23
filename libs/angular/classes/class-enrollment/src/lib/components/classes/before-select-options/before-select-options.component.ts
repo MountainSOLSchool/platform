@@ -20,7 +20,6 @@ type AdditionalOption = {
 };
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         OverlayPanelModule,

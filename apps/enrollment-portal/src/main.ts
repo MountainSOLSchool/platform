@@ -1,15 +1,11 @@
-import {
-    HTTP_INTERCEPTORS,
-    provideHttpClient,
-    withInterceptorsFromDi,
-} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
-import { AuthInterceptor } from '@sol/auth/interceptor';
+import { authInterceptor } from '@sol/auth/interceptor';
 import { MessageService } from 'primeng/api';
 import { appRoutes } from './app/app-routes';
 import { AppComponent } from './app/app.component';
@@ -27,21 +23,17 @@ import {
     provideFireConfig,
     provideFireFunctions,
 } from '@sol/angular/firebase/adapter';
-import { MarkdownModule } from 'ngx-markdown';
+import { provideMarkdown } from 'ngx-markdown';
 import { getSolApp } from '@sol/ts/firebase/firebase-config';
 
 if (environment.production) {
     enableProdMode();
 }
 
-const httpInterceptorProviders = [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-];
-
 bootstrapApplication(AppComponent, {
     providers: [
-        importProvidersFrom(BrowserModule, BrowserAnimationsModule),
-        importProvidersFrom(BrowserAnimationsModule),
+        importProvidersFrom(BrowserModule),
+        provideAnimations(),
         MessageService,
         provideStoreDevtools({
             maxAge: 50,
@@ -58,11 +50,10 @@ bootstrapApplication(AppComponent, {
         provideFireAuth(),
         provideFireFunctions(),
         provideFireConfig(),
-        provideHttpClient(withInterceptorsFromDi()),
-        httpInterceptorProviders,
+        provideHttpClient(withInterceptors([authInterceptor])),
         provideStore(),
         provideEffects(),
         provideRouter(appRoutes),
-        importProvidersFrom(MarkdownModule.forRoot()),
+        provideMarkdown(),
     ],
 });

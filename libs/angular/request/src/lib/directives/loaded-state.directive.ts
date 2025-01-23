@@ -14,7 +14,6 @@ export interface LetViewContext<T> {
 
 @Directive({
     selector: '[solLoaded]',
-    standalone: true,
 })
 export class SolLoadedDirective<T> {
     private readonly templateRef = inject(TemplateRef);

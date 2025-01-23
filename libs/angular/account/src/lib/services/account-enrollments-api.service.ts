@@ -6,9 +6,9 @@ import { SemesterEnrollment } from '@sol/classes/domain';
     providedIn: 'root',
 })
 export class AccountEnrollmentsApiService {
-    private readonly functions = inject(FirebaseFunctionsService);
+    readonly #functions = inject(FirebaseFunctionsService);
 
     getAll() {
-        return this.functions.callFn<Array<SemesterEnrollment>>('enrollments');
+        return this.#functions.callFn<Array<SemesterEnrollment>>('enrollments');
     }
 }

@@ -7,7 +7,6 @@ import {
 import { ClassPrintoutsStore } from '../../store/class-printouts.store';
 import { provideComponentStore } from '@ngrx/component-store';
 import { ClassPrintoutsViewComponent } from './class-printouts.view.component';
-import { SolLoadingDirective } from '@sol/angular/request';
 import { ClassPrintoutRow } from '../../models/class-printout-row.type';
 
 @Component({
@@ -26,7 +25,7 @@ import { ClassPrintoutRow } from '../../models/class-printout-row.type';
         ></sol-class-printouts-view>
     }`,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ClassPrintoutsViewComponent, SolLoadingDirective],
+    imports: [ClassPrintoutsViewComponent],
     providers: [provideComponentStore(ClassPrintoutsStore)],
 })
 export class ClassPrintoutsComponent {

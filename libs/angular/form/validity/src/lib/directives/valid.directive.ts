@@ -1,7 +1,6 @@
 import { Directive, ElementRef, inject, Input, Renderer2 } from '@angular/core';
 
 @Directive({
-    standalone: true,
     selector: '[solValid]',
 })
 export class ValidDirective {

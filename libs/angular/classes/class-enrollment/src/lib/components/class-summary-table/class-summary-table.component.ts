@@ -44,7 +44,6 @@ interface ClassCostSummary {
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-class-summary-table',
     templateUrl: './class-summary-table.component.html',
-    standalone: true,
     imports: [
         CurrencyPipe,
         TreeTableModule,

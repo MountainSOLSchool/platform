@@ -9,7 +9,6 @@ import { Requested, RequestState } from '../models/requested.type';
 
 @Directive({
     selector: '[solLoading]',
-    standalone: true,
 })
 export class SolLoadingDirective<T> {
     private readonly templateRef = inject(TemplateRef);

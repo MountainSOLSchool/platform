@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
-    selector: 'sol-enrollment-skeleton-view',
+    selector: 'sol-enrollment-skeleton',
     template: `<div class="flex mb-3">
             <div>
                 <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
@@ -19,4 +19,4 @@ import { SkeletonModule } from 'primeng/skeleton';
     imports: [SkeletonModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EnrollmentSkeletonViewComponent {}
+export class EnrollmentSkeletonComponent {}
