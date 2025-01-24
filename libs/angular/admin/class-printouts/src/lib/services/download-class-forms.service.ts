@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
-import { forkJoin, tap } from 'rxjs';
+import { forkJoin, map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DownloadClassFormsService {
@@ -12,7 +12,13 @@ export class DownloadClassFormsService {
             this.#openClassRoster(classId, semesterId),
             this.#openClassSignIn(classId, semesterId),
             this.#openStudentHealth(classId, semesterId),
-        ]);
+        ]).pipe(
+            map(([roster, signIn, health]) => ({
+                roster,
+                signIn,
+                health,
+            }))
+        );
     }
 
     #openClassSignIn(classId: string, semesterId: string) {
@@ -20,23 +26,7 @@ export class DownloadClassFormsService {
             .call<{
                 html: string;
             }>(`signIn?classId=${classId}&semesterId=${semesterId}`)
-            .pipe(
-                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                tap(({ html }) => {
-                    const win = window.open(
-                        '',
-                        `${classId} Sign In/Out`,
-                        `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${
-                            screen.width / 2
-                        },height=${screen.height},top=0,left=${
-                            screen.width / 2
-                        }`
-                    );
-                    if (win) {
-                        win.document.body.innerHTML = html;
-                    }
-                })
-            );
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded());
     }
 
     #openClassRoster(classId: string, semesterId: string) {
@@ -44,21 +34,7 @@ export class DownloadClassFormsService {
             .call<{
                 html: string;
             }>(`roster?classId=${classId}&semesterId=${semesterId}`)
-            .pipe(
-                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                tap(({ html }) => {
-                    const win = window.open(
-                        '',
-                        `${classId} Roster`,
-                        `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${
-                            screen.width / 2
-                        },height=${screen.height},top=0,left=0`
-                    );
-                    if (win) {
-                        win.document.body.innerHTML = html;
-                    }
-                })
-            );
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded());
     }
 
     #openStudentHealth(classId: string, semesterId: string) {
@@ -66,20 +42,6 @@ export class DownloadClassFormsService {
             .call<{
                 html: string;
             }>(`studentHealth?classId=${classId}&semesterId=${semesterId}`)
-            .pipe(
-                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                tap(({ html }) => {
-                    const win = window.open(
-                        '',
-                        `${classId} Student Health`,
-                        `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${
-                            screen.width / 2
-                        },height=${screen.height},top=0,left=0`
-                    );
-                    if (win) {
-                        win.document.body.innerHTML = html;
-                    }
-                })
-            );
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded());
     }
 }

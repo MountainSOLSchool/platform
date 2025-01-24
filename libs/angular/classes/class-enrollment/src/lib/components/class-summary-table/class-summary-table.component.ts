@@ -7,7 +7,7 @@ import {
     Signal,
     signal,
 } from '@angular/core';
-import { CurrencyPipe, DatePipe, JsonPipe, NgClass } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { switchMap, of } from 'rxjs';
 import { TreeTableModule } from 'primeng/treetable';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -44,13 +44,7 @@ interface ClassCostSummary {
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-class-summary-table',
     templateUrl: './class-summary-table.component.html',
-    imports: [
-        CurrencyPipe,
-        TreeTableModule,
-        ProgressSpinnerModule,
-        JsonPipe,
-        NgClass,
-    ],
+    imports: [CurrencyPipe, TreeTableModule, ProgressSpinnerModule, NgClass],
     providers: [DatePipe],
 })
 export class ClassSummaryTableComponent {

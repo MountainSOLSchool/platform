@@ -17,7 +17,6 @@ import { filter, map, of, shareReplay, take, timer } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
-import { CheckoutComponent } from '../checkout/checkout.component';
 import { ConfirmationComponent } from '../confirmation/confirmation.component';
 import {
     CdkStepper,
@@ -63,7 +62,6 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
         ClassesComponent,
         InfoComponent,
         AccountComponent,
-        CheckoutComponent,
         ConfirmationComponent,
         MedicalComponent,
         RxLet,

@@ -36,6 +36,7 @@
             "@sol/angular/classes/semester-list": [
                 "libs/angular/classes/class-semester-list/src/index.ts"
             ],
+            "@sol/angular/dialog": ["libs/angular/dialog/src/index.ts"],
             "@sol/angular/firebase/adapter": [
                 "libs/angular/firebase/adapter/src/index.ts"
             ],
@@ -72,6 +73,9 @@
             "@sol/firebase/functions-api": [
                 "libs/firebase/functions-api/src/index.ts"
             ],
+            "@sol/firebase/remote-config-api": [
+                "libs/firebase/remote-config-api/src/index.ts"
+            ],
             "@sol/form/validity": ["libs/angular/form/validity/src/index.ts"],
             "@sol/header": ["libs/angular/header/src/index.ts"],
             "@sol/paths": ["libs/angular/paths/src/index.ts"],
@@ -98,9 +102,6 @@
             ],
             "@sol/ts/firebase/firebase-config": [
                 "libs/ts/firebase/firebase-config/src/index.ts"
-            ],
-            "@sol/firebase/remote-config-api": [
-                "libs/firebase/remote-config-api/src/index.ts"
             ]
         }
     },

@@ -41,22 +41,25 @@ import { FormsModule } from '@angular/forms';
                 >
                     <ng-template pTemplate="header">
                         <tr>
-                            <th pSortableColumn="title" style="width: 40%">
+                            <th pSortableColumn="title" style="width: 25%">
                                 Name <p-sortIcon field="title"></p-sortIcon>
                             </th>
-                            <th pSortableColumn="enrolledCount">
+                            <th
+                                pSortableColumn="enrolledCount"
+                                style="width: 15%"
+                            >
                                 # Enrolled Students
                                 <p-sortIcon field="enrolledCount"></p-sortIcon>
                             </th>
-                            <th pSortableColumn="start">
+                            <th pSortableColumn="start" style="width: 15%">
                                 Start
                                 <p-sortIcon field="start"></p-sortIcon>
                             </th>
-                            <th pSortableColumn="end">
+                            <th pSortableColumn="end" style="width: 15%">
                                 End
                                 <p-sortIcon field="end"></p-sortIcon>
                             </th>
-                            <th style="width: 20%"></th>
+                            <th style="width: 15%"></th>
                             <th style="width: 15%"></th>
                         </tr>
                     </ng-template>
@@ -70,13 +73,9 @@ import { FormsModule } from '@angular/forms';
                                 <td>
                                     <p-button
                                         class="sol-button"
-                                        label="View/Print Class Forms"
-                                        icon="pi pi-download"
+                                        label="View Forms"
+                                        icon="pi pi-window-maximize"
                                         [id]="row.id + 'downloadBtn'"
-                                        [loading]="
-                                            classIdOfFormsBeingDownloaded() ===
-                                            row.id
-                                        "
                                         (click)="downloadClick.emit(row.id)"
                                     >
                                     </p-button>
@@ -85,7 +84,8 @@ import { FormsModule } from '@angular/forms';
                                     <p-button
                                         class="sol-button"
                                         [id]="row.id + 'emailsBtn'"
-                                        label="Copy Email Lists"
+                                        label="View Emails"
+                                        icon="pi pi-window-maximize"
                                         [loading]="
                                             classIdOfEmailsBeingCopied() ===
                                             row.id
@@ -112,9 +112,6 @@ import { FormsModule } from '@angular/forms';
 export class ClassPrintoutsViewComponent {
     readonly rows = input.required<Array<ClassPrintoutRow> | undefined>();
     readonly classIdOfEmailsBeingCopied = input.required<string | undefined>();
-    readonly classIdOfFormsBeingDownloaded = input.required<
-        string | undefined
-    >();
     readonly semesters = input.required<
         Array<{ id: string; name: string }> | undefined
     >();

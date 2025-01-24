@@ -16,13 +16,15 @@ import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { CopyClassEmailsService } from '../../services/copy-class-emails.service';
-import { DownloadClassFormsService } from '../../services/download-class-forms.service';
+import { Dialog } from '@angular/cdk/dialog';
+import { ClassPrintoutsDisplayComponent } from './class-printouts-display.component';
+import { ClassEmailsDialogComponent } from './class-emails.component';
+import { DialogContainerComponent } from '@sol/angular/dialog';
 
 @Component({
     template: `<sol-class-printouts-view
         [rows]="classRows.value()"
         [classIdOfEmailsBeingCopied]="rowOfEmailsBeingCopied()?.id"
-        [classIdOfFormsBeingDownloaded]="classIdOfFormsBeingDownloaded()"
         [semesters]="semesters.value()"
         [selectedSemester]="selectedSemester()"
         (selectedSemesterChange)="selectedSemesterChange($event)"
@@ -36,7 +38,7 @@ export class ClassPrintoutsComponent implements OnInit {
     readonly #classSemesterListService = inject(ClassesSemesterListService);
     readonly #classListService = inject(ClassListService);
     readonly #copyClassEmailsService = inject(CopyClassEmailsService);
-    readonly #downloadClassFormsService = inject(DownloadClassFormsService);
+    readonly #dialog = inject(Dialog);
 
     readonly semesters = rxResource({
         loader: () =>
@@ -73,32 +75,22 @@ export class ClassPrintoutsComponent implements OnInit {
             filter((row): row is ClassPrintoutRow => !!row),
             switchMap((row) => {
                 return this.#copyClassEmailsService
-                    .copyClassEmails({
+                    .getClassEmails({
                         classId: row.id,
-                        classTitle: row.title,
                         semesterId: this.selectedSemester(),
                     })
                     .pipe(
+                        tap((emails) =>
+                            this.#dialog.open(ClassEmailsDialogComponent, {
+                                container: DialogContainerComponent,
+                                data: {
+                                    emails,
+                                    title: row.title,
+                                    fullscreen: false,
+                                },
+                            })
+                        ),
                         tap(() => this.rowOfEmailsBeingCopied.set(undefined))
-                    );
-            })
-        )
-    );
-
-    readonly classIdOfFormsBeingDownloaded = signal<string | undefined>(
-        undefined
-    );
-
-    readonly #downloadClassFormsFor = rxMethod<string | undefined>(
-        pipe(
-            filter((classId): classId is string => !!classId),
-            switchMap((classId) => {
-                return this.#downloadClassFormsService
-                    .downloadClassForms(classId, this.selectedSemester())
-                    .pipe(
-                        tap(() =>
-                            this.classIdOfFormsBeingDownloaded.set(undefined)
-                        )
                     );
             })
         )
@@ -106,7 +98,6 @@ export class ClassPrintoutsComponent implements OnInit {
 
     ngOnInit() {
         this.#copyClassEmailsFor(this.rowOfEmailsBeingCopied);
-        this.#downloadClassFormsFor(this.classIdOfFormsBeingDownloaded);
     }
 
     selectedSemesterChange(semester: string) {
@@ -118,7 +109,14 @@ export class ClassPrintoutsComponent implements OnInit {
     }
 
     downloadClick(classId: string) {
-        this.classIdOfFormsBeingDownloaded.set(classId);
+        this.#dialog.open(ClassPrintoutsDisplayComponent, {
+            container: DialogContainerComponent,
+            data: {
+                classId,
+                semesterId: this.selectedSemester(),
+                fullscreen: true,
+            },
+        });
     }
 
     #mapToClassRows({

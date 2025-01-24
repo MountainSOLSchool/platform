@@ -28,7 +28,6 @@ import { FormsModule } from '@angular/forms';
 import { create, enforce, group, test } from 'vest';
 import { RxLet } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
-import { RxFor } from '@rx-angular/template/for';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,7 +45,6 @@ import { RxFor } from '@rx-angular/template/for';
         SelectButtonModule,
         FormsModule,
         RxLet,
-        RxFor,
         ValidDirective,
         MessagesComponent,
     ],
