@@ -5,7 +5,6 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { LoginComponent } from '@sol/auth/login';
 import { CardModule } from 'primeng/card';
 import {
     BehaviorSubject,
@@ -35,13 +34,11 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { NgClass, NgStyle } from '@angular/common';
 import { SelectStudentCardComponent } from '../select-student-card/select-student-card.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        LoginComponent,
         CardModule,
         MessagesModule,
         MessageModule,
@@ -54,8 +51,6 @@ import { SelectStudentCardComponent } from '../select-student-card/select-studen
         ButtonModule,
         DialogModule,
         ProgressSpinnerModule,
-        NgClass,
-        NgStyle,
         SelectStudentCardComponent,
     ],
     selector: 'sol-student-selection',

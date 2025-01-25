@@ -5,7 +5,7 @@ type FirebaseServiceMethods<T> = {
     [key: string]: FirebaseSdkMethod<T, any, any>;
 };
 
-export class FirebaseAuthBasedServiceFactory {
+export class FirebaseServiceFactory {
     static create<T, Methods extends FirebaseServiceMethods<T>>(
         instance: T,
         methods: Methods

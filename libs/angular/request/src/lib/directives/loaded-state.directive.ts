@@ -14,7 +14,6 @@ export interface LetViewContext<T> {
 
 @Directive({
     selector: '[solLoaded]',
-    standalone: true,
 })
 export class SolLoadedDirective<T> {
     private readonly templateRef = inject(TemplateRef);
@@ -31,7 +30,7 @@ export class SolLoadedDirective<T> {
 
     static ngTemplateGuard_solLoaded<T>(
         dir: SolLoadedDirective<T>,
-        state: Requested<T>
+        state: Requested<T> | null | undefined
     ): state is T {
         return true;
     }

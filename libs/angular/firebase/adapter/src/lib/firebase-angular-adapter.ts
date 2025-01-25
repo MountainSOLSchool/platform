@@ -5,12 +5,19 @@ import {
     signOut,
 } from 'firebase/auth';
 import { Auth, user } from '@angular/fire/auth';
-import { FirebaseAuthBasedServiceFactory } from '@sol/ts/firebase/adapter';
+import { FirebaseServiceFactory } from '@sol/ts/firebase/adapter';
 import { inject, InjectionToken } from '@angular/core';
 import { Functions, httpsCallable } from '@angular/fire/functions';
+import {
+    getRemoteConfig,
+    getValue,
+    fetchAndActivate,
+    RemoteConfig,
+} from 'firebase/remote-config';
+import { FirebaseApp } from '@angular/fire/app';
 
 export const fireAuth = (auth: Auth) =>
-    FirebaseAuthBasedServiceFactory.create(auth, {
+    FirebaseServiceFactory.create(auth, {
         createUserWithEmailAndPassword,
         sendPasswordResetEmail,
         signInWithEmailAndPassword,
@@ -28,7 +35,7 @@ export const provideFireAuth = () => ({
 });
 
 const fireFunctions = (functions: Functions) =>
-    FirebaseAuthBasedServiceFactory.create(functions, {
+    FirebaseServiceFactory.create(functions, {
         httpsCallable,
     });
 
@@ -40,3 +47,48 @@ export const provideFireFunctions = () => ({
     provide: FIRE_FUNCTIONS,
     useFactory: () => fireFunctions(inject(Functions)),
 });
+
+const fireConfigApp = (app: FirebaseApp) =>
+    FirebaseServiceFactory.create(app, {
+        getRemoteConfig,
+    });
+
+export const FIRE_CONFIG_APP = new InjectionToken<
+    ReturnType<typeof fireConfigApp>
+>('FIRE_CONFIG_APP');
+
+export const provideFireConfigApp = () => ({
+    provide: FIRE_CONFIG_APP,
+    useFactory: () => fireConfigApp(inject(FirebaseApp)),
+});
+
+const fireConfigInstance = (remoteConfig: RemoteConfig) =>
+    FirebaseServiceFactory.create(remoteConfig, {
+        getValue,
+        fetchAndActivate,
+    });
+
+export const FIRE_CONFIG_INSTANCE = new InjectionToken<
+    ReturnType<typeof fireConfigInstance>
+>('FIRE_CONFIG_INSTANCE');
+
+export const provideFireConfigInstance = (remoteConfig: RemoteConfig) => ({
+    provide: FIRE_CONFIG_INSTANCE,
+    useFactory: () => fireConfigInstance(remoteConfig),
+});
+
+export const provideFireConfig = () => [
+    {
+        provide: FIRE_CONFIG_APP,
+        useFactory: () => fireConfigApp(inject(FirebaseApp)),
+    },
+    {
+        provide: FIRE_CONFIG_INSTANCE,
+        useFactory: () => {
+            const app = inject(FirebaseApp);
+            const configApp = fireConfigApp(app);
+            const remoteConfig = configApp.getRemoteConfig();
+            return fireConfigInstance(remoteConfig);
+        },
+    },
+];

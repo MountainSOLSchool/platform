@@ -52,24 +52,6 @@
         "@rx-angular/template": {
             "@angular/core": "^19.0.0",
             "@angular/common": "^19.0.0"
-        },
-        "@ngrx/store": {
-            "@angular/core": "^19.0.0"
-        },
-        "@ngrx/effects": {
-            "@angular/core": "^19.0.0"
-        },
-        "@ngrx/entity": {
-            "@angular/core": "^19.0.0"
-        },
-        "@ngrx/component-store": {
-            "@angular/core": "^19.0.0"
-        },
-        "@ngrx/store-devtools": {
-            "@angular/core": "^19.0.0"
-        },
-        "@ngrx/operators": {
-            "@angular/core": "^19.0.0"
         }
     },
     "dependencies": {
@@ -91,14 +73,15 @@
         "@fullcalendar/interaction": "^6.1.14",
         "@fullcalendar/timegrid": "^6.1.14",
         "@fullcalendar/web-component": "^6.1.10",
-        "@ngrx/component-store": "^18.1.1",
-        "@ngrx/effects": "^18.1.1",
-        "@ngrx/entity": "^18.1.1",
-        "@ngrx/operators": "18.0.2",
-        "@ngrx/store": "^18.1.1",
-        "@ngrx/store-devtools": "^18.1.1",
+        "@ngrx/component-store": "19.0.0",
+        "@ngrx/effects": "19.0.0",
+        "@ngrx/entity": "19.0.0",
+        "@ngrx/operators": "19.0.0",
+        "@ngrx/signals": "19.0.0",
+        "@ngrx/store": "19.0.0",
+        "@ngrx/store-devtools": "19.0.0",
         "@nx-extend/terraform": "^6.0.5",
-        "@nx/angular": "20.2.2",
+        "@nx/angular": "20.3.2",
         "@reduxjs/toolkit": "^1.9.3",
         "@rx-angular/cdk": "^18.0.0",
         "@rx-angular/template": "^18.0.3",
@@ -146,16 +129,16 @@
         "@angular/language-service": "19.0.3",
         "@babel/core": "^7.14.5",
         "@babel/preset-react": "^7.14.5",
-        "@nx/cypress": "20.2.2",
-        "@nx/esbuild": "20.2.2",
-        "@nx/eslint": "20.2.2",
-        "@nx/eslint-plugin": "20.2.2",
-        "@nx/jest": "20.2.2",
-        "@nx/js": "20.2.2",
-        "@nx/next": "20.2.2",
-        "@nx/node": "20.2.2",
-        "@nx/react": "20.2.2",
-        "@nx/workspace": "20.2.2",
+        "@nx/cypress": "20.3.2",
+        "@nx/esbuild": "20.3.2",
+        "@nx/eslint": "20.3.2",
+        "@nx/eslint-plugin": "20.3.2",
+        "@nx/jest": "20.3.2",
+        "@nx/js": "20.3.2",
+        "@nx/next": "20.3.2",
+        "@nx/node": "20.3.2",
+        "@nx/react": "20.3.2",
+        "@nx/workspace": "20.3.2",
         "@schematics/angular": "19.0.3",
         "@swc-node/register": "1.9.2",
         "@swc/core": "1.5.7",
@@ -200,7 +183,7 @@
         "jsonc-eslint-parser": "^2.1.0",
         "lint-staged": "^15.0.2",
         "ng-packagr": "19.0.1",
-        "nx": "20.2.2",
+        "nx": "20.3.2",
         "postcss": "8.4.38",
         "postcss-import": "14.1.0",
         "postcss-preset-env": "7.5.0",

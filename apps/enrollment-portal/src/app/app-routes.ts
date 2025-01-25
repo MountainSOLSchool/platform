@@ -1,17 +1,17 @@
-import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { HeaderComponent } from '@sol/header';
-import { AdminGuard } from './admin.guard';
-import { LoginEffectModule } from './login.effects';
-import { UserGuard } from './user.guard';
+import { adminGuard } from './admin.guard';
+import { userGuard } from './user.guard';
 import { provideClassList } from '@sol/angular/classes/list';
 import { provideRequests } from '@sol/angular/request';
+import { provideEffects } from '@ngrx/effects';
+import { loginEffects } from './login.effects';
 
 export const appRoutes: Routes = [
     {
         path: '',
         component: HeaderComponent,
-        providers: [importProvidersFrom(LoginEffectModule), provideRequests()],
+        providers: [provideEffects(loginEffects), provideRequests()],
         children: [
             {
                 path: 'user',
@@ -24,7 +24,7 @@ export const appRoutes: Routes = [
                 children: [
                     {
                         path: '',
-                        canActivate: [UserGuard],
+                        canActivate: [userGuard],
                         children: [
                             {
                                 path: 'account',
@@ -35,8 +35,7 @@ export const appRoutes: Routes = [
                             },
                             {
                                 path: 'admin',
-                                providers: [AdminGuard],
-                                canActivate: [AdminGuard],
+                                canActivate: [adminGuard],
                                 children: [
                                     {
                                         path: '',

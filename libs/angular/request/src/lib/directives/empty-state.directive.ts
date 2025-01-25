@@ -9,7 +9,6 @@ import { Requested, RequestState } from '../models/requested.type';
 
 @Directive({
     selector: '[solEmpty]',
-    standalone: true,
 })
 export class SolEmptyDirective<T> {
     private readonly templateRef = inject(TemplateRef);

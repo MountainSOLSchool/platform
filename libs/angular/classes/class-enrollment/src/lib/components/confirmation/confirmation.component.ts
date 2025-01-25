@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe, JsonPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -46,7 +46,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
         CheckoutComponent,
         ClassSummaryTableComponent,
         DatePipe,
-        JsonPipe,
     ],
     providers: [],
     selector: 'sol-class-confirmation',

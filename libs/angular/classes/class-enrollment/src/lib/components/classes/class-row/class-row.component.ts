@@ -76,7 +76,6 @@ interface ClassRow {
     ],
     selector: 'sol-class-row',
     templateUrl: './class-row.component.html',
-    standalone: true,
 })
 export class ClassRowComponent {
     readonly row = input.required<ClassRow>();

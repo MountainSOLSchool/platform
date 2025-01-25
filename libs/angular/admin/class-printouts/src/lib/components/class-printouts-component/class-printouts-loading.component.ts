@@ -29,4 +29,4 @@ import { TableModule } from 'primeng/table';
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [TableModule],
 })
-export class ClassPrintoutsLoadingViewComponent {}
+export class ClassPrintoutsLoadingComponent {}

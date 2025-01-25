@@ -18,8 +18,8 @@
             </ul>
         </p-panel>
     </div>
-    <div>
-        @if (semesters(); as semesters) {
+        <div>
+        @if (semesters.value(); as semesters) {
             <p-panel>
                 <ng-template pTemplate="header">
                     <div style="display: flex; align-items: center; gap: 10px">
@@ -36,10 +36,10 @@
                     </div>
                 </ng-template>
                 <div style="width: 500px; margin-top: 10px">
-                    @defer (when data() !== undefined) {
+                    @defer (when semesterEnrollmentChartData.hasValue()) {
                         <p-chart
                             type="radar"
-                            [data]="data()"
+                            [data]="semesterEnrollmentChartData.value()"
                             [options]="chartOptions"
                             [style]="{ height: '200px' }"
                         ></p-chart>

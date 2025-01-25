@@ -13,7 +13,6 @@ import { FormsModule } from '@angular/forms';
 import { SliderModule } from 'primeng/slider';
 
 @Component({
-    standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AutoFocusModule,

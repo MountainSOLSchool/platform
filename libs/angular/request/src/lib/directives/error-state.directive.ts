@@ -9,7 +9,6 @@ import { Requested, RequestState } from '../models/requested.type';
 
 @Directive({
     selector: '[solError]',
-    standalone: true,
 })
 export class SolErrorDirective<T> {
     private readonly templateRef = inject(TemplateRef);

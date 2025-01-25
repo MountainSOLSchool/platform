@@ -1,4 +1,4 @@
-import { FirebaseAuthBasedServiceFactory } from '@sol/ts/firebase/adapter';
+import { FirebaseServiceFactory } from '@sol/ts/firebase/adapter';
 import { getSolAuth } from './sol-auth';
 import {
     createUserWithEmailAndPassword,
@@ -9,11 +9,11 @@ import {
 } from 'firebase/auth';
 
 let _solAuthClient:
-    | ReturnType<typeof FirebaseAuthBasedServiceFactory.create>
+    | ReturnType<typeof FirebaseServiceFactory.create>
     | undefined;
 
 export const getSolAuthClient = () => {
-    _solAuthClient ??= FirebaseAuthBasedServiceFactory.create(getSolAuth(), {
+    _solAuthClient ??= FirebaseServiceFactory.create(getSolAuth(), {
         createUserWithEmailAndPassword,
         sendPasswordResetEmail,
         signInWithEmailAndPassword,

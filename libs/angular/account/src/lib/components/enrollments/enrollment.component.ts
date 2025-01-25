@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 import { SemesterEnrollment } from '@sol/classes/domain';
 import { ClassSummaryTableComponent } from '@sol/classes/enrollment';
@@ -7,36 +7,36 @@ import { CardModule } from 'primeng/card';
 
 @Component({
     selector: 'sol-enrollment-view',
-    template: `<p-card [header]="enrollment.studentName">
+    template: `@let enrollmentValue = enrollment();
+    <p-card [header]="enrollmentValue.studentName">
         <p>
             <b>Final cost:</b>
-            <br />{{ enrollment.finalCost | currency }} (Includes additional
+            <br />{{ enrollmentValue.finalCost | currency }} (Includes additional
             options and discounts)
         </p>
         <p>
             <b>Date:</b><br />
-            {{ enrollment.timestamp._seconds * 1000 | date: 'short' }}
+            {{ enrollmentValue.timestamp._seconds * 1000 | date: 'short' }}
         </p>
         <p>
             <b>Transaction ID:</b>
             {{
-                enrollment.transactionId === ''
+                enrollmentValue.transactionId === ''
                     ? 'Paid by Check'
-                    : enrollment.transactionId
+                    : enrollmentValue.transactionId
             }}
         </p>
         <p><b>Classes:</b></p>
         <!-- TODO: how to display historical data? -->
         <sol-class-summary-table
-            [classes]="assertHasClasses(enrollment) ? enrollment.classes : []"
+            [classes]="assertHasClasses(enrollmentValue) ? enrollmentValue.classes : []"
         ></sol-class-summary-table>
     </p-card>`,
     imports: [ClassSummaryTableComponent, CurrencyPipe, CardModule, DatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EnrollmentViewComponent {
-    @Input({ required: true })
-    enrollment!: SemesterEnrollment;
+export class EnrollmentComponent {
+    readonly enrollment = input.required<SemesterEnrollment>();
 
     assertHasClasses(
         enrollment: SemesterEnrollment

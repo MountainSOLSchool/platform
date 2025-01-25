@@ -113,7 +113,8 @@ export class ClassRepository {
             gradeRangeEnd: dbo.grade_range_end,
             description: dbo.description,
             live: dbo.live,
-            cost: dbo.cost,
+            // Coerce to number to ensure it is a number because we are doing manual database entries today
+            cost: Number(dbo.cost),
             location: dbo.location,
             instructors: (
                 (await DatabaseUtility.getHydratedDocuments(

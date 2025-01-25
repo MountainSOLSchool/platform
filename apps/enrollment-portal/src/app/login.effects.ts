@@ -1,60 +1,45 @@
-import { inject, Injectable, NgModule } from '@angular/core';
+import { inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions, createEffect, ofType, provideEffects } from '@ngrx/effects';
-import { BehaviorSubject, combineLatest, filter, pairwise, tap } from 'rxjs';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { filter, pairwise, tap } from 'rxjs';
 import { userLoginInitiated } from './login.actions';
 import { UserService } from '@sol/auth/user';
 
-@Injectable({ providedIn: 'root' })
-export class LoginEffect {
-    private readonly router = inject(Router);
-    private readonly user = inject(UserService).getUser();
-    private readonly actions = inject(Actions);
+const lastRouteBeforeUserPages = signal<string>('/');
 
-    private readonly lastRouteBeforeUserPages$ = new BehaviorSubject<string>(
-        '/'
-    );
+const updateLastRouteBeforeUserPages = createEffect(
+    (actions$ = inject(Actions)) => {
+        return actions$.pipe(
+            ofType(userLoginInitiated),
+            tap((last) => lastRouteBeforeUserPages.set(last.currentRoute))
+        );
+    },
+    { functional: true, dispatch: false }
+);
 
-    readonly updateLastRouteBeforeUserPages = createEffect(
-        () => {
-            return this.actions.pipe(
-                ofType(userLoginInitiated),
-                tap((last) =>
-                    this.lastRouteBeforeUserPages$.next(last.currentRoute)
+const redirectWhenLoggedIn = createEffect(
+    (router = inject(Router), user = inject(UserService).getUser()) => {
+        return user
+            .pipe(
+                pairwise(),
+                filter(
+                    ([prevUser, currUser]) =>
+                        prevUser === null && currUser !== null
                 )
-            );
-        },
-        { dispatch: false }
-    );
-
-    readonly redirectWhenLoggedIn = createEffect(
-        () => {
-            return combineLatest([
-                this.user.pipe(
-                    pairwise(),
-                    filter(
-                        ([prevUser, currUser]) =>
-                            prevUser === null && currUser !== null
-                    )
-                ),
-                this.lastRouteBeforeUserPages$,
-            ]).pipe(
-                filter(() => {
-                    return (
+            )
+            .pipe(
+                filter(
+                    () =>
                         window.location.pathname.endsWith('/user/login') ||
                         window.location.pathname.endsWith('/user/create')
-                    );
-                }),
-                tap(([, lastRouteBeforeUserPages]) => {
-                    this.router.navigateByUrl(lastRouteBeforeUserPages);
-                })
+                ),
+                tap(() => router.navigateByUrl(lastRouteBeforeUserPages()))
             );
-        },
-        { dispatch: false }
-    );
-}
+    },
+    { functional: true, dispatch: false }
+);
 
-@NgModule({
-    providers: [provideEffects(LoginEffect)],
-})
-export class LoginEffectModule {}
+export const loginEffects = {
+    updateLastRouteBeforeUserPages,
+    redirectWhenLoggedIn,
+};
