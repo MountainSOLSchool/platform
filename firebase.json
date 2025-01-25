@@ -81,6 +81,18 @@
                     "function": "getMyStudent"
                 },
                 {
+                    "source": "/getStudentCompletedUnits",
+                    "function": "getStudentCompletedUnits"
+                },
+                {
+                    "source": "/getMyStudent",
+                    "function": "getMyStudent"
+                },
+                {
+                    "source": "/getMyStudent",
+                    "function": "getMyStudent"
+                },
+                {
                     "source": "/updateEnrollmentDraft",
                     "function": "updateEnrollmentDraft"
                 },
