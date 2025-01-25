@@ -57,7 +57,6 @@ function SmartTreeChart() {
     const units = useSelector((state: RootState) => state.units);
 
     const student = useSelector((state: RootState) => state.student);
-    const studentName = student['name'];
     const [completeUnits, setCompleteUnits] = useState([]);
     const [unitName, setUnitName] = useState(sidebarDefault.header);
     const [unitDescription, setUnitDescription] = useState(
@@ -188,12 +187,12 @@ function SmartTreeChart() {
         });
 
         const smartTreeData = {
-            name: studentName,
+            name: student.name,
             children: treePaths,
         };
 
         const animatedTreeData = {
-            name: studentName,
+            name: student.name,
             children: animatedTreePaths,
         };
 
@@ -596,6 +595,7 @@ function SmartTreeChart() {
     */
 
     useEffect(() => {
+        console.log('again');
         if (paths.length > 0 && units.length > 0) {
             setCompleteUnits(student['completedUnits']);
             generateNodes();

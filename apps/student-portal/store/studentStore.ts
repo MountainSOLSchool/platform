@@ -7,7 +7,7 @@ export const student = createSlice({
         completedUnits: [],
     },
     reducers: {
-        loadedTestStudent: (state, action) => {
+        loadedStudentCompletedUnits: (state, action) => {
             return action.payload;
         },
         setStudentId: (state, action: { payload: string }) => {
@@ -17,6 +17,7 @@ export const student = createSlice({
     },
 });
 
-export const { loadedTestStudent, setStudentId, setStudent } = student.actions;
+export const { loadedStudentCompletedUnits, setStudentId, setStudent } =
+    student.actions;
 
 export default student.reducer;

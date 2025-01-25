@@ -4,7 +4,7 @@ import { Observable, map } from 'rxjs';
 import { db } from '../firebase/database';
 import { doc, getDoc } from 'firebase/firestore';
 
-import { setStudentId, loadedTestStudent } from './studentStore';
+import { setStudentId, loadedStudentCompletedUnits } from './studentStore';
 
 export const loadStudent = (action$: Observable<Action>) =>
     action$.pipe(
@@ -16,7 +16,7 @@ export const loadStudent = (action$: Observable<Action>) =>
                         .data()
                         .completed_units.map((unit: { id: string }) => unit.id);
                     let name = doc.data().first_name;
-                    return loadedTestStudent({
+                    return loadedStudentCompletedUnits({
                         name: name,
                         completedUnits: units,
                     });
