@@ -22,6 +22,7 @@ env:
         fullUnitsAndPaths
         getCompletedUnits
         getMyStudent
+        getStudentCompletedUnits
         historicalSemesters
         loadEnrollmentDraft
         myEnrolledStudents
