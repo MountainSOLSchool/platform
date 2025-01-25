@@ -4,13 +4,13 @@ import { Observable, map } from 'rxjs';
 import { db } from '../firebase/database';
 import { doc, getDoc } from 'firebase/firestore';
 
-import { requestTestStudent, loadedTestStudent } from './testStudent';
+import { setStudentId, loadedTestStudent } from './studentStore';
 
-export const loadTestStudent = (action$: Observable<Action>) =>
+export const loadStudent = (action$: Observable<Action>) =>
     action$.pipe(
-        filter((action) => action.type === requestTestStudent.type),
-        switchMap(() =>
-            from(getDoc(doc(db, 'students', 'zWKUjbHAUOFJBKo38LYw'))).pipe(
+        filter((action) => action.type === setStudentId.type),
+        switchMap(({ payload }: { payload: string; type: string }) =>
+            from(getDoc(doc(db, 'students', payload))).pipe(
                 map((doc) => {
                     let units = doc
                         .data()

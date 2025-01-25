@@ -13,7 +13,6 @@ const nextConfig = {
     },
 
     redirects: async () => {
-        return [];
         return [
             {
                 source: '/',

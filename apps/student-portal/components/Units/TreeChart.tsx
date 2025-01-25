@@ -4,10 +4,7 @@ import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'apps/student-portal/store/store';
 import { requestPaths } from 'apps/student-portal/store/paths';
-import {
-    requestUnits,
-    overrideUnits,
-} from 'apps/student-portal/store/unitStore';
+import { requestUnits } from 'apps/student-portal/store/unitStore';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',
@@ -34,16 +31,16 @@ const Colors = {
 };
 
 // DEFINE SIDEBAR CONTENT AND BEHAVIOR
-const sidebarDefault = {header: "Unit Name", description: "Unit Description"};
+const sidebarDefault = { header: 'Unit Name', description: 'Unit Description' };
 const unitName = sidebarDefault.header;
 const unitdescription = sidebarDefault.description;
 const sidebarDimensions = {
     width: 400,
-    paddingTop: "2rem",
-    paddingHoriz: "1rem",
+    paddingTop: '2rem',
+    paddingHoriz: '1rem',
     fontSize: 15,
     headerFontSize: 25,
-}
+};
 
 function SmartTreeChart() {
     const dispatch = useDispatch();
@@ -63,7 +60,9 @@ function SmartTreeChart() {
     const studentName = student['name'];
     const [completeUnits, setCompleteUnits] = useState([]);
     const [unitName, setUnitName] = useState(sidebarDefault.header);
-    const [unitDescription, setUnitDescription] = useState(sidebarDefault.description);
+    const [unitDescription, setUnitDescription] = useState(
+        sidebarDefault.description
+    );
 
     function generateNodes() {
         const animatedTreePaths = [];
@@ -130,7 +129,7 @@ function SmartTreeChart() {
                     categories.push(category);
                 }
             });
-            
+
             // ADD INVISIBLE NODES TO BEND NODES INWARD
             categories.forEach((category, index) => {
                 if (category['children'].length === 1) {
@@ -605,39 +604,45 @@ function SmartTreeChart() {
             dispatch(requestUnits());
         }
         return;
-    }, [paths.length, units.length, student]);
-
-    
+    }, [paths.length, units.length, student, dispatch, generateNodes]);
 
     return (
         <div className="smart-tree-wrapper">
-            <h1>HELLO THERE</h1>
-            <button onClick={() => dispatch(overrideUnits(MtnMedicUnits))}>
+            <h1>{student.name}&apos;s Units</h1>
+            {/* <button onClick={() => dispatch(overrideUnits(MtnMedicUnits))}>
                 MTN MEDIC ONLY
             </button>
-            <button onClick={() => {
-                d3.select('.smart-tree-sidebar').style('transform', 'rotateY(180deg)');
-            }}>FLIP SIDEBAR</button>
-            <div 
+            <button
+                onClick={() => {
+                    d3.select('.smart-tree-sidebar').style(
+                        'transform',
+                        'rotateY(180deg)'
+                    );
+                }}
+            >
+                FLIP SIDEBAR
+            </button> */}
+            <div
                 style={{
-                    border: "1px solid black",
                     display: 'inline-flex',
-                    }}>
+                }}
+            >
                 <div className="smart-tree-container"></div>
-                <div className="smart-tree-sidebar" 
+                <div
+                    className="smart-tree-sidebar"
                     style={{
-                        border: "2px solid black",
+                        border: '2px solid black',
                         paddingLeft: sidebarDimensions.paddingHoriz,
                         paddingBottom: sidebarDimensions.paddingTop,
                         paddingTop: sidebarDimensions.paddingTop,
                         width: sidebarDimensions.width,
                         fontSize: sidebarDimensions.fontSize,
-                        }}>
+                    }}
+                >
                     <h2 className="sidebar-header">{unitName}</h2>
                     <p className="sidebar-description">{unitDescription}</p>
-                </div>  
+                </div>
             </div>
-            
         </div>
     );
 }

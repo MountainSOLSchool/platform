@@ -28,7 +28,7 @@ export const loadUnits = (action$: Observable<Action>) =>
                                                   .toString()
                                       ) ?? []
                                     : 'none',
-                                description: fields.description.stringValue,
+                                description: fields?.description?.stringValue,
                             };
                         })
                     )
