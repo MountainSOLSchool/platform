@@ -27,3 +27,4 @@ export { allStudents } from './endpoints/all-students';
 export { fullUnitsAndPaths } from './endpoints/full-units-and-paths';
 export { getCompletedUnits } from './endpoints/get-completed-units';
 export { updateCompletedUnits } from './endpoints/update-completed-units';
+export { getStudentCompletedUnits } from './endpoints/get-student-completed-units';
