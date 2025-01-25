@@ -7,6 +7,8 @@ import { Tooltip } from 'primereact/tooltip';
 import UpdateStudentUnitsChanges from './UpdateStudentUnitsChanges';
 import { useSelector } from 'react-redux';
 import { selectUnitNameAndCompletionChange } from './UnitsStore';
+import { Button } from 'primereact/button';
+import { useRouter } from 'next/navigation';
 
 // TODO: the styling classes are haphazardly applied here
 export function UpdateUnitsTool(props: {
@@ -30,6 +32,8 @@ export function UpdateUnitsTool(props: {
         isCompleted: boolean;
     }) => void;
 }) {
+    const router = useRouter();
+
     const unitsByCategory = Object.entries(props.units).reduce(
         (agg, [unitId, unit]) => ({
             ...agg,
@@ -206,6 +210,11 @@ export function UpdateUnitsTool(props: {
     return (
         <div>
             <h2 className="text-3xl font-bold mb-3">Completed Units</h2>
+            <Button
+                label="View Student's Paths Tree"
+                icon="pi pi-window-maximize"
+                onClick={() => router.push(`/units/student/${props.student}`)}
+            ></Button>
             <TabView activeIndex={activeTabIndex}>
                 <TabPanel
                     header="Class Units"

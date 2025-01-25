@@ -4,10 +4,7 @@ import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'apps/student-portal/store/store';
 import { requestPaths } from 'apps/student-portal/store/paths';
-import {
-    requestUnits,
-    overrideUnits,
-} from 'apps/student-portal/store/unitStore';
+import { requestUnits } from 'apps/student-portal/store/unitStore';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',
@@ -33,13 +30,25 @@ const Colors = {
     text: 'black',
 };
 
+// DEFINE SIDEBAR CONTENT AND BEHAVIOR
+const sidebarDefault = { header: 'Unit Name', description: 'Unit Description' };
+const unitName = sidebarDefault.header;
+const unitdescription = sidebarDefault.description;
+const sidebarDimensions = {
+    width: 400,
+    paddingTop: '2rem',
+    paddingHoriz: '1rem',
+    fontSize: 15,
+    headerFontSize: 25,
+};
+
 function SmartTreeChart() {
     const dispatch = useDispatch();
 
     // [x] GET UNITS ARRAY
     // [x] GET STUDENT PROFILE
     // [x] FIND COMPLETED UNITS
-    // [] COMPARE STUDENT UNITS TO PREREQS AND MARK ALL COMPLETED, INCOMPLETE, AND UNAVAILABLE CLASSES
+    // [X] COMPARE STUDENT UNITS TO PREREQS AND MARK ALL COMPLETED, INCOMPLETE, AND UNAVAILABLE CLASSES
     // [x] SORT INTO HIERARCHY
     // [x] IF LOADING MULTIPLE NODES FOR ANY CATEGORY, GENERATE NEW CATEGORY BRANCH
     // [] ? SHOW ONE NODE DEEP FOR CLASSES THAT ARE NOT AVAILABLE ?
@@ -48,8 +57,11 @@ function SmartTreeChart() {
     const units = useSelector((state: RootState) => state.units);
 
     const student = useSelector((state: RootState) => state.student);
-    const studentName = student['name'];
     const [completeUnits, setCompleteUnits] = useState([]);
+    const [unitName, setUnitName] = useState(sidebarDefault.header);
+    const [unitDescription, setUnitDescription] = useState(
+        sidebarDefault.description
+    );
 
     function generateNodes() {
         const animatedTreePaths = [];
@@ -117,7 +129,7 @@ function SmartTreeChart() {
                 }
             });
 
-            // ADD GHOST NODES TO OFFSET CATEGORIES WITH ONE UNIT
+            // ADD INVISIBLE NODES TO BEND NODES INWARD
             categories.forEach((category, index) => {
                 if (category['children'].length === 1) {
                     // OFFSET UP OR DOWN
@@ -175,12 +187,12 @@ function SmartTreeChart() {
         });
 
         const smartTreeData = {
-            name: studentName,
+            name: student.name,
             children: treePaths,
         };
 
         const animatedTreeData = {
-            name: studentName,
+            name: student.name,
             children: animatedTreePaths,
         };
 
@@ -199,7 +211,7 @@ function SmartTreeChart() {
         // (dx is a height, and dy a width). This because the tree must be viewed with the root at the
         // “bottom”, in the data domain. The width of a column is based on the tree’s height.
         const root = d3.hierarchy(data);
-        const dx = 37.5;
+        const dx = 35;
         const dy = (width - marginRight - marginLeft) / (1 + root.height);
 
         // Define the tree layout and the shape for links.
@@ -235,7 +247,7 @@ function SmartTreeChart() {
             .attr('pointer-events', 'all');
 
         function update(event, source) {
-            const duration = event?.altKey ? 2500 : 250; // hold the alt key to slow down the transition
+            const duration = event?.altKey ? 2500 : 300; // hold the alt key to slow down the transition
             const nodes = root.descendants().reverse();
             const links = root.links();
 
@@ -308,17 +320,20 @@ function SmartTreeChart() {
                 .attr('stroke-width', 10)
                 .on('click', (e: any) => {
                     let nodeData = e.target['__data__'].data;
+                    if (nodeData.hasOwnProperty('description')) {
+                        setUnitName(nodeData['name']);
+                        setUnitDescription(nodeData['description']);
+                        console.log(nodeData.name);
+                    }
                     if (nodeData.status === 'ghost') {
                         return;
                     }
                     d3.selectAll('circle').classed('tree-node-selected', false);
-                    // TODO ADD CONDITION FOR DESELCTING BRANCHES
                     d3.select(e.target).classed('tree-node-selected', true);
                 });
 
             nodeEnter
                 .append('text')
-                .attr('dy', '.35em')
                 .attr('dy', '0.31em')
                 .attr('x', (d) => (d['_children'] ? -18 : 18))
                 .attr('text-anchor', (d) => (d['_children'] ? 'end' : 'start'))
@@ -412,12 +427,11 @@ function SmartTreeChart() {
             });
         }
 
-        // Do the first update to the initial configuration of the tree — where a number of nodes
-        // are open (arbitrarily selected as the root, plus nodes with 7 letters).
+        // Do the first update to the initial configuration of the tree
         root['x0'] = dy / 2;
         root['y0'] = 0;
         root.descendants().forEach((d, i) => {
-            // @ts-ignore mutating id on purpose for now
+            // @ts-ignore muatintg id on purpose for now
             d['id'] = i;
             d['_children'] = d.children;
             if (d.data.status) {
@@ -581,6 +595,7 @@ function SmartTreeChart() {
     */
 
     useEffect(() => {
+        console.log('again');
         if (paths.length > 0 && units.length > 0) {
             setCompleteUnits(student['completedUnits']);
             generateNodes();
@@ -589,15 +604,45 @@ function SmartTreeChart() {
             dispatch(requestUnits());
         }
         return;
-    }, [paths.length, units.length, student]);
+    }, [paths.length, units.length, student, dispatch, generateNodes]);
 
     return (
         <div className="smart-tree-wrapper">
-            <h1>HELLO THERE</h1>
-            <button onClick={() => dispatch(overrideUnits(MtnMedicUnits))}>
+            <h1>{student.name}&apos;s Units</h1>
+            {/* <button onClick={() => dispatch(overrideUnits(MtnMedicUnits))}>
                 MTN MEDIC ONLY
             </button>
-            <div className="smart-tree-container"></div>
+            <button
+                onClick={() => {
+                    d3.select('.smart-tree-sidebar').style(
+                        'transform',
+                        'rotateY(180deg)'
+                    );
+                }}
+            >
+                FLIP SIDEBAR
+            </button> */}
+            <div
+                style={{
+                    display: 'inline-flex',
+                }}
+            >
+                <div className="smart-tree-container"></div>
+                <div
+                    className="smart-tree-sidebar"
+                    style={{
+                        border: '2px solid black',
+                        paddingLeft: sidebarDimensions.paddingHoriz,
+                        paddingBottom: sidebarDimensions.paddingTop,
+                        paddingTop: sidebarDimensions.paddingTop,
+                        width: sidebarDimensions.width,
+                        fontSize: sidebarDimensions.fontSize,
+                    }}
+                >
+                    <h2 className="sidebar-header">{unitName}</h2>
+                    <p className="sidebar-description">{unitDescription}</p>
+                </div>
+            </div>
         </div>
     );
 }

@@ -92,6 +92,22 @@ export class FirebaseFunctions {
         const result = await getCompletedUnitsFn({ studentId });
         return result.data.completedUnitIds;
     }
+
+    static async getStudentCompletedUnits(
+        studentId: string
+    ): Promise<{ name: string; completed_units: Array<string> }> {
+        const getCompletedUnitsFn = httpsCallable<
+            { studentId: string },
+            {
+                student: {
+                    name: string;
+                    completed_units: Array<string>;
+                };
+            }
+        >(this.functions, 'getStudentCompletedUnits');
+        const result = await getCompletedUnitsFn({ studentId });
+        return result.data.student;
+    }
 }
 
 function getConfiguredFunctions() {

@@ -1,18 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import testStore from './testStore';
 import login from '../app/login/login.slice';
 import updateUnits from '../components/Units/UnitsStore';
 import { createEpicMiddleware } from 'redux-observable';
-import { load100 } from './testStoreEpic';
 import paths from './paths';
 import { loadPaths } from './pathsEpic';
 import unitStore from './unitStore';
 import { loadUnits } from './unitEpic';
-import testStudent from './testStudent';
-import { loadTestStudent } from './testStudentEpic';
+import student from './studentStore';
+import { loadStudent } from './studentEpic';
 import { createRootEpic } from '@sharakai/use-redux-observable-epic';
 
-const epics = [loadPaths, load100, loadUnits, loadTestStudent];
+const epics = [loadPaths, loadUnits, loadStudent];
 
 export const { rootEpic, addEpic } = createRootEpic(epics);
 
@@ -20,10 +18,9 @@ const epicMiddleware = createEpicMiddleware();
 
 export const store = configureStore({
     reducer: {
-        counter: testStore,
         paths: paths,
         units: unitStore,
-        student: testStudent,
+        student: student,
         login: login,
         updateUnits: updateUnits,
     },
