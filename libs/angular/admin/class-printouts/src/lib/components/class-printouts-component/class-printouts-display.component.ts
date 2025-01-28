@@ -2,10 +2,10 @@ import {
     ChangeDetectionStrategy,
     Component,
     inject,
-    viewChild,
+    signal,
 } from '@angular/core';
 import { DownloadClassFormsService } from '../../services/download-class-forms.service';
-import { TabView, TabViewModule } from 'primeng/tabview';
+import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
@@ -29,7 +29,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
                         (click)="print()"
                     ></button>
                 </div>
-                <p-tabView #tabs class="flex-1">
+                <p-tabView (activeIndexChange)="activeTabIndex.set($event)" class="flex-1">
                     <p-tabPanel header="Class Roster">
                         <div
                             class="overflow-auto"
@@ -92,9 +92,10 @@ export class ClassPrintoutsDisplayComponent {
 
     readonly #formsService = inject(DownloadClassFormsService);
     readonly #dialogRef = inject(DialogRef);
-    readonly tabView = viewChild<TabView>('tabs');
 
     readonly tabs = ['roster', 'signIn', 'health'] as const;
+
+    readonly activeTabIndex = signal(0);
 
     readonly printoutsContent = rxResource({
         loader: () =>
@@ -105,11 +106,10 @@ export class ClassPrintoutsDisplayComponent {
     });
 
     print() {
-        const tabView = this.tabView();
         const printoutContentsValue = this.printoutsContent.value();
-        if (tabView && printoutContentsValue) {
+        if (printoutContentsValue) {
             const printContent =
-                printoutContentsValue[this.tabs[tabView.tabindex]].html;
+                printoutContentsValue[this.tabs[this.activeTabIndex()]].html;
             const win = window.open('', '_blank');
             win?.document.write(printContent);
             win?.document.close();
