@@ -5,6 +5,7 @@ import { DatabaseUtility } from '@sol/firebase/database';
 import { Semester } from '@sol/firebase/classes/semester';
 import { _getClasses } from '../shared/_getClasses';
 import { _getSemestersAvailableToEnroll } from '../shared/_getSemestersAvailableToEnroll';
+import { SemesterClass } from '@sol/classes/domain';
 
 export const createEnrollmentEmail = onDocumentCreated(
     'enrollment/{enrollmentId}',
@@ -62,15 +63,12 @@ export const createEnrollmentEmail = onDocumentCreated(
                 enrollmentRecord.finalCost - (classesCost - totalDiscounts);
             const user = await AuthUtility.getUser(enrollmentRecord.userId);
 
-            const styles = `
-                body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
-                th { background-color: #f5f5f5; }
-                .indent { padding-left: 20px; color: #666; }
-                .total-row td { font-weight: bold; border-top: 2px solid #333; }
-                .discount-row { color: #2d862d; }
-            `;
+            const { html, text } = generateEmailContent(
+                enrollmentRecord,
+                classesWithOptions,
+                semesterNamesById,
+                differenceBetweenFinalCostAndOriginalCostWithDiscounts
+            );
 
             await DatabaseUtility.getDatabase()
                 .collection('mail')
@@ -78,88 +76,180 @@ export const createEnrollmentEmail = onDocumentCreated(
                     to: user.email ?? enrollmentRecord.contactEmail,
                     message: {
                         subject: `Class confirmation for ${enrollmentRecord.studentName}`,
-                        html: `
-                        <style>${styles}</style>
-                        <p>Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!</p>
-
-                        <p>You can check out all your enrollments anytime by logging in here: 
-                            <a href="https://enrollment.mountainsol.org/account/enrollments">https://enrollment.mountainsol.org/account/enrollments</a>
-                        </p>
-
-                        <p>Here's a quick reminder of what your student should bring in their backpack:
-                        <ul>
-                          <li>Water bottle</li>
-                          <li>Peanut-free snack</li>
-                          <li>Bugspray/sunscreen</li>
-                          <li>Rain jacket</li>
-                        </ul>
-                        </p>
-
-                        <p>Got questions? Just reply to this email or reach out to your instructor directly!</p>
-
-                        <p>Here's your receipt:</p>
-
-                        <table>
-                          <thead>
-                          <tr>
-                            <th>Class</th>
-                            <th>Semester</th>
-                            <th>Details</th>
-                            <th>Cost</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                            ${classesWithOptions
-                                .map(
-                                    (c) => `
-                            <tr>
-                                <td>${c.title}</td>
-                                <td>${semesterNamesById[c.semesterId] ?? '--'}</td>
-                                <td>Base registration</td>
-                                <td>$${c.cost}</td>
-                            </tr>
-                            ${c.additionalOptions
-                                .map(
-                                    (opt) => `
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td class="indent">+ ${opt.description}</td>
-                                <td>$${opt.cost}</td>
-                            </tr>`
-                                )
-                                .join('')}`
-                                )
-                                .join('')}
-                          ${enrollmentRecord.discounts
-                              .map(
-                                  (d) => `
-                            <tr class="discount-row">
-                                <td colspan="3">${d.description}</td>
-                                <td>-$${d.amount.toFixed(2)}</td>
-                            </tr>`
-                              )
-                              .join('')}
-                          ${
-                              differenceBetweenFinalCostAndOriginalCostWithDiscounts !=
-                              0
-                                  ? `
-                            <tr class="discount-row">
-                                <td colspan="3">Other Adjustments</td>
-                                <td>${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0 ? '+' : '-'}$${Math.abs(differenceBetweenFinalCostAndOriginalCostWithDiscounts).toFixed(2)}</td>
-                            </tr>`
-                                  : ''
-                          }
-                          <tr class="total-row">
-                            <td colspan="3">Total</td>
-                            <td>$${enrollmentRecord.finalCost.toFixed(2)}</td>
-                          </tr>
-                          </tbody>
-                        </table>
-
-                        <p>Transaction ID: ${enrollmentRecord.transactionId || 'N/A'}</p>`,
+                        html,
+                        text,
                     },
                 });
         }
     }
 );
+
+interface EmailContent {
+    html: string;
+    text: string;
+}
+
+function generateEmailContent(
+    enrollmentRecord: ClassEnrollmentDbo,
+    classesWithOptions: Array<
+        SemesterClass & {
+            additionalOptions: Array<{
+                id: string;
+                description: string;
+                cost: number;
+                studentsIds?: Array<string>;
+            }>;
+        }
+    >,
+    semesterNamesById: Record<string, string>,
+    differenceBetweenFinalCostAndOriginalCostWithDiscounts: number
+): EmailContent {
+    const backpackItems = [
+        'Water bottle',
+        'Peanut-free snack',
+        'Bugspray/sunscreen',
+        'Rain jacket',
+    ];
+
+    const classesContent = classesWithOptions.map((c) => ({
+        title: c.title,
+        semester: semesterNamesById[c.semesterId] ?? '--',
+        baseCost: c.cost,
+        options: c.additionalOptions.map((opt) => ({
+            description: opt.description,
+            cost: opt.cost,
+        })),
+    }));
+
+    const styles = `
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f5f5f5; }
+        .indent { padding-left: 20px; color: #666; }
+        .total-row td { font-weight: bold; border-top: 2px solid #333; }
+        .discount-row { color: #2d862d; }
+    `;
+
+    const html = `
+        <style>${styles}</style>
+        <p>Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!</p>
+
+        <p>You can check out all your enrollments anytime by logging in here: 
+            <a href="https://enrollment.mountainsol.org/account/enrollments">https://enrollment.mountainsol.org/account/enrollments</a>
+        </p>
+
+        <p>Here's a quick reminder of what your student should bring in their backpack:
+        <ul>
+          ${backpackItems.map((item) => `<li>${item}</li>`).join('\n')}
+        </ul>
+        </p>
+
+        <p>Got questions? Just reply to this email or reach out to your instructor directly!</p>
+
+        <p>Here's your receipt:</p>
+
+        <table>
+          <thead>
+          <tr>
+            <th>Class</th>
+            <th>Semester</th>
+            <th>Details</th>
+            <th>Cost</th>
+          </tr>
+          </thead>
+          <tbody>
+            ${classesContent
+                .map(
+                    (c) => `
+            <tr>
+                <td>${c.title}</td>
+                <td>${c.semester}</td>
+                <td>Base registration</td>
+                <td>$${c.baseCost}</td>
+            </tr>
+            ${c.options
+                .map(
+                    (opt) => `
+            <tr>
+                <td></td>
+                <td></td>
+                <td class="indent">+ ${opt.description}</td>
+                <td>$${opt.cost}</td>
+            </tr>`
+                )
+                .join('')}`
+                )
+                .join('')}
+          ${enrollmentRecord.discounts
+              .map(
+                  (d) => `
+            <tr class="discount-row">
+                <td colspan="3">${d.description}</td>
+                <td>-$${d.amount.toFixed(2)}</td>
+            </tr>`
+              )
+              .join('')}
+          ${
+              differenceBetweenFinalCostAndOriginalCostWithDiscounts != 0
+                  ? `
+            <tr class="discount-row">
+                <td colspan="3">Other Adjustments</td>
+                <td>${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0 ? '+' : '-'}$${Math.abs(
+                    differenceBetweenFinalCostAndOriginalCostWithDiscounts
+                ).toFixed(2)}</td>
+            </tr>`
+                  : ''
+          }
+          <tr class="total-row">
+            <td colspan="3">Total</td>
+            <td>$${enrollmentRecord.finalCost.toFixed(2)}</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <p>Transaction ID: ${enrollmentRecord.transactionId || 'N/A'}</p>`;
+
+    // Plain Text Version
+    const text = `Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!
+
+You can check out all your enrollments anytime by logging in here: 
+https://enrollment.mountainsol.org/account/enrollments
+
+Here's a quick reminder of what your student should bring in their backpack:
+${backpackItems.map((item) => `• ${item}`).join('\n')}
+
+Got questions? Just reply to this email or reach out to your instructor directly!
+
+Here's your receipt:
+
+${classesContent
+    .map(
+        (c) => `
+${c.title}
+Semester: ${c.semester}
+Base registration: $${c.baseCost}${c.options
+            .map((opt) => `\n+ ${opt.description}: $${opt.cost}`)
+            .join('')}
+`
+    )
+    .join('\n')}
+${enrollmentRecord.discounts
+    .map((d) => `${d.description}: -$${d.amount.toFixed(2)}`)
+    .join('\n')}
+${
+    differenceBetweenFinalCostAndOriginalCostWithDiscounts != 0
+        ? `Other Adjustments: ${
+              differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0
+                  ? '+'
+                  : '-'
+          }$${Math.abs(differenceBetweenFinalCostAndOriginalCostWithDiscounts).toFixed(2)}`
+        : ''
+}
+
+Total: $${enrollmentRecord.finalCost.toFixed(2)}
+
+Transaction ID: ${enrollmentRecord.transactionId || 'N/A'}`;
+
+    return { html, text };
+}
