@@ -76,6 +76,7 @@ export const createEnrollmentEmail = onDocumentCreated(
                     to: user.email ?? enrollmentRecord.contactEmail,
                     message: {
                         subject: `Class confirmation for ${enrollmentRecord.studentName}`,
+                        messageId: `<enrollment-confirmation-${enrollmentRecord.transactionId}@mountainsol.org>`,
                         html,
                         text,
                     },
