@@ -132,83 +132,91 @@ function generateEmailContent(
     `;
 
     const html = `
-        <style>${styles}</style>
-        <p>Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!</p>
+        <!DOCTYPE html>
+        <html>
+            <head>
+                <meta charset="utf-8">
+                <style>${styles}</style>
+            </head>
+            <body>
+                <p>Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!</p>
 
-        <p>You can check out all your enrollments anytime by logging in here: 
-            <a href="https://enrollment.mountainsol.org/account/enrollments">https://enrollment.mountainsol.org/account/enrollments</a>
-        </p>
+                <p>You can check out all your enrollments anytime by logging in here: 
+                    <a href="https://enrollment.mountainsol.org/account/enrollments">https://enrollment.mountainsol.org/account/enrollments</a>
+                </p>
 
-        <p>Here's a quick reminder of what your student should bring in their backpack:
-        <ul>
-          ${backpackItems.map((item) => `<li>${item}</li>`).join('\n')}
-        </ul>
-        </p>
+                <p>Here's a quick reminder of what your student should bring in their backpack:
+                <ul>
+                ${backpackItems.map((item) => `<li>${item}</li>`).join('\n')}
+                </ul>
+                </p>
 
-        <p>Got questions? Just reply to this email or reach out to your instructor directly!</p>
+                <p>Got questions? Just reply to this email or reach out to your instructor directly!</p>
 
-        <p>Here's your receipt:</p>
+                <p>Here's your receipt:</p>
 
-        <table>
-          <thead>
-          <tr>
-            <th>Class</th>
-            <th>Semester</th>
-            <th>Details</th>
-            <th>Cost</th>
-          </tr>
-          </thead>
-          <tbody>
-            ${classesContent
-                .map(
-                    (c) => `
-            <tr>
-                <td>${c.title}</td>
-                <td>${c.semester}</td>
-                <td>Base registration</td>
-                <td>$${c.baseCost}</td>
-            </tr>
-            ${c.options
-                .map(
-                    (opt) => `
-            <tr>
-                <td></td>
-                <td></td>
-                <td class="indent">+ ${opt.description}</td>
-                <td>$${opt.cost}</td>
-            </tr>`
-                )
-                .join('')}`
-                )
-                .join('')}
-          ${enrollmentRecord.discounts
-              .map(
-                  (d) => `
-            <tr class="discount-row">
-                <td colspan="3">${d.description}</td>
-                <td>-$${d.amount.toFixed(2)}</td>
-            </tr>`
-              )
-              .join('')}
-          ${
-              differenceBetweenFinalCostAndOriginalCostWithDiscounts != 0
-                  ? `
-            <tr class="discount-row">
-                <td colspan="3">Other Adjustments</td>
-                <td>${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0 ? '+' : '-'}$${Math.abs(
-                    differenceBetweenFinalCostAndOriginalCostWithDiscounts
-                ).toFixed(2)}</td>
-            </tr>`
-                  : ''
-          }
-          <tr class="total-row">
-            <td colspan="3">Total</td>
-            <td>$${enrollmentRecord.finalCost.toFixed(2)}</td>
-          </tr>
-          </tbody>
-        </table>
+                <table>
+                <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Semester</th>
+                    <th>Details</th>
+                    <th>Cost</th>
+                </tr>
+                </thead>
+                <tbody>
+                    ${classesContent
+                        .map(
+                            (c) => `
+                    <tr>
+                        <td>${c.title}</td>
+                        <td>${c.semester}</td>
+                        <td>Base registration</td>
+                        <td>$${c.baseCost}</td>
+                    </tr>
+                    ${c.options
+                        .map(
+                            (opt) => `
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="indent">+ ${opt.description}</td>
+                        <td>$${opt.cost}</td>
+                    </tr>`
+                        )
+                        .join('')}`
+                        )
+                        .join('')}
+                ${enrollmentRecord.discounts
+                    .map(
+                        (d) => `
+                    <tr class="discount-row">
+                        <td colspan="3">${d.description}</td>
+                        <td>-$${d.amount.toFixed(2)}</td>
+                    </tr>`
+                    )
+                    .join('')}
+                ${
+                    differenceBetweenFinalCostAndOriginalCostWithDiscounts != 0
+                        ? `
+                    <tr class="discount-row">
+                        <td colspan="3">Other Adjustments</td>
+                        <td>${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0 ? '+' : '-'}$${Math.abs(
+                            differenceBetweenFinalCostAndOriginalCostWithDiscounts
+                        ).toFixed(2)}</td>
+                    </tr>`
+                        : ''
+                }
+                <tr class="total-row">
+                    <td colspan="3">Total</td>
+                    <td>$${enrollmentRecord.finalCost.toFixed(2)}</td>
+                </tr>
+                </tbody>
+                </table>
 
-        <p>Transaction ID: ${enrollmentRecord.transactionId || 'N/A'}</p>`;
+                <p>Transaction ID: ${enrollmentRecord.transactionId || 'N/A'}</p>
+            </body>
+        </html>`;
 
     // Plain Text Version
     const text = `Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!
