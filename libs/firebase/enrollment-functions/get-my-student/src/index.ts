@@ -1,0 +1,1 @@
+export { getMyStudent } from './lib/get-my-student';

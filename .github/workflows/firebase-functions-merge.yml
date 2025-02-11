@@ -5,75 +5,91 @@ on:
         branches:
             - main
 
-env:
-    FUNCTIONS: >-
-        adminEnrollments
-        allStudents
-        availableEnrollmentClasses
-        calculateBasket
-        classGroups
-        classesBySemester
-        classes
-        currentSemester
-        deleteEnrollmentDraft
-        emails
-        enroll
-        enrollments
-        fullUnitsAndPaths
-        getCompletedUnits
-        getMyStudent
-        getStudentCompletedUnits
-        historicalSemesters
-        loadEnrollmentDraft
-        myEnrolledStudents
-        paymentToken
-        roles
-        roster
-        semestersAvailableToEnroll
-        signIn
-        studentHealth
-        tshirts
-        updateCompletedUnits
-        updateEnrollmentDraft
-        addEmailToSolsticeList
-        createEnrollmentEmail
-        onSuccessfulEnrollDeleteDraft
-
 jobs:
-    build_and_deploy:
+    deploy_affected:
         runs-on: ubuntu-latest
-        strategy:
-            max-parallel: 1
-            matrix:
-                group: [1, 2, 3, 4, 5, 6]
         steps:
             - uses: actions/checkout@v4
-            - run: npm ci
-            - run: npx nx run functions:build
-            - name: Prepare functions list
-              id: prepare_functions
-              run: |
-                  # Convert multi-line string to array
-                  FUNC_ARRAY=(${FUNCTIONS})
-
-                  # Calculate the number of functions per group
-                  TOTAL=${#FUNC_ARRAY[@]}
-                  PER_GROUP=$(( (TOTAL + ${{ matrix.group }} - 1) / ${{ strategy.job-total }} ))
-
-                  # Calculate start and end indices for this group
-                  START=$(( ((${{ matrix.group }} - 1) * PER_GROUP) ))
-                  END=$(( START + PER_GROUP ))
-
-                  # Extract the functions for this group and prefix each with 'functions:'
-                  GROUP_FUNCTIONS=$(printf "functions:%s," "${FUNC_ARRAY[@]:START:PER_GROUP}")
-
-                  # Remove the trailing comma
-                  DEPLOY_FUNCTIONS=${GROUP_FUNCTIONS%,}
-
-                  echo "functions_list=${DEPLOY_FUNCTIONS}" >> $GITHUB_OUTPUT
-
-            - uses: w9jds/firebase-action@v13.4.0
               with:
-                  args: deploy --only ${{ steps.prepare_functions.outputs.functions_list }} --project prod
+                fetch-depth: 2  # Fetch the current and previous commit
+
+            - name: Get base commit
+              id: base
+              run: echo "commit=$(git rev-parse HEAD~1)" >> $GITHUB_OUTPUT
+            
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Get affected functions and build
+              id: get_affected
+              run: |
+                  # Get affected libraries comparing to previous commit
+                  AFFECTED=$(npx nx show projects --affected --base=${{ steps.base.outputs.commit }} | grep 'firebase-enrollment-functions-' || true)
+                  
+                  FUNCTIONS=()
+                  while IFS= read -r lib; do
+                    FUNC_NAME=${lib#firebase-enrollment-functions-}
+                    if [ "$FUNC_NAME" != "shared" ]; then
+                      FUNC_NAME=$(echo "$FUNC_NAME" | awk -F'-' '{for(i=1;i<=NF;i++){if(i==1){printf("%s",$i)}else{printf("%s%s",toupper(substr($i,1,1)),substr($i,2))}}}')
+                      FUNCTIONS+=("$FUNC_NAME")
+                    fi
+                  done <<< "$AFFECTED"
+                  
+                  if [ ${#FUNCTIONS[@]} -eq 0 ]; then
+                    echo "No functions were affected"
+                    echo "has_changes=false" >> $GITHUB_OUTPUT
+                    exit 0
+                  fi
+
+                  echo "has_changes=true" >> $GITHUB_OUTPUT
+                  
+                  # Build the functions
+                  npx nx run functions:build
+                  
+                  # Calculate groups (5 functions per group)
+                  GROUP_SIZE=5
+                  TOTAL=${#FUNCTIONS[@]}
+                  NUM_GROUPS=$(( (TOTAL + GROUP_SIZE - 1) / GROUP_SIZE ))
+                  
+                  echo "Total affected functions: $TOTAL"
+                  echo "Number of groups: $NUM_GROUPS"
+                  
+                  # Install function dependencies
+                  cd dist/apps/functions
+                  npm install firebase-admin firebase-functions
+                  cd ../../..
+                  
+                  # Create groups array for subsequent steps
+                  GROUPS_JSON="["
+                  for ((i=0; i<$NUM_GROUPS; i++)); do
+                    START=$((i * GROUP_SIZE))
+                    GROUP_FUNCTIONS=""
+                    
+                    # Get up to 5 functions for this group
+                    for ((j=0; j<GROUP_SIZE && START+j<TOTAL; j++)); do
+                      if [ ! -z "$GROUP_FUNCTIONS" ]; then
+                        GROUP_FUNCTIONS+=","
+                      fi
+                      GROUP_FUNCTIONS+="functions:${FUNCTIONS[START+j]}"
+                    done
+                    
+                    if [ $i -gt 0 ]; then
+                      GROUPS_JSON+=","
+                    fi
+                    GROUPS_JSON+="{\"functions\":\"$GROUP_FUNCTIONS\"}"
+                  done
+                  GROUPS_JSON+="]"
+                  
+                  echo "groups=$GROUPS_JSON" >> $GITHUB_OUTPUT
+
+            - name: Deploy function groups
+              if: steps.get_affected.outputs.has_changes == 'true'
+              uses: w9jds/firebase-action@v13.4.0
+              with:
+                args: deploy --only ${{ matrix.functions }} --project prod
               env:
-                  GCP_SA_KEY: ${{ secrets.FIREBASE_GCP_SA_KEY }}
+                GCP_SA_KEY: ${{ secrets.FIREBASE_GCP_SA_KEY }}
+              strategy:
+                max-parallel: 1
+                matrix:
+                  include: ${{ fromJson(steps.get_affected.outputs.groups) }}

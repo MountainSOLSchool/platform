@@ -1,0 +1,1 @@
+export { paymentToken } from './lib/payment-token';

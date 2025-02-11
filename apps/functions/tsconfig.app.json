@@ -3,8 +3,36 @@
     "compilerOptions": {
         "outDir": "../../dist/out-tsc",
         "module": "commonjs",
-        "types": ["node"]
+        "types": [
+            "node"
+        ]
     },
-    "exclude": ["**/*.spec.ts", "jest.config.ts"],
-    "include": ["**/*.ts"]
+    "exclude": [
+        "**/*.spec.ts",
+        "jest.config.ts"
+    ],
+    "include": [
+        "**/*.ts",
+        "../../libs/firebase/enrollment-functions/all-students/src/lib/all-students.ts",
+        "../../libs/firebase/enrollment-functions/shared/src/lib/_assertUserCanManageStudent.ts",
+        "../../libs/firebase/enrollment-functions/shared/src/lib/_deleteEnrollmentDraft.ts",
+        "../../libs/firebase/enrollment-functions/shared/src/lib/_getCategorizedClasses.ts",
+        "../../libs/firebase/enrollment-functions/shared/src/lib/_getClasses.ts",
+        "../../libs/firebase/enrollment-functions/shared/src/lib/_getClassGroupsFromClasses.ts",
+        "../../libs/firebase/enrollment-functions/shared/src/lib/_getSemestersAvailableToEnroll.ts",
+        "../../libs/firebase/enrollment-functions/emails/src/lib/emails.ts",
+        "../../libs/firebase/enrollment-functions/enrollments/src/lib/enrollments.ts",
+        "../../libs/firebase/enrollment-functions/full-units-and-paths/src/lib/full-units-and-paths.ts",
+        "../../libs/firebase/enrollment-functions/get-completed-units/src/lib/get-completed-units.ts",
+        "../../libs/firebase/enrollment-functions/historical-semesters/src/lib/historical-semesters.ts",
+        "../../libs/firebase/enrollment-functions/load-enrollment-draft/src/lib/load-enrollment-draft.ts",
+        "../../libs/firebase/enrollment-functions/my-enrolled-students/src/lib/my-enrolled-students.ts",
+        "../../libs/firebase/enrollment-functions/payment-token/src/lib/payment-token.ts",
+        "../../libs/firebase/enrollment-functions/roles/src/lib/roles.ts",
+        "../../libs/firebase/enrollment-functions/roster/src/lib/roster.ts",
+        "../../libs/firebase/enrollment-functions/sign-in/src/lib/sign-in.ts",
+        "../../libs/firebase/enrollment-functions/student-health/src/lib/student-health.ts",
+        "../../libs/firebase/enrollment-functions/tshirts/src/lib/tshirts.ts",
+        "../../libs/firebase/enrollment-functions/update-completed-units/src/lib/update-completed-units.ts"
+, "../../libs/firebase/enrollment-functions/add-email-to-solstice-list/src/lib/add-email-to-solstice-list.ts"    ]
 }

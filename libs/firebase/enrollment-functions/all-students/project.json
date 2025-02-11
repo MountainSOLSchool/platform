@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-all-students",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/all-students/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-all-students --web",
+    "targets": {}
+}

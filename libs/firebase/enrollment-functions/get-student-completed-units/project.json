@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-get-student-completed-units",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/get-student-completed-units/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-get-student-completed-units --web",
+    "targets": {}
+}

@@ -1,0 +1,1 @@
+export { addEmailToSolsticeList } from './lib/add-email-to-solstice-list';

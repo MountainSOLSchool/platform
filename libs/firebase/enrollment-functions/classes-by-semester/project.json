@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-classes-by-semester",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/classes-by-semester/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-classes-by-semester --web",
+    "targets": {}
+}

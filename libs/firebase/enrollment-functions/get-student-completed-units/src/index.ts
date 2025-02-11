@@ -1,0 +1,1 @@
+export { getStudentCompletedUnits } from './lib/get-student-completed-units';

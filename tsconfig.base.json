@@ -69,6 +69,102 @@
                 "libs/firebase/classes/semester/src/index.ts"
             ],
             "@sol/firebase/database": ["libs/firebase/database/src/index.ts"],
+            "@sol/firebase/enrollment-functions/add-email-to-solstice-list": [
+                "libs/firebase/enrollment-functions/add-email-to-solstice-list/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/admin-enrollments": [
+                "libs/firebase/enrollment-functions/admin-enrollments/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/all-students": [
+                "libs/firebase/enrollment-functions/all-students/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/available-enrollment-classes": [
+                "libs/firebase/enrollment-functions/available-enrollment-classes/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/calculate-basket": [
+                "libs/firebase/enrollment-functions/calculate-basket/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/class-groups": [
+                "libs/firebase/enrollment-functions/class-groups/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/classes": [
+                "libs/firebase/enrollment-functions/classes/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/classes-by-semester": [
+                "libs/firebase/enrollment-functions/classes-by-semester/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/create-enrollment-email": [
+                "libs/firebase/enrollment-functions/create-enrollment-email/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/current-semester": [
+                "libs/firebase/enrollment-functions/current-semester/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/delete-enrollment-draft": [
+                "libs/firebase/enrollment-functions/delete-enrollment-draft/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/emails": [
+                "libs/firebase/enrollment-functions/emails/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/enroll": [
+                "libs/firebase/enrollment-functions/enroll/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/enrollments": [
+                "libs/firebase/enrollment-functions/enrollments/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/full-units-and-paths": [
+                "libs/firebase/enrollment-functions/full-units-and-paths/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-completed-units": [
+                "libs/firebase/enrollment-functions/get-completed-units/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-my-student": [
+                "libs/firebase/enrollment-functions/get-my-student/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-student-completed-units": [
+                "libs/firebase/enrollment-functions/get-student-completed-units/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/historical-semesters": [
+                "libs/firebase/enrollment-functions/historical-semesters/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/load-enrollment-draft": [
+                "libs/firebase/enrollment-functions/load-enrollment-draft/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/my-enrolled-students": [
+                "libs/firebase/enrollment-functions/my-enrolled-students/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/on-successful-enroll-delete-draft": [
+                "libs/firebase/enrollment-functions/on-successful-enroll-delete-draft/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/payment-token": [
+                "libs/firebase/enrollment-functions/payment-token/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/roles": [
+                "libs/firebase/enrollment-functions/roles/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/roster": [
+                "libs/firebase/enrollment-functions/roster/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/semesters-available-to-enroll": [
+                "libs/firebase/enrollment-functions/semesters-available-to-enroll/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/shared": [
+                "libs/firebase/enrollment-functions/shared/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/sign-in": [
+                "libs/firebase/enrollment-functions/sign-in/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/student-health": [
+                "libs/firebase/enrollment-functions/student-health/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/tshirts": [
+                "libs/firebase/enrollment-functions/tshirts/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/update-completed-units": [
+                "libs/firebase/enrollment-functions/update-completed-units/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/update-enrollment-draft": [
+                "libs/firebase/enrollment-functions/update-enrollment-draft/src/index.ts"
+            ],
             "@sol/firebase/functions": ["libs/firebase/functions/src/index.ts"],
             "@sol/firebase/functions-api": [
                 "libs/firebase/functions-api/src/index.ts"
