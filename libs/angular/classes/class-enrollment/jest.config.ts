@@ -1,6 +1,6 @@
 export default {
     displayName: 'classes-class-enrollment',
-    preset: '../../../jest.preset.js',
+    preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
         'ts-jest': {
