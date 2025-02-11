@@ -1,0 +1,1 @@
+export { allStudents } from './lib/all-students';

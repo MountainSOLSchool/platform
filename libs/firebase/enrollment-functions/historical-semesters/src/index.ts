@@ -1,0 +1,1 @@
+export { historicalSemesters } from './lib/historical-semesters';

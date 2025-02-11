@@ -1,0 +1,1 @@
+export { createEnrollmentEmail } from './lib/create-enrollment-email';

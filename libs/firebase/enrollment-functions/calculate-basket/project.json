@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-calculate-basket",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/calculate-basket/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-calculate-basket --web",
+    "targets": {}
+}

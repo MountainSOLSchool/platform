@@ -1,0 +1,6 @@
+{
+    "name": "@sol/firebase/enrollment-functions/calculate-basket",
+    "version": "0.0.1",
+    "dependencies": {},
+    "private": true
+}

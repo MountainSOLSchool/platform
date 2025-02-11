@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-sign-in",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/sign-in/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-sign-in --web",
+    "targets": {}
+}

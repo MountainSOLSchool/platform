@@ -1,0 +1,1 @@
+export { classesBySemester } from './lib/classes-by-semester';
