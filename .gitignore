@@ -6,6 +6,7 @@
 /dist
 /tmp
 /out-tsc
+apps/student-portal/package.json
 
 # dependencies
 /node_modules

@@ -12,6 +12,8 @@ const nextConfig = {
         svgr: false,
     },
 
+    output: 'standalone',
+
     redirects: async () => {
         return [
             {
