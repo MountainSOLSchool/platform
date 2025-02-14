@@ -23,9 +23,12 @@ export type StudentDbEntry = {
     ok_natural_bugspray: boolean;
     ok_sunscreen: boolean;
     birth_date: string;
-    emergency_contacts: Array<ContactDbEntry>;
     authorized_pick_up_contacts: Array<ContactDbEntry>;
     guardians: Array<ContactDbEntry>;
+    tshirt_size: string;
+    // it's an array of Firestore.DocumentReference, but that can't class can't be imported here
+    completed_units?: Array<unknown>;
+    emergency_contacts: Array<ContactDbEntry>;
     has_life_threatening_allergies: boolean;
     allergies: string;
     authorized_to_administer_meds: boolean;
@@ -40,13 +43,11 @@ export type StudentDbEntry = {
     does_not_have_insurance: boolean;
     doctor: string;
     doctor_phone: string;
-    tshirt_size: string;
     weightPounds: number;
     heightFeet: number;
     heightInches: number;
     parent_notes: string;
-    // it's an array of Firestore.DocumentReference, but that can't class can't be imported here
-    completed_units?: Array<unknown>;
+    last_updated_medical_info_timestamp?: string;
 };
 
 export type NewStudentDbEntry = Omit<StudentDbEntry, 'id'>;

@@ -33,8 +33,9 @@ import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { RxFor } from '@rx-angular/template/for';
 import { MessagesModule } from 'primeng/messages';
 import { RxIf } from '@rx-angular/template/if';
-import { NgStyle } from '@angular/common';
+import { AsyncPipe, JsonPipe, NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,6 +60,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         MessagesModule,
         RxIf,
         ProgressSpinnerModule,
+        JsonPipe,
+        AsyncPipe,
     ],
     selector: 'sol-medical',
     templateUrl: './medical.component.html',
@@ -177,6 +180,10 @@ export class MedicalComponent {
         }
     );
 
+    readonly isOutOfDate = this.workflow.selectSignal(
+        (s) => s.isMedicalInfoOutOfDate
+    );
+
     readonly lifeThreateningOptions = [
         { name: 'My child has a life-threatening allergy', value: true },
         {
@@ -247,8 +254,14 @@ export class MedicalComponent {
     }
     @Input() isStudentLoading = false;
 
-    @Output() validityChange = this.errors$.pipe(
-        map((errors) => Object.keys(errors).length === 0)
+    @Output() validityChange = combineLatest([
+        this.errors$,
+        toObservable(this.isOutOfDate),
+    ]).pipe(
+        map(
+            ([errors, isOutOfDate]) =>
+                !isOutOfDate && Object.keys(errors).length === 0
+        )
     );
 
     trackByIndex(index: number) {

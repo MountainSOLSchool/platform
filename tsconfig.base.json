@@ -126,6 +126,9 @@
             "@sol/firebase/enrollment-functions/historical-semesters": [
                 "libs/firebase/enrollment-functions/historical-semesters/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/is-medical-info-out-of-date": [
+                "libs/firebase/enrollment-functions/is-medical-info-out-of-date/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/load-enrollment-draft": [
                 "libs/firebase/enrollment-functions/load-enrollment-draft/src/index.ts"
             ],
