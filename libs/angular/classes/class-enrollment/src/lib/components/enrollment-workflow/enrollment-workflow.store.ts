@@ -30,10 +30,26 @@ type PaidEnrollment = Enrollment & {
         | undefined;
 };
 
-const initialState = {
+type State = {
+    enrollment: PaidEnrollment;
+    randomValueThatResetsPaymentCollector: string;
+    status: 'draft' | 'submitted' | 'failed' | 'enrolled';
+    basketCosts: {
+        discountAmounts: Array<{ code: string; amount: number }>;
+        finalTotal: number;
+        originalTotal: number;
+    };
+    isLoadingDiscounts: boolean;
+    isLoadingStudent: boolean;
+    isMedicalInfoOutOfDate: boolean;
+    draftEnrollment: Partial<Enrollment> | undefined;
+};
+
+const initialState: State = {
     status: 'draft' as const,
     randomValueThatResetsPaymentCollector: Math.random().toString(),
     draftEnrollment: undefined,
+    isMedicalInfoOutOfDate: false,
     enrollment: {
         selectedClasses: [],
         userCostsToSelectedClassIds: {},
@@ -75,20 +91,6 @@ const initialState = {
     },
     isLoadingDiscounts: false,
     isLoadingStudent: false,
-};
-
-type State = {
-    enrollment: PaidEnrollment;
-    randomValueThatResetsPaymentCollector: string;
-    status: 'draft' | 'submitted' | 'failed' | 'enrolled';
-    basketCosts: {
-        discountAmounts: Array<{ code: string; amount: number }>;
-        finalTotal: number;
-        originalTotal: number;
-    };
-    isLoadingDiscounts: boolean;
-    isLoadingStudent: boolean;
-    draftEnrollment: Partial<Enrollment> | undefined;
 };
 
 @Injectable()
@@ -276,6 +278,26 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                             );
                     })
                 );
+            })
+        );
+    });
+
+    readonly getIsMedicalInfoOutOfDate = this.effect(() => {
+        return this.select(this.selectStudent).pipe(
+            filter((student) => !!student?.id),
+            switchMap((student) => {
+                return this.functions
+                    .call<{ isOutOfDate: boolean }>('isMedicalInfoOutOfDate', {
+                        student,
+                    })
+                    .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                        tap(({ isOutOfDate }) => {
+                            this.patchState({
+                                isMedicalInfoOutOfDate: isOutOfDate,
+                            });
+                        })
+                    );
             })
         );
     });

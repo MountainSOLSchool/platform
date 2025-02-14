@@ -1,0 +1,1 @@
+export { isMedicalInfoOutOfDate } from './lib/is-medical-info-out-of-date';

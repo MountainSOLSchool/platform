@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-is-medical-info-out-of-date",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/is-medical-info-out-of-date/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-is-medical-info-out-of-date --web",
+    "targets": {}
+}
