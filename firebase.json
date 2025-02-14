@@ -10,7 +10,11 @@
         {
             "site": "mountain-sol-platform",
             "public": "public",
-            "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ],
             "rewrites": [
                 {
                     "source": "/classes",
@@ -111,6 +115,10 @@
                 {
                     "source": "/fullUnitsAndPaths",
                     "function": "fullUnitsAndPaths"
+                },
+                {
+                    "source": "/isMedicalInfoOutOfDate",
+                    "function": "isMedicalInfoOutOfDate"
                 },
                 {
                     "source": "**",
