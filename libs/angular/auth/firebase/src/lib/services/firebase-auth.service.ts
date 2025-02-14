@@ -1,14 +1,13 @@
-import { inject, Injectable, NgModule } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { inject, Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { from } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 
 import { FIRE_AUTH } from '@sol/angular/firebase/adapter';
 
-@NgModule({
-    imports: [RouterModule],
+@Injectable({
+    providedIn: 'root',
 })
-@Injectable()
 export class FirebaseAuthService {
     private readonly router = inject(Router);
     private readonly fireAuth = inject(FIRE_AUTH);

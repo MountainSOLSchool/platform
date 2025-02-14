@@ -15,13 +15,13 @@ import { AsyncPipe } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CardModule } from 'primeng/card';
+import { provideComponentStore } from '@ngrx/component-store';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-login',
     imports: [
         AsyncPipe,
-        LoginStore,
         FormsModule,
         ButtonModule,
         InputTextModule,
@@ -42,6 +42,7 @@ import { CardModule } from 'primeng/card';
             }
         `,
     ],
+    providers: [provideComponentStore(LoginStore)],
 })
 export class LoginComponent implements OnInit {
     @Input() isCreatingNewAccount = false;

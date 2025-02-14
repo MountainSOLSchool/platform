@@ -16,13 +16,7 @@ import { map, Observable } from 'rxjs';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        AsyncPipe,
-        MenuModule,
-        AvatarModule,
-        ButtonModule,
-        FirebaseAuthService,
-    ],
+    imports: [AsyncPipe, MenuModule, AvatarModule, ButtonModule],
     selector: 'sol-user-button',
     template: `@if (email$ | async; as email) {
             <div style="cursor: pointer">

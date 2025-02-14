@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, NgModule } from '@angular/core';
+import { computed, inject, Injectable } from '@angular/core';
 import {
     BehaviorSubject,
     combineLatest,
@@ -10,11 +10,7 @@ import {
 } from 'rxjs';
 import { ComponentStore } from '@ngrx/component-store';
 import { tapResponse, concatLatestFrom } from '@ngrx/operators';
-import {
-    FirebaseAuthService,
-    FirebaseAuthModule,
-} from '@sol/angular/auth/firebase';
-import { Router } from '@angular/router';
+import { FirebaseAuthService } from '@sol/angular/auth/firebase';
 import { MessageService } from 'primeng/api';
 import { loginSuite } from './login.suite';
 import { UserService } from '@sol/auth/user';
@@ -35,15 +31,10 @@ enum RequestState {
     Failure,
 }
 
-@NgModule({
-    imports: [FirebaseAuthModule, FirebaseAuthService],
-    providers: [LoginStore],
-})
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class LoginStore extends ComponentStore<LoginState> {
     private readonly authService = inject(FirebaseAuthService);
     private readonly user$ = inject(UserService).getUser();
-    private readonly router = inject(Router);
     private readonly messageService = inject(MessageService);
 
     constructor() {
