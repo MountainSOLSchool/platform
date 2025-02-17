@@ -24,7 +24,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                node-version: '18'
+                node-version: '22'
                 cache: 'npm'
 
             - name: Generate cache key
@@ -123,7 +123,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                node-version: '18'
+                node-version: '22'
 
             - name: Restore cached node_modules
               uses: actions/cache/restore@v4
