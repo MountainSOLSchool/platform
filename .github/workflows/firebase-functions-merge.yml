@@ -52,39 +52,46 @@ jobs:
                   if [ ${#FUNCTIONS[@]} -eq 0 ]; then
                     echo "No functions were affected"
                     echo "has_changes=false" >> $GITHUB_OUTPUT
-                    echo "matrix=[]" >> $GITHUB_OUTPUT
-                  else
-                    echo "has_changes=true" >> $GITHUB_OUTPUT
-                    
-                    GROUP_SIZE=5
-                    TOTAL=${#FUNCTIONS[@]}
-                    NUM_GROUPS=$(( (TOTAL + GROUP_SIZE - 1) / GROUP_SIZE ))
-                    
-                    GROUPS_JSON="["
-                    for ((i=0; i<$NUM_GROUPS; i++)); do
-                      START=$((i * GROUP_SIZE))
-                      GROUP_FUNCTIONS=""
-                      
-                      for ((j=0; j<GROUP_SIZE && START+j<TOTAL; j++)); do
-                        if [ ! -z "$GROUP_FUNCTIONS" ]; then
-                          GROUP_FUNCTIONS+=","
-                        fi
-                        GROUP_FUNCTIONS+="functions:${FUNCTIONS[START+j]}"
-                      done
-                      
-                      if [ $i -gt 0 ]; then
-                        GROUPS_JSON+=","
-                      fi
-                      GROUPS_JSON+="{\"functions\":\"$GROUP_FUNCTIONS\"}"
-                    done
-                    GROUPS_JSON+="]"
-                    
-                    echo "matrix=$GROUPS_JSON" >> $GITHUB_OUTPUT
-                    
-                    echo "Total affected functions: $TOTAL"
-                    echo "Number of groups: $NUM_GROUPS"
-                    echo "Matrix: $GROUPS_JSON"
+                    echo "matrix=null" >> $GITHUB_OUTPUT
+                    exit 0
                   fi
+                  
+                  echo "has_changes=true" >> $GITHUB_OUTPUT
+                  
+                  GROUP_SIZE=5
+                  TOTAL=${#FUNCTIONS[@]}
+                  NUM_GROUPS=$(( (TOTAL + GROUP_SIZE - 1) / GROUP_SIZE ))
+                  
+                  GROUPS_JSON="["
+                  for ((i=0; i<$NUM_GROUPS; i++)); do
+                    START=$((i * GROUP_SIZE))
+                    GROUP_FUNCTIONS=""
+                    
+                    for ((j=0; j<GROUP_SIZE && START+j<TOTAL; j++)); do
+                      if [ ! -z "$GROUP_FUNCTIONS" ]; then
+                        GROUP_FUNCTIONS+=","
+                      fi
+                      GROUP_FUNCTIONS+="functions:${FUNCTIONS[START+j]}"
+                    done
+                    
+                    if [ $i -gt 0 ]; then
+                      GROUPS_JSON+=","
+                    fi
+                    GROUPS_JSON+="{\"functions\":\"$GROUP_FUNCTIONS\"}"
+                  done
+                  GROUPS_JSON+="]"
+                  
+                  echo "matrix=$GROUPS_JSON" >> $GITHUB_OUTPUT
+                  
+                  echo "Total affected functions: $TOTAL"
+                  echo "Number of groups: $NUM_GROUPS"
+                  echo "Matrix: $GROUPS_JSON"
+
+            - name: Skip deployment
+              if: steps.get_affected.outputs.has_changes == 'false'
+              run: |
+                echo "No functions were affected in this change. Skipping deployment."
+                exit 0
 
             - name: Build all functions
               if: steps.get_affected.outputs.has_changes == 'true'
