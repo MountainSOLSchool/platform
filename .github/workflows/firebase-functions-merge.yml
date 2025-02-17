@@ -52,7 +52,7 @@ jobs:
                   if [ ${#FUNCTIONS[@]} -eq 0 ]; then
                     echo "No functions were affected"
                     echo "has_changes=false" >> $GITHUB_OUTPUT
-                    echo "matrix=null" >> $GITHUB_OUTPUT
+                    echo "matrix=[]" >> $GITHUB_OUTPUT
                     exit 0
                   fi
                   
@@ -62,7 +62,8 @@ jobs:
                   TOTAL=${#FUNCTIONS[@]}
                   NUM_GROUPS=$(( (TOTAL + GROUP_SIZE - 1) / GROUP_SIZE ))
                   
-                  GROUPS_JSON="["
+                  VALID_GROUPS=()
+                  
                   for ((i=0; i<$NUM_GROUPS; i++)); do
                     START=$((i * GROUP_SIZE))
                     GROUP_FUNCTIONS=""
@@ -74,10 +75,19 @@ jobs:
                       GROUP_FUNCTIONS+="functions:${FUNCTIONS[START+j]}"
                     done
                     
+                    # Only add group if it contains functions
+                    if [ ! -z "$GROUP_FUNCTIONS" ]; then
+                      VALID_GROUPS+=("{\"functions\":\"$GROUP_FUNCTIONS\"}")
+                    fi
+                  done
+                  
+                  # Combine valid groups into JSON array
+                  GROUPS_JSON="["
+                  for ((i=0; i<${#VALID_GROUPS[@]}; i++)); do
                     if [ $i -gt 0 ]; then
                       GROUPS_JSON+=","
                     fi
-                    GROUPS_JSON+="{\"functions\":\"$GROUP_FUNCTIONS\"}"
+                    GROUPS_JSON+="${VALID_GROUPS[i]}"
                   done
                   GROUPS_JSON+="]"
                   
@@ -151,6 +161,7 @@ jobs:
             - name: Deploy functions group
               id: deploy
               uses: w9jds/firebase-action@v13.16.0
+              if: matrix.functions != ''
               with:
                   args: deploy --only ${{ matrix.functions }} --project prod
               env:
