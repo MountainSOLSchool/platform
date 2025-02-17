@@ -14,9 +14,9 @@ import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workf
 import { MessagesComponent } from '@sol/form/validity';
 import { create, enforce, test } from 'vest';
 import { BehaviorSubject, combineLatest, map, skip, startWith } from 'rxjs';
-import { RxLet } from '@rx-angular/template/let';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { UserService } from '@sol/auth/user';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +26,7 @@ import { UserService } from '@sol/auth/user';
         InputTextModule,
         ChipModule,
         MessagesComponent,
-        RxLet,
+        AsyncPipe,
     ],
     selector: 'sol-checkout',
     templateUrl: './checkout.component.html',

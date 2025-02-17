@@ -7,16 +7,16 @@
         max-width: 600px;
     "
 >
-    <div class="p-input-icon-left" style="flex: 2; min-width: 200px">
-        <i class="pi pi-search"></i>
-        <span class="p-input-icon-right" style="width: 100%">
-            @if (searchInput.value.length > 0) {
-                <i
-                    class="pi pi-times-circle"
-                    (click)="searchChange((searchInput.value = ''))"
-                    style="cursor: pointer"
-                ></i>
-            }
+        <div class="p-input-icon-left" style="flex: 2; min-width: 200px">
+            <i class="pi pi-search"></i>
+            <span class="p-input-icon-right" style="width: 100%">
+                @if (searchInput.value.length > 0) {
+                    <i
+                        class="pi pi-times-circle"
+                        (click)="searchChange((searchInput.value = ''))"
+                        style="cursor: pointer"
+                    ></i>
+                }
             <input
                 #searchInput
                 type="text"
@@ -54,8 +54,8 @@
             <p>
                 <b>Selected classes ({{ selectedClasses.length }})</b>
             </p>
+            @let view = { showChips: false };
             <div
-                *rxLet="{ showChips: false }; let view"
                 style="display: flex; gap: 4px; flex-wrap: wrap"
             >
                 @if (view.showChips) {

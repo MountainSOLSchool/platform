@@ -24,7 +24,6 @@ import {
     STEPPER_GLOBAL_OPTIONS,
 } from '@angular/cdk/stepper';
 import { MedicalComponent } from '../medical/medical.component';
-import { RxLet } from '@rx-angular/template/let';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
 import { EventsComponent } from '../events/events.component';
@@ -64,7 +63,6 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
         AccountComponent,
         ConfirmationComponent,
         MedicalComponent,
-        RxLet,
         ProgressSpinnerModule,
         DialogModule,
         EventsComponent,

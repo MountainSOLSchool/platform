@@ -7,7 +7,6 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ToolbarModule } from 'primeng/toolbar';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs';
-import { RxLet } from '@rx-angular/template/let';
 import { AsyncPipe, NgStyle } from '@angular/common';
 
 @Component({
@@ -20,7 +19,6 @@ import { AsyncPipe, NgStyle } from '@angular/common';
         ToolbarModule,
         RouterModule,
         UserButtonComponent,
-        RxLet,
     ],
     styles: [
         `
@@ -29,7 +27,9 @@ import { AsyncPipe, NgStyle } from '@angular/common';
             }
         `,
     ],
-    template: ` <header *rxLet="size$; let size" class="toolbarz">
+    template: `@let size = size$ | async;
+    @if (size) {
+    <header class="toolbarz">
             <p-toolbar styleClass="toolbar">
                 <div routerLink="/" class="p-toolbar-group-left">
                     <div>
@@ -67,6 +67,7 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                 </div>
             </p-toolbar>
         </header>
+    }
         <div style="padding: 1rem"><router-outlet></router-outlet></div>
         <p-sidebar [(visible)]="display" position="right">
             <ul style="font-size:16px">

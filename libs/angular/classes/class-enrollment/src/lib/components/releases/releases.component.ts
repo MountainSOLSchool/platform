@@ -19,15 +19,14 @@ import { ButtonModule } from 'primeng/button';
 import { InputMaskModule } from 'primeng/inputmask';
 import { FieldsetModule } from 'primeng/fieldset';
 import { RippleModule } from 'primeng/ripple';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { AccordionModule } from 'primeng/accordion';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { create, enforce, group, test } from 'vest';
-import { RxLet } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,15 +37,14 @@ import { MessagesComponent, ValidDirective } from '@sol/form/validity';
         InputMaskModule,
         FieldsetModule,
         RippleModule,
-        InputTextareaModule,
         InputNumberModule,
         AccordionModule,
         ToggleButtonModule,
         SelectButtonModule,
         FormsModule,
-        RxLet,
         ValidDirective,
         MessagesComponent,
+        AsyncPipe,
     ],
     selector: 'sol-releases',
     templateUrl: './releases.component.html',

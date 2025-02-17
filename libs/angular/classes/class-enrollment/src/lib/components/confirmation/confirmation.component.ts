@@ -1,4 +1,4 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -7,16 +7,13 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { RxLet } from '@rx-angular/template/let';
 import { ChipModule } from 'primeng/chip';
 import { combineLatest, filter, map, Subject, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { RxFor } from '@rx-angular/template/for';
 import { FieldsetModule } from 'primeng/fieldset';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
-import { RxIf } from '@rx-angular/template/if';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
@@ -33,9 +30,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
         DatePipe,
         CurrencyPipe,
         ChipModule,
-        RxLet,
-        RxFor,
-        RxIf,
         FieldsetModule,
         CardModule,
         InputTextModule,
@@ -46,6 +40,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
         CheckoutComponent,
         ClassSummaryTableComponent,
         DatePipe,
+        AsyncPipe,
     ],
     providers: [],
     selector: 'sol-class-confirmation',
