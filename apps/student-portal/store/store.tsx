@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, Tuple } from '@reduxjs/toolkit';
 import login from '../app/login/login.slice';
 import updateUnits from '../components/Units/UnitsStore';
 import { createEpicMiddleware } from 'redux-observable';
@@ -24,7 +24,7 @@ export const store = configureStore({
         login: login,
         updateUnits: updateUnits,
     },
-    middleware: () => [epicMiddleware],
+    middleware: () => new Tuple(epicMiddleware),
 });
 
 epicMiddleware.run(rootEpic);

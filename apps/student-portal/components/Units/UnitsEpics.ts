@@ -14,12 +14,17 @@ import {
     selectCompletedAndChangedCompletedUnitIds,
     selectSemesters,
     selectSelectedSemesterId,
+    State,
 } from './UnitsStore';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { FirebaseFunctions } from '../../functions/firebase-functions';
 import { RequestedUtility } from '@sol/react/request';
 
-export const loadSemestersEpic: Epic = (action$, state$) =>
+export const loadSemestersEpic: Epic<
+    unknown,
+    unknown,
+    { updateUnits: State }
+> = (action$, state$) =>
     action$.pipe(
         startWith(unitsSlice.actions.ready()),
         ofType(unitsSlice.actions.ready.type),
@@ -43,7 +48,11 @@ export const loadSemestersEpic: Epic = (action$, state$) =>
         })
     );
 
-export const loadClassesForSemesterEpic: Epic = (_, state$) =>
+export const loadClassesForSemesterEpic: Epic<
+    unknown,
+    unknown,
+    { updateUnits: State }
+> = (_, state$) =>
     state$.pipe(
         map(selectSelectedSemesterId),
         distinctUntilChanged(),
@@ -70,7 +79,11 @@ export const loadClassesForSemesterEpic: Epic = (_, state$) =>
         })
     );
 
-export const loadStudentsEpic: Epic = (action$, state$) =>
+export const loadStudentsEpic: Epic<
+    unknown,
+    unknown,
+    { updateUnits: State }
+> = (action$, state$) =>
     action$.pipe(
         startWith(unitsSlice.actions.ready()),
         ofType(unitsSlice.actions.ready.type),
@@ -95,7 +108,11 @@ export const loadStudentsEpic: Epic = (action$, state$) =>
         })
     );
 
-export const loadStudentCompletedUnitIdsEpic: Epic = (action$) =>
+export const loadStudentCompletedUnitIdsEpic: Epic<
+    unknown,
+    unknown,
+    { updateUnits: State }
+> = (action$) =>
     action$.pipe(
         ofType(unitsSlice.actions.setSelectedStudentId.type),
         switchMap(({ payload: studentId }) => {
@@ -121,7 +138,11 @@ export const loadStudentCompletedUnitIdsEpic: Epic = (action$) =>
         })
     );
 
-export const loadPathsAndUnitsEpic: Epic = (action$) =>
+export const loadPathsAndUnitsEpic: Epic<
+    unknown,
+    unknown,
+    { updateUnits: State }
+> = (action$) =>
     action$.pipe(
         startWith(unitsSlice.actions.ready()),
         ofType(unitsSlice.actions.ready.type),
@@ -144,14 +165,18 @@ export const loadPathsAndUnitsEpic: Epic = (action$) =>
         })
     );
 
-export const saveCompletedUnitsEpic: Epic = (action$, state$) =>
+export const saveCompletedUnitsEpic: Epic<
+    unknown,
+    unknown,
+    { updateUnits: State }
+> = (action$, state$) =>
     action$.pipe(
         ofType(unitsSlice.actions.saveChanges.type),
         withLatestFrom(
             state$.pipe(map(selectSelectedStudentId)),
             state$.pipe(map(selectCompletedAndChangedCompletedUnitIds))
         ),
-        filter((args): args is [unknown, string, string[]] =>
+        filter((args): args is [never, string, string[]] =>
             RequestedUtility.isLoaded(args[2])
         ),
         switchMap(([, studentId, completedUnitIds]) => {

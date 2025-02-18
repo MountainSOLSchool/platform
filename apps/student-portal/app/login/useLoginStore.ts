@@ -18,7 +18,7 @@ export function useLoginStore(): {
         viewModel,
         login: () => dispatch(loginSlice.actions.logIn()),
         sendPasswordResetEmail: () =>
-            dispatch(loginSlice.actions.sendPasswordResetEmail),
+            dispatch(loginSlice.actions.sendPasswordResetEmail()),
         setEmail: (email) => dispatch(loginSlice.actions.setEmail(email)),
         setPassword: (password) =>
             dispatch(loginSlice.actions.setPassword(password)),

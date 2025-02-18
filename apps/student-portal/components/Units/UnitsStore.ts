@@ -6,7 +6,7 @@ import { Path } from '../../models/path.type';
 
 import { StudentSelectionType } from './StudentSelectionType.type';
 
-type State = {
+export type State = {
     students: Requested<
         Array<{ first_name: string; last_name: string; id: string }>
     >;

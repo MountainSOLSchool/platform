@@ -25,7 +25,7 @@ const getSuite = () =>
         }
     );
 
-type State = {
+export type State = {
     email: string;
     password: string;
     mode: LoginMode;
