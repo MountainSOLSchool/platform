@@ -20,6 +20,10 @@ Run `npm ci`.
 
 -   [Nx Console](https://marketplace.visualstudio.com/items?itemName=nrwl.angular-console) enables you to run build and serve commands with a GUI
 
+### Firebase Console
+
+Manage Firebase capabilities on the [Firebase Console](https://console.firebase.google.com/u/0/project/mountain-sol-platform/overview).
+
 ## Firebase Functions
 
 Run the Firebase functions locally with `npx nx run functions:serve`.
