@@ -33,7 +33,7 @@
     <button (click)="fillOutForTest()">Fill out form for test</button>
 }
 @let isUserLoggedIn = isUserLoggedIn$ | async;
-@if (isUserLoggedIn) {
+@if (isUserLoggedIn !== null) {
     <mat-stepper
     #stepper
     [orientation]="(stepperOrientation | async)!"

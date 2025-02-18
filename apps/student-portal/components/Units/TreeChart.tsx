@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'apps/student-portal/store/store';
 import { requestPaths } from 'apps/student-portal/store/paths';
 import { requestUnits } from 'apps/student-portal/store/unitStore';
+import { setStudentId } from 'apps/student-portal/store/studentStore';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',
@@ -42,8 +43,12 @@ const sidebarDimensions = {
     headerFontSize: 25,
 };
 
-function SmartTreeChart() {
+function SmartTreeChart(props: { studentId: string }) {
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setStudentId(props.studentId));
+    }, [props.studentId, dispatch]);
 
     // [x] GET UNITS ARRAY
     // [x] GET STUDENT PROFILE

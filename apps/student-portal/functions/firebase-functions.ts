@@ -108,6 +108,15 @@ export class FirebaseFunctions {
         const result = await getCompletedUnitsFn({ studentId });
         return result.data.student;
     }
+
+    static async getRoles(): Promise<Array<string>> {
+        const getRolesFn = httpsCallable<void, Array<string>>(
+            this.functions,
+            'roles'
+        );
+        const result = await getRolesFn();
+        return result.data;
+    }
 }
 
 function getConfiguredFunctions() {
