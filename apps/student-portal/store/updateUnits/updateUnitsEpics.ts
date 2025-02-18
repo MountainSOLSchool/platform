@@ -8,16 +8,16 @@ import {
 } from 'rxjs';
 import { map, catchError, startWith, mergeMap, tap } from 'rxjs/operators';
 import {
-    unitsSlice,
+    updateUnitsSlice,
     selectAllStudents,
     selectSelectedStudentId,
     selectCompletedAndChangedCompletedUnitIds,
     selectSemesters,
     selectSelectedSemesterId,
     State,
-} from './UnitsStore';
+} from './updateUnitsSlice';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
-import { FirebaseFunctions } from '../../functions/firebase-functions';
+import { FirebaseFunctions } from '../../firebase/functions';
 import { RequestedUtility } from '@sol/react/request';
 
 export const loadSemestersEpic: Epic<
@@ -26,14 +26,14 @@ export const loadSemestersEpic: Epic<
     { updateUnits: State }
 > = (action$, state$) =>
     action$.pipe(
-        startWith(unitsSlice.actions.ready()),
-        ofType(unitsSlice.actions.ready.type),
+        startWith(updateUnitsSlice.actions.ready()),
+        ofType(updateUnitsSlice.actions.ready.type),
         withLatestFrom(state$.pipe(map(selectSemesters))),
         filter(([, semesters]) => RequestedUtility.isNotComplete(semesters)),
         switchMap(() => {
             return fromPromise(FirebaseFunctions.getSemesters()).pipe(
                 map((semesters) =>
-                    unitsSlice.actions.semestersLoadSucceeded(
+                    updateUnitsSlice.actions.semestersLoadSucceeded(
                         semesters.map(({ name, id }) => ({
                             displayName: name,
                             semesterId: id,
@@ -41,9 +41,9 @@ export const loadSemestersEpic: Epic<
                     )
                 ),
                 catchError((error) =>
-                    of(unitsSlice.actions.semestersLoadFailed(error))
+                    of(updateUnitsSlice.actions.semestersLoadFailed(error))
                 ),
-                startWith(unitsSlice.actions.semestersLoadStarted())
+                startWith(updateUnitsSlice.actions.semestersLoadStarted())
             );
         })
     );
@@ -62,7 +62,7 @@ export const loadClassesForSemesterEpic: Epic<
                 FirebaseFunctions.getClassesForSemester(semesterId)
             ).pipe(
                 map((classes) =>
-                    unitsSlice.actions.classesLoadSucceeded(
+                    updateUnitsSlice.actions.classesLoadSucceeded(
                         classes.map(({ title, id, studentIds, unitIds }) => ({
                             displayName: title,
                             classId: id,
@@ -72,9 +72,9 @@ export const loadClassesForSemesterEpic: Epic<
                     )
                 ),
                 catchError((error) =>
-                    of(unitsSlice.actions.classesLoadFailed(error))
+                    of(updateUnitsSlice.actions.classesLoadFailed(error))
                 ),
-                startWith(unitsSlice.actions.classesLoadStarted())
+                startWith(updateUnitsSlice.actions.classesLoadStarted())
             );
         })
     );
@@ -85,8 +85,8 @@ export const loadStudentsEpic: Epic<
     { updateUnits: State }
 > = (action$, state$) =>
     action$.pipe(
-        startWith(unitsSlice.actions.ready()),
-        ofType(unitsSlice.actions.ready.type),
+        startWith(updateUnitsSlice.actions.ready()),
+        ofType(updateUnitsSlice.actions.ready.type),
         withLatestFrom(state$.pipe(map(selectAllStudents))),
         filter(([, students]) => RequestedUtility.isNotComplete(students)),
         switchMap(() => {
@@ -98,12 +98,12 @@ export const loadStudentsEpic: Epic<
                 ])
             ).pipe(
                 map((students) =>
-                    unitsSlice.actions.studentLoadSucceeded(students)
+                    updateUnitsSlice.actions.studentLoadSucceeded(students)
                 ),
                 catchError((error) =>
-                    of(unitsSlice.actions.studentLoadFailed(error))
+                    of(updateUnitsSlice.actions.studentLoadFailed(error))
                 ),
-                startWith(unitsSlice.actions.studentLoadStarted())
+                startWith(updateUnitsSlice.actions.studentLoadStarted())
             );
         })
     );
@@ -114,25 +114,25 @@ export const loadStudentCompletedUnitIdsEpic: Epic<
     { updateUnits: State }
 > = (action$) =>
     action$.pipe(
-        ofType(unitsSlice.actions.setSelectedStudentId.type),
+        ofType(updateUnitsSlice.actions.setSelectedStudentId.type),
         switchMap(({ payload: studentId }) => {
             return fromPromise(
                 FirebaseFunctions.getCompletedUnitIds(studentId)
             ).pipe(
                 map((unitIds) =>
-                    unitsSlice.actions.studentCompletedUnitIdsLoadSucceeded(
+                    updateUnitsSlice.actions.studentCompletedUnitIdsLoadSucceeded(
                         unitIds
                     )
                 ),
                 catchError((error) =>
                     of(
-                        unitsSlice.actions.studentCompletedUnitIdsLoadFailed(
+                        updateUnitsSlice.actions.studentCompletedUnitIdsLoadFailed(
                             error
                         )
                     )
                 ),
                 startWith(
-                    unitsSlice.actions.studentCompletedUnitIdsLoadStarted()
+                    updateUnitsSlice.actions.studentCompletedUnitIdsLoadStarted()
                 )
             );
         })
@@ -144,23 +144,23 @@ export const loadPathsAndUnitsEpic: Epic<
     { updateUnits: State }
 > = (action$) =>
     action$.pipe(
-        startWith(unitsSlice.actions.ready()),
-        ofType(unitsSlice.actions.ready.type),
+        startWith(updateUnitsSlice.actions.ready()),
+        ofType(updateUnitsSlice.actions.ready.type),
         switchMap(() => {
             return fromPromise(FirebaseFunctions.getFullUnitsAndPaths()).pipe(
                 mergeMap((unitIds) => [
-                    unitsSlice.actions.unitsLoadSucceeded(unitIds.units),
-                    unitsSlice.actions.pathsLoadSucceeded(unitIds.paths),
+                    updateUnitsSlice.actions.unitsLoadSucceeded(unitIds.units),
+                    updateUnitsSlice.actions.pathsLoadSucceeded(unitIds.paths),
                 ]),
                 catchError((error) =>
                     of(
-                        unitsSlice.actions.studentCompletedUnitIdsLoadFailed(
+                        updateUnitsSlice.actions.studentCompletedUnitIdsLoadFailed(
                             error
                         ),
-                        unitsSlice.actions.unitsLoadFailed(error)
+                        updateUnitsSlice.actions.unitsLoadFailed(error)
                     )
                 ),
-                startWith(unitsSlice.actions.unitsLoadStarted())
+                startWith(updateUnitsSlice.actions.unitsLoadStarted())
             );
         })
     );
@@ -171,7 +171,7 @@ export const saveCompletedUnitsEpic: Epic<
     { updateUnits: State }
 > = (action$, state$) =>
     action$.pipe(
-        ofType(unitsSlice.actions.saveChanges.type),
+        ofType(updateUnitsSlice.actions.saveChanges.type),
         withLatestFrom(
             state$.pipe(map(selectSelectedStudentId)),
             state$.pipe(map(selectCompletedAndChangedCompletedUnitIds))
@@ -187,20 +187,22 @@ export const saveCompletedUnitsEpic: Epic<
                 )
             ).pipe(
                 // TODO: track success in state
-                map(() => unitsSlice.actions.saveCompletedUnitsSucceeded()),
+                map(() =>
+                    updateUnitsSlice.actions.saveCompletedUnitsSucceeded()
+                ),
                 // TODO: should use a toast
                 tap(() => alert('Saved!')),
                 catchError((error) => {
                     console.error('Error saving completed units', error);
                     return of(
-                        unitsSlice.actions.saveCompletedUnitsFailed(error)
+                        updateUnitsSlice.actions.saveCompletedUnitsFailed(error)
                     );
                 })
             );
         })
     );
 
-export const UnitsEpics = combineEpics(
+export const UpdateUnitsEpics = combineEpics(
     loadSemestersEpic,
     loadClassesForSemesterEpic,
     loadStudentsEpic,

@@ -1,5 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { LoginMode, LoginViewModel } from './login-view-model';
+import { LoginMode, LoginViewModel } from '../../app/login/login-view-model';
 import { create, enforce, skipWhen, test } from 'vest';
 import { Requested, RequestState } from '@sol/react/request';
 

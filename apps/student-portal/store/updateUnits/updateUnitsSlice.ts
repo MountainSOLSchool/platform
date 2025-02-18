@@ -1,10 +1,10 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { Requested, RequestedUtility, RequestState } from '@sol/react/request';
-import { UpdateStudentUnitsViewProps } from './UpdateStudentUnitsView';
+import { UpdateStudentUnitsViewProps } from '../../components/units/update/UpdateStudentUnitsView';
 import { UnitDbEntry } from '@sol/classes/domain';
 import { Path } from '../../models/path.type';
 
-import { StudentSelectionType } from './StudentSelectionType.type';
+import { StudentSelectionType } from '../../components/units/update/StudentSelectionType.type';
 
 export type State = {
     students: Requested<
@@ -45,7 +45,7 @@ const initialState: State = {
     selectionType: 'all',
 };
 
-export const unitsSlice = createSlice({
+export const updateUnitsSlice = createSlice({
     name: 'updateUnits',
     initialState,
     reducers: {
@@ -204,7 +204,7 @@ function resetSelectedStudent(state: State) {
     state.changedUnitCompletions = {};
 }
 
-export default unitsSlice.reducer;
+export default updateUnitsSlice.reducer;
 
 const selectState = (state: { updateUnits: State }) => state.updateUnits;
 

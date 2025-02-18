@@ -8,7 +8,7 @@ import {
     selectLoginForm,
     selectValidationErrors,
     State,
-} from './login.slice';
+} from './loginSlice';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 export const submitLoginEpic: (

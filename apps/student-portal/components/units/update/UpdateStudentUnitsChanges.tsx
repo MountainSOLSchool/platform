@@ -1,6 +1,6 @@
 'use client';
 import { useSelector } from 'react-redux';
-import { selectUnitNameAndCompletionChange } from './UnitsStore';
+import { selectUnitNameAndCompletionChange } from '../../../store/updateUnits/updateUnitsSlice';
 import UpdateStudentUnitsChangesView from './UpdateStudentUnitsChangesView';
 
 export default function UpdateStudentUnitsChanges() {

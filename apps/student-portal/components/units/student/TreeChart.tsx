@@ -2,10 +2,10 @@
 import { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'apps/student-portal/store/store';
-import { requestPaths } from 'apps/student-portal/store/paths';
-import { requestUnits } from 'apps/student-portal/store/unitStore';
-import { setStudentId } from 'apps/student-portal/store/studentStore';
+import { RootState } from '../../../store/store';
+import { requestPaths } from '../../../store/paths/pathsSlice';
+import { requestUnits } from '../../../store/unit/unitSlice';
+import { setStudentId } from '../../../store/student/studentSlice';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',

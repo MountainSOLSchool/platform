@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { User } from 'firebase/auth';
 import { getSolAuthClient } from '@sol/ts/firebase/firebase-config';
-import { FirebaseFunctions } from '../../functions/firebase-functions';
+import { FirebaseFunctions } from '../../firebase/functions';
 
 export function useAuth() {
     const [user, setUser] = useState<User | null>(null);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SmartTreeChart } from '../../../../components/Units/TreeChart';
+import { SmartTreeChart } from '../../../../components/units/student/TreeChart';
 
 type PageProps = { params: Promise<{ id: string }> };
 

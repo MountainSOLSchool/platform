@@ -6,7 +6,7 @@ import { Card } from 'primereact/card';
 import { Tooltip } from 'primereact/tooltip';
 import UpdateStudentUnitsChanges from './UpdateStudentUnitsChanges';
 import { useSelector } from 'react-redux';
-import { selectUnitNameAndCompletionChange } from './UnitsStore';
+import { selectUnitNameAndCompletionChange } from '../../../store/updateUnits/updateUnitsSlice';
 import { Button } from 'primereact/button';
 import { useRouter } from 'next/navigation';
 

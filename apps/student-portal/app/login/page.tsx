@@ -1,7 +1,7 @@
 'use client';
 import LoginView from './login-view';
-import { useLoginStore } from './useLoginStore';
-import { submitLoginEpic } from './login.epics';
+import { useLoginStore } from '../../store/login/useLoginStore';
+import { submitLoginEpic } from '../../store/login/loginEpics';
 import { useRouter } from 'next/navigation';
 import { useEpic } from '@sharakai/use-redux-observable-epic';
 

@@ -1,13 +1,13 @@
 import { configureStore, Tuple } from '@reduxjs/toolkit';
-import login from '../app/login/login.slice';
-import updateUnits from '../components/Units/UnitsStore';
+import login from './login/loginSlice';
+import updateUnits from './updateUnits/updateUnitsSlice';
 import { createEpicMiddleware } from 'redux-observable';
-import paths from './paths';
-import { loadPaths } from './pathsEpic';
-import unitStore from './unitStore';
-import { loadUnits } from './unitEpic';
-import student from './studentStore';
-import { loadStudent } from './studentEpic';
+import paths from './paths/pathsSlice';
+import { loadPaths } from './paths/pathsEpic';
+import unitStore from './unit/unitSlice';
+import { loadUnits } from './unit/unitEpic';
+import student from './student/studentSlice';
+import { loadStudent } from './student/studentEpic';
 import { createRootEpic } from '@sharakai/use-redux-observable-epic';
 
 const epics = [loadPaths, loadUnits, loadStudent];

@@ -1,8 +1,8 @@
 import { filter, switchMap, from } from 'rxjs';
-import { requestUnits, loadedUnits } from './unitStore';
+import { requestUnits, loadedUnits } from './unitSlice';
 import { Action } from 'redux';
 import { Observable, map } from 'rxjs';
-import { db } from '../firebase/database';
+import { db } from '../../firebase/database';
 import { collection, getDocs } from 'firebase/firestore';
 
 export const loadUnits = (action$: Observable<Action>) =>
