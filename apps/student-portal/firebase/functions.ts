@@ -4,7 +4,7 @@ import {
     httpsCallable,
 } from 'firebase/functions';
 import { StudentDbEntry } from '@sol/student/domain';
-import { SemesterClass, UnitDbEntry } from '@sol/classes/domain';
+import { SemesterClass } from '@sol/classes/domain';
 import { Path } from '../models/path.type';
 
 let _functions: ReturnType<typeof getFunctions> | undefined;
@@ -55,13 +55,31 @@ export class FirebaseFunctions {
 
     static async getFullUnitsAndPaths(): Promise<{
         paths: Array<Path>;
-        units: Record<string, UnitDbEntry>;
+        units: Record<
+            string,
+            {
+                name: string;
+                description: string;
+                category: string;
+                isRepeatable: boolean;
+                prereqUnitIds: Array<string>;
+            }
+        >;
     }> {
         const getPathsFn = httpsCallable<
             void,
             {
                 paths: Array<Path>;
-                units: Record<string, UnitDbEntry>;
+                units: Record<
+                    string,
+                    {
+                        name: string;
+                        description: string;
+                        category: string;
+                        isRepeatable: boolean;
+                        prereqUnitIds: Array<string>;
+                    }
+                >;
             }
         >(this.functions, 'fullUnitsAndPaths');
         const result = await getPathsFn();

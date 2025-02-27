@@ -16,6 +16,7 @@ type Units = {
         name: string;
         description: string;
         category: string;
+        isRepeatable: boolean;
     };
 };
 

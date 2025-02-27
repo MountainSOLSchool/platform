@@ -19,6 +19,7 @@ export function UpdateUnitsTool(props: {
             name: string;
             description: string;
             category: string;
+            isRepeatable: boolean;
         };
     };
     paths: Array<{
@@ -59,6 +60,10 @@ export function UpdateUnitsTool(props: {
         );
     };
 
+    const repeatableUnits = Object.entries(props.units).filter(
+        ([, unit]) => !!unit.isRepeatable
+    );
+
     const renderPathContent = (units: typeof props.units) => {
         const sortedPaths = props.paths.concat().sort((a, b) => {
             if (a.name === 'Ranger') return -1;
@@ -67,6 +72,27 @@ export function UpdateUnitsTool(props: {
 
         return (
             <div className="space-y-8">
+                {/** put the special box here */}
+                <Card
+                    className="mb-4"
+                    key="repeatable-units"
+                    title="Repeatable Units"
+                >
+                    <div className="border rounded-lg">
+                        <div>
+                            {repeatableUnits.map(([id, unit]) => {
+                                return (
+                                    <div
+                                        key={`repeatable-unit-${id}`}
+                                        className="mb-4"
+                                    >
+                                        <p>{unit.name}</p>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </Card>
                 {sortedPaths
                     .filter((path) =>
                         path.unitIds.some((unitId) => !!units[unitId])
@@ -100,6 +126,9 @@ export function UpdateUnitsTool(props: {
                                                     props.isCompletedByUnitId[
                                                         unitId
                                                     ] ?? false
+                                                }
+                                                disabled={
+                                                    units[unitId]?.isRepeatable
                                                 }
                                                 onToggle={(
                                                     unitId,
@@ -148,6 +177,10 @@ export function UpdateUnitsTool(props: {
                                                                     .isCompletedByUnitId[
                                                                     unitId
                                                                 ] ?? false
+                                                            }
+                                                            disabled={
+                                                                units[unitId]
+                                                                    ?.isRepeatable
                                                             }
                                                             onToggle={(
                                                                 unitId,
@@ -243,6 +276,7 @@ function UnitCheckboxWithTooltip(props: {
     name: string;
     description: string;
     isCompleted: boolean;
+    disabled?: boolean;
     onToggle: (unitId: string, isCompleted: boolean) => void;
 }) {
     const changedUnits = useSelector(selectUnitNameAndCompletionChange);
@@ -265,6 +299,7 @@ function UnitCheckboxWithTooltip(props: {
                 className={`checkbox-${props.unitId} flex items-center mt-1 pr-2`}
             >
                 <Checkbox
+                    disabled={props.disabled ?? false}
                     inputId={props.unitId}
                     checked={props.isCompleted ?? false}
                     onChange={(e) =>
