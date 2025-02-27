@@ -3,8 +3,13 @@ import { Requested, RequestedUtility, RequestState } from '@sol/react/request';
 import { UpdateStudentUnitsViewProps } from '../../components/units/update/UpdateStudentUnitsView';
 import { UnitDbEntry } from '@sol/classes/domain';
 import { Path } from '../../models/path.type';
-
 import { StudentSelectionType } from '../../components/units/update/StudentSelectionType.type';
+
+export type RepeatableUnitCompletion = {
+    unitId: string;
+    recordedDate: string;
+    appliedToPath?: string;
+};
 
 export type State = {
     students: Requested<
@@ -23,6 +28,7 @@ export type State = {
     selectedClassId: string | undefined;
     selectedStudentId: string | undefined;
     selectedStudentCompletedUnitIds: Requested<Array<string>>;
+    repeatableCompletions: Array<RepeatableUnitCompletion>; // Store as array
     paths: Requested<Array<Path>>;
     units: Requested<Record<string, UnitDbEntry>>;
     changedUnitCompletions: Record<string, boolean>;
@@ -38,6 +44,7 @@ const initialState: State = {
     selectedClassId: undefined,
     selectedStudentId: undefined,
     selectedStudentCompletedUnitIds: RequestState.Empty,
+    repeatableCompletions: [], // Initialize as empty array
     units: RequestState.Empty,
     paths: RequestState.Empty,
     changedUnitCompletions: {},
@@ -82,19 +89,18 @@ export const updateUnitsSlice = createSlice({
         ) => {
             state.students = action.payload;
         },
-        studentCompletedUnitIdsLoadSucceeded: (
+        studentCompletedUnitsLoadSucceeded: (
             state,
             action: {
                 payload: {
-                    unitIds: Array<string>;
-                    repeatableUnits: Array<{
-                        unitId: string;
-                        appliedToPathId?: string;
-                    }>;
+                    regularUnitIds: Array<string>;
+                    repeatableCompletions: Array<RepeatableUnitCompletion>;
                 };
             }
         ) => {
-            state.selectedStudentCompletedUnitIds = action.payload.unitIds;
+            state.selectedStudentCompletedUnitIds =
+                action.payload.regularUnitIds;
+            state.repeatableCompletions = action.payload.repeatableCompletions;
         },
         unitsLoadSucceeded: (
             state,
@@ -121,8 +127,9 @@ export const updateUnitsSlice = createSlice({
         studentLoadStarted: (state) => {
             state.students = RequestState.Loading;
         },
-        studentCompletedUnitIdsLoadStarted: (state) => {
+        studentCompletedUnitsLoadStarted: (state) => {
             state.selectedStudentCompletedUnitIds = RequestState.Loading;
+            state.repeatableCompletions = []; // Reset repeatable completions
         },
         unitsLoadStarted: (state) => {
             state.units = RequestState.Loading;
@@ -139,8 +146,9 @@ export const updateUnitsSlice = createSlice({
         studentLoadFailed: (state) => {
             state.students = RequestState.Error;
         },
-        studentCompletedUnitIdsLoadFailed: (state) => {
+        studentCompletedUnitsLoadFailed: (state) => {
             state.selectedStudentCompletedUnitIds = RequestState.Error;
+            state.repeatableCompletions = []; // Reset repeatable completions on error
         },
         unitsLoadFailed: (state) => {
             state.units = RequestState.Error;
@@ -169,6 +177,7 @@ export const updateUnitsSlice = createSlice({
         setSelectedStudentId: (state, action: { payload: string }) => {
             state.selectedStudentId = action.payload;
             state.selectedStudentCompletedUnitIds = RequestState.Loading;
+            state.repeatableCompletions = []; // Reset repeatable completions
             state.changedUnitCompletions = {};
         },
         setUnitCompletion: (
@@ -184,6 +193,58 @@ export const updateUnitsSlice = createSlice({
             } else {
                 delete state.changedUnitCompletions[action.payload.unitId];
             }
+        },
+        // New actions for repeatable completions
+        addRepeatableCompletion: (
+            state,
+            action: { payload: { unitId: string } }
+        ) => {
+            const newCompletion: RepeatableUnitCompletion = {
+                unitId: action.payload.unitId,
+                recordedDate: new Date().toISOString(),
+                appliedToPath: undefined,
+            };
+
+            state.repeatableCompletions.push(newCompletion);
+        },
+        updateRepeatableCompletion: (
+            state,
+            action: {
+                payload: {
+                    completion: RepeatableUnitCompletion;
+                    appliedToPath: string;
+                };
+            }
+        ) => {
+            const index = state.repeatableCompletions.findIndex(
+                (completion) =>
+                    completion.unitId + completion.recordedDate ===
+                    action.payload.completion.unitId +
+                        action.payload.completion.recordedDate
+            );
+
+            if (index !== -1) {
+                state.repeatableCompletions[index] = {
+                    ...state.repeatableCompletions[index],
+                    appliedToPath: action.payload.appliedToPath,
+                };
+            }
+        },
+        removeRepeatableCompletion: (
+            state,
+            action: {
+                payload: {
+                    unitId: string;
+                    recordedDate: string;
+                    appliedToPath?: string;
+                };
+            }
+        ) => {
+            state.repeatableCompletions = state.repeatableCompletions.filter(
+                (completion) =>
+                    completion.unitId + completion.recordedDate !==
+                    action.payload.unitId + action.payload.recordedDate
+            );
         },
         ready: (state) => {
             state.students = RequestState.Loading;
@@ -209,6 +270,7 @@ export const updateUnitsSlice = createSlice({
 function resetSelectedStudent(state: State) {
     state.selectedStudentId = undefined;
     state.selectedStudentCompletedUnitIds = RequestState.Empty;
+    state.repeatableCompletions = [];
     state.changedUnitCompletions = {};
 }
 
@@ -249,6 +311,11 @@ export const selectSelectedStudentCompletedUnitIds = createSelector(
 export const selectChangedUnitCompletions = createSelector(
     [selectState],
     (state) => state.changedUnitCompletions
+);
+
+export const selectRepeatableCompletions = createSelector(
+    [selectState],
+    (state) => state.repeatableCompletions
 );
 
 export const selectCompletedAndChangedCompletedUnitIds = createSelector(
@@ -305,10 +372,14 @@ export const selectIsSaveInProgress = createSelector(
 export const selectUnitNameAndCompletionChange = createSelector(
     [selectUnits, selectChangedUnitCompletions],
     (units, changedUnitCompletions) => {
+        if (!RequestedUtility.isLoaded(units)) {
+            return [];
+        }
+
         return Object.entries(changedUnitCompletions).map(
             ([unitId, isCompleted]) => {
                 return {
-                    name: units[unitId].name,
+                    name: units[unitId]?.name || unitId,
                     added: isCompleted,
                 };
             }
@@ -401,6 +472,7 @@ export const selectUpdateStudentUnitsProps = createSelector(
         selectSelectedClassUnitIds,
         selectSelectedStudentId,
         selectCompletedAndChangedCompletedUnitIds,
+        selectRepeatableCompletions,
         selectUnits,
         selectPaths,
         selectIsSaveInProgress,
@@ -415,6 +487,7 @@ export const selectUpdateStudentUnitsProps = createSelector(
         selectedClassUnitIds,
         selectedStudentId,
         completedUnitIds,
+        repeatableCompletions,
         units,
         paths,
         isSaveInProgress,
@@ -430,6 +503,7 @@ export const selectUpdateStudentUnitsProps = createSelector(
             selectedClassUnitIds,
             selectedStudentId,
             completedUnitIds,
+            repeatableCompletions,
             units,
             paths,
             isSaveInProgress,

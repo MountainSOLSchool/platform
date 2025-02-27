@@ -10,6 +10,7 @@ import SemesterSelectionDropdown from './SemesterSelectionDropdown';
 import ClassSelectionDropdown from './ClassSelectionDropdown';
 import StudentSelectionTypePicker from './StudentSelectionTypePicker';
 import { StudentSelectionType } from './StudentSelectionType.type';
+import { RepeatableUnitCompletion } from 'apps/student-portal/store/updateUnits/updateUnitsSlice';
 
 type Units = {
     [unitId: string]: {
@@ -32,13 +33,7 @@ export interface UpdateStudentUnitsViewProps {
     selectedClassUnitIds: Array<string>;
     selectedStudentId: string | undefined;
     completedUnitIds: Requested<Array<string>>;
-    completedRepeatableUnits: Requested<
-        Array<{
-            unitId: string;
-            recordedDate: string;
-            appliedToPathId: string | undefined;
-        }>
-    >;
+    repeatableCompletions: RepeatableUnitCompletion[];
     units: Requested<Units>;
     paths: Requested<
         Array<{
@@ -60,6 +55,14 @@ export function UpdateStudentUnitsView(
             unitId: string;
             isCompleted: boolean;
         }) => void;
+        addRepeatableCompletion?: (unitId: string) => void;
+        updateRepeatableCompletion?: (
+            completion: RepeatableUnitCompletion,
+            appliedToPath: string
+        ) => void;
+        removeRepeatableCompletion?: (
+            completion: RepeatableUnitCompletion
+        ) => void;
         saveClicked: () => void;
     }
 ) {
@@ -167,15 +170,18 @@ export function UpdateStudentUnitsView(
                         RequestedUtility.isLoaded(props.completedUnitIds) ? (
                             <div>
                                 <UpdateUnitsTool
-                                    repeatableCompletions={[
-                                        // just a hardcoded test example
-                                        {
-                                            id: '123',
-                                            unitId: 'HHwX56kM8sqwQVAFGEUp',
-                                            recordedDate: new Date(),
-                                            appliedToPath: null,
-                                        },
-                                    ]}
+                                    repeatableCompletions={
+                                        props.repeatableCompletions
+                                    }
+                                    onRepeatableCompletionAdded={
+                                        props.addRepeatableCompletion
+                                    }
+                                    onRepeatableCompletionUpdated={
+                                        props.updateRepeatableCompletion
+                                    }
+                                    onRepeatableCompletionRemoved={
+                                        props.removeRepeatableCompletion
+                                    }
                                     student={props.selectedStudentId}
                                     isCompletedByUnitId={Object.fromEntries([
                                         ...(RequestedUtility.isLoaded(

@@ -32,6 +32,18 @@ function UpdateStudentUnits() {
                 unitCompletionChanged={(change) =>
                     unitsStore.unitCompletionChanged(change)
                 }
+                addRepeatableCompletion={(unitId) =>
+                    unitsStore.addRepeatableCompletion(unitId)
+                }
+                updateRepeatableCompletion={(completion, appliedToPath) =>
+                    unitsStore.updateRepeatableCompletion(
+                        completion,
+                        appliedToPath
+                    )
+                }
+                removeRepeatableCompletion={(completion) =>
+                    unitsStore.removeRepeatableCompletion(completion)
+                }
                 saveClicked={() => unitsStore.saveChanges()}
             ></UpdateStudentUnitsView>
         </>

@@ -10,14 +10,7 @@ import { selectUnitNameAndCompletionChange } from '../../../store/updateUnits/up
 import { Button } from 'primereact/button';
 import { useRouter } from 'next/navigation';
 import { Dropdown } from 'primereact/dropdown';
-
-// Add a new type for the repeatable unit completions
-export type RepeatableUnitCompletion = {
-    id: string; // Unique ID for this completion
-    unitId: string;
-    recordedDate: Date;
-    appliedToPath: string | null;
-};
+import { RepeatableUnitCompletion } from '../../../store/updateUnits/updateUnitsSlice';
 
 // TODO: the styling classes are haphazardly applied here
 export function UpdateUnitsTool(props: {
@@ -37,16 +30,19 @@ export function UpdateUnitsTool(props: {
         electives: Array<PathElective>;
     }>;
     selectedClassUnitIds?: Array<string>;
+    repeatableCompletions: RepeatableUnitCompletion[];
     onUnitsChanged: (changedUnit: {
         unitId: string;
         isCompleted: boolean;
     }) => void;
-    // Add new props for repeatable unit completions
-    repeatableCompletions: RepeatableUnitCompletion[];
+    // Add new props for repeatable unit operations
     onRepeatableCompletionAdded?: (unitId: string) => void;
-    onRepeatableCompletionApplied?: (
-        completionId: string,
-        pathName: string | null
+    onRepeatableCompletionUpdated?: (
+        completion: RepeatableUnitCompletion,
+        appliedToPath: string
+    ) => void;
+    onRepeatableCompletionRemoved?: (
+        completion: RepeatableUnitCompletion
     ) => void;
 }) {
     const router = useRouter();
@@ -82,20 +78,25 @@ export function UpdateUnitsTool(props: {
 
     // Function to add a new completion for a repeatable unit
     const handleAddCompletion = (unitId: string) => {
-        // Call the callback if provided
         if (props.onRepeatableCompletionAdded) {
             props.onRepeatableCompletionAdded(unitId);
         }
     };
 
-    // Function to apply a completion to a path
-    const handleApplyToPath = (
-        completionId: string,
-        pathName: string | null
+    // Function to update a repeatable completion
+    const handleUpdateCompletion = (
+        completion: RepeatableUnitCompletion,
+        appliedToPath: string
     ) => {
-        // Call the callback if provided
-        if (props.onRepeatableCompletionApplied) {
-            props.onRepeatableCompletionApplied(completionId, pathName);
+        if (props.onRepeatableCompletionUpdated) {
+            props.onRepeatableCompletionUpdated(completion, appliedToPath);
+        }
+    };
+
+    // Function to remove a repeatable completion
+    const handleRemoveCompletion = (completion: RepeatableUnitCompletion) => {
+        if (props.onRepeatableCompletionRemoved) {
+            props.onRepeatableCompletionRemoved(completion);
         }
     };
 
@@ -113,10 +114,14 @@ export function UpdateUnitsTool(props: {
 
     const renderRepeatableUnitsCard = () => {
         return (
-            <Card className="mb-4" key="repeatable-units" title="">
+            <Card
+                key="repeatable-units"
+                title="Give-Back Electives"
+                className="mb-4"
+            >
+                <p>Repeat for each path.</p>
                 <div className="border rounded-lg">
                     {repeatableUnits.map(([unitId, unit]) => {
-                        // Get completions for this unit
                         const unitCompletions =
                             props.repeatableCompletions.filter(
                                 (completion) => completion.unitId === unitId
@@ -125,82 +130,93 @@ export function UpdateUnitsTool(props: {
                         return (
                             <div
                                 key={`repeatable-unit-${unitId}`}
-                                className="mb-6 border-b pb-4 last:border-b-0"
+                                className="mb-2 border-b pb-4 last:border-b-0"
                             >
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="text-lg font-semibold">
                                         {unit.name}
                                     </h3>
-                                    <Button
-                                        label="Add Completion"
-                                        icon="pi pi-plus"
-                                        className="p-button-sm"
-                                        onClick={() =>
-                                            handleAddCompletion(unitId)
-                                        }
-                                    />
                                 </div>
-                                <p className="text-sm text-gray-600 mb-3">
-                                    {unit.description}
-                                </p>
+                                <Button
+                                    label="Add Completion"
+                                    icon="pi pi-plus"
+                                    size='small'
+                                    className="mb-4"
+                                    onClick={() => handleAddCompletion(unitId)}
+                                />
 
-                                {/* List of completions */}
                                 {unitCompletions.length > 0 ? (
-                                    <div className="ml-4">
-                                        <h4 className="text-md font-medium mb-2">
-                                            Completions:
-                                        </h4>
-                                        <ul className="list-disc space-y-3 ml-4">
+                                    <div>
+                                        <div className="list-disc">
                                             {unitCompletions.map(
                                                 (completion) => (
-                                                    <li
-                                                        key={completion.id}
-                                                        className="flex items-center gap-3"
+                                                    <div
+                                                        key={
+                                                            completion.unitId +
+                                                            completion.recordedDate
+                                                        }
+                                                        className="flex items-center align-items-center gap-3"
                                                     >
-                                                        <span>
-                                                            Completed on{' '}
-                                                            {completion.recordedDate.toLocaleDateString()}
-                                                        </span>
+                                                        <div>
+                                                            Recorded completion
+                                                            on{' '}
+                                                            {new Date(
+                                                                completion.recordedDate
+                                                            ).toLocaleDateString()}{' '}for
+                                                        </div>
                                                         <Dropdown
                                                             value={
                                                                 completion.appliedToPath
                                                             }
-                                                            options={[
-                                                                {
-                                                                    label: '-- Not Applied --',
-                                                                    value: null,
-                                                                },
-                                                                ...props.paths.map(
+                                                            options={props.paths
+                                                                .filter(
+                                                                    (path) =>
+                                                                        path.unitIds.includes(
+                                                                            completion.unitId
+                                                                        ) ||
+                                                                        path.electives
+                                                                            .flatMap(
+                                                                                (
+                                                                                    elective
+                                                                                ) =>
+                                                                                    elective.unitIds
+                                                                            )
+                                                                            .includes(
+                                                                                completion.unitId
+                                                                            )
+                                                                )
+                                                                .map(
                                                                     (path) => ({
                                                                         label: path.name,
                                                                         value: path.name,
                                                                     })
-                                                                ),
-                                                            ]}
+                                                                )}
                                                             onChange={(e) =>
-                                                                handleApplyToPath(
-                                                                    completion.id,
+                                                                handleUpdateCompletion(
+                                                                    completion,
                                                                     e.value
                                                                 )
                                                             }
                                                             placeholder="Apply to Path"
                                                             className="p-inputtext-sm"
                                                         />
-                                                        {completion.appliedToPath && (
-                                                            <span className="text-green-600 text-sm">
-                                                                Applied to{' '}
-                                                                {
-                                                                    completion.appliedToPath
-                                                                }
-                                                            </span>
-                                                        )}
-                                                    </li>
+                                                        <Button
+                                                            icon="pi pi-trash"
+                                                            className="p-button-sm p-button-danger p-button-text"
+                                                            onClick={() =>
+                                                                handleRemoveCompletion(
+                                                                    completion
+                                                                )
+                                                            }
+                                                            tooltip="Remove Completion"
+                                                        />
+                                                    </div>
                                                 )
                                             )}
-                                        </ul>
+                                        </div>
                                     </div>
                                 ) : (
-                                    <div className="text-sm text-gray-500 italic ml-4">
+                                    <div className="text-sm text-gray-500 italic">
                                         No completions recorded yet
                                     </div>
                                 )}
@@ -220,9 +236,6 @@ export function UpdateUnitsTool(props: {
 
         return (
             <div className="space-y-8">
-                {/** Render the repeatable units card */}
-                {renderRepeatableUnitsCard()}
-
                 {sortedPaths
                     .filter((path) =>
                         path.unitIds.some((unitId) => !!units[unitId])
@@ -250,12 +263,12 @@ export function UpdateUnitsTool(props: {
                                             // For repeatable units, check if any completion has been applied to this path
                                             const isCompleted = isRepeatable
                                                 ? isRepeatableUnitAppliedToPath(
-                                                      unitId,
-                                                      path.name
-                                                  )
+                                                    unitId,
+                                                    path.name
+                                                )
                                                 : props.isCompletedByUnitId[
-                                                      unitId
-                                                  ] ?? false;
+                                                unitId
+                                                ] ?? false;
 
                                             return (
                                                 <UnitCheckboxWithTooltip
@@ -314,13 +327,13 @@ export function UpdateUnitsTool(props: {
                                                         const isCompleted =
                                                             isRepeatable
                                                                 ? isRepeatableUnitAppliedToPath(
-                                                                      unitId,
-                                                                      path.name
-                                                                  )
+                                                                    unitId,
+                                                                    path.name
+                                                                )
                                                                 : props
-                                                                      .isCompletedByUnitId[
-                                                                      unitId
-                                                                  ] ?? false;
+                                                                    .isCompletedByUnitId[
+                                                                unitId
+                                                                ] ?? false;
 
                                                         return (
                                                             <UnitCheckboxWithTooltip
@@ -373,6 +386,7 @@ export function UpdateUnitsTool(props: {
                             </div>
                         </Card>
                     ))}
+                {renderRepeatableUnitsCard()}
             </div>
         );
     };
