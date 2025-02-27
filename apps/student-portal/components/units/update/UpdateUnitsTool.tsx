@@ -9,6 +9,15 @@ import { useSelector } from 'react-redux';
 import { selectUnitNameAndCompletionChange } from '../../../store/updateUnits/updateUnitsSlice';
 import { Button } from 'primereact/button';
 import { useRouter } from 'next/navigation';
+import { Dropdown } from 'primereact/dropdown';
+
+// Add a new type for the repeatable unit completions
+export type RepeatableUnitCompletion = {
+    id: string; // Unique ID for this completion
+    unitId: string;
+    recordedDate: Date;
+    appliedToPath: string | null;
+};
 
 // TODO: the styling classes are haphazardly applied here
 export function UpdateUnitsTool(props: {
@@ -32,6 +41,13 @@ export function UpdateUnitsTool(props: {
         unitId: string;
         isCompleted: boolean;
     }) => void;
+    // Add new props for repeatable unit completions
+    repeatableCompletions: RepeatableUnitCompletion[];
+    onRepeatableCompletionAdded?: (unitId: string) => void;
+    onRepeatableCompletionApplied?: (
+        completionId: string,
+        pathName: string | null
+    ) => void;
 }) {
     const router = useRouter();
 
@@ -64,6 +80,138 @@ export function UpdateUnitsTool(props: {
         ([, unit]) => !!unit.isRepeatable
     );
 
+    // Function to add a new completion for a repeatable unit
+    const handleAddCompletion = (unitId: string) => {
+        // Call the callback if provided
+        if (props.onRepeatableCompletionAdded) {
+            props.onRepeatableCompletionAdded(unitId);
+        }
+    };
+
+    // Function to apply a completion to a path
+    const handleApplyToPath = (
+        completionId: string,
+        pathName: string | null
+    ) => {
+        // Call the callback if provided
+        if (props.onRepeatableCompletionApplied) {
+            props.onRepeatableCompletionApplied(completionId, pathName);
+        }
+    };
+
+    // Function to check if a repeatable unit has been applied to a specific path
+    const isRepeatableUnitAppliedToPath = (
+        unitId: string,
+        pathName: string
+    ) => {
+        return props.repeatableCompletions.some(
+            (completion) =>
+                completion.unitId === unitId &&
+                completion.appliedToPath === pathName
+        );
+    };
+
+    const renderRepeatableUnitsCard = () => {
+        return (
+            <Card className="mb-4" key="repeatable-units" title="">
+                <div className="border rounded-lg">
+                    {repeatableUnits.map(([unitId, unit]) => {
+                        // Get completions for this unit
+                        const unitCompletions =
+                            props.repeatableCompletions.filter(
+                                (completion) => completion.unitId === unitId
+                            );
+
+                        return (
+                            <div
+                                key={`repeatable-unit-${unitId}`}
+                                className="mb-6 border-b pb-4 last:border-b-0"
+                            >
+                                <div className="flex justify-between items-center mb-2">
+                                    <h3 className="text-lg font-semibold">
+                                        {unit.name}
+                                    </h3>
+                                    <Button
+                                        label="Add Completion"
+                                        icon="pi pi-plus"
+                                        className="p-button-sm"
+                                        onClick={() =>
+                                            handleAddCompletion(unitId)
+                                        }
+                                    />
+                                </div>
+                                <p className="text-sm text-gray-600 mb-3">
+                                    {unit.description}
+                                </p>
+
+                                {/* List of completions */}
+                                {unitCompletions.length > 0 ? (
+                                    <div className="ml-4">
+                                        <h4 className="text-md font-medium mb-2">
+                                            Completions:
+                                        </h4>
+                                        <ul className="list-disc space-y-3 ml-4">
+                                            {unitCompletions.map(
+                                                (completion) => (
+                                                    <li
+                                                        key={completion.id}
+                                                        className="flex items-center gap-3"
+                                                    >
+                                                        <span>
+                                                            Completed on{' '}
+                                                            {completion.recordedDate.toLocaleDateString()}
+                                                        </span>
+                                                        <Dropdown
+                                                            value={
+                                                                completion.appliedToPath
+                                                            }
+                                                            options={[
+                                                                {
+                                                                    label: '-- Not Applied --',
+                                                                    value: null,
+                                                                },
+                                                                ...props.paths.map(
+                                                                    (path) => ({
+                                                                        label: path.name,
+                                                                        value: path.name,
+                                                                    })
+                                                                ),
+                                                            ]}
+                                                            onChange={(e) =>
+                                                                handleApplyToPath(
+                                                                    completion.id,
+                                                                    e.value
+                                                                )
+                                                            }
+                                                            placeholder="Apply to Path"
+                                                            className="p-inputtext-sm"
+                                                        />
+                                                        {completion.appliedToPath && (
+                                                            <span className="text-green-600 text-sm">
+                                                                Applied to{' '}
+                                                                {
+                                                                    completion.appliedToPath
+                                                                }
+                                                            </span>
+                                                        )}
+                                                    </li>
+                                                )
+                                            )}
+                                        </ul>
+                                    </div>
+                                ) : (
+                                    <div className="text-sm text-gray-500 italic ml-4">
+                                        No completions recorded yet
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+            </Card>
+        );
+    };
+
     const renderPathContent = (units: typeof props.units) => {
         const sortedPaths = props.paths.concat().sort((a, b) => {
             if (a.name === 'Ranger') return -1;
@@ -72,27 +220,9 @@ export function UpdateUnitsTool(props: {
 
         return (
             <div className="space-y-8">
-                {/** put the special box here */}
-                <Card
-                    className="mb-4"
-                    key="repeatable-units"
-                    title="Repeatable Units"
-                >
-                    <div className="border rounded-lg">
-                        <div>
-                            {repeatableUnits.map(([id, unit]) => {
-                                return (
-                                    <div
-                                        key={`repeatable-unit-${id}`}
-                                        className="mb-4"
-                                    >
-                                        <p>{unit.name}</p>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </Card>
+                {/** Render the repeatable units card */}
+                {renderRepeatableUnitsCard()}
+
                 {sortedPaths
                     .filter((path) =>
                         path.unitIds.some((unitId) => !!units[unitId])
@@ -113,34 +243,50 @@ export function UpdateUnitsTool(props: {
                                                 units[b]?.name
                                             );
                                         })
-                                        .map((unitId) => (
-                                            <UnitCheckboxWithTooltip
-                                                key={`${path.name}-${unitId}`}
-                                                unitId={unitId}
-                                                name={units[unitId]?.name ?? ''}
-                                                description={
-                                                    units[unitId]
-                                                        ?.description ?? ''
-                                                }
-                                                isCompleted={
-                                                    props.isCompletedByUnitId[
-                                                        unitId
-                                                    ] ?? false
-                                                }
-                                                disabled={
-                                                    units[unitId]?.isRepeatable
-                                                }
-                                                onToggle={(
-                                                    unitId,
-                                                    isCompleted
-                                                ) =>
-                                                    props.onUnitsChanged({
+                                        .map((unitId) => {
+                                            const isRepeatable =
+                                                units[unitId]?.isRepeatable;
+
+                                            // For repeatable units, check if any completion has been applied to this path
+                                            const isCompleted = isRepeatable
+                                                ? isRepeatableUnitAppliedToPath(
+                                                      unitId,
+                                                      path.name
+                                                  )
+                                                : props.isCompletedByUnitId[
+                                                      unitId
+                                                  ] ?? false;
+
+                                            return (
+                                                <UnitCheckboxWithTooltip
+                                                    key={`${path.name}-${unitId}`}
+                                                    unitId={unitId}
+                                                    name={
+                                                        units[unitId]?.name ??
+                                                        ''
+                                                    }
+                                                    description={
+                                                        units[unitId]
+                                                            ?.description ?? ''
+                                                    }
+                                                    isCompleted={isCompleted}
+                                                    // Don't disable repeatable units anymore, but make them read-only
+                                                    disabled={false}
+                                                    readOnly={isRepeatable}
+                                                    isRepeatable={isRepeatable}
+                                                    pathName={path.name}
+                                                    onToggle={(
                                                         unitId,
-                                                        isCompleted,
-                                                    })
-                                                }
-                                            />
-                                        ))}
+                                                        isCompleted
+                                                    ) =>
+                                                        props.onUnitsChanged({
+                                                            unitId,
+                                                            isCompleted,
+                                                        })
+                                                    }
+                                                />
+                                            );
+                                        })}
                                 </div>
                                 {path.electives
                                     .filter((elective) =>
@@ -159,42 +305,68 @@ export function UpdateUnitsTool(props: {
                                                         (unitId) =>
                                                             !!units[unitId]
                                                     )
-                                                    .map((unitId) => (
-                                                        <UnitCheckboxWithTooltip
-                                                            key={`${path.name}-${elective.name}-${unitId}`}
-                                                            unitId={unitId}
-                                                            name={
-                                                                units[unitId]
-                                                                    ?.name ?? ''
-                                                            }
-                                                            description={
-                                                                units[unitId]
-                                                                    ?.description ??
-                                                                ''
-                                                            }
-                                                            isCompleted={
-                                                                props
-                                                                    .isCompletedByUnitId[
-                                                                    unitId
-                                                                ] ?? false
-                                                            }
-                                                            disabled={
-                                                                units[unitId]
-                                                                    ?.isRepeatable
-                                                            }
-                                                            onToggle={(
-                                                                unitId,
-                                                                isCompleted
-                                                            ) =>
-                                                                props.onUnitsChanged(
-                                                                    {
-                                                                        unitId,
-                                                                        isCompleted,
-                                                                    }
-                                                                )
-                                                            }
-                                                        />
-                                                    ))}
+                                                    .map((unitId) => {
+                                                        const isRepeatable =
+                                                            units[unitId]
+                                                                ?.isRepeatable;
+
+                                                        // For repeatable units, check if any completion has been applied to this path
+                                                        const isCompleted =
+                                                            isRepeatable
+                                                                ? isRepeatableUnitAppliedToPath(
+                                                                      unitId,
+                                                                      path.name
+                                                                  )
+                                                                : props
+                                                                      .isCompletedByUnitId[
+                                                                      unitId
+                                                                  ] ?? false;
+
+                                                        return (
+                                                            <UnitCheckboxWithTooltip
+                                                                key={`${path.name}-${elective.name}-${unitId}`}
+                                                                unitId={unitId}
+                                                                name={
+                                                                    units[
+                                                                        unitId
+                                                                    ]?.name ??
+                                                                    ''
+                                                                }
+                                                                description={
+                                                                    units[
+                                                                        unitId
+                                                                    ]
+                                                                        ?.description ??
+                                                                    ''
+                                                                }
+                                                                isCompleted={
+                                                                    isCompleted
+                                                                }
+                                                                // Don't disable repeatable units anymore, but make them read-only
+                                                                disabled={false}
+                                                                readOnly={
+                                                                    isRepeatable
+                                                                }
+                                                                isRepeatable={
+                                                                    isRepeatable
+                                                                }
+                                                                pathName={
+                                                                    path.name
+                                                                }
+                                                                onToggle={(
+                                                                    unitId,
+                                                                    isCompleted
+                                                                ) =>
+                                                                    props.onUnitsChanged(
+                                                                        {
+                                                                            unitId,
+                                                                            isCompleted,
+                                                                        }
+                                                                    )
+                                                                }
+                                                            />
+                                                        );
+                                                    })}
                                             </div>
                                         </div>
                                     ))}
@@ -277,6 +449,9 @@ function UnitCheckboxWithTooltip(props: {
     description: string;
     isCompleted: boolean;
     disabled?: boolean;
+    readOnly?: boolean;
+    isRepeatable?: boolean;
+    pathName?: string;
     onToggle: (unitId: string, isCompleted: boolean) => void;
 }) {
     const changedUnits = useSelector(selectUnitNameAndCompletionChange);
@@ -302,9 +477,12 @@ function UnitCheckboxWithTooltip(props: {
                     disabled={props.disabled ?? false}
                     inputId={props.unitId}
                     checked={props.isCompleted ?? false}
-                    onChange={(e) =>
-                        props.onToggle(props.unitId, e.checked ?? false)
-                    }
+                    onChange={(e) => {
+                        // Only call onToggle if the unit is not read-only
+                        if (!props.readOnly) {
+                            props.onToggle(props.unitId, e.checked ?? false);
+                        }
+                    }}
                 />
                 <label
                     htmlFor={props.unitId}
@@ -317,6 +495,14 @@ function UnitCheckboxWithTooltip(props: {
                             style={{ fontSize: '0.875rem' }}
                         />
                     )}
+                    {/* Show a badge if this is a repeatable unit being applied to a path */}
+                    {props.isRepeatable &&
+                        props.isCompleted &&
+                        props.pathName && (
+                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                                Applied
+                            </span>
+                        )}
                 </label>
             </div>
         </div>

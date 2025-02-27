@@ -84,9 +84,17 @@ export const updateUnitsSlice = createSlice({
         },
         studentCompletedUnitIdsLoadSucceeded: (
             state,
-            action: { payload: Array<string> }
+            action: {
+                payload: {
+                    unitIds: Array<string>;
+                    repeatableUnits: Array<{
+                        unitId: string;
+                        appliedToPathId?: string;
+                    }>;
+                };
+            }
         ) => {
-            state.selectedStudentCompletedUnitIds = action.payload;
+            state.selectedStudentCompletedUnitIds = action.payload.unitIds;
         },
         unitsLoadSucceeded: (
             state,

@@ -13,8 +13,18 @@ export const getCompletedUnits = Functions.endpoint
 
         response.send({
             completedUnitIds:
-                student?.completed_units?.map(
-                    (unit) => (unit as DocumentReference).id
+                student?.completed_units?.filter((unit): unit is { id: string } => !('recorded_date' in unit)).map(
+                    (unit) => (unit).id
                 ) ?? [],
+            completedRepeatableUnits:
+                student?.completed_units?.filter((unit): unit is {
+                    recorded_date: string;
+                    unit: DocumentReference;
+                    applied_to_path?: DocumentReference;
+                } => 'recorded_date' in unit).map(unit => ({
+                    unitId: unit.unit.id,
+                    recordedDate: unit.recorded_date,
+                    appliedToPathId: unit.applied_to_path?.id
+                }))
         });
     });

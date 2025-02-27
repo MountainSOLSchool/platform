@@ -98,17 +98,27 @@ export class FirebaseFunctions {
         return undefined;
     }
 
-    static async getCompletedUnitIds(
-        studentId: string
-    ): Promise<Array<string>> {
+    static async getCompletedUnitIds(studentId: string): Promise<{
+        completedUnitIds: Array<string>;
+        completedRepeatableUnits: Array<{
+            unitId: string;
+            recordedDate: string;
+            appliedToPathId: string | undefined;
+        }>;
+    }> {
         const getCompletedUnitsFn = httpsCallable<
             { studentId: string },
             {
                 completedUnitIds: Array<string>;
+                completedRepeatableUnits: Array<{
+                    unitId: string;
+                    recordedDate: string;
+                    appliedToPathId: string | undefined;
+                }>;
             }
         >(this.functions, 'getCompletedUnits');
         const result = await getCompletedUnitsFn({ studentId });
-        return result.data.completedUnitIds;
+        return result.data;
     }
 
     static async getStudentCompletedUnits(

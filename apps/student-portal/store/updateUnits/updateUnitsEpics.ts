@@ -119,9 +119,12 @@ export const loadStudentCompletedUnitIdsEpic: Epic<
             return fromPromise(
                 FirebaseFunctions.getCompletedUnitIds(studentId)
             ).pipe(
-                map((unitIds) =>
+                map(({ completedUnitIds, completedRepeatableUnits }) =>
                     updateUnitsSlice.actions.studentCompletedUnitIdsLoadSucceeded(
-                        unitIds
+                        {
+                            unitIds: completedUnitIds,
+                            repeatableUnits: completedRepeatableUnits,
+                        }
                     )
                 ),
                 catchError((error) =>

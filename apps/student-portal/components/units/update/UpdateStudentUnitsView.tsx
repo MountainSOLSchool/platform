@@ -32,6 +32,13 @@ export interface UpdateStudentUnitsViewProps {
     selectedClassUnitIds: Array<string>;
     selectedStudentId: string | undefined;
     completedUnitIds: Requested<Array<string>>;
+    completedRepeatableUnits: Requested<
+        Array<{
+            unitId: string;
+            recordedDate: string;
+            appliedToPathId: string | undefined;
+        }>
+    >;
     units: Requested<Units>;
     paths: Requested<
         Array<{
@@ -160,6 +167,15 @@ export function UpdateStudentUnitsView(
                         RequestedUtility.isLoaded(props.completedUnitIds) ? (
                             <div>
                                 <UpdateUnitsTool
+                                    repeatableCompletions={[
+                                        // just a hardcoded test example
+                                        {
+                                            id: '123',
+                                            unitId: 'HHwX56kM8sqwQVAFGEUp',
+                                            recordedDate: new Date(),
+                                            appliedToPath: null,
+                                        },
+                                    ]}
                                     student={props.selectedStudentId}
                                     isCompletedByUnitId={Object.fromEntries([
                                         ...(RequestedUtility.isLoaded(
