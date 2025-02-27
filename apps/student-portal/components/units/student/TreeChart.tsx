@@ -6,6 +6,7 @@ import { RootState } from '../../../store/store';
 import { requestPaths } from '../../../store/paths/pathsSlice';
 import { requestUnits } from '../../../store/unit/unitSlice';
 import { setStudentId } from '../../../store/student/studentSlice';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',
@@ -611,7 +612,9 @@ function SmartTreeChart(props: { studentId: string }) {
         return;
     }, [paths.length, units.length, student, dispatch, generateNodes]);
 
-    return (
+    return !student.name || !paths.length || !units.length ? (
+        <ProgressSpinner></ProgressSpinner>
+    ) : (
         <div className="smart-tree-wrapper">
             <h1>{student.name}&apos;s Units</h1>
             {/* <button onClick={() => dispatch(overrideUnits(MtnMedicUnits))}>

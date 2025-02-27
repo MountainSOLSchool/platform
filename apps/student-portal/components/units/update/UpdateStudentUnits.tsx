@@ -1,8 +1,13 @@
 'use client';
 import { useEpic } from '@sharakai/use-redux-observable-epic';
+import { useSelector } from 'react-redux';
 import UpdateStudentUnitsView from './UpdateStudentUnitsView';
 import { useUnitsStore } from '../../../store/updateUnits/useUnitsStore';
 import { UpdateUnitsEpics } from '../../../store/updateUnits/updateUnitsEpics';
+import {
+    selectUnitNameAndCompletionChange,
+    selectRepeatableCompletionChangesWithUnitNames,
+} from '../../../store/updateUnits/updateUnitsSlice';
 
 export default function UpdateStudentUnitsWithRegisteredEpics() {
     useEpic(UpdateUnitsEpics);
@@ -12,6 +17,13 @@ export default function UpdateStudentUnitsWithRegisteredEpics() {
 
 function UpdateStudentUnits() {
     const unitsStore = useUnitsStore();
+
+    const changedUnitCompletions = useSelector(
+        selectUnitNameAndCompletionChange
+    );
+    const repeatableCompletionChanges = useSelector(
+        selectRepeatableCompletionChangesWithUnitNames
+    );
 
     return (
         <>
@@ -45,7 +57,9 @@ function UpdateStudentUnits() {
                     unitsStore.removeRepeatableCompletion(completion)
                 }
                 saveClicked={() => unitsStore.saveChanges()}
-            ></UpdateStudentUnitsView>
+                changedUnitCompletions={changedUnitCompletions}
+                repeatableCompletionChanges={repeatableCompletionChanges}
+            />
         </>
     );
 }

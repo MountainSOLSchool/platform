@@ -1,7 +1,6 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 import { Requested, RequestedUtility, RequestState } from '@sol/react/request';
 import { UpdateStudentUnitsViewProps } from '../../components/units/update/UpdateStudentUnitsView';
-import { UnitDbEntry } from '@sol/classes/domain';
 import { Path } from '../../models/path.type';
 import { StudentSelectionType } from '../../components/units/update/StudentSelectionType.type';
 
@@ -37,14 +36,19 @@ export type State = {
     repeatableCompletions: Array<RepeatableUnitCompletion>;
     repeatableCompletionChanges: RepeatableCompletionChange[];
     paths: Requested<Array<Path>>;
-    units: Requested<Record<string, {
-        id: string;
-        name: string;
-        description: string;
-        category: string;
-        isRepeatable?: boolean;
-        prereqUnitIds?: Array<string>;
-    }>>;
+    units: Requested<
+        Record<
+            string,
+            {
+                id: string;
+                name: string;
+                description: string;
+                category: string;
+                isRepeatable?: boolean;
+                prereqUnitIds?: Array<string>;
+            }
+        >
+    >;
     changedUnitCompletions: Record<string, boolean>;
     saveChanges: Requested<void>;
     selectionType: StudentSelectionType;
@@ -122,14 +126,17 @@ export const updateUnitsSlice = createSlice({
         unitsLoadSucceeded: (
             state,
             action: {
-                payload: Record<string, {
-                    id: string;
-                    name: string;
-                    description: string;
-                    category: string;
-                    isRepeatable?: boolean;
-                    prereqUnitIds?: Array<string>;
-                }>
+                payload: Record<
+                    string,
+                    {
+                        id: string;
+                        name: string;
+                        description: string;
+                        category: string;
+                        isRepeatable?: boolean;
+                        prereqUnitIds?: Array<string>;
+                    }
+                >;
             }
         ) => {
             state.units = action.payload;
@@ -237,7 +244,7 @@ export const updateUnitsSlice = createSlice({
             // Track this as a change
             state.repeatableCompletionChanges.push({
                 type: 'added',
-                completion: { ...newCompletion }
+                completion: { ...newCompletion },
             });
         },
         updateRepeatableCompletion: (
@@ -253,11 +260,12 @@ export const updateUnitsSlice = createSlice({
                 (completion) =>
                     completion.unitId + completion.recordedDate ===
                     action.payload.completion.unitId +
-                    action.payload.completion.recordedDate
+                        action.payload.completion.recordedDate
             );
 
             if (index !== -1) {
-                const previousPath = state.repeatableCompletions[index].appliedToPath;
+                const previousPath =
+                    state.repeatableCompletions[index].appliedToPath;
 
                 // Update the completion
                 state.repeatableCompletions[index] = {
@@ -269,8 +277,10 @@ export const updateUnitsSlice = createSlice({
                 const changeIndex = state.repeatableCompletionChanges.findIndex(
                     (change) =>
                         change.type === 'updated' &&
-                        change.completion.unitId === action.payload.completion.unitId &&
-                        change.completion.recordedDate === action.payload.completion.recordedDate
+                        change.completion.unitId ===
+                            action.payload.completion.unitId &&
+                        change.completion.recordedDate ===
+                            action.payload.completion.recordedDate
                 );
 
                 if (changeIndex !== -1) {
@@ -278,14 +288,14 @@ export const updateUnitsSlice = createSlice({
                     state.repeatableCompletionChanges[changeIndex] = {
                         type: 'updated',
                         completion: { ...state.repeatableCompletions[index] },
-                        previousPath
+                        previousPath,
                     };
                 } else {
                     // Add new change record
                     state.repeatableCompletionChanges.push({
                         type: 'updated',
                         completion: { ...state.repeatableCompletions[index] },
-                        previousPath
+                        previousPath,
                     });
                 }
             }
@@ -296,7 +306,7 @@ export const updateUnitsSlice = createSlice({
         ) => {
             // Save a copy of the completion before removing it
             const completionToRemove = state.repeatableCompletions.find(
-                completion =>
+                (completion) =>
                     completion.unitId === action.payload.unitId &&
                     completion.recordedDate === action.payload.recordedDate
             );
@@ -305,7 +315,7 @@ export const updateUnitsSlice = createSlice({
                 // Add to changes
                 state.repeatableCompletionChanges.push({
                     type: 'removed',
-                    completion: { ...completionToRemove }
+                    completion: { ...completionToRemove },
                 });
             }
 
@@ -471,9 +481,9 @@ export const selectRepeatableCompletionsWithUnitNames = createSelector(
             return [];
         }
 
-        return repeatableCompletions.map(completion => ({
+        return repeatableCompletions.map((completion) => ({
             ...completion,
-            unitName: units[completion.unitId]?.name || completion.unitId
+            unitName: units[completion.unitId]?.name || completion.unitId,
         }));
     }
 );
@@ -485,9 +495,11 @@ export const selectRepeatableCompletionChangesWithUnitNames = createSelector(
             return [];
         }
 
-        return changes.map(change => ({
+        return changes.map((change) => ({
             ...change,
-            unitName: units[change.completion.unitId]?.name || change.completion.unitId
+            unitName:
+                units[change.completion.unitId]?.name ||
+                change.completion.unitId,
         }));
     }
 );

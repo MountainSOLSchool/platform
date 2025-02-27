@@ -2,7 +2,7 @@
 import { useSelector } from 'react-redux';
 import {
     selectUnitNameAndCompletionChange,
-    selectRepeatableCompletionChangesWithUnitNames
+    selectRepeatableCompletionChangesWithUnitNames,
 } from '../../../store/updateUnits/updateUnitsSlice';
 import UpdateStudentUnitsChangesView from './UpdateStudentUnitsChangesView';
 

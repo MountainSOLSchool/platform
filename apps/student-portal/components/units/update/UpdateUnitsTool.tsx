@@ -121,7 +121,10 @@ export function UpdateUnitsTool(props: {
                 title="Give-Back Electives"
                 className="mb-4"
             >
-                <p>These units are completed multiple times to satisfy requirements in different paths.</p>
+                <p>
+                    These units are completed multiple times to satisfy
+                    requirements in different paths.
+                </p>
                 <div className="border rounded-lg">
                     {repeatableUnits.map(([unitId, unit]) => {
                         const unitCompletions =
@@ -142,7 +145,7 @@ export function UpdateUnitsTool(props: {
                                 <Button
                                     label="Add Completion"
                                     icon="pi pi-plus"
-                                    size='small'
+                                    size="small"
                                     className="mb-4"
                                     onClick={() => handleAddCompletion(unitId)}
                                 />
@@ -164,7 +167,8 @@ export function UpdateUnitsTool(props: {
                                                             on{' '}
                                                             {new Date(
                                                                 completion.recordedDate
-                                                            ).toLocaleDateString()}{' '}for
+                                                            ).toLocaleDateString()}{' '}
+                                                            for
                                                         </div>
                                                         <Dropdown
                                                             value={
@@ -265,12 +269,12 @@ export function UpdateUnitsTool(props: {
                                             // For repeatable units, check if any completion has been applied to this path
                                             const isCompleted = isRepeatable
                                                 ? isRepeatableUnitAppliedToPath(
-                                                    unitId,
-                                                    path.name
-                                                )
+                                                      unitId,
+                                                      path.name
+                                                  )
                                                 : props.isCompletedByUnitId[
-                                                unitId
-                                                ] ?? false;
+                                                      unitId
+                                                  ] ?? false;
 
                                             return (
                                                 <UnitCheckboxWithTooltip
@@ -329,13 +333,13 @@ export function UpdateUnitsTool(props: {
                                                         const isCompleted =
                                                             isRepeatable
                                                                 ? isRepeatableUnitAppliedToPath(
-                                                                    unitId,
-                                                                    path.name
-                                                                )
+                                                                      unitId,
+                                                                      path.name
+                                                                  )
                                                                 : props
-                                                                    .isCompletedByUnitId[
-                                                                unitId
-                                                                ] ?? false;
+                                                                      .isCompletedByUnitId[
+                                                                      unitId
+                                                                  ] ?? false;
 
                                                         return (
                                                             <UnitCheckboxWithTooltip
@@ -429,13 +433,21 @@ export function UpdateUnitsTool(props: {
     const activeTabIndex = tabVisibilityByIndex.findIndex((visible) => visible);
 
     return (
-        <div>
-            <h2 className="text-3xl font-bold mb-3">Completed Units</h2>
-            <Button
-                label="View Student's Paths Tree"
-                icon="pi pi-window-maximize"
-                onClick={() => router.push(`/units/student/${props.student}`)}
-            ></Button>
+        <div className="mb-8">
+            <div className="mb-1 flex justify-content-between align-items-center">
+                <h2 className="text-3xl font-bold">Completed Units</h2>
+                <Button
+                    label="View Student's Paths Tree"
+                    icon="pi pi-window-maximize"
+                    onClick={() =>
+                        window.open(
+                            `/units/student/${props.student}`,
+                            '_blank',
+                            'noopener noreferrer'
+                        )
+                    }
+                ></Button>
+            </div>
             <TabView activeIndex={activeTabIndex}>
                 <TabPanel
                     header="Class Units"

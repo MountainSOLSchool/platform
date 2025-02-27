@@ -18,7 +18,7 @@ export const loadPaths = (action$: Observable<Action>) =>
                                 ? fields.requirements.arrayValue.values.map(
                                       (e) =>
                                           e.referenceValue
-                                              .match(/\w+$/i)
+                                              ?.match(/\w+$/i)
                                               .toString()
                                   )
                                 : 'none';
