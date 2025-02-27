@@ -15,6 +15,7 @@ import {
     selectSemesters,
     selectSelectedSemesterId,
     State,
+    selectRepeatableCompletions,
 } from './updateUnitsSlice';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { FirebaseFunctions } from '../../firebase/functions';
@@ -108,7 +109,7 @@ export const loadStudentsEpic: Epic<
         })
     );
 
-export const loadStudentCompletedUnitIdsEpic: Epic<
+export const loadStudentCompletedUnitsEpic: Epic<
     unknown,
     unknown,
     { updateUnits: State }
@@ -119,20 +120,23 @@ export const loadStudentCompletedUnitIdsEpic: Epic<
             return fromPromise(
                 FirebaseFunctions.getCompletedUnitIds(studentId)
             ).pipe(
-                map((unitIds) =>
-                    updateUnitsSlice.actions.studentCompletedUnitIdsLoadSucceeded(
-                        unitIds
+                map(({ regularUnitIds, repeatableCompletions }) =>
+                    updateUnitsSlice.actions.studentCompletedUnitsLoadSucceeded(
+                        {
+                            regularUnitIds,
+                            repeatableCompletions,
+                        }
                     )
                 ),
                 catchError((error) =>
                     of(
-                        updateUnitsSlice.actions.studentCompletedUnitIdsLoadFailed(
+                        updateUnitsSlice.actions.studentCompletedUnitsLoadFailed(
                             error
                         )
                     )
                 ),
                 startWith(
-                    updateUnitsSlice.actions.studentCompletedUnitIdsLoadStarted()
+                    updateUnitsSlice.actions.studentCompletedUnitsLoadStarted()
                 )
             );
         })
@@ -154,7 +158,7 @@ export const loadPathsAndUnitsEpic: Epic<
                 ]),
                 catchError((error) =>
                     of(
-                        updateUnitsSlice.actions.studentCompletedUnitIdsLoadFailed(
+                        updateUnitsSlice.actions.studentCompletedUnitsLoadFailed(
                             error
                         ),
                         updateUnitsSlice.actions.unitsLoadFailed(error)
@@ -174,23 +178,23 @@ export const saveCompletedUnitsEpic: Epic<
         ofType(updateUnitsSlice.actions.saveChanges.type),
         withLatestFrom(
             state$.pipe(map(selectSelectedStudentId)),
-            state$.pipe(map(selectCompletedAndChangedCompletedUnitIds))
+            state$.pipe(map(selectCompletedAndChangedCompletedUnitIds)),
+            state$.pipe(map(selectRepeatableCompletions))
         ),
-        filter((args): args is [never, string, string[]] =>
+        filter((args): args is [never, string, string[], any] =>
             RequestedUtility.isLoaded(args[2])
         ),
-        switchMap(([, studentId, completedUnitIds]) => {
+        switchMap(([, studentId, completedUnitIds, repeatableCompletions]) => {
             return fromPromise(
                 FirebaseFunctions.updateCompletedUnits(
                     studentId,
-                    completedUnitIds
+                    completedUnitIds,
+                    repeatableCompletions
                 )
             ).pipe(
-                // TODO: track success in state
                 map(() =>
                     updateUnitsSlice.actions.saveCompletedUnitsSucceeded()
                 ),
-                // TODO: should use a toast
                 tap(() => alert('Saved!')),
                 catchError((error) => {
                     console.error('Error saving completed units', error);
@@ -206,7 +210,7 @@ export const UpdateUnitsEpics = combineEpics(
     loadSemestersEpic,
     loadClassesForSemesterEpic,
     loadStudentsEpic,
-    loadStudentCompletedUnitIdsEpic,
+    loadStudentCompletedUnitsEpic,
     loadPathsAndUnitsEpic,
     saveCompletedUnitsEpic
 );

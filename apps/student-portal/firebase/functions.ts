@@ -4,8 +4,9 @@ import {
     httpsCallable,
 } from 'firebase/functions';
 import { StudentDbEntry } from '@sol/student/domain';
-import { SemesterClass, UnitDbEntry } from '@sol/classes/domain';
+import { SemesterClass } from '@sol/classes/domain';
 import { Path } from '../models/path.type';
+import { RepeatableUnitCompletion } from '../store/updateUnits/updateUnitsSlice';
 
 let _functions: ReturnType<typeof getFunctions> | undefined;
 
@@ -55,13 +56,33 @@ export class FirebaseFunctions {
 
     static async getFullUnitsAndPaths(): Promise<{
         paths: Array<Path>;
-        units: Record<string, UnitDbEntry>;
+        units: Record<
+            string,
+            {
+                id: string;
+                name: string;
+                description: string;
+                category: string;
+                isRepeatable: boolean;
+                prereqUnitIds: Array<string>;
+            }
+        >;
     }> {
         const getPathsFn = httpsCallable<
             void,
             {
                 paths: Array<Path>;
-                units: Record<string, UnitDbEntry>;
+                units: Record<
+                    string,
+                    {
+                        id: string;
+                        name: string;
+                        description: string;
+                        category: string;
+                        isRepeatable: boolean;
+                        prereqUnitIds: Array<string>;
+                    }
+                >;
             }
         >(this.functions, 'fullUnitsAndPaths');
         const result = await getPathsFn();
@@ -70,27 +91,69 @@ export class FirebaseFunctions {
 
     static async updateCompletedUnits(
         studentId: string,
-        completedUnitIds: Array<string>
+        completedUnitIds: Array<string>,
+        repeatableCompletions: RepeatableUnitCompletion[]
     ): Promise<void> {
         const updateCompletedUnitsFn = httpsCallable<
-            { studentId: string; completedUnitIds: Array<string> },
+            {
+                studentId: string;
+                completedUnitIds: Array<string>;
+                repeatableCompletions: RepeatableUnitCompletion[];
+            },
             void
         >(this.functions, 'updateCompletedUnits');
-        await updateCompletedUnitsFn({ studentId, completedUnitIds });
+
+        await updateCompletedUnitsFn({
+            studentId,
+            completedUnitIds,
+            repeatableCompletions: repeatableCompletions.map((completion) => ({
+                unitId: completion.unitId,
+                recordedDate: completion.recordedDate,
+                appliedToPath: completion.appliedToPath,
+            })),
+        });
+
         return undefined;
     }
 
-    static async getCompletedUnitIds(
-        studentId: string
-    ): Promise<Array<string>> {
+    static async getCompletedUnitIds(studentId: string): Promise<{
+        regularUnitIds: Array<string>;
+        repeatableCompletions: RepeatableUnitCompletion[];
+    }> {
         const getCompletedUnitsFn = httpsCallable<
             { studentId: string },
             {
-                completedUnitIds: Array<string>;
+                completedUnits: Array<{
+                    type: 'regular' | 'repeatable';
+                    unitId: string;
+                    recordedDate?: string;
+                    appliedToPath?: string;
+                }>;
             }
         >(this.functions, 'getCompletedUnits');
+
         const result = await getCompletedUnitsFn({ studentId });
-        return result.data.completedUnitIds;
+
+        // Process the result to separate regular units from repeatable completions
+        const regularUnitIds: string[] = [];
+        const repeatableCompletions: RepeatableUnitCompletion[] = [];
+
+        result.data.completedUnits.forEach((item) => {
+            if (item.type === 'regular') {
+                regularUnitIds.push(item.unitId);
+            } else {
+                repeatableCompletions.push({
+                    unitId: item.unitId,
+                    recordedDate: item.recordedDate as string,
+                    appliedToPath: item.appliedToPath,
+                });
+            }
+        });
+
+        return {
+            regularUnitIds,
+            repeatableCompletions,
+        };
     }
 
     static async getStudentCompletedUnits(

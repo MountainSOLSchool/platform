@@ -10,14 +10,8 @@ import SemesterSelectionDropdown from './SemesterSelectionDropdown';
 import ClassSelectionDropdown from './ClassSelectionDropdown';
 import StudentSelectionTypePicker from './StudentSelectionTypePicker';
 import { StudentSelectionType } from './StudentSelectionType.type';
+import { RepeatableUnitCompletion } from 'apps/student-portal/store/updateUnits/updateUnitsSlice';
 
-type Units = {
-    [unitId: string]: {
-        name: string;
-        description: string;
-        category: string;
-    };
-};
 
 export interface UpdateStudentUnitsViewProps {
     students: Requested<
@@ -31,7 +25,17 @@ export interface UpdateStudentUnitsViewProps {
     selectedClassUnitIds: Array<string>;
     selectedStudentId: string | undefined;
     completedUnitIds: Requested<Array<string>>;
-    units: Requested<Units>;
+    repeatableCompletions: RepeatableUnitCompletion[];
+    units: Requested<Record<string,
+        {
+            id: string;
+            name: string;
+            description: string;
+            category: string;
+            isRepeatable?: boolean;
+            prereqUnitIds?: Array<string>;
+        }
+    >>;
     paths: Requested<
         Array<{
             name: string;
@@ -52,6 +56,14 @@ export function UpdateStudentUnitsView(
             unitId: string;
             isCompleted: boolean;
         }) => void;
+        addRepeatableCompletion?: (unitId: string) => void;
+        updateRepeatableCompletion?: (
+            completion: RepeatableUnitCompletion,
+            appliedToPath: string
+        ) => void;
+        removeRepeatableCompletion?: (
+            completion: RepeatableUnitCompletion
+        ) => void;
         saveClicked: () => void;
     }
 ) {
@@ -155,10 +167,22 @@ export function UpdateStudentUnitsView(
                 {props.selectedStudentId ? (
                     <>
                         {RequestedUtility.isLoaded(props.paths) &&
-                        RequestedUtility.isLoaded(props.units) &&
-                        RequestedUtility.isLoaded(props.completedUnitIds) ? (
+                            RequestedUtility.isLoaded(props.units) &&
+                            RequestedUtility.isLoaded(props.completedUnitIds) ? (
                             <div>
                                 <UpdateUnitsTool
+                                    repeatableCompletions={
+                                        props.repeatableCompletions
+                                    }
+                                    onRepeatableCompletionAdded={
+                                        props.addRepeatableCompletion
+                                    }
+                                    onRepeatableCompletionUpdated={
+                                        props.updateRepeatableCompletion
+                                    }
+                                    onRepeatableCompletionRemoved={
+                                        props.removeRepeatableCompletion
+                                    }
                                     student={props.selectedStudentId}
                                     isCompletedByUnitId={Object.fromEntries([
                                         ...(RequestedUtility.isLoaded(
@@ -174,8 +198,8 @@ export function UpdateStudentUnitsView(
                                                     props.completedUnitIds
                                                 )
                                                     ? props.completedUnitIds.includes(
-                                                          unitId
-                                                      )
+                                                        unitId
+                                                    )
                                                     : false,
                                             ]
                                         ),
