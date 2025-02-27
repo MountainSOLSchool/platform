@@ -242,7 +242,7 @@ export function UpdateStudentUnitsView(
                 >
                     <Button
                         loading={props.isSaveInProgress}
-                        label="Save Updates"
+                        label="Save Changes"
                         icon="pi pi-save"
                         className="p-button-primary"
                         onClick={() => props.saveClicked()}
