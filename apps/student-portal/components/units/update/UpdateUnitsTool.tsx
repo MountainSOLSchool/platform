@@ -119,7 +119,7 @@ export function UpdateUnitsTool(props: {
                 title="Give-Back Electives"
                 className="mb-4"
             >
-                <p>Repeat for each path.</p>
+                <p>These units are completed multiple times to satisfy requirements in different paths.</p>
                 <div className="border rounded-lg">
                     {repeatableUnits.map(([unitId, unit]) => {
                         const unitCompletions =
