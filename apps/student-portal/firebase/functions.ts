@@ -59,6 +59,7 @@ export class FirebaseFunctions {
         units: Record<
             string,
             {
+                id: string;
                 name: string;
                 description: string;
                 category: string;
@@ -74,6 +75,7 @@ export class FirebaseFunctions {
                 units: Record<
                     string,
                     {
+                        id: string;
                         name: string;
                         description: string;
                         category: string;

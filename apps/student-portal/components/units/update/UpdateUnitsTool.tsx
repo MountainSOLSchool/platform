@@ -18,10 +18,12 @@ export function UpdateUnitsTool(props: {
     isCompletedByUnitId: { [unitId: string]: boolean };
     units: {
         [unitId: string]: {
+            id: string;
             name: string;
             description: string;
             category: string;
-            isRepeatable: boolean;
+            isRepeatable?: boolean;
+            prereqUnitIds?: Array<string>;
         };
     };
     paths: Array<{

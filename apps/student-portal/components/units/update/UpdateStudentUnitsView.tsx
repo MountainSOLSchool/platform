@@ -12,14 +12,6 @@ import StudentSelectionTypePicker from './StudentSelectionTypePicker';
 import { StudentSelectionType } from './StudentSelectionType.type';
 import { RepeatableUnitCompletion } from 'apps/student-portal/store/updateUnits/updateUnitsSlice';
 
-type Units = {
-    [unitId: string]: {
-        name: string;
-        description: string;
-        category: string;
-        isRepeatable: boolean;
-    };
-};
 
 export interface UpdateStudentUnitsViewProps {
     students: Requested<
@@ -34,7 +26,16 @@ export interface UpdateStudentUnitsViewProps {
     selectedStudentId: string | undefined;
     completedUnitIds: Requested<Array<string>>;
     repeatableCompletions: RepeatableUnitCompletion[];
-    units: Requested<Units>;
+    units: Requested<Record<string,
+        {
+            id: string;
+            name: string;
+            description: string;
+            category: string;
+            isRepeatable?: boolean;
+            prereqUnitIds?: Array<string>;
+        }
+    >>;
     paths: Requested<
         Array<{
             name: string;
@@ -166,8 +167,8 @@ export function UpdateStudentUnitsView(
                 {props.selectedStudentId ? (
                     <>
                         {RequestedUtility.isLoaded(props.paths) &&
-                        RequestedUtility.isLoaded(props.units) &&
-                        RequestedUtility.isLoaded(props.completedUnitIds) ? (
+                            RequestedUtility.isLoaded(props.units) &&
+                            RequestedUtility.isLoaded(props.completedUnitIds) ? (
                             <div>
                                 <UpdateUnitsTool
                                     repeatableCompletions={
@@ -197,8 +198,8 @@ export function UpdateStudentUnitsView(
                                                     props.completedUnitIds
                                                 )
                                                     ? props.completedUnitIds.includes(
-                                                          unitId
-                                                      )
+                                                        unitId
+                                                    )
                                                     : false,
                                             ]
                                         ),

@@ -37,7 +37,14 @@ export type State = {
     repeatableCompletions: Array<RepeatableUnitCompletion>;
     repeatableCompletionChanges: RepeatableCompletionChange[];
     paths: Requested<Array<Path>>;
-    units: Requested<Record<string, UnitDbEntry>>;
+    units: Requested<Record<string, {
+        id: string;
+        name: string;
+        description: string;
+        category: string;
+        isRepeatable?: boolean;
+        prereqUnitIds?: Array<string>;
+    }>>;
     changedUnitCompletions: Record<string, boolean>;
     saveChanges: Requested<void>;
     selectionType: StudentSelectionType;
@@ -115,7 +122,14 @@ export const updateUnitsSlice = createSlice({
         unitsLoadSucceeded: (
             state,
             action: {
-                payload: Record<string, UnitDbEntry>;
+                payload: Record<string, {
+                    id: string;
+                    name: string;
+                    description: string;
+                    category: string;
+                    isRepeatable?: boolean;
+                    prereqUnitIds?: Array<string>;
+                }>
             }
         ) => {
             state.units = action.payload;
