@@ -70,7 +70,10 @@ export interface UseEpicOptions {
  * };
  * ```
  */
-export function useEpic(epic: Epic, options?: UseEpicOptions): void {
+export function useEpic(
+    epic: Epic<unknown, unknown, any>,
+    options?: UseEpicOptions
+): void {
     const addEpicContext = useAddEpic();
     // Allow user to provide their own `addEpic` function, else fallback to context.
     // This allows addEpic to be a module-level singleton if desired

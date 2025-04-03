@@ -2,9 +2,11 @@
 import { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'apps/student-portal/store/store';
-import { requestPaths } from 'apps/student-portal/store/paths';
-import { requestUnits } from 'apps/student-portal/store/unitStore';
+import { RootState } from '../../../store/store';
+import { requestPaths } from '../../../store/paths/pathsSlice';
+import { requestUnits } from '../../../store/unit/unitSlice';
+import { setStudentId } from '../../../store/student/studentSlice';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',
@@ -42,8 +44,12 @@ const sidebarDimensions = {
     headerFontSize: 25,
 };
 
-function SmartTreeChart() {
+function SmartTreeChart(props: { studentId: string }) {
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setStudentId(props.studentId));
+    }, [props.studentId, dispatch]);
 
     // [x] GET UNITS ARRAY
     // [x] GET STUDENT PROFILE
@@ -606,7 +612,9 @@ function SmartTreeChart() {
         return;
     }, [paths.length, units.length, student, dispatch, generateNodes]);
 
-    return (
+    return !student.name || !paths.length || !units.length ? (
+        <ProgressSpinner></ProgressSpinner>
+    ) : (
         <div className="smart-tree-wrapper">
             <h1>{student.name}&apos;s Units</h1>
             {/* <button onClick={() => dispatch(overrideUnits(MtnMedicUnits))}>

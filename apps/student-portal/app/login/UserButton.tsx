@@ -3,7 +3,7 @@ import { Avatar } from 'primereact/avatar';
 import { Button } from 'primereact/button';
 import { Menu } from 'primereact/menu';
 import { useRouter } from 'next/navigation';
-import { useAuth } from './UseAuth';
+import { useAuth } from './useAuth';
 
 interface UserButtonProps {
     size?: 'default' | 'small';

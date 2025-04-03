@@ -7,10 +7,13 @@ import {
     loginSlice,
     selectLoginForm,
     selectValidationErrors,
-} from './login.slice';
+    State,
+} from './loginSlice';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
-export const submitLoginEpic: (router: AppRouterInstance) => Epic =
+export const submitLoginEpic: (
+    router: AppRouterInstance
+) => Epic<unknown, unknown, { login: State }> =
     (router: AppRouterInstance) => (action$, state$) =>
         action$.pipe(
             ofType(loginSlice.actions.logIn.type),

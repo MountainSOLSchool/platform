@@ -10,7 +10,7 @@ export const student = createSlice({
         loadedStudentCompletedUnits: (state, action) => {
             return action.payload;
         },
-        setStudentId: (state, action: { payload: string }) => {
+        setStudentId: (_, action: { payload: string }) => {
             // empty
         },
         setStudent: (state, action) => action.payload,

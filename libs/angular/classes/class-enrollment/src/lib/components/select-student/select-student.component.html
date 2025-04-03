@@ -1,70 +1,76 @@
-<ng-container *rxLet="viewModel$; let vm">
-    <div *rxIf="!vm.showAsReadonlyBlock; else readonlyExplanation">
-        Select a student to enroll.
-    </div>
-    <ng-template #readonlyExplanation>
-        <div style="margin-bottom: 1rem">
-            In order to change the student you are enrolling, you must start
-            over.
-        </div>
-        <button
-            style="margin-bottom: 2rem"
-            pButton
-            label="Start Over"
-            (click)="startOverIntent()"
-        ></button>
-    </ng-template>
-    <div class="mt-4 flex flex-wrap gap-3">
-        @if (vm.students === undefined) {
+@let vm = viewModel$ | async;
+@if (vm) {
+    <ng-container>
+        @if (!vm.showAsReadonlyBlock) {
+            <div>
+                Select a student to enroll.
+            </div>
+        } @else {
+            <div style="margin-bottom: 1rem">
+                In order to change the student you are enrolling, you must start
+                over.
+            </div>
+            <button
+                style="margin-bottom: 2rem"
+                pButton
+                label="Start Over"
+                (click)="startOverIntent()"
+            ></button>
+        }
+        <div class="mt-4 flex flex-wrap gap-3">
+            @if (vm.students === undefined) {
+                <sol-student-selection-card
+                    [disabled]="vm.showAsReadonlyBlock"
+                    [loading]="true"
+                ></sol-student-selection-card>
+            } @else {
+                @for (student of vm.students; track student) {
+                    <sol-student-selection-card
+                        [student]="student"
+                        [selected]="student.id === vm.selectedStudentId"
+                        [disabled]="vm.showAsReadonlyBlock"
+                        (clicked)="selectedStudent(student.id)"
+                    ></sol-student-selection-card>
+                }
+            }
             <sol-student-selection-card
                 [disabled]="vm.showAsReadonlyBlock"
-                [loading]="true"
+                [selected]="vm.selectedStudentType === 'new'"
+                icon="pi-user-plus"
+                (clicked)="selectedStudentType('new')"
             ></sol-student-selection-card>
-        } @else {
-            @for (student of vm.students; track student) {
-                <sol-student-selection-card
-                    [student]="student"
-                    [selected]="student.id === vm.selectedStudentId"
-                    [disabled]="vm.showAsReadonlyBlock"
-                    (clicked)="selectedStudent(student.id)"
-                ></sol-student-selection-card>
-            }
-        }
-        <sol-student-selection-card
-            [disabled]="vm.showAsReadonlyBlock"
-            [selected]="vm.selectedStudentType === 'new'"
-            icon="pi-user-plus"
-            (clicked)="selectedStudentType('new')"
-        ></sol-student-selection-card>
-    </div>
-</ng-container>
+        </div>
+    </ng-container>
+}
 
-<p-dialog
-    header="Start over?"
-    *rxLet="showStartOverModal$; let showStartOverModal"
-    [visible]="showStartOverModal"
-    [closable]="false"
-    [modal]="true"
-    [draggable]="false"
-    (onHide)="canceledChange$.next(undefined)"
->
-    <div style="margin-top: 1rem">
-        Starting over the selected student will cause you to lose any new or
-        updated information you've entered on the subsequent steps. Are you sure
-        you want to start over and change students?
-    </div>
-    <div style="margin-top: 1rem">
-        <button
-            pButton
-            class="p-button-danger"
-            label="Yes, Start Over"
-            (click)="confirmStartOver()"
-        ></button>
-        <button
-            pButton
-            label="No, Cancel"
-            style="margin-left: 1rem"
-            (click)="canceledChange$.next(undefined)"
-        ></button>
-    </div>
-</p-dialog>
+@let showStartOverModal = showStartOverModal$ | async;
+@if (showStartOverModal) {
+    <p-dialog
+        header="Start over?"
+        [visible]="showStartOverModal"
+        [closable]="false"
+        [modal]="true"
+        [draggable]="false"
+        (onHide)="canceledChange$.next(undefined)"
+    >
+        <div style="margin-top: 1rem">
+            Starting over the selected student will cause you to lose any new or
+            updated information you've entered on the subsequent steps. Are you sure
+            you want to start over and change students?
+        </div>
+        <div style="margin-top: 1rem">
+            <button
+                pButton
+                class="p-button-danger"
+                label="Yes, Start Over"
+                (click)="confirmStartOver()"
+            ></button>
+            <button
+                pButton
+                label="No, Cancel"
+                style="margin-left: 1rem"
+                (click)="canceledChange$.next(undefined)"
+            ></button>
+        </div>
+    </p-dialog>    
+}

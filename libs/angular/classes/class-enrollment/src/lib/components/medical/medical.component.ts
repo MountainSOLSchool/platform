@@ -28,12 +28,9 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { create, enforce, group, test } from 'vest';
 import { StudentForm } from '@sol/student/domain';
-import { RxLet } from '@rx-angular/template/let';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
-import { RxFor } from '@rx-angular/template/for';
 import { MessagesModule } from 'primeng/messages';
-import { RxIf } from '@rx-angular/template/if';
-import { AsyncPipe, JsonPipe, NgStyle } from '@angular/common';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -53,14 +50,10 @@ import { toObservable } from '@angular/core/rxjs-interop';
         ToggleButtonModule,
         SelectButtonModule,
         FormsModule,
-        RxLet,
-        RxFor,
         ValidDirective,
         MessagesComponent,
         MessagesModule,
-        RxIf,
         ProgressSpinnerModule,
-        JsonPipe,
         AsyncPipe,
     ],
     selector: 'sol-medical',

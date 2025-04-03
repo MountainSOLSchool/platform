@@ -22,19 +22,18 @@ import {
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ToastModule } from 'primeng/toast';
-import { RxLet } from '@rx-angular/template/let';
 import { DropdownModule } from 'primeng/dropdown';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { RxIf } from '@rx-angular/template/if';
 import { create, enforce, omitWhen, test } from 'vest';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectStudentCardComponent } from '../select-student-card/select-student-card.component';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,15 +42,14 @@ import { SelectStudentCardComponent } from '../select-student-card/select-studen
         MessagesModule,
         MessageModule,
         ToastModule,
-        RxLet,
         DropdownModule,
         RadioButtonModule,
         FormsModule,
-        RxIf,
         ButtonModule,
         DialogModule,
         ProgressSpinnerModule,
         SelectStudentCardComponent,
+        AsyncPipe,
     ],
     selector: 'sol-student-selection',
     templateUrl: './select-student.component.html',

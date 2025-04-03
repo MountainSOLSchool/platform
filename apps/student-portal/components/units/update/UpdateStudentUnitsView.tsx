@@ -10,14 +10,7 @@ import SemesterSelectionDropdown from './SemesterSelectionDropdown';
 import ClassSelectionDropdown from './ClassSelectionDropdown';
 import StudentSelectionTypePicker from './StudentSelectionTypePicker';
 import { StudentSelectionType } from './StudentSelectionType.type';
-
-type Units = {
-    [unitId: string]: {
-        name: string;
-        description: string;
-        category: string;
-    };
-};
+import { RepeatableUnitCompletion } from 'apps/student-portal/store/updateUnits/updateUnitsSlice';
 
 export interface UpdateStudentUnitsViewProps {
     students: Requested<
@@ -31,7 +24,20 @@ export interface UpdateStudentUnitsViewProps {
     selectedClassUnitIds: Array<string>;
     selectedStudentId: string | undefined;
     completedUnitIds: Requested<Array<string>>;
-    units: Requested<Units>;
+    repeatableCompletions: RepeatableUnitCompletion[];
+    units: Requested<
+        Record<
+            string,
+            {
+                id: string;
+                name: string;
+                description: string;
+                category: string;
+                isRepeatable?: boolean;
+                prereqUnitIds?: Array<string>;
+            }
+        >
+    >;
     paths: Requested<
         Array<{
             name: string;
@@ -52,9 +58,27 @@ export function UpdateStudentUnitsView(
             unitId: string;
             isCompleted: boolean;
         }) => void;
+        addRepeatableCompletion?: (unitId: string) => void;
+        updateRepeatableCompletion?: (
+            completion: RepeatableUnitCompletion,
+            appliedToPath: string
+        ) => void;
+        removeRepeatableCompletion?: (
+            completion: RepeatableUnitCompletion
+        ) => void;
         saveClicked: () => void;
+        changedUnitCompletions?: Array<{ name: string; added: boolean }>;
+        repeatableCompletionChanges?: Array<any>;
     }
 ) {
+    const hasUnsavedChanges = () => {
+        return (
+            (props.changedUnitCompletions &&
+                props.changedUnitCompletions.length > 0) ||
+            (props.repeatableCompletionChanges &&
+                props.repeatableCompletionChanges.length > 0)
+        );
+    };
     const studentOptions =
         RequestedUtility.isLoaded(props.students) &&
         props.students
@@ -78,9 +102,9 @@ export function UpdateStudentUnitsView(
             .sort((a, b) => a.displayName.localeCompare(b.displayName));
 
     return (
-        <div>
+        <div className="pb-20">
             <h1>Update Student Units</h1>
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 ml-0">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-2 mb-4 ml-0">
                 <div>
                     <div className="font-medium mb-2">Selection Type</div>
                     <StudentSelectionTypePicker
@@ -151,7 +175,7 @@ export function UpdateStudentUnitsView(
                 </div>
             </div>
 
-            <div className="mt-5">
+            <div className="mt-4">
                 {props.selectedStudentId ? (
                     <>
                         {RequestedUtility.isLoaded(props.paths) &&
@@ -159,6 +183,18 @@ export function UpdateStudentUnitsView(
                         RequestedUtility.isLoaded(props.completedUnitIds) ? (
                             <div>
                                 <UpdateUnitsTool
+                                    repeatableCompletions={
+                                        props.repeatableCompletions
+                                    }
+                                    onRepeatableCompletionAdded={
+                                        props.addRepeatableCompletion
+                                    }
+                                    onRepeatableCompletionUpdated={
+                                        props.updateRepeatableCompletion
+                                    }
+                                    onRepeatableCompletionRemoved={
+                                        props.removeRepeatableCompletion
+                                    }
                                     student={props.selectedStudentId}
                                     isCompletedByUnitId={Object.fromEntries([
                                         ...(RequestedUtility.isLoaded(
@@ -189,18 +225,6 @@ export function UpdateStudentUnitsView(
                                         props.unitCompletionChanged(change)
                                     }
                                 />
-
-                                <Button
-                                    loading={props.isSaveInProgress}
-                                    className="mt-4"
-                                    style={
-                                        props.selectedStudentId === ''
-                                            ? { display: 'none' }
-                                            : {}
-                                    }
-                                    label="Save Updates"
-                                    onClick={() => props.saveClicked()}
-                                />
                             </div>
                         ) : (
                             <UnitsSkeleton />
@@ -210,6 +234,37 @@ export function UpdateStudentUnitsView(
                     <div>Select a student to update their completed units.</div>
                 )}
             </div>
+
+            {props.selectedStudentId && (
+                <div
+                    style={{ zIndex: 1000 }}
+                    className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-6 py-3 px-4 flex align-items-center justify-content-start"
+                >
+                    <Button
+                        loading={props.isSaveInProgress}
+                        label="Save Changes"
+                        icon="pi pi-save"
+                        className="p-button-primary"
+                        onClick={() => props.saveClicked()}
+                    />
+
+                    {(props.isSaveInProgress || hasUnsavedChanges()) && (
+                        <div className="ml-4 text-sm font-medium">
+                            {props.isSaveInProgress ? (
+                                <span className="text-blue-600">
+                                    <i className="pi pi-spin pi-spinner mr-1"></i>
+                                    Saving changes...
+                                </span>
+                            ) : hasUnsavedChanges() ? (
+                                <span className="text-amber-600">
+                                    <i className="pi pi-exclamation-circle mr-1"></i>
+                                    Unsaved changes
+                                </span>
+                            ) : null}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

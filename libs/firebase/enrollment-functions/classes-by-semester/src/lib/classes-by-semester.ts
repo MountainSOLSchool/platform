@@ -25,7 +25,6 @@ export const classesBySemester = Functions.endpoint.handle<
         }
         response.send(theClassesBySemester);
     } catch (e) {
-        console.log(e);
         response
             .status(500)
             .send({ error: 'Error fetching classes by semester' });

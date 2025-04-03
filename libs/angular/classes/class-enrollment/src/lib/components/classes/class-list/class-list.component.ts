@@ -30,7 +30,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ChipModule } from 'primeng/chip';
 import { SkeletonModule } from 'primeng/skeleton';
 import { FormsModule } from '@angular/forms';
-import { RxLet } from '@rx-angular/template/let';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -74,7 +73,6 @@ interface ClassRow {
         ChipModule,
         SkeletonModule,
         FormsModule,
-        RxLet,
         SelectButtonModule,
         ToggleButtonModule,
         ProgressSpinnerModule,

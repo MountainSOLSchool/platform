@@ -1,10 +1,16 @@
 @if (allStepsComplete) {
-    <ng-container *rxLet="viewModel$; let vm; suspense: skeleton">
+    @let vm = viewModel$ | async;
+    @defer (when !!vm){
+        @if (vm) {
+
         <div class="section">
-            <p-fieldset legend="Student" *rxLet="student$; let student">
-                <p>Name: {{ student?.firstName }} {{ student?.lastName }}</p>
-                <p>Birthdate: {{ student?.birthdate | date }}</p>
-            </p-fieldset>
+            @let student = student$ | async;
+            @if (student) {
+                <p-fieldset legend="Student">
+                    <p>Name: {{ student?.firstName }} {{ student?.lastName }}</p>
+                    <p>Birthdate: {{ student?.birthdate | date }}</p>
+                </p-fieldset>
+            }
         </div>
 
         <div class="section">
@@ -45,46 +51,46 @@
                         ></button>
                     </span>
                 </div>
-                <ng-container
-                    *rxIf="!vm.isLoadingDiscounts; else loadingDiscounts"
-                >
+                @if (!vm.isLoadingDiscounts) {
                     <div
-                        class="flex align-items-center"
-                        style="margin-top: 1rem"
-                    >
-                        <p-chip
-                            *rxFor="let discount of vm.validDiscountAmounts"
-                            [label]="
-                                discount.code +
-                                ' (-' +
-                                (discount.amount | currency) +
-                                ')'
-                            "
-                            styleClass="mr-2 valid-chip"
-                            [removable]="true"
-                            (onRemove)="removeDiscountCode(discount.code)"
-                        ></p-chip>
-                    </div>
-                    @if (vm.invalidCodes.length > 0) {
-                        <div style="margin-top: 1rem">
-                            <div>
-                                Could not find a discount matching these codes:
-                            </div>
-                            <div
-                                class="flex align-items-center"
-                                style="margin-top: 0.5rem"
-                            >
+                    class="flex align-items-center"
+                    style="margin-top: 1rem"
+                >
+                @for (discount of vm.validDiscountAmounts; track discount.code) {
+                    <p-chip
+                        [label]="
+                            discount.code +
+                            ' (-' +
+                            (discount.amount | currency) +
+                            ')'
+                        "
+                        styleClass="mr-2 valid-chip"
+                        [removable]="true"
+                        (onRemove)="removeDiscountCode(discount.code)"
+                    ></p-chip>
+                }
+                </div>
+                @if (vm.invalidCodes.length > 0) {
+                    <div style="margin-top: 1rem">
+                        <div>
+                            Could not find a discount matching these codes:
+                        </div>
+                        <div
+                            class="flex align-items-center"
+                            style="margin-top: 0.5rem"
+                        >
+                            @for (code of vm.invalidCodes; track code) {
                                 <p-chip
-                                    *rxFor="let code of vm.invalidCodes"
                                     [label]="code"
                                     styleClass="mr-2"
                                     [removable]="true"
                                     (onRemove)="removeDiscountCode(code)"
                                 ></p-chip>
-                            </div>
+                            }
                         </div>
-                    }</ng-container
-                ><ng-template #loadingDiscounts>
+                    </div>
+                }
+                } @else {
                     <p-progressSpinner
                         [style]="{ width: '50px', height: '50px' }"
                         styleClass="custom-spinner"
@@ -92,7 +98,7 @@
                         fill="var(--surface-ground)"
                         animationDuration=".5s"
                     ></p-progressSpinner>
-                </ng-template>
+                }
                 <p>
                     Note: We offer need-based scholarships on a case-by-case
                     basis, so if cost is a barrier to your participation, please
@@ -109,24 +115,25 @@
         <div class="section">
             <p-fieldset legend="Payment Method">
                 @if (finalTotal()) {
-                    <sol-checkout
-                        *rxLet="
-                            randomValueThatResetsPaymentCollector$;
-                            let randomValueThatResetsPaymentCollector
-                        "
-                        [randomValueThatResetsPaymentCollector]="
-                            randomValueThatResetsPaymentCollector
-                        "
-                        [interacted]="interacted"
-                        (validityChange)="validityChange.next($event)"
-                    ></sol-checkout>
+                    @let randomValueThatResetsPaymentCollector = randomValueThatResetsPaymentCollector$ | async;
+                    @if (randomValueThatResetsPaymentCollector) {
+                        <sol-checkout
+                            [randomValueThatResetsPaymentCollector]="
+                                randomValueThatResetsPaymentCollector
+                            "
+                            [interacted]="interacted"
+                            (validityChange)="validityChange.next($event)"
+                        ></sol-checkout>}
                 } @else {
                     <p>No payment method is required at this time.</p>
                 }
                 <div>
-                    <p *rxLet="userEmail$; let email">
-                        Receipt Email: {{ email }}
-                    </p>
+                    @let email = userEmail$ | async;
+                    @if (email) {
+                        <p>
+                            Receipt Email: {{ email }}
+                        </p>
+                    }
                 </div>
             </p-fieldset>
         </div>
@@ -154,8 +161,8 @@
                 </div>
             </p-fieldset>
         </div>
-    </ng-container>
-    <ng-template #skeleton>
+        }
+    } @loading (minimum 500ms) {
         <div style="width: 100%; margin-top: 1rem">
             <div
                 style="
@@ -167,7 +174,7 @@
                 <p-progressSpinner></p-progressSpinner>
             </div>
         </div>
-    </ng-template>
+    }
 } @else {
     <p>Please complete all steps before submitting.</p>
 }

@@ -19,6 +19,7 @@ import {
     RequestedOperatorsUtility,
     RequestedUtility,
 } from '@sol/angular/request';
+import { UserService } from '@sol/auth/user';
 
 type PaidEnrollment = Enrollment & {
     paymentMethod:
@@ -97,6 +98,7 @@ const initialState: State = {
 export class EnrollmentWorkflowStore extends ComponentStore<State> {
     private readonly functions = inject(FirebaseFunctionsService);
     private readonly router = inject(Router);
+    private readonly isLoggedIn$ = inject(UserService).isLoggedIn();
 
     constructor() {
         super(initialState);
@@ -176,29 +178,36 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     }));
 
     readonly loadDraft = this.effect(() => {
-        return this.functions
-            .call<{
-                draft: Partial<Enrollment> | undefined;
-            }>('loadEnrollmentDraft')
-            .pipe(
-                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                tap(
-                    ({ draft }) =>
-                        draft &&
-                        Object.entries(draft).forEach(([key, value]) => {
-                            if (value !== undefined) {
-                                this.patchState((state) => ({
-                                    ...state,
-                                    draftEnrollment: draft,
-                                    enrollment: {
-                                        ...state.enrollment,
-                                        [key]: value,
-                                    },
-                                }));
-                            }
-                        })
-                )
-            );
+        return this.isLoggedIn$.pipe(
+            filter(Boolean),
+            switchMap(() =>
+                this.functions
+                    .call<{
+                        draft: Partial<Enrollment> | undefined;
+                    }>('loadEnrollmentDraft')
+                    .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                        tap(
+                            ({ draft }) =>
+                                draft &&
+                                Object.entries(draft).forEach(
+                                    ([key, value]) => {
+                                        if (value !== undefined) {
+                                            this.patchState((state) => ({
+                                                ...state,
+                                                draftEnrollment: draft,
+                                                enrollment: {
+                                                    ...state.enrollment,
+                                                    [key]: value,
+                                                },
+                                            }));
+                                        }
+                                    }
+                                )
+                        )
+                    )
+            )
+        );
     });
 
     readonly saveDraft = this.effect(() => {

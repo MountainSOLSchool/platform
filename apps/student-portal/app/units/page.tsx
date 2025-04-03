@@ -1,3 +1,3 @@
-import UpdateStudentUnitsWrapper from '../../components/Units/UpdateStudentUnits';
+import UpdateStudentUnitsWrapper from '../../components/units/update/UpdateStudentUnits';
 
 export default UpdateStudentUnitsWrapper;

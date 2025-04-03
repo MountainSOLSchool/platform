@@ -1,8 +1,8 @@
 import { filter, switchMap, from } from 'rxjs';
-import { loadedPaths, requestPaths } from './paths';
+import { loadedPaths, requestPaths } from './pathsSlice';
 import { Action } from 'redux';
 import { Observable, map } from 'rxjs';
-import { db } from '../firebase/database';
+import { db } from '../../firebase/database';
 import { collection, getDocs } from 'firebase/firestore';
 
 export const loadPaths = (action$: Observable<Action>) =>
@@ -18,7 +18,7 @@ export const loadPaths = (action$: Observable<Action>) =>
                                 ? fields.requirements.arrayValue.values.map(
                                       (e) =>
                                           e.referenceValue
-                                              .match(/\w+$/i)
+                                              ?.match(/\w+$/i)
                                               .toString()
                                   )
                                 : 'none';

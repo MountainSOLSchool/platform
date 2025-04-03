@@ -1,13 +1,14 @@
-import { filter, from, switchMap } from 'rxjs';
+import { from, switchMap } from 'rxjs';
 import { Action } from 'redux';
 import { Observable, map } from 'rxjs';
 
-import { setStudentId, loadedStudentCompletedUnits } from './studentStore';
-import { FirebaseFunctions } from '../functions/firebase-functions';
+import { setStudentId, loadedStudentCompletedUnits } from './studentSlice';
+import { FirebaseFunctions } from '../../firebase/functions';
+import { ofType } from 'redux-observable';
 
 export const loadStudent = (action$: Observable<Action>) =>
     action$.pipe(
-        filter((action) => action.type === setStudentId.type),
+        ofType(setStudentId.type),
         switchMap(({ payload }: { payload: string; type: string }) =>
             from(FirebaseFunctions.getStudentCompletedUnits(payload)).pipe(
                 map(({ name, completed_units }) => {

@@ -1,4 +1,3 @@
-import CORS from 'cors';
 import { AuthUtility, Role } from './auth.utility';
 import { defineSecret, defineString } from 'firebase-functions/params';
 import { SecretParam, StringParam } from 'firebase-functions/lib/params/types';
@@ -6,7 +5,50 @@ import { onRequest } from 'firebase-functions/v2/https';
 import { type Request } from 'firebase-functions/v2/https';
 import * as express from 'express';
 
-const cors = CORS({ origin: true });
+const ALLOWED_ORIGINS = defineString('ALLOWED_ORIGINS');
+
+const corsMiddleware = (
+    req: Request,
+    res: express.Response,
+    next: () => void
+) => {
+    const origin = req.headers.origin;
+    const allowedOrigins = ALLOWED_ORIGINS.value()
+        .split(',')
+        .map((o) => o.trim());
+
+    if (!origin) {
+        res.status(400).json({
+            error: 'Bad Request: Origin header is required',
+        });
+        return;
+    }
+
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+        res.setHeader(
+            'Access-Control-Allow-Methods',
+            'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+        );
+        res.setHeader(
+            'Access-Control-Allow-Headers',
+            'Authorization,Content-Type'
+        );
+
+        if (req.method === 'OPTIONS') {
+            res.status(204).send();
+            return;
+        }
+
+        next();
+    } else {
+        res.status(400).json({
+            error: 'Bad Request: Origin not allowed by CORS policy',
+            origin,
+            allowedOrigins,
+        });
+    }
+};
 
 class FunctionBuilder<SecretNames extends string, StringNames extends string> {
     constructor(
@@ -40,10 +82,9 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
     >(...stringNames: StringNamesParam) {
         const strings: Record<StringNames, StringParam> = stringNames
             .map((string) => defineString(string))
-            .reduce(
-                (all, string) => ({ ...all, [string.name]: string }),
-                {} as Record<StringNames, StringParam>
-            );
+            .reduce((all, string) => ({ ...all, [string.name]: string }), {
+                ALLOWED_ORIGINS: ALLOWED_ORIGINS,
+            } as Record<StringNames, StringParam>);
         return new FunctionBuilder(this.secrets, strings, this.roles);
     }
 
@@ -63,9 +104,11 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
         ) => void
     ) {
         return onRequest(
-            { secrets: Object.values(this.secrets) },
+            {
+                secrets: Object.values(this.secrets),
+            },
             async (request, response) => {
-                cors(request, response, async () => {
+                corsMiddleware(request, response, async () => {
                     this.roles.forEach((role) => {
                         AuthUtility.validateRole(request, response, role);
                     });

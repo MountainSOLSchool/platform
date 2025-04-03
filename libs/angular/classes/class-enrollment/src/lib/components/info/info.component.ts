@@ -26,15 +26,13 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { RxLet } from '@rx-angular/template/let';
 import { create, test, enforce, group } from 'vest';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { StudentForm } from '@sol/student/domain';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
-import { RxIf } from '@rx-angular/template/if';
-import { NgStyle } from '@angular/common';
+import { AsyncPipe, NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
@@ -53,14 +51,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         ToggleButtonModule,
         SelectButtonModule,
         FormsModule,
-        RxLet,
         ValidDirective,
         MessagesComponent,
         OverlayPanelModule,
         DropdownModule,
         MessagesModule,
-        RxIf,
         ProgressSpinnerModule,
+        AsyncPipe,
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',

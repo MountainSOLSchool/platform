@@ -16,13 +16,15 @@ import * as auth from 'firebase/auth';
 import { PrimeReactProvider } from 'primereact/api';
 import LoginWithRegisteredEpics from './login/page';
 import dynamic from 'next/dynamic';
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 // TODO: preventing SSR temporarily because something goes wrong with pre-rendering (likely useMediaQuery)
 const Header = dynamic(() => import('../components/Header'), { ssr: false });
 
+type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated';
+
 function RootLayout({ children }: { children: React.ReactNode }) {
-    // TODO: add to provider
-    const isLoggedIn = useIsLoggedIn();
+    const { authStatus } = useAuthStatus();
 
     return (
         <html>
@@ -30,12 +32,19 @@ function RootLayout({ children }: { children: React.ReactNode }) {
                 <PrimeReactProvider>
                     <Provider store={store}>
                         <AddEpicContext.Provider value={addEpic}>
-                            <Header />
+                            {authStatus !== 'loading' && <Header />}
                             <Head>
                                 <title>Mountain SOL Student Portal</title>
                             </Head>
                             <main className="app">
-                                {isLoggedIn ? (
+                                {authStatus === 'loading' ? (
+                                    <div
+                                        className="flex justify-content-center align-items-center"
+                                        style={{ height: '100vh' }}
+                                    >
+                                        <ProgressSpinner />
+                                    </div>
+                                ) : authStatus === 'authenticated' ? (
                                     children
                                 ) : (
                                     <LoginWithRegisteredEpics />
@@ -51,19 +60,22 @@ function RootLayout({ children }: { children: React.ReactNode }) {
 
 export default RootLayout;
 
-function useIsLoggedIn() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+function useAuthStatus() {
+    const [authStatus, setAuthStatus] = useState<AuthStatus>('loading');
     const router = useRouter();
 
     useEffect(() => {
-        auth.getAuth().onAuthStateChanged((user) => {
+        const unsubscribe = auth.getAuth().onAuthStateChanged((user) => {
             if (user) {
-                setIsLoggedIn(true);
+                setAuthStatus('authenticated');
             } else {
+                setAuthStatus('unauthenticated');
                 router.push('/login');
             }
         });
-    });
 
-    return isLoggedIn;
+        return () => unsubscribe();
+    }, [router]);
+
+    return { authStatus };
 }

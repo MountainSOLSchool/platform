@@ -7,7 +7,9 @@
     "targets": {
         "build": {
             "executor": "@angular-devkit/build-angular:browser",
-            "outputs": ["{options.outputPath}"],
+            "outputs": [
+                "{options.outputPath}"
+            ],
             "options": {
                 "outputPath": "dist/apps/enrollment-portal",
                 "index": "apps/enrollment-portal/src/index.html",
@@ -63,21 +65,6 @@
                     "sourceMap": true,
                     "namedChunks": true,
                     "baseHref": "/"
-                },
-                "developmentRemoteFunctions": {
-                    "buildOptimizer": false,
-                    "optimization": false,
-                    "vendorChunk": true,
-                    "extractLicenses": false,
-                    "sourceMap": true,
-                    "namedChunks": true,
-                    "baseHref": "/",
-                    "fileReplacements": [
-                        {
-                            "replace": "apps/enrollment-portal/src/environments/environment.ts",
-                            "with": "apps/enrollment-portal/src/environments/environment.default.ts"
-                        }
-                    ]
                 }
             },
             "defaultConfiguration": "production"
@@ -90,9 +77,6 @@
                 },
                 "development": {
                     "buildTarget": "enrollment-portal:build:development"
-                },
-                "developmentRemoteFunctions": {
-                    "buildTarget": "enrollment-portal:build:developmentRemoteFunctions"
                 }
             },
             "defaultConfiguration": "development"
@@ -105,11 +89,15 @@
         },
         "lint": {
             "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
+            "outputs": [
+                "{options.outputFile}"
+            ]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/apps/enrollment-portal"],
+            "outputs": [
+                "{workspaceRoot}/coverage/apps/enrollment-portal"
+            ],
             "options": {
                 "jestConfig": "apps/enrollment-portal/jest.config.ts"
             }

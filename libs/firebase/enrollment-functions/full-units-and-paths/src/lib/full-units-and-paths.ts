@@ -8,46 +8,51 @@ export const fullUnitsAndPaths = Functions.endpoint.handle(
         const paths = await getPaths();
         const units = await getUnits();
 
-        response.send({
-            paths: paths.map((path) => ({
-                id: path.id,
-                name: path.name,
-                description: path.description,
-                unitIds:
-                    (
-                        path.requirements as
+        const responsePaths = paths.map((path) => ({
+            id: path.id,
+            name: path.name,
+            description: path.description,
+            unitIds:
+                (
+                    path.requirements as
+                    | Array<DocumentReference>
+                    | undefined
+                )?.map((reference) => reference.id) ?? [],
+            electives:
+                path.electives?.map((elective) => ({
+                    name: elective.name,
+                    unitIds:
+                        (
+                            elective.options as
                             | Array<DocumentReference>
                             | undefined
-                    )?.map((reference) => reference.id) ?? [],
-                electives:
-                    path.electives?.map((elective) => ({
-                        name: elective.name,
-                        unitIds:
-                            (
-                                elective.options as
-                                    | Array<DocumentReference>
-                                    | undefined
-                            )?.map((reference) => reference.id) ?? [],
-                    })) ?? [],
-            })),
-            units: units
-                .map((unit) => ({
-                    id: unit.id,
-                    name: unit.name,
-                    description: unit.description,
-                    category: unit.category,
-                    prereqUnitIds:
-                        (
-                            unit.prereqs as Array<DocumentReference> | undefined
                         )?.map((reference) => reference.id) ?? [],
-                }))
-                .reduce(
-                    (acc, unit) => ({
-                        ...acc,
-                        [unit.id]: unit,
-                    }),
-                    {}
-                ),
+                })) ?? [],
+        }));
+
+        const responseUnits = units
+            .map((unit) => ({
+                id: unit.id,
+                name: unit.name,
+                description: unit.description,
+                category: unit.category,
+                isRepeatable: unit.is_repeatable,
+                prereqUnitIds:
+                    (
+                        unit.prereqs as Array<DocumentReference> | undefined
+                    )?.map((reference) => reference.id) ?? [],
+            }))
+            .reduce(
+                (acc, unit) => ({
+                    ...acc,
+                    [unit.id]: unit,
+                }),
+                {}
+            )
+
+        response.send({
+            paths: responsePaths,
+            units: responseUnits
         });
     }
 );

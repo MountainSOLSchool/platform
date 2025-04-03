@@ -14,9 +14,9 @@ import {
     tap,
 } from 'rxjs';
 import {
-    cardPaymentMethodPayload,
+    type cardPaymentMethodPayload,
+    type Dropin,
     create as createDropIn,
-    Dropin,
 } from 'braintree-web-drop-in';
 import { dataCollector, client } from 'braintree-web';
 import { UserService } from '@sol/auth/user';

@@ -8,7 +8,7 @@ import { Button } from 'primereact/button';
 import { Sidebar } from 'primereact/sidebar';
 import { useMediaQuery } from 'react-responsive';
 import UserButton from '../app/login/UserButton';
-import { useAuth } from '../app/login/UseAuth';
+import { useAuth } from '../app/login/useAuth';
 
 const Header = () => {
     const [display, setDisplay] = useState(false);

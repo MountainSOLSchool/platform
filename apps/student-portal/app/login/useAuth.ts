@@ -1,22 +1,19 @@
 import { useEffect, useState } from 'react';
 import { User } from 'firebase/auth';
 import { getSolAuthClient } from '@sol/ts/firebase/firebase-config';
-import { getFunctions, httpsCallable } from 'firebase/functions';
+import { FirebaseFunctions } from '../../firebase/functions';
 
 export function useAuth() {
     const [user, setUser] = useState<User | null>(null);
     const [isAdmin, setIsAdmin] = useState(false);
     const auth = getSolAuthClient();
-    const functions = getFunctions();
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
             setUser(user);
             if (user) {
                 try {
-                    const getRoles = httpsCallable(functions, 'roles');
-                    const result = await getRoles();
-                    const roles = result.data as string[];
+                    const roles = await FirebaseFunctions.getRoles();
                     setIsAdmin(roles.includes('admin'));
                 } catch (error) {
                     console.error('Error checking admin status:', error);
