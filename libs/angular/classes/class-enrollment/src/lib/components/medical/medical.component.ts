@@ -33,6 +33,7 @@ import { MessagesModule } from 'primeng/messages';
 import { AsyncPipe, NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { ConfirmAccuracyComponent } from '../confirm-accuracy/confirm-accuracy.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,6 +56,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
         MessagesModule,
         ProgressSpinnerModule,
         AsyncPipe,
+        ConfirmAccuracyComponent,
     ],
     selector: 'sol-medical',
     templateUrl: './medical.component.html',

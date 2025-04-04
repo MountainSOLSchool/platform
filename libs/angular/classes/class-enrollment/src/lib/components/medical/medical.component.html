@@ -1,4 +1,4 @@
-@if ((isUpdatingExistingStudent$ | async) === true) {
+@if ((isUpdatingExistingStudent$ | async) === true && !isOutOfDate()) {
     <p-messages
     [enableService]="false"
     severity="info"
@@ -19,31 +19,6 @@
         </div>
     </div>
 } @else {    
-        @if (isOutOfDate()) {
-            <p-messages
-            [enableService]="false"
-            severity="error"
-            [closable]="false"
-        >
-            <ng-template pTemplate>
-                <div class="flex justify-content-between align-items-center w-full -my-2">
-                    <div class="flex-grow-1">
-                        <i class="pi pi-exclamation-triangle" style="margin-right: 4px"></i>
-                        Your student's medical information is required to be updated every two years. Please update or confirm you have reviewed and there are no changes.
-                    </div>
-                    <div class="flex-none ml-3">
-                        <button
-                            pButton
-                            type="button"
-                            label="Confirm is up-to-date"
-                            size="small"
-                            class="p-button-outlined"
-                        ></button>
-                    </div>
-                </div>
-            </ng-template>
-        </p-messages>
-        }
         @let vm = viewModel$ | async;
         @if (vm) {
             <p-accordion>
@@ -60,6 +35,7 @@
                     </div>
                 </ng-template>
                 <form>
+                    <sol-confirm-accuracy></sol-confirm-accuracy>
                     <div class="p-fluid">
                         <h3>Emergency Contacts</h3>
                         <p>

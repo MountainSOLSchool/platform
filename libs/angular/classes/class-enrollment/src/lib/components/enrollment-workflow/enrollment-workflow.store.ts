@@ -42,7 +42,9 @@ type State = {
     };
     isLoadingDiscounts: boolean;
     isLoadingStudent: boolean;
+    // TODO: student, not just medical, info
     isMedicalInfoOutOfDate: boolean;
+    hasAcknowledgedOutOfDate: boolean;
     draftEnrollment: Partial<Enrollment> | undefined;
 };
 
@@ -51,6 +53,7 @@ const initialState: State = {
     randomValueThatResetsPaymentCollector: Math.random().toString(),
     draftEnrollment: undefined,
     isMedicalInfoOutOfDate: false,
+    hasAcknowledgedOutOfDate: false,
     enrollment: {
         selectedClasses: [],
         userCostsToSelectedClassIds: {},
