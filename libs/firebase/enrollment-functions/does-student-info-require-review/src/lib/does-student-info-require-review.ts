@@ -1,9 +1,8 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
-import { StudentForm } from '@sol/student/domain';
 import { _assertUserCanManageStudent, _doesStudentInfoRequireReview, _mapStudentFormToStudentDbEntry } from '@sol/firebase/enrollment-functions/shared';
 
 export const doesStudentInfoRequireReview = Functions.endpoint.handle<{
-    student: StudentForm;
+    studentId: string;
 }>(
     async (request, response) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
@@ -14,17 +13,13 @@ export const doesStudentInfoRequireReview = Functions.endpoint.handle<{
         }
 
         const {
-            student,
+            studentId,
         } = request.body.data;
 
-        if (student?.id) {
-            await _assertUserCanManageStudent(user, student.id, response);
-        }
-
-        const updatedStudentDbEntry = _mapStudentFormToStudentDbEntry(student);
+        await _assertUserCanManageStudent(user, studentId, response);
 
         response.send({
-            isOutOfDate: 'id' in updatedStudentDbEntry && await _doesStudentInfoRequireReview(updatedStudentDbEntry, { request, response })
+            isOutOfDate: await _doesStudentInfoRequireReview(studentId, { request, response })
         });
     }
 );

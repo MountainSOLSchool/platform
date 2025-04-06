@@ -325,14 +325,14 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     });
 
     readonly getDoesStudentInfoRequireReview = this.effect(() => {
-        return this.select(this.selectStudent).pipe(
-            filter((student) => !!student?.id),
-            switchMap((student) => {
+        return this.select(this.selectStudentId).pipe(
+            filter(Boolean),
+            switchMap((studentId) => {
                 return this.functions
                     .call<{ isOutOfDate: boolean }>(
                         'doesStudentInfoRequireReview',
                         {
-                            student,
+                            studentId,
                         }
                     )
                     .pipe(

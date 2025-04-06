@@ -5,12 +5,12 @@ import { Request } from 'firebase-functions/v2/https';
 import * as express from 'express';
 import { SemesterEnrollment } from "@sol/classes/domain";
 
-export async function _doesStudentInfoRequireReview(studentDbEntry: StudentDbEntry, userContext: {
+export async function _doesStudentInfoRequireReview(studentId: string, userContext: {
     request: Request,
     response: express.Response
 }): Promise<boolean> {
 
-    const currentStudentDbEntry = await StudentRepository.get(studentDbEntry.id);
+    const currentStudentDbEntry = await StudentRepository.get(studentId);
 
     if (!currentStudentDbEntry) {
         return false;
