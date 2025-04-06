@@ -99,12 +99,12 @@
                 <h2>Student Info</h2>
                 @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
                     <sol-acknowledge-out-of-date>
-                    <sol-student-info
-                        [interacted]="studentInfo.interacted"
-                        [isStudentLoading]="isStudentLoading()"
-                        (validityChange)="studentInfo.hasError = !$event"
-                    ></sol-student-info>
-                </sol-acknowledge-out-of-date>
+                        <sol-student-info
+                            [interacted]="studentInfo.interacted"
+                            [isStudentLoading]="isStudentLoading()"
+                            (validityChange)="studentInfo.hasError = !$event"
+                        ></sol-student-info>
+                    </sol-acknowledge-out-of-date>
                 } @else {
                     <ng-container
                         *ngTemplateOutlet="mustSelectStudent"
@@ -120,11 +120,11 @@
                 <h2>Medical Info</h2>
                 @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
                     <sol-acknowledge-out-of-date>
-                    <sol-medical
-                        [interacted]="medicalInfo.interacted"
-                        (validityChange)="medicalInfo.hasError = !$event"
-                    ></sol-medical>
-                </sol-acknowledge-out-of-date>
+                        <sol-medical
+                            [interacted]="medicalInfo.interacted"
+                            (validityChange)="medicalInfo.hasError = !$event"
+                        ></sol-medical>
+                    </sol-acknowledge-out-of-date>
                 } @else {
                     <ng-container
                         *ngTemplateOutlet="mustSelectStudent"
