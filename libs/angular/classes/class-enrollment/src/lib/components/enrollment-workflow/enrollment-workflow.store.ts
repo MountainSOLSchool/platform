@@ -324,7 +324,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         );
     });
 
-    readonly getIsMedicalInfoOutOfDate = this.effect(() => {
+    readonly getDoesStudentInfoRequireReview = this.effect(() => {
         return this.select(this.selectStudent).pipe(
             filter((student) => !!student?.id),
             switchMap((student) => {
