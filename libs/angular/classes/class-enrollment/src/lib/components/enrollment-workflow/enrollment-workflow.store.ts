@@ -31,10 +31,30 @@ type PaidEnrollment = Enrollment & {
         | undefined;
 };
 
-const initialState = {
+type State = {
+    enrollment: PaidEnrollment;
+    randomValueThatResetsPaymentCollector: string;
+    status: 'draft' | 'submitted' | 'failed' | 'enrolled';
+    basketCosts: {
+        discountAmounts: Array<{ code: string; amount: number }>;
+        finalTotal: number;
+        originalTotal: number;
+    };
+    isLoadingDiscounts: boolean;
+    isLoadingStudent: boolean;
+    doesStudentInfoRequireReview: boolean;
+    hasAcknowledgedOutOfDate: boolean;
+    accuracyConfirmations: { [item: string]: boolean };
+    draftEnrollment: Partial<Enrollment> | undefined;
+};
+
+const initialState: State = {
     status: 'draft' as const,
     randomValueThatResetsPaymentCollector: Math.random().toString(),
     draftEnrollment: undefined,
+    doesStudentInfoRequireReview: false,
+    hasAcknowledgedOutOfDate: false,
+    accuracyConfirmations: {},
     enrollment: {
         selectedClasses: [],
         userCostsToSelectedClassIds: {},
@@ -76,20 +96,6 @@ const initialState = {
     },
     isLoadingDiscounts: false,
     isLoadingStudent: false,
-};
-
-type State = {
-    enrollment: PaidEnrollment;
-    randomValueThatResetsPaymentCollector: string;
-    status: 'draft' | 'submitted' | 'failed' | 'enrolled';
-    basketCosts: {
-        discountAmounts: Array<{ code: string; amount: number }>;
-        finalTotal: number;
-        originalTotal: number;
-    };
-    isLoadingDiscounts: boolean;
-    isLoadingStudent: boolean;
-    draftEnrollment: Partial<Enrollment> | undefined;
 };
 
 @Injectable()
@@ -256,35 +262,87 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
             switchMap(() => {
                 return this.select((enrollment) => enrollment).pipe(
                     take(1),
-                    switchMap(({ enrollment }) => {
-                        return this.functions
-                            .call<{
-                                email: string;
-                                success: boolean;
-                            }>('enroll', enrollment)
-                            .pipe(
-                                tap((response) => {
-                                    if (RequestedUtility.isLoaded(response)) {
-                                        if (response.success) {
-                                            this.patchState({
-                                                status: 'enrolled',
-                                            });
-                                        } else {
+                    switchMap(
+                        ({
+                            enrollment,
+                            doesStudentInfoRequireReview,
+                            accuracyConfirmations,
+                        }) => {
+                            return this.functions
+                                .call<{
+                                    email: string;
+                                    success: boolean;
+                                }>(
+                                    'enroll',
+                                    Object.assign(
+                                        ...[
+                                            {},
+                                            enrollment,
+                                            ...(doesStudentInfoRequireReview
+                                                ? [
+                                                      {
+                                                          hasConfirmedAccuracy:
+                                                              Object.values(
+                                                                  accuracyConfirmations
+                                                              ).length > 0 &&
+                                                              Object.values(
+                                                                  accuracyConfirmations
+                                                              ).every(Boolean),
+                                                      },
+                                                  ]
+                                                : []),
+                                        ]
+                                    )
+                                )
+                                .pipe(
+                                    tap((response) => {
+                                        if (
+                                            RequestedUtility.isLoaded(response)
+                                        ) {
+                                            if (response.success) {
+                                                this.patchState({
+                                                    status: 'enrolled',
+                                                });
+                                            } else {
+                                                this.patchState({
+                                                    status: 'failed',
+                                                });
+                                            }
+                                        } else if (
+                                            RequestedUtility.isError(response)
+                                        ) {
                                             this.patchState({
                                                 status: 'failed',
                                             });
                                         }
-                                    } else if (
-                                        RequestedUtility.isError(response)
-                                    ) {
-                                        this.patchState({
-                                            status: 'failed',
-                                        });
-                                    }
-                                })
-                            );
-                    })
+                                    })
+                                );
+                        }
+                    )
                 );
+            })
+        );
+    });
+
+    readonly getDoesStudentInfoRequireReview = this.effect(() => {
+        return this.select(this.selectStudentId).pipe(
+            filter(Boolean),
+            switchMap((studentId) => {
+                return this.functions
+                    .call<{ isOutOfDate: boolean }>(
+                        'doesStudentInfoRequireReview',
+                        {
+                            studentId,
+                        }
+                    )
+                    .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                        tap(({ isOutOfDate }) => {
+                            this.patchState({
+                                doesStudentInfoRequireReview: isOutOfDate,
+                            });
+                        })
+                    );
             })
         );
     });

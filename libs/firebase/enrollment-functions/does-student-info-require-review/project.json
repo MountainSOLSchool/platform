@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-does-student-info-require-review",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/does-student-info-require-review/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-does-student-info-require-review --web",
+    "targets": {}
+}

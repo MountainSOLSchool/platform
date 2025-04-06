@@ -1,5 +1,6 @@
 export type SemesterEnrollment = {
     studentName: string;
+    studentId: string;
     finalCost: number;
     transactionId: string;
     timestamp: { _seconds: number };

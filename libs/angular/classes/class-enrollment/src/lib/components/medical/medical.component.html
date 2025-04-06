@@ -12,20 +12,21 @@
     </ng-template>
 </p-messages>
 }
-@if (isStudentLoading) {
+@if (isStudentLoading()) {
     <div style="width: 100%; margin-top: 1rem">
         <div style="margin-left: auto; margin-right: auto; width: fit-content">
             <p-progressSpinner></p-progressSpinner>
         </div>
     </div>
-} @else {
-    @let vm = viewModel$ | async;
-    @if (vm) {
-        <p-accordion>
-            <p-accordionTab [selected]="true">
-                <ng-template pTemplate="header">
-                    @let valid = !vm.hasErrorsByGroup['contacts'];
-                    <div
+} @else {    
+        @let vm = viewModel();
+        @let sectionConfirmation = accuracyConfirmations();
+        @if (vm) {
+            <p-accordion>
+                <p-accordionTab [selected]="true">
+                    <ng-template pTemplate="header">
+                        @let valid = !vm.hasErrorsByGroup['contacts'];
+                        <div
                         [solValid]="valid"
                     >
                         Emergency Contacts
@@ -35,6 +36,7 @@
                     </div>
                 </ng-template>
                 <form>
+                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['contacts']" [messages]="vm.errors['confirmedAccuracyContacts']" (sectionConfirmedChange)="sectionConfirmationChanged('contacts', $event)"></sol-confirm-accuracy>
                     <div class="p-fluid">
                         <h3>Emergency Contacts</h3>
                         <p>
@@ -165,6 +167,7 @@
                     </div>
                 </ng-template>
                 <form>
+                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['health']" [messages]="vm.errors['confirmedAccuracyHealth']" (sectionConfirmedChange)="sectionConfirmationChanged('health', $event)"></sol-confirm-accuracy>
                     <div class="p-fluid">
                         <h3>Student Information</h3>
                         <div class="formgrid grid">

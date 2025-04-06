@@ -30,6 +30,7 @@ export class ClassEnrollmentRepository {
                 const dbo = doc.data();
                 return {
                     studentName: dbo.studentName,
+                    studentId: dbo.studentId,
                     finalCost: dbo.finalCost,
                     classIds: dbo.classIds,
                     classes: dbo.classes,
@@ -60,6 +61,7 @@ export class ClassEnrollmentRepository {
                 const dbo = doc.data();
                 return {
                     studentName: dbo.studentName,
+                    studentId: dbo.studentId,
                     finalCost: dbo.finalCost,
                     classIds: dbo.classIds,
                     classes: dbo.classes,

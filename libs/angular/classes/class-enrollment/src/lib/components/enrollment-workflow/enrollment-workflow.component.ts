@@ -39,6 +39,7 @@ import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FirebaseRemoteConfigService } from '@sol/firebase/remote-config-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { AcknowledgeOutOfDateComponent } from '../acknowledge-out-of-date/acknowledge-out-of-date.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,6 +73,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
         MatVerticalStepperScrollerDirective,
         SelectStudentComponent,
         ReleasesComponent,
+        AcknowledgeOutOfDateComponent,
     ],
     styles: [
         `
