@@ -45,7 +45,7 @@ export type StudentDbEntry = {
     heightFeet: number;
     heightInches: number;
     parent_notes: string;
-    last_updated_medical_info_timestamp?: string;
+    last_reviewed_student_info_timestamp?: string;
     completed_units?: Array<
         | DocumentReference
         | {

@@ -1,7 +1,6 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { Braintree } from '@sol/payments/braintree';
 import {
-    NewStudentDbEntry,
     StudentDbEntry,
     StudentForm,
 } from '@sol/student/domain';
@@ -12,6 +11,7 @@ import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
 import { Semester } from '@sol/firebase/classes/semester';
 import { _assertUserCanManageStudent, _getClasses, _getClassGroupsFromClasses, _doesStudentInfoRequireReview, _mapStudentFormToStudentDbEntry } from '@sol/firebase/enrollment-functions/shared';
+import { Request } from 'firebase-functions/v2/https';
 import * as express from 'express';
 
 
@@ -30,6 +30,7 @@ export const enroll = Functions.endpoint
         paymentMethod?: { nonce: string; deviceData: string };
         userCostsToSelectedClassIds: Record<string, number | undefined>;
         additionalOptionIdsByClassId: { [classId: string]: Array<string> };
+        hasConfirmedAccuracy?: boolean;
     }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
 
@@ -46,14 +47,29 @@ export const enroll = Functions.endpoint
             releaseSignatures,
             userCostsToSelectedClassIds,
             additionalOptionIdsByClassId,
+            hasConfirmedAccuracy
         } = request.body.data;
 
         if (student?.id) {
             await _assertUserCanManageStudent(user, student.id, response);
         }
 
-        const updatedStudentDbEntry = _mapStudentFormToStudentDbEntry(student);
-        'id' in updatedStudentDbEntry && _assertMedicalInfoUpToDate(response, updatedStudentDbEntry);
+        const updatedStudentDbEntry = Object.assign(...[
+            {},
+            _mapStudentFormToStudentDbEntry(student),
+            ...(hasConfirmedAccuracy
+                ? [{ last_reviewed_student_info_timestamp: new Date().toISOString(), }]
+                : []
+            )
+        ]);
+        const okay = hasConfirmedAccuracy || !('id' in updatedStudentDbEntry) || await _assertStudentInfoUpToDate(updatedStudentDbEntry, { request, response });
+
+        if (!okay) {
+            response.status(400).send({
+                error: 'Student info requires review',
+            });
+            return;
+        }
 
         const classes = Object.values(
             await _getClasses(selectedClasses)
@@ -188,16 +204,14 @@ export const enroll = Functions.endpoint
     });
 
 
-async function _assertMedicalInfoUpToDate(
-    response: express.Response,
-    studentDbEntry: StudentDbEntry
-) {
-    const isOutOfDate = await _doesStudentInfoRequireReview(studentDbEntry);
+async function _assertStudentInfoUpToDate(
 
-    if (isOutOfDate) {
-        response.status(400).send({
-            error: 'Medical info is out of date',
-        });
-        return;
+    studentDbEntry: StudentDbEntry,
+    userContext: {
+        request: Request;
+        response: express.Response;
     }
+) {
+    const isOutOfDate = await _doesStudentInfoRequireReview(studentDbEntry, userContext);
+    return !isOutOfDate;
 }

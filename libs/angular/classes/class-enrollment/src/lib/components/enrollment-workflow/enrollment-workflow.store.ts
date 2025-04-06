@@ -262,34 +262,63 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
             switchMap(() => {
                 return this.select((enrollment) => enrollment).pipe(
                     take(1),
-                    switchMap(({ enrollment }) => {
-                        return this.functions
-                            .call<{
-                                email: string;
-                                success: boolean;
-                            }>('enroll', enrollment)
-                            .pipe(
-                                tap((response) => {
-                                    if (RequestedUtility.isLoaded(response)) {
-                                        if (response.success) {
-                                            this.patchState({
-                                                status: 'enrolled',
-                                            });
-                                        } else {
+                    switchMap(
+                        ({
+                            enrollment,
+                            doesStudentInfoRequireReview,
+                            accuracyConfirmations,
+                        }) => {
+                            return this.functions
+                                .call<{
+                                    email: string;
+                                    success: boolean;
+                                }>(
+                                    'enroll',
+                                    Object.assign(
+                                        ...[
+                                            {},
+                                            enrollment,
+                                            ...(doesStudentInfoRequireReview
+                                                ? [
+                                                      {
+                                                          hasConfirmedAccuracy:
+                                                              Object.values(
+                                                                  accuracyConfirmations
+                                                              ).length > 0 &&
+                                                              Object.values(
+                                                                  accuracyConfirmations
+                                                              ).every(Boolean),
+                                                      },
+                                                  ]
+                                                : []),
+                                        ]
+                                    )
+                                )
+                                .pipe(
+                                    tap((response) => {
+                                        if (
+                                            RequestedUtility.isLoaded(response)
+                                        ) {
+                                            if (response.success) {
+                                                this.patchState({
+                                                    status: 'enrolled',
+                                                });
+                                            } else {
+                                                this.patchState({
+                                                    status: 'failed',
+                                                });
+                                            }
+                                        } else if (
+                                            RequestedUtility.isError(response)
+                                        ) {
                                             this.patchState({
                                                 status: 'failed',
                                             });
                                         }
-                                    } else if (
-                                        RequestedUtility.isError(response)
-                                    ) {
-                                        this.patchState({
-                                            status: 'failed',
-                                        });
-                                    }
-                                })
-                            );
-                    })
+                                    })
+                                );
+                        }
+                    )
                 );
             })
         );

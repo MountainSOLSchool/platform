@@ -24,7 +24,7 @@ export const doesStudentInfoRequireReview = Functions.endpoint.handle<{
         const updatedStudentDbEntry = _mapStudentFormToStudentDbEntry(student);
 
         response.send({
-            isOutOfDate: 'id' in updatedStudentDbEntry && await _doesStudentInfoRequireReview(updatedStudentDbEntry)
+            isOutOfDate: 'id' in updatedStudentDbEntry && await _doesStudentInfoRequireReview(updatedStudentDbEntry, { request, response })
         });
     }
 );
