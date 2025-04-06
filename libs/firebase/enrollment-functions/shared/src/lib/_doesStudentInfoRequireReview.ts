@@ -1,4 +1,3 @@
-import { StudentDbEntry } from "@sol/student/domain";
 import { StudentRepository } from "@sol/student/repository";
 import { ClassEnrollmentRepository } from "@sol/classes/enrollment/repository";
 import { Request } from 'firebase-functions/v2/https';
@@ -25,6 +24,7 @@ export async function _doesStudentInfoRequireReview(studentId: string, userConte
     const twoYearsAgo = new Date();
     twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2);
 
-    return (currentStudentDbEntry.last_reviewed_student_info_timestamp && new Date(currentStudentDbEntry.last_reviewed_student_info_timestamp) < twoYearsAgo) ||
-        earliestStudentEnrollmentTimestamp < twoYearsAgo.getTime() / 1000;
+    return currentStudentDbEntry.last_reviewed_student_info_timestamp
+        ? new Date(currentStudentDbEntry.last_reviewed_student_info_timestamp) < twoYearsAgo
+        : earliestStudentEnrollmentTimestamp < twoYearsAgo.getTime() / 1000;
 }
