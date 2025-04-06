@@ -62,7 +62,7 @@ export const enroll = Functions.endpoint
                 : []
             )
         ]);
-        const okay = hasConfirmedAccuracy || !('id' in updatedStudentDbEntry) || await _assertStudentInfoUpToDate(updatedStudentDbEntry, { request, response });
+        const okay = hasConfirmedAccuracy || !('id' in updatedStudentDbEntry) || await _assertStudentInfoUpToDate(updatedStudentDbEntry.id, { request, response });
 
         if (!okay) {
             response.status(400).send({
@@ -206,12 +206,12 @@ export const enroll = Functions.endpoint
 
 async function _assertStudentInfoUpToDate(
 
-    studentDbEntry: StudentDbEntry,
+    studentId: string,
     userContext: {
         request: Request;
         response: express.Response;
     }
 ) {
-    const isOutOfDate = await _doesStudentInfoRequireReview(studentDbEntry, userContext);
+    const isOutOfDate = await _doesStudentInfoRequireReview(studentId, userContext);
     return !isOutOfDate;
 }
