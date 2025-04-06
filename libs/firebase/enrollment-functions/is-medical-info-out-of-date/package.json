@@ -1,5 +1,5 @@
 {
-    "name": "@sol/firebase/enrollment-functions/is-medical-info-out-of-date",
+    "name": "@sol/firebase/enrollment-functions/does-student-info-require-review",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
