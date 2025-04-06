@@ -1,18 +1,12 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     inject,
-    Input,
-    Output,
+    input,
     ViewChild,
 } from '@angular/core';
-import {
-    BehaviorSubject,
-    combineLatest,
-    map,
-    ObservedValueOf,
-    shareReplay,
-} from 'rxjs';
+import { map } from 'rxjs';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
@@ -32,8 +26,10 @@ import { StudentForm } from '@sol/student/domain';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { MessagesModule } from 'primeng/messages';
-import { AsyncPipe, NgStyle } from '@angular/common';
+import { NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { outputFromObservable, toObservable } from '@angular/core/rxjs-interop';
+import { ConfirmAccuracyComponent } from '../confirm-accuracy/confirm-accuracy.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,7 +53,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
         DropdownModule,
         MessagesModule,
         ProgressSpinnerModule,
-        AsyncPipe,
+        ConfirmAccuracyComponent,
     ],
     selector: 'sol-student-info',
     templateUrl: './info.component.html',
@@ -67,8 +63,26 @@ export class InfoComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
 
     private readonly validationSuite = create(
-        (student: Partial<StudentForm>) => {
+        (
+            student: Partial<StudentForm>,
+            accuracyCheck: {
+                isOutOfDate: boolean;
+                accuracyConfirmations: Record<string, boolean>;
+            }
+        ) => {
             group('student', () => {
+                test(
+                    'confirmedAccuracyStudent',
+                    'Please confirm this section is up-to-date or make necessary changes',
+                    () => {
+                        if (accuracyCheck.isOutOfDate) {
+                            enforce(
+                                accuracyCheck.accuracyConfirmations['student']
+                            ).isTruthy();
+                        }
+                    }
+                );
+
                 test('firstName', 'First name is required', () => {
                     enforce(student.firstName).isNotEmpty();
                 });
@@ -95,6 +109,18 @@ export class InfoComponent {
             });
 
             group('contact', () => {
+                test(
+                    'confirmedAccuracyContact',
+                    'Please confirm this section is up-to-date or make necessary changes',
+                    () => {
+                        if (accuracyCheck.isOutOfDate) {
+                            enforce(
+                                accuracyCheck.accuracyConfirmations['contact']
+                            ).isTruthy();
+                        }
+                    }
+                );
+
                 test('contactFirstName', 'First name is required', () => {
                     enforce(student.contactFirstName).isNotEmpty();
                 });
@@ -129,6 +155,18 @@ export class InfoComponent {
             });
 
             group('privacy', () => {
+                test(
+                    'confirmedAccuracyPrivacy',
+                    'Please confirm this section is up-to-date or make necessary changes',
+                    () => {
+                        if (accuracyCheck.isOutOfDate) {
+                            enforce(
+                                accuracyCheck.accuracyConfirmations['privacy']
+                            ).isTruthy();
+                        }
+                    }
+                );
+
                 test('photography', 'Photography privacy is required', () => {
                     enforce(student.photography).isNotUndefined();
                 });
@@ -148,6 +186,18 @@ export class InfoComponent {
             });
 
             group('guardians', () => {
+                test(
+                    'confirmedAccuracyGuardians',
+                    'Please confirm this section is up-to-date or make necessary changes',
+                    () => {
+                        if (accuracyCheck.isOutOfDate) {
+                            enforce(
+                                accuracyCheck.accuracyConfirmations['guardians']
+                            ).isTruthy();
+                        }
+                    }
+                );
+
                 student.guardians?.forEach((guardian, i) => {
                     test(`guardian_${i}_name`, 'Name is required', () => {
                         enforce(guardian.guardianName).isNotEmpty();
@@ -182,6 +232,18 @@ export class InfoComponent {
             });
 
             group('pickup', () => {
+                test(
+                    'confirmedAccuracyPickup',
+                    'Please confirm this section is up-to-date or make necessary changes',
+                    () => {
+                        if (accuracyCheck.isOutOfDate) {
+                            enforce(
+                                accuracyCheck.accuracyConfirmations['pickup']
+                            ).isTruthy();
+                        }
+                    }
+                );
+
                 test('codeword', 'Codeword is required', () => {
                     enforce(student.pickupCodeword).isNotEmpty();
                 });
@@ -208,85 +270,85 @@ export class InfoComponent {
 
     authorized = true;
 
-    readonly isUpdatingExistingStudent$ = this.workflow.select(
+    readonly isUpdatingExistingStudent = this.workflow.selectSignal(
         (state) => state.enrollment.isStudentNew === false
     );
 
-    readonly student$ = this.workflow
-        .select((state) => state.enrollment.student)
-        .pipe(
-            map((student) => {
-                let age: string;
-                if (student?.birthdate) {
-                    const ageDiffMs =
-                        Date.now() - new Date(student.birthdate).getTime();
-                    const ageDate = new Date(ageDiffMs);
-                    age = Math.abs(ageDate.getUTCFullYear() - 1970).toString();
-                } else {
-                    age = '';
-                }
-                return {
-                    ...student,
-                    age,
-                };
-            })
-        );
-
-    private readonly interacted$ = new BehaviorSubject(false);
-
-    private readonly validation$ = this.student$.pipe(
-        map((student) => {
-            return this.validationSuite(student);
-        }),
-        shareReplay()
+    private readonly workflowStudent = this.workflow.selectSignal(
+        (state) => state.enrollment.student
     );
 
-    readonly errors$ = this.validation$.pipe(
-        map((validation) => {
-            return validation.getErrors();
-        })
+    readonly student = computed(() => {
+        const student = this.workflowStudent();
+        let age: string;
+        if (student?.birthdate) {
+            const ageDiffMs =
+                Date.now() - new Date(student.birthdate).getTime();
+            const ageDate = new Date(ageDiffMs);
+            age = Math.abs(ageDate.getUTCFullYear() - 1970).toString();
+        } else {
+            age = '';
+        }
+        return {
+            ...student,
+            age,
+        };
+    });
+
+    private readonly isOutOfDate = this.workflow.selectSignal(
+        (state) => state.doesStudentInfoRequireReview
     );
 
-    readonly hasErrorsByGroup$ = combineLatest([
-        this.validation$,
-        this.interacted$,
-    ]).pipe(
-        map(([validation, interacted]) => {
-            return interacted
-                ? Object.assign(
-                      {},
-                      ...Object.keys(validation.groups).map((group) => ({
-                          [group]: !!Object.values(
-                              validation.getErrorsByGroup(group)
-                          ).find((field) => field.length > 0),
-                      }))
-                  )
-                : {};
-        })
+    readonly accuracyConfirmations = this.workflow.selectSignal(
+        (state) => state.accuracyConfirmations
     );
 
-    readonly viewModel$ = combineLatest([
-        this.student$,
-        this.errors$,
-        this.interacted$,
-        this.hasErrorsByGroup$,
-    ]).pipe(
-        map(([student, errors, interacted, hasErrorsByGroup]) => {
-            return {
-                student,
-                errors: interacted ? errors : {},
-                hasErrorsByGroup,
-            };
-        })
-    );
+    private readonly validation = computed(() => {
+        return this.validationSuite(this.student(), {
+            isOutOfDate: this.isOutOfDate(),
+            accuracyConfirmations: this.accuracyConfirmations(),
+        });
+    });
 
-    @Input() set interacted(value: boolean) {
-        this.interacted$.next(value);
-    }
-    @Input() isStudentLoading = false;
+    readonly errors = computed(() => {
+        return this.validation().getErrors();
+    });
 
-    @Output() validityChange = this.errors$.pipe(
-        map((errors) => Object.keys(errors).length === 0)
+    readonly hasErrorsByGroup = computed(() => {
+        const validation = this.validation();
+        const interacted = this.interacted();
+        return interacted
+            ? Object.assign(
+                  {},
+                  ...Object.keys(validation.groups).map((group) => ({
+                      [group]: !!Object.values(
+                          validation.getErrorsByGroup(group)
+                      ).find((field) => field.length > 0),
+                  }))
+              )
+            : {};
+    });
+
+    readonly viewModel = computed(() => {
+        const student = this.student();
+        const errors = this.errors();
+        const interacted = this.interacted();
+        const hasErrorsByGroup = this.hasErrorsByGroup();
+        return {
+            student,
+            errors: interacted ? errors : {},
+            hasErrorsByGroup,
+        };
+    });
+
+    readonly interacted = input<boolean>(false);
+
+    readonly isStudentLoading = input<boolean>(false);
+
+    readonly validityChange = outputFromObservable(
+        toObservable(this.errors).pipe(
+            map((errors) => Object.keys(errors).length === 0)
+        )
     );
 
     readonly yesNoOptions = [
@@ -316,7 +378,16 @@ export class InfoComponent {
 
     @ViewChild('op') op!: OverlayPanel;
 
-    updateStudentInfo(info: ObservedValueOf<typeof this.student$>): void {
+    sectionConfirmationChanged(sectionName: string, confirmed: boolean) {
+        this.workflow.patchState((s) => ({
+            accuracyConfirmations: {
+                ...s.accuracyConfirmations,
+                [sectionName]: confirmed,
+            },
+        }));
+    }
+
+    updateStudentInfo(info: ReturnType<typeof this.student>): void {
         this.workflow.patchState((s) => ({
             enrollment: {
                 ...s.enrollment,

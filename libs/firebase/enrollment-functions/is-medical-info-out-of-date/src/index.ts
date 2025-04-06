@@ -1,1 +1,1 @@
-export { isMedicalInfoOutOfDate } from './lib/is-medical-info-out-of-date';
+export { doesStudentInfoRequireReview } from './lib/does-student-info-require-review';

@@ -111,6 +111,10 @@ export class ClassEnrollmentComponent {
         filter((email): email is string => !!email)
     );
 
+    readonly accuracyConfirmations = this.store.selectSignal(
+        (state) => state.accuracyConfirmations
+    );
+
     readonly isStudentLoading = this.store.isStudentLoading;
 
     readonly earlyBirdEnd = Date.parse('2023-04-01T23:59:59.999Z');

@@ -28,4 +28,4 @@ export { fullUnitsAndPaths } from '@sol/firebase/enrollment-functions/full-units
 export { getCompletedUnits } from '@sol/firebase/enrollment-functions/get-completed-units';
 export { updateCompletedUnits } from '@sol/firebase/enrollment-functions/update-completed-units';
 export { getStudentCompletedUnits } from '@sol/firebase/enrollment-functions/get-student-completed-units';
-export { isMedicalInfoOutOfDate } from '@sol/firebase/enrollment-functions/is-medical-info-out-of-date';
+export { doesStudentInfoRequireReview } from '@sol/firebase/enrollment-functions/is-medical-info-out-of-date';

@@ -42,9 +42,9 @@ type State = {
     };
     isLoadingDiscounts: boolean;
     isLoadingStudent: boolean;
-    // TODO: student, not just medical, info
-    isMedicalInfoOutOfDate: boolean;
+    doesStudentInfoRequireReview: boolean;
     hasAcknowledgedOutOfDate: boolean;
+    accuracyConfirmations: { [item: string]: boolean };
     draftEnrollment: Partial<Enrollment> | undefined;
 };
 
@@ -52,8 +52,9 @@ const initialState: State = {
     status: 'draft' as const,
     randomValueThatResetsPaymentCollector: Math.random().toString(),
     draftEnrollment: undefined,
-    isMedicalInfoOutOfDate: false,
+    doesStudentInfoRequireReview: false,
     hasAcknowledgedOutOfDate: false,
+    accuracyConfirmations: {},
     enrollment: {
         selectedClasses: [],
         userCostsToSelectedClassIds: {},
@@ -299,14 +300,17 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
             filter((student) => !!student?.id),
             switchMap((student) => {
                 return this.functions
-                    .call<{ isOutOfDate: boolean }>('isMedicalInfoOutOfDate', {
-                        student,
-                    })
+                    .call<{ isOutOfDate: boolean }>(
+                        'doesStudentInfoRequireReview',
+                        {
+                            student,
+                        }
+                    )
                     .pipe(
                         RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                         tap(({ isOutOfDate }) => {
                             this.patchState({
-                                isMedicalInfoOutOfDate: isOutOfDate,
+                                doesStudentInfoRequireReview: isOutOfDate,
                             });
                         })
                     );

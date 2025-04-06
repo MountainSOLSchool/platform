@@ -1,8 +1,8 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { StudentForm } from '@sol/student/domain';
-import { _assertUserCanManageStudent, _isMedicalInfoOutOfDate, _mapStudentFormToStudentDbEntry } from '@sol/firebase/enrollment-functions/shared';
+import { _assertUserCanManageStudent, _doesStudentInfoRequireReview, _mapStudentFormToStudentDbEntry } from '@sol/firebase/enrollment-functions/shared';
 
-export const isMedicalInfoOutOfDate = Functions.endpoint.handle<{
+export const doesStudentInfoRequireReview = Functions.endpoint.handle<{
     student: StudentForm;
 }>(
     async (request, response) => {
@@ -24,7 +24,7 @@ export const isMedicalInfoOutOfDate = Functions.endpoint.handle<{
         const updatedStudentDbEntry = _mapStudentFormToStudentDbEntry(student);
 
         response.send({
-            isOutOfDate: 'id' in updatedStudentDbEntry && await _isMedicalInfoOutOfDate(updatedStudentDbEntry)
+            isOutOfDate: 'id' in updatedStudentDbEntry && await _doesStudentInfoRequireReview(updatedStudentDbEntry)
         });
     }
 );

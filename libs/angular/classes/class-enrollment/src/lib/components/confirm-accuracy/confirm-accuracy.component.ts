@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, model } from '@angular/core';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
+import { MessagesComponent } from '@sol/form/validity';
 
 @Component({
     standalone: true,
@@ -13,7 +14,8 @@ import { FormsModule } from '@angular/forms';
             <div class="flex align-items-center">
                 <p-checkbox
                     [binary]="true"
-                    [(ngModel)]="sectionConfirmed"
+                    [ngModel]="sectionConfirmed()"
+                    (ngModelChange)="sectionConfirmed.set($event)"
                     inputId="section-{{ sectionId }}-confirmed"
                     [required]="true"
                 >
@@ -25,26 +27,21 @@ import { FormsModule } from '@angular/forms';
                     I have reviewed this section and confirm it is up-to-date
                 </label>
             </div>
-            @if (showValidationError) {
-                <small class="p-error block mt-2">
-                    Please confirm this section is up-to-date or make necessary
-                    changes
-                </small>
-            }
+            <sol-messages [messages]="messages()"></sol-messages>
         </div>
     }`,
-    imports: [CheckboxModule, FormsModule],
+    imports: [CheckboxModule, FormsModule, MessagesComponent],
 })
 export class ConfirmAccuracyComponent {
-    #workflow = inject(EnrollmentWorkflowStore);
+    readonly #workflow = inject(EnrollmentWorkflowStore);
 
     readonly isOutOfDate = this.#workflow.selectSignal(
-        (state) => state.isMedicalInfoOutOfDate
+        (state) => state.doesStudentInfoRequireReview
     );
 
-    sectionConfirmed = false;
+    readonly sectionConfirmed = model.required<boolean>();
 
-    showValidationError = true;
+    readonly messages = input<Array<string>>([]);
 
     readonly sectionId = Math.random();
 }

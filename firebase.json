@@ -117,8 +117,8 @@
                     "function": "fullUnitsAndPaths"
                 },
                 {
-                    "source": "/isMedicalInfoOutOfDate",
-                    "function": "isMedicalInfoOutOfDate"
+                    "source": "/doesStudentInfoRequireReview",
+                    "function": "doesStudentInfoRequireReview"
                 },
                 {
                     "source": "**",

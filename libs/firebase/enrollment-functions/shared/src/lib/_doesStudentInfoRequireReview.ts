@@ -2,7 +2,7 @@ import { StudentDbEntry } from "@sol/student/domain";
 import { StudentRepository } from "@sol/student/repository";
 import { isEqual } from "lodash";
 
-export async function _isMedicalInfoOutOfDate(studentDbEntry: StudentDbEntry): Promise<boolean> {
+export async function _doesStudentInfoRequireReview(studentDbEntry: StudentDbEntry): Promise<boolean> {
     const medicalInfoFields: Array<keyof StudentDbEntry> = [
         'emergency_contacts',
         'has_life_threatening_allergies',

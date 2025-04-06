@@ -1,18 +1,11 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    computed,
     inject,
-    Input,
-    Output,
+    input,
 } from '@angular/core';
-import {
-    BehaviorSubject,
-    combineLatest,
-    filter,
-    map,
-    ObservedValueOf,
-    shareReplay,
-} from 'rxjs';
+import { map } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
@@ -32,7 +25,7 @@ import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { MessagesModule } from 'primeng/messages';
 import { AsyncPipe, NgStyle } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { outputFromObservable, toObservable } from '@angular/core/rxjs-interop';
 import { ConfirmAccuracyComponent } from '../confirm-accuracy/confirm-accuracy.component';
 
 @Component({
@@ -77,8 +70,26 @@ export class MedicalComponent {
     ];
 
     private readonly validationSuite = create(
-        (student: Partial<StudentForm>) => {
+        (
+            student: Partial<StudentForm>,
+            accuracyCheck: {
+                isOutOfDate: boolean;
+                accuracyConfirmations: Record<string, boolean>;
+            }
+        ) => {
             group('contacts', () => {
+                test(
+                    'confirmedAccuracyContacts',
+                    'Please confirm this section is up-to-date or make necessary changes',
+                    () => {
+                        if (accuracyCheck.isOutOfDate) {
+                            enforce(
+                                accuracyCheck.accuracyConfirmations['contacts']
+                            ).isTruthy();
+                        }
+                    }
+                );
+
                 student.emergencyContacts?.forEach((contact, i) => {
                     test(`contact_${i}_name`, 'Name is required', () => {
                         enforce(contact.name).isNotEmpty();
@@ -98,6 +109,18 @@ export class MedicalComponent {
                 });
             });
             group('health', () => {
+                test(
+                    'confirmedAccuracyHealth',
+                    'Please confirm this section is up-to-date or make necessary changes',
+                    () => {
+                        if (accuracyCheck.isOutOfDate) {
+                            enforce(
+                                accuracyCheck.accuracyConfirmations['health']
+                            ).isTruthy();
+                        }
+                    }
+                );
+
                 test('weight', 'Weight is required', () => {
                     enforce(student.weightImperial).isNotEmpty();
                 });
@@ -175,10 +198,6 @@ export class MedicalComponent {
         }
     );
 
-    readonly isOutOfDate = this.workflow.selectSignal(
-        (s) => s.isMedicalInfoOutOfDate
-    );
-
     readonly lifeThreateningOptions = [
         { name: 'My child has a life-threatening allergy', value: true },
         {
@@ -191,71 +210,67 @@ export class MedicalComponent {
         (state) => !state.enrollment.isStudentNew
     );
 
-    readonly student$ = this.workflow
-        .select((state) => state.enrollment.student)
-        .pipe(map((student) => student ?? {}));
-
-    private readonly interacted$ = new BehaviorSubject(false);
-
-    private readonly validation$ = this.student$.pipe(
-        filter((student): student is StudentForm => !!student),
-        map((student) => {
-            return this.validationSuite(student);
-        }),
-        shareReplay()
+    readonly workflowStudent = this.workflow.selectSignal(
+        (state) => state.enrollment.student
     );
 
-    readonly errors$ = this.validation$.pipe(
-        map((validation) => {
-            return validation.getErrors();
-        })
+    readonly student = computed(() => {
+        return this.workflowStudent() ?? {};
+    });
+
+    readonly isOutOfDate = this.workflow.selectSignal(
+        (state) => state.doesStudentInfoRequireReview
     );
 
-    readonly hasErrorsByGroup$ = combineLatest([
-        this.validation$,
-        this.interacted$,
-    ]).pipe(
-        map(([validation, interacted]) => {
-            return interacted
-                ? Object.assign(
-                      {},
-                      ...Object.keys(validation.groups).map((group) => ({
-                          [group]: !!Object.values(
-                              validation.getErrorsByGroup(group)
-                          ).find((field) => field.length > 0),
-                      }))
-                  )
-                : {};
-        })
+    readonly accuracyConfirmations = this.workflow.selectSignal(
+        (state) => state.accuracyConfirmations
     );
 
-    readonly viewModel$ = combineLatest([
-        this.student$,
-        this.errors$,
-        this.interacted$,
-        this.hasErrorsByGroup$,
-    ]).pipe(
-        map(([student, errors, interacted, hasErrorsByGroup]) => {
-            return {
-                student,
-                errors: interacted ? errors : {},
-                hasErrorsByGroup,
-            };
-        })
-    );
+    private readonly validation = computed(() => {
+        return this.validationSuite(this.student(), {
+            isOutOfDate: this.isOutOfDate(),
+            accuracyConfirmations: this.accuracyConfirmations(),
+        });
+    });
 
-    @Input() set interacted(value: boolean) {
-        this.interacted$.next(value);
-    }
-    @Input() isStudentLoading = false;
+    readonly errors = computed(() => {
+        return this.validation().getErrors();
+    });
 
-    @Output() validityChange = combineLatest([
-        this.errors$,
-        toObservable(this.isOutOfDate),
-    ]).pipe(
-        map(
-            ([errors, isOutOfDate]) =>
-                !isOutOfDate && Object.keys(errors).length === 0
+    readonly hasErrorsByGroup = computed(() => {
+        const interacted = this.interacted();
+        const validation = this.validation();
+        return interacted
+            ? Object.assign(
+                  {},
+                  ...Object.keys(validation.groups).map((group) => ({
+                      [group]: !!Object.values(
+                          validation.getErrorsByGroup(group)
+                      ).find((field) => field.length > 0),
+                  }))
+              )
+            : {};
+    });
+
+    readonly viewModel = computed(() => {
+        const student = this.student();
+        const errors = this.errors();
+        const interacted = this.interacted();
+        const hasErrorsByGroup = this.hasErrorsByGroup();
+        return {
+            student,
+            errors: interacted ? errors : {},
+            hasErrorsByGroup,
+        };
+    });
+
+    readonly interacted = input(false);
+
+    readonly isStudentLoading = input(false);
+
+    readonly validityChange = outputFromObservable(
+        toObservable(this.errors).pipe(
+            map((errors) => Object.keys(errors).length === 0)
         )
     );
 
@@ -263,9 +278,16 @@ export class MedicalComponent {
         return index;
     }
 
-    updateStudentMedicalInfo(
-        info: ObservedValueOf<typeof this.student$>
-    ): void {
+    sectionConfirmationChanged(sectionName: string, confirmed: boolean) {
+        this.workflow.patchState((s) => ({
+            accuracyConfirmations: {
+                ...s.accuracyConfirmations,
+                [sectionName]: confirmed,
+            },
+        }));
+    }
+
+    updateStudentMedicalInfo(info: ReturnType<typeof this.student>): void {
         this.workflow.patchState(({ enrollment }) => ({
             enrollment: {
                 ...enrollment,

@@ -1,4 +1,4 @@
-@if ((isUpdatingExistingStudent$ | async) === true) {
+@if (isUpdatingExistingStudent() === true) {
     <p-messages
     [enableService]="false"
     severity="info"
@@ -12,14 +12,15 @@
     </ng-template>
 </p-messages>
 }
-@if (isStudentLoading) {
+@if (isStudentLoading()) {
     <div style="width: 100%; margin-top: 1rem">
         <div style="margin-left: auto; margin-right: auto; width: fit-content">
             <p-progressSpinner></p-progressSpinner>
         </div>
     </div>
 } @else {
-    @let vm = viewModel$ | async;
+    @let vm = viewModel();
+    @let sectionConfirmation = accuracyConfirmations();
     @if (vm) {
         <p-accordion>
             <p-accordionTab [selected]="true">
@@ -36,6 +37,7 @@
                     </div>
                 </ng-template>
                 <form>
+                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['student']" [messages]="vm.errors['confirmedAccuracyStudent']" (sectionConfirmedChange)="sectionConfirmationChanged('student', $event)"></sol-confirm-accuracy>
                     <div class="p-fluid">
                         <div class="formgrid grid">
                             <div class="field col-12 md:col-6">
@@ -119,7 +121,7 @@
                                         id="lastName"
                                         name="lastName"
                                         pInputText
-                                        [solValid]="!vm.errors['firstName']"
+                                        [solValid]="!vm.errors['lastName']"
                                         [(ngModel)]="vm.student.lastName"
                                         (ngModelChange)="
                                             updateStudentInfo(vm.student)
@@ -292,6 +294,7 @@
                     </div>
                 </ng-template>
                 <form>
+                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['contact']"  [messages]="vm.errors['confirmedAccuracyContact']" (sectionConfirmedChange)="sectionConfirmationChanged('contact', $event)"></sol-confirm-accuracy>
                     <div class="p-fluid">
                         <!-- fields for primary contact first and last name -->
                         <div class="formgrid grid">
@@ -464,6 +467,7 @@
                 </form>
             </p-accordionTab>
             <p-accordionTab>
+                <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['privacy']" [messages]="vm.errors['confirmedAccuracyPrivacy']" (sectionConfirmedChange)="sectionConfirmationChanged('privacy', $event)"></sol-confirm-accuracy>
                 <ng-template pTemplate="header"
                     >
                     @let valid = !vm.hasErrorsByGroup['privacy'];
@@ -575,6 +579,7 @@
                     </div>
                 </ng-template>
                 <form>
+                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['guardians']" [messages]="vm.errors['confirmedAccuracyGuardians']" (sectionConfirmedChange)="sectionConfirmationChanged('guardians', $event)"></sol-confirm-accuracy>
                     <div class="p-fluid">
                         <h3>Parent/Guardian</h3>
                         @for (
@@ -757,6 +762,7 @@
                     </div>
                 </ng-template>
                 <form>
+                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['pickup']" [messages]="vm.errors['confirmedAccuracyPickup']" (sectionConfirmedChange)="sectionConfirmationChanged('pickup', $event)"></sol-confirm-accuracy>
                     <div class="p-fluid">
                         <p>
                             What code word should we ask for when picking up your

@@ -11,7 +11,7 @@ import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
 import { Semester } from '@sol/firebase/classes/semester';
-import { _assertUserCanManageStudent, _getClasses, _getClassGroupsFromClasses, _isMedicalInfoOutOfDate, _mapStudentFormToStudentDbEntry } from '@sol/firebase/enrollment-functions/shared';
+import { _assertUserCanManageStudent, _getClasses, _getClassGroupsFromClasses, _doesStudentInfoRequireReview, _mapStudentFormToStudentDbEntry } from '@sol/firebase/enrollment-functions/shared';
 import * as express from 'express';
 
 
@@ -192,7 +192,7 @@ async function _assertMedicalInfoUpToDate(
     response: express.Response,
     studentDbEntry: StudentDbEntry
 ) {
-    const isOutOfDate = await _isMedicalInfoOutOfDate(studentDbEntry);
+    const isOutOfDate = await _doesStudentInfoRequireReview(studentDbEntry);
 
     if (isOutOfDate) {
         response.status(400).send({
