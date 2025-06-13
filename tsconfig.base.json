@@ -11,10 +11,7 @@
         "importHelpers": true,
         "target": "es2022",
         "module": "esnext",
-        "lib": [
-            "es2022",
-            "dom"
-        ],
+        "lib": ["es2022", "dom"],
         "skipLibCheck": true,
         "skipDefaultLibCheck": true,
         "baseUrl": ".",
@@ -23,9 +20,7 @@
             "@sharakai/use-redux-observable-epic": [
                 "libs/react/use-redux-observable-epic/src/index.ts"
             ],
-            "@sol/account": [
-                "libs/angular/account/src/index.ts"
-            ],
+            "@sol/account": ["libs/angular/account/src/index.ts"],
             "@sol/admin/class-printouts": [
                 "libs/angular/admin/class-printouts/src/index.ts"
             ],
@@ -41,27 +36,17 @@
             "@sol/angular/classes/semester-list": [
                 "libs/angular/classes/class-semester-list/src/index.ts"
             ],
-            "@sol/angular/dialog": [
-                "libs/angular/dialog/src/index.ts"
-            ],
+            "@sol/angular/dialog": ["libs/angular/dialog/src/index.ts"],
             "@sol/angular/firebase/adapter": [
                 "libs/angular/firebase/adapter/src/index.ts"
             ],
-            "@sol/angular/request": [
-                "libs/angular/request/src/index.ts"
-            ],
+            "@sol/angular/request": ["libs/angular/request/src/index.ts"],
             "@sol/auth/interceptor": [
                 "libs/angular/auth/interceptor/src/index.ts"
             ],
-            "@sol/auth/login": [
-                "libs/angular/auth/login/src/index.ts"
-            ],
-            "@sol/auth/user": [
-                "libs/angular/auth/user/src/index.ts"
-            ],
-            "@sol/calendar": [
-                "libs/angular/calendar/calendar/src/index.ts"
-            ],
+            "@sol/auth/login": ["libs/angular/auth/login/src/index.ts"],
+            "@sol/auth/user": ["libs/angular/auth/user/src/index.ts"],
+            "@sol/calendar": ["libs/angular/calendar/calendar/src/index.ts"],
             "@sol/classes/calendar": [
                 "libs/angular/classes/class-calendar/src/index.ts"
             ],
@@ -83,9 +68,7 @@
             "@sol/firebase/classes/semester": [
                 "libs/firebase/classes/semester/src/index.ts"
             ],
-            "@sol/firebase/database": [
-                "libs/firebase/database/src/index.ts"
-            ],
+            "@sol/firebase/database": ["libs/firebase/database/src/index.ts"],
             "@sol/firebase/enrollment-functions/add-email-to-solstice-list": [
                 "libs/firebase/enrollment-functions/add-email-to-solstice-list/src/index.ts"
             ],
@@ -119,6 +102,9 @@
             "@sol/firebase/enrollment-functions/delete-enrollment-draft": [
                 "libs/firebase/enrollment-functions/delete-enrollment-draft/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/does-student-info-require-review": [
+                "libs/firebase/enrollment-functions/does-student-info-require-review/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/emails": [
                 "libs/firebase/enrollment-functions/emails/src/index.ts"
             ],
@@ -142,9 +128,6 @@
             ],
             "@sol/firebase/enrollment-functions/historical-semesters": [
                 "libs/firebase/enrollment-functions/historical-semesters/src/index.ts"
-            ],
-            "@sol/firebase/enrollment-functions/does-student-info-require-review": [
-                "libs/firebase/enrollment-functions/does-student-info-require-review/src/index.ts"
             ],
             "@sol/firebase/enrollment-functions/load-enrollment-draft": [
                 "libs/firebase/enrollment-functions/load-enrollment-draft/src/index.ts"
@@ -185,60 +168,34 @@
             "@sol/firebase/enrollment-functions/update-enrollment-draft": [
                 "libs/firebase/enrollment-functions/update-enrollment-draft/src/index.ts"
             ],
-            "@sol/firebase/functions": [
-                "libs/firebase/functions/src/index.ts"
-            ],
+            "@sol/firebase/functions": ["libs/firebase/functions/src/index.ts"],
             "@sol/firebase/functions-api": [
                 "libs/firebase/functions-api/src/index.ts"
             ],
             "@sol/firebase/remote-config-api": [
                 "libs/firebase/remote-config-api/src/index.ts"
             ],
-            "@sol/form/validity": [
-                "libs/angular/form/validity/src/index.ts"
-            ],
-            "@sol/header": [
-                "libs/angular/header/src/index.ts"
-            ],
-            "@sol/paths": [
-                "libs/angular/paths/src/index.ts"
-            ],
-            "@sol/payments/braintree": [
-                "libs/firebase/braintree/src/index.ts"
-            ],
+            "@sol/form/validity": ["libs/angular/form/validity/src/index.ts"],
+            "@sol/header": ["libs/angular/header/src/index.ts"],
+            "@sol/paths": ["libs/angular/paths/src/index.ts"],
+            "@sol/payments/braintree": ["libs/firebase/braintree/src/index.ts"],
             "@sol/payments/braintree-client": [
                 "libs/angular/braintree-client/src/index.ts"
             ],
-            "@sol/payments/transactions": [
-                "libs/ts/transactions/src/index.ts"
-            ],
-            "@sol/react/auth": [
-                "libs/react/auth/src/index.ts"
-            ],
-            "@sol/react/request": [
-                "libs/react/request/src/index.ts"
-            ],
-            "@sol/record/domain": [
-                "libs/ts/record/domain/src/index.ts"
-            ],
-            "@sol/student/domain": [
-                "libs/ts/student/domain/src/index.ts"
-            ],
-            "@sol/student/import": [
-                "libs/ts/student/import/src/index.ts"
-            ],
+            "@sol/payments/transactions": ["libs/ts/transactions/src/index.ts"],
+            "@sol/react/auth": ["libs/react/auth/src/index.ts"],
+            "@sol/react/request": ["libs/react/request/src/index.ts"],
+            "@sol/record/domain": ["libs/ts/record/domain/src/index.ts"],
+            "@sol/student/domain": ["libs/ts/student/domain/src/index.ts"],
+            "@sol/student/import": ["libs/ts/student/import/src/index.ts"],
             "@sol/student/reports": [
                 "libs/firebase/student/reports/src/index.ts"
             ],
             "@sol/student/repository": [
                 "libs/firebase/student/repository/src/index.ts"
             ],
-            "@sol/table/domain": [
-                "libs/ts/table/domain/src/index.ts"
-            ],
-            "@sol/table/html": [
-                "libs/ts/table/html/src/index.ts"
-            ],
+            "@sol/table/domain": ["libs/ts/table/domain/src/index.ts"],
+            "@sol/table/html": ["libs/ts/table/html/src/index.ts"],
             "@sol/ts/firebase/adapter": [
                 "libs/ts/firebase/adapter/src/index.ts"
             ],
@@ -247,8 +204,5 @@
             ]
         }
     },
-    "exclude": [
-        "node_modules",
-        "tmp"
-    ]
+    "exclude": ["node_modules", "tmp"]
 }

@@ -4,12 +4,11 @@
     "projectType": "application",
     "sourceRoot": "apps/enrollment-portal/src",
     "prefix": "sol",
+    "tags": [],
     "targets": {
         "build": {
             "executor": "@angular-devkit/build-angular:browser",
-            "outputs": [
-                "{options.outputPath}"
-            ],
+            "outputs": ["{options.outputPath}"],
             "options": {
                 "outputPath": "dist/apps/enrollment-portal",
                 "index": "apps/enrollment-portal/src/index.html",
@@ -79,7 +78,8 @@
                     "buildTarget": "enrollment-portal:build:development"
                 }
             },
-            "defaultConfiguration": "development"
+            "defaultConfiguration": "development",
+            "continuous": true
         },
         "extract-i18n": {
             "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -89,19 +89,14 @@
         },
         "lint": {
             "executor": "@nx/eslint:lint",
-            "outputs": [
-                "{options.outputFile}"
-            ]
+            "outputs": ["{options.outputFile}"]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": [
-                "{workspaceRoot}/coverage/apps/enrollment-portal"
-            ],
+            "outputs": ["{workspaceRoot}/coverage/apps/enrollment-portal"],
             "options": {
                 "jestConfig": "apps/enrollment-portal/jest.config.ts"
             }
         }
-    },
-    "tags": []
+    }
 }

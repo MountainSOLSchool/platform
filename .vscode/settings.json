@@ -8,5 +8,6 @@
             "<node_internals>/**",
             "${workspaceFolder}/node_modules/**"
         ]
-    }
+    },
+    "nxConsole.generateAiAgentRules": true
 }
