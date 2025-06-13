@@ -3,9 +3,18 @@
     "compilerOptions": {
         "outDir": "../../../../dist/out-tsc",
         "declaration": true,
-        "types": ["node"],
-        "moduleResolution": "bundler"
+        "types": [
+            "node"
+        ],
+        "moduleResolution": "bundler",
+        "module": "esnext"
     },
-    "include": ["src/**/*.ts"],
-    "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "jest.config.ts",
+        "src/**/*.spec.ts",
+        "src/**/*.test.ts"
+    ]
 }
