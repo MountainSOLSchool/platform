@@ -25,7 +25,7 @@ export class TshirtsComponent {
     readonly #classesSemesterListService = inject(ClassesSemesterListService);
 
     readonly semesterOptions = rxResource({
-        loader: () =>
+        stream: () =>
             this.#classesSemesterListService
                 .getAllSemestersWithCurrentFirst()
                 .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
@@ -36,8 +36,8 @@ export class TshirtsComponent {
     );
 
     readonly students = rxResource({
-        request: () => this.selectedSemester(),
-        loader: ({ request: selectedSemester }) =>
+        params: () => this.selectedSemester(),
+        stream: ({ params: selectedSemester }) =>
             this.#functionsApi
                 .call<{
                     list: Array<{

@@ -29,7 +29,7 @@ export class ManageAccountComponent {
     readonly #userService = inject(UserService);
 
     readonly email = rxResource({
-        loader: () =>
+        stream: () =>
             this.#userService.getUser().pipe(map((user) => user?.email)),
     });
 

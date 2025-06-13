@@ -34,7 +34,7 @@ export class DashboardComponent {
     readonly #classesSemesterListService = inject(ClassesSemesterListService);
 
     readonly semesters = rxResource({
-        loader: () =>
+        stream: () =>
             this.#classesSemesterListService
                 .getEnrollableSemesters()
                 .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
@@ -46,8 +46,8 @@ export class DashboardComponent {
     });
 
     readonly semesterEnrollmentChartData = rxResource({
-        request: () => this.selectedSemester(),
-        loader: ({ request: semesterId }) => {
+        params: () => this.selectedSemester(),
+        stream: ({ params: semesterId }) => {
             if (!semesterId) {
                 return of(undefined);
             }

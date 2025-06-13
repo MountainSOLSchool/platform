@@ -98,7 +98,7 @@ export class ClassPrintoutsDisplayComponent {
     readonly activeTabIndex = signal(0);
 
     readonly printoutsContent = rxResource({
-        loader: () =>
+        stream: () =>
             this.#formsService.downloadClassForms(
                 this.#data.classId,
                 this.#data.semesterId

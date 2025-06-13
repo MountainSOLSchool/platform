@@ -1,9 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    inject,
-    ResourceStatus,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { SemesterEnrollment } from '@sol/classes/domain';
 import { rxResource } from '@angular/core/rxjs-interop';
@@ -15,13 +10,13 @@ import { EnrollmentSkeletonComponent } from './enrollment-skeleton.component';
     selector: 'sol-account-enrollments',
     template: `<h2>Enrollments</h2>
         @switch (enrollments.status()) {
-            @case (rs.Loading) {
+            @case ('loading') {
                 <sol-enrollment-skeleton />
             }
-            @case (rs.Idle) {
+            @case ('idle') {
                 <sol-enrollment-skeleton />
             }
-            @case (rs.Error) {
+            @case ('error') {
                 <p>There was an error loading your enrollments.</p>
             }
             @default {
@@ -52,10 +47,8 @@ export class AccountEnrollmentsComponent {
     );
 
     readonly enrollments = rxResource({
-        loader: () => this.#accountEnrollmentsApiService.getAll(),
+        stream: () => this.#accountEnrollmentsApiService.getAll(),
     });
-
-    readonly rs = ResourceStatus;
 
     public sortEnrollments(
         enrollments: Array<SemesterEnrollment>

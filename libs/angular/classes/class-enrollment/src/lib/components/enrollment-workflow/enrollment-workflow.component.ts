@@ -126,7 +126,7 @@ export class ClassEnrollmentComponent {
     readonly showSecretAutofill$ = of(false);
 
     readonly shouldShowEventsStep = rxResource({
-        loader: () =>
+        stream: () =>
             this.remoteConfig.getValue('show_events_step').pipe(
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 map((value) => value.asBoolean())

@@ -41,7 +41,7 @@ export class ClassPrintoutsComponent implements OnInit {
     readonly #dialog = inject(Dialog);
 
     readonly semesters = rxResource({
-        loader: () =>
+        stream: () =>
             this.#classSemesterListService
                 .getAllSemestersWithCurrentFirst()
                 .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
@@ -52,8 +52,8 @@ export class ClassPrintoutsComponent implements OnInit {
     );
 
     readonly classRows = rxResource({
-        request: () => this.selectedSemester(),
-        loader: ({ request: selectedSemester }) =>
+        params: () => this.selectedSemester(),
+        stream: ({ params: selectedSemester }) =>
             this.#classListService
                 .getClassesBySemesterIds([selectedSemester])
                 .pipe(
