@@ -29,3 +29,4 @@ export { getCompletedUnits } from '@sol/firebase/enrollment-functions/get-comple
 export { updateCompletedUnits } from '@sol/firebase/enrollment-functions/update-completed-units';
 export { getStudentCompletedUnits } from '@sol/firebase/enrollment-functions/get-student-completed-units';
 export { doesStudentInfoRequireReview } from '@sol/firebase/enrollment-functions/does-student-info-require-review';
+export { studentInfoSheet } from '@sol/firebase/enrollment-functions/student-info-sheet';

@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-student-info-sheet",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/student-info-sheet/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-student-info-sheet --web",
+    "targets": {}
+}

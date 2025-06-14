@@ -27,6 +27,9 @@
             "@sol/angular/admin/enrollments": [
                 "libs/angular/admin/enrollments/src/index.ts"
             ],
+            "@sol/angular/admin/students": [
+                "libs/angular/admin/students/src/index.ts"
+            ],
             "@sol/angular/auth/firebase": [
                 "libs/angular/auth/firebase/src/index.ts"
             ],
@@ -158,6 +161,9 @@
             ],
             "@sol/firebase/enrollment-functions/student-health": [
                 "libs/firebase/enrollment-functions/student-health/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/student-info-sheet": [
+                "libs/firebase/enrollment-functions/student-info-sheet/src/index.ts"
             ],
             "@sol/firebase/enrollment-functions/tshirts": [
                 "libs/firebase/enrollment-functions/tshirts/src/index.ts"
