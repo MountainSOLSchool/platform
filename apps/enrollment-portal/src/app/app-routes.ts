@@ -55,6 +55,16 @@ export const appRoutes: Routes = [
                                             ),
                                     },
                                     {
+                                        path: 'students',
+                                        loadComponent: () =>
+                                            import(
+                                                '@sol/angular/admin/students'
+                                            ).then(
+                                                (m) =>
+                                                    m.SolAngularAdminStudentsComponent
+                                            ),
+                                    },
+                                    {
                                         path: 't-shirts',
                                         loadChildren: () =>
                                             import(
