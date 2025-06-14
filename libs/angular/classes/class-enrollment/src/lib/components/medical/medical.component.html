@@ -45,7 +45,7 @@
                             care of your child if you cannot be reached.
                         </p>
     
-                        @for (contact of vm.student.emergencyContacts; track trackByIndex; let i = $index; let last = $last) {
+                        @for (contact of vm.student.emergencyContacts; track trackByIndex(i); let i = $index; let last = $last) {
                             <div
                                 style="margin-bottom: 1rem"
                                 [ngStyle]="{
@@ -387,7 +387,7 @@
                             information for each medication.
                         </p>
     
-                        @for (medication of vm.student.medications; track trackByIndex; let i = $index; let last = $last) {
+                        @for (medication of vm.student.medications; track trackByIndex(i); let i = $index; let last = $last) {
 
                             <div
                             style="margin-bottom: 1rem"

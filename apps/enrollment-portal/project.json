@@ -8,7 +8,9 @@
     "targets": {
         "build": {
             "executor": "@angular-devkit/build-angular:browser",
-            "outputs": ["{options.outputPath}"],
+            "outputs": [
+                "{options.outputPath}"
+            ],
             "options": {
                 "outputPath": "dist/apps/enrollment-portal",
                 "index": "apps/enrollment-portal/src/index.html",
@@ -30,7 +32,8 @@
                     "node_modules/primeflex/primeflex.css",
                     "node_modules/primeicons/primeicons.css",
                     "node_modules/primeng/resources/primeng.min.css",
-                    "node_modules/primeng/resources/themes/lara-light-blue/theme.css"
+                    "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+                    "apps/enrollment-portal/src/theme-colors.scss"
                 ],
                 "scripts": []
             },
@@ -89,11 +92,15 @@
         },
         "lint": {
             "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
+            "outputs": [
+                "{options.outputFile}"
+            ]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/apps/enrollment-portal"],
+            "outputs": [
+                "{workspaceRoot}/coverage/apps/enrollment-portal"
+            ],
             "options": {
                 "jestConfig": "apps/enrollment-portal/jest.config.ts"
             }

@@ -1,178 +1,176 @@
-<div
-    [ngStyle]="{
-        border: selected ? '.2rem solid #3c82f7' : '.2rem solid transparent',
-        'border-radius': '6px',
-        'border-top-right-radius': '80px',
-        'margin-bottom': '2em',
-        'box-sizing': 'border-box',
-        'margin-left': 'auto',
-        'margin-right': 'auto',
-        'min-width': '300px',
-        height: 'fit-content',
-    }"
->
+<mat-card class="program-card" [ngClass]="{'selected': selected}">
     @let classInfoValue = classInfo();
-    <p-card styleClass="class-card">
-        <ng-template pTemplate="header"></ng-template>
-        <div style="position: relative; margin-top: -2.5rem">
-            <div style="padding-right: 145px">
-                <h2>
-                    {{ classInfoValue.title
-                    }}{{ classInfoValue.pausedForEnrollment ? ' (Full)' : '' }}
-                </h2>
-            </div>
-            <div
-                [ngStyle]="{
-                    position: 'absolute',
-                    top: '-30px',
-                    right: '-25px',
-                    display: 'inline-block',
-                    width: '165px',
-                    height: '165px',
-                    background:
-                        'url(' +
-                        (classInfoValue.thumbnailUrl ?? fallbackImageUrl) +
-                        ')',
-                    'background-position': '50% 50%',
-                    'background-size': 'cover',
-                    'border-radius': '50%',
-                    filter: classInfoValue.pausedForEnrollment
-                        ? 'grayscale(100%)'
-                        : '',
-                    border: '3px solid ' + (selected ? '#3c82f7' : 'black'),
-                }"
-            ></div>
-        </div>
-        <div
-            class="flex flex-wrap align-items-center"
-            style="
-                margin-bottom: 1.5rem;
-                margin-top: 1rem;
-                gap: 3px;
-                padding-right: 145px;
-            "
-        >
-            <p-chip
-                [label]="classInfoValue.classDateTimes"
-                icon="pi pi-calendar"
-                styleClass="mr-2 custom-chip"
-            ></p-chip>
-            <p-chip
-                [label]="classInfoValue.weekday"
-                styleClass="mr-2 custom-chip"
-            ></p-chip>
-            <p-chip
-                [label]="classInfoValue.dailyTimes"
-                icon="pi pi-clock"
-                styleClass="mr-2 custom-chip"
-            ></p-chip>
-        </div>
-        <p>
-            <b>Class Type:</b>
-            {{ classInfoValue.classType }}<br />
-            <b>Grades:</b>
-            {{ classInfoValue.gradeRangeStart }}
-            -
-            {{ classInfoValue.gradeRangeEnd }}<br />
-            <b>Location:</b>
-            {{ classInfoValue.location }}<br />
-            @if (!classInfoValue.paymentRange) {
-                <b>Cost:</b>
-                ${{ classInfoValue.cost }}<br />
-            } @else {
-                <b>Sliding Scale Cost:</b>
-                ${{ classInfoValue.paymentRange.lowest }}-${{
-                    classInfoValue.paymentRange.highest
-                }}<br />
-            }
-            <b>Instructors:</b>
-            @for (
-                instructor of classInfoValue.instructors;
-                track instructor;
-                let isLast = $last
-            ) {
-                <span>
-                    {{ instructor.firstName }}
-                    {{ instructor.lastName }}{{ isLast ? '' : ', ' }}
-                </span>
-            }
-            <br />
-            <br />
-            <b>Description:</b>
-            <br />
-            <markdown>{{ classInfoValue.description }}</markdown>
-            <br />
-        </p>
-        <div style="margin-top: 2rem; margin-bottom: -1rem">
-            @if (classInfoValue.pausedForEnrollment) {
-                <div style="margin-bottom: 1rem">
-                    <b
-                        >This class is not accepting additional students at this
-                        time.</b
-                    >
+    
+    <!-- Header with background image and gradient overlay -->
+    <div class="card-header"
+         [style.background-image]="'url(' + (classInfoValue.thumbnailUrl ?? fallbackImageUrl) + ')'"
+         [ngClass]="{'grayscale': classInfoValue.pausedForEnrollment}">
+        <div class="header-overlay">
+            <h2 class="card-title">
+                {{ classInfoValue.title }}
+                @if (classInfoValue.pausedForEnrollment) {
+                    <span class="full-badge">Full</span>
+                }
+            </h2>
+            <div class="header-info">
+                <div class="date-info">
+                    <mat-icon>event</mat-icon>
+                    <span>{{ classInfoValue.classDateTimes }}</span>
                 </div>
-            }
-            <p-overlayPanel pAutoFocus #beforeSelectingForm>
-                @if (beforeSelectingForm.overlayVisible) {
-                    <sol-class-before-select-options-form
-                        [optionsByClass]="beforeSelectOptionsByClass()"
-                        (confirmed)="confirmed(beforeSelectingForm, $event)"
-                    ></sol-class-before-select-options-form>
+                @if (classInfoValue.weekday) {
+                    <div class="date-info">
+                        <mat-icon>today</mat-icon>
+                        <span>{{ classInfoValue.weekday }}</span>
+                    </div>
                 }
-            </p-overlayPanel>
-            @if (classInfoValue.forInformationOnly) {
-                Contact
-                <a href="mailto:info@mountainsol.org"
-                    >info&#64;mountainsol.org</a
-                >
-                for more information.
-            } @else {
-                @if (requiresPromptBeforeSelecting(classInfoValue)) {
-                    @if (!selected) {
-                        <p-button
-                            [disabled]="classInfoValue.pausedForEnrollment"
-                            label="Select"
-                            styleClass="p-button-outlined"
-                            icon="pi pi-plus"
-                            (click)="beforeSelectingForm.toggle($event)"
-                        ></p-button>
-                    } @else {
-                        <p-button
-                            [disabled]="classInfoValue.pausedForEnrollment"
-                            [label]="
-                                'Selected (' +
-                                (showOnlyAddedCost ? '+' : '') +
-                                '$' +
-                                (showOnlyAddedCost
-                                    ? classInfoValue.additionalCost
-                                    : (classInfoValue.userCost ??
-                                          classInfoValue.initialCost) +
-                                      classInfoValue.additionalCost) +
-                                ')'
-                            "
-                            styleClass="p-button-primary"
-                            icon="pi pi-check"
-                            (click)="deselected()"
-                        ></p-button>
-                    }
-                } @else {
-                    <p-toggleButton
-                        [disabled]="classInfoValue.pausedForEnrollment"
-                        [inputId]="'select' + classInfoValue.id"
-                        styleClass="p-button-primary"
-                        [onIcon]="'pi pi-check'"
-                        onLabel="Selected"
-                        [offIcon]="'pi pi-plus'"
-                        [offLabel]="
-                            classInfoValue.pausedForEnrollment
-                                ? 'Class Full'
-                                : 'Select'
-                        "
-                        [(ngModel)]="selected"
-                        (ngModelChange)="selectionToggled()"
-                    ></p-toggleButton>
-                }
-            }
+                <div class="date-info">
+                    <mat-icon>access_time</mat-icon>
+                    <span>{{ classInfoValue.dailyTimes }}</span>
+                </div>
+            </div>
         </div>
-    </p-card>
-</div>
+    </div>
+
+    <mat-card-content class="card-body">
+        <!-- Key details grid -->
+        <div class="details-grid">
+            <div class="detail-item">
+                <mat-icon color="primary">style</mat-icon>
+                <div class="detail-content">
+                    <span class="detail-label">Class Type</span>
+                    <span class="detail-value">{{ classInfoValue.classType }}</span>
+                </div>
+            </div>
+            
+            <div class="detail-item">
+                <mat-icon color="primary">school</mat-icon>
+                <div class="detail-content">
+                    <span class="detail-label">Grades</span>
+                    <span class="detail-value">
+                        @if (classInfoValue.gradeRangeStart && classInfoValue.gradeRangeEnd) {
+                            {{ classInfoValue.gradeRangeStart }} - {{ classInfoValue.gradeRangeEnd }}
+                        } @else {
+                            All Ages
+                        }
+                    </span>
+                </div>
+            </div>
+            
+            <div class="detail-item">
+                <mat-icon color="primary">place</mat-icon>
+                <div class="detail-content">
+                    <span class="detail-label">Location</span>
+                    <span class="detail-value">{{ classInfoValue.location }}</span>
+                </div>
+            </div>
+            
+            <div class="detail-item">
+                <mat-icon color="primary">payments</mat-icon>
+                <div class="detail-content">
+                    <span class="detail-label">Cost</span>
+                    <span class="detail-value">
+                        @if (!classInfoValue.paymentRange) {
+                            ${{ classInfoValue.cost }}
+                        } @else {
+                            ${{ classInfoValue.paymentRange.lowest }} - ${{ classInfoValue.paymentRange.highest }}
+                        }
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Instructors -->
+        <div class="instructors-section">
+            <h3 class="section-title">
+                <mat-icon>people</mat-icon>
+                Instructors
+            </h3>
+            <p class="instructor-names">
+                @for (instructor of classInfoValue.instructors; track instructor; let isLast = $last) {
+                    {{ instructor.firstName }} {{ instructor.lastName }}{{ isLast ? '' : ', ' }}
+                }
+            </p>
+        </div>
+
+        <!-- Description -->
+        <div class="description-section">
+            <h3 class="section-title">
+                <mat-icon>description</mat-icon>
+                About This Class
+            </h3>
+            <div class="description-content">
+                <markdown>{{ classInfoValue.description }}</markdown>
+            </div>
+        </div>
+    </mat-card-content>
+
+    <!-- Actions footer -->
+    <mat-card-actions class="card-actions">
+        @if (classInfoValue.pausedForEnrollment) {
+            <div class="enrollment-notice">
+                <mat-icon>info_outline</mat-icon>
+                <span>This class is not accepting additional students at this time.</span>
+            </div>
+        }
+
+        <p-overlayPanel pAutoFocus #beforeSelectingForm>
+            @if (beforeSelectingForm.overlayVisible) {
+                <sol-class-before-select-options-form
+                    [optionsByClass]="beforeSelectOptionsByClass()"
+                    (confirmed)="confirmed(beforeSelectingForm, $event)"
+                ></sol-class-before-select-options-form>
+            }
+        </p-overlayPanel>
+
+        @if (classInfoValue.forInformationOnly) {
+            <div class="info-only-notice">
+                <mat-icon>email</mat-icon>
+                Contact <a href="mailto:info@mountainsol.org">info&#64;mountainsol.org</a> for more information.
+            </div>
+        } @else {
+            @if (requiresPromptBeforeSelecting(classInfoValue)) {
+                @if (!selected) {
+                    <button mat-raised-button
+                            color="primary"
+                            class="select-button"
+                            [disabled]="classInfoValue.pausedForEnrollment"
+                            (click)="beforeSelectingForm.toggle($event)">
+                        <mat-icon>add_circle_outline</mat-icon>
+                        Select Class
+                    </button>
+                } @else {
+                    <button mat-raised-button
+                            color="accent"
+                            class="select-button selected-state"
+                            (click)="deselected()">
+                        <mat-icon>check_circle</mat-icon>
+                        Selected{{classCostLabel(showOnlyAddedCost
+                                ? classInfoValue.additionalCost
+                                : (classInfoValue.userCost ?? classInfoValue.initialCost) + classInfoValue.additionalCost, showOnlyAddedCost)}}
+                    </button>
+                }
+            } @else {
+                @if (!selected) {
+                    <button mat-raised-button
+                            color="primary"
+                            class="select-button"
+                            [disabled]="classInfoValue.pausedForEnrollment"
+                            (click)="selected = true; selectionToggled()">
+                        <mat-icon>add_circle_outline</mat-icon>
+                        {{ classInfoValue.pausedForEnrollment ? 'Class Full' : 'Select Class' }}
+                    </button>
+                } @else {
+                    <button mat-raised-button
+                            color="accent"
+                            class="select-button selected-state"
+                            (click)="selected = false; selectionToggled()">
+                        <mat-icon>check_circle</mat-icon>
+                        Selected
+                    </button>
+                }
+            }
+        }
+    </mat-card-actions>
+</mat-card>

@@ -272,7 +272,8 @@
                 ></i>
             </div>
         </div>
-        <div style="margin-top: 1rem" *rxLet="userEmail$; let email">
+        <div style="margin-top: 1rem">
+            @let email = userEmail$ | async;
             A confirmation email has been sent to
             <b>{{ email }}</b
             >.

@@ -1,36 +1,51 @@
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
+// Custom Theming for Angular Material v19+
+// Using the new Material 3 theming system
 @use '@angular/material' as mat;
-// Plus imports for other components in your app.
+@use './theme-colors' as colors; // Import your generated blue palettes
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat.elevation-classes();
-@include mat.app-background();
+// Define theme using the new M3 theming API
+html {
+    // Enable automatic light/dark mode switching based on user preference
+    color-scheme: light;
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$portal-primary: mat.m2-define-palette(mat.$m2-indigo-palette);
-$portal-accent: mat.m2-define-palette(mat.$m2-pink-palette, A200, A100, A400);
+    // Apply the theme using your custom blue palette
+    @include mat.theme((color: colors.$primary-palette, // Your custom blue (#3B82F6) palette
+            typography: Roboto, // Use Roboto font family
+            density: 0 // Standard density (0 to -5, where 0 is default)
+        ));
+}
 
-// The warn palette is optional (defaults to red).
-$portal-warn: mat.m2-define-palette(mat.$m2-red-palette);
+// Apply default background and text colors to the body
+body {
+    --mat-sys-surface: white;
+    color: var(--mat-sys-on-surface);
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$portal-theme: mat.m2-define-light-theme(
-    (
-        color: (
-            primary: $portal-primary,
-            accent: $portal-accent,
-            warn: $portal-warn,
-        ),
-    )
-);
+// Optional: If you want to ensure buttons match PrimeNG lara-light-blue exactly
+.mat-mdc-raised-button.mat-primary {
+    // These overrides ensure exact color matching with PrimeNG
+    --mdc-filled-button-container-color: #3B82F6;
+    --mdc-filled-button-label-text-color: white;
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include mat.all-component-themes($portal-theme);
+    &:hover {
+        --mdc-filled-button-hover-container-color: #2563EB;
+    }
+
+    &:active {
+        --mdc-filled-button-pressed-container-color: #1d4ed8;
+    }
+
+    &:disabled {
+        --mdc-filled-button-disabled-container-color: #e5e7eb;
+        --mdc-filled-button-disabled-label-text-color: #9ca3af;
+    }
+}
+
+// If you need the accent color to be different (like your current pink)
+// You can define a separate theme for specific components or sections
+.accent-theme {
+    @include mat.theme((color: mat.$magenta-palette, // Or use colors.$tertiary-palette from your generated file
+        ));
+}
