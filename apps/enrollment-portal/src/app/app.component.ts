@@ -13,7 +13,7 @@ import { ToastModule } from 'primeng/toast';
         </div>
         <footer style="padding: 10px; border-top: 1px solid gray">
             <p>
-                &#169; Mountain SOL 2023 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &#169; Mountain SOL 2025 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <a href="https://www.mountainsol.org/privacy-policy/"
                     >Privacy Policy</a
                 >

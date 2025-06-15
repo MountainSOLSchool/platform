@@ -123,8 +123,13 @@ export class StudentRepository {
     static async allStudentsOfAllTime(): Promise<Array<StudentDbEntry>> {
         const studentsCollection = this.database.collection('students');
 
-        const studentDocuments = await studentsCollection.listDocuments();
+        const students = await DatabaseUtility.fetchMatchingDocuments(
+            studentsCollection,
+            ['school', '>=', '']
+        );
 
-        return await DatabaseUtility.getHydratedDocuments(studentDocuments);
+        return await DatabaseUtility.getHydratedDocuments(
+            students.map((doc) => doc.ref)
+        );
     }
 }

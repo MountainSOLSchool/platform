@@ -82,6 +82,14 @@ const Header = () => {
                     </li>
                     <li>
                         <a
+                            href="https://enrollment.mountainsol.org/admin/students"
+                            onClick={() => setDisplay(false)}
+                        >
+                            Student Info Sheets
+                        </a>
+                    </li>
+                    <li>
+                        <a
                             href="https://enrollment.mountainsol.org/admin/t-shirts"
                             onClick={() => setDisplay(false)}
                         >

@@ -90,6 +90,11 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                     >
                 </li>
                 <li>
+                    <a routerLink="/admin/students" (click)="display = false"
+                        >Student Info Sheets</a
+                    >
+                </li>
+                <li>
                     <a routerLink="/admin/t-shirts" (click)="display = false"
                         >T-shirt Sizes</a
                     >
