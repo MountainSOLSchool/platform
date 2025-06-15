@@ -55,7 +55,6 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
         @if (infoSheetValue) {
             <div class="relative w-full">
                 <div class="flex justify-between items-center mb-2">
-                    <h2 class="text-xl font-bold">{{ studentName }}</h2>
                     <div class="flex gap-2">
                         <button
                             pButton
@@ -64,19 +63,14 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
                             class="p-button-primary"
                             (click)="print()"
                         ></button>
-                        <button
-                            pButton
-                            icon="pi pi-times"
-                            class="p-button-secondary"
-                            (click)="close()"
-                        ></button>
                     </div>
                 </div>
-                <div
-                    class="overflow-auto border rounded-lg p-4"
-                    style="max-height: 80vh"
-                    [innerHTML]="infoSheetValue.html"
-                ></div>
+                <iframe
+                    class="w-full border rounded-lg"
+                    style="height: 80vh"
+                    [src]="sanitize.bypassSecurityTrustResourceUrl(createBlobUrl(infoSheetValue.html))"
+                    frameborder="0"
+                ></iframe>
             </div>
         } @else {
             <div class="flex justify-center items-center p-8">
@@ -93,6 +87,7 @@ export class StudentInfoDisplayComponent {
 
     readonly #studentInfoService = inject(StudentInfoService);
     readonly #dialogRef = inject(DialogRef);
+    readonly sanitize = inject(DomSanitizer);
 
     readonly studentName = this.#data.studentName;
 
@@ -100,6 +95,11 @@ export class StudentInfoDisplayComponent {
         stream: () =>
             this.#studentInfoService.getStudentInfoSheet(this.#data.studentId),
     });
+
+    createBlobUrl(html: string): string {
+        const blob = new Blob([html], { type: 'text/html' });
+        return URL.createObjectURL(blob);
+    }
 
     print() {
         const infoSheetValue = this.infoSheet.value();
@@ -159,7 +159,7 @@ export interface StudentTableRow {
 @Component({
     selector: 'sol-student-info-table-view',
     template: `<div class="mb-4">
-            <h1>Student Information Management</h1>
+            <h1>Student Information Sheets</h1>
             <p class="text-gray-600">
                 View and print emergency information sheets for all students
             </p>
@@ -181,7 +181,7 @@ export interface StudentTableRow {
                     sortMode="single"
                 >
                     <ng-template pTemplate="caption">
-                        <div class="flex justify-between items-center">
+                        <div class="flex justify-between align-items-center gap-4">
                             <span>Total Students: {{ studentsValue.length }}</span>
                             <span class="p-input-icon-left">
                                 <i class="pi pi-search"></i>
@@ -266,6 +266,7 @@ export interface StudentTableRow {
         TableModule,
         StudentInfoLoadingComponent,
         TagModule,
+        InputTextModule,
     ],
 })
 export class StudentInfoTableViewComponent {
@@ -290,6 +291,8 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { Dialog } from '@angular/cdk/dialog';
 import { DialogContainerComponent } from '@sol/angular/dialog';
 import { StudentDbEntry } from '@sol/student/domain';
+import { InputTextModule } from 'primeng/inputtext';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
     template: `<sol-student-info-table-view
@@ -326,7 +329,7 @@ export class SolAngularAdminStudentsComponent implements OnInit {
                     data: {
                         studentId: student.id,
                         studentName: `${student.firstName} ${student.lastName}`,
-                        fullscreen: false,
+                        fullscreen: true,
                     },
                 });
 
