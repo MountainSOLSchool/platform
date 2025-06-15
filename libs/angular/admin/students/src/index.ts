@@ -1,1 +1,1 @@
-export * from './lib/sol-angular-admin-students/sol-angular-admin-students.component';
+export * from './lib/sol-angular-admin-students/student-info-table.component';

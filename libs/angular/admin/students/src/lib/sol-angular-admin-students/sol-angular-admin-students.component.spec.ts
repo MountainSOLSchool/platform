@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SolAngularAdminStudentsComponent } from './sol-angular-admin-students.component';
+import { StudentInfoTableComponent } from './student-info-table.component';
 
-describe('SolAngularAdminStudentsComponent', () => {
-    let component: SolAngularAdminStudentsComponent;
-    let fixture: ComponentFixture<SolAngularAdminStudentsComponent>;
+describe('StudentInfoTableComponent', () => {
+    let component: StudentInfoTableComponent;
+    let fixture: ComponentFixture<StudentInfoTableComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SolAngularAdminStudentsComponent],
+            imports: [StudentInfoTableComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(SolAngularAdminStudentsComponent);
+        fixture = TestBed.createComponent(StudentInfoTableComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

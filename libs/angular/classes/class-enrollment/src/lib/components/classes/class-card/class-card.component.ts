@@ -9,7 +9,7 @@ import {
     signal,
 } from '@angular/core';
 
-import { DatePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
@@ -63,7 +63,6 @@ export interface ClassCardInfo {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        DatePipe,
         CardModule,
         ChipModule,
         MarkdownModule,

@@ -61,7 +61,7 @@ export const appRoutes: Routes = [
                                                 '@sol/angular/admin/students'
                                             ).then(
                                                 (m) =>
-                                                    m.SolAngularAdminStudentsComponent
+                                                    m.StudentInfoTableComponent
                                             ),
                                     },
                                     {

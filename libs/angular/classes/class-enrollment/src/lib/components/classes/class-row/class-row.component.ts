@@ -6,7 +6,7 @@ import {
     input,
     Output,
 } from '@angular/core';
-import { CurrencyPipe, NgClass, NgStyle } from '@angular/common';
+import { CurrencyPipe, NgClass } from '@angular/common';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import {
     ClassCardComponent,
@@ -67,7 +67,6 @@ interface ClassRow {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        NgStyle,
         NgClass,
         MatIconModule,
         MatButtonModule,
