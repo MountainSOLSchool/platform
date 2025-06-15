@@ -91,7 +91,7 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                 </li>
                 <li>
                     <a routerLink="/admin/students" (click)="display = false"
-                        >Students</a
+                        >Student Info Sheets</a
                     >
                 </li>
                 <li>

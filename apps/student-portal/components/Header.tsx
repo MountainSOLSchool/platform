@@ -85,7 +85,7 @@ const Header = () => {
                             href="https://enrollment.mountainsol.org/admin/students"
                             onClick={() => setDisplay(false)}
                         >
-                            Students
+                            Student Info Sheets
                         </a>
                     </li>
                     <li>

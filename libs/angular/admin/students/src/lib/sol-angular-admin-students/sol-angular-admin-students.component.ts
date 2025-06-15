@@ -73,7 +73,7 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
                 ></iframe>
             </div>
         } @else {
-            <div class="flex justify-center items-center p-8">
+            <div class="flex-1 flex justify-content-center items-center">
                 <p-progressSpinner />
             </div>
         }
@@ -125,12 +125,12 @@ import { TableModule } from 'primeng/table';
     template: `<p-table [loading]="true">
         <ng-template pTemplate="header">
             <tr>
-                <th style="width: 20%">Name</th>
+                <th style="width: 25%">Name</th>
                 <th style="width: 10%">Age</th>
                 <th style="width: 20%">School</th>
                 <th style="width: 20%">Contact</th>
-                <th style="width: 15%">Medical</th>
-                <th style="width: 15%">Actions</th>
+                <th style="width: 10%"></th>
+                <th style="width: 15%"></th>
             </tr>
         </ng-template>
     </p-table>`,
@@ -196,7 +196,7 @@ export interface StudentTableRow {
                     </ng-template>
                     <ng-template pTemplate="header">
                         <tr>
-                            <th pSortableColumn="lastName" style="width: 20%">
+                            <th pSortableColumn="lastName" style="width: 25%">
                                 Name <p-sortIcon field="lastName"></p-sortIcon>
                             </th>
                             <th pSortableColumn="age" style="width: 10%">
@@ -206,8 +206,8 @@ export interface StudentTableRow {
                                 School <p-sortIcon field="school"></p-sortIcon>
                             </th>
                             <th style="width: 20%">Contact</th>
-                            <th style="width: 15%">Medical</th>
-                            <th style="width: 15%">Actions</th>
+                            <th style="width: 10%"></th>
+                            <th style="width: 15%"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-student let-dt="dt">

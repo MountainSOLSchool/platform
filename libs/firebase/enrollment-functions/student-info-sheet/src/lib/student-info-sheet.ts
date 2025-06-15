@@ -288,7 +288,7 @@ class StudentInfoSheetFactory {
                     ${student.emergency_contacts?.map(contact => `
                         <div class="contact-item">
                             <div>
-                                <span class="contact-name">${escapeHtml(`${contact.first_name} ${contact.last_name}`)}</span>
+                                <span class="contact-name">${escapeHtml(`${contact.first_name}`)}</span>
                                 <span class="contact-relationship">(${escapeHtml(contact.relationship)})</span>
                             </div>
                             <div class="contact-info">📱 ${escapeHtml(contact.phone)}</div>
@@ -309,7 +309,7 @@ class StudentInfoSheetFactory {
                             <span class="contact-relationship">(${escapeHtml(person.relationship)})</span>
                             <span class="contact-info"> - ${escapeHtml(person.phone)}</span>
                         </div>
-                    `).join('') || '<p>No authorized pickup contacts listed</p>'}
+                    `).join('') || '<p>The only authorized pickup contacts are the emergency contacts</p>'}
                 </div>
             </div>
 
