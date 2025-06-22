@@ -3,7 +3,7 @@ import { SemesterClassGroup } from '@sol/classes/domain';
 import { ClassRepository } from './class.repository';
 import { SemesterRepository } from './semester.repository';
 
-type SemesterClassGroupDbo = Omit<SemesterClassGroup, 'classes'> & {
+export type SemesterClassGroupDbo = Omit<SemesterClassGroup, 'classes'> & {
     classIds: Array<string>;
 };
 
