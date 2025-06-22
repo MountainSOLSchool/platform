@@ -163,7 +163,6 @@ export const enroll = Functions.endpoint
         }
 
         if (success) {
-
             const studentRef = await ('id' in updatedStudentDbEntry
                 ? StudentRepository.update(updatedStudentDbEntry)
                 : StudentRepository.create(updatedStudentDbEntry));

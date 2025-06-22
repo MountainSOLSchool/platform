@@ -6,5 +6,6 @@ export const adminEnrollments = Functions.endpoint
     .handle(async (request, response) => {
         const enrollments =
             await ClassEnrollmentRepository.getCurrentSemesterEnrollments();
+
         response.send(enrollments);
     });

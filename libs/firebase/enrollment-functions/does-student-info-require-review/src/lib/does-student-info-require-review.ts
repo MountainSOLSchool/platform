@@ -1,5 +1,5 @@
-import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { _assertUserCanManageStudent, _doesStudentInfoRequireReview, _mapStudentFormToStudentDbEntry } from '@sol/firebase/enrollment-functions/shared';
+import { AuthUtility, Functions } from '@sol/firebase/functions';
 
 export const doesStudentInfoRequireReview = Functions.endpoint.handle<{
     studentId: string;

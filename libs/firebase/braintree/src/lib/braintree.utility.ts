@@ -1,6 +1,6 @@
 import { Customer, BraintreeGateway, Environment } from 'braintree';
 import { PreparedTransaction } from '@sol/payments/transactions';
-import { type auth } from 'firebase-admin';
+import admin from 'firebase-admin';
 
 export class Braintree {
     constructor(
@@ -36,7 +36,7 @@ export class Braintree {
 
     private gateway: BraintreeGateway;
 
-    public async getClientToken(user: auth.UserRecord) {
+    public async getClientToken(user: admin.auth.UserRecord) {
         let customer: Customer | undefined;
         try {
             customer = await this.gateway.customer.find(user.uid);

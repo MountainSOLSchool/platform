@@ -27,7 +27,7 @@
         "install:husky": "[ ! -d \"/node_modules/is-ci/\" ] || is-ci || [ ! -d \"/node_modules/husky/\" ] || husky install",
         "prepare": "npm run install:husky"
     },
-    "main": "dist/apps/functions/main.cjs",
+    "main": "dist/apps/functions/main.js",
     "engines": {
         "node": "22"
     },

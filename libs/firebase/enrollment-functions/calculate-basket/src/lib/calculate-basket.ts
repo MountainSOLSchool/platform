@@ -85,5 +85,6 @@ export const calculateBasket = Functions.endpoint.handle<{
                 ({ additionalOptionIds }) => additionalOptionIds
             )
         );
+
     response.send({ discountAmounts, finalTotal, originalTotal });
 });

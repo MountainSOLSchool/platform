@@ -87,6 +87,7 @@ export const getMyStudent = Functions.endpoint.handle<{ studentId: string }>(
             return;
         }
         const form = _mapStudentDbEntryToStudentForm(student);
+
         response.send({ student: form });
     }
 );

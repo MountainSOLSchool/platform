@@ -1,5 +1,5 @@
-import { Functions, Role } from '@sol/firebase/functions';
 import { StudentRepository } from '@sol/student/repository';
+import { Functions, Role } from '@sol/firebase/functions';
 
 export const getCompletedUnits = Functions.endpoint
     .restrictedToRoles(Role.Admin)

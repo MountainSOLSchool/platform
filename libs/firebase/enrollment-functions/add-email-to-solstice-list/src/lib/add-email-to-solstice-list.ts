@@ -8,6 +8,7 @@ export const addEmailToSolsticeList = onDocumentCreated(
     async (event) => {
         const enrollmentRecord =
             !!event.data && (event.data.data() as ClassEnrollmentDbo);
+
         if (
             enrollmentRecord &&
             enrollmentRecord.status === 'enrolled' &&

@@ -24,6 +24,9 @@ type DocumentProperty = {
         | null;
 };
 
+// Prewarm Firebase connection
+import('./prewarm-database');
+
 export class DatabaseUtility {
     public static getDatabase() {
         return db;

@@ -7,7 +7,6 @@ export const onSuccessfulEnrollDeleteDraft = onDocumentCreated(
     async (event) => {
         const enrollmentRecord =
             event.data && (event.data.data() as ClassEnrollmentDbo);
-
         if (enrollmentRecord && enrollmentRecord.status === 'enrolled') {
             _deleteEnrollmentDraft(enrollmentRecord.userId);
         }

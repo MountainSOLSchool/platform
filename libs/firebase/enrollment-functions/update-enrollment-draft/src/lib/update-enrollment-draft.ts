@@ -28,7 +28,6 @@ export const updateEnrollmentDraft = Functions.endpoint.handle<
         .doc(user.uid);
 
     const doesDocExist = (await draftDoc.get()).exists;
-
     if (!doesDocExist) {
         await draftDoc.set(enrollmentDraft);
     } else {

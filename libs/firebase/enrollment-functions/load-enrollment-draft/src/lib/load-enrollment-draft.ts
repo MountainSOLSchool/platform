@@ -1,5 +1,5 @@
-import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
+import { AuthUtility, Functions } from '@sol/firebase/functions';
 
 export const loadEnrollmentDraft = Functions.endpoint.handle(
     async (request, response) => {

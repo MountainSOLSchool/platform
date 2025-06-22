@@ -1,6 +1,6 @@
 import { _assertUserCanManageStudent } from '@sol/firebase/enrollment-functions/shared';
-import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { StudentRepository } from '@sol/student/repository';
+import { AuthUtility, Functions } from '@sol/firebase/functions';
 
 export const getStudentCompletedUnits = Functions.endpoint.handle<{
     studentId: string;

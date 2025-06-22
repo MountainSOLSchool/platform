@@ -7,5 +7,6 @@ export const roles = Functions.endpoint.handle(async (request, response) => {
         return;
     }
     const roles = await AuthUtility.getUserRoles(user);
+
     response.send(roles);
 });

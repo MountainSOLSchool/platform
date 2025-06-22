@@ -32,8 +32,6 @@ export const roster = Functions.endpoint
         { classId: string; semesterId: string }
     >(async (request, response) => {
         const { classId, semesterId } = request.query;
-
         const htmlTable = await getClassRosterTable(classId, semesterId);
-
         response.send({ html: htmlTable });
     });

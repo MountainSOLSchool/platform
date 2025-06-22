@@ -1,6 +1,5 @@
 import { StudentRepository } from '@sol/student/repository';
 import { Functions, Role } from '@sol/firebase/functions';
-import { SpecificSemesterRepository } from '@sol/classes/repository';
 import { StudentDbEntry } from '@sol/student/domain';
 
 class StudentInfoSheetFactory {

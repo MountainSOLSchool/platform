@@ -46,6 +46,7 @@ export const createEnrollmentEmail = onDocumentCreated(
                     additionalOptions: optionDetails,
                 };
             });
+
             const classesCost = classesWithOptions.reduce((total, c) => {
                 const optionsCost = c.additionalOptions.reduce(
                     (sum, opt) => sum + (opt.cost || 0),

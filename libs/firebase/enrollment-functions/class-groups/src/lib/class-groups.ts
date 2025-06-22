@@ -1,5 +1,4 @@
 import { Functions } from '@sol/firebase/functions';
-
 import { Semester } from '@sol/firebase/classes/semester';
 
 export const classGroups = Functions.endpoint.handle<{
@@ -22,18 +21,18 @@ export const classGroups = Functions.endpoint.handle<{
 
     const groups = await (groupIdsBySemesterId
         ? Object.fromEntries(
-              await Promise.all(
-                  Object.entries(groupIdsBySemesterId).map(
-                      async ([semesterId, groupIds]) =>
-                          [
-                              semesterId,
-                              await Semester.of(semesterId).groups.getMany(
-                                  groupIds
-                              ),
-                          ] as const
-                  )
-              )
-          )
+            await Promise.all(
+                Object.entries(groupIdsBySemesterId).map(
+                    async ([semesterId, groupIds]) =>
+                        [
+                            semesterId,
+                            await Semester.of(semesterId).groups.getMany(
+                                groupIds
+                            ),
+                        ] as const
+                )
+            )
+        )
         : activeSemesterGroups.getOpenForRegistration());
 
     response.send({ groups });
