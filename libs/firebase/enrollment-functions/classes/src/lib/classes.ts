@@ -14,7 +14,6 @@ export const classes = Functions.endpoint.handle<
     const activeSemesterClasses = Semester.active().classes;
 
     const query = request.body.data?.query;
-
     const classes = query
         ? 'semesterId' in query
             ? await Semester.of(query.semesterId).classes.getAll()

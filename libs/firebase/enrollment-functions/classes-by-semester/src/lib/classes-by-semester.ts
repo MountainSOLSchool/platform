@@ -23,6 +23,7 @@ export const classesBySemester = Functions.endpoint.handle<
                 groups,
             };
         }
+
         response.send(theClassesBySemester);
     } catch (e) {
         response

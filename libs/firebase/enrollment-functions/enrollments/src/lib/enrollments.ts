@@ -8,6 +8,7 @@ export const enrollments = Functions.endpoint.handle(
                 request,
                 response
             );
+
         response.send(enrollments);
     }
 );

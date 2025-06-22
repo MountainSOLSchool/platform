@@ -114,8 +114,10 @@ jobs:
               with:
                 name: dist-functions
                 path: |
-                  dist/apps/functions/main.cjs
-                  dist/apps/functions/main.cjs.map
+                  dist/apps/functions/main.js
+                  dist/apps/functions/main.js.map
+                  dist/apps/functions/package.json
+                  dist/apps/functions/package-lock.json
                 retention-days: 1
 
     deploy:
@@ -138,21 +140,16 @@ jobs:
               with:
                 node-version: '22'
 
-            - name: Restore cached node_modules
-              uses: actions/cache/restore@v4
-              with:
-                path: node_modules
-                key: ${{ needs.prepare_and_build.outputs.cache_key }}
-                fail-on-cache-miss: true
-
             - name: Download build artifacts
               uses: actions/download-artifact@v4
               with:
                 name: dist-functions
-                path: dist/apps/functions
 
             - name: Verify download
-              run: ls -la dist/apps/functions/
+              run: ls -la
+
+            - name: Install dependencies
+              run: npm ci
 
             - name: Deploy functions group
               id: deploy

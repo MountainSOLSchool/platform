@@ -2,7 +2,7 @@ import { _getCategorizedClasses, _getSemestersAvailableToEnroll } from '@sol/fir
 import { Functions } from '@sol/firebase/functions';
 
 export const availableEnrollmentClasses = Functions.endpoint.handle(
-    async (request, response) => {
+    async (_, response) => {
         const semesters = await _getSemestersAvailableToEnroll();
 
         const categorizedClassesBySemester = await Promise.all(

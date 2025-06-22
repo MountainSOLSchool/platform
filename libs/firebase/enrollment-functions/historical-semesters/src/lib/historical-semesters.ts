@@ -3,10 +3,10 @@ import { DatabaseUtility } from '@sol/firebase/database';
 
 export const historicalSemesters = Functions.endpoint.handle<
     | {
-          ids: Array<string>;
-      }
+        ids: Array<string>;
+    }
     | undefined
->(async (request, response) => {
+>(async (_, response) => {
     const semestersCollection =
         await DatabaseUtility.getCollectionRef('semesters');
     const semesters = await semestersCollection.get().then((snapshot) =>

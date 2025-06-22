@@ -12,5 +12,6 @@ export const paymentToken = Functions.endpoint
         }
         const braintree = new Braintree(secrets, strings);
         const token = await braintree.getClientToken(user);
+
         response.send(token);
     });

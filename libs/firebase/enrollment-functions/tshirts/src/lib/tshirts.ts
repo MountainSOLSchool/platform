@@ -7,6 +7,7 @@ export const tshirts = Functions.endpoint.restrictedToRoles(Role.Admin).handle<{
     const { semesterId } = request.body.data;
     const tshirtList =
         await StudentTshirtsGenerator.createTshirtList(semesterId);
+
     response.send({
         list: tshirtList,
     });

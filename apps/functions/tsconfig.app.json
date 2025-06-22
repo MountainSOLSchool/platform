@@ -2,7 +2,7 @@
     "extends": "./tsconfig.json",
     "compilerOptions": {
         "outDir": "../../dist/out-tsc",
-        "module": "commonjs",
+        "module": "es2022",
         "types": [
             "node"
         ]
@@ -33,6 +33,7 @@
         "../../libs/firebase/enrollment-functions/sign-in/src/lib/sign-in.ts",
         "../../libs/firebase/enrollment-functions/student-health/src/lib/student-health.ts",
         "../../libs/firebase/enrollment-functions/tshirts/src/lib/tshirts.ts",
-        "../../libs/firebase/enrollment-functions/update-completed-units/src/lib/update-completed-units.ts"
-, "../../libs/firebase/enrollment-functions/add-email-to-solstice-list/src/lib/add-email-to-solstice-list.ts"    ]
+        "../../libs/firebase/enrollment-functions/update-completed-units/src/lib/update-completed-units.ts",
+        "../../libs/firebase/enrollment-functions/add-email-to-solstice-list/src/lib/add-email-to-solstice-list.ts"
+    ]
 }

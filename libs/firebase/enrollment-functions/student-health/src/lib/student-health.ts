@@ -23,8 +23,6 @@ export const studentHealth = Functions.endpoint
         { classId: string; semesterId: string }
     >(async (request, response) => {
         const { classId, semesterId } = request.query;
-
         const htmlTable = await getClassStudentHealthTable(classId, semesterId);
-
         response.send({ html: htmlTable });
     });

@@ -12,6 +12,7 @@ export const emails = Functions.endpoint
             classId,
             semesterId
         );
+
         response.send({
             list: emailList,
         });

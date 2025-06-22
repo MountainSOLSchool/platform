@@ -1,7 +1,7 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { StudentRepository } from '@sol/student/repository';
-import { Semester } from '@sol/firebase/classes/semester';
 import { SignInTableFactory } from '@sol/student/reports';
+import { Semester } from '@sol/firebase/classes/semester';
 import { SpecificSemesterRepository } from '@sol/classes/repository';
 
 async function getClassSignInTable(classId: string, semesterId: string) {

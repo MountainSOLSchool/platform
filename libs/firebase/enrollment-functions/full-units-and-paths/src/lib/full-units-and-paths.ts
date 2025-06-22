@@ -1,7 +1,7 @@
 import { UnitDbEntry, type PathDbEntry } from '@sol/classes/domain';
 import { DatabaseUtility } from '@sol/firebase/database';
-import { Functions } from '@sol/firebase/functions';
 import { type DocumentReference } from 'firebase-admin/firestore';
+import { Functions } from '@sol/firebase/functions';
 
 export const fullUnitsAndPaths = Functions.endpoint.handle(
     async (request, response) => {

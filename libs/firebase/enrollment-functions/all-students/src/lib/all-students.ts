@@ -1,6 +1,6 @@
 import { Functions, Role } from '@sol/firebase/functions';
-import { StudentDbEntry } from '@sol/student/domain';
 import { StudentRepository } from '@sol/student/repository';
+import { StudentDbEntry } from '@sol/student/domain';
 
 export const allStudents = Functions.endpoint
     .restrictedToRoles(Role.Admin)

@@ -18,9 +18,9 @@
         "bundle": true,
         "thirdParty": false,
         "dependenciesFieldType": "dependencies",
-        "target": "node16",
+        "target": "node20",
         "format": [
-          "cjs"
+          "esm"
         ],
         "esbuildOptions": {
           "sourcemap": true,

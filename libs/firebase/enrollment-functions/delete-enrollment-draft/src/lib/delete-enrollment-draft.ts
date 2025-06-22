@@ -1,5 +1,5 @@
-import { _deleteEnrollmentDraft } from '@sol/firebase/enrollment-functions/shared';
 import { AuthUtility, Functions } from '@sol/firebase/functions';
+import { _deleteEnrollmentDraft } from '@sol/firebase/enrollment-functions/shared';
 
 export const deleteEnrollmentDraft = Functions.endpoint.handle(
     async (request, response) => {

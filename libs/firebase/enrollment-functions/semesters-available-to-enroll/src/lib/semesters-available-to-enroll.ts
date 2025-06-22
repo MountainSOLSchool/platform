@@ -6,7 +6,7 @@ export const semestersAvailableToEnroll = Functions.endpoint.handle<
         ids: Array<string>;
     }
     | undefined
->(async (request, response) => {
+>(async (_, response) => {
     const semesters = await _getSemestersAvailableToEnroll();
 
     response.send({
