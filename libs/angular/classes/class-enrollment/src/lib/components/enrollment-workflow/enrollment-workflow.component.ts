@@ -92,6 +92,16 @@ import { AcknowledgeOutOfDateComponent } from '../acknowledge-out-of-date/acknow
             :host ::ng-deep .mat-vertical-content-container {
                 margin-left: -5px;
             }
+            @media (max-width: 800px) {
+                :host ::ng-deep .mat-vertical-content-container {
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+                :host ::ng-deep .mat-vertical-content {
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+            }
             :host ::ng-deep .mat-stepper-vertical-line::before {
                 border: none;
             }
