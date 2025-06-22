@@ -4,7 +4,7 @@ import { SemesterRepository } from './semester.repository';
 import admin from 'firebase-admin';
 import { DocumentReference } from 'firebase-admin/firestore';
 
-type ClassDbo = {
+export type ClassDbo = {
     id: string;
     description: string;
     live: boolean;
@@ -18,9 +18,9 @@ type ClassDbo = {
     students?: Array<admin.firestore.DocumentReference>;
     units?: Array<admin.firestore.DocumentReference>;
     name: string;
-    start: { _seconds: number };
-    end: { _seconds: number };
-    registration_end_date: { _seconds: number };
+    start: admin.firestore.Timestamp;
+    end: admin.firestore.Timestamp;
+    registration_end_date: admin.firestore.Timestamp;
     class_type: string;
     grade_range_start: number;
     grade_range_end: number;
