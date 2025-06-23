@@ -181,6 +181,13 @@ export interface ClassCardInfo {
                 margin-bottom: 24px;
             }
 
+            @media (max-width: 620px) {
+                .details-grid {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
+            }
+
             .detail-item {
                 display: flex;
                 align-items: flex-start;
@@ -210,6 +217,19 @@ export interface ClassCardInfo {
                     font-size: 15px;
                     color: #212121;
                     font-weight: 500;
+                }
+            }
+
+            @media (max-width: 620px) {
+                .detail-item {
+                    gap: 6px;
+
+                    mat-icon {
+                        font-size: 16px;
+                        width: 34px;
+                        height: 24px;
+                        margin-top: 2px;
+                    }
                 }
             }
 

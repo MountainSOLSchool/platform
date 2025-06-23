@@ -105,6 +105,17 @@ import { AcknowledgeOutOfDateComponent } from '../acknowledge-out-of-date/acknow
             :host ::ng-deep .mat-stepper-vertical-line::before {
                 border: none;
             }
+
+            :host ::ng-deep .mat-step-header {
+                padding: 10px 4px;
+                background-color: white;
+            }
+
+            @media (max-width: 620px) {
+                :host ::ng-deep .mat-step-header {
+                    padding: 10px 0;
+                }
+            }
         `,
     ],
 })

@@ -30,7 +30,6 @@ import { map, Observable } from 'rxjs';
                     size="large"
                     icon="pi pi-user"
                     (click)="menu.toggle($event)"
-                    styleClass="mr-2"
                     [style]="{
                         'background-color': '#aaa',
                         color: '#ffffff'
