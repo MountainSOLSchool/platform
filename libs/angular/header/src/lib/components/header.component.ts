@@ -22,19 +22,21 @@ import { AsyncPipe, NgStyle } from '@angular/common';
     ],
     styles: [
         `
-            .toolbar {
-                color: green;
+            @media (max-width: 620px) {
+                :host ::ng-deep p-toolbar > div {
+                    padding: 10px;
+                }
             }
         `,
     ],
     template: `@let size = size$ | async;
     @if (size) {
-    <header class="toolbarz">
-            <p-toolbar styleClass="toolbar">
+    <header>
+            <p-toolbar>
                 <div routerLink="/" class="p-toolbar-group-left">
                     <div>
                         <img
-                            src="https://www.mountainsol.org/wp-content/uploads/2020/03/SOL-horizontal-large-1024x234-1.jpg"
+                            [src]="size === 'default' ? 'https://www.mountainsol.org/wp-content/uploads/2020/03/SOL-horizontal-large-1024x234-1.jpg' : 'https://firebasestorage.googleapis.com/v0/b/mountain-sol-platform.appspot.com/o/SOL-horizontal-large-1024x234-1.jpg?alt=media&token=ec0f774c-3862-41b6-a646-c834468a3cb1'"
                             alt="sol-logo"
                             [ngStyle]="{
                                 'margin-right': '10px',
@@ -52,7 +54,7 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                 </div>
                 <div class="p-toolbar-group-right">
                     @if ((isLoggedIn$ | async) && (isAdmin$ | async)) {
-                        <div style="margin-right: 2rem">
+                        <div style="margin-right: 1rem">
                             <p-button
                                 type="text"
                                 (click)="display = true"
@@ -121,7 +123,7 @@ export class HeaderComponent {
     private readonly userService = inject(UserService);
 
     readonly size$ = inject(BreakpointObserver)
-        .observe('(min-width: 600px)')
+        .observe('(min-width: 620px)')
         .pipe(map(({ matches }) => (matches ? 'default' : 'small')));
 
     display = false;
