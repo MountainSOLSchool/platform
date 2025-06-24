@@ -136,6 +136,9 @@
                 let last = $last
             ) {
                 <p-tabPanel [header]="semester.name">
+                    @if (semester.additionalInfoPanel && semester.additionalInfoPanel.active) {
+                        <sol-info-panel [config]="semester.additionalInfoPanel"></sol-info-panel>
+                    }
                     @if ((isFakeSearchLoading$ | async) === true) {
                         <ng-container
                             *ngTemplateOutlet="largeSpinner"

@@ -54,6 +54,7 @@ import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { TabViewModule } from 'primeng/tabview';
 import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
 import { ClassRowComponent } from '../class-row/class-row.component';
+import { InfoPanelComponent } from '../../info-panel/info-panel.component';
 
 interface ClassRow {
     classes: Array<SemesterClass & { classDateTimes: string }>;
@@ -91,6 +92,7 @@ interface ClassRow {
         NgTemplateOutlet,
         ClassesSkeletonComponent,
         ClassRowComponent,
+        InfoPanelComponent,
     ],
     selector: 'sol-class-picker',
     templateUrl: './class-list.component.html',
@@ -142,7 +144,13 @@ export class ClassesComponent {
     readonly semesterOptions = toSignal(
         this.semesterListService.getEnrollableSemesters().pipe(
             RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-            map((semesters) => semesters.map(({ id, name }) => ({ id, name })))
+            map((semesters) =>
+                semesters.map(({ id, name, additionalInfoPanel }) => ({
+                    id,
+                    name,
+                    additionalInfoPanel,
+                }))
+            )
         )
     );
 

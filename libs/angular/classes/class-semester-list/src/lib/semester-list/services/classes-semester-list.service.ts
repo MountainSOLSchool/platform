@@ -4,6 +4,7 @@ import {
     RequestedOperatorsUtility,
     RequestService,
 } from '@sol/angular/request';
+import { AdditionalInfoPanel } from '@sol/classes/domain'; // Add to your imports
 
 type Semester = 'Spring' | 'Summer' | 'Fall' | 'Winter';
 
@@ -17,7 +18,11 @@ export class ClassesSemesterListService {
     private readonly getEnrollableSemestersRequest =
         this.requestService.declareRequest(() =>
             this.functions.call<{
-                semesters: Array<{ id: string; name: string }>;
+                semesters: Array<{
+                    id: string;
+                    name: string;
+                    additionalInfoPanel?: AdditionalInfoPanel;
+                }>;
             }>('semestersAvailableToEnroll')
         );
 

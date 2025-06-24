@@ -9,4 +9,5 @@ export * from './lib/models/discount/basket-discount.abstract';
 export * from './lib/models/semester-enrollment';
 export * from './lib/models/path/path-db-entry';
 export * from './lib/models/path/unit-db-entry';
+export * from './lib/models/semester-panel-config';
 export * from './lib/utilities/enrollment.utility';
