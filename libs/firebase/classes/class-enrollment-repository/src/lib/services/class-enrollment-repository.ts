@@ -18,6 +18,28 @@ export class ClassEnrollmentRepository {
         return DatabaseUtility.getDatabase();
     }
 
+    /**
+     * Get the most recent enrolled enrollment for a specific student
+     */
+    static async getLatestEnrolledByStudentId(
+        studentId: string
+    ): Promise<ClassEnrollmentDbo | null> {
+        const snapshot = await this.database
+            .collection('enrollment')
+            .where('studentId', '==', studentId)
+            .where('status', '==', 'enrolled')
+            .orderBy('timestamp', 'desc')
+            .limit(1)
+            .get();
+
+        if (snapshot.empty) {
+            return null;
+        }
+
+        const doc = snapshot.docs[0];
+        return doc.data() as ClassEnrollmentDbo;
+    }
+
     static async getCurrentSemesterEnrollments(): Promise<
         Array<SemesterEnrollment>
     > {

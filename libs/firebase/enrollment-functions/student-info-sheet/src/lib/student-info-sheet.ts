@@ -1,9 +1,10 @@
 import { StudentRepository } from '@sol/student/repository';
 import { Functions, Role } from '@sol/firebase/functions';
 import { StudentDbEntry } from '@sol/student/domain';
+import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 
 class StudentInfoSheetFactory {
-    build(student: StudentDbEntry): string {
+    build(student: StudentDbEntry, medicalReleaseSignature?: string, enrollmentDate?: Date): string {
         const formatDate = (dateString: string): string => {
             if (!dateString) return '';
             const date = new Date(dateString);
@@ -222,6 +223,71 @@ class StudentInfoSheetFactory {
             font-size: 12px;
         }
         
+        .medical-release-section {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 2px solid #333;
+        }
+        
+        .medical-release-section h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            border: none;
+            color: #333;
+        }
+        
+        .medical-release-text {
+            font-size: 12px;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        
+        .signature-box {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+        
+        .signature-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .signature-label {
+            font-weight: bold;
+            font-size: 13px;
+        }
+        
+        .signature-value {
+            font-size: 14px;
+            font-style: italic;
+            color: #2563eb;
+            border-bottom: 1px solid #ccc;
+            min-width: 200px;
+            text-align: center;
+            padding: 4px;
+        }
+        
+        .signature-date {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+        }
+        
+        .signature-info {
+            font-size: 13px;
+            margin-top: 12px;
+        }
+        
+        .signature-info strong {
+            color: #2563eb;
+        }
+        
         .footer {
             margin-top: 24px;
             padding-top: 16px;
@@ -237,6 +303,11 @@ class StudentInfoSheetFactory {
         
         .crossmark {
             color: #dc2626;
+        }
+        
+        .warning {
+            color: #dc2626;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -402,6 +473,34 @@ class StudentInfoSheetFactory {
             </div>
         </div>
 
+        <!-- Medical Release Section -->
+        <div class="medical-release-section">
+            <h3>Medical Release and Permission to Treat</h3>
+            <div class="medical-release-text">
+                My child is in good physical and mental health. I have listed any special health considerations. 
+                I acknowledge that acceptance of my child to the program with my child's special health considerations is at the discretion of Mountain SOL School. In case of emergency, I understand that every effort will be made to contact parents or guardians of children. In the event I cannot be reached within a reasonable time, I grant permission to the physician selected by Mountain SOL staff to hospitalize, secure treatment for and to order injection, anesthesia or surgery for the child as named herein. 
+                With my digital signature below, I hereby certify that this information is correct.
+            </div>
+            ${medicalReleaseSignature ? `
+            <div class="signature-box">
+                <div class="signature-line">
+                    <span class="signature-label">Digital Signature:</span>
+                    <span class="signature-value">${escapeHtml(medicalReleaseSignature)}</span>
+                </div>
+                <div class="signature-date">
+                    ${enrollmentDate ? 
+                        `Signed: ${enrollmentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}` : 
+                        `Signed during enrollment - ${new Date().getFullYear()}`
+                    }
+                </div>
+            </div>
+            ` : `
+            <div class="signature-info warning">
+                ⚠️ No medical release signature on file. Medical treatment authorization may be required before emergency medical care can be provided.
+            </div>
+            `}
+        </div>
+
         <!-- Footer -->
         <div class="footer">
             Emergency Information Sheet - Summer Classes ${new Date().getFullYear()} - 
@@ -421,7 +520,33 @@ async function getStudentInfoSheet(studentId: string): Promise<string> {
         throw new Error(`Student with ID ${studentId} not found`);
     }
 
-    return new StudentInfoSheetFactory().build(student);
+    // Find the most recent completed enrollment for this student to get the medical release signature
+    let medicalReleaseSignature: string | undefined;
+    let enrollmentDate: Date | undefined;
+    
+    try {
+        // Query for enrollments where studentId matches and status is 'enrolled'
+        const latestEnroll = await ClassEnrollmentRepository.getLatestEnrolledByStudentId(studentId);
+        
+        if (latestEnroll) {
+        
+                enrollmentDate = latestEnroll.timestamp?.toDate();
+                
+                const medicalRelease = latestEnroll.releaseSignatures?.find(
+                    sig => sig.name === 'MEDICAL_RELEASE_FALL_2023' || 
+                           sig.name.includes('MEDICAL_RELEASE')
+                );
+                
+                if (medicalRelease) {
+                    medicalReleaseSignature = medicalRelease.signature;
+                }
+        }
+    } catch (error) {
+        console.warn('Could not retrieve enrollment data for medical release signature:', error);
+        // Continue without signature - the template will show a warning
+    }
+
+    return new StudentInfoSheetFactory().build(student, medicalReleaseSignature, enrollmentDate);
 }
 
 export const studentInfoSheet = Functions.endpoint

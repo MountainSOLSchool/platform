@@ -1,10 +1,12 @@
+import admin from 'firebase-admin';
+
 export type ClassEnrollmentDbo = {
+    id?: string;
     relatedId?: string;
     studentId?: string;
     userId: string;
-
+    timestamp?: admin.firestore.Timestamp;
     studentName: string;
-
     contactEmail: string;
     finalCost: number;
     discountIds: Array<string>;
