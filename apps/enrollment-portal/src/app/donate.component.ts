@@ -83,8 +83,10 @@ import * as browserDetection from '@braintree/browser-detection';
 
                         @if (isIosButNotSafari()) {
                             <div class="form-field">
-                                Please use Safari on iOS to use Venmo as an
-                                option.
+                                <strong
+                                    >Please use Safari on iOS to use Venmo as an
+                                    option.</strong
+                                >
                             </div>
                         }
 
