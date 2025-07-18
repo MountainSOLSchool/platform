@@ -42,7 +42,11 @@ bootstrapApplication(AppComponent, {
         provideFunctions(() => {
             const functions = getFunctions();
             if (!environment.remoteFunctions) {
-                connectFunctionsEmulator(functions, 'localhost', 5001);
+                connectFunctionsEmulator(
+                    functions,
+                    'davidsmacbook.local',
+                    5001
+                );
             }
             return functions;
         }),

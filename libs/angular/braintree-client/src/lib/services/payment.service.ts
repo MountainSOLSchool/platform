@@ -14,7 +14,7 @@ export class PaymentService {
             filter((user) => anonymous || !!user),
             switchMap(() =>
                 this.functions
-                    .call<string>('paymentToken')
+                    .call<string>('paymentToken', { anonymous })
                     .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
             )
         );

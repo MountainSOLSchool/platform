@@ -162,7 +162,7 @@ export class PaymentCollectorStore extends ComponentStore<{
                             // Configure which payment methods to show
                             if (this.get().paymentMethods.includes('venmo')) {
                                 dropInOptions.venmo = {
-                                    allowDesktop: true,
+                                    allowNewBrowserTab: false,
                                     allowDesktopWebLogin: true,
                                 };
                             }

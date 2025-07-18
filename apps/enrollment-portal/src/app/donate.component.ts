@@ -119,7 +119,7 @@ import { RequestedUtility } from '@sol/angular/request';
 export class DonateComponent {
     private readonly functions = inject(FirebaseFunctionsService);
 
-    donationAmount = signal<number>(25);
+    donationAmount = signal<number>(5);
     paymentMethodData = signal<any>(null);
     processing = signal(false);
     messages = signal<Message[]>([]);
@@ -150,7 +150,7 @@ export class DonateComponent {
                     success: boolean;
                     transactionId: string;
                     message: string;
-                }>('processVenmoDonation', {
+                }>('donateVenmo', {
                     amount: this.donationAmount(),
                     paymentMethodNonce: this.paymentMethodData().nonce,
                     deviceData: this.paymentMethodData().deviceData,
