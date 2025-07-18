@@ -8,6 +8,8 @@ import { PreparedTransaction } from '@sol/payments/transactions';
 import admin from 'firebase-admin';
 
 export class Braintree {
+    private readonly venmoProfileId: string;
+
     constructor(
         private readonly secrets: Record<
             (typeof Braintree.SECRET_NAMES)[number],
@@ -26,6 +28,7 @@ export class Braintree {
             publicKey: secrets[`BRAINTREE_PUBLIC_KEY${envSuffix}`],
             privateKey: secrets[`BRAINTREE_PRIVATE_KEY${envSuffix}`],
         });
+        this.venmoProfileId = secrets[`BRAINTREE_VENMO_PROFILE_ID${envSuffix}`];
     }
 
     static SECRET_NAMES = [
@@ -35,6 +38,8 @@ export class Braintree {
         'BRAINTREE_MERCHANT_ID_PROD',
         'BRAINTREE_PUBLIC_KEY_PROD',
         'BRAINTREE_PRIVATE_KEY_PROD',
+        'BRAINTREE_VENMO_PROFILE_ID',
+        'BRAINTREE_VENMO_PROFILE_ID_PROD',
     ] as const;
 
     static STRING_NAMES = ['BRAINTREE_ENV'] as const;
@@ -84,7 +89,7 @@ export class Braintree {
             options: {
                 submitForSettlement: true,
                 venmo: {
-                    profileId: '1953896702662410263', // temporary sandbox value
+                    profileId: this.venmoProfileId,
                 },
             },
             deviceData: transaction.deviceData,
