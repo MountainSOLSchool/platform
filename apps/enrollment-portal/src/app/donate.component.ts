@@ -63,7 +63,6 @@ import { RequestedUtility } from '@sol/angular/request';
                                 >Donation Amount</label
                             >
                             <div class="amount-input-container">
-                                <span class="currency-symbol">$</span>
                                 <p-inputNumber
                                     [(ngModel)]="donationAmount"
                                     inputId="amount"
@@ -71,7 +70,6 @@ import { RequestedUtility } from '@sol/angular/request';
                                     currency="USD"
                                     [showButtons]="false"
                                     [min]="5"
-                                    [step]="10"
                                     placeholder="Enter amount"
                                     class="amount-input"
                                 >
