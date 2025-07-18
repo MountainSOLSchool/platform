@@ -1,9 +1,9 @@
 {
-    "name": "sol-donate-venmo",
+    "name": "firebase-enrollment-functions-donate-venmo",
     "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/firebase/enrollment-functions/donate-venmo/src",
     "projectType": "library",
     "tags": [],
-    "// targets": "to see all targets run: nx show project sol-donate-venmo --web",
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-donate-venmo --web",
     "targets": {}
 }

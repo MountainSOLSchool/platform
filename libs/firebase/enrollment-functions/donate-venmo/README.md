@@ -1,7 +1,7 @@
-# sol-donate-venmo
+# firebase-enrollment-functions-donate-venmo
 
 This library was generated with [Nx](https://nx.dev).
 
 ## Building
 
-Run `nx build sol-donate-venmo` to build the library.
+Run `nx build firebase-enrollment-functions-donate-venmo` to build the library.
