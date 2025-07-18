@@ -85,6 +85,7 @@
         "@angular/platform-browser": "20.0.3",
         "@angular/platform-browser-dynamic": "20.0.3",
         "@angular/router": "20.0.3",
+        "@braintree/browser-detection": "^2.1.0",
         "@fullcalendar/angular": "^6.1.17",
         "@fullcalendar/core": "^6.1.17",
         "@fullcalendar/daygrid": "^6.1.17",

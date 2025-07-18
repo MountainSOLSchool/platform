@@ -11,6 +11,7 @@ import { Message } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { lastValueFrom } from 'rxjs';
 import { RequestedUtility } from '@sol/angular/request';
+import * as browserDetection from '@braintree/browser-detection';
 
 @Component({
     selector: 'sol-donate',
@@ -79,6 +80,13 @@ import { RequestedUtility } from '@sol/angular/request';
                                 >Minimum donation: $5</small
                             >
                         </div>
+
+                        @if (isIosButNotSafari()) {
+                            <div class="form-field">
+                                Please use Safari on iOS to use Venmo as an
+                                option.
+                            </div>
+                        }
 
                         <div class="form-field">
                             <label class="field-label">Payment Method</label>
@@ -482,5 +490,9 @@ export class DonateComponent {
         this.messages.set([]);
         this.donationComplete.set(false);
         this.transactionId.set('');
+    }
+
+    isIosButNotSafari() {
+        return browserDetection.isIos() && !browserDetection.isSafari();
     }
 }
