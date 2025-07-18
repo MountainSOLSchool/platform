@@ -493,6 +493,6 @@ export class DonateComponent {
     }
 
     isIosButNotSafari() {
-        return browserDetection.isIos() && !browserDetection.isSafari();
+        return browserDetection.isIos() && !browserDetection.isIosSafari();
     }
 }
