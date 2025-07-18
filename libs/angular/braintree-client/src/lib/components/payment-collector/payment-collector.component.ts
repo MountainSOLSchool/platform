@@ -36,7 +36,7 @@ export class PaymentCollectorComponent implements OnInit {
     }
 
     @Input() anonymous = false;
-    @Input() paymentMethods: string[] = ['card', 'paypal', 'venmo'];
+    @Input() paymentMethods: string[] = ['card', 'venmo'];
 
     @Output() paymentMethod: Observable<
         | {
