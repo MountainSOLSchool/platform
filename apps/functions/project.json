@@ -33,20 +33,20 @@
       "options": {
         "commands": [
           "npx nx run functions:build --watch",
-          "firebase serve --only functions --project=dev --port=5001 --host=0.0.0.0"
+          "firebase serve --only functions --project=dev --port=5001"
         ]
       },
       "configurations": {
         "production": {
           "commands": [
             "npx nx run functions:build --watch",
-            "firebase serve --only functions --project=prod --port=5001 --host=0.0.0.0"
+            "firebase serve --only functions --project=prod --port=5001"
           ]
         },
         "development": {
           "commands": [
             "npx nx run functions:build --watch",
-            "firebase serve --only functions --project=dev --port=5001 --host=0.0.0.0"
+            "firebase serve --only functions --project=dev --port=5001"
           ]
         }
       },

@@ -45,7 +45,7 @@ export class PaymentCollectorStore extends ComponentStore<{
             nonce: undefined,
             paymentDetails: undefined,
             isAnonymous: false,
-            paymentMethods: ['card', 'paypal', 'venmo'], // Default payment methods
+            paymentMethods: ['card'],
         });
     }
 
