@@ -49,10 +49,6 @@ export class PaymentCollectorStore extends ComponentStore<{
         });
     }
 
-    private isIOS(): boolean {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent);
-    }
-
     readonly prepare = this.effect((prepare$) => {
         return prepare$.pipe(
             switchMap(() => {
@@ -168,11 +164,7 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     allowDesktopWebLogin: true,
                                     mobileWebFallBack: true,
                                     allowDesktop: true,
-                                    ...(this.isIOS()
-                                        ? {
-                                              allowWebviews: true,
-                                          }
-                                        : {}),
+                                    allowWebviews: true,
                                 };
 
                                 dropInOptions.venmo = venmoConfig;
