@@ -49,6 +49,10 @@ export class PaymentCollectorStore extends ComponentStore<{
         });
     }
 
+    private isIOS(): boolean {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent);
+    }
+
     readonly prepare = this.effect((prepare$) => {
         return prepare$.pipe(
             switchMap(() => {
@@ -154,25 +158,34 @@ export class PaymentCollectorStore extends ComponentStore<{
                                 },
                             };
 
-                            // Configure payment methods based on anonymous mode
                             if (!anonymous) {
                                 dropInOptions.vaultManager = true;
                             }
 
-                            // Configure which payment methods to show
                             if (this.get().paymentMethods.includes('venmo')) {
-                                dropInOptions.venmo = {
+                                const venmoConfig = {
                                     allowNewBrowserTab: false,
                                     allowDesktopWebLogin: true,
+                                    mobileWebFallBack: true,
+                                    allowDesktop: true,
+                                    ...(this.isIOS()
+                                        ? {
+                                              allowWebviews: true,
+                                          }
+                                        : {}),
                                 };
+
+                                dropInOptions.venmo = venmoConfig;
                             }
 
                             createDropIn(
                                 dropInOptions,
                                 (err, dropInInstance) => {
                                     if (err) {
-                                        // Handle any errors that might've occurred when creating Drop-in
-                                        console.error(err);
+                                        console.error(
+                                            'Drop-in creation error:',
+                                            err
+                                        );
                                         return;
                                     }
                                     this.patchState({ dropInInstance });

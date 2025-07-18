@@ -56,8 +56,8 @@ export const donateVenmo = Functions.endpoint
                 deviceData,
             } = request.body.data;
 
-            if (!amount || amount <= 0) {
-                response.status(400).send({ error: 'Invalid donation amount' });
+            if (!amount || amount <= 0 || amount > 249) {
+                response.status(400).send({ error: 'Invalid donation amount. Please donate an amount under $250' });
                 return;
             }
 

@@ -69,7 +69,7 @@ import { RequestedUtility } from '@sol/angular/request';
                                     inputId="amount"
                                     mode="currency"
                                     currency="USD"
-                                    [showButtons]="true"
+                                    [showButtons]="false"
                                     [min]="5"
                                     [step]="10"
                                     placeholder="Enter amount"
@@ -114,7 +114,14 @@ import { RequestedUtility } from '@sol/angular/request';
             :host {
                 display: block;
                 min-height: 100vh;
-                background-color: var(--surface-ground);
+            }
+
+            p-inputnumber {
+                width: 100%;
+            }
+
+            ::ng-deep .p-inputnumber {
+                width: 100%;
             }
 
             .donation-container {
