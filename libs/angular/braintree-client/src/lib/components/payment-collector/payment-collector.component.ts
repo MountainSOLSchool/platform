@@ -35,6 +35,9 @@ export class PaymentCollectorComponent implements OnInit {
         this.store.resetDropInInstance();
     }
 
+    @Input() anonymous = false;
+    @Input() paymentMethods: string[] = ['card', 'venmo'];
+
     @Output() paymentMethod: Observable<
         | {
               nonce: string;
@@ -49,6 +52,10 @@ export class PaymentCollectorComponent implements OnInit {
     readonly loading$ = this.store.select(({ token }) => !token);
 
     ngOnInit(): void {
-        this.store.initialize(this.COLLECTOR_ELEMENT_SELECTOR);
+        this.store.initialize({
+            elementSelector: this.COLLECTOR_ELEMENT_SELECTOR,
+            anonymous: this.anonymous,
+            paymentMethods: this.paymentMethods,
+        });
     }
 }

@@ -122,6 +122,10 @@
                     "function": "doesStudentInfoRequireReview"
                 },
                 {
+                    "source": "/donateVenmo",
+                    "function": "donateVenmo"
+                },
+                {
                     "source": "**",
                     "destination": "/index.html"
                 }

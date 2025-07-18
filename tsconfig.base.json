@@ -108,6 +108,9 @@
             "@sol/firebase/enrollment-functions/does-student-info-require-review": [
                 "libs/firebase/enrollment-functions/does-student-info-require-review/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/donate-venmo": [
+                "libs/firebase/enrollment-functions/donate-venmo/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/emails": [
                 "libs/firebase/enrollment-functions/emails/src/index.ts"
             ],

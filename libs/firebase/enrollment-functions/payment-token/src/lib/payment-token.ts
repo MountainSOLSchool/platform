@@ -4,14 +4,25 @@ import { Braintree } from '@sol/payments/braintree';
 export const paymentToken = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .usingStrings(...Braintree.STRING_NAMES)
-    .handle(async (request, response, secrets, strings) => {
+    .handle<{
+        anonymous?: boolean;
+    }>(async (request, response, secrets, strings) => {
+        const { anonymous = false } = request.body.data || {};
+        
+        const braintree = new Braintree(secrets, strings);
+        
+        if (anonymous) {
+            const token = await braintree.getAnonymousClientToken();
+            response.send(token);
+            return;
+        }
+        
         const user = await AuthUtility.getUserFromRequest(request, response);
         if (!user) {
             response.status(401).send({ error: 'Unauthorized' });
             return;
         }
-        const braintree = new Braintree(secrets, strings);
+        
         const token = await braintree.getClientToken(user);
-
         response.send(token);
     });
