@@ -29,6 +29,8 @@ export class PaymentCollectorStore extends ComponentStore<{
     dropInInstance: Dropin | undefined;
     nonce: string | undefined;
     paymentDetails: cardPaymentMethodPayload['details'] | undefined;
+    isAnonymous: boolean;
+    paymentMethods: string[];
 }> {
     private readonly http = inject(HttpClient);
     private readonly functions = inject(FirebaseFunctionsService);
@@ -42,6 +44,8 @@ export class PaymentCollectorStore extends ComponentStore<{
             dropInInstance: undefined,
             nonce: undefined,
             paymentDetails: undefined,
+            isAnonymous: false,
+            paymentMethods: ['card', 'paypal', 'venmo'], // Default payment methods
         });
     }
 
@@ -68,20 +72,56 @@ export class PaymentCollectorStore extends ComponentStore<{
         );
     });
 
-    readonly loadToken$ = this.effect(() => {
-        return this.paymentService.getToken().pipe(
-            tap((token) => {
-                this.patchState({
-                    token,
-                });
-            })
-        );
-    });
+    readonly loadToken$ = this.effect(
+        (
+            config$: Observable<
+                | {
+                      anonymous?: boolean;
+                  }
+                | undefined
+            >
+        ) => {
+            return config$.pipe(
+                switchMap((config) => {
+                    const anonymous =
+                        config?.anonymous ?? this.get().isAnonymous;
+                    this.patchState({ isAnonymous: anonymous });
+
+                    return this.paymentService.getToken(anonymous).pipe(
+                        tap((token) => {
+                            this.patchState({
+                                token,
+                            });
+                        })
+                    );
+                })
+            );
+        }
+    );
 
     readonly initialize = this.effect(
-        (elementSelector$: Observable<string>) => {
-            return elementSelector$.pipe(
-                switchMap((elementSelector) => {
+        (
+            config$: Observable<{
+                elementSelector: string;
+                anonymous?: boolean;
+                paymentMethods?: string[];
+            }>
+        ) => {
+            return config$.pipe(
+                switchMap((config) => {
+                    const {
+                        elementSelector,
+                        anonymous = false,
+                        paymentMethods,
+                    } = config;
+
+                    if (paymentMethods) {
+                        this.patchState({ paymentMethods });
+                    }
+
+                    // Load token with anonymous flag
+                    this.loadToken$({ anonymous });
+
                     return this.select(({ token }) => token).pipe(
                         filter((token): token is string => !!token),
                         take(1),
@@ -105,15 +145,30 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     );
                                 }
                             );
-                            createDropIn(
-                                {
-                                    vaultManager: true,
-                                    authorization: token,
-                                    container: `#${elementSelector}`,
-                                    dataCollector: {
-                                        kount: true,
-                                    },
+
+                            const dropInOptions: any = {
+                                authorization: token,
+                                container: `#${elementSelector}`,
+                                dataCollector: {
+                                    kount: true,
                                 },
+                            };
+
+                            // Configure payment methods based on anonymous mode
+                            if (!anonymous) {
+                                dropInOptions.vaultManager = true;
+                            }
+
+                            // Configure which payment methods to show
+                            if (this.get().paymentMethods.includes('venmo')) {
+                                dropInOptions.venmo = {
+                                    allowDesktop: true,
+                                    allowDesktopWebLogin: true,
+                                };
+                            }
+
+                            createDropIn(
+                                dropInOptions,
                                 (err, dropInInstance) => {
                                     if (err) {
                                         // Handle any errors that might've occurred when creating Drop-in
@@ -143,6 +198,7 @@ export class PaymentCollectorStore extends ComponentStore<{
             );
         }
     );
+
     readonly resetDropInInstance = this.effect((trigger$) => {
         return trigger$.pipe(
             tap(() => this.get().dropInInstance?.clearSelectedPaymentMethod())

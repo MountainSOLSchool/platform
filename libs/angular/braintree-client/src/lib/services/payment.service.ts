@@ -9,9 +9,9 @@ export class PaymentService {
     private readonly functions = inject(FirebaseFunctionsService);
     private readonly user = inject(UserService).getUser();
 
-    getToken(): Observable<string> {
+    getToken(anonymous = false): Observable<string> {
         return this.user.pipe(
-            filter((user) => !!user),
+            filter((user) => anonymous || !!user),
             switchMap(() =>
                 this.functions
                     .call<string>('paymentToken')

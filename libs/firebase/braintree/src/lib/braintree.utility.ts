@@ -1,4 +1,9 @@
-import { Customer, BraintreeGateway, Environment } from 'braintree';
+import {
+    Customer,
+    BraintreeGateway,
+    Environment,
+    TransactionRequest,
+} from 'braintree';
 import { PreparedTransaction } from '@sol/payments/transactions';
 import admin from 'firebase-admin';
 
@@ -66,5 +71,31 @@ export class Braintree {
             customer: transaction.customer,
             deviceData: transaction.deviceData,
         });
+    }
+
+    public async transactWithVenmo(
+        transaction: Omit<PreparedTransaction, 'customer'> & {
+            customFields?: Record<string, string>;
+        }
+    ) {
+        const transactionRequest: TransactionRequest = {
+            amount: transaction.amount.toFixed(2),
+            paymentMethodNonce: transaction.nonce,
+            options: {
+                submitForSettlement: true,
+                venmo: {
+                    profileId: '1953896702662410263', // temporary sandbox value
+                },
+            },
+            deviceData: transaction.deviceData,
+            customFields: transaction.customFields,
+        };
+
+        return await this.gateway.transaction.sale(transactionRequest);
+    }
+
+    public async getAnonymousClientToken() {
+        const response = await this.gateway.clientToken.generate({});
+        return response.clientToken;
     }
 }
