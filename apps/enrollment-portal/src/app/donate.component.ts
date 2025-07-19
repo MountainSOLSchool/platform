@@ -70,14 +70,14 @@ import * as browserDetection from '@braintree/browser-detection';
                                     mode="currency"
                                     currency="USD"
                                     [showButtons]="false"
-                                    [min]="5"
+                                    [min]="1"
                                     placeholder="Enter amount"
                                     class="amount-input"
                                 >
                                 </p-inputNumber>
                             </div>
                             <small class="field-hint"
-                                >Minimum donation: $5</small
+                                >Minimum donation: $1</small
                             >
                         </div>
 
