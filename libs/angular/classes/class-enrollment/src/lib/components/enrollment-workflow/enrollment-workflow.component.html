@@ -1,3 +1,4 @@
+<div style="max-width: 1100px; margin: auto; ">
 @if (didLoadFromDraft()) {
     <p-messages severity="info" [closable]="false">
         <ng-template pTemplate>
@@ -37,7 +38,7 @@
     <mat-stepper
     #stepper
     [orientation]="(stepperOrientation | async)!"
-    style="height: 100%"
+    style="height: 100%;"
 >
     <mat-step #classSelection label="Class Selection">
         <ng-template matStepContent>
@@ -227,6 +228,7 @@
         </div>
     </ng-template>
 </mat-stepper>
+
 @let isSubmitting = isSubmitting$ | async;
 @if (isSubmitting) {
     <p-dialog
@@ -288,3 +290,4 @@
     </p-dialog>
 }
 }
+</div>
