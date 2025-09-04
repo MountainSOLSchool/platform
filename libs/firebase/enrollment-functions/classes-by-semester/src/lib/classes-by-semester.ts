@@ -1,8 +1,7 @@
 import { Functions } from '@sol/firebase/functions';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { DatabaseUtility } from '@sol/firebase/database';
-import { ClassDbo } from './class.repository';
-import { SemesterClassGroupDbo } from './class-group.repository';
+import { ClassDbo, SemesterClassGroupDbo } from '@sol/classes/repository';
 import admin from 'firebase-admin';
 
 interface InstructorDbo {
