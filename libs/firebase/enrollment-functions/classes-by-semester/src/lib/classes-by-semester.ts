@@ -1,7 +1,8 @@
 import { Functions } from '@sol/firebase/functions';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { DatabaseUtility } from '@sol/firebase/database';
-import { ClassDbo, SemesterClassGroupDbo } from '@sol/classes/repository';
+import { ClassDbo } from './class.repository';
+import { SemesterClassGroupDbo } from './class-group.repository';
 import admin from 'firebase-admin';
 
 interface InstructorDbo {
@@ -38,18 +39,22 @@ interface RequestConfig {
     onlyOpenForRegistration?: boolean;
 }
 
-function transformTimestamp(timestamp: admin.firestore.Timestamp | null | undefined): number {
+function transformTimestamp(
+    timestamp: admin.firestore.Timestamp | null | undefined
+): number {
     return timestamp && timestamp.seconds ? timestamp.seconds * 1000 : 0;
 }
 
-function extractIdFromReference(ref:
-    admin.firestore.DocumentReference
-    | string): string {
+function extractIdFromReference(
+    ref: admin.firestore.DocumentReference | string
+): string {
     if (typeof ref === 'string') return ref;
     return ref.path[ref.path.length - 1];
 }
 
-async function fetchInstructorData(ref: admin.firestore.DocumentReference): Promise<InstructorResponse> {
+async function fetchInstructorData(
+    ref: admin.firestore.DocumentReference
+): Promise<InstructorResponse> {
     const doc = await DatabaseUtility.getDatabase().doc(ref.path).get();
     const data = doc.data() as InstructorDbo | undefined;
 
@@ -57,7 +62,7 @@ async function fetchInstructorData(ref: admin.firestore.DocumentReference): Prom
         return {
             id: doc.id,
             firstName: '',
-            lastName: ''
+            lastName: '',
         };
     }
 
@@ -76,20 +81,24 @@ async function fetchAdditionalOptionsFromSubcollection(
 ): Promise<AdditionalOptionResponse[]> {
     try {
         const additionalOptionsSnapshot = await DatabaseUtility.getDatabase()
-            .collection(`semesters/${semesterId}/classes/${classId}/additional_options`)
+            .collection(
+                `semesters/${semesterId}/classes/${classId}/additional_options`
+            )
             .get();
 
-        return additionalOptionsSnapshot.docs.map(doc => {
+        return additionalOptionsSnapshot.docs.map((doc) => {
             const data = doc.data() as AdditionalOptionDbo;
             return {
                 id: doc.id,
                 description: data.description || '',
                 cost: data.cost || 0,
-                studentsIds: (data.students || []).map(extractIdFromReference)
+                studentsIds: (data.students || []).map(extractIdFromReference),
             };
         });
     } catch (error) {
-        console.log(`No additional options subcollection found for class ${classId}`);
+        console.log(
+            `No additional options subcollection found for class ${classId}`
+        );
         return [];
     }
 }
@@ -99,24 +108,32 @@ function transformInlineAdditionalOptions(
 ): AdditionalOptionResponse[] {
     if (!options) return [];
 
-    return options.map(option => ({
+    return options.map((option) => ({
         id: option.id || '',
         description: option.description || '',
         cost: option.cost || 0,
-        studentsIds: (option.students || []).map(extractIdFromReference)
+        studentsIds: (option.students || []).map(extractIdFromReference),
     }));
 }
 
-async function transformClass(classDbo: ClassDbo, semesterId: string): Promise<SemesterClass> {
+async function transformClass(
+    classDbo: ClassDbo,
+    semesterId: string
+): Promise<SemesterClass> {
     const instructorRefs = classDbo.instructors || [];
     const instructors = await Promise.all(
         instructorRefs.map(fetchInstructorData)
     );
 
-    let additionalOptions = await fetchAdditionalOptionsFromSubcollection(semesterId, classDbo.id);
+    let additionalOptions = await fetchAdditionalOptionsFromSubcollection(
+        semesterId,
+        classDbo.id
+    );
 
     if (additionalOptions.length === 0) {
-        additionalOptions = transformInlineAdditionalOptions(classDbo.additional_options);
+        additionalOptions = transformInlineAdditionalOptions(
+            classDbo.additional_options
+        );
     }
 
     return {
@@ -142,84 +159,99 @@ async function transformClass(classDbo: ClassDbo, semesterId: string): Promise<S
         semesterId: semesterId,
         forInformationOnly: classDbo.for_information_only || false,
         unitIds: (classDbo.units || []).map(extractIdFromReference),
-        paymentRange: classDbo.payment_range_lowest && classDbo.payment_range_highest ? {
-            lowest: classDbo.payment_range_lowest,
-            highest: classDbo.payment_range_highest
-        } : undefined,
-        additionalOptions
+        paymentRange:
+            classDbo.payment_range_lowest && classDbo.payment_range_highest
+                ? {
+                      lowest: classDbo.payment_range_lowest,
+                      highest: classDbo.payment_range_highest,
+                  }
+                : undefined,
+        additionalOptions,
     };
 }
 
-async function transformGroup(groupDbo: SemesterClassGroupDbo, allClasses: SemesterClass[]): Promise<SemesterClassGroup> {
+async function transformGroup(
+    groupDbo: SemesterClassGroupDbo,
+    allClasses: SemesterClass[]
+): Promise<SemesterClassGroup> {
     const classIds = groupDbo.classIds || [];
-    const groupClasses = allClasses.filter(cls => classIds.includes(cls.id));
+    const groupClasses = allClasses.filter((cls) => classIds.includes(cls.id));
 
-    console.log(`Group ${groupDbo.id}: classIds=${JSON.stringify(classIds)}, found ${groupClasses.length} classes`);
+    console.log(
+        `Group ${groupDbo.id}: classIds=${JSON.stringify(classIds)}, found ${groupClasses.length} classes`
+    );
 
     return {
         id: groupDbo.id,
         name: groupDbo.name,
         cost: groupDbo.cost,
-        classes: groupClasses
+        classes: groupClasses,
     };
 }
 
 export async function _getCategorizedClassesOptimized(
     semesterId: string,
     config: RequestConfig = {}
-): Promise<{ groups: SemesterClassGroup[]; classesNotInGroups: SemesterClass[] }> {
+): Promise<{
+    groups: SemesterClassGroup[];
+    classesNotInGroups: SemesterClass[];
+}> {
     const db = DatabaseUtility.getDatabase();
 
     const classesPath = `semesters/${semesterId}/classes`;
     const groupsPath = `semesters/${semesterId}/groups`;
 
     const classesQuery = config.onlyOpenForRegistration
-        ? db.collection(classesPath)
-            .where('registration_end_date', '>=', new Date(Date.now()))
-            .where('live', '==', true)
+        ? db
+              .collection(classesPath)
+              .where('registration_end_date', '>=', new Date(Date.now()))
+              .where('live', '==', true)
         : db.collection(classesPath).where('live', '==', true);
 
     const groupsQuery = db.collection(groupsPath);
 
     const [classesSnapshot, groupsSnapshot] = await Promise.all([
         classesQuery.get(),
-        groupsQuery.get()
+        groupsQuery.get(),
     ]);
 
-    const classDboes: ClassDbo[] = classesSnapshot.docs.map(doc => ({
+    const classDboes: ClassDbo[] = classesSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...(doc.data() as Omit<ClassDbo, 'id'>)
+        ...(doc.data() as Omit<ClassDbo, 'id'>),
     }));
 
-    const groupDbos: SemesterClassGroupDbo[] = groupsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...(doc.data() as Omit<SemesterClassGroupDbo, 'id'>)
-    }));
+    const groupDbos: SemesterClassGroupDbo[] = groupsSnapshot.docs.map(
+        (doc) => ({
+            id: doc.id,
+            ...(doc.data() as Omit<SemesterClassGroupDbo, 'id'>),
+        })
+    );
 
     const classes = await Promise.all(
-        classDboes.map(classDbo => transformClass(classDbo, semesterId))
+        classDboes.map((classDbo) => transformClass(classDbo, semesterId))
     );
 
     const allGroups = await Promise.all(
-        groupDbos.map(groupDbo => transformGroup(groupDbo, classes))
+        groupDbos.map((groupDbo) => transformGroup(groupDbo, classes))
     );
 
     let filteredGroups = allGroups;
     if (config.onlyOpenForRegistration) {
         const now = Date.now();
-        filteredGroups = allGroups.filter(group => {
+        filteredGroups = allGroups.filter((group) => {
             if (!group.classes || group.classes.length === 0) {
                 console.log(`Filtering out group ${group.id}: no classes`);
                 return false;
             }
 
-            return group.classes.every(classItem =>
-                classItem.live && classItem.registrationEndMs >= now
+            return group.classes.every(
+                (classItem) =>
+                    classItem.live && classItem.registrationEndMs >= now
             );
         });
     }
 
-    filteredGroups = filteredGroups.filter(group => {
+    filteredGroups = filteredGroups.filter((group) => {
         if (!group.classes || group.classes.length === 0) {
             console.log(`Removing empty group: ${group.id}`);
             return false;
@@ -228,65 +260,71 @@ export async function _getCategorizedClassesOptimized(
     });
 
     const idsOfClassesInGroups = new Set<string>(
-        filteredGroups.flatMap(g => g.classes.map(c => c.id))
+        filteredGroups.flatMap((g) => g.classes.map((c) => c.id))
     );
 
     const classesNotInGroups = classes.filter(
-        c => !idsOfClassesInGroups.has(c.id)
+        (c) => !idsOfClassesInGroups.has(c.id)
     );
 
     return {
         groups: filteredGroups,
-        classesNotInGroups
+        classesNotInGroups,
     };
 }
 
 export async function _getCategorizedClassesOptimizedBatched(
     semesterId: string,
     config: RequestConfig = {}
-): Promise<{ groups: SemesterClassGroup[]; classesNotInGroups: SemesterClass[] }> {
+): Promise<{
+    groups: SemesterClassGroup[];
+    classesNotInGroups: SemesterClass[];
+}> {
     const db = DatabaseUtility.getDatabase();
 
     const classesPath = `semesters/${semesterId}/classes`;
     const groupsPath = `semesters/${semesterId}/groups`;
 
     const classesQuery = config.onlyOpenForRegistration
-        ? db.collection(classesPath)
-            .where('registration_end_date', '>=', new Date(Date.now()))
-            .where('live', '==', true)
+        ? db
+              .collection(classesPath)
+              .where('registration_end_date', '>=', new Date(Date.now()))
+              .where('live', '==', true)
         : db.collection(classesPath).where('live', '==', true);
 
     const groupsQuery = db.collection(groupsPath);
 
     const [classesSnapshot, groupsSnapshot] = await Promise.all([
         classesQuery.get(),
-        groupsQuery.get()
+        groupsQuery.get(),
     ]);
 
-    const classDboes: ClassDbo[] = classesSnapshot.docs.map(doc => ({
+    const classDboes: ClassDbo[] = classesSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...(doc.data() as Omit<ClassDbo, 'id'>)
+        ...(doc.data() as Omit<ClassDbo, 'id'>),
     }));
 
-    const groupDbos: SemesterClassGroupDbo[] = groupsSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...(doc.data() as Omit<SemesterClassGroupDbo, 'id'>)
-    }));
+    const groupDbos: SemesterClassGroupDbo[] = groupsSnapshot.docs.map(
+        (doc) => ({
+            id: doc.id,
+            ...(doc.data() as Omit<SemesterClassGroupDbo, 'id'>),
+        })
+    );
 
     const instructorPaths = new Set<string>();
-    classDboes.forEach(cls => {
-        cls.instructors?.forEach(ref => {
+    classDboes.forEach((cls) => {
+        cls.instructors?.forEach((ref) => {
             instructorPaths.add(ref.path);
         });
     });
 
-    const instructorPromises = Array.from(instructorPaths).map(path =>
+    const instructorPromises = Array.from(instructorPaths).map((path) =>
         db.doc(path).get()
     );
     const instructorDocs = await Promise.all(instructorPromises);
 
     const instructorMap = new Map<string, InstructorResponse>();
-    instructorDocs.forEach(doc => {
+    instructorDocs.forEach((doc) => {
         if (doc.exists) {
             const data = doc.data() as InstructorDbo;
             instructorMap.set(doc.ref.path, {
@@ -301,18 +339,28 @@ export async function _getCategorizedClassesOptimizedBatched(
 
     const classes = await Promise.all(
         classDboes.map(async (classDbo): Promise<SemesterClass> => {
-            const instructors: InstructorResponse[] = (classDbo.instructors || []).map(ref => {
+            const instructors: InstructorResponse[] = (
+                classDbo.instructors || []
+            ).map((ref) => {
                 const path = ref.path;
-                return instructorMap.get(path) || {
-                    id: extractIdFromReference(ref),
-                    firstName: '',
-                    lastName: ''
-                };
+                return (
+                    instructorMap.get(path) || {
+                        id: extractIdFromReference(ref),
+                        firstName: '',
+                        lastName: '',
+                    }
+                );
             });
 
-            let additionalOptions = await fetchAdditionalOptionsFromSubcollection(semesterId, classDbo.id);
+            let additionalOptions =
+                await fetchAdditionalOptionsFromSubcollection(
+                    semesterId,
+                    classDbo.id
+                );
             if (additionalOptions.length === 0) {
-                additionalOptions = transformInlineAdditionalOptions(classDbo.additional_options);
+                additionalOptions = transformInlineAdditionalOptions(
+                    classDbo.additional_options
+                );
             }
 
             return {
@@ -320,7 +368,9 @@ export async function _getCategorizedClassesOptimizedBatched(
                 title: classDbo.name,
                 startMs: transformTimestamp(classDbo.start),
                 endMs: transformTimestamp(classDbo.end),
-                registrationEndMs: transformTimestamp(classDbo.registration_end_date),
+                registrationEndMs: transformTimestamp(
+                    classDbo.registration_end_date
+                ),
                 enrolledCount: classDbo.students?.length || 0,
                 classType: classDbo.class_type,
                 gradeRangeStart: classDbo.grade_range_start,
@@ -333,52 +383,62 @@ export async function _getCategorizedClassesOptimizedBatched(
                 dailyTimes: classDbo.daily_times,
                 weekday: classDbo.weekday,
                 thumbnailUrl: classDbo.thumbnailUrl,
-                studentIds: (classDbo.students || []).map(extractIdFromReference),
-                pausedForEnrollment: classDbo.paused_for_enrollment || false,
+                studentIds: (classDbo.students || []).map(
+                    extractIdFromReference
+                ),
+                pausedForEnrollment: classDbo.max_student_size
+                    ? (classDbo.students ?? []).length >
+                      classDbo.max_student_size
+                    : classDbo.paused_for_enrollment || false,
                 semesterId: semesterId,
                 forInformationOnly: classDbo.for_information_only || false,
                 unitIds: (classDbo.units || []).map(extractIdFromReference),
-                paymentRange: classDbo.payment_range_lowest && classDbo.payment_range_highest ? {
-                    lowest: classDbo.payment_range_lowest,
-                    highest: classDbo.payment_range_highest
-                } : undefined,
-                additionalOptions
+                paymentRange:
+                    classDbo.payment_range_lowest &&
+                    classDbo.payment_range_highest
+                        ? {
+                              lowest: classDbo.payment_range_lowest,
+                              highest: classDbo.payment_range_highest,
+                          }
+                        : undefined,
+                additionalOptions,
             };
         })
     );
 
     const allGroups = await Promise.all(
-        groupDbos.map(groupDbo => transformGroup(groupDbo, classes))
+        groupDbos.map((groupDbo) => transformGroup(groupDbo, classes))
     );
 
     let filteredGroups = allGroups;
     if (config.onlyOpenForRegistration) {
         const now = Date.now();
-        filteredGroups = allGroups.filter(group => {
+        filteredGroups = allGroups.filter((group) => {
             if (!group.classes || group.classes.length === 0) {
                 return false;
             }
-            return group.classes.every(classItem =>
-                classItem.live && classItem.registrationEndMs >= now
+            return group.classes.every(
+                (classItem) =>
+                    classItem.live && classItem.registrationEndMs >= now
             );
         });
     }
 
-    filteredGroups = filteredGroups.filter(group =>
-        group.classes && group.classes.length > 0
+    filteredGroups = filteredGroups.filter(
+        (group) => group.classes && group.classes.length > 0
     );
 
     const idsOfClassesInGroups = new Set<string>(
-        filteredGroups.flatMap(g => g.classes.map(c => c.id))
+        filteredGroups.flatMap((g) => g.classes.map((c) => c.id))
     );
 
     const classesNotInGroups = classes.filter(
-        c => !idsOfClassesInGroups.has(c.id)
+        (c) => !idsOfClassesInGroups.has(c.id)
     );
 
     return {
         groups: filteredGroups,
-        classesNotInGroups
+        classesNotInGroups,
     };
 }
 
@@ -387,22 +447,30 @@ export const classesBySemester = Functions.endpoint.handle<string[]>(
     async (request, response) => {
         try {
             const semesterIds: string[] = request.body.data;
-            const results: Record<string, {
-                classes: SemesterClass[];
-                groups: SemesterClassGroup[];
-            }> = {};
+            const results: Record<
+                string,
+                {
+                    classes: SemesterClass[];
+                    groups: SemesterClassGroup[];
+                }
+            > = {};
 
-            const semesterPromises = semesterIds.map(async (semesterId: string) => {
-                const { classesNotInGroups, groups } = await _getCategorizedClassesOptimizedBatched(semesterId);
-                return { semesterId, classesNotInGroups, groups };
-            });
+            const semesterPromises = semesterIds.map(
+                async (semesterId: string) => {
+                    const { classesNotInGroups, groups } =
+                        await _getCategorizedClassesOptimizedBatched(
+                            semesterId
+                        );
+                    return { semesterId, classesNotInGroups, groups };
+                }
+            );
 
             const allResults = await Promise.all(semesterPromises);
 
             allResults.forEach(({ semesterId, classesNotInGroups, groups }) => {
                 results[semesterId] = {
                     classes: classesNotInGroups,
-                    groups
+                    groups,
                 };
             });
 
@@ -411,7 +479,8 @@ export const classesBySemester = Functions.endpoint.handle<string[]>(
             console.error('Error in classesBySemesterOptimized:', error);
             response.status(500).send({
                 error: 'Error fetching classes by semester',
-                details: error instanceof Error ? error.message : 'Unknown error'
+                details:
+                    error instanceof Error ? error.message : 'Unknown error',
             });
         }
     }
