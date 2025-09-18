@@ -38,7 +38,7 @@ Run the frontend portal with `npx nx run enrollment-portal:serve` and view at ht
 
 ## Student Portal (React)
 
-Run the frontend portal with `npx nx run student-portal:serve` and view at http://localhost:4200/.
+Run the frontend portal with `npx nx run student-portal:serve` and view at http://localhost:4201/.
 
 ### Deployment
 
