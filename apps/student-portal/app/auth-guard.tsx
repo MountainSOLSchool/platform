@@ -11,16 +11,17 @@ export function isPublicRoute(
     pathname: string
 ): boolean {
     return publicRoutes.some((route) => {
-        const pattern = route.replace(/:\w+/g, '[^/]+').replace(/\//g, '\\/');
+        const pattern = route.replace(/:[^/]+/g, '[^/]+').replace(/\//g, '\\/');
 
         const regex = new RegExp(`^${pattern}$`);
         return regex.test(pathname);
     });
 }
 
-export function useAuthStatus() {
+export function useAuthStatus(publicRoutes: Array<string>) {
     const [authStatus, setAuthStatus] = useState<AuthStatus>('loading');
     const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         const unsubscribe = auth.getAuth().onAuthStateChanged((user) => {
@@ -28,12 +29,14 @@ export function useAuthStatus() {
                 setAuthStatus('authenticated');
             } else {
                 setAuthStatus('unauthenticated');
-                router.push('/login');
+                if (!isPublicRoute(publicRoutes, pathname)) {
+                    router.push('/login');
+                }
             }
         });
 
         return () => unsubscribe();
-    }, [router]);
+    }, [router, pathname, publicRoutes]);
 
     return { authStatus };
 }
@@ -46,7 +49,7 @@ export function AuthGuard({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
-    const { authStatus } = useAuthStatus();
+    const { authStatus } = useAuthStatus(publicRoutes);
 
     if (isPublicRoute(publicRoutes, pathname)) {
         return <>{children}</>;

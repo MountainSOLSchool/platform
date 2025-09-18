@@ -1,18 +1,11 @@
 import { _assertUserCanManageStudent } from '@sol/firebase/enrollment-functions/shared';
 import { StudentRepository } from '@sol/student/repository';
-import { AuthUtility, Functions } from '@sol/firebase/functions';
+import { Functions } from '@sol/firebase/functions';
 
 export const getStudentCompletedUnits = Functions.endpoint.handle<{
     studentId: string;
 }>(async (request, response) => {
-    const user = await AuthUtility.getUserFromRequest(request, response);
-    if (!user) {
-        response.send({ studentIds: [] });
-        return;
-    }
     const { studentId } = request.body.data;
-
-    await _assertUserCanManageStudent(user, studentId, response);
 
     const student = await StudentRepository.get(studentId);
 

@@ -10,14 +10,13 @@ import { AddEpicContext } from '@sharakai/use-redux-observable-epic';
 import { PrimeReactProvider } from 'primereact/api';
 import dynamic from 'next/dynamic';
 import { AuthGuard, useAuthStatus } from './auth-guard';
+import { publicRoutes } from './public-routes-config';
 
 // TODO: preventing SSR temporarily because something goes wrong with pre-rendering (likely useMediaQuery)
 const Header = dynamic(() => import('../components/Header'), { ssr: false });
 
-export const publicRoutes = ['/units/student/:id'];
-
 function RootLayout({ children }: { children: React.ReactNode }) {
-    const { authStatus } = useAuthStatus();
+    const { authStatus } = useAuthStatus(publicRoutes);
 
     return (
         <html>

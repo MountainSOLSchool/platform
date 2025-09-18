@@ -601,7 +601,6 @@ function SmartTreeChart(props: { studentId: string }) {
     */
 
     useEffect(() => {
-        console.log('again');
         if (paths.length > 0 && units.length > 0) {
             setCompleteUnits(student['completedUnits']);
             generateNodes();
