@@ -324,7 +324,6 @@ const SmartTreeChart = memo(function SmartTreeChart({
                             name: nodeData['name'],
                             description: nodeData['description'],
                         });
-                        console.log(nodeData.name);
                     }
                     if (nodeData.status === 'ghost') {
                         return;

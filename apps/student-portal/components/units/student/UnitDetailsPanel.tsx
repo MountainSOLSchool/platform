@@ -21,7 +21,7 @@ export function UnitDetailsPanel({ unitDetails, isSelected }: UnitDetailsPanelPr
             setIsExpanded(true);
             setIsMinimized(false);
         }
-    }, [isSelected]);
+    }, [isSelected, isExpanded]);
 
     const handleDragStart = (clientY: number) => {
         setDragStartY(clientY);
