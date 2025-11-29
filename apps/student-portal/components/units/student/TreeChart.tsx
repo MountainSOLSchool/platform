@@ -257,7 +257,7 @@ const SmartTreeChart = memo(function SmartTreeChart({
             .attr('x2', '100%')
             .attr('y2', '100%');
 
-        // Create a smooth gradient with transition in the middle
+        // Create a smooth gradient with gradual transition
         gradient
             .append('stop')
             .attr('offset', '0%')
@@ -265,17 +265,17 @@ const SmartTreeChart = memo(function SmartTreeChart({
 
         gradient
             .append('stop')
-            .attr('offset', '45%')
+            .attr('offset', '30%')
             .attr('stop-color', Colors.complete);
 
         gradient
             .append('stop')
             .attr('offset', '50%')
-            .attr('stop-color', '#0a95c6'); // Blend between complete and unlocked
+            .attr('stop-color', '#2c9dc9'); // Blend between complete and unlocked
 
         gradient
             .append('stop')
-            .attr('offset', '55%')
+            .attr('offset', '70%')
             .attr('stop-color', Colors.unlocked);
 
         gradient
