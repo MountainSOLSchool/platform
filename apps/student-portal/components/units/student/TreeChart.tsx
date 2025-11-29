@@ -146,31 +146,44 @@ const SmartTreeChart = memo(function SmartTreeChart({
 
             // CHECK COMPLETION OF CATEGORIES
             categories.forEach((category, index) => {
-                if (
-                    !category['children'].find(
-                        (unit) =>
-                            unit.status !== 'complete' &&
-                            unit.status !== 'ghost'
-                    )
-                ) {
+                const nonGhostChildren = category['children'].filter(
+                    (unit) => unit.status !== 'ghost'
+                );
+                const completedChildren = nonGhostChildren.filter(
+                    (unit) => unit.status === 'complete'
+                );
+
+                if (completedChildren.length === nonGhostChildren.length) {
+                    // All children complete
                     categories[index].status = 'complete';
+                } else if (completedChildren.length > 0) {
+                    // Some children complete, some not
+                    categories[index].status = 'partial';
                 }
+                // Otherwise remains 'locked' or 'unlocked'
             });
             newPath['children'] = categories;
 
-            // ACTIVE PATHS
+            // ACTIVE PATHS - check if any category has completed units
             if (
                 newPath.children.find(
-                    (unit: { status: string }) => unit.status === 'complete'
+                    (unit: { status: string }) => unit.status === 'complete' || unit.status === 'partial'
                 )
             ) {
-                if (
-                    !newPath.children.find(
-                        (unit: { status: string }) => unit.status !== 'complete'
-                    )
-                ) {
+                // Check path completion status
+                const allComplete = !newPath.children.find(
+                    (unit: { status: string }) => unit.status !== 'complete'
+                );
+                const someComplete = newPath.children.find(
+                    (unit: { status: string }) => unit.status === 'complete' || unit.status === 'partial'
+                );
+
+                if (allComplete) {
                     newPath.status = 'complete';
+                } else if (someComplete) {
+                    newPath.status = 'partial';
                 }
+
                 animatedTreePaths.push(newPath);
                 treePaths.push(newPath);
             } else {
@@ -233,6 +246,42 @@ const SmartTreeChart = memo(function SmartTreeChart({
                 'style',
                 'max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;'
             );
+
+        // Add gradient definition for partial completion
+        const defs = svg.append('defs');
+        const gradient = defs
+            .append('linearGradient')
+            .attr('id', 'partial-gradient')
+            .attr('x1', '0%')
+            .attr('y1', '0%')
+            .attr('x2', '100%')
+            .attr('y2', '100%');
+
+        // Create a smooth gradient with transition in the middle
+        gradient
+            .append('stop')
+            .attr('offset', '0%')
+            .attr('stop-color', Colors.complete);
+
+        gradient
+            .append('stop')
+            .attr('offset', '45%')
+            .attr('stop-color', Colors.complete);
+
+        gradient
+            .append('stop')
+            .attr('offset', '50%')
+            .attr('stop-color', '#0a95c6'); // Blend between complete and unlocked
+
+        gradient
+            .append('stop')
+            .attr('offset', '55%')
+            .attr('stop-color', Colors.unlocked);
+
+        gradient
+            .append('stop')
+            .attr('offset', '100%')
+            .attr('stop-color', Colors.unlocked);
 
         const gLink = svg
             .append('g')
@@ -312,6 +361,8 @@ const SmartTreeChart = memo(function SmartTreeChart({
                             return Colors.unlocked;
                         case 'complete':
                             return Colors.complete;
+                        case 'partial':
+                            return 'url(#partial-gradient)';
                         default:
                             return Colors.unlocked;
                     }
@@ -401,6 +452,8 @@ const SmartTreeChart = memo(function SmartTreeChart({
                             return Colors.unlocked;
                         case 'complete':
                             return Colors.complete;
+                        case 'partial':
+                            return Colors.unlocked; // Use unlocked color for partial links
                         default:
                             return Colors.unlocked;
                     }
