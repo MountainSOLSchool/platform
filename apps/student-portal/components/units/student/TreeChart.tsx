@@ -76,9 +76,18 @@ const SmartTreeChart = memo(function SmartTreeChart({
                 children: [],
             });
             newPath.units.forEach((unit: string) => {
+                // Skip null/undefined units
+                if (!unit) return;
+
+                // Find the unit data
+                const unitData = units.find((e) => e['URL'] === unit);
+
+                // Skip if unit doesn't exist in the units array
+                if (!unitData) return;
+
                 let newUnit = Object.assign(
                     {},
-                    units.find((e) => e['URL'] === unit),
+                    unitData,
                     { status: 'locked' }
                 );
 
@@ -367,7 +376,12 @@ const SmartTreeChart = memo(function SmartTreeChart({
                             return Colors.unlocked;
                     }
                 })
-                .attr('stroke-width', 10)
+                .attr('stroke-width', (d: any) => {
+                    return d.data.status === 'ghost' ? 0 : 10;
+                })
+                .attr('stroke', (d: any) => {
+                    return d.data.status === 'ghost' ? 'none' : undefined;
+                })
                 .on('click', (e: any) => {
                     let nodeData = e.target['__data__'].data;
                     if (nodeData.hasOwnProperty('description')) {
@@ -432,6 +446,8 @@ const SmartTreeChart = memo(function SmartTreeChart({
                 })
                 .attr('stroke-opacity', (d: any) => {
                     switch (d.target.data.status) {
+                        case 'ghost':
+                            return 0;
                         case 'unlocked':
                             return 0.4;
                         case 'locked':
