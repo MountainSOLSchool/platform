@@ -1,0 +1,201 @@
+/* Container for the whole page */
+.student-units-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.tree-container {
+    width: 100%;
+    padding: 1rem;
+    overflow-x: auto;
+}
+
+/* Mobile Bottom Sheet */
+.unit-details-panel.mobile {
+    display: block;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    touch-action: none;
+}
+
+.unit-details-panel.mobile.collapsed {
+    /* Show just the handle and title when collapsed */
+}
+
+.unit-details-panel.mobile.expanded {
+    /* Show full panel at 50vh when expanded */
+}
+
+.unit-details-panel.mobile .drag-handle-container {
+    padding: 12px 0 8px 0;
+    display: flex;
+    justify-content: center;
+    cursor: grab;
+}
+
+.unit-details-panel.mobile .drag-handle-container:active {
+    cursor: grabbing;
+}
+
+.unit-details-panel.mobile .drag-handle {
+    width: 40px;
+    height: 5px;
+    background: #d1d5db;
+    border-radius: 3px;
+}
+
+.unit-details-panel.mobile .panel-title {
+    padding: 0.5rem 1.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.unit-details-panel.mobile.expanded .panel-title {
+    font-size: 1.5rem;
+    padding: 0.75rem 1.5rem 1rem 1.5rem;
+    white-space: normal;
+}
+
+.unit-details-panel.mobile .panel-content {
+    padding: 0 1.5rem 2rem 1.5rem;
+    overflow-y: auto;
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.unit-details-panel.mobile.expanded .panel-content {
+    max-height: calc(50vh - 120px);
+    opacity: 1;
+}
+
+.unit-details-panel.mobile .panel-content p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4b5563;
+}
+
+/* Desktop Floating Panel - hidden on mobile */
+.unit-details-panel.desktop {
+    display: none;
+    position: fixed;
+    right: 20px;
+    top: 100px;
+    width: 400px;
+    max-width: calc(100vw - 40px);
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+.unit-details-panel.desktop.minimized {
+    width: auto;
+}
+
+.unit-details-panel.desktop .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    border-radius: 12px 12px 0 0;
+}
+
+.unit-details-panel.desktop.minimized .panel-header {
+    border-radius: 12px;
+    border-bottom: none;
+}
+
+.unit-details-panel.desktop .panel-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.unit-details-panel.desktop.minimized .panel-header h3 {
+    max-width: 200px;
+}
+
+.unit-details-panel.desktop .minimize-button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px 8px;
+    margin-left: 12px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.unit-details-panel.desktop .minimize-button:hover {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.unit-details-panel.desktop .panel-content {
+    padding: 1.5rem;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.unit-details-panel.desktop .panel-content p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #4b5563;
+    margin: 0;
+}
+
+/* Tablet and Desktop styles */
+@media (min-width: 768px) {
+    .unit-details-panel.mobile {
+        display: none;
+    }
+
+    .expand-button.mobile {
+        display: none;
+    }
+
+    .unit-details-panel.desktop {
+        display: block;
+    }
+
+    .tree-container {
+        margin-right: 440px; /* Make room for the floating panel */
+    }
+}
+
+/* Large screens - give tree more space */
+@media (min-width: 1400px) {
+    .tree-container {
+        margin-right: 460px;
+    }
+
+    .unit-details-panel.desktop {
+        width: 440px;
+        right: 40px;
+    }
+}

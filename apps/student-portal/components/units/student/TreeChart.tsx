@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
@@ -7,6 +7,7 @@ import { requestPaths } from '../../../store/paths/pathsSlice';
 import { requestUnits } from '../../../store/unit/unitSlice';
 import { setStudentId } from '../../../store/student/studentSlice';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { UnitDetails } from './UnitDetailsSidebar';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',
@@ -32,24 +33,20 @@ const Colors = {
     text: 'black',
 };
 
-// DEFINE SIDEBAR CONTENT AND BEHAVIOR
-const sidebarDefault = { header: 'Unit Name', description: 'Unit Description' };
-const unitName = sidebarDefault.header;
-const unitdescription = sidebarDefault.description;
-const sidebarDimensions = {
-    width: 400,
-    paddingTop: '2rem',
-    paddingHoriz: '1rem',
-    fontSize: 15,
-    headerFontSize: 25,
-};
+interface SmartTreeChartProps {
+    studentId: string;
+    onUnitSelect: (details: UnitDetails) => void;
+}
 
-function SmartTreeChart(props: { studentId: string }) {
+const SmartTreeChart = memo(function SmartTreeChart({
+    studentId,
+    onUnitSelect,
+}: SmartTreeChartProps) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setStudentId(props.studentId));
-    }, [props.studentId, dispatch]);
+        dispatch(setStudentId(studentId));
+    }, [studentId, dispatch]);
 
     // [x] GET UNITS ARRAY
     // [x] GET STUDENT PROFILE
@@ -64,10 +61,6 @@ function SmartTreeChart(props: { studentId: string }) {
 
     const student = useSelector((state: RootState) => state.student);
     const [completeUnits, setCompleteUnits] = useState([]);
-    const [unitName, setUnitName] = useState(sidebarDefault.header);
-    const [unitDescription, setUnitDescription] = useState(
-        sidebarDefault.description
-    );
 
     function generateNodes() {
         const animatedTreePaths = [];
@@ -83,9 +76,18 @@ function SmartTreeChart(props: { studentId: string }) {
                 children: [],
             });
             newPath.units.forEach((unit: string) => {
+                // Skip null/undefined units
+                if (!unit) return;
+
+                // Find the unit data
+                const unitData = units.find((e) => e['URL'] === unit);
+
+                // Skip if unit doesn't exist in the units array
+                if (!unitData) return;
+
                 let newUnit = Object.assign(
                     {},
-                    units.find((e) => e['URL'] === unit),
+                    unitData,
                     { status: 'locked' }
                 );
 
@@ -153,31 +155,44 @@ function SmartTreeChart(props: { studentId: string }) {
 
             // CHECK COMPLETION OF CATEGORIES
             categories.forEach((category, index) => {
-                if (
-                    !category['children'].find(
-                        (unit) =>
-                            unit.status !== 'complete' &&
-                            unit.status !== 'ghost'
-                    )
-                ) {
+                const nonGhostChildren = category['children'].filter(
+                    (unit) => unit.status !== 'ghost'
+                );
+                const completedChildren = nonGhostChildren.filter(
+                    (unit) => unit.status === 'complete'
+                );
+
+                if (completedChildren.length === nonGhostChildren.length) {
+                    // All children complete
                     categories[index].status = 'complete';
+                } else if (completedChildren.length > 0) {
+                    // Some children complete, some not
+                    categories[index].status = 'partial';
                 }
+                // Otherwise remains 'locked' or 'unlocked'
             });
             newPath['children'] = categories;
 
-            // ACTIVE PATHS
+            // ACTIVE PATHS - check if any category has completed units
             if (
                 newPath.children.find(
-                    (unit: { status: string }) => unit.status === 'complete'
+                    (unit: { status: string }) => unit.status === 'complete' || unit.status === 'partial'
                 )
             ) {
-                if (
-                    !newPath.children.find(
-                        (unit: { status: string }) => unit.status !== 'complete'
-                    )
-                ) {
+                // Check path completion status
+                const allComplete = !newPath.children.find(
+                    (unit: { status: string }) => unit.status !== 'complete'
+                );
+                const someComplete = newPath.children.find(
+                    (unit: { status: string }) => unit.status === 'complete' || unit.status === 'partial'
+                );
+
+                if (allComplete) {
                     newPath.status = 'complete';
+                } else if (someComplete) {
+                    newPath.status = 'partial';
                 }
+
                 animatedTreePaths.push(newPath);
                 treePaths.push(newPath);
             } else {
@@ -240,6 +255,42 @@ function SmartTreeChart(props: { studentId: string }) {
                 'style',
                 'max-width: 100%; height: auto; font: 10px sans-serif; user-select: none;'
             );
+
+        // Add gradient definition for partial completion
+        const defs = svg.append('defs');
+        const gradient = defs
+            .append('linearGradient')
+            .attr('id', 'partial-gradient')
+            .attr('x1', '0%')
+            .attr('y1', '0%')
+            .attr('x2', '100%')
+            .attr('y2', '100%');
+
+        // Create a smooth gradient with gradual transition
+        gradient
+            .append('stop')
+            .attr('offset', '0%')
+            .attr('stop-color', Colors.complete);
+
+        gradient
+            .append('stop')
+            .attr('offset', '30%')
+            .attr('stop-color', Colors.complete);
+
+        gradient
+            .append('stop')
+            .attr('offset', '50%')
+            .attr('stop-color', '#2c9dc9'); // Blend between complete and unlocked
+
+        gradient
+            .append('stop')
+            .attr('offset', '70%')
+            .attr('stop-color', Colors.unlocked);
+
+        gradient
+            .append('stop')
+            .attr('offset', '100%')
+            .attr('stop-color', Colors.unlocked);
 
         const gLink = svg
             .append('g')
@@ -319,17 +370,25 @@ function SmartTreeChart(props: { studentId: string }) {
                             return Colors.unlocked;
                         case 'complete':
                             return Colors.complete;
+                        case 'partial':
+                            return 'url(#partial-gradient)';
                         default:
                             return Colors.unlocked;
                     }
                 })
-                .attr('stroke-width', 10)
+                .attr('stroke-width', (d: any) => {
+                    return d.data.status === 'ghost' ? 0 : 10;
+                })
+                .attr('stroke', (d: any) => {
+                    return d.data.status === 'ghost' ? 'none' : undefined;
+                })
                 .on('click', (e: any) => {
                     let nodeData = e.target['__data__'].data;
                     if (nodeData.hasOwnProperty('description')) {
-                        setUnitName(nodeData['name']);
-                        setUnitDescription(nodeData['description']);
-                        console.log(nodeData.name);
+                        onUnitSelect({
+                            name: nodeData['name'],
+                            description: nodeData['description'],
+                        });
                     }
                     if (nodeData.status === 'ghost') {
                         return;
@@ -387,6 +446,8 @@ function SmartTreeChart(props: { studentId: string }) {
                 })
                 .attr('stroke-opacity', (d: any) => {
                     switch (d.target.data.status) {
+                        case 'ghost':
+                            return 0;
                         case 'unlocked':
                             return 0.4;
                         case 'locked':
@@ -407,6 +468,8 @@ function SmartTreeChart(props: { studentId: string }) {
                             return Colors.unlocked;
                         case 'complete':
                             return Colors.complete;
+                        case 'partial':
+                            return Colors.unlocked; // Use unlocked color for partial links
                         default:
                             return Colors.unlocked;
                     }
@@ -601,7 +664,6 @@ function SmartTreeChart(props: { studentId: string }) {
     */
 
     useEffect(() => {
-        console.log('again');
         if (paths.length > 0 && units.length > 0) {
             setCompleteUnits(student['completedUnits']);
             generateNodes();
@@ -615,44 +677,11 @@ function SmartTreeChart(props: { studentId: string }) {
     return !student.name || !paths.length || !units.length ? (
         <ProgressSpinner></ProgressSpinner>
     ) : (
-        <div className="smart-tree-wrapper">
+        <>
             <h1>{student.name}&apos;s Units</h1>
-            {/* <button onClick={() => dispatch(overrideUnits(MtnMedicUnits))}>
-                MTN MEDIC ONLY
-            </button>
-            <button
-                onClick={() => {
-                    d3.select('.smart-tree-sidebar').style(
-                        'transform',
-                        'rotateY(180deg)'
-                    );
-                }}
-            >
-                FLIP SIDEBAR
-            </button> */}
-            <div
-                style={{
-                    display: 'inline-flex',
-                }}
-            >
-                <div className="smart-tree-container"></div>
-                <div
-                    className="smart-tree-sidebar"
-                    style={{
-                        border: '2px solid black',
-                        paddingLeft: sidebarDimensions.paddingHoriz,
-                        paddingBottom: sidebarDimensions.paddingTop,
-                        paddingTop: sidebarDimensions.paddingTop,
-                        width: sidebarDimensions.width,
-                        fontSize: sidebarDimensions.fontSize,
-                    }}
-                >
-                    <h2 className="sidebar-header">{unitName}</h2>
-                    <p className="sidebar-description">{unitDescription}</p>
-                </div>
-            </div>
-        </div>
+            <div className="smart-tree-container"></div>
+        </>
     );
-}
+});
 
 export { SmartTreeChart, MtnMedicUnits };

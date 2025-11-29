@@ -1,0 +1,119 @@
+'use client';
+import { useState, useRef, useEffect } from 'react';
+import { UnitDetails } from './UnitDetailsSidebar';
+import './UnitDetailsPanel.css';
+
+interface UnitDetailsPanelProps {
+    unitDetails: UnitDetails;
+    isSelected: boolean;
+}
+
+export function UnitDetailsPanel({ unitDetails, isSelected }: UnitDetailsPanelProps) {
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isMinimized, setIsMinimized] = useState(false);
+    const [dragStartY, setDragStartY] = useState<number | null>(null);
+    const [currentTranslateY, setCurrentTranslateY] = useState(0);
+    const panelRef = useRef<HTMLDivElement>(null);
+
+    // Auto-expand when a unit is selected
+    useEffect(() => {
+        if (isSelected && !isExpanded) {
+            setIsExpanded(true);
+            setIsMinimized(false);
+        }
+    }, [isSelected, isExpanded]);
+
+    const handleDragStart = (clientY: number) => {
+        setDragStartY(clientY);
+    };
+
+    const handleDragMove = (clientY: number) => {
+        if (dragStartY === null) return;
+        const delta = clientY - dragStartY;
+        // Only allow dragging down (positive delta)
+        if (delta > 0) {
+            setCurrentTranslateY(delta);
+        }
+    };
+
+    const handleDragEnd = () => {
+        if (dragStartY === null) return;
+
+        // If dragged down more than 100px, collapse
+        if (currentTranslateY > 100) {
+            setIsExpanded(false);
+        }
+
+        setDragStartY(null);
+        setCurrentTranslateY(0);
+    };
+
+    const toggleExpand = () => {
+        setIsExpanded(!isExpanded);
+        setIsMinimized(false);
+    };
+
+    const toggleMinimize = () => {
+        setIsMinimized(!isMinimized);
+    };
+
+    return (
+        <>
+            {/* Mobile Bottom Sheet */}
+            {isSelected && (
+                <div
+                    ref={panelRef}
+                    className={`unit-details-panel mobile ${isExpanded ? 'expanded' : 'collapsed'}`}
+                    style={{
+                        transform: `translateY(${isExpanded ? currentTranslateY : 0}px)`,
+                    }}
+                    onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
+                    onTouchMove={(e) => handleDragMove(e.touches[0].clientY)}
+                    onTouchEnd={handleDragEnd}
+                    onMouseDown={(e) => handleDragStart(e.clientY)}
+                    onMouseMove={(e) => {
+                        if (dragStartY !== null) handleDragMove(e.clientY);
+                    }}
+                    onMouseUp={handleDragEnd}
+                    onMouseLeave={handleDragEnd}
+                    onClick={() => !isExpanded && toggleExpand()}
+                >
+                    {/* Drag Handle */}
+                    <div className="drag-handle-container">
+                        <div className="drag-handle" />
+                    </div>
+
+                    {/* Title - always visible */}
+                    <div className="panel-title">{unitDetails.name}</div>
+
+                    {/* Content - only visible when expanded */}
+                    <div className="panel-content">
+                        <p>{unitDetails.description}</p>
+                    </div>
+                </div>
+            )}
+
+            {/* Desktop Floating Panel */}
+            {isSelected && (
+                <div className={`unit-details-panel desktop ${isMinimized ? 'minimized' : ''}`}>
+                    <div className="panel-header">
+                        <h3>{unitDetails.name}</h3>
+                        <button
+                            onClick={toggleMinimize}
+                            className="minimize-button"
+                            aria-label={isMinimized ? 'Expand' : 'Minimize'}
+                        >
+                            {isMinimized ? '▲' : '▼'}
+                        </button>
+                    </div>
+
+                    {!isMinimized && (
+                        <div className="panel-content">
+                            <p>{unitDetails.description}</p>
+                        </div>
+                    )}
+                </div>
+            )}
+        </>
+    );
+}
