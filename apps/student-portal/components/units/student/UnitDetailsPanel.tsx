@@ -60,64 +60,59 @@ export function UnitDetailsPanel({ unitDetails, isSelected }: UnitDetailsPanelPr
     return (
         <>
             {/* Mobile Bottom Sheet */}
-            <div
-                ref={panelRef}
-                className="unit-details-panel mobile"
-                style={{
-                    transform: `translateY(${isExpanded ? currentTranslateY : 0}px)`,
-                    bottom: isExpanded ? 0 : '-100%',
-                }}
-                onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
-                onTouchMove={(e) => handleDragMove(e.touches[0].clientY)}
-                onTouchEnd={handleDragEnd}
-                onMouseDown={(e) => handleDragStart(e.clientY)}
-                onMouseMove={(e) => {
-                    if (dragStartY !== null) handleDragMove(e.clientY);
-                }}
-                onMouseUp={handleDragEnd}
-                onMouseLeave={handleDragEnd}
-            >
-                {/* Drag Handle */}
-                <div className="drag-handle-container">
-                    <div className="drag-handle" />
-                </div>
+            {isSelected && (
+                <div
+                    ref={panelRef}
+                    className={`unit-details-panel mobile ${isExpanded ? 'expanded' : 'collapsed'}`}
+                    style={{
+                        transform: `translateY(${isExpanded ? currentTranslateY : 0}px)`,
+                    }}
+                    onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
+                    onTouchMove={(e) => handleDragMove(e.touches[0].clientY)}
+                    onTouchEnd={handleDragEnd}
+                    onMouseDown={(e) => handleDragStart(e.clientY)}
+                    onMouseMove={(e) => {
+                        if (dragStartY !== null) handleDragMove(e.clientY);
+                    }}
+                    onMouseUp={handleDragEnd}
+                    onMouseLeave={handleDragEnd}
+                    onClick={() => !isExpanded && toggleExpand()}
+                >
+                    {/* Drag Handle */}
+                    <div className="drag-handle-container">
+                        <div className="drag-handle" />
+                    </div>
 
-                <div className="panel-content">
-                    <h2>{unitDetails.name}</h2>
-                    <p>{unitDetails.description}</p>
-                </div>
-            </div>
+                    {/* Title - always visible */}
+                    <div className="panel-title">{unitDetails.name}</div>
 
-            {/* Desktop Floating Panel */}
-            <div
-                className={`unit-details-panel desktop ${isMinimized ? 'minimized' : ''}`}
-                style={{
-                    display: isSelected || !isMinimized ? 'block' : 'none',
-                }}
-            >
-                <div className="panel-header">
-                    <h3>{unitDetails.name}</h3>
-                    <button
-                        onClick={toggleMinimize}
-                        className="minimize-button"
-                        aria-label={isMinimized ? 'Expand' : 'Minimize'}
-                    >
-                        {isMinimized ? '▲' : '▼'}
-                    </button>
-                </div>
-
-                {!isMinimized && (
+                    {/* Content - only visible when expanded */}
                     <div className="panel-content">
                         <p>{unitDetails.description}</p>
                     </div>
-                )}
-            </div>
+                </div>
+            )}
 
-            {/* Mobile Expand Button (when collapsed) */}
-            {!isExpanded && isSelected && (
-                <button className="expand-button mobile" onClick={toggleExpand}>
-                    <span>View Details</span>
-                </button>
+            {/* Desktop Floating Panel */}
+            {isSelected && (
+                <div className={`unit-details-panel desktop ${isMinimized ? 'minimized' : ''}`}>
+                    <div className="panel-header">
+                        <h3>{unitDetails.name}</h3>
+                        <button
+                            onClick={toggleMinimize}
+                            className="minimize-button"
+                            aria-label={isMinimized ? 'Expand' : 'Minimize'}
+                        >
+                            {isMinimized ? '▲' : '▼'}
+                        </button>
+                    </div>
+
+                    {!isMinimized && (
+                        <div className="panel-content">
+                            <p>{unitDetails.description}</p>
+                        </div>
+                    )}
+                </div>
             )}
         </>
     );

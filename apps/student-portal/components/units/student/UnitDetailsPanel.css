@@ -22,10 +22,17 @@
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-    transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    max-height: 50vh;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 100;
     touch-action: none;
+}
+
+.unit-details-panel.mobile.collapsed {
+    /* Show just the handle and title when collapsed */
+}
+
+.unit-details-panel.mobile.expanded {
+    /* Show full panel at 50vh when expanded */
 }
 
 .unit-details-panel.mobile .drag-handle-container {
@@ -46,17 +53,33 @@
     border-radius: 3px;
 }
 
+.unit-details-panel.mobile .panel-title {
+    padding: 0.5rem 1.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.unit-details-panel.mobile.expanded .panel-title {
+    font-size: 1.5rem;
+    padding: 0.75rem 1.5rem 1rem 1.5rem;
+    white-space: normal;
+}
+
 .unit-details-panel.mobile .panel-content {
     padding: 0 1.5rem 2rem 1.5rem;
     overflow-y: auto;
-    max-height: calc(50vh - 60px);
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.3s ease;
 }
 
-.unit-details-panel.mobile .panel-content h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #111827;
+.unit-details-panel.mobile.expanded .panel-content {
+    max-height: calc(50vh - 120px);
+    opacity: 1;
 }
 
 .unit-details-panel.mobile .panel-content p {
@@ -65,35 +88,7 @@
     color: #4b5563;
 }
 
-/* Mobile Expand Button */
-.expand-button.mobile {
-    display: block;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #0077b6;
-    color: white;
-    border: none;
-    border-radius: 30px;
-    padding: 14px 24px;
-    font-size: 1rem;
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0, 119, 182, 0.3);
-    cursor: pointer;
-    z-index: 99;
-    transition: all 0.2s ease;
-}
-
-.expand-button.mobile:hover {
-    background: #005f8e;
-    box-shadow: 0 6px 16px rgba(0, 119, 182, 0.4);
-}
-
-.expand-button.mobile:active {
-    transform: scale(0.95);
-}
-
-/* Desktop Floating Panel */
+/* Desktop Floating Panel - hidden on mobile */
 .unit-details-panel.desktop {
     display: none;
     position: fixed;
