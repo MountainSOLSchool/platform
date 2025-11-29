@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
@@ -7,7 +7,7 @@ import { requestPaths } from '../../../store/paths/pathsSlice';
 import { requestUnits } from '../../../store/unit/unitSlice';
 import { setStudentId } from '../../../store/student/studentSlice';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { UnitDetailsSidebar, UnitDetails } from './UnitDetailsSidebar';
+import { UnitDetails } from './UnitDetailsSidebar';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',
@@ -33,12 +33,17 @@ const Colors = {
     text: 'black',
 };
 
-function SmartTreeChart(props: { studentId: string }) {
+interface SmartTreeChartProps {
+    studentId: string;
+    onUnitSelect: (details: UnitDetails) => void;
+}
+
+function SmartTreeChart({ studentId, onUnitSelect }: SmartTreeChartProps) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(setStudentId(props.studentId));
-    }, [props.studentId, dispatch]);
+        dispatch(setStudentId(studentId));
+    }, [studentId, dispatch]);
 
     // [x] GET UNITS ARRAY
     // [x] GET STUDENT PROFILE
@@ -53,14 +58,6 @@ function SmartTreeChart(props: { studentId: string }) {
 
     const student = useSelector((state: RootState) => state.student);
     const [completeUnits, setCompleteUnits] = useState([]);
-
-    // Use ref to store the sidebar update function so D3 can call it without causing re-renders
-    const updateSidebarRef = useRef<((details: UnitDetails) => void) | null>(null);
-
-    // Callback to register the sidebar's update function
-    const handleSidebarMount = useCallback((updateFn: (details: UnitDetails) => void) => {
-        updateSidebarRef.current = updateFn;
-    }, []);
 
     function generateNodes() {
         const animatedTreePaths = [];
@@ -320,13 +317,11 @@ function SmartTreeChart(props: { studentId: string }) {
                 .on('click', (e: any) => {
                     let nodeData = e.target['__data__'].data;
                     if (nodeData.hasOwnProperty('description')) {
-                        // Update sidebar through ref instead of setState to avoid re-rendering the tree
-                        if (updateSidebarRef.current) {
-                            updateSidebarRef.current({
-                                name: nodeData['name'],
-                                description: nodeData['description']
-                            });
-                        }
+                        // Call parent callback to update selected unit
+                        onUnitSelect({
+                            name: nodeData['name'],
+                            description: nodeData['description']
+                        });
                         console.log(nodeData.name);
                     }
                     if (nodeData.status === 'ghost') {
@@ -612,30 +607,10 @@ function SmartTreeChart(props: { studentId: string }) {
     return !student.name || !paths.length || !units.length ? (
         <ProgressSpinner></ProgressSpinner>
     ) : (
-        <div className="smart-tree-wrapper">
+        <>
             <h1>{student.name}&apos;s Units</h1>
-            {/* <button onClick={() => dispatch(overrideUnits(MtnMedicUnits))}>
-                MTN MEDIC ONLY
-            </button>
-            <button
-                onClick={() => {
-                    d3.select('.smart-tree-sidebar').style(
-                        'transform',
-                        'rotateY(180deg)'
-                    );
-                }}
-            >
-                FLIP SIDEBAR
-            </button> */}
-            <div
-                style={{
-                    display: 'inline-flex',
-                }}
-            >
-                <div className="smart-tree-container"></div>
-                <UnitDetailsSidebar onMountCallback={handleSidebarMount} />
-            </div>
-        </div>
+            <div className="smart-tree-container"></div>
+        </>
     );
 }
 

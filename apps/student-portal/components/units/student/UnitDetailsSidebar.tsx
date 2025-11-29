@@ -1,8 +1,3 @@
-'use client';
-import { useState, useEffect, useRef } from 'react';
-
-const sidebarDefault = { header: 'Unit Name', description: 'Unit Description' };
-
 const sidebarDimensions = {
     width: 400,
     paddingTop: '2rem',
@@ -17,21 +12,10 @@ export interface UnitDetails {
 }
 
 interface UnitDetailsSidebarProps {
-    onMountCallback: (updateFn: (details: UnitDetails) => void) => void;
+    unitDetails: UnitDetails;
 }
 
-export function UnitDetailsSidebar({ onMountCallback }: UnitDetailsSidebarProps) {
-    const [unitName, setUnitName] = useState(sidebarDefault.header);
-    const [unitDescription, setUnitDescription] = useState(sidebarDefault.description);
-
-    // Register the callback with parent on mount only
-    useEffect(() => {
-        onMountCallback((details: UnitDetails) => {
-            setUnitName(details.name);
-            setUnitDescription(details.description);
-        });
-    }, [onMountCallback]);
-
+export function UnitDetailsSidebar({ unitDetails }: UnitDetailsSidebarProps) {
     return (
         <div
             className="smart-tree-sidebar"
@@ -44,8 +28,8 @@ export function UnitDetailsSidebar({ onMountCallback }: UnitDetailsSidebarProps)
                 fontSize: sidebarDimensions.fontSize,
             }}
         >
-            <h2 className="sidebar-header">{unitName}</h2>
-            <p className="sidebar-description">{unitDescription}</p>
+            <h2 className="sidebar-header">{unitDetails.name}</h2>
+            <p className="sidebar-description">{unitDetails.description}</p>
         </div>
     );
 }
