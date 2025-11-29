@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
@@ -7,6 +7,7 @@ import { requestPaths } from '../../../store/paths/pathsSlice';
 import { requestUnits } from '../../../store/unit/unitSlice';
 import { setStudentId } from '../../../store/student/studentSlice';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { UnitDetailsSidebar, UnitDetails } from './UnitDetailsSidebar';
 
 const MtnMedicUnits = [
     'r4X1YxigB3y5vgyuY3HU',
@@ -32,18 +33,6 @@ const Colors = {
     text: 'black',
 };
 
-// DEFINE SIDEBAR CONTENT AND BEHAVIOR
-const sidebarDefault = { header: 'Unit Name', description: 'Unit Description' };
-const unitName = sidebarDefault.header;
-const unitdescription = sidebarDefault.description;
-const sidebarDimensions = {
-    width: 400,
-    paddingTop: '2rem',
-    paddingHoriz: '1rem',
-    fontSize: 15,
-    headerFontSize: 25,
-};
-
 function SmartTreeChart(props: { studentId: string }) {
     const dispatch = useDispatch();
 
@@ -64,10 +53,14 @@ function SmartTreeChart(props: { studentId: string }) {
 
     const student = useSelector((state: RootState) => state.student);
     const [completeUnits, setCompleteUnits] = useState([]);
-    const [unitName, setUnitName] = useState(sidebarDefault.header);
-    const [unitDescription, setUnitDescription] = useState(
-        sidebarDefault.description
-    );
+
+    // Use ref to store the sidebar update function so D3 can call it without causing re-renders
+    const updateSidebarRef = useRef<((details: UnitDetails) => void) | null>(null);
+
+    // Callback to register the sidebar's update function
+    const handleSidebarMount = useCallback((updateFn: (details: UnitDetails) => void) => {
+        updateSidebarRef.current = updateFn;
+    }, []);
 
     function generateNodes() {
         const animatedTreePaths = [];
@@ -327,8 +320,13 @@ function SmartTreeChart(props: { studentId: string }) {
                 .on('click', (e: any) => {
                     let nodeData = e.target['__data__'].data;
                     if (nodeData.hasOwnProperty('description')) {
-                        setUnitName(nodeData['name']);
-                        setUnitDescription(nodeData['description']);
+                        // Update sidebar through ref instead of setState to avoid re-rendering the tree
+                        if (updateSidebarRef.current) {
+                            updateSidebarRef.current({
+                                name: nodeData['name'],
+                                description: nodeData['description']
+                            });
+                        }
                         console.log(nodeData.name);
                     }
                     if (nodeData.status === 'ghost') {
@@ -635,20 +633,7 @@ function SmartTreeChart(props: { studentId: string }) {
                 }}
             >
                 <div className="smart-tree-container"></div>
-                <div
-                    className="smart-tree-sidebar"
-                    style={{
-                        border: '2px solid black',
-                        paddingLeft: sidebarDimensions.paddingHoriz,
-                        paddingBottom: sidebarDimensions.paddingTop,
-                        paddingTop: sidebarDimensions.paddingTop,
-                        width: sidebarDimensions.width,
-                        fontSize: sidebarDimensions.fontSize,
-                    }}
-                >
-                    <h2 className="sidebar-header">{unitName}</h2>
-                    <p className="sidebar-description">{unitDescription}</p>
-                </div>
+                <UnitDetailsSidebar onMountCallback={handleSidebarMount} />
             </div>
         </div>
     );
