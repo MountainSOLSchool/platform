@@ -38,7 +38,10 @@ interface SmartTreeChartProps {
     onUnitSelect: (details: UnitDetails) => void;
 }
 
-const SmartTreeChart = memo(function SmartTreeChart({ studentId, onUnitSelect }: SmartTreeChartProps) {
+const SmartTreeChart = memo(function SmartTreeChart({
+    studentId,
+    onUnitSelect,
+}: SmartTreeChartProps) {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -317,10 +320,9 @@ const SmartTreeChart = memo(function SmartTreeChart({ studentId, onUnitSelect }:
                 .on('click', (e: any) => {
                     let nodeData = e.target['__data__'].data;
                     if (nodeData.hasOwnProperty('description')) {
-                        // Call parent callback to update selected unit
                         onUnitSelect({
                             name: nodeData['name'],
-                            description: nodeData['description']
+                            description: nodeData['description'],
                         });
                         console.log(nodeData.name);
                     }
