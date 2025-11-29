@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, memo } from 'react';
 import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
@@ -38,7 +38,7 @@ interface SmartTreeChartProps {
     onUnitSelect: (details: UnitDetails) => void;
 }
 
-function SmartTreeChart({ studentId, onUnitSelect }: SmartTreeChartProps) {
+const SmartTreeChart = memo(function SmartTreeChart({ studentId, onUnitSelect }: SmartTreeChartProps) {
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -612,6 +612,6 @@ function SmartTreeChart({ studentId, onUnitSelect }: SmartTreeChartProps) {
             <div className="smart-tree-container"></div>
         </>
     );
-}
+});
 
 export { SmartTreeChart, MtnMedicUnits };

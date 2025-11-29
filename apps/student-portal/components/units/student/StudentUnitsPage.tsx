@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { SmartTreeChart } from './TreeChart';
 import { UnitDetailsSidebar, UnitDetails } from './UnitDetailsSidebar';
 
@@ -13,10 +13,14 @@ export function StudentUnitsPage({ studentId }: StudentUnitsPageProps) {
         description: 'Unit Description',
     });
 
+    const handleUnitSelect = useCallback((details: UnitDetails) => {
+        setSelectedUnit(details);
+    }, []);
+
     return (
         <div className="smart-tree-wrapper">
             <div style={{ display: 'inline-flex' }}>
-                <SmartTreeChart studentId={studentId} onUnitSelect={setSelectedUnit} />
+                <SmartTreeChart studentId={studentId} onUnitSelect={handleUnitSelect} />
                 <UnitDetailsSidebar unitDetails={selectedUnit} />
             </div>
         </div>
