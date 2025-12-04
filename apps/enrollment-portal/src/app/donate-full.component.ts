@@ -1,4 +1,10 @@
-import { Component, inject, signal, computed, linkedSignal } from '@angular/core';
+import {
+    Component,
+    inject,
+    signal,
+    computed,
+    linkedSignal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
@@ -73,7 +79,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
                             />
                         </div>
 
-
                         <div class="form-field">
                             <label for="street" class="field-label"
                                 >Street Address</label
@@ -89,7 +94,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
                         <div class="address-row">
                             <div class="form-field">
-                                <label for="city" class="field-label">City</label>
+                                <label for="city" class="field-label"
+                                    >City</label
+                                >
                                 <input
                                     pInputText
                                     id="city"
@@ -100,7 +107,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
                             </div>
 
                             <div class="form-field state-field">
-                                <label for="state" class="field-label">State</label>
+                                <label for="state" class="field-label"
+                                    >State</label
+                                >
                                 <input
                                     pInputText
                                     id="state"
@@ -167,7 +176,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
                         }
 
                         <div class="form-field">
-                            <label class="field-label required">Payment Method</label>
+                            <label class="field-label required"
+                                >Payment Method</label
+                            >
                             <sol-payment-collector
                                 [anonymous]="!isLoggedIn()"
                                 [paymentMethods]="['card', 'venmo']"
@@ -219,10 +230,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
                 </div>
             </div>
             <div style="margin-top: 1rem">
-                Your donation of <b>\${{ donationAmount() }}</b> has been processed successfully.
+                Your donation of <b>\${{ donationAmount() }}</b> has been
+                processed successfully.
             </div>
             <div style="margin-top: 1rem">
-                A confirmation email has been sent to <b>{{ donorEmail() }}</b>.
+                A confirmation email has been sent to <b>{{ donorEmail() }}</b
+                >.
             </div>
             <div style="margin-top: 1rem">
                 <strong>Transaction ID:</strong> {{ transactionId() }}
@@ -455,64 +468,68 @@ export class DonateFullComponent {
             this.street(),
             this.city(),
             this.state(),
-            this.zip()
-        ].filter(s => s.trim()).join(', ');
+            this.zip(),
+        ]
+            .filter((s) => s.trim())
+            .join(', ');
 
-        this.functions.call<{
-            success: boolean;
-            transactionId: string;
-            message: string;
-        }>('donate', {
-            amount: this.donationAmount(),
-            paymentMethodNonce: this.paymentMethodData().nonce,
-            deviceData: this.paymentMethodData().deviceData,
-            donorName: this.donorName(),
-            donorEmail: this.donorEmail(),
-            donorAddress: fullAddress || undefined,
-            referralSource: this.referralSource() || undefined,
-        }).subscribe({
-            next: (result) => {
-                if (!RequestedUtility.isLoaded(result)) {
+        this.functions
+            .call<{
+                success: boolean;
+                transactionId: string;
+                message: string;
+            }>('donate', {
+                amount: this.donationAmount(),
+                paymentMethodNonce: this.paymentMethodData().nonce,
+                deviceData: this.paymentMethodData().deviceData,
+                donorName: this.donorName(),
+                donorEmail: this.donorEmail(),
+                donorAddress: fullAddress || undefined,
+                referralSource: this.referralSource() || undefined,
+            })
+            .subscribe({
+                next: (result) => {
+                    if (!RequestedUtility.isLoaded(result)) {
+                        this.messages.set([
+                            {
+                                severity: 'error',
+                                summary: 'Error',
+                                detail: 'Unable to process donation. Please try again later.',
+                            },
+                        ]);
+                        this.processing.set(false);
+                        return;
+                    }
+
+                    if (result.success) {
+                        this.messages.set([]); // Clear any error messages
+                        this.donationComplete.set(true);
+                        this.transactionId.set(result.transactionId);
+                    } else {
+                        this.messages.set([
+                            {
+                                severity: 'error',
+                                summary: 'Donation Failed',
+                                detail:
+                                    result.message ||
+                                    'Unable to process donation. Please try again.',
+                            },
+                        ]);
+                    }
+                    this.processing.set(false);
+                },
+                error: (error) => {
+                    console.error('Donation error:', error);
                     this.messages.set([
                         {
                             severity: 'error',
                             summary: 'Error',
-                            detail: 'Unable to process donation. Please try again later.',
+                            detail: 'An unexpected error occurred. Please try again.',
                         },
                     ]);
                     this.processing.set(false);
-                    return;
-                }
-
-                if (result.success) {
-                    this.messages.set([]); // Clear any error messages
-                    this.donationComplete.set(true);
-                    this.transactionId.set(result.transactionId);
-                } else {
-                    this.messages.set([
-                        {
-                            severity: 'error',
-                            summary: 'Donation Failed',
-                            detail:
-                                result.message ||
-                                'Unable to process donation. Please try again.',
-                        },
-                    ]);
-                }
-                this.processing.set(false);
-            },
-            error: (error) => {
-                console.error('Donation error:', error);
-                this.messages.set([
-                    {
-                        severity: 'error',
-                        summary: 'Error',
-                        detail: 'An unexpected error occurred. Please try again.',
-                    },
-                ]);
-                this.processing.set(false);
-            }
-        });
+                },
+            });
     }
 
     reset() {
