@@ -126,6 +126,10 @@
                     "function": "donateVenmo"
                 },
                 {
+                    "source": "/donate",
+                    "function": "donate"
+                },
+                {
                     "source": "**",
                     "destination": "/index.html"
                 }

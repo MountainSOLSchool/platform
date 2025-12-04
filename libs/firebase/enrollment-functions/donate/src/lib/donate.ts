@@ -52,6 +52,7 @@ export const donate = Functions.endpoint
         amount: number;
         paymentMethodNonce: string;
         deviceData: string;
+        paymentMethodType: string;
         donorName: string;
         donorEmail: string;
         donorAddress?: string;
@@ -62,6 +63,7 @@ export const donate = Functions.endpoint
                 amount,
                 paymentMethodNonce,
                 deviceData,
+                paymentMethodType,
                 donorName,
                 donorEmail,
                 donorAddress,
@@ -86,20 +88,14 @@ export const donate = Functions.endpoint
 
             const braintree = new Braintree(secrets, strings);
 
-            let paymentMethod: 'venmo' | 'card' = 'card';
-            let success = false;
-            let transaction: any;
-            let errors: { deepErrors: () => Array<{ message: string }> } | undefined;
-
-            // Try to determine payment method from nonce characteristics
-            // Braintree nonces for Venmo often contain specific patterns
-            const isLikelyVenmo = paymentMethodNonce.includes('venmo') ||
-                                  paymentMethodNonce.startsWith('fake-venmo');
+            // Braintree returns payment types like 'VenmoAccount', 'CreditCard', 'PayPalAccount'
+            const isVenmo = paymentMethodType === 'VenmoAccount';
+            const paymentMethod: 'venmo' | 'card' = isVenmo ? 'venmo' : 'card';
 
             const donationRecord: Omit<DonationDbo, 'timestamp'> = {
                 amount,
                 currency: 'USD',
-                paymentMethod: isLikelyVenmo ? 'venmo' : 'card',
+                paymentMethod,
                 status: 'pending',
                 source: 'donation_page',
                 donorName,
@@ -110,35 +106,23 @@ export const donate = Functions.endpoint
 
             const donationId = await DonationRepository.create(donationRecord);
 
-            if (isLikelyVenmo) {
-                // Try Venmo transaction
-                const venmoResult = await braintree.transactWithVenmo({
-                    amount: amount,
-                    nonce: paymentMethodNonce,
-                    deviceData: deviceData,
-                    customFields: {
-                        purpose: 'charitable_donation',
-                    }
-                });
+            const result = isVenmo
+                ? await braintree.transactWithVenmo({
+                      amount,
+                      nonce: paymentMethodNonce,
+                      deviceData,
+                      customFields: {
+                          purpose: 'charitable_donation',
+                      }
+                  })
+                : await braintree.transact({
+                      amount,
+                      nonce: paymentMethodNonce,
+                      deviceData,
+                      customer: { email: donorEmail },
+                  });
 
-                success = venmoResult.success;
-                transaction = venmoResult.transaction;
-                errors = venmoResult.errors;
-                paymentMethod = 'venmo';
-            } else {
-                // Process as card transaction
-                const cardResult = await braintree.transact({
-                    amount: amount,
-                    nonce: paymentMethodNonce,
-                    deviceData: deviceData,
-                    customer: { email: donorEmail },
-                });
-
-                success = cardResult.success;
-                transaction = cardResult.transaction;
-                errors = cardResult.errors;
-                paymentMethod = 'card';
-            }
+            const { success, transaction, errors } = result;
 
             if (success && transaction) {
                 await DonationRepository.update(donationId, {

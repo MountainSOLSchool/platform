@@ -13,6 +13,7 @@ import { UserService } from '@sol/auth/user';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputMaskModule } from 'primeng/inputmask';
 import { CardModule } from 'primeng/card';
 import { MessagesModule } from 'primeng/messages';
 import { Message } from 'primeng/api';
@@ -32,6 +33,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
         ButtonModule,
         InputNumberModule,
         InputTextModule,
+        InputMaskModule,
         CardModule,
         MessagesModule,
         ProgressSpinnerModule,
@@ -110,24 +112,29 @@ import { toSignal } from '@angular/core/rxjs-interop';
                                 <label for="state" class="field-label"
                                     >State</label
                                 >
-                                <input
-                                    pInputText
+                                <p-inputMask
                                     id="state"
                                     [(ngModel)]="state"
-                                    placeholder="State"
+                                    mask="aa"
+                                    slotChar=" "
+                                    [style]="{ 'text-transform': 'uppercase' }"
+                                    placeholder="CA"
                                     class="full-width"
-                                />
+                                >
+                                </p-inputMask>
                             </div>
 
                             <div class="form-field zip-field">
                                 <label for="zip" class="field-label">ZIP</label>
-                                <input
-                                    pInputText
+                                <p-inputMask
                                     id="zip"
                                     [(ngModel)]="zip"
-                                    placeholder="ZIP"
+                                    mask="99999"
+                                    slotChar=" "
+                                    placeholder="12345"
                                     class="full-width"
-                                />
+                                >
+                                </p-inputMask>
                             </div>
                         </div>
 
@@ -260,11 +267,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
                 width: 100%;
             }
 
-            p-inputnumber {
+            p-inputnumber,
+            p-inputmask {
                 width: 100%;
             }
 
-            ::ng-deep .p-inputnumber {
+            ::ng-deep .p-inputnumber,
+            ::ng-deep .p-inputmask {
                 width: 100%;
             }
 
@@ -482,6 +491,7 @@ export class DonateFullComponent {
                 amount: this.donationAmount(),
                 paymentMethodNonce: this.paymentMethodData().nonce,
                 deviceData: this.paymentMethodData().deviceData,
+                paymentMethodType: this.paymentMethodData().type,
                 donorName: this.donorName(),
                 donorEmail: this.donorEmail(),
                 donorAddress: fullAddress || undefined,

@@ -18,6 +18,7 @@ export type PaymentCollector = {
         nonce: string;
         deviceData: string;
         paymentDetails: cardPaymentMethodPayload['details'];
+        type: string;
     }>;
 };
 
@@ -43,6 +44,7 @@ export class PaymentCollectorComponent implements OnInit {
               nonce: string;
               deviceData: string;
               paymentDetails: cardPaymentMethodPayload['details'];
+              type: string;
           }
         | undefined
     > = this.store.selectPaymentMethod();
