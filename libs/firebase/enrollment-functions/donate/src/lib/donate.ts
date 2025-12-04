@@ -72,7 +72,7 @@ export const donate = Functions.endpoint
 
             // Very large donations should go through a different process
             if (!amount || amount <= 0 || amount > 9999) {
-                response.status(400).send({ error: 'Invalid donation amount. Please donate an amount under $250' });
+                response.status(400).send({ error: 'Invalid donation amount. Please donate an amount under $10,000' });
                 return;
             }
 
