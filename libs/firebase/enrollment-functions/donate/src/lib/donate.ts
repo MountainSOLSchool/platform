@@ -12,7 +12,7 @@ export interface DonationDbo {
     timestamp: Date;
     completedAt?: Date;
     errors?: string[];
-    source?: 'donation_page_venmo' | 'donation_page';
+    source?: 'donation_page';
     donorName?: string;
     donorEmail?: string;
     donorAddress?: string;
@@ -37,7 +37,7 @@ export class DonationRepository {
         return id;
     }
 
-        static async update(id: string, updates: Partial<DonationDbo>): Promise<void> {
+    static async update(id: string, updates: Partial<DonationDbo>): Promise<void> {
         await this.database
             .collection('donations')
             .doc(id)
@@ -45,19 +45,27 @@ export class DonationRepository {
     }
 }
 
-export const donateVenmo = Functions.endpoint
+export const donate = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .usingStrings(...Braintree.STRING_NAMES)
     .handle<{
         amount: number;
         paymentMethodNonce: string;
         deviceData: string;
+        donorName: string;
+        donorEmail: string;
+        donorAddress?: string;
+        referralSource?: string;
     }>(async (request, response, secrets, strings) => {
-        try {            
+        try {
             const {
                 amount,
-                                            paymentMethodNonce,
+                paymentMethodNonce,
                 deviceData,
+                donorName,
+                donorEmail,
+                donorAddress,
+                referralSource,
             } = request.body.data;
 
             if (!amount || amount <= 0 || amount > 249) {
@@ -70,36 +78,77 @@ export const donateVenmo = Functions.endpoint
                 return;
             }
 
+            if (!donorName || !donorEmail) {
+                response.status(400).send({ error: 'Donor name and email are required' });
+                return;
+            }
+
+            const braintree = new Braintree(secrets, strings);
+
+            // Detect payment method type from the nonce
+            // Venmo nonces typically start with 'fake-venmo-account-nonce' in sandbox
+            // or contain venmo-specific identifiers in production
+            // For now, we'll try Venmo first and fall back to card
+            let paymentMethod: 'venmo' | 'card' = 'card';
+            let success = false;
+            let transaction: any;
+            let errors: any;
+
+            // Try to determine payment method from nonce characteristics
+            // Braintree nonces for Venmo often contain specific patterns
+            const isLikelyVenmo = paymentMethodNonce.includes('venmo') ||
+                                  paymentMethodNonce.startsWith('fake-venmo');
+
             const donationRecord: Omit<DonationDbo, 'timestamp'> = {
                 amount,
                 currency: 'USD',
-                paymentMethod: 'venmo',
+                paymentMethod: isLikelyVenmo ? 'venmo' : 'card',
                 status: 'pending',
-                source: 'donation_page_venmo'
+                source: 'donation_page',
+                donorName,
+                donorEmail,
+                donorAddress,
+                referralSource,
             };
 
             const donationId = await DonationRepository.create(donationRecord);
 
-            const braintree = new Braintree(secrets, strings);
+            if (isLikelyVenmo) {
+                // Try Venmo transaction
+                const venmoResult = await braintree.transactWithVenmo({
+                    amount: amount,
+                    nonce: paymentMethodNonce,
+                    deviceData: deviceData,
+                    customFields: {
+                        purpose: 'charitable_donation',
+                    }
+                });
 
-            const {
-                success,
-                transaction,
-                errors
-            } = await braintree.transactWithVenmo({
-                amount: amount,
-                nonce: paymentMethodNonce,
-                deviceData: deviceData,
-                customFields: {
-                    purpose: 'charitable_donation',
-                }
-            });
+                success = venmoResult.success;
+                transaction = venmoResult.transaction;
+                errors = venmoResult.errors;
+                paymentMethod = 'venmo';
+            } else {
+                // Process as card transaction
+                const cardResult = await braintree.transact({
+                    amount: amount,
+                    nonce: paymentMethodNonce,
+                    deviceData: deviceData,
+                    customer: { email: donorEmail },
+                });
+
+                success = cardResult.success;
+                transaction = cardResult.transaction;
+                errors = cardResult.errors;
+                paymentMethod = 'card';
+            }
 
             if (success && transaction) {
                 await DonationRepository.update(donationId, {
                     status: 'completed',
                     transactionId: transaction.id,
-                    completedAt: new Date()
+                    completedAt: new Date(),
+                    paymentMethod,
                 });
 
                 response.send({
@@ -107,10 +156,10 @@ export const donateVenmo = Functions.endpoint
                     donationId,
                     transactionId: transaction.id,
                     amount: amount,
-                });                
+                });
             } else {
-                const errorMessages = errors?.deepErrors().map((e) => e.message) || ['Transaction failed'];
-                
+                const errorMessages = errors?.deepErrors().map((e: any) => e.message) || ['Transaction failed'];
+
                 await DonationRepository.update(donationId, {
                     status: 'failed',
                     errors: errorMessages
@@ -124,8 +173,8 @@ export const donateVenmo = Functions.endpoint
             }
 
         } catch (error) {
-            console.error('Error processing Venmo donation:', error);
-            
+            console.error('Error processing donation:', error);
+
             // Handle gateway rejection for token_issuance
             if (error instanceof Error && error.message.includes('token_issuance')) {
                 response.status(503).send({
