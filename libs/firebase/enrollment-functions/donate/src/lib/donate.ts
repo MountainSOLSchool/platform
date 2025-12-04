@@ -304,7 +304,7 @@ function generateDonationEmailContent(
 
                     <p style="font-size: 12px; margin-top: 20px;">
                     Mountain SOL is a 501(c)(3) nonprofit organization.<br>
-                    Tax ID: [Your Tax ID]
+                    Tax ID: 54-1942427
                     </p>
                 </div>
             </body>
