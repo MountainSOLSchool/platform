@@ -339,7 +339,7 @@ Email: info@mountainsol.org
 Website: mountainsol.org
 
 Mountain SOL is a 501(c)(3) nonprofit organization.
-Tax ID: [Your Tax ID]`;
+Tax ID: 54-1942427`;
 
     return { html, text };
 }
