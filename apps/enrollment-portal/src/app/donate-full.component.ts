@@ -182,18 +182,20 @@ import { toSignal } from '@angular/core/rxjs-interop';
                             </div>
                         }
 
-                        <div class="form-field">
-                            <label class="field-label required"
-                                >Payment Method</label
-                            >
-                            <sol-payment-collector
-                                [anonymous]="!isLoggedIn()"
-                                [paymentMethods]="['card', 'venmo']"
-                                (paymentMethod)="setPaymentMethod($event)"
-                                class="payment-collector"
-                            >
-                            </sol-payment-collector>
-                        </div>
+                        @if (isLoggedIn() !== undefined) {
+                            <div class="form-field">
+                                <label class="field-label required"
+                                    >Payment Method</label
+                                >
+                                <sol-payment-collector
+                                    [anonymous]="!isLoggedIn()"
+                                    [paymentMethods]="['card', 'venmo']"
+                                    (paymentMethod)="setPaymentMethod($event)"
+                                    class="payment-collector"
+                                >
+                                </sol-payment-collector>
+                            </div>
+                        }
 
                         <div class="form-field">
                             <button
@@ -428,7 +430,10 @@ export class DonateFullComponent {
     private readonly userService = inject(UserService);
 
     private readonly user = toSignal(this.userService.getUser());
-    readonly isLoggedIn = computed(() => !!this.user());
+    readonly isLoggedIn = computed(() => {
+        const user = this.user();
+        return user === undefined ? undefined : !!user;
+    });
 
     donationAmount = signal<number>(25);
     donorName = signal<string>('');
