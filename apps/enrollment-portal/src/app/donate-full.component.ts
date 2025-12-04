@@ -1,17 +1,18 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
+import { UserService } from '@sol/auth/user';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
 import { CardModule } from 'primeng/card';
 import { MessagesModule } from 'primeng/messages';
 import { Message } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { lastValueFrom } from 'rxjs';
+import { DialogModule } from 'primeng/dialog';
+import { map, filter } from 'rxjs';
 import { RequestedUtility } from '@sol/angular/request';
 import * as browserDetection from '@braintree/browser-detection';
 
@@ -20,15 +21,16 @@ import * as browserDetection from '@braintree/browser-detection';
     standalone: true,
     imports: [
         CommonModule,
+        AsyncPipe,
         FormsModule,
         PaymentCollectorComponent,
         ButtonModule,
         InputNumberModule,
         InputTextModule,
-        InputTextareaModule,
         CardModule,
         MessagesModule,
         ProgressSpinnerModule,
+        DialogModule,
     ],
     template: `
         <div class="donation-container">
@@ -43,25 +45,7 @@ import * as browserDetection from '@braintree/browser-detection';
                     </p-messages>
                 }
 
-                @if (donationComplete()) {
-                    <div class="success-content">
-                        <i class="pi pi-check-circle success-icon"></i>
-                        <h2 class="success-title">Thank You!</h2>
-                        <p class="success-message">
-                            Your donation of &#36;{{ donationAmount() }} has
-                            been processed successfully.
-                        </p>
-                        <p class="transaction-id">
-                            Transaction ID: {{ transactionId() }}
-                        </p>
-                        <button
-                            pButton
-                            label="Make Another Donation"
-                            class="reset-button"
-                            (click)="reset()"
-                        ></button>
-                    </div>
-                } @else {
+                @if (!donationComplete()) {
                     <div class="donation-form">
                         <div class="form-field">
                             <label for="name" class="field-label required"
@@ -90,18 +74,53 @@ import * as browserDetection from '@braintree/browser-detection';
                             />
                         </div>
 
+
                         <div class="form-field">
-                            <label for="address" class="field-label"
-                                >Address</label
+                            <label for="street" class="field-label"
+                                >Street Address</label
                             >
-                            <textarea
-                                pInputTextarea
-                                id="address"
-                                [(ngModel)]="donorAddress"
-                                placeholder="Street, City, State, ZIP"
-                                [rows]="3"
+                            <input
+                                pInputText
+                                id="street"
+                                [(ngModel)]="street"
+                                placeholder="123 Main St"
                                 class="full-width"
-                            ></textarea>
+                            />
+                        </div>
+
+                        <div class="address-row">
+                            <div class="form-field">
+                                <label for="city" class="field-label">City</label>
+                                <input
+                                    pInputText
+                                    id="city"
+                                    [(ngModel)]="city"
+                                    placeholder="City"
+                                    class="full-width"
+                                />
+                            </div>
+
+                            <div class="form-field state-field">
+                                <label for="state" class="field-label">State</label>
+                                <input
+                                    pInputText
+                                    id="state"
+                                    [(ngModel)]="state"
+                                    placeholder="State"
+                                    class="full-width"
+                                />
+                            </div>
+
+                            <div class="form-field zip-field">
+                                <label for="zip" class="field-label">ZIP</label>
+                                <input
+                                    pInputText
+                                    id="zip"
+                                    [(ngModel)]="zip"
+                                    placeholder="ZIP"
+                                    class="full-width"
+                                />
+                            </div>
                         </div>
 
                         <div class="form-field">
@@ -151,7 +170,7 @@ import * as browserDetection from '@braintree/browser-detection';
                         <div class="form-field">
                             <label class="field-label required">Payment Method</label>
                             <sol-payment-collector
-                                [anonymous]="true"
+                                [anonymous]="!isLoggedIn()"
                                 [paymentMethods]="['card', 'venmo']"
                                 (paymentMethod)="setPaymentMethod($event)"
                                 class="payment-collector"
@@ -174,6 +193,49 @@ import * as browserDetection from '@braintree/browser-detection';
                 }
             </p-card>
         </div>
+
+        <p-dialog
+            header="Submitting..."
+            [visible]="processing()"
+            [closable]="false"
+            [modal]="true"
+            [draggable]="false"
+        >
+            <p-progressSpinner></p-progressSpinner>
+        </p-dialog>
+
+        <p-dialog
+            header="Successfully donated!"
+            [visible]="donationComplete()"
+            [closable]="false"
+            [modal]="true"
+            [draggable]="false"
+        >
+            <div style="width: 100%">
+                <div style="text-align: center">
+                    <i
+                        style="color: green; font-size: 60px"
+                        class="pi pi-check-circle"
+                    ></i>
+                </div>
+            </div>
+            <div style="margin-top: 1rem">
+                Your donation of <b>\${{ donationAmount() }}</b> has been processed successfully.
+            </div>
+            <div style="margin-top: 1rem">
+                A confirmation email has been sent to <b>{{ donorEmail() }}</b>.
+            </div>
+            <div style="margin-top: 1rem">
+                <strong>Transaction ID:</strong> {{ transactionId() }}
+            </div>
+            <div style="margin-top: 1rem">
+                <button
+                    pButton
+                    label="Make Another Donation"
+                    (click)="reset()"
+                ></button>
+            </div>
+        </p-dialog>
     `,
     styles: [
         `
@@ -231,34 +293,33 @@ import * as browserDetection from '@braintree/browser-detection';
                 color: #e74c3c;
             }
 
+            .field-error {
+                color: #e74c3c;
+                font-size: 0.85rem;
+                margin-top: 0.25rem;
+            }
+
+            .address-row {
+                display: grid;
+                grid-template-columns: 1fr 120px 100px;
+                gap: 1rem;
+            }
+
+            .state-field,
+            .zip-field {
+                min-width: 0;
+            }
+
             .amount-input-container {
                 display: flex;
                 align-items: center;
                 position: relative;
             }
 
-            .currency-symbol {
-                position: absolute;
-                left: 0.75rem;
-                z-index: 1;
-                color: var(--text-color-secondary);
-                font-weight: 500;
-            }
-
             .amount-input ::ng-deep .p-inputnumber-input {
                 padding-left: 2rem;
                 font-size: 1.1rem;
                 height: 3rem;
-            }
-
-            .amount-input ::ng-deep .p-inputnumber-button-group {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .amount-input ::ng-deep .p-inputnumber-button {
-                height: 1.5rem;
-                width: 2rem;
             }
 
             .field-hint {
@@ -292,48 +353,6 @@ import * as browserDetection from '@braintree/browser-detection';
                 cursor: not-allowed;
             }
 
-            .success-content {
-                text-align: center;
-                padding: 2rem 1rem;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            .success-icon {
-                font-size: 4rem;
-                color: #22c55e;
-                margin-bottom: 0.5rem;
-            }
-
-            .success-title {
-                font-size: 1.5rem;
-                font-weight: 600;
-                color: var(--text-color);
-                margin: 0;
-            }
-
-            .success-message {
-                font-size: 1.1rem;
-                color: var(--text-color);
-                margin: 0;
-                line-height: 1.5;
-            }
-
-            .transaction-id {
-                font-size: 0.9rem;
-                color: var(--text-color-secondary);
-                margin: 0;
-                word-break: break-all;
-            }
-
-            .reset-button {
-                width: 100%;
-                height: 2.5rem;
-                margin-top: 1rem;
-            }
-
             /* Mobile-specific styles */
             @media (max-width: 768px) {
                 .donation-container {
@@ -348,54 +367,18 @@ import * as browserDetection from '@braintree/browser-detection';
                     border: none;
                 }
 
-                .donation-card ::ng-deep .p-card-header {
-                    padding: 1rem 1rem 0.5rem;
-                    font-size: 1.2rem;
-                    text-align: center;
+                .address-row {
+                    grid-template-columns: 1fr;
                 }
 
-                .donation-card ::ng-deep .p-card-body {
-                    padding: 1rem;
-                }
-
-                .form-field {
-                    gap: 0.75rem;
-                }
-
-                .field-label {
-                    font-size: 1rem;
-                }
-
-                .amount-input ::ng-deep .p-inputnumber-input {
-                    height: 3.5rem;
-                    font-size: 1.2rem;
+                .state-field,
+                .zip-field {
+                    grid-column: 1;
                 }
 
                 .donate-button {
                     height: 3.5rem;
                     font-size: 1.2rem;
-                    margin-top: 0.5rem;
-                }
-
-                .success-content {
-                    padding: 1.5rem 0.5rem;
-                }
-
-                .success-icon {
-                    font-size: 3.5rem;
-                }
-
-                .success-title {
-                    font-size: 1.3rem;
-                }
-
-                .success-message {
-                    font-size: 1rem;
-                }
-
-                .transaction-id {
-                    font-size: 0.8rem;
-                    padding: 0 0.5rem;
                 }
             }
 
@@ -405,68 +388,15 @@ import * as browserDetection from '@braintree/browser-detection';
                     padding: 0;
                 }
 
-                .donation-card ::ng-deep .p-card-header {
-                    padding: 0.75rem 1rem 0.5rem;
-                    font-size: 1.1rem;
-                }
-
-                .donation-card ::ng-deep .p-card-body {
-                    padding: 0.75rem;
-                }
-
                 .form-field {
                     gap: 0.5rem;
-                }
-
-                .amount-input ::ng-deep .p-inputnumber-input {
-                    height: 3rem;
-                    font-size: 1.1rem;
-                }
-
-                .donate-button {
-                    height: 3rem;
-                    font-size: 1.1rem;
-                }
-
-                .success-content {
-                    padding: 1rem 0.5rem;
-                }
-
-                .success-icon {
-                    font-size: 3rem;
-                }
-
-                .success-title {
-                    font-size: 1.2rem;
-                }
-            }
-
-            /* Landscape orientation on mobile */
-            @media (max-width: 768px) and (orientation: landscape) {
-                .donation-container {
-                    min-height: auto;
-                    padding: 0.5rem;
-                }
-
-                .success-content {
-                    padding: 1rem 0.5rem;
-                }
-
-                .success-icon {
-                    font-size: 2.5rem;
                 }
             }
 
             /* Touch-friendly improvements */
             @media (pointer: coarse) {
-                .donate-button,
-                .reset-button {
-                    min-height: 44px; /* iOS/Android touch target minimum */
-                }
-
-                .amount-input ::ng-deep .p-inputnumber-button {
-                    min-width: 44px;
-                    min-height: 22px;
+                .donate-button {
+                    min-height: 44px;
                 }
             }
         `,
@@ -474,17 +404,37 @@ import * as browserDetection from '@braintree/browser-detection';
 })
 export class DonateFullComponent {
     private readonly functions = inject(FirebaseFunctionsService);
+    private readonly userService = inject(UserService);
+
+    readonly user$ = this.userService.getUser();
+    readonly userEmail$ = this.user$.pipe(
+        map((user) => user?.email),
+        filter((email): email is string => !!email)
+    );
 
     donationAmount = signal<number>(25);
     donorName = signal<string>('');
     donorEmail = signal<string>('');
-    donorAddress = signal<string>('');
+    street = signal<string>('');
+    city = signal<string>('');
+    state = signal<string>('');
+    zip = signal<string>('');
     referralSource = signal<string>('');
     paymentMethodData = signal<any>(null);
     processing = signal(false);
     messages = signal<Message[]>([]);
     donationComplete = signal(false);
     transactionId = signal<string>('');
+    isLoggedIn = signal<boolean>(false);
+
+    constructor() {
+        this.user$.subscribe((user) => {
+            this.isLoggedIn.set(!!user);
+            if (user?.email) {
+                this.donorEmail.set(user.email);
+            }
+        });
+    }
 
     canDonate = () => {
         const hasRequiredFields =
@@ -509,80 +459,96 @@ export class DonateFullComponent {
         this.paymentMethodData.set(method);
     }
 
-    async processDonation() {
+    processDonation() {
         if (!this.canDonate()) return;
 
         this.processing.set(true);
         this.messages.set([]);
 
-        try {
-            const result = await lastValueFrom(
-                this.functions.call<{
-                    success: boolean;
-                    transactionId: string;
-                    message: string;
-                }>('donate', {
-                    amount: this.donationAmount(),
-                    paymentMethodNonce: this.paymentMethodData().nonce,
-                    deviceData: this.paymentMethodData().deviceData,
-                    donorName: this.donorName(),
-                    donorEmail: this.donorEmail(),
-                    donorAddress: this.donorAddress() || undefined,
-                    referralSource: this.referralSource() || undefined,
-                    // Payment method type will be determined by backend based on nonce type
-                })
-            );
+        const fullAddress = [
+            this.street(),
+            this.city(),
+            this.state(),
+            this.zip()
+        ].filter(s => s.trim()).join(', ');
 
-            if (!RequestedUtility.isLoaded(result)) {
+        this.functions.call<{
+            success: boolean;
+            transactionId: string;
+            message: string;
+        }>('donate', {
+            amount: this.donationAmount(),
+            paymentMethodNonce: this.paymentMethodData().nonce,
+            deviceData: this.paymentMethodData().deviceData,
+            donorName: this.donorName(),
+            donorEmail: this.donorEmail(),
+            donorAddress: fullAddress || undefined,
+            referralSource: this.referralSource() || undefined,
+        }).subscribe({
+            next: (result) => {
+                if (!RequestedUtility.isLoaded(result)) {
+                    this.messages.set([
+                        {
+                            severity: 'error',
+                            summary: 'Error',
+                            detail: 'Unable to process donation. Please try again later.',
+                        },
+                    ]);
+                    this.processing.set(false);
+                    return;
+                }
+
+                if (result.success) {
+                    this.donationComplete.set(true);
+                    this.transactionId.set(result.transactionId);
+                } else {
+                    this.messages.set([
+                        {
+                            severity: 'error',
+                            summary: 'Donation Failed',
+                            detail:
+                                result.message ||
+                                'Unable to process donation. Please try again.',
+                        },
+                    ]);
+                }
+                this.processing.set(false);
+            },
+            error: (error) => {
+                console.error('Donation error:', error);
                 this.messages.set([
                     {
                         severity: 'error',
                         summary: 'Error',
-                        detail: 'Unable to process donation. Please try again later.',
+                        detail: 'An unexpected error occurred. Please try again.',
                     },
                 ]);
-                return;
+                this.processing.set(false);
             }
-
-            if (result.success) {
-                this.donationComplete.set(true);
-                this.transactionId.set(result.transactionId);
-            } else {
-                this.messages.set([
-                    {
-                        severity: 'error',
-                        summary: 'Donation Failed',
-                        detail:
-                            result.message ||
-                            'Unable to process donation. Please try again.',
-                    },
-                ]);
-            }
-        } catch (error) {
-            console.error('Donation error:', error);
-            this.messages.set([
-                {
-                    severity: 'error',
-                    summary: 'Error',
-                    detail: 'An unexpected error occurred. Please try again.',
-                },
-            ]);
-        } finally {
-            this.processing.set(false);
-        }
+        });
     }
 
     reset() {
         this.donationAmount.set(25);
         this.donorName.set('');
         this.donorEmail.set('');
-        this.donorAddress.set('');
+        this.street.set('');
+        this.city.set('');
+        this.state.set('');
+        this.zip.set('');
         this.referralSource.set('');
         this.paymentMethodData.set(null);
         this.processing.set(false);
         this.messages.set([]);
         this.donationComplete.set(false);
         this.transactionId.set('');
+
+        // Restore user email if logged in
+        this.user$.subscribe((user) => {
+            if (user?.email) {
+                this.donorEmail.set(user.email);
+            }
+        }).unsubscribe();
     }
 
     isIosButNotSafari() {
