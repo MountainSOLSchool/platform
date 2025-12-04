@@ -6,17 +6,13 @@ import { type Firestore } from 'firebase-admin/firestore';
 export interface DonationDbo {
     amount: number;
     currency: string;
-    paymentMethod: 'venmo' | 'card';
+    paymentMethod: 'venmo';
     transactionId?: string;
     status: 'pending' | 'completed' | 'failed' | 'refunded';
     timestamp: Date;
     completedAt?: Date;
     errors?: string[];
-    source?: 'donation_page_venmo' | 'donation_page';
-    donorName?: string;
-    donorEmail?: string;
-    donorAddress?: string;
-    referralSource?: string;
+    source?: 'donation_page_venmo';
 }
 
 export interface DonationSummary {
