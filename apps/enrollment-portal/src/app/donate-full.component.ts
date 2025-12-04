@@ -16,10 +16,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputMaskModule } from 'primeng/inputmask';
 import { CardModule } from 'primeng/card';
 import { MessagesModule } from 'primeng/messages';
-import { Message } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
-import { RequestedUtility } from '@sol/angular/request';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 import * as browserDetection from '@braintree/browser-detection';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -445,9 +444,37 @@ export class DonateFullComponent {
     referralSource = signal<string>('');
     paymentMethodData = signal<any>(null);
     processing = signal(false);
-    messages = signal<Message[]>([]);
-    donationComplete = signal(false);
-    transactionId = signal<string>('');
+
+    // Donation result state
+    donationResult = signal<
+        | { status: 'idle' }
+        | { status: 'processing' }
+        | { status: 'success'; transactionId: string }
+        | { status: 'error'; message: string }
+    >({ status: 'idle' });
+
+    // Derived state
+    readonly messages = computed(() => {
+        const result = this.donationResult();
+        if (result.status === 'error') {
+            return [
+                {
+                    severity: 'error' as const,
+                    summary: 'Donation Failed',
+                    detail: result.message,
+                },
+            ];
+        }
+        return [];
+    });
+
+    readonly donationComplete = computed(
+        () => this.donationResult().status === 'success'
+    );
+    readonly transactionId = computed(() => {
+        const result = this.donationResult();
+        return result.status === 'success' ? result.transactionId : '';
+    });
 
     canDonate = () => {
         const hasRequiredFields =
@@ -476,7 +503,7 @@ export class DonateFullComponent {
         if (!this.canDonate()) return;
 
         this.processing.set(true);
-        this.messages.set([]);
+        this.donationResult.set({ status: 'processing' });
 
         const fullAddress = [
             this.street(),
@@ -502,48 +529,22 @@ export class DonateFullComponent {
                 donorAddress: fullAddress || undefined,
                 referralSource: this.referralSource() || undefined,
             })
-            .subscribe({
-                next: (result) => {
-                    if (!RequestedUtility.isLoaded(result)) {
-                        this.messages.set([
-                            {
-                                severity: 'error',
-                                summary: 'Error',
-                                detail: 'Unable to process donation. Please try again later.',
-                            },
-                        ]);
-                        this.processing.set(false);
-                        return;
-                    }
-
-                    if (result.success) {
-                        this.messages.set([]); // Clear any error messages
-                        this.donationComplete.set(true);
-                        this.transactionId.set(result.transactionId);
-                    } else {
-                        this.messages.set([
-                            {
-                                severity: 'error',
-                                summary: 'Donation Failed',
-                                detail:
-                                    result.message ||
-                                    'Unable to process donation. Please try again.',
-                            },
-                        ]);
-                    }
-                    this.processing.set(false);
-                },
-                error: (error) => {
-                    console.error('Donation error:', error);
-                    this.messages.set([
-                        {
-                            severity: 'error',
-                            summary: 'Error',
-                            detail: 'An unexpected error occurred. Please try again.',
-                        },
-                    ]);
-                    this.processing.set(false);
-                },
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+            .subscribe((result) => {
+                if (result.success) {
+                    this.donationResult.set({
+                        status: 'success',
+                        transactionId: result.transactionId,
+                    });
+                } else {
+                    this.donationResult.set({
+                        status: 'error',
+                        message:
+                            result.message ||
+                            'Unable to process donation. Please try again.',
+                    });
+                }
+                this.processing.set(false);
             });
     }
 
@@ -557,11 +558,8 @@ export class DonateFullComponent {
         this.referralSource.set('');
         this.paymentMethodData.set(null);
         this.processing.set(false);
-        this.messages.set([]);
-        this.donationComplete.set(false);
-        this.transactionId.set('');
+        this.donationResult.set({ status: 'idle' });
 
-        // Restore user email if logged in (linkedSignal will auto-update)
         const user = this.user();
         if (user?.email) {
             this.donorEmail.set(user.email);
