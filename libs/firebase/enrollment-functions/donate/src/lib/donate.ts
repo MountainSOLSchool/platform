@@ -70,8 +70,8 @@ export const donate = Functions.endpoint
                 referralSource,
             } = request.body.data;
 
-            // Donations $250+ should go through a different channel for compliance/tracking
-            if (!amount || amount <= 0 || amount > 249) {
+            // Very large donations should go through a different process
+            if (!amount || amount <= 0 || amount > 9999) {
                 response.status(400).send({ error: 'Invalid donation amount. Please donate an amount under $250' });
                 return;
             }
