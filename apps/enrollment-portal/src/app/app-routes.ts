@@ -124,7 +124,7 @@ export const appRoutes: Routes = [
                         ],
                     },
                     {
-                        path: 'donate',
+                        path: 'make-donation',
                         loadComponent: () =>
                             import('./donate-full.component').then(
                                 (m) => m.DonateFullComponent
