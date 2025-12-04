@@ -29,6 +29,7 @@ export class PaymentCollectorStore extends ComponentStore<{
     dropInInstance: Dropin | undefined;
     nonce: string | undefined;
     paymentDetails: cardPaymentMethodPayload['details'] | undefined;
+    paymentMethodType: string | undefined;
     isAnonymous: boolean;
     paymentMethods: string[];
 }> {
@@ -44,6 +45,7 @@ export class PaymentCollectorStore extends ComponentStore<{
             dropInInstance: undefined,
             nonce: undefined,
             paymentDetails: undefined,
+            paymentMethodType: undefined,
             isAnonymous: false,
             paymentMethods: ['card'],
         });
@@ -62,6 +64,7 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     nonce: paymentMethod.nonce,
                                     paymentDetails:
                                         details as cardPaymentMethodPayload['details'],
+                                    paymentMethodType: paymentMethod.type,
                                 });
                             }),
                             catchError((e) => of(console.error(e)))
@@ -222,16 +225,18 @@ export class PaymentCollectorStore extends ComponentStore<{
               nonce: string;
               deviceData: string;
               paymentDetails: cardPaymentMethodPayload['details'];
+              type: string;
           }
         | undefined
     > {
         return this.state$.pipe(
-            map(({ nonce, deviceData, paymentDetails }) =>
-                nonce && deviceData && paymentDetails
+            map(({ nonce, deviceData, paymentDetails, paymentMethodType }) =>
+                nonce && deviceData && paymentDetails && paymentMethodType
                     ? {
                           nonce,
                           deviceData,
                           paymentDetails,
+                          type: paymentMethodType,
                       }
                     : undefined
             )

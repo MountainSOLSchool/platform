@@ -124,6 +124,13 @@ export const appRoutes: Routes = [
                         ],
                     },
                     {
+                        path: 'donate',
+                        loadComponent: () =>
+                            import('./donate-full.component').then(
+                                (m) => m.DonateFullComponent
+                            ),
+                    },
+                    {
                         path: 'donate-venmo',
                         loadComponent: () =>
                             import('./donate.component').then(
