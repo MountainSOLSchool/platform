@@ -68,6 +68,7 @@ export const donate = Functions.endpoint
                 referralSource,
             } = request.body.data;
 
+            // Donations $250+ should go through a different channel for compliance/tracking
             if (!amount || amount <= 0 || amount > 249) {
                 response.status(400).send({ error: 'Invalid donation amount. Please donate an amount under $250' });
                 return;
@@ -85,14 +86,10 @@ export const donate = Functions.endpoint
 
             const braintree = new Braintree(secrets, strings);
 
-            // Detect payment method type from the nonce
-            // Venmo nonces typically start with 'fake-venmo-account-nonce' in sandbox
-            // or contain venmo-specific identifiers in production
-            // For now, we'll try Venmo first and fall back to card
             let paymentMethod: 'venmo' | 'card' = 'card';
             let success = false;
             let transaction: any;
-            let errors: any;
+            let errors: { deepErrors: () => Array<{ message: string }> } | undefined;
 
             // Try to determine payment method from nonce characteristics
             // Braintree nonces for Venmo often contain specific patterns
@@ -182,8 +179,8 @@ export const donate = Functions.endpoint
                     transactionId: transaction.id,
                     amount: amount,
                 });
-            } else{
-                const errorMessages = errors?.deepErrors().map((e: any) => e.message) || ['Transaction failed'];
+            } else {
+                const errorMessages = errors?.deepErrors().map((e) => e.message) || ['Transaction failed'];
 
                 await DonationRepository.update(donationId, {
                     status: 'failed',

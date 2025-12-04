@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule, AsyncPipe } from '@angular/common';
+import { Component, inject, signal, computed, linkedSignal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
@@ -12,16 +12,15 @@ import { MessagesModule } from 'primeng/messages';
 import { Message } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DialogModule } from 'primeng/dialog';
-import { map, filter } from 'rxjs';
 import { RequestedUtility } from '@sol/angular/request';
 import * as browserDetection from '@braintree/browser-detection';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'sol-donate-full',
     standalone: true,
     imports: [
         CommonModule,
-        AsyncPipe,
         FormsModule,
         PaymentCollectorComponent,
         ButtonModule,
@@ -406,15 +405,12 @@ export class DonateFullComponent {
     private readonly functions = inject(FirebaseFunctionsService);
     private readonly userService = inject(UserService);
 
-    readonly user$ = this.userService.getUser();
-    readonly userEmail$ = this.user$.pipe(
-        map((user) => user?.email),
-        filter((email): email is string => !!email)
-    );
+    private readonly user = toSignal(this.userService.getUser());
+    readonly isLoggedIn = computed(() => !!this.user());
 
     donationAmount = signal<number>(25);
     donorName = signal<string>('');
-    donorEmail = signal<string>('');
+    donorEmail = linkedSignal(() => this.user()?.email ?? '');
     street = signal<string>('');
     city = signal<string>('');
     state = signal<string>('');
@@ -425,16 +421,6 @@ export class DonateFullComponent {
     messages = signal<Message[]>([]);
     donationComplete = signal(false);
     transactionId = signal<string>('');
-    isLoggedIn = signal<boolean>(false);
-
-    constructor() {
-        this.user$.subscribe((user) => {
-            this.isLoggedIn.set(!!user);
-            if (user?.email) {
-                this.donorEmail.set(user.email);
-            }
-        });
-    }
 
     canDonate = () => {
         const hasRequiredFields =
@@ -532,7 +518,6 @@ export class DonateFullComponent {
     reset() {
         this.donationAmount.set(25);
         this.donorName.set('');
-        this.donorEmail.set('');
         this.street.set('');
         this.city.set('');
         this.state.set('');
@@ -544,12 +529,11 @@ export class DonateFullComponent {
         this.donationComplete.set(false);
         this.transactionId.set('');
 
-        // Restore user email if logged in
-        this.user$.subscribe((user) => {
-            if (user?.email) {
-                this.donorEmail.set(user.email);
-            }
-        }).unsubscribe();
+        // Restore user email if logged in (linkedSignal will auto-update)
+        const user = this.user();
+        if (user?.email) {
+            this.donorEmail.set(user.email);
+        }
     }
 
     isIosButNotSafari() {
