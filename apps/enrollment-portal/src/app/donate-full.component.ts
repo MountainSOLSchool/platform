@@ -499,6 +499,7 @@ export class DonateFullComponent {
                 }
 
                 if (result.success) {
+                    this.messages.set([]); // Clear any error messages
                     this.donationComplete.set(true);
                     this.transactionId.set(result.transactionId);
                 } else {
