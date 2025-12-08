@@ -238,19 +238,19 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                     .pipe(
                         RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                         tapResponse({
-    next: ({ student }) => {
-        this.patchState((state) => ({
-            isLoadingStudent: false,
-            enrollment: {
-                ...state.enrollment,
-                student,
-            },
-        }));
-    },
-    error: () => {
-        this.patchState({ isLoadingStudent: false });
-    }
-})
+                            next: ({ student }) => {
+                                this.patchState((state) => ({
+                                    isLoadingStudent: false,
+                                    enrollment: {
+                                        ...state.enrollment,
+                                        student,
+                                    },
+                                }));
+                            },
+                            error: () => {
+                                this.patchState({ isLoadingStudent: false });
+                            },
+                        })
                     )
             )
         );
