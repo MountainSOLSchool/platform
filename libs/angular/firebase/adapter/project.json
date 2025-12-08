@@ -3,6 +3,7 @@
     "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/angular/firebase/adapter/src",
     "projectType": "library",
+    "tags": [],
     "targets": {
         "build": {
             "executor": "@nx/js:tsc",
@@ -21,9 +22,9 @@
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
-                "jestConfig": "libs/angular/firebase/adapter/jest.config.ts"
+                "jestConfig": "libs/angular/firebase/adapter/jest.config.ts",
+                "tsConfig": "libs/angular/firebase/adapter/tsconfig.spec.json"
             }
         }
-    },
-    "tags": []
+    }
 }

@@ -4,6 +4,7 @@
     "projectType": "library",
     "sourceRoot": "src",
     "prefix": "sol",
+    "tags": ["scope:student"],
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
@@ -17,6 +18,5 @@
         "lint": {
             "executor": "@nx/eslint:lint"
         }
-    },
-    "tags": ["scope:student"]
+    }
 }

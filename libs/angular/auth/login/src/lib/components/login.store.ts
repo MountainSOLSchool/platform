@@ -92,30 +92,30 @@ export class LoginStore extends ComponentStore<LoginState> {
                     ? this.authService.emailSignup(email, password)
                     : this.authService.login(email, password)
                 ).pipe(
-                    tapResponse(
-                        () => {
-                            // this.router.navigate(['/']);
-                            this.messageService.add({
-                                detail: newAccountCreation
-                                    ? 'Created account!'
-                                    : 'Logged in!',
-                                summary: 'Success',
-                                severity: 'success',
-                            });
-                            this.loginRequestState$.next(RequestState.Success);
-                        },
-                        (error: { code: string }) => {
-                            this.messageService.add({
-                                detail: `Failed to ${
-                                    newAccountCreation
-                                        ? 'create account'
-                                        : 'log in'
-                                }: ${error.code}`,
-                                severity: 'error',
-                            });
-                            this.loginRequestState$.next(RequestState.Failure);
-                        }
-                    )
+                    tapResponse({
+    next: () => {
+        // this.router.navigate(['/']);
+        this.messageService.add({
+            detail: newAccountCreation
+                ? 'Created account!'
+                : 'Logged in!',
+            summary: 'Success',
+            severity: 'success',
+        });
+        this.loginRequestState$.next(RequestState.Success);
+    },
+    error: (error: {
+        code: string;
+    }) => {
+        this.messageService.add({
+            detail: `Failed to ${newAccountCreation
+                ? 'create account'
+                : 'log in'}: ${error.code}`,
+            severity: 'error',
+        });
+        this.loginRequestState$.next(RequestState.Failure);
+    }
+})
                 )
             )
         );

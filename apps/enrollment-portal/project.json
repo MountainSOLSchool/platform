@@ -8,9 +8,7 @@
     "targets": {
         "build": {
             "executor": "@angular-devkit/build-angular:browser",
-            "outputs": [
-                "{options.outputPath}"
-            ],
+            "outputs": ["{options.outputPath}"],
             "options": {
                 "outputPath": "dist/apps/enrollment-portal",
                 "index": "apps/enrollment-portal/src/index.html",
@@ -92,17 +90,14 @@
         },
         "lint": {
             "executor": "@nx/eslint:lint",
-            "outputs": [
-                "{options.outputFile}"
-            ]
+            "outputs": ["{options.outputFile}"]
         },
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": [
-                "{workspaceRoot}/coverage/apps/enrollment-portal"
-            ],
+            "outputs": ["{workspaceRoot}/coverage/apps/enrollment-portal"],
             "options": {
-                "jestConfig": "apps/enrollment-portal/jest.config.ts"
+                "jestConfig": "apps/enrollment-portal/jest.config.ts",
+                "tsConfig": "apps/enrollment-portal/tsconfig.spec.json"
             }
         }
     }

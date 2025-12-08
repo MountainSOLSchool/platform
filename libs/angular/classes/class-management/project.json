@@ -4,6 +4,7 @@
     "projectType": "library",
     "sourceRoot": "src",
     "prefix": "sol",
+    "tags": ["scope:classes"],
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
@@ -11,12 +12,12 @@
                 "{workspaceRoot}/coverage/libs/angular/classes/class-management"
             ],
             "options": {
-                "jestConfig": "libs/angular/classes/class-management/jest.config.ts"
+                "jestConfig": "libs/angular/classes/class-management/jest.config.ts",
+                "tsConfig": "libs/angular/classes/class-management/tsconfig.spec.json"
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint"
         }
-    },
-    "tags": ["scope:classes"]
+    }
 }
