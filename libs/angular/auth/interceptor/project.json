@@ -4,6 +4,7 @@
     "projectType": "library",
     "sourceRoot": "src",
     "prefix": "sol",
+    "tags": [],
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
@@ -11,12 +12,12 @@
                 "{workspaceRoot}/coverage/libs/angular/auth/interceptor"
             ],
             "options": {
-                "jestConfig": "libs/angular/auth/interceptor/jest.config.ts"
+                "jestConfig": "libs/angular/auth/interceptor/jest.config.ts",
+                "tsConfig": "libs/angular/auth/interceptor/tsconfig.spec.json"
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint"
         }
-    },
-    "tags": []
+    }
 }

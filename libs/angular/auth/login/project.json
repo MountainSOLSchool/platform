@@ -4,17 +4,18 @@
     "projectType": "library",
     "sourceRoot": "src",
     "prefix": "sol",
+    "tags": ["scope:auth"],
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/angular/auth/login"],
             "options": {
-                "jestConfig": "libs/angular/auth/login/jest.config.ts"
+                "jestConfig": "libs/angular/auth/login/jest.config.ts",
+                "tsConfig": "libs/angular/auth/login/tsconfig.spec.json"
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint"
         }
-    },
-    "tags": ["scope:auth"]
+    }
 }

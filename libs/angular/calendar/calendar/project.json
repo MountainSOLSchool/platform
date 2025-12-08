@@ -4,6 +4,7 @@
     "projectType": "library",
     "sourceRoot": "src",
     "prefix": "sol",
+    "tags": [],
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
@@ -11,12 +12,12 @@
                 "{workspaceRoot}/coverage/libs/angular/calendar/calendar"
             ],
             "options": {
-                "jestConfig": "libs/angular/calendar/calendar/jest.config.ts"
+                "jestConfig": "libs/angular/calendar/calendar/jest.config.ts",
+                "tsConfig": "libs/angular/calendar/calendar/tsconfig.spec.json"
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint"
         }
-    },
-    "tags": []
+    }
 }

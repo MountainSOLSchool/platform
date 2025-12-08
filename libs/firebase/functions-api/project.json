@@ -4,17 +4,18 @@
     "projectType": "library",
     "sourceRoot": "libs/firebase/functions-api/src",
     "prefix": "sol",
+    "tags": [],
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/firebase/functions-api"],
             "options": {
-                "jestConfig": "libs/firebase/functions-api/jest.config.ts"
+                "jestConfig": "libs/firebase/functions-api/jest.config.ts",
+                "tsConfig": "libs/firebase/functions-api/tsconfig.spec.json"
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint"
         }
-    },
-    "tags": []
+    }
 }

@@ -4,18 +4,19 @@
     "projectType": "library",
     "sourceRoot": "src",
     "prefix": "sol",
+    "tags": ["scope:libs/angular/paths"],
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/libs/angular/paths"],
             "options": {
-                "jestConfig": "libs/angular/paths/jest.config.ts"
+                "jestConfig": "libs/angular/paths/jest.config.ts",
+                "tsConfig": "libs/angular/paths/tsconfig.spec.json"
             }
         },
         "lint": {
             "executor": "@nx/eslint:lint",
             "outputs": ["{options.outputFile}"]
         }
-    },
-    "tags": ["scope:libs/angular/paths"]
+    }
 }

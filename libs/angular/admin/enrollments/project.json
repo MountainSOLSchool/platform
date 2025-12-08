@@ -3,14 +3,15 @@
     "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
     "sourceRoot": "libs/angular/admin/enrollments/src",
     "prefix": "sol",
-    "tags": [],
     "projectType": "library",
+    "tags": [],
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
             "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
             "options": {
-                "jestConfig": "libs/angular/admin/enrollments/jest.config.ts"
+                "jestConfig": "libs/angular/admin/enrollments/jest.config.ts",
+                "tsConfig": "libs/angular/admin/enrollments/tsconfig.spec.json"
             }
         },
         "lint": {

@@ -92,8 +92,8 @@ export class LoginStore extends ComponentStore<LoginState> {
                     ? this.authService.emailSignup(email, password)
                     : this.authService.login(email, password)
                 ).pipe(
-                    tapResponse(
-                        () => {
+                    tapResponse({
+                        next: () => {
                             // this.router.navigate(['/']);
                             this.messageService.add({
                                 detail: newAccountCreation
@@ -104,7 +104,7 @@ export class LoginStore extends ComponentStore<LoginState> {
                             });
                             this.loginRequestState$.next(RequestState.Success);
                         },
-                        (error: { code: string }) => {
+                        error: (error: { code: string }) => {
                             this.messageService.add({
                                 detail: `Failed to ${
                                     newAccountCreation
@@ -114,8 +114,8 @@ export class LoginStore extends ComponentStore<LoginState> {
                                 severity: 'error',
                             });
                             this.loginRequestState$.next(RequestState.Failure);
-                        }
-                    )
+                        },
+                    })
                 )
             )
         );
