@@ -154,6 +154,8 @@ git push origin main  # Triggers deployment
 
 ## For AI Assistants
 
+### Working with This Codebase
+
 When working on this codebase:
 
 1. **Read relevant docs first** - Check these documents before making changes
@@ -165,6 +167,90 @@ When working on this codebase:
 7. **Keep components focused** - One responsibility per component
 8. **Validate server-side** - All business logic in Cloud Functions
 9. **Type everything** - No `any` types, proper error typing
+
+### Maintaining This Documentation
+
+**IMPORTANT**: When making changes to the codebase, you must update these AI documentation files to keep them accurate.
+
+#### When to Update Documentation
+
+Update the relevant `/ai/*.md` files when you:
+
+1. **Establish new patterns** that should be followed in future work
+   - New state management patterns
+   - New component communication patterns
+   - New API integration patterns
+
+2. **Add new architectural components**
+   - New libraries or major features
+   - New services or utilities
+   - New deployment workflows
+
+3. **Change existing patterns** that are documented
+   - Refactor a pattern that's referenced in the docs
+   - Update a utility or service that's documented
+   - Change file locations of referenced files
+
+4. **Discover undocumented patterns** while reading the codebase
+   - Find a pattern used consistently but not documented
+   - Identify a best practice that should be captured
+
+#### How to Update Documentation
+
+1. **Update file path references** if files move or line numbers change significantly
+   - Use ranges for logical blocks (e.g., `:50-75`)
+   - Use single lines for specific examples (e.g., `:42`)
+
+2. **Add new sections** for new patterns
+   - Keep descriptions concise
+   - Reference actual implementation files
+   - Explain the "why" not just the "what"
+
+3. **Remove outdated information** if patterns are deprecated
+   - Don't leave old patterns that are no longer used
+   - Update or remove file references that no longer exist
+
+4. **Maintain consistency** across all docs
+   - Use the same referencing style (file paths with line numbers)
+   - Keep the same structure (overview → details → examples → best practices)
+   - Cross-reference related docs when appropriate
+
+#### Which File to Update
+
+- **`angular-patterns.md`** - Angular-specific patterns (signals, components, forms, RxJS)
+- **`firebase-patterns.md`** - Firebase integration (functions, Firestore, email, Braintree backend)
+- **`codebase-structure.md`** - Repository structure, organization, file locations, imports
+- **`payment-processing.md`** - Payment flows, Braintree integration, vault, security
+- **`development-workflow.md`** - Dev setup, testing, building, deployment, git workflow
+- **`README.md`** - Overview and quick reference (this file)
+
+#### Example Update Workflow
+
+```
+User asks: "Add caching to the payment token service"
+
+Your workflow:
+1. Implement the caching feature
+2. After implementation, check: Is this a new pattern worth documenting?
+3. If yes, update `payment-processing.md`:
+   - Add section on token caching
+   - Reference the implementation file and line numbers
+   - Explain when/why to use caching
+4. Update `README.md` quick reference if it's a common pattern
+5. Mention in your response: "Updated /ai/payment-processing.md to document the new token caching pattern"
+```
+
+#### Verification Checklist
+
+Before finishing a task that involves pattern changes:
+
+- [ ] Did I introduce a new pattern that others should follow?
+- [ ] Did I change a file that's referenced in the docs?
+- [ ] Did I move or rename files mentioned in the docs?
+- [ ] Are the line number references still accurate?
+- [ ] Should this pattern be added to the quick reference?
+
+**Remember**: These docs are the primary way future AI assistants (and developers) will understand the codebase. Keep them accurate and up-to-date!
 
 ## Documentation Style
 
