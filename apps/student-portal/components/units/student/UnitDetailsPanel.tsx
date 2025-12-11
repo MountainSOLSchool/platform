@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { UnitDetails } from './UnitDetailsSidebar';
 import './UnitDetailsPanel.css';
 
@@ -8,11 +8,15 @@ interface UnitDetailsPanelProps {
     isSelected: boolean;
 }
 
-export function UnitDetailsPanel({ unitDetails, isSelected }: UnitDetailsPanelProps) {
+export function UnitDetailsPanel({
+    unitDetails,
+    isSelected,
+}: UnitDetailsPanelProps) {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
-    const [dragStartY, setDragStartY] = useState<number | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
     const [currentTranslateY, setCurrentTranslateY] = useState(0);
+    const dragStartY = useRef<number | null>(null);
     const panelRef = useRef<HTMLDivElement>(null);
 
     // Auto-expand when a unit is selected
@@ -23,30 +27,84 @@ export function UnitDetailsPanel({ unitDetails, isSelected }: UnitDetailsPanelPr
         }
     }, [isSelected, isExpanded]);
 
-    const handleDragStart = (clientY: number) => {
-        setDragStartY(clientY);
-    };
+    const handleDragStart = useCallback((clientY: number) => {
+        dragStartY.current = clientY;
+        setIsDragging(true);
+    }, []);
 
-    const handleDragMove = (clientY: number) => {
-        if (dragStartY === null) return;
-        const delta = clientY - dragStartY;
-        // Only allow dragging down (positive delta)
-        if (delta > 0) {
-            setCurrentTranslateY(delta);
+    const handleDragMove = useCallback((clientY: number) => {
+        if (dragStartY.current === null) return;
+        const delta = clientY - dragStartY.current;
+        // Allow dragging down (positive) and slightly up (negative, capped)
+        setCurrentTranslateY(Math.max(-20, delta));
+    }, []);
+
+    const handleDragEnd = useCallback(() => {
+        if (dragStartY.current === null) {
+            setIsDragging(false);
+            return;
         }
-    };
-
-    const handleDragEnd = () => {
-        if (dragStartY === null) return;
 
         // If dragged down more than 100px, collapse
         if (currentTranslateY > 100) {
             setIsExpanded(false);
         }
 
-        setDragStartY(null);
+        dragStartY.current = null;
+        setIsDragging(false);
         setCurrentTranslateY(0);
-    };
+    }, [currentTranslateY]);
+
+    // Global mouse event handlers for drag (so dragging works even when mouse leaves element)
+    useEffect(() => {
+        if (!isDragging) return;
+
+        const handleMouseMove = (e: MouseEvent) => {
+            e.preventDefault();
+            handleDragMove(e.clientY);
+        };
+
+        const handleMouseUp = () => {
+            handleDragEnd();
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isDragging, handleDragMove, handleDragEnd]);
+
+    const handleTouchStart = useCallback(
+        (e: React.TouchEvent) => {
+            handleDragStart(e.touches[0].clientY);
+        },
+        [handleDragStart]
+    );
+
+    const handleTouchMove = useCallback(
+        (e: React.TouchEvent) => {
+            if (dragStartY.current !== null) {
+                e.preventDefault();
+                handleDragMove(e.touches[0].clientY);
+            }
+        },
+        [handleDragMove]
+    );
+
+    const handleTouchEnd = useCallback(() => {
+        handleDragEnd();
+    }, [handleDragEnd]);
+
+    const handleMouseDown = useCallback(
+        (e: React.MouseEvent) => {
+            e.preventDefault();
+            handleDragStart(e.clientY);
+        },
+        [handleDragStart]
+    );
 
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
@@ -57,26 +115,28 @@ export function UnitDetailsPanel({ unitDetails, isSelected }: UnitDetailsPanelPr
         setIsMinimized(!isMinimized);
     };
 
+    const handleClick = useCallback(() => {
+        // Only toggle if not dragging and not expanded
+        if (!isDragging && !isExpanded) {
+            toggleExpand();
+        }
+    }, [isDragging, isExpanded]);
+
     return (
         <>
             {/* Mobile Bottom Sheet */}
             {isSelected && (
                 <div
                     ref={panelRef}
-                    className={`unit-details-panel mobile ${isExpanded ? 'expanded' : 'collapsed'}`}
+                    className={`unit-details-panel mobile ${isExpanded ? 'expanded' : 'collapsed'} ${isDragging ? 'dragging' : ''}`}
                     style={{
                         transform: `translateY(${isExpanded ? currentTranslateY : 0}px)`,
                     }}
-                    onTouchStart={(e) => handleDragStart(e.touches[0].clientY)}
-                    onTouchMove={(e) => handleDragMove(e.touches[0].clientY)}
-                    onTouchEnd={handleDragEnd}
-                    onMouseDown={(e) => handleDragStart(e.clientY)}
-                    onMouseMove={(e) => {
-                        if (dragStartY !== null) handleDragMove(e.clientY);
-                    }}
-                    onMouseUp={handleDragEnd}
-                    onMouseLeave={handleDragEnd}
-                    onClick={() => !isExpanded && toggleExpand()}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                    onMouseDown={handleMouseDown}
+                    onClick={handleClick}
                 >
                     {/* Drag Handle */}
                     <div className="drag-handle-container">
@@ -95,7 +155,9 @@ export function UnitDetailsPanel({ unitDetails, isSelected }: UnitDetailsPanelPr
 
             {/* Desktop Floating Panel */}
             {isSelected && (
-                <div className={`unit-details-panel desktop ${isMinimized ? 'minimized' : ''}`}>
+                <div
+                    className={`unit-details-panel desktop ${isMinimized ? 'minimized' : ''}`}
+                >
                     <div className="panel-header">
                         <h3>{unitDetails.name}</h3>
                         <button
