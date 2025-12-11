@@ -8,6 +8,11 @@ interface UnitDetailsPanelProps {
     isSelected: boolean;
 }
 
+// Height of the collapsed panel (handle + title)
+const COLLAPSED_HEIGHT = 80;
+// Threshold for snap behavior
+const SNAP_THRESHOLD = 100;
+
 export function UnitDetailsPanel({
     unitDetails,
     isSelected,
@@ -32,12 +37,21 @@ export function UnitDetailsPanel({
         setIsDragging(true);
     }, []);
 
-    const handleDragMove = useCallback((clientY: number) => {
-        if (dragStartY.current === null) return;
-        const delta = clientY - dragStartY.current;
-        // Allow dragging down (positive) and slightly up (negative, capped)
-        setCurrentTranslateY(Math.max(-20, delta));
-    }, []);
+    const handleDragMove = useCallback(
+        (clientY: number) => {
+            if (dragStartY.current === null) return;
+            const delta = clientY - dragStartY.current;
+
+            if (isExpanded) {
+                // When expanded: allow dragging down freely, cap upward drag
+                setCurrentTranslateY(Math.max(-30, delta));
+            } else {
+                // When collapsed: allow dragging up freely, cap downward drag
+                setCurrentTranslateY(Math.min(30, delta));
+            }
+        },
+        [isExpanded]
+    );
 
     const handleDragEnd = useCallback(() => {
         if (dragStartY.current === null) {
@@ -45,15 +59,22 @@ export function UnitDetailsPanel({
             return;
         }
 
-        // If dragged down more than 100px, collapse
-        if (currentTranslateY > 100) {
-            setIsExpanded(false);
+        if (isExpanded) {
+            // If expanded and dragged down past threshold, collapse
+            if (currentTranslateY > SNAP_THRESHOLD) {
+                setIsExpanded(false);
+            }
+        } else {
+            // If collapsed and dragged up past threshold, expand
+            if (currentTranslateY < -SNAP_THRESHOLD) {
+                setIsExpanded(true);
+            }
         }
 
         dragStartY.current = null;
         setIsDragging(false);
         setCurrentTranslateY(0);
-    }, [currentTranslateY]);
+    }, [currentTranslateY, isExpanded]);
 
     // Global mouse event handlers for drag (so dragging works even when mouse leaves element)
     useEffect(() => {
@@ -106,10 +127,10 @@ export function UnitDetailsPanel({
         [handleDragStart]
     );
 
-    const toggleExpand = () => {
-        setIsExpanded(!isExpanded);
+    const toggleExpand = useCallback(() => {
+        setIsExpanded((prev) => !prev);
         setIsMinimized(false);
-    };
+    }, []);
 
     const toggleMinimize = () => {
         setIsMinimized(!isMinimized);
@@ -120,7 +141,18 @@ export function UnitDetailsPanel({
         if (!isDragging && !isExpanded) {
             toggleExpand();
         }
-    }, [isDragging, isExpanded]);
+    }, [isDragging, isExpanded, toggleExpand]);
+
+    // Calculate the transform based on state
+    const getTransform = () => {
+        if (isExpanded) {
+            // Expanded: at bottom, translate by drag amount
+            return `translateY(${currentTranslateY}px)`;
+        } else {
+            // Collapsed: slide down to show only handle/title, plus drag amount
+            return `translateY(calc(100% - ${COLLAPSED_HEIGHT}px + ${currentTranslateY}px))`;
+        }
+    };
 
     return (
         <>
@@ -130,7 +162,7 @@ export function UnitDetailsPanel({
                     ref={panelRef}
                     className={`unit-details-panel mobile ${isExpanded ? 'expanded' : 'collapsed'} ${isDragging ? 'dragging' : ''}`}
                     style={{
-                        transform: `translateY(${isExpanded ? currentTranslateY : 0}px)`,
+                        transform: getTransform(),
                     }}
                     onTouchStart={handleTouchStart}
                     onTouchMove={handleTouchMove}
