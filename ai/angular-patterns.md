@@ -98,18 +98,15 @@ When state may be `undefined` during loading, wait before rendering.
 
 ### Input Masking
 
-Use PrimeNG `p-inputMask` for formatted inputs.
+**Current implementation**: Uses PrimeNG `p-inputMask` (legacy)
 
 **State field (2 uppercase letters)**: `apps/enrollment-portal/src/app/donate-full.component.ts:108-117`
 
 **ZIP field (5 digits)**: `apps/enrollment-portal/src/app/donate-full.component.ts:122-130`
 
-**Key attributes**:
-- `mask`: Pattern (`aa` = letters, `99` = numbers)
-- `slotChar`: Character shown for empty slots (use `" "` for cleaner UX)
-- `style`: Additional styling like uppercase transform
+**For new implementations**: Consider using Angular Material `<mat-form-field>` with custom directives or third-party mask libraries compatible with Material (e.g., `ngx-mask`)
 
-**Reference pattern**: See enrollment forms for similar usage
+**Note**: When migrating masked inputs from PrimeNG, preserve the same UX (uppercase transform, placeholder behavior, validation)
 
 ### Validation
 
@@ -131,18 +128,26 @@ Components that collect data emit observables.
 
 ## Styling Patterns
 
-### PrimeNG Components
+### UI Component Libraries
 
-The codebase uses PrimeNG for UI components:
-- `p-card` - Container cards
-- `p-button` - Buttons
-- `p-dialog` - Modal dialogs
-- `p-inputNumber` - Numeric inputs
-- `p-inputMask` - Formatted text inputs
-- `p-inputText` - Text inputs
-- `p-messages` - Error/info messages
+**IMPORTANT**: The codebase is transitioning from PrimeNG to Angular Material.
 
-**Import example**: `apps/enrollment-portal/src/app/donate-full.component.ts:13-21`
+**For NEW components and updates**:
+- Use Angular Material components only
+- Import from `@angular/material/*`
+- Follow Material Design guidelines
+
+**Legacy PrimeNG usage**:
+- Existing components still use PrimeNG (p-card, p-button, p-dialog, p-inputNumber, p-inputMask, p-inputText, p-messages)
+- Do NOT use PrimeNG for new work
+- When updating existing components, prefer migrating to Material if feasible
+- Goal: Eventually remove PrimeNG dependency
+
+**Angular Material examples in codebase**:
+- Search for existing Material usage to see patterns
+- Reference Material documentation: https://material.angular.io/components
+
+**Why Material**: Better long-term support, more comprehensive component set, better accessibility, no breaking styling changes in updates
 
 ## Best Practices
 
