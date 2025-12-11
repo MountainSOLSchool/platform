@@ -12,6 +12,13 @@ export const accountRoutes: Routes = [
         providers: [provideClassList()],
     },
     {
+        path: 'students',
+        loadComponent: () =>
+            import('./components/students/account-students.component').then(
+                (m) => m.AccountStudentsComponent
+            ),
+    },
+    {
         path: 'manage',
         loadComponent: () =>
             import('./components/reset-password/manage-account.component').then(

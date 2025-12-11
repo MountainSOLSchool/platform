@@ -72,6 +72,10 @@ export class UserButtonComponent implements OnInit {
                     routerLink: '/account/enrollments',
                 },
                 {
+                    label: 'Students',
+                    routerLink: '/account/students',
+                },
+                {
                     label: 'Manage Account',
                     routerLink: '/account/manage',
                 },
