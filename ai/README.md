@@ -152,6 +152,7 @@ git push origin main  # Triggers deployment
 5. **No premature abstraction** - Three similar lines > unnecessary abstraction
 6. **Reference file paths** - Point to actual code rather than duplicating examples
 7. **Use Angular Material** - For all new components and updates, use Angular Material (not PrimeNG)
+8. **Minimal comments** - Code should be self-documenting through clear names and structure. Comment "why", not "what". Don't annotate obvious operations.
 
 ## For AI Assistants
 

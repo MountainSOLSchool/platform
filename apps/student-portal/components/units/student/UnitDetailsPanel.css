@@ -26,6 +26,13 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 100;
     touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Disable transition during drag for immediate feedback */
+.unit-details-panel.mobile.dragging {
+    transition: none;
 }
 
 .unit-details-panel.mobile.collapsed {

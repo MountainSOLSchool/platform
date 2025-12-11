@@ -80,6 +80,32 @@ Firebase function calls emit a loading state followed by either data or error.
 
 **Service implementation**: `libs/firebase/functions-api/src/lib/services/functions.service.ts:28-32`
 
+### Using rxResource for Data Loading
+
+For components that load data on init, use `rxResource()` from `@angular/core/rxjs-interop`:
+
+```typescript
+readonly studentsResource = rxResource({
+    stream: () => this.#apiService.getAll(),
+});
+```
+
+Template handles loading/error/success states via `.status()` and `.value()`:
+
+```html
+@switch (studentsResource.status()) {
+    @case ('loading') { <loading-skeleton /> }
+    @case ('error') { <error-state (retry)="studentsResource.reload()" /> }
+    @default {
+        @for (item of studentsResource.value(); track item.id) {
+            <item-card [item]="item" />
+        }
+    }
+}
+```
+
+**Example**: `libs/angular/account/src/lib/components/students/account-students.component.ts`
+
 ## Conditional Rendering with Signals
 
 ### Wait for Defined State
