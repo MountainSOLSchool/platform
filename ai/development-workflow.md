@@ -242,44 +242,52 @@ Example PR description:
 
 ## Deployment
 
-### Firebase Functions
+**Note**: Deployment is automated via GitHub Actions. Push to `main` branch triggers deployments.
+
+### GitHub Actions Workflows
+
+**Functions deployment**: `.github/workflows/firebase-functions-merge.yml`
+- Runs on push to `main`
+- Uses Nx to detect affected functions (lines 37-98)
+- Builds all functions (line 102)
+- Deploys affected functions in groups of 5 (lines 61-92, 154-161)
+- Parallel build, sequential deploy (line 131)
+
+**Hosting deployment**: `.github/workflows/firebase-hosting-merge.yml`
+- Runs on push to `main`
+- Builds enrollment-portal (line 16)
+- Deploys to Firebase Hosting (lines 17-21)
+
+**Build check**: `.github/workflows/build-check.yml`
+- Runs on pull requests
+- Validates builds before merge
+
+### Manual Deployment (if needed)
 
 ```bash
-# Deploy all functions
+# Deploy all functions (use with caution)
 firebase deploy --only functions
 
 # Deploy specific function
 firebase deploy --only functions:donate
 
-# Deploy to specific environment
-firebase use dev
-firebase deploy --only functions
-```
-
-### Frontend (Firebase Hosting)
-
-```bash
-# Build and deploy
-nx build enrollment-portal --configuration=production
+# Deploy frontend
 firebase deploy --only hosting
-```
 
-### Firestore Rules and Indexes
-
-```bash
-# Deploy security rules
+# Deploy Firestore rules/indexes
 firebase deploy --only firestore:rules
-
-# Deploy indexes
 firebase deploy --only firestore:indexes
 ```
 
-### Complete Deployment
+### Deployment Process
 
-```bash
-# Deploy everything
-firebase deploy
-```
+1. Push changes to `main` branch
+2. GitHub Actions automatically:
+   - Detects affected projects
+   - Builds changed functions
+   - Deploys to production
+3. Monitor deployment in GitHub Actions UI
+4. Check Firebase Console for function status
 
 ## Nx Commands
 
@@ -497,10 +505,9 @@ nx lint                                  # Lint all
 nx lint --fix                            # Auto-fix lint issues
 npm run format                           # Format all files
 
-# Deployment
-firebase deploy --only functions         # Deploy functions
-firebase deploy --only hosting           # Deploy frontend
-firebase deploy                          # Deploy everything
+# Deployment (automated via GitHub Actions)
+# Push to main branch triggers deployment
+git push origin main
 
 # Nx Utilities
 nx graph                                 # View dependency graph

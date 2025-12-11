@@ -10,10 +10,17 @@ Cloud Functions are located in `/libs/firebase/enrollment-functions/*/src/lib/`.
 
 **Example function**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts`
 
+**Function Declaration Utility**: The codebase uses a custom `Functions.endpoint` builder instead of raw `onCall`.
+
+**Utility location**: `libs/firebase/functions/src/lib/utilities/functions.utility.ts`
+
 **Key patterns**:
-- Use `onCall` from `firebase-functions/v2/https`
-- Get secrets via `getSecrets()` from `@sol/firebase/config/server`
-- Validate input early (lines 71-77 in donate.ts)
+- Use `Functions.endpoint` builder for function declaration
+- Chain `.usingSecrets()` and `.usingStrings()` for configuration (lines 66-89)
+- Add role restrictions with `.restrictedToRoles()` (lines 91-93)
+- Complete with `.handle()` method (lines 95-138)
+- Automatic CORS handling (lines 10-51, applied in handle method)
+- Secrets and strings passed as parameters to handler (lines 102-103)
 - Return consistent response shapes with `success` boolean
 
 ### Registering Functions

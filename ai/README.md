@@ -139,9 +139,8 @@ nx affected:test
 # Building
 nx affected:build
 
-# Deployment
-firebase deploy --only functions
-firebase deploy --only hosting
+# Deployment (automated via GitHub Actions)
+git push origin main  # Triggers deployment
 ```
 
 ## Coding Principles
