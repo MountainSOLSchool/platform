@@ -16,10 +16,9 @@ export const myEnrolledStudents = Functions.endpoint.handle(
             studentIds.map(async (id) => await StudentRepository.get(id))
         );
 
-        // Get all enrollments for the user to find current classes per student
         const allEnrollments =
             await ClassEnrollmentRepository.getCurrentSemesterEnrollments();
-        const userEnrollments = allEnrollments.filter(
+        const enrollmentsByStudent = allEnrollments.filter(
             (e: SemesterEnrollment) => studentIds.includes(e.studentId)
         );
 
@@ -28,23 +27,17 @@ export const myEnrolledStudents = Functions.endpoint.handle(
                 (student): student is NonNullable<typeof student> => !!student
             )
             .map(({ id, first_name, last_name, birth_date, completed_units }) => {
-                // Get current class enrollments for this student
-                const studentEnrollments = userEnrollments.filter(
-                    (e: SemesterEnrollment) => e.studentId === id
-                );
-                const currentClasses = studentEnrollments.flatMap(
-                    (e: SemesterEnrollment) =>
+                const currentClasses = enrollmentsByStudent
+                    .filter((e: SemesterEnrollment) => e.studentId === id)
+                    .flatMap((e: SemesterEnrollment) =>
                         'classes' in e ? e.classes : []
-                );
-
-                // Count completed units
-                const completedUnitsCount = completed_units?.length ?? 0;
+                    );
 
                 return {
                     id,
                     name: `${first_name} ${last_name}`,
                     birthday: birth_date,
-                    completedUnitsCount,
+                    completedUnitsCount: completed_units?.length ?? 0,
                     currentClasses: currentClasses.map(
                         (c: { id: string; semesterId: string }) => ({
                             id: c.id,
