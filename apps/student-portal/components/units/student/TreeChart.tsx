@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, memo } from 'react';
+import { useEffect, memo } from 'react';
 import * as d3 from 'd3';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
@@ -60,7 +60,7 @@ const SmartTreeChart = memo(function SmartTreeChart({
     const units = useSelector((state: RootState) => state.units);
 
     const student = useSelector((state: RootState) => state.student);
-    const [completeUnits, setCompleteUnits] = useState([]);
+    const completeUnits = student.completedUnits ?? [];
 
     function generateNodes() {
         const animatedTreePaths = [];
@@ -85,11 +85,7 @@ const SmartTreeChart = memo(function SmartTreeChart({
                 // Skip if unit doesn't exist in the units array
                 if (!unitData) return;
 
-                let newUnit = Object.assign(
-                    {},
-                    unitData,
-                    { status: 'locked' }
-                );
+                let newUnit = Object.assign({}, unitData, { status: 'locked' });
 
                 // MARK COMPLETED UNITS
                 if (completeUnits.includes(unit)) {
@@ -176,7 +172,8 @@ const SmartTreeChart = memo(function SmartTreeChart({
             // ACTIVE PATHS - check if any category has completed units
             if (
                 newPath.children.find(
-                    (unit: { status: string }) => unit.status === 'complete' || unit.status === 'partial'
+                    (unit: { status: string }) =>
+                        unit.status === 'complete' || unit.status === 'partial'
                 )
             ) {
                 // Check path completion status
@@ -184,7 +181,8 @@ const SmartTreeChart = memo(function SmartTreeChart({
                     (unit: { status: string }) => unit.status !== 'complete'
                 );
                 const someComplete = newPath.children.find(
-                    (unit: { status: string }) => unit.status === 'complete' || unit.status === 'partial'
+                    (unit: { status: string }) =>
+                        unit.status === 'complete' || unit.status === 'partial'
                 );
 
                 if (allComplete) {
@@ -665,13 +663,11 @@ const SmartTreeChart = memo(function SmartTreeChart({
 
     useEffect(() => {
         if (paths.length > 0 && units.length > 0) {
-            setCompleteUnits(student['completedUnits']);
             generateNodes();
         } else {
             dispatch(requestPaths());
             dispatch(requestUnits());
         }
-        return;
     }, [paths.length, units.length, student, dispatch, generateNodes]);
 
     return !student.name || !paths.length || !units.length ? (
