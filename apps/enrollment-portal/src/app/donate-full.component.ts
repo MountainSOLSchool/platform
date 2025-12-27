@@ -81,7 +81,9 @@ import { MatDialogModule } from '@angular/material/dialog';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label">Street Address</label>
+                                <label class="field-label"
+                                    >Street Address</label
+                                >
                                 <input
                                     type="text"
                                     [(ngModel)]="street"

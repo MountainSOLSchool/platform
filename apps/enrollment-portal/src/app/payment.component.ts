@@ -169,13 +169,18 @@ import { MatIconModule } from '@angular/material/icon';
                                         placeholder="0.00"
                                         min="1"
                                         class="form-input amount-input"
-                                        [class.input-error]="amountExceedsLimit()"
+                                        [class.input-error]="
+                                            amountExceedsLimit()
+                                        "
                                     />
                                 </div>
                                 @if (amountExceedsLimit()) {
                                     <span class="field-error">
-                                        For amounts over $9,999, please contact us at
-                                        <a href="mailto:info@mountainsol.org">info&#64;mountainsol.org</a>
+                                        For amounts over $9,999, please contact
+                                        us at
+                                        <a href="mailto:info@mountainsol.org"
+                                            >info&#64;mountainsol.org</a
+                                        >
                                     </span>
                                 } @else {
                                     <span class="field-hint">Minimum: $1</span>

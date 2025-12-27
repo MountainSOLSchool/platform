@@ -188,11 +188,17 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     this.patchState({ dropInInstance });
                                     dropInInstance?.on(
                                         'paymentMethodRequestable',
-                                        (event: { paymentMethodIsSelected: boolean }) => {
+                                        (event: {
+                                            paymentMethodIsSelected: boolean;
+                                        }) => {
                                             // Only prepare when:
                                             // 1. We're ready for user interaction (after initial clear)
                                             // 2. User has actively selected a payment method
-                                            if (this.get().readyForUserInteraction && event.paymentMethodIsSelected) {
+                                            if (
+                                                this.get()
+                                                    .readyForUserInteraction &&
+                                                event.paymentMethodIsSelected
+                                            ) {
                                                 this.prepare();
                                             }
                                         }
