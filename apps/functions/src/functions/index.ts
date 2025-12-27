@@ -32,3 +32,4 @@ export { doesStudentInfoRequireReview } from '@sol/firebase/enrollment-functions
 export { studentInfoSheet } from '@sol/firebase/enrollment-functions/student-info-sheet';
 export { donateVenmo } from '@sol/firebase/enrollment-functions/donate-venmo';
 export { donate } from '@sol/firebase/enrollment-functions/donate';
+export { payment } from '@sol/firebase/enrollment-functions/payment';

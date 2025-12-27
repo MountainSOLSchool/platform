@@ -24,14 +24,15 @@ platform/
 
 ### enrollment-portal
 
-The main Angular application for student enrollment and donation management.
+The main Angular application for student enrollment, donations, and payments.
 
 **Key directories**:
 ```
 apps/enrollment-portal/
 ├── src/
 │   ├── app/
-│   │   ├── donate-full.component.ts    # Donation page
+│   │   ├── donate-full.component.ts    # Donation page (/make-donation)
+│   │   ├── payment.component.ts        # Service payment page (/make-payment)
 │   │   ├── dashboard-component/         # User dashboard
 │   │   └── tshirts-component/           # T-shirt orders
 │   ├── assets/
@@ -84,7 +85,27 @@ HTTP request utilities:
 - `requested-operators.utility.ts` - RxJS operators for Requested<T>
 - `requested.utility.ts` - Type guards and helpers
 
+### TypeScript Libraries (`/libs/ts`)
+
+Framework-agnostic, pure TypeScript libraries:
+
+#### `/libs/ts/payments/domain/`
+Payment domain types (used by both frontend and backend):
+- `payment.dbo.ts` - Base payment database object interface
+- `payment.factory.ts` - PaymentFactory interface
+- `payment-email.strategy.ts` - PaymentEmailStrategy interface
+- `payment-request.ts` - Request types (ServicePaymentRequest, DonationRequest)
+- `payment-result.ts` - PaymentResult type
+
 ### Firebase Libraries (`/libs/firebase`)
+
+#### `/libs/firebase/payments/`
+Shared payment processing infrastructure:
+- `payment.repository.ts` - CRUD for payments collection
+- `payment-handler.ts` - Template method for payment processing
+- `factories/` - ServicePaymentFactory, DonationFactory
+- `handlers/` - ServicePaymentHandler, DonationHandler
+- `email-strategies/` - Email generation strategies
 
 #### `/libs/firebase/enrollment-functions/`
 Cloud Functions organized by feature:
@@ -92,11 +113,13 @@ Cloud Functions organized by feature:
 ```
 enrollment-functions/
 ├── donate/
-│   └── src/lib/donate.ts
+│   └── src/lib/donate.ts       # Donation function (uses DonationHandler)
+├── payment/
+│   └── src/lib/payment.ts      # Service payment function (uses ServicePaymentHandler)
 ├── payment-token/
 │   └── src/lib/payment-token.ts
 ├── enroll/
-└── index.ts                  # Exports all functions
+└── index.ts                    # Exports all functions
 ```
 
 Each function is a separate library with its own `project.json`.
@@ -126,9 +149,13 @@ The monorepo uses path mapping in `tsconfig.base.json`:
       "@sol/angular/request": ["libs/angular/request/src/index.ts"],
       "@sol/firebase/functions-api": ["libs/firebase/functions-api/src/index.ts"],
       "@sol/payments/braintree-client": ["libs/angular/braintree-client/src/index.ts"],
-      "@sol/firebase/enrollment-functions": ["libs/firebase/enrollment-functions/src/index.ts"],
+      "@sol/payments/domain": ["libs/ts/payments/domain/src/index.ts"],
+      "@sol/firebase/payments": ["libs/firebase/payments/src/index.ts"],
       "@sol/firebase/enrollment-functions/donate": [
         "libs/firebase/enrollment-functions/donate/src/index.ts"
+      ],
+      "@sol/firebase/enrollment-functions/payment": [
+        "libs/firebase/enrollment-functions/payment/src/index.ts"
       ]
     }
   }
@@ -199,9 +226,12 @@ functions (app)
 
 ```bash
 # Serve enrollment portal
-nx serve enrollment-portal
+npx nx run enrollment-portal:serve:development
 
-# Run Firebase emulators
+# Run Firebase functions
+npx nx run functions:serve:development
+
+# Or run Firebase emulators (alternative)
 firebase emulators:start
 ```
 

@@ -1,0 +1,8 @@
+{
+    "name": "firebase-enrollment-functions-payment",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/payment/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {}
+}

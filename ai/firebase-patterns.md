@@ -41,7 +41,7 @@ Add to `tsconfig.base.json` paths section.
 
 The codebase uses repository classes for Firestore access.
 
-**Example**: `libs/firebase/enrollment-functions/donate-venmo/src/lib/donation.repository.ts`
+**Shared repository example**: `libs/firebase/payments/src/lib/payment.repository.ts`
 
 **Methods**:
 - `create()` - Add new document
@@ -52,9 +52,13 @@ The codebase uses repository classes for Firestore access.
 
 Define TypeScript interfaces for Firestore documents.
 
-**Example**: `libs/firebase/enrollment-functions/donate-venmo/src/lib/donate-venmo.ts:9-20`
+**Shared DBO example**: `libs/ts/payments/domain/src/lib/payment.dbo.ts`
 
 **Naming**: Use `Dbo` suffix (Database Object) for Firestore document interfaces.
+
+**Location pattern**:
+- Shared DBOs go in `libs/ts/*/domain/` (framework-agnostic)
+- Function-specific DBOs can be in the function library
 
 ### Timestamp Handling
 
@@ -70,7 +74,9 @@ The codebase uses a Firebase extension (Firestore-triggered email) via a `mail` 
 
 ### Sending Transactional Emails
 
-**Example**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts:143-155`
+Emails are sent by writing to the `mail` collection. The `PaymentHandler` does this automatically.
+
+**Handler email sending**: `libs/firebase/payments/src/lib/payment-handler.ts` (sendConfirmationEmail method)
 
 **Required fields**:
 - `to` - Recipient email
@@ -79,27 +85,32 @@ The codebase uses a Firebase extension (Firestore-triggered email) via a `mail` 
 - `message.html` - HTML version
 - `message.text` - Plain text version
 
-### Email Content Generation
+### Email Strategy Pattern
 
-Always provide both HTML and plain text versions.
+Email content is generated using the **Strategy Pattern** for flexibility.
 
-**Example**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts:157-280` (generateDonationEmailContent function)
+**Strategy interface**: `libs/ts/payments/domain/src/lib/payment-email.strategy.ts`
+
+**Implementations**:
+- `ServicePaymentEmailStrategy` - No tax language (`libs/firebase/payments/src/lib/email-strategies/service-payment.email-strategy.ts`)
+- `DonationEmailStrategy` - Includes 501(c)(3) info (`libs/firebase/payments/src/lib/email-strategies/donation.email-strategy.ts`)
 
 **Best Practices**:
 - Keep HTML simple (email clients have limited CSS support)
 - Use inline styles in `<head>` (not inline on elements)
 - Test across email clients
+- Share common styles via `base-email.styles.ts`
 
 ### Email for Receipts
 
 For donation/payment receipts, include:
 - Organization name
-- Tax ID (EIN) for 501(c)(3) organizations
+- Tax ID (EIN) for 501(c)(3) organizations (donations only)
 - Transaction details (amount, date, method)
-- "No goods or services were provided" statement (if applicable)
+- Purpose/invoice number (service payments)
 - Contact information
 
-**Reference**: See donation email template structure in donate.ts lines 157-280
+**Reference**: See email strategy implementations in `libs/firebase/payments/src/lib/email-strategies/`
 
 ## Braintree Payment Integration
 
@@ -112,24 +123,46 @@ For donation/payment receipts, include:
 - Customer tokens with vault access for logged-in users
 - Use `request.auth?.uid` for authenticated user ID
 
-### Payment Processing Patterns
+### Payment Processing Architecture
 
-**Determine payment method from frontend** - Don't inspect nonce.
+Payment processing uses a **Template Method** pattern with **Strategy** and **Factory** patterns.
 
-**Example**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts:89-125`
+**Template Method**: `libs/firebase/payments/src/lib/payment-handler.ts`
+- Defines the processing skeleton: validate → create record → process → update → send email
+- Concrete handlers implement `getFactory()` to provide type-specific behavior
 
-**Key pattern** (lines 92-94):
-- Braintree returns payment types like 'VenmoAccount', 'CreditCard', 'PayPalAccount'
-- Use ternary to route to correct payment method
-- Frontend sends `paymentMethodType` from Braintree Drop-in
+**Factory Pattern**: Each payment type has a factory that provides:
+- `validate(request)` - Type-specific validation
+- `createPayment(request)` - Creates the PaymentDbo
+- `getEmailStrategy()` - Returns the appropriate email strategy
+
+**Factories**:
+- `ServicePaymentFactory` (`libs/firebase/payments/src/lib/factories/service-payment.factory.ts`)
+- `DonationFactory` (`libs/firebase/payments/src/lib/factories/donation.factory.ts`)
+
+**Strategy Pattern**: Email generation varies by payment type
+- `ServicePaymentEmailStrategy` - No tax language
+- `DonationEmailStrategy` - Includes 501(c)(3) info
+
+### Cloud Functions (Thin Wrappers)
+
+Cloud Functions are thin wrappers that wire up handlers:
+
+**Example**: `libs/firebase/enrollment-functions/payment/src/lib/payment.ts`
+
+Pattern:
+1. Create Braintree instance with secrets
+2. Create appropriate handler
+3. Call `handler.handle(request.body.data)`
+4. Return result
 
 ### Error Handling
 
-Braintree errors have a specific structure.
+The `PaymentHandler` returns structured results:
+- Success: `{ success: true, paymentId, transactionId, amount }`
+- Failure: `{ success: false, errors, message }`
 
-**Type definition**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts:91`
-
-**Usage**: Check `errors?.deepErrors()` for error messages
+Braintree errors are extracted via `errors?.deepErrors()`
 
 ## Configuration Management
 
@@ -199,11 +232,14 @@ Always log errors for debugging with `console.error()`.
 ### 5. Keep Functions Focused
 
 - One function = one responsibility
-- Extract shared logic to utilities
+- Extract shared logic to utilities (`@sol/firebase/payments` for payment processing)
 - Don't combine unrelated operations
 
-### 6. Comment Business Rules
+### 6. Use Compositional Patterns
 
-Add comments explaining non-obvious limits and requirements.
+For related functionality with variations:
+- **Factory Pattern** - Different validation/creation per type
+- **Strategy Pattern** - Different behaviors (email content)
+- **Template Method** - Shared processing flow with extension points
 
-**Example**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts:71` ($250 limit explanation)
+**Reference**: `libs/firebase/payments/` for payment processing patterns

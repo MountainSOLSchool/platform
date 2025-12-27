@@ -11,37 +11,31 @@ import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 import { UserService } from '@sol/auth/user';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
-import * as browserDetection from '@braintree/browser-detection';
 import { toSignal } from '@angular/core/rxjs-interop';
+import * as browserDetection from '@braintree/browser-detection';
 
 import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
-    selector: 'sol-donate-full',
+    selector: 'sol-payment',
     standalone: true,
     imports: [
         CommonModule,
         FormsModule,
         PaymentCollectorComponent,
         MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
         MatButtonModule,
         MatProgressSpinnerModule,
         MatIconModule,
-        MatDialogModule,
     ],
     template: `
         <div class="form-container">
             <mat-card class="form-card">
                 <mat-card-header>
-                    <mat-card-title>Support Mountain SOL</mat-card-title>
+                    <mat-card-title>Make a Payment</mat-card-title>
                 </mat-card-header>
 
                 <mat-card-content>
@@ -52,7 +46,7 @@ import { MatDialogModule } from '@angular/material/dialog';
                         </div>
                     }
 
-                    @if (!donationComplete()) {
+                    @if (!paymentComplete()) {
                         <form class="form-content">
                             <div class="form-field">
                                 <label class="field-label required"
@@ -60,8 +54,8 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 >
                                 <input
                                     type="text"
-                                    [(ngModel)]="donorName"
-                                    name="donorName"
+                                    [(ngModel)]="payerName"
+                                    name="payerName"
                                     placeholder="Enter your full name"
                                     class="form-input"
                                 />
@@ -73,15 +67,17 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 >
                                 <input
                                     type="email"
-                                    [(ngModel)]="donorEmail"
-                                    name="donorEmail"
+                                    [(ngModel)]="payerEmail"
+                                    name="payerEmail"
                                     placeholder="your.email@example.com"
                                     class="form-input"
                                 />
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label">Street Address</label>
+                                <label class="field-label required"
+                                    >Street Address</label
+                                >
                                 <input
                                     type="text"
                                     [(ngModel)]="street"
@@ -93,7 +89,9 @@ import { MatDialogModule } from '@angular/material/dialog';
 
                             <div class="address-row">
                                 <div class="form-field city-field">
-                                    <label class="field-label">City</label>
+                                    <label class="field-label required"
+                                        >City</label
+                                    >
                                     <input
                                         type="text"
                                         [(ngModel)]="city"
@@ -104,7 +102,9 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 </div>
 
                                 <div class="form-field state-field">
-                                    <label class="field-label">State</label>
+                                    <label class="field-label required"
+                                        >State</label
+                                    >
                                     <input
                                         type="text"
                                         [(ngModel)]="state"
@@ -116,7 +116,9 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 </div>
 
                                 <div class="form-field zip-field">
-                                    <label class="field-label">ZIP</label>
+                                    <label class="field-label required"
+                                        >ZIP</label
+                                    >
                                     <input
                                         type="text"
                                         [(ngModel)]="zip"
@@ -130,35 +132,54 @@ import { MatDialogModule } from '@angular/material/dialog';
 
                             <div class="form-field">
                                 <label class="field-label"
-                                    >How did you hear about Mountain SOL?</label
+                                    >Invoice Number (optional)</label
                                 >
                                 <input
                                     type="text"
-                                    [(ngModel)]="referralSource"
-                                    name="referralSource"
-                                    placeholder="e.g., Friend, Social Media, Website"
+                                    [(ngModel)]="invoiceNumber"
+                                    name="invoiceNumber"
+                                    placeholder="e.g., INV-2024-001"
                                     class="form-input"
                                 />
                             </div>
 
                             <div class="form-field">
                                 <label class="field-label required"
-                                    >Donation Amount</label
+                                    >Purpose</label
+                                >
+                                <input
+                                    type="text"
+                                    [(ngModel)]="purpose"
+                                    name="purpose"
+                                    placeholder="e.g., First Aid Class - ABC Company"
+                                    class="form-input"
+                                />
+                            </div>
+
+                            <div class="form-field">
+                                <label class="field-label required"
+                                    >Payment Amount</label
                                 >
                                 <div class="amount-input-wrapper">
                                     <span class="currency-prefix">$</span>
                                     <input
                                         type="number"
-                                        [(ngModel)]="donationAmount"
-                                        name="donationAmount"
-                                        placeholder="25.00"
+                                        [(ngModel)]="paymentAmount"
+                                        name="paymentAmount"
+                                        placeholder="0.00"
                                         min="1"
                                         class="form-input amount-input"
+                                        [class.input-error]="amountExceedsLimit()"
                                     />
                                 </div>
-                                <span class="field-hint"
-                                    >Minimum donation: $1</span
-                                >
+                                @if (amountExceedsLimit()) {
+                                    <span class="field-error">
+                                        For amounts over $9,999, please contact us at
+                                        <a href="mailto:info@mountainsol.org">info&#64;mountainsol.org</a>
+                                    </span>
+                                } @else {
+                                    <span class="field-hint">Minimum: $1</span>
+                                }
                             </div>
 
                             @if (isIosButNotSafari()) {
@@ -191,15 +212,15 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 mat-raised-button
                                 color="primary"
                                 class="submit-button"
-                                [disabled]="!canDonate() || processing()"
-                                (click)="processDonation()"
+                                [disabled]="!canPay() || processing()"
+                                (click)="processPayment()"
                             >
                                 @if (processing()) {
                                     <mat-spinner diameter="20"></mat-spinner>
                                     <span>Processing...</span>
                                 } @else {
-                                    <mat-icon>favorite</mat-icon>
-                                    <span>Donate</span>
+                                    <mat-icon>check</mat-icon>
+                                    <span>Submit Payment</span>
                                 }
                             </button>
                         </form>
@@ -208,19 +229,19 @@ import { MatDialogModule } from '@angular/material/dialog';
                             <div class="success-icon">
                                 <mat-icon>check_circle</mat-icon>
                             </div>
-                            <h2>Thank You!</h2>
+                            <h2>Payment Successful!</h2>
                             <p>
-                                Your donation of
+                                Your payment of
                                 <strong
                                     >\${{
-                                        donationAmount() | number: '1.2-2'
+                                        paymentAmount() | number: '1.2-2'
                                     }}</strong
                                 >
                                 has been processed successfully.
                             </p>
                             <p>
                                 A confirmation email has been sent to
-                                <strong>{{ donorEmail() }}</strong
+                                <strong>{{ payerEmail() }}</strong
                                 >.
                             </p>
                             <p class="transaction-id">
@@ -232,7 +253,7 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 color="primary"
                                 (click)="reset()"
                             >
-                                Make Another Donation
+                                Make Another Payment
                             </button>
                         </div>
                     }
@@ -267,6 +288,15 @@ import { MatDialogModule } from '@angular/material/dialog';
             mat-card-title {
                 font-size: 1.5rem;
                 font-weight: 500;
+            }
+
+            mat-card-subtitle a {
+                color: #1976d2;
+                text-decoration: none;
+            }
+
+            mat-card-subtitle a:hover {
+                text-decoration: underline;
             }
 
             .form-content {
@@ -352,6 +382,19 @@ import { MatDialogModule } from '@angular/material/dialog';
             .field-hint {
                 font-size: 0.75rem;
                 color: rgba(0, 0, 0, 0.6);
+            }
+
+            .field-error {
+                font-size: 0.75rem;
+                color: #c62828;
+            }
+
+            .field-error a {
+                color: #c62828;
+            }
+
+            .input-error {
+                border-color: #c62828 !important;
             }
 
             .error-banner {
@@ -461,7 +504,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         `,
     ],
 })
-export class DonateFullComponent {
+export class PaymentComponent {
     private readonly functions = inject(FirebaseFunctionsService);
     private readonly userService = inject(UserService);
 
@@ -471,14 +514,15 @@ export class DonateFullComponent {
         return user === undefined ? undefined : !!user;
     });
 
-    donationAmount = signal<number>(25);
-    donorName = signal<string>('');
-    donorEmail = linkedSignal(() => this.user()?.email ?? '');
+    paymentAmount = signal<number | null>(null);
+    payerName = signal<string>('');
+    payerEmail = linkedSignal(() => this.user()?.email ?? '');
     street = signal<string>('');
     city = signal<string>('');
     state = signal<string>('');
     zip = signal<string>('');
-    referralSource = signal<string>('');
+    invoiceNumber = signal<string>('');
+    purpose = signal<string>('');
     paymentMethodData = signal<
         | {
               nonce: string;
@@ -489,7 +533,7 @@ export class DonateFullComponent {
     >(undefined);
     processing = signal(false);
 
-    donationResult = signal<
+    paymentResult = signal<
         | { status: 'idle' }
         | { status: 'processing' }
         | { status: 'success'; transactionId: string }
@@ -497,32 +541,47 @@ export class DonateFullComponent {
     >({ status: 'idle' });
 
     readonly errorMessage = computed(() => {
-        const result = this.donationResult();
+        const result = this.paymentResult();
         return result.status === 'error' ? result.message : null;
     });
 
-    readonly donationComplete = computed(
-        () => this.donationResult().status === 'success'
+    readonly amountExceedsLimit = computed(() => {
+        const amount = this.paymentAmount();
+        return amount !== null && amount > 9999;
+    });
+
+    readonly paymentComplete = computed(
+        () => this.paymentResult().status === 'success'
     );
 
     readonly transactionId = computed(() => {
-        const result = this.donationResult();
+        const result = this.paymentResult();
         return result.status === 'success' ? result.transactionId : '';
     });
 
-    canDonate = () => {
-        const hasRequiredFields =
-            this.donorName().trim().length > 0 &&
-            this.donorEmail().trim().length > 0 &&
-            this.isValidEmail(this.donorEmail());
+    readonly canPay = computed(() => {
+        const hasName = this.payerName().trim().length > 0;
+        const hasValidEmail = this.isValidEmail(this.payerEmail());
+        const hasAddress =
+            this.street().trim().length > 0 &&
+            this.city().trim().length > 0 &&
+            this.state().trim().length === 2 &&
+            this.zip().trim().length === 5;
+        const hasPurpose = this.purpose().trim().length > 0;
+        const amount = this.paymentAmount();
+        const hasValidAmount = amount !== null && amount >= 1 && amount <= 9999;
+        const hasPaymentMethod = !!this.paymentMethodData();
 
         return (
-            hasRequiredFields &&
-            this.donationAmount() >= 1 &&
-            this.paymentMethodData() &&
+            hasName &&
+            hasValidEmail &&
+            hasAddress &&
+            hasPurpose &&
+            hasValidAmount &&
+            hasPaymentMethod &&
             !this.processing()
         );
-    };
+    });
 
     isValidEmail(email: string): boolean {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -541,50 +600,49 @@ export class DonateFullComponent {
         this.paymentMethodData.set(method);
     }
 
-    processDonation() {
+    processPayment() {
         const paymentMethod = this.paymentMethodData();
-        if (!this.canDonate() || !paymentMethod) return;
+        if (!this.canPay() || !paymentMethod) return;
 
         this.processing.set(true);
-        this.donationResult.set({ status: 'processing' });
+        this.paymentResult.set({ status: 'processing' });
 
         const fullAddress = [
             this.street(),
             this.city(),
             this.state(),
             this.zip(),
-        ]
-            .filter((s) => s.trim())
-            .join(', ');
+        ].join(', ');
 
         this.functions
             .call<{
                 success: boolean;
                 transactionId: string;
                 message: string;
-            }>('donate', {
-                amount: this.donationAmount(),
+            }>('payment', {
+                amount: this.paymentAmount(),
                 paymentMethodNonce: paymentMethod.nonce,
                 deviceData: paymentMethod.deviceData,
                 paymentMethodType: paymentMethod.type,
-                donorName: this.donorName(),
-                donorEmail: this.donorEmail(),
-                donorAddress: fullAddress || undefined,
-                referralSource: this.referralSource() || undefined,
+                payerName: this.payerName(),
+                payerEmail: this.payerEmail(),
+                payerAddress: fullAddress,
+                invoiceNumber: this.invoiceNumber() || undefined,
+                purpose: this.purpose(),
             })
             .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
             .subscribe((result) => {
                 if (result.success) {
-                    this.donationResult.set({
+                    this.paymentResult.set({
                         status: 'success',
                         transactionId: result.transactionId,
                     });
                 } else {
-                    this.donationResult.set({
+                    this.paymentResult.set({
                         status: 'error',
                         message:
                             result.message ||
-                            'Unable to process donation. Please try again.',
+                            'Unable to process payment. Please try again.',
                     });
                 }
                 this.processing.set(false);
@@ -592,20 +650,21 @@ export class DonateFullComponent {
     }
 
     reset() {
-        this.donationAmount.set(25);
-        this.donorName.set('');
+        this.paymentAmount.set(null);
+        this.payerName.set('');
         this.street.set('');
         this.city.set('');
         this.state.set('');
         this.zip.set('');
-        this.referralSource.set('');
+        this.invoiceNumber.set('');
+        this.purpose.set('');
         this.paymentMethodData.set(undefined);
         this.processing.set(false);
-        this.donationResult.set({ status: 'idle' });
+        this.paymentResult.set({ status: 'idle' });
 
         const user = this.user();
         if (user?.email) {
-            this.donorEmail.set(user.email);
+            this.payerEmail.set(user.email);
         }
     }
 

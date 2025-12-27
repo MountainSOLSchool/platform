@@ -32,6 +32,7 @@ export class PaymentCollectorStore extends ComponentStore<{
     paymentMethodType: string | undefined;
     isAnonymous: boolean;
     paymentMethods: string[];
+    readyForUserInteraction: boolean;
 }> {
     private readonly http = inject(HttpClient);
     private readonly functions = inject(FirebaseFunctionsService);
@@ -48,6 +49,7 @@ export class PaymentCollectorStore extends ComponentStore<{
             paymentMethodType: undefined,
             isAnonymous: false,
             paymentMethods: ['card'],
+            readyForUserInteraction: false,
         });
     }
 
@@ -186,7 +188,14 @@ export class PaymentCollectorStore extends ComponentStore<{
                                     this.patchState({ dropInInstance });
                                     dropInInstance?.on(
                                         'paymentMethodRequestable',
-                                        () => this.prepare()
+                                        (event: { paymentMethodIsSelected: boolean }) => {
+                                            // Only prepare when:
+                                            // 1. We're ready for user interaction (after initial clear)
+                                            // 2. User has actively selected a payment method
+                                            if (this.get().readyForUserInteraction && event.paymentMethodIsSelected) {
+                                                this.prepare();
+                                            }
+                                        }
                                     );
                                     dropInInstance?.on(
                                         'noPaymentMethodRequestable',
@@ -194,6 +203,8 @@ export class PaymentCollectorStore extends ComponentStore<{
                                             this.patchState({
                                                 nonce: undefined,
                                                 paymentDetails: undefined,
+                                                // After clearing, we're ready for real user interactions
+                                                readyForUserInteraction: true,
                                             });
                                         }
                                     );

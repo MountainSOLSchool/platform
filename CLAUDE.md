@@ -130,14 +130,14 @@ libs/
 
 ```bash
 # Development
-nx serve enrollment-portal
-firebase emulators:start
+npx nx run enrollment-portal:serve:development
+npx nx run functions:serve:development
 
 # Testing
-nx affected:test
+npx nx affected:test
 
 # Building
-nx affected:build
+npx nx affected:build
 
 # Deployment (automated via GitHub Actions)
 git push origin main  # Triggers deployment

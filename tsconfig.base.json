@@ -147,6 +147,9 @@
             "@sol/firebase/enrollment-functions/on-successful-enroll-delete-draft": [
                 "libs/firebase/enrollment-functions/on-successful-enroll-delete-draft/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/payment": [
+                "libs/firebase/enrollment-functions/payment/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/payment-token": [
                 "libs/firebase/enrollment-functions/payment-token/src/index.ts"
             ],
@@ -181,6 +184,9 @@
                 "libs/firebase/enrollment-functions/update-enrollment-draft/src/index.ts"
             ],
             "@sol/firebase/functions": ["libs/firebase/functions/src/index.ts"],
+            "@sol/firebase/payments": [
+                "libs/firebase/payments/src/index.ts"
+            ],
             "@sol/firebase/functions-api": [
                 "libs/firebase/functions-api/src/index.ts"
             ],
@@ -193,6 +199,9 @@
             "@sol/payments/braintree": ["libs/firebase/braintree/src/index.ts"],
             "@sol/payments/braintree-client": [
                 "libs/angular/braintree-client/src/index.ts"
+            ],
+            "@sol/payments/domain": [
+                "libs/ts/payments/domain/src/index.ts"
             ],
             "@sol/payments/transactions": ["libs/ts/transactions/src/index.ts"],
             "@sol/react/auth": ["libs/react/auth/src/index.ts"],
