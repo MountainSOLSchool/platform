@@ -131,6 +131,13 @@ export const appRoutes: Routes = [
                             ),
                     },
                     {
+                        path: 'make-payment',
+                        loadComponent: () =>
+                            import('./payment.component').then(
+                                (m) => m.PaymentComponent
+                            ),
+                    },
+                    {
                         path: 'donate-venmo',
                         loadComponent: () =>
                             import('./donate.component').then(

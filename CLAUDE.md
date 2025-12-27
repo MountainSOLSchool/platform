@@ -4,7 +4,7 @@ This directory contains documentation about the Mountain SOL platform codebase p
 
 ## Documents
 
-### [Angular Patterns](./angular-patterns.md)
+### [Angular Patterns](./ai/angular-patterns.md)
 Patterns and best practices for Angular development in this codebase:
 - Signal-based state management (signal, computed, linkedSignal)
 - Converting observables to signals
@@ -16,7 +16,7 @@ Patterns and best practices for Angular development in this codebase:
 
 **Reference implementation**: `apps/enrollment-portal/src/app/donate-full.component.ts`
 
-### [Firebase Patterns](./firebase-patterns.md)
+### [Firebase Patterns](./ai/firebase-patterns.md)
 Firebase integration patterns including Cloud Functions, Firestore, and email:
 - Cloud Functions v2 structure
 - Firestore repository pattern
@@ -28,7 +28,7 @@ Firebase integration patterns including Cloud Functions, Firestore, and email:
 
 **Reference implementation**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts`
 
-### [Codebase Structure](./codebase-structure.md)
+### [Codebase Structure](./ai/codebase-structure.md)
 Overview of the monorepo architecture and organization:
 - Nx monorepo structure
 - Application and library organization
@@ -42,7 +42,7 @@ Overview of the monorepo architecture and organization:
 - `nx.json` - Nx configuration
 - `project.json` files - Project configuration
 
-### [Payment Processing](./payment-processing.md)
+### [Payment Processing](./ai/payment-processing.md)
 Comprehensive guide to Braintree payment integration:
 - Payment architecture (3-layer system)
 - Payment Collector component usage
@@ -56,7 +56,7 @@ Comprehensive guide to Braintree payment integration:
 - `libs/angular/braintree-client/src/lib/components/payment-collector/`
 - `libs/angular/braintree-client/src/lib/services/payment.service.ts`
 
-### [Development Workflow](./development-workflow.md)
+### [Development Workflow](./ai/development-workflow.md)
 Day-to-day development practices and tooling:
 - Local development setup
 - Running dev servers and emulators
@@ -130,14 +130,14 @@ libs/
 
 ```bash
 # Development
-nx serve enrollment-portal
-firebase emulators:start
+npx nx run enrollment-portal:serve:development
+npx nx run functions:serve:development
 
 # Testing
-nx affected:test
+npx nx affected:test
 
 # Building
-nx affected:build
+npx nx affected:build
 
 # Deployment (automated via GitHub Actions)
 git push origin main  # Triggers deployment

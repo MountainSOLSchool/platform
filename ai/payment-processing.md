@@ -4,16 +4,76 @@ This document describes payment processing patterns using Braintree in the Mount
 
 ## Architecture Overview
 
-The payment system has three layers:
+The payment system has four layers:
 
-1. **Frontend**: Braintree Drop-in UI component
-2. **Component Store**: State management for payment flow
-3. **Backend**: Cloud Functions for payment processing
+1. **Domain Types**: Shared TypeScript interfaces (`@sol/payments/domain`)
+2. **Frontend**: Braintree Drop-in UI component (`@sol/payments/braintree-client`)
+3. **Backend Processing**: Shared handlers, factories, and strategies (`@sol/firebase/payments`)
+4. **Cloud Functions**: Thin function wrappers (`@sol/firebase/enrollment-functions/payment`, `donate`)
 
-**Key Components**:
-- `libs/angular/braintree-client/src/lib/components/payment-collector/payment-collector.component.ts`
-- `libs/angular/braintree-client/src/lib/components/payment-collector/payment-collector.store.ts`
-- `libs/angular/braintree-client/src/lib/services/payment.service.ts`
+**Key Libraries**:
+- `libs/ts/payments/domain/` - Domain types (PaymentDbo, factories, strategies)
+- `libs/angular/braintree-client/` - Frontend payment collection
+- `libs/firebase/payments/` - Backend processing (handlers, repositories, email strategies)
+- `libs/firebase/enrollment-functions/payment/` - Service payment Cloud Function
+- `libs/firebase/enrollment-functions/donate/` - Donation Cloud Function
+
+## Compositional Architecture
+
+The payment system uses **Strategy**, **Factory**, and **Template Method** patterns for flexibility.
+
+### Pattern Overview
+
+```
+Cloud Function (thin wrapper)
+    └── PaymentHandler<TRequest> (template method)
+            ├── getFactory() → PaymentFactory<TRequest>
+            │       ├── validate(request)
+            │       ├── createPayment(request) → PaymentDbo
+            │       └── getEmailStrategy() → PaymentEmailStrategy
+            ├── processTransaction() (shared Braintree logic)
+            └── sendConfirmationEmail() (uses strategy)
+```
+
+### Domain Types (`@sol/payments/domain`)
+
+**Location**: `libs/ts/payments/domain/src/lib/`
+
+**Key interfaces**:
+- `PaymentDbo` - Base payment database object (`payment.dbo.ts`)
+- `PaymentFactory<TRequest>` - Factory interface (`payment.factory.ts`)
+- `PaymentEmailStrategy` - Email generation strategy (`payment-email.strategy.ts`)
+- `ServicePaymentRequest`, `DonationRequest` - Request types (`payment-request.ts`)
+- `PaymentResult` - Success/failure result type (`payment-result.ts`)
+
+### Backend Handlers (`@sol/firebase/payments`)
+
+**Location**: `libs/firebase/payments/src/lib/`
+
+**Payment Handler** (Template Method): `payment-handler.ts`
+- Abstract `handle()` method defines the processing skeleton
+- Concrete handlers implement `getFactory()` to provide type-specific behavior
+
+**Factories**:
+- `ServicePaymentFactory` - For service payments (`factories/service-payment.factory.ts`)
+- `DonationFactory` - For donations (`factories/donation.factory.ts`)
+
+**Email Strategies**:
+- `ServicePaymentEmailStrategy` - No tax language (`email-strategies/service-payment.email-strategy.ts`)
+- `DonationEmailStrategy` - Includes 501(c)(3) info (`email-strategies/donation.email-strategy.ts`)
+
+**Repository**: `PaymentRepository` - CRUD for `payments` collection (`payment.repository.ts`)
+
+### Adding New Payment Types
+
+To add a new payment type (e.g., event registration):
+
+1. Add request type to `@sol/payments/domain` (`libs/ts/payments/domain/src/lib/payment-request.ts`)
+2. Create factory in `@sol/firebase/payments` (`libs/firebase/payments/src/lib/factories/`)
+3. Create email strategy if different from existing (`libs/firebase/payments/src/lib/email-strategies/`)
+4. Create handler extending `PaymentHandler` (`libs/firebase/payments/src/lib/handlers/`)
+5. Create Cloud Function in `libs/firebase/enrollment-functions/[name]/`
+6. Export from `apps/functions/src/functions/index.ts`
 
 ## Frontend Integration
 
@@ -35,7 +95,7 @@ The `PaymentCollectorComponent` wraps Braintree's Drop-in UI.
 
 Wait for user state before rendering to ensure correct initialization.
 
-**Pattern**: `apps/enrollment-portal/src/app/donate-full.component.ts:440-443, 185-198`
+**Pattern**: `apps/enrollment-portal/src/app/payment.component.ts:184-197`
 
 **Key Points**:
 - `anonymous="false"` enables Braintree Vault (saved payment methods)
@@ -48,7 +108,7 @@ Set `[anonymous]="true"` on the payment collector component.
 
 ### Capturing Payment Data
 
-**Handler example**: `apps/enrollment-portal/src/app/donate-full.component.ts:497-499`
+**Handler example**: `apps/enrollment-portal/src/app/payment.component.ts:485-493`
 
 The `type` field indicates payment method:
 - `'CreditCard'` - Credit/debit card
@@ -114,42 +174,45 @@ Emits `undefined` until all required data is available (nonce, deviceData, payme
 
 ### Payment Processing
 
-**Example function**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts`
+Payment processing now uses the shared `PaymentHandler` infrastructure.
 
-**Key pattern** (lines 89-125):
-- Receive `paymentMethodType` from frontend (line 68)
-- Determine payment method via type check (lines 92-94)
-- Route to appropriate Braintree method using ternary (lines 110-125)
+**Example Cloud Function**: `libs/firebase/enrollment-functions/payment/src/lib/payment.ts`
+
+The Cloud Function is a thin wrapper:
+1. Create Braintree instance with secrets
+2. Create handler (e.g., `ServicePaymentHandler`)
+3. Call `handler.handle(request)`
+4. Return result
 
 **Don't derive payment type from nonce inspection** - Get it from the Braintree Drop-in on the frontend.
 
-## Payment Methods
+## Payment Types
 
-### Credit Card
+### Service Payments
 
-**Backend processing**: See donate.ts lines 113-125 (card path of ternary)
+**Route**: `/make-payment`
+**Component**: `apps/enrollment-portal/src/app/payment.component.ts`
+**Cloud Function**: `payment`
+**Collection**: `payments`
 
-**Features**:
-- Fraud detection via device data
-- Customer vault support
-- Automatic receipt email
+**Required fields**: name, email, address, purpose, amount, payment method
+**Optional fields**: invoice number
 
-### Venmo
+### Donations
 
-**Backend processing**: See donate.ts lines 110-125 (venmo path of ternary)
+**Route**: `/make-donation`
+**Component**: `apps/enrollment-portal/src/app/donate-full.component.ts`
+**Cloud Function**: `donate`
+**Collection**: `payments` (with `paymentType: 'donation'`)
 
-**Features**:
-- Mobile-optimized flow
-- Custom fields for transaction metadata (line 115)
-- Venmo-specific validation
+**Required fields**: name, email, amount, payment method
+**Optional fields**: address, referral source
 
 ### Platform Detection
 
 Some payment methods have platform restrictions.
 
-**iOS detection**: `apps/enrollment-portal/src/app/donate-full.component.ts:585-587`
-
-**Usage in template**: Lines 176-183
+**iOS detection**: `apps/enrollment-portal/src/app/payment.component.ts:578-580`
 
 Venmo on iOS requires Safari due to browser restrictions.
 
@@ -180,13 +243,13 @@ When creating Drop-in with customer token:
 
 Display user-friendly messages using computed signals.
 
-**Pattern**: `apps/enrollment-portal/src/app/donate-full.component.ts:458-470`
+**Pattern**: `apps/enrollment-portal/src/app/payment.component.ts:441-444`
 
 ### Backend Errors
 
-**Error type**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts:91`
-
-**Usage**: Check `errors?.deepErrors()` for error messages
+The `PaymentHandler` returns structured results:
+- Success: `{ success: true, paymentId, transactionId, amount }`
+- Failure: `{ success: false, errors, message }`
 
 **Common Braintree error types**:
 - "Insufficient funds"
@@ -198,9 +261,7 @@ Display user-friendly messages using computed signals.
 
 The `FirebaseFunctionsService` handles network errors.
 
-**Service implementation**: `libs/firebase/functions-api/src/lib/services/functions.service.ts:16-26`
-
-**Usage with operator**: `apps/enrollment-portal/src/app/donate-full.component.ts:531`
+**Usage with operator**: `apps/enrollment-portal/src/app/payment.component.ts:524`
 
 Network errors are filtered out by `ignoreAllStatesButLoaded()` operator.
 
@@ -234,9 +295,9 @@ Always collect and send device data for fraud detection.
 
 ### 3. Validate Server-Side
 
-All payment validation happens in Cloud Functions, not frontend.
+All payment validation happens in Cloud Functions via factory `validate()` method.
 
-**Example**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts:71-77`
+**Example**: `libs/firebase/payments/src/lib/factories/service-payment.factory.ts`
 
 ### 4. Use HTTPS
 
@@ -259,7 +320,7 @@ The Drop-in UI loads Braintree SDK automatically. Don't include it in main bundl
 
 Only render payment collector when needed.
 
-**Pattern**: `apps/enrollment-portal/src/app/donate-full.component.ts:185`
+**Pattern**: `apps/enrollment-portal/src/app/payment.component.ts:184`
 
 ### 3. Token Caching
 
@@ -267,15 +328,23 @@ The PaymentService uses observables with automatic caching - tokens aren't re-re
 
 ## Common Patterns
 
-### Donation Flow
+### Service Payment Flow
 
-**Complete flow**: `apps/enrollment-portal/src/app/donate-full.component.ts:501-546`
+**Complete flow**: `apps/enrollment-portal/src/app/payment.component.ts:495-556`
 
 **Key elements**:
-- Set processing state (line 505)
-- Call function with payment data (lines 516-530)
-- Filter loading state (line 531)
-- Update result based on success (lines 534-545)
+- Extract payment method data (line 496)
+- Guard check (line 497)
+- Set processing state (lines 499-500)
+- Call function with payment data (lines 508-523)
+- Filter loading state (line 524)
+- Update result based on success (lines 525-541)
+
+### Donation Flow
+
+Uses same patterns via `DonationHandler` and `DonationFactory`.
+
+**Reference**: `apps/enrollment-portal/src/app/donate-full.component.ts`
 
 ### Enrollment Payment Flow
 

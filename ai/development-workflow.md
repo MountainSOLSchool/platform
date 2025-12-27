@@ -40,7 +40,7 @@ These files are gitignored and contain sensitive configuration.
 
 ```bash
 # Serve Angular app with hot reload
-nx serve enrollment-portal
+npx nx run enrollment-portal:serve:development
 
 # Opens at http://localhost:4200
 ```
@@ -68,11 +68,21 @@ firebase emulators:start --only functions,firestore
 Run both simultaneously in separate terminals:
 
 ```bash
+# Terminal 1: Firebase Functions
+npx nx run functions:serve:development
+
+# Terminal 2: Angular App
+npx nx run enrollment-portal:serve:development
+```
+
+Alternatively, use Firebase emulators for functions:
+
+```bash
 # Terminal 1
 firebase emulators:start
 
 # Terminal 2
-nx serve enrollment-portal
+npx nx run enrollment-portal:serve:development
 ```
 
 Configure Angular to use emulators in development.
@@ -489,33 +499,34 @@ Before submitting code for review:
 
 ```bash
 # Development
-nx serve enrollment-portal              # Serve Angular app
-firebase emulators:start                 # Start Firebase emulators
+npx nx run enrollment-portal:serve:development  # Serve Angular app
+npx nx run functions:serve:development          # Serve Firebase functions
+firebase emulators:start                        # Start Firebase emulators
 
 # Testing
-nx test                                  # Run all tests
-nx affected:test                         # Test affected projects
+npx nx test                                     # Run all tests
+npx nx affected:test                            # Test affected projects
 
 # Building
-nx build enrollment-portal               # Build frontend
-nx affected:build                        # Build affected projects
+npx nx build enrollment-portal                  # Build frontend
+npx nx affected:build                           # Build affected projects
 
 # Linting & Formatting
-nx lint                                  # Lint all
-nx lint --fix                            # Auto-fix lint issues
-npm run format                           # Format all files
+npx nx lint                                     # Lint all
+npx nx lint --fix                               # Auto-fix lint issues
+npm run format                                  # Format all files
 
 # Deployment (automated via GitHub Actions)
 # Push to main branch triggers deployment
 git push origin main
 
 # Nx Utilities
-nx graph                                 # View dependency graph
-nx affected:apps                         # Show affected apps
-nx reset                                 # Clear Nx cache
+npx nx graph                                    # View dependency graph
+npx nx affected:apps                            # Show affected apps
+npx nx reset                                    # Clear Nx cache
 
 # Firebase Utilities
-firebase functions:log                   # View function logs
-firebase projects:list                   # List Firebase projects
-firebase use <project>                   # Switch project
+firebase functions:log                          # View function logs
+firebase projects:list                          # List Firebase projects
+firebase use <project>                          # Switch project
 ```
