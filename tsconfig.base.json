@@ -87,6 +87,9 @@
             "@sol/firebase/enrollment-functions/calculate-basket": [
                 "libs/firebase/enrollment-functions/calculate-basket/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/class-admin": [
+                "libs/firebase/enrollment-functions/class-admin/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/class-groups": [
                 "libs/firebase/enrollment-functions/class-groups/src/index.ts"
             ],

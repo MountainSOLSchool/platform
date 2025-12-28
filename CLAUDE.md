@@ -116,12 +116,14 @@ apps/
 
 libs/
   angular/
-    classes/                  # Class enrollment
+    classes/                  # Class enrollment & admin management
+      class-management/       # Admin class CRUD (create, list, edit)
     braintree-client/         # Payment UI
     auth/                     # Authentication
     request/                  # HTTP utilities
   firebase/
     enrollment-functions/     # Cloud Functions
+      class-admin/            # Admin class management functions
     functions-api/            # Functions client
     config/                   # Configuration
 ```

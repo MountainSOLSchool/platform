@@ -60,6 +60,23 @@ Define TypeScript interfaces for Firestore documents.
 - Shared DBOs go in `libs/ts/*/domain/` (framework-agnostic)
 - Function-specific DBOs can be in the function library
 
+### Key Collections
+
+**Classes**: Stored at `semesters/{semesterId}/classes/{classId}`
+- Uses `ClassDbo` structure with snake_case fields
+- Instructors stored as `DocumentReference` array to `teachers` collection
+
+**Teachers**: Top-level `teachers` collection
+- Fields: `first_name`, `last_name`, `archived` (optional)
+- Referenced from classes via `DocumentReference` (not string IDs)
+
+**Semesters**: Top-level `semesters` collection
+- Fields: `displayName`
+- Config at `config/activeSemester` specifies current semester
+
+**Students**: Top-level `students` collection
+- Referenced from classes via `DocumentReference` array
+
 ### Timestamp Handling
 
 Always use server timestamps for consistency via `FieldValue.serverTimestamp()`.

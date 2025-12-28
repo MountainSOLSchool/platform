@@ -33,3 +33,9 @@ export { studentInfoSheet } from '@sol/firebase/enrollment-functions/student-inf
 export { donateVenmo } from '@sol/firebase/enrollment-functions/donate-venmo';
 export { donate } from '@sol/firebase/enrollment-functions/donate';
 export { payment } from '@sol/firebase/enrollment-functions/payment';
+export {
+    createClass,
+    getInstructors,
+    getClassesForAdmin,
+    createSemester,
+} from '@sol/firebase/enrollment-functions/class-admin';
