@@ -56,22 +56,21 @@ export class PaymentCollectorStore extends ComponentStore<{
     readonly prepare = this.effect((prepare$) => {
         return prepare$.pipe(
             switchMap(() => {
-                return this.selectDropInInstance().pipe(
-                    take(1),
-                    switchMap((instance) =>
-                        from(instance.requestPaymentMethod()).pipe(
-                            tap((paymentMethod) => {
-                                const details = paymentMethod.details;
-                                this.patchState({
-                                    nonce: paymentMethod.nonce,
-                                    paymentDetails:
-                                        details as cardPaymentMethodPayload['details'],
-                                    paymentMethodType: paymentMethod.type,
-                                });
-                            }),
-                            catchError((e) => of(console.error(e)))
-                        )
-                    )
+                const instance = this.get().dropInInstance;
+                if (!instance || !instance.isPaymentMethodRequestable()) {
+                    return of(undefined);
+                }
+                return from(instance.requestPaymentMethod()).pipe(
+                    tap((paymentMethod) => {
+                        const details = paymentMethod.details;
+                        this.patchState({
+                            nonce: paymentMethod.nonce,
+                            paymentDetails:
+                                details as cardPaymentMethodPayload['details'],
+                            paymentMethodType: paymentMethod.type,
+                        });
+                    }),
+                    catchError(() => of(undefined))
                 );
             })
         );
@@ -190,16 +189,29 @@ export class PaymentCollectorStore extends ComponentStore<{
                                         'paymentMethodRequestable',
                                         (event: {
                                             paymentMethodIsSelected: boolean;
+                                            type: string;
                                         }) => {
-                                            // Only prepare when:
-                                            // 1. We're ready for user interaction (after initial clear)
-                                            // 2. User has actively selected a payment method
+                                            // Prepare when ready for user interaction
+                                            // For vaulted methods: paymentMethodIsSelected is true
+                                            // For fresh card entry: paymentMethodIsSelected is false, but type is 'CreditCard'
+                                            // For Venmo: type is 'VenmoAccount'
                                             if (
-                                                this.get()
-                                                    .readyForUserInteraction &&
-                                                event.paymentMethodIsSelected
+                                                this.get().readyForUserInteraction
                                             ) {
-                                                this.prepare();
+                                                if (event.paymentMethodIsSelected) {
+                                                    // Vaulted payment method selected - tokenize immediately
+                                                    this.prepare();
+                                                } else if (
+                                                    event.type === 'CreditCard' ||
+                                                    event.type === 'VenmoAccount'
+                                                ) {
+                                                    // Fresh card/Venmo - tokenize after a short delay
+                                                    // to ensure the Drop-in UI has settled
+                                                    setTimeout(
+                                                        () => this.prepare(),
+                                                        150
+                                                    );
+                                                }
                                             }
                                         }
                                     );
@@ -214,7 +226,20 @@ export class PaymentCollectorStore extends ComponentStore<{
                                             });
                                         }
                                     );
-                                    dropInInstance?.clearSelectedPaymentMethod();
+
+                                    // For anonymous users (no vaulted methods), the Drop-in starts
+                                    // with no payment method selected, so clearSelectedPaymentMethod()
+                                    // won't trigger noPaymentMethodRequestable. Check if already
+                                    // in a non-requestable state and set ready immediately.
+                                    if (
+                                        !dropInInstance?.isPaymentMethodRequestable()
+                                    ) {
+                                        this.patchState({
+                                            readyForUserInteraction: true,
+                                        });
+                                    } else {
+                                        dropInInstance?.clearSelectedPaymentMethod();
+                                    }
                                 }
                             );
                         })
