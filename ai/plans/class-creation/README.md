@@ -51,6 +51,7 @@ Enable admins to create and edit classes directly in the enrollment portal, repl
 - URL: `/admin/classes/management` - Class list (default)
 - URL: `/admin/classes/management/create` - Create form
 - URL: `/admin/classes/management/create?semesterId=xyz` - Create form with pre-selected semester
+- URL: `/admin/classes/management/edit/:id?semesterId=xyz` - Edit form for existing class
 - Requires admin role
 - Link in admin dashboard Quick Navigation
 
@@ -67,6 +68,8 @@ Enable admins to create and edit classes directly in the enrollment portal, repl
 | `classType` | string | Yes | Type of class |
 | `gradeRangeStart` | number | Yes | Minimum grade level |
 | `gradeRangeEnd` | number | Yes | Maximum grade level |
+| `minStudentSize` | number | No | Minimum students (default 5) |
+| `maxStudentSize` | number | No | Maximum students (default 12) |
 | `cost` | number | Yes | Base price |
 | `paymentRange` | {lowest, highest} | No | Sliding scale range |
 | `location` | string | Yes | Where class meets |
@@ -102,11 +105,11 @@ Uses snake_case field names and Firestore references for instructors, students, 
    - [x] Add route under admin section
    - [x] Connect form to backend
 
-### Phase 2: Class Editing
+### Phase 2: Class Editing ✅ COMPLETE
 
-- [ ] Create `updateClass` Firebase function
-- [ ] Create `getClassForEdit` Firebase function
-- [ ] Update form to support edit mode (route exists: `/admin/classes/management/edit/:id`)
+- [x] Create `updateClass` Firebase function
+- [x] Create `getClassForEdit` Firebase function
+- [x] Update form to support edit mode (route exists: `/admin/classes/management/edit/:id`)
 
 ### Phase 3: Enhanced Features
 
@@ -125,9 +128,13 @@ Uses snake_case field names and Firestore references for instructors, students, 
 
 ### Backend
 - `libs/firebase/enrollment-functions/class-admin/src/lib/create-class.ts`
+- `libs/firebase/enrollment-functions/class-admin/src/lib/update-class.ts`
 - `libs/firebase/enrollment-functions/class-admin/src/lib/get-instructors.ts`
 - `libs/firebase/enrollment-functions/class-admin/src/lib/get-classes-for-admin.ts`
+- `libs/firebase/enrollment-functions/class-admin/src/lib/get-class-for-edit.ts`
 - `libs/firebase/enrollment-functions/class-admin/src/lib/create-semester.ts`
+- `libs/firebase/enrollment-functions/class-admin/src/lib/get-class-types.ts`
+- `libs/firebase/enrollment-functions/class-admin/src/lib/get-locations.ts`
 - `libs/firebase/enrollment-functions/class-admin/src/index.ts`
 
 ### Frontend
@@ -138,7 +145,7 @@ Uses snake_case field names and Firestore references for instructors, students, 
 - `libs/angular/classes/class-management/src/lib/class-management-routes.ts`
 
 ### Registration
-- `apps/functions/src/functions/index.ts` - exports createClass, getInstructors, getClassesForAdmin, createSemester
+- `apps/functions/src/functions/index.ts` - exports createClass, updateClass, getInstructors, getClassesForAdmin, getClassForEdit, createSemester, getClassTypes, getLocations
 - `tsconfig.base.json` - path mapping for @sol/firebase/enrollment-functions/class-admin
 
 ### Shared
@@ -172,9 +179,31 @@ The codebase uses a `teachers` collection (not `instructors`) for storing teache
 ### Hardcoded Values (Phase 4 will address)
 
 The following are currently hardcoded in the form component:
-- Class types: Homeschool, Afterschool, Weekend, Camp, Workshop, Special Event
-- Locations: Farm, Forest, Mountain, Stream, Garden, Classroom
-- Weekdays: Monday-Sunday
+- ~~Class types: Homeschool, Afterschool, Weekend, Camp, Workshop, Special Event~~ **Now loaded from `class_types` collection via `getClassTypes` function**
+- ~~Locations: Farm, Forest, Mountain, Stream, Garden, Classroom~~ **Now loaded from `campuses` collection via `getLocations` function**
+- ~~Weekdays: Monday-Sunday~~ **Now a free text input to support formats like "M-Th", "Su-F"**
+
+### Class Types Enhancement
+
+Class types are now loaded from the `class_types` Firestore collection and presented as a combobox (mat-autocomplete) that:
+- Shows suggestions from the database
+- Allows filtering by typing
+- Allows entering custom values not in the list
+
+### Locations Enhancement
+
+Locations are now loaded from the `campuses` Firestore collection and presented as a combobox (mat-autocomplete) that:
+- Shows suggestions from the database (campus names)
+- Allows filtering by typing
+- Allows entering custom values not in the list
+
+### Time Input Enhancement
+
+Daily times are now entered via separate Start Time and End Time dropdowns:
+- Pre-defined time options from 5am to 11pm plus "All Day"
+- Times are combined into a string format like "9am-4pm" for storage
+- When editing, existing time strings are parsed to pre-fill the dropdowns
+- Original value is shown for reference when editing
 
 ### Future Considerations
 

@@ -2,8 +2,9 @@ import { Functions, Role } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
 import admin from 'firebase-admin';
 
-export interface CreateClassRequest {
+export interface UpdateClassRequest {
     semesterId: string;
+    classId: string;
     name: string;
     description: string;
     classType: string;
@@ -23,22 +24,27 @@ export interface CreateClassRequest {
     maxStudentSize?: number;
     thumbnailUrl?: string;
     live: boolean;
+    pausedForEnrollment?: boolean;
     forInformationOnly?: boolean;
     unitIds?: string[];
 }
 
-export interface CreateClassResponse {
+export interface UpdateClassResponse {
     success: boolean;
-    classId: string;
 }
 
-export const createClass = Functions.endpoint
+export const updateClass = Functions.endpoint
     .restrictedToRoles(Role.Admin)
-    .handle<CreateClassRequest>(async (request, response) => {
+    .handle<UpdateClassRequest>(async (request, response) => {
         const data = request.body.data;
 
         if (!data.semesterId) {
             response.status(400).send({ error: 'semesterId is required' });
+            return;
+        }
+
+        if (!data.classId) {
+            response.status(400).send({ error: 'classId is required' });
             return;
         }
 
@@ -55,15 +61,21 @@ export const createClass = Functions.endpoint
         }
 
         const db = DatabaseUtility.getDatabase();
-        const classesCollection = db.collection(
-            `semesters/${data.semesterId}/classes`
+        const classRef = db.doc(
+            `semesters/${data.semesterId}/classes/${data.classId}`
         );
+
+        const existingDoc = await classRef.get();
+        if (!existingDoc.exists) {
+            response.status(404).send({ error: 'Class not found' });
+            return;
+        }
 
         const instructorRefs = data.instructorIds.map((id) =>
             db.doc(`teachers/${id}`)
         );
 
-        const classDoc: Record<string, unknown> = {
+        const updateData: Record<string, unknown> = {
             name: data.name,
             description: data.description || '',
             class_type: data.classType || '',
@@ -80,28 +92,38 @@ export const createClass = Functions.endpoint
                 new Date(data.registrationEndDate)
             ),
             live: data.live ?? false,
-            paused_for_enrollment: false,
+            paused_for_enrollment: data.pausedForEnrollment ?? false,
             for_information_only: data.forInformationOnly ?? false,
-            students: [],
             min_student_size: data.minStudentSize ?? 5,
             max_student_size: data.maxStudentSize ?? 12,
             thumbnailUrl: data.thumbnailUrl || '',
         };
 
-        if (data.paymentRangeLowest && data.paymentRangeHighest) {
-            classDoc['payment_range_lowest'] = data.paymentRangeLowest;
-            classDoc['payment_range_highest'] = data.paymentRangeHighest;
+        if (
+            data.paymentRangeLowest !== undefined &&
+            data.paymentRangeHighest !== undefined
+        ) {
+            updateData['payment_range_lowest'] = data.paymentRangeLowest;
+            updateData['payment_range_highest'] = data.paymentRangeHighest;
+        } else {
+            updateData['payment_range_lowest'] =
+                admin.firestore.FieldValue.delete();
+            updateData['payment_range_highest'] =
+                admin.firestore.FieldValue.delete();
         }
 
         if (data.unitIds && data.unitIds.length > 0) {
-            classDoc['units'] = data.unitIds.map((id) => db.doc(`units/${id}`));
+            updateData['units'] = data.unitIds.map((id) =>
+                db.doc(`units/${id}`)
+            );
+        } else {
+            updateData['units'] = admin.firestore.FieldValue.delete();
         }
 
-        const docRef = await classesCollection.add(classDoc);
+        await classRef.update(updateData);
 
-        const result: CreateClassResponse = {
+        const result: UpdateClassResponse = {
             success: true,
-            classId: docRef.id,
         };
 
         response.send(result);

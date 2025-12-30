@@ -463,7 +463,9 @@ export class AdminClassListComponent {
     }
 
     editClass(cls: AdminClass) {
-        this.router.navigate(['/admin/classes/management/edit', cls.id]);
+        this.router.navigate(['/admin/classes/management/edit', cls.id], {
+            queryParams: { semesterId: this.selectedSemesterId() },
+        });
     }
 
     formatCost(cls: AdminClass): string {

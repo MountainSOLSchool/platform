@@ -35,7 +35,11 @@ export { donate } from '@sol/firebase/enrollment-functions/donate';
 export { payment } from '@sol/firebase/enrollment-functions/payment';
 export {
     createClass,
+    updateClass,
     getInstructors,
     getClassesForAdmin,
+    getClassForEdit,
     createSemester,
+    getClassTypes,
+    getLocations,
 } from '@sol/firebase/enrollment-functions/class-admin';
