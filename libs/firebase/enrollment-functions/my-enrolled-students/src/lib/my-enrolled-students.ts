@@ -8,9 +8,10 @@ export const myEnrolledStudents = Functions.endpoint.handle(
         const user = await AuthUtility.getUserFromRequest(request, response);
 
         if (!user) {
-            response.send({ studentIds: [] });
+            response.send({ students: [] });
             return;
         }
+
         const studentIds = await AuthUtility.getUserStudentIds(user);
         const studentOrEmptyLookups = await Promise.all(
             studentIds.map(async (id) => await StudentRepository.get(id))
@@ -30,7 +31,13 @@ export const myEnrolledStudents = Functions.endpoint.handle(
                 const currentClasses = enrollmentsByStudent
                     .filter((e: SemesterEnrollment) => e.studentId === id)
                     .flatMap((e: SemesterEnrollment) =>
-                        'classes' in e ? e.classes : []
+                        'classes' in e && Array.isArray(e.classes)
+                            ? e.classes
+                            : []
+                    )
+                    .filter(
+                        (c): c is { id: string; semesterId: string } =>
+                            c != null && typeof c.id === 'string'
                     );
 
                 return {
@@ -38,12 +45,10 @@ export const myEnrolledStudents = Functions.endpoint.handle(
                     name: `${first_name} ${last_name}`,
                     birthday: birth_date,
                     completedUnitsCount: completed_units?.length ?? 0,
-                    currentClasses: currentClasses.map(
-                        (c: { id: string; semesterId: string }) => ({
-                            id: c.id,
-                            semesterId: c.semesterId,
-                        })
-                    ),
+                    currentClasses: currentClasses.map((c) => ({
+                        id: c.id,
+                        semesterId: c.semesterId,
+                    })),
                 };
             });
 
