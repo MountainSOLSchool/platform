@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ComponentStore } from '@ngrx/component-store';
-import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import {
     catchError,
     filter,
@@ -19,7 +17,6 @@ import {
     create as createDropIn,
 } from 'braintree-web-drop-in';
 import { dataCollector, client } from 'braintree-web';
-import { UserService } from '@sol/auth/user';
 import { PaymentService } from '../../services/payment.service';
 
 @Injectable()
@@ -34,9 +31,6 @@ export class PaymentCollectorStore extends ComponentStore<{
     paymentMethods: string[];
     readyForUserInteraction: boolean;
 }> {
-    private readonly http = inject(HttpClient);
-    private readonly functions = inject(FirebaseFunctionsService);
-    private readonly user = inject(UserService);
     private readonly paymentService = inject(PaymentService);
 
     constructor() {
@@ -254,13 +248,6 @@ export class PaymentCollectorStore extends ComponentStore<{
             tap(() => this.get().dropInInstance?.clearSelectedPaymentMethod())
         );
     });
-
-    private selectDropInInstance() {
-        return this.state$.pipe(
-            map(({ dropInInstance }) => dropInInstance),
-            filter((instance): instance is Dropin => !!instance)
-        );
-    }
 
     selectPaymentMethod(): Observable<
         | {
