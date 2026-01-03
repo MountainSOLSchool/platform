@@ -60,7 +60,8 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 >
                                 <input
                                     type="text"
-                                    [(ngModel)]="donorName"
+                                    [ngModel]="donorName()"
+                                    (ngModelChange)="donorName.set($event)"
                                     name="donorName"
                                     placeholder="Enter your full name"
                                     class="form-input"
@@ -73,7 +74,8 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 >
                                 <input
                                     type="email"
-                                    [(ngModel)]="donorEmail"
+                                    [ngModel]="donorEmail()"
+                                    (ngModelChange)="donorEmail.set($event)"
                                     name="donorEmail"
                                     placeholder="your.email@example.com"
                                     class="form-input"
@@ -86,7 +88,8 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 >
                                 <input
                                     type="text"
-                                    [(ngModel)]="street"
+                                    [ngModel]="street()"
+                                    (ngModelChange)="street.set($event)"
                                     name="street"
                                     placeholder="123 Main St"
                                     class="form-input"
@@ -98,7 +101,8 @@ import { MatDialogModule } from '@angular/material/dialog';
                                     <label class="field-label">City</label>
                                     <input
                                         type="text"
-                                        [(ngModel)]="city"
+                                        [ngModel]="city()"
+                                        (ngModelChange)="city.set($event)"
                                         name="city"
                                         placeholder="City"
                                         class="form-input"
@@ -109,7 +113,8 @@ import { MatDialogModule } from '@angular/material/dialog';
                                     <label class="field-label">State</label>
                                     <input
                                         type="text"
-                                        [(ngModel)]="state"
+                                        [ngModel]="state()"
+                                        (ngModelChange)="state.set($event)"
                                         name="state"
                                         placeholder="CA"
                                         maxlength="2"
@@ -121,7 +126,8 @@ import { MatDialogModule } from '@angular/material/dialog';
                                     <label class="field-label">ZIP</label>
                                     <input
                                         type="text"
-                                        [(ngModel)]="zip"
+                                        [ngModel]="zip()"
+                                        (ngModelChange)="zip.set($event)"
                                         name="zip"
                                         placeholder="12345"
                                         maxlength="5"
@@ -136,7 +142,8 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 >
                                 <input
                                     type="text"
-                                    [(ngModel)]="referralSource"
+                                    [ngModel]="referralSource()"
+                                    (ngModelChange)="referralSource.set($event)"
                                     name="referralSource"
                                     placeholder="e.g., Friend, Social Media, Website"
                                     class="form-input"
@@ -151,7 +158,8 @@ import { MatDialogModule } from '@angular/material/dialog';
                                     <span class="currency-prefix">$</span>
                                     <input
                                         type="number"
-                                        [(ngModel)]="donationAmount"
+                                        [ngModel]="donationAmount()"
+                                        (ngModelChange)="donationAmount.set($event)"
                                         name="donationAmount"
                                         placeholder="25.00"
                                         min="1"
@@ -512,7 +520,7 @@ export class DonateFullComponent {
         return result.status === 'success' ? result.transactionId : '';
     });
 
-    canDonate = () => {
+    canDonate = computed(() => {
         const hasRequiredFields =
             this.donorName().trim().length > 0 &&
             this.donorEmail().trim().length > 0 &&
@@ -521,10 +529,10 @@ export class DonateFullComponent {
         return (
             hasRequiredFields &&
             this.donationAmount() >= 1 &&
-            this.paymentMethodData() &&
+            !!this.paymentMethodData() &&
             !this.processing()
         );
-    };
+    });
 
     isValidEmail(email: string): boolean {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
