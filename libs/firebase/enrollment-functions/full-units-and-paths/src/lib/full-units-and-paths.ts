@@ -78,16 +78,31 @@ async function getPaths(): Promise<Array<PathDbEntry>> {
     const db = DatabaseUtility.getDatabase();
     const pathsSnapshot = await db.collection('paths').get();
 
-    return pathsSnapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-            id: doc.id,
-            name: data.name,
-            description: data.description,
-            requirements: data.requirements,
-            electives: data.electives,
-        };
-    }) as Array<PathDbEntry>;
+    const paths = await Promise.all(
+        pathsSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
+
+            // Fetch electives subcollection
+            const electivesSnapshot = await doc.ref.collection('electives').get();
+            const electives = electivesSnapshot.docs.map((electiveDoc) => {
+                const electiveData = electiveDoc.data();
+                return {
+                    name: electiveData.name ?? '',
+                    options: electiveData.options ?? [],
+                };
+            });
+
+            return {
+                id: doc.id,
+                name: data.name,
+                description: data.description,
+                requirements: data.requirements,
+                electives,
+            };
+        })
+    );
+
+    return paths as Array<PathDbEntry>;
 }
 
 async function getUnits(): Promise<Array<UnitDbEntry>> {
