@@ -426,7 +426,7 @@ export class UnitSelectorComponent {
         Array<{ id: string; name: string; description: string }>
     >([]);
 
-    private previousAgeGroup = '';
+    private previousAgeGroup: string | null = null;
 
     otherUnits = computed(() => {
         const unitsMap = this.units();
@@ -440,15 +440,18 @@ export class UnitSelectorComponent {
     constructor() {
         effect(() => {
             const currentAgeGroup = this.ageGroup();
-            if (currentAgeGroup !== this.previousAgeGroup) {
+            if (this.previousAgeGroup === null) {
+                // First load - don't clear selections, just load units
+                this.previousAgeGroup = currentAgeGroup;
+                this.loadUnits();
+            } else if (currentAgeGroup !== this.previousAgeGroup) {
+                // User changed age group - clear selections
                 this.previousAgeGroup = currentAgeGroup;
                 this.selectedUnitIds.set([]);
                 this.selectionChange.emit([]);
                 this.loadUnits();
             }
         });
-
-        this.loadUnits();
     }
 
     private loadUnits() {

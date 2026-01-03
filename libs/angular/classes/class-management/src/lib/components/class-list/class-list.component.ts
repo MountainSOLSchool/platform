@@ -20,6 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { ClassDetailDialogComponent } from './class-detail-dialog.component';
 import { AddSemesterDialogComponent } from './add-semester-dialog.component';
+import { ActiveSemesterDialogComponent } from './active-semester-dialog.component';
 
 interface AdminClass {
     id: string;
@@ -103,6 +104,13 @@ interface Semester {
                         >
                             <mat-icon>add</mat-icon>
                             Add Semester
+                        </button>
+                        <button
+                            mat-stroked-button
+                            (click)="openActiveSemesterDialog()"
+                        >
+                            <mat-icon>settings</mat-icon>
+                            Active Semesters
                         </button>
                     </div>
                 </mat-card-content>
@@ -489,6 +497,18 @@ export class AdminClassListComponent {
     openAddSemesterDialog() {
         const dialogRef = this.dialog.open(AddSemesterDialogComponent, {
             width: '400px',
+        });
+
+        dialogRef.closed.subscribe((result) => {
+            if (result) {
+                window.location.reload();
+            }
+        });
+    }
+
+    openActiveSemesterDialog() {
+        const dialogRef = this.dialog.open(ActiveSemesterDialogComponent, {
+            width: '500px',
         });
 
         dialogRef.closed.subscribe((result) => {
