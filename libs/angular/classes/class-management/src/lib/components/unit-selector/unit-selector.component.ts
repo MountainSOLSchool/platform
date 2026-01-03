@@ -16,6 +16,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { UnitLimitWarningDialogComponent } from './unit-limit-warning-dialog.component';
 
 interface Unit {
     id: string;
@@ -64,6 +66,7 @@ interface PathUnitGroup {
         MatTooltipModule,
         MatIconModule,
         MatButtonModule,
+        MatDialogModule,
     ],
     template: `
         <div class="unit-selector">
@@ -345,6 +348,9 @@ interface PathUnitGroup {
 })
 export class UnitSelectorComponent implements OnInit {
     private readonly functions = inject(FirebaseFunctionsService);
+    private readonly dialog = inject(MatDialog);
+
+    private static readonly SOFT_UNIT_LIMIT = 3;
 
     readonly initialSelectedIds = input<string[]>([]);
     readonly selectionChange = output<string[]>();
@@ -373,7 +379,12 @@ export class UnitSelectorComponent implements OnInit {
             .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
             .subscribe({
                 next: (result) => {
-                    this.paths.set(result.paths);
+                    const sortedPaths = [...result.paths].sort((a, b) => {
+                        if (a.name === 'Ranger') return -1;
+                        if (b.name === 'Ranger') return 1;
+                        return a.name.localeCompare(b.name);
+                    });
+                    this.paths.set(sortedPaths);
                     this.units.set(result.units);
                     this.selectedUnitIds.set([...this.initialSelectedIds()]);
                     this.loading.set(false);
@@ -461,16 +472,30 @@ export class UnitSelectorComponent implements OnInit {
 
     toggleUnit(unitId: string) {
         const current = this.selectedUnitIds();
-        let updated: string[];
 
         if (current.includes(unitId)) {
-            updated = current.filter((id) => id !== unitId);
-        } else {
-            updated = [...current, unitId];
+            const updated = current.filter((id) => id !== unitId);
+            this.selectedUnitIds.set(updated);
+            this.selectionChange.emit(updated);
+            return;
         }
 
-        this.selectedUnitIds.set(updated);
-        this.selectionChange.emit(updated);
+        if (current.length >= UnitSelectorComponent.SOFT_UNIT_LIMIT) {
+            this.dialog
+                .open(UnitLimitWarningDialogComponent)
+                .afterClosed()
+                .subscribe((confirmed) => {
+                    if (confirmed) {
+                        const updated = [...current, unitId];
+                        this.selectedUnitIds.set(updated);
+                        this.selectionChange.emit(updated);
+                    }
+                });
+        } else {
+            const updated = [...current, unitId];
+            this.selectedUnitIds.set(updated);
+            this.selectionChange.emit(updated);
+        }
     }
 
     clearAll() {
