@@ -25,6 +25,7 @@ export interface CreateClassRequest {
     live: boolean;
     forInformationOnly?: boolean;
     unitIds?: string[];
+    ageGroup?: string;
 }
 
 export interface CreateClassResponse {
@@ -94,7 +95,16 @@ export const createClass = Functions.endpoint
         }
 
         if (data.unitIds && data.unitIds.length > 0) {
-            classDoc['units'] = data.unitIds.map((id) => db.doc(`units/${id}`));
+            const unitCollection = data.ageGroup
+                ? `${data.ageGroup}_units`
+                : 'units';
+            classDoc['units'] = data.unitIds.map((id) =>
+                db.doc(`${unitCollection}/${id}`)
+            );
+        }
+
+        if (data.ageGroup) {
+            classDoc['age_group'] = data.ageGroup;
         }
 
         const docRef = await classesCollection.add(classDoc);

@@ -4,6 +4,89 @@ This document describes Firebase integration patterns used in the Mountain SOL p
 
 ## Cloud Functions (v2)
 
+### Library-Per-Function Architecture
+
+**IMPORTANT**: Each Firebase function MUST be in its own Nx library. This enables granular `nx affected` deployment - only functions that change (or whose dependencies change) are deployed on each commit to main.
+
+**Library location**: `libs/firebase/enrollment-functions/{function-name}/`
+
+**Required files for a new function library**:
+```
+libs/firebase/enrollment-functions/{function-name}/
+├── src/
+│   ├── index.ts                    # Export the function
+│   └── lib/
+│       └── {function-name}.ts      # Function implementation
+├── project.json                    # Nx project configuration
+├── package.json                    # Package metadata
+├── tsconfig.json                   # TypeScript config
+└── tsconfig.lib.json               # Library-specific TS config
+```
+
+**Steps to create a new function library**:
+
+1. Create the directory structure (see above)
+
+2. Create `project.json`:
+```json
+{
+    "name": "firebase-enrollment-functions-{function-name}",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/{function-name}/src",
+    "projectType": "library",
+    "tags": [],
+    "targets": {}
+}
+```
+
+3. Create `package.json`:
+```json
+{
+    "name": "@sol/firebase/enrollment-functions/{function-name}",
+    "version": "0.0.1",
+    "dependencies": {},
+    "private": true
+}
+```
+
+4. Create `tsconfig.json`:
+```json
+{
+    "extends": "../../../../tsconfig.base.json",
+    "compilerOptions": { "module": "es2022" },
+    "files": [],
+    "include": [],
+    "references": [{ "path": "./tsconfig.lib.json" }]
+}
+```
+
+5. Create `tsconfig.lib.json`:
+```json
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../../../../dist/out-tsc",
+        "declaration": true,
+        "types": ["node"]
+    },
+    "include": ["src/**/*.ts"]
+}
+```
+
+6. Add path mapping to `tsconfig.base.json`:
+```json
+"@sol/firebase/enrollment-functions/{function-name}": [
+    "libs/firebase/enrollment-functions/{function-name}/src/index.ts"
+]
+```
+
+7. Export from `apps/functions/src/functions/index.ts`:
+```typescript
+export { functionName } from '@sol/firebase/enrollment-functions/{function-name}';
+```
+
+**Reference implementation**: `libs/firebase/enrollment-functions/get-age-group-units/`
+
 ### Function Structure
 
 Cloud Functions are located in `/libs/firebase/enrollment-functions/*/src/lib/`.

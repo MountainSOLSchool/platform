@@ -27,6 +27,7 @@ export interface UpdateClassRequest {
     pausedForEnrollment?: boolean;
     forInformationOnly?: boolean;
     unitIds?: string[];
+    ageGroup?: string;
 }
 
 export interface UpdateClassResponse {
@@ -113,11 +114,20 @@ export const updateClass = Functions.endpoint
         }
 
         if (data.unitIds && data.unitIds.length > 0) {
+            const unitCollection = data.ageGroup
+                ? `${data.ageGroup}_units`
+                : 'units';
             updateData['units'] = data.unitIds.map((id) =>
-                db.doc(`units/${id}`)
+                db.doc(`${unitCollection}/${id}`)
             );
         } else {
             updateData['units'] = admin.firestore.FieldValue.delete();
+        }
+
+        if (data.ageGroup) {
+            updateData['age_group'] = data.ageGroup;
+        } else {
+            updateData['age_group'] = admin.firestore.FieldValue.delete();
         }
 
         await classRef.update(updateData);

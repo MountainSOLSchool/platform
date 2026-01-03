@@ -5,7 +5,7 @@ import {
     computed,
     input,
     output,
-    OnInit,
+    effect,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
@@ -44,6 +44,10 @@ interface UnitsAndPathsResponse {
     units: Record<string, Unit>;
 }
 
+interface AgeGroupUnitsResponse {
+    units: Array<{ id: string; name: string; description: string }>;
+}
+
 interface PathUnitItem {
     unitId: string;
     unitName: string;
@@ -75,12 +79,61 @@ interface PathUnitGroup {
                     <mat-spinner diameter="32"></mat-spinner>
                     <span>Loading units...</span>
                 </div>
+            } @else if (ageGroup()) {
+                <!-- Age group (Mallards/Mapaches) simple list view -->
+                @if (ageGroupUnits().length === 0) {
+                    <div class="empty-state">
+                        <mat-icon>school</mat-icon>
+                        <p>No units found for {{ ageGroup() }}</p>
+                    </div>
+                } @else {
+                    <div class="selector-header">
+                        <span class="selected-count">
+                            {{ selectedUnitIds().length }} unit(s) selected
+                        </span>
+                        @if (selectedUnitIds().length > 0) {
+                            <button mat-button (click)="clearAll()">
+                                <mat-icon>clear_all</mat-icon>
+                                Clear All
+                            </button>
+                        }
+                    </div>
+                    <div class="age-group-list">
+                        @for (unit of ageGroupUnits(); track unit.id) {
+                            <div
+                                class="unit-item"
+                                [class.selected]="isSelected(unit.id)"
+                            >
+                                <div class="unit-item-header">
+                                    <mat-checkbox
+                                        [checked]="isSelected(unit.id)"
+                                        (change)="toggleUnit(unit.id)"
+                                    >
+                                        <span class="unit-name">
+                                            {{ unit.name }}
+                                        </span>
+                                    </mat-checkbox>
+                                    @if (unit.description) {
+                                        <mat-icon
+                                            class="info-icon"
+                                            [matTooltip]="unit.description"
+                                            matTooltipPosition="above"
+                                        >
+                                            info_outline
+                                        </mat-icon>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
             } @else if (paths().length === 0) {
                 <div class="empty-state">
                     <mat-icon>school</mat-icon>
                     <p>No paths found</p>
                 </div>
             } @else {
+                <!-- Standard paths view -->
                 <div class="selector-header">
                     <span class="selected-count">
                         {{ selectedUnitIds().length }} unit(s) selected
@@ -250,6 +303,15 @@ interface PathUnitGroup {
                 background: #fafafa;
             }
 
+            .age-group-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 0.5rem;
+                padding: 1rem;
+                max-height: 500px;
+                overflow-y: auto;
+            }
+
             .path-header {
                 padding: 0.75rem;
                 font-weight: 500;
@@ -346,19 +408,25 @@ interface PathUnitGroup {
         `,
     ],
 })
-export class UnitSelectorComponent implements OnInit {
+export class UnitSelectorComponent {
     private readonly functions = inject(FirebaseFunctionsService);
     private readonly dialog = inject(MatDialog);
 
     private static readonly SOFT_UNIT_LIMIT = 3;
 
     readonly initialSelectedIds = input<string[]>([]);
+    readonly ageGroup = input<string>('');
     readonly selectionChange = output<string[]>();
 
     loading = signal(true);
     paths = signal<Path[]>([]);
     units = signal<Record<string, Unit>>({});
     selectedUnitIds = signal<string[]>([]);
+    ageGroupUnits = signal<
+        Array<{ id: string; name: string; description: string }>
+    >([]);
+
+    private previousAgeGroup = '';
 
     otherUnits = computed(() => {
         const unitsMap = this.units();
@@ -369,11 +437,31 @@ export class UnitSelectorComponent implements OnInit {
             .sort((a, b) => a.name.localeCompare(b.name));
     });
 
-    ngOnInit() {
-        this.loadUnitsAndPaths();
+    constructor() {
+        effect(() => {
+            const currentAgeGroup = this.ageGroup();
+            if (currentAgeGroup !== this.previousAgeGroup) {
+                this.previousAgeGroup = currentAgeGroup;
+                this.selectedUnitIds.set([]);
+                this.selectionChange.emit([]);
+                this.loadUnits();
+            }
+        });
+
+        this.loadUnits();
+    }
+
+    private loadUnits() {
+        const ageGroup = this.ageGroup();
+        if (ageGroup) {
+            this.loadAgeGroupUnits(ageGroup);
+        } else {
+            this.loadUnitsAndPaths();
+        }
     }
 
     private loadUnitsAndPaths() {
+        this.loading.set(true);
         this.functions
             .call<UnitsAndPathsResponse>('fullUnitsAndPaths')
             .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
@@ -390,6 +478,27 @@ export class UnitSelectorComponent implements OnInit {
                     this.loading.set(false);
                 },
                 error: () => {
+                    this.loading.set(false);
+                },
+            });
+    }
+
+    private loadAgeGroupUnits(ageGroup: string) {
+        this.loading.set(true);
+        this.functions
+            .call<AgeGroupUnitsResponse>('getAgeGroupUnits', { ageGroup })
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+            .subscribe({
+                next: (result) => {
+                    const sortedUnits = [...result.units].sort((a, b) =>
+                        a.name.localeCompare(b.name)
+                    );
+                    this.ageGroupUnits.set(sortedUnits);
+                    this.selectedUnitIds.set([...this.initialSelectedIds()]);
+                    this.loading.set(false);
+                },
+                error: () => {
+                    this.ageGroupUnits.set([]);
                     this.loading.set(false);
                 },
             });

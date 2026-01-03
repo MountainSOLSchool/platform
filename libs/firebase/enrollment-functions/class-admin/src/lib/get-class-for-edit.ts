@@ -31,6 +31,7 @@ export interface ClassForEdit {
     forInformationOnly: boolean;
     thumbnailUrl?: string;
     unitIds?: string[];
+    ageGroup?: string;
 }
 
 export interface GetClassForEditResponse {
@@ -97,6 +98,7 @@ export const getClassForEdit = Functions.endpoint
             forInformationOnly: data.for_information_only ?? false,
             thumbnailUrl: data.thumbnailUrl,
             unitIds: unitIds.length > 0 ? unitIds : undefined,
+            ageGroup: data.age_group || undefined,
         };
 
         response.send({ class: classForEdit });

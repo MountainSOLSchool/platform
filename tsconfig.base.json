@@ -129,6 +129,9 @@
             "@sol/firebase/enrollment-functions/full-units-and-paths": [
                 "libs/firebase/enrollment-functions/full-units-and-paths/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/get-age-group-units": [
+                "libs/firebase/enrollment-functions/get-age-group-units/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/get-completed-units": [
                 "libs/firebase/enrollment-functions/get-completed-units/src/index.ts"
             ],

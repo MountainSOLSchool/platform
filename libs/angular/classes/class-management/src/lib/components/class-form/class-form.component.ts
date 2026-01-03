@@ -66,6 +66,7 @@ interface ClassForEdit {
     forInformationOnly: boolean;
     thumbnailUrl?: string;
     unitIds?: string[];
+    ageGroup?: string;
 }
 
 type FormState = { message?: string } & (
@@ -227,6 +228,28 @@ type FormState = { message?: string } & (
                                                 }}</mat-option>
                                             }
                                         </mat-autocomplete>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Age Group (Optional)</mat-label>
+                                        <mat-select
+                                            [(ngModel)]="ageGroup"
+                                            name="ageGroup"
+                                        >
+                                            <mat-option value=""
+                                                >Standard (Paths & Units)</mat-option
+                                            >
+                                            <mat-option value="mallards"
+                                                >Mallards</mat-option
+                                            >
+                                            <mat-option value="mapaches"
+                                                >Mapaches</mat-option
+                                            >
+                                        </mat-select>
+                                        <mat-hint
+                                            >Select Mallards or Mapaches for
+                                            younger age group units</mat-hint
+                                        >
                                     </mat-form-field>
                                 </section>
 
@@ -614,6 +637,7 @@ type FormState = { message?: string } & (
                                     </p>
                                     <sol-unit-selector
                                         [initialSelectedIds]="selectedUnitIds()"
+                                        [ageGroup]="ageGroup()"
                                         (selectionChange)="
                                             onUnitSelectionChange($event)
                                         "
@@ -1040,6 +1064,7 @@ export class ClassFormComponent implements OnInit {
     pausedForEnrollment = signal<boolean>(false);
     forInformationOnly = signal<boolean>(false);
     selectedUnitIds = signal<string[]>([]);
+    ageGroup = signal<string>('');
 
     formState = signal<FormState>({ status: 'idle' });
 
@@ -1311,6 +1336,7 @@ export class ClassFormComponent implements OnInit {
                     this.pausedForEnrollment.set(cls.pausedForEnrollment);
                     this.forInformationOnly.set(cls.forInformationOnly);
                     this.selectedUnitIds.set(cls.unitIds ?? []);
+                    this.ageGroup.set(cls.ageGroup ?? '');
                     this.loadingClass.set(false);
                 },
                 error: (err) => {
@@ -1357,6 +1383,7 @@ export class ClassFormComponent implements OnInit {
             pausedForEnrollment: this.pausedForEnrollment(),
             forInformationOnly: this.forInformationOnly(),
             unitIds: this.selectedUnitIds(),
+            ageGroup: this.ageGroup() || undefined,
         };
 
         const classId = this.classIdFromRoute();
@@ -1445,6 +1472,7 @@ export class ClassFormComponent implements OnInit {
         this.pausedForEnrollment.set(false);
         this.forInformationOnly.set(false);
         this.selectedUnitIds.set([]);
+        this.ageGroup.set('');
         this.formState.set({ status: 'idle' });
     }
 
