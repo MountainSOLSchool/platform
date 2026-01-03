@@ -13,15 +13,20 @@ export const myEnrolledStudents = Functions.endpoint.handle(
         }
 
         const studentIds = await AuthUtility.getUserStudentIds(user);
+
+        if (studentIds.length === 0) {
+            response.send({ students: [] });
+            return;
+        }
+
         const studentOrEmptyLookups = await Promise.all(
             studentIds.map(async (id) => await StudentRepository.get(id))
         );
 
-        const allEnrollments =
-            await ClassEnrollmentRepository.getCurrentSemesterEnrollments();
-        const enrollmentsByStudent = allEnrollments.filter(
-            (e: SemesterEnrollment) => studentIds.includes(e.studentId)
-        );
+        const enrollmentsByStudent =
+            await ClassEnrollmentRepository.getEnrollmentsForStudents(
+                studentIds
+            );
 
         const students = studentOrEmptyLookups
             .filter(

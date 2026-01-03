@@ -3,8 +3,8 @@ import { DatabaseUtility } from '@sol/firebase/database';
 
 export const historicalSemesters = Functions.endpoint.handle<
     | {
-        ids: Array<string>;
-    }
+          ids: Array<string>;
+      }
     | undefined
 >(async (_, response) => {
     const semestersCollection =
@@ -23,8 +23,15 @@ export const historicalSemesters = Functions.endpoint.handle<
         .get()
         .then((doc) => doc.data()?.id);
 
+    const otherSemestersDoc = await DatabaseUtility.getDocumentRef(
+        `config/otherSemestersAvailableToEnroll`
+    );
+    const otherEnrollableSemesterIds: string[] =
+        (await otherSemestersDoc.get().then((doc) => doc.data()?.list)) ?? [];
+
     response.send({
         semesters,
         activeSemesterId,
+        otherEnrollableSemesterIds,
     });
 });

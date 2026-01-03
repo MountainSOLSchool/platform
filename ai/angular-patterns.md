@@ -152,6 +152,59 @@ Components that collect data emit observables.
 
 **Template binding**: `apps/enrollment-portal/src/app/donate-full.component.ts:190-195`
 
+### Signal Inputs with Effects for Reloading
+
+When a child component needs to reload data based on parent input changes, use `input()` with `effect()`:
+
+**Reference**: `libs/angular/classes/class-management/src/lib/components/unit-selector/unit-selector.component.ts:355-389`
+
+Pattern:
+```typescript
+readonly ageGroup = input<string>('');
+private previousAgeGroup = '';
+
+constructor() {
+    effect(() => {
+        const currentAgeGroup = this.ageGroup();
+        if (currentAgeGroup !== this.previousAgeGroup) {
+            this.previousAgeGroup = currentAgeGroup;
+            this.selectedUnitIds.set([]);
+            this.selectionChange.emit([]);
+            this.loadUnits();
+        }
+    });
+    this.loadUnits();
+}
+```
+
+This pattern tracks input changes and triggers side effects (like API calls) when they change.
+
+## Confirmation Dialogs
+
+Use Angular Material `MatDialog` for confirmation prompts.
+
+**Reference**: `libs/angular/classes/class-management/src/lib/components/unit-selector/unit-selector.component.ts:483-493`
+
+Pattern:
+```typescript
+this.dialog
+    .open(UnitLimitWarningDialogComponent)
+    .afterClosed()
+    .subscribe((confirmed) => {
+        if (confirmed) {
+            // User confirmed action
+        }
+    });
+```
+
+**Dialog component example**: `libs/angular/classes/class-management/src/lib/components/unit-selector/unit-limit-warning-dialog.component.ts`
+
+Dialog components use:
+- `mat-dialog-title` for header
+- `mat-dialog-content` for body
+- `mat-dialog-actions` for buttons
+- `[mat-dialog-close]="value"` to close with a result
+
 ## Styling Patterns
 
 ### UI Component Libraries

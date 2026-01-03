@@ -3,32 +3,49 @@ import { DatabaseUtility } from '@sol/firebase/database';
 import { type DocumentReference } from 'firebase-admin/firestore';
 import { Functions } from '@sol/firebase/functions';
 
+function extractIdFromRef(ref: unknown): string | null {
+    if (!ref) return null;
+    // Handle DocumentReference objects
+    if (typeof ref === 'object' && 'id' in ref && typeof (ref as DocumentReference).id === 'string') {
+        return (ref as DocumentReference).id;
+    }
+    // Handle case where it might already be a string
+    if (typeof ref === 'string') {
+        return ref;
+    }
+    return null;
+}
+
 export const fullUnitsAndPaths = Functions.endpoint.handle(
     async (request, response) => {
         const paths = await getPaths();
         const units = await getUnits();
 
-        const responsePaths = paths.map((path) => ({
-            id: path.id,
-            name: path.name,
-            description: path.description,
-            unitIds:
-                (
-                    path.requirements as
-                    | Array<DocumentReference>
-                    | undefined
-                )?.map((reference) => reference.id) ?? [],
-            electives:
-                path.electives?.map((elective) => ({
+        const responsePaths = paths.map((path) => {
+            const requirementRefs = (path.requirements as Array<unknown>) ?? [];
+            const unitIds = requirementRefs
+                .map(extractIdFromRef)
+                .filter((id): id is string => id !== null);
+
+            const electives = (path.electives ?? []).map((elective) => {
+                const optionRefs = (elective.options as Array<unknown>) ?? [];
+                const electiveUnitIds = optionRefs
+                    .map(extractIdFromRef)
+                    .filter((id): id is string => id !== null);
+                return {
                     name: elective.name,
-                    unitIds:
-                        (
-                            elective.options as
-                            | Array<DocumentReference>
-                            | undefined
-                        )?.map((reference) => reference.id) ?? [],
-                })) ?? [],
-        }));
+                    unitIds: electiveUnitIds,
+                };
+            });
+
+            return {
+                id: path.id,
+                name: path.name,
+                description: path.description,
+                unitIds,
+                electives,
+            };
+        });
 
         const responseUnits = units
             .map((unit) => ({
@@ -48,29 +65,52 @@ export const fullUnitsAndPaths = Functions.endpoint.handle(
                     [unit.id]: unit,
                 }),
                 {}
-            )
+            );
 
         response.send({
             paths: responsePaths,
-            units: responseUnits
+            units: responseUnits,
         });
     }
 );
 
 async function getPaths(): Promise<Array<PathDbEntry>> {
-    const pathsCollection = await DatabaseUtility.getCollectionRef('paths');
+    const db = DatabaseUtility.getDatabase();
+    const pathsSnapshot = await db.collection('paths').get();
 
-    const pathsDocuments = await pathsCollection.listDocuments();
+    const paths = await Promise.all(
+        pathsSnapshot.docs.map(async (doc) => {
+            const data = doc.data();
 
-    const paths = await DatabaseUtility.getHydratedDocuments(pathsDocuments);
-    return paths as unknown as Array<PathDbEntry>;
+            // Fetch electives subcollection
+            const electivesSnapshot = await doc.ref.collection('electives').get();
+            const electives = electivesSnapshot.docs.map((electiveDoc) => {
+                const electiveData = electiveDoc.data();
+                return {
+                    name: electiveData.name ?? '',
+                    options: electiveData.options ?? [],
+                };
+            });
+
+            return {
+                id: doc.id,
+                name: data.name,
+                description: data.description,
+                requirements: data.requirements,
+                electives,
+            };
+        })
+    );
+
+    return paths as Array<PathDbEntry>;
 }
 
 async function getUnits(): Promise<Array<UnitDbEntry>> {
-    const unitsCollection = await DatabaseUtility.getCollectionRef('units');
+    const db = DatabaseUtility.getDatabase();
+    const unitsSnapshot = await db.collection('units').get();
 
-    const unitsDocuments = await unitsCollection.listDocuments();
-
-    const units = await DatabaseUtility.getHydratedDocuments(unitsDocuments);
-    return units as unknown as Array<UnitDbEntry>;
+    return unitsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+    })) as Array<UnitDbEntry>;
 }

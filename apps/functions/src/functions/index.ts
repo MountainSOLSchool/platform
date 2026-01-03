@@ -25,6 +25,7 @@ export { onSuccessfulEnrollDeleteDraft } from '@sol/firebase/enrollment-function
 export { deleteEnrollmentDraft } from '@sol/firebase/enrollment-functions/delete-enrollment-draft';
 export { allStudents } from '@sol/firebase/enrollment-functions/all-students';
 export { fullUnitsAndPaths } from '@sol/firebase/enrollment-functions/full-units-and-paths';
+export { getAgeGroupUnits } from '@sol/firebase/enrollment-functions/get-age-group-units';
 export { getCompletedUnits } from '@sol/firebase/enrollment-functions/get-completed-units';
 export { updateCompletedUnits } from '@sol/firebase/enrollment-functions/update-completed-units';
 export { getStudentCompletedUnits } from '@sol/firebase/enrollment-functions/get-student-completed-units';
@@ -33,3 +34,14 @@ export { studentInfoSheet } from '@sol/firebase/enrollment-functions/student-inf
 export { donateVenmo } from '@sol/firebase/enrollment-functions/donate-venmo';
 export { donate } from '@sol/firebase/enrollment-functions/donate';
 export { payment } from '@sol/firebase/enrollment-functions/payment';
+export {
+    createClass,
+    updateClass,
+    getInstructors,
+    getClassesForAdmin,
+    getClassForEdit,
+    createSemester,
+    getClassTypes,
+    getLocations,
+    updateActiveSemesterConfig,
+} from '@sol/firebase/enrollment-functions/class-admin';

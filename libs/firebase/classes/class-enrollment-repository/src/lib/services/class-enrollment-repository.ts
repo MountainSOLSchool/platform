@@ -64,6 +64,45 @@ export class ClassEnrollmentRepository {
         );
     }
 
+    static async getEnrollmentsForStudents(
+        studentIds: string[]
+    ): Promise<Array<SemesterEnrollment>> {
+        if (studentIds.length === 0) {
+            return [];
+        }
+
+        // Firestore 'in' queries are limited to 30 items
+        const chunks: string[][] = [];
+        for (let i = 0; i < studentIds.length; i += 30) {
+            chunks.push(studentIds.slice(i, i + 30));
+        }
+
+        const results: SemesterEnrollment[] = [];
+        for (const chunk of chunks) {
+            const snapshot = await this.database
+                .collection('enrollment')
+                .where('studentId', 'in', chunk)
+                .where('status', '==', 'enrolled')
+                .get();
+
+            for (const doc of snapshot.docs) {
+                const dbo = doc.data();
+                results.push({
+                    studentName: dbo.studentName,
+                    studentId: dbo.studentId,
+                    finalCost: dbo.finalCost,
+                    classIds: dbo.classIds,
+                    classes: dbo.classes,
+                    transactionId: dbo.transactionId,
+                    timestamp: dbo.timestamp,
+                    discounts: dbo.discounts,
+                });
+            }
+        }
+
+        return results;
+    }
+
     static async getCurrentUserCompletedEnrollments(
         request: Request,
         response: express.Response
