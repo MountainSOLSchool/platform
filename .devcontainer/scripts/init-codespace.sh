@@ -2,30 +2,38 @@
 # Codespace Initialization Script
 # Automatically configures Firebase, ngrok, and SSH on container start
 
-set -e
-
 echo "=== Initializing Codespace ==="
 
 # --- Firebase Setup (Service Account) ---
 CREDS_FILE="$HOME/.config/firebase-service-account.json"
+mkdir -p "$HOME/.config"
 
 if [ -n "$GOOGLE_APPLICATION_CREDENTIALS_JSON" ]; then
     echo "✓ Firebase service account found, configuring..."
 
-    # Decode base64 and write to file
-    echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" | base64 -d > "$CREDS_FILE"
+    # Decode base64 (strip whitespace/newlines first) and write to file
+    echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" | tr -d '[:space:]' | base64 -d > "$CREDS_FILE" 2>/dev/null
 
-    # Set environment variable for Firebase CLI and Admin SDK
-    export GOOGLE_APPLICATION_CREDENTIALS="$CREDS_FILE"
+    if [ -s "$CREDS_FILE" ]; then
+        # Set environment variable for Firebase CLI and Admin SDK
+        export GOOGLE_APPLICATION_CREDENTIALS="$CREDS_FILE"
 
-    # Add to bashrc for future shells
-    echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$CREDS_FILE\"" >> "$HOME/.bashrc"
+        # Add to bashrc for future shells (only if not already there)
+        if ! grep -q "GOOGLE_APPLICATION_CREDENTIALS" "$HOME/.bashrc"; then
+            echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$CREDS_FILE\"" >> "$HOME/.bashrc"
+        fi
 
-    echo "  Service account configured at $CREDS_FILE"
+        echo "  Service account configured at $CREDS_FILE"
+    else
+        echo "  ⚠ Failed to decode service account - check base64 encoding"
+        echo "  Re-encode with: base64 -i your-key.json | tr -d '\\n' | pbcopy"
+    fi
 elif [ -n "$FIREBASE_TOKEN" ]; then
     echo "✓ Firebase token found (legacy), configuring..."
     export FIREBASE_TOKEN="$FIREBASE_TOKEN"
-    echo "export FIREBASE_TOKEN=\"$FIREBASE_TOKEN\"" >> "$HOME/.bashrc"
+    if ! grep -q "FIREBASE_TOKEN" "$HOME/.bashrc"; then
+        echo "export FIREBASE_TOKEN=\"$FIREBASE_TOKEN\"" >> "$HOME/.bashrc"
+    fi
     echo "  Firebase CLI will use token from environment"
 else
     echo "⚠ Firebase credentials not set"
