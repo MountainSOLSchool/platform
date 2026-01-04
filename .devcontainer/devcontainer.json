@@ -22,6 +22,9 @@
         "NGROK_AUTHTOKEN": {
             "description": "ngrok auth token for SSH tunneling. Get from: https://dashboard.ngrok.com"
         },
+        "NGROK_TCP_ADDRESS": {
+            "description": "Static ngrok TCP address for SSH (e.g., 7.tcp.ngrok.io:20072). Reserve at: https://dashboard.ngrok.com/cloud-edge/tcp-addresses"
+        },
         "SSH_PASSWORD": {
             "description": "Password for SSH access via Termius (for the 'node' user)"
         }

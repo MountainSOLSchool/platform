@@ -57,11 +57,28 @@ if ! grep -q "^PasswordAuthentication yes" /etc/ssh/sshd_config; then
     sudo service ssh restart
 fi
 
+# --- Auto-start ngrok SSH tunnel (if static address configured) ---
+if [ -n "$NGROK_AUTHTOKEN" ] && [ -n "$NGROK_TCP_ADDRESS" ]; then
+    echo "✓ Starting ngrok SSH tunnel with static address..."
+    nohup ngrok tcp --region=us --remote-addr="$NGROK_TCP_ADDRESS" 2222 > /tmp/ngrok.log 2>&1 &
+    echo "  Tunnel running at $NGROK_TCP_ADDRESS → localhost:2222"
+    echo "  Logs: /tmp/ngrok.log"
+fi
+
 echo ""
 echo "=== Codespace Ready ==="
 echo ""
+if [ -n "$NGROK_TCP_ADDRESS" ]; then
+    echo "SSH Access (Termius):"
+    echo "  Host: $(echo $NGROK_TCP_ADDRESS | cut -d: -f1)"
+    echo "  Port: $(echo $NGROK_TCP_ADDRESS | cut -d: -f2)"
+    echo "  User: node"
+    echo ""
+fi
 echo "Quick commands:"
 echo "  Start Angular app:    npx nx run enrollment-portal:serve:development"
 echo "  Start Firebase:       firebase emulators:start"
-echo "  Start SSH tunnel:     ngrok tcp 2222"
+if [ -z "$NGROK_TCP_ADDRESS" ]; then
+    echo "  Start SSH tunnel:     ngrok tcp 2222"
+fi
 echo ""
