@@ -36,18 +36,26 @@ firebase emulators:start
 - 8080: Firestore
 - 9099: Auth
 
+### Codespaces Secrets (Recommended)
+
+For automatic setup, add these secrets to your repo:
+**Repo → Settings → Secrets and variables → Codespaces**
+
+| Secret | Description | How to Get |
+|--------|-------------|------------|
+| `FIREBASE_TOKEN` | Firebase CI auth | Run `firebase login:ci` locally |
+| `NGROK_AUTHTOKEN` | ngrok tunnel auth | https://dashboard.ngrok.com |
+| `SSH_PASSWORD` | Termius login password | Choose any password |
+
+With secrets configured, the init script runs automatically on container start.
+
 ### Mobile SSH Access (Termius)
 
 To connect from Termius or other SSH clients on mobile:
 
-**One-time setup** (get free token from https://ngrok.com):
-```bash
-ngrok config add-authtoken YOUR_TOKEN
-```
-
 **Start SSH tunnel**:
 ```bash
-.devcontainer/scripts/ssh-tunnel.sh
+ngrok tcp 2222
 ```
 
 This displays connection details (host, port) to enter in Termius. Username is `node`.
