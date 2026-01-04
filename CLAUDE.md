@@ -10,7 +10,8 @@ This repository is configured for GitHub Codespaces, enabling development from a
 
 **What's pre-configured**:
 - Node 22 with npm
-- Firebase CLI and Claude Code CLI installed globally
+- Firebase CLI, Claude Code CLI, GitHub CLI, and ngrok installed globally
+- SSH server for terminal access from mobile apps (Termius)
 - Port forwarding for all dev servers and emulators
 - VS Code extensions for Angular, React, Firebase, and NX
 
@@ -34,6 +35,22 @@ firebase emulators:start
 - 5001: Firebase Functions
 - 8080: Firestore
 - 9099: Auth
+
+### Mobile SSH Access (Termius)
+
+To connect from Termius or other SSH clients on mobile:
+
+**One-time setup** (get free token from https://ngrok.com):
+```bash
+ngrok config add-authtoken YOUR_TOKEN
+```
+
+**Start SSH tunnel**:
+```bash
+.devcontainer/scripts/ssh-tunnel.sh
+```
+
+This displays connection details (host, port) to enter in Termius. Username is `node`.
 
 ## Documents
 
