@@ -9,9 +9,13 @@
         },
         "ghcr.io/devcontainers/features/sshd:1": {
             "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "installDirectlyFromGitHubRelease": true,
+            "version": "latest"
         }
     },
-    "forwardPorts": [4200, 4201, 5001, 4000, 9099, 8080],
+    "forwardPorts": [4200, 4201, 5001, 4000, 9099, 8080, 2222],
     "portsAttributes": {
         "4200": {
             "label": "Angular (enrollment-portal)",
@@ -35,6 +39,10 @@
         },
         "8080": {
             "label": "Firebase Firestore Emulator",
+            "onAutoForward": "silent"
+        },
+        "2222": {
+            "label": "SSH",
             "onAutoForward": "silent"
         }
     },
