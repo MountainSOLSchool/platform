@@ -2,6 +2,58 @@
 
 This document describes the development workflow, git practices, and deployment process for the Mountain SOL platform.
 
+## GitHub Codespaces (Mobile Development)
+
+The repository is configured for GitHub Codespaces, enabling development from any device including mobile phones/tablets via Termius.
+
+### Setup Files
+
+- `.devcontainer/devcontainer.json` - Container configuration
+- `.devcontainer/scripts/init-codespace.sh` - Auto-init script (runs on start)
+- `.devcontainer/scripts/ssh-tunnel.sh` - Manual SSH tunnel helper
+
+### Required Secrets
+
+Add these in **Repo → Settings → Secrets and variables → Codespaces**:
+
+| Secret | Purpose | How to Generate |
+|--------|---------|-----------------|
+| `FIREBASE_TOKEN` | Firebase CLI authentication | Run `firebase login:ci` locally |
+| `NGROK_AUTHTOKEN` | SSH tunnel for Termius | https://dashboard.ngrok.com |
+| `SSH_PASSWORD` | Termius login password | Choose any password |
+
+### Creating a Codespace
+
+1. Go to repo on GitHub
+2. Click **Code → Codespaces → Create codespace**
+3. Wait for container build (~3-5 min first time)
+4. Init script runs automatically, configuring Firebase and SSH
+
+### Connecting from Termius (Mobile)
+
+1. In Codespace terminal: `ngrok tcp 2222`
+2. Note the host and port (e.g., `4.tcp.ngrok.io:12345`)
+3. In Termius, create host with:
+   - **Hostname**: `4.tcp.ngrok.io`
+   - **Port**: `12345`
+   - **Username**: `node`
+   - **Password**: (your `SSH_PASSWORD` secret)
+
+### Viewing Web Apps on Mobile
+
+1. Start the dev server: `npx nx run enrollment-portal:serve:development`
+2. Get the forwarded URL: `gh codespace ports`
+3. Set port 4200 to public: `gh codespace ports visibility 4200:public -c $CODESPACE_NAME`
+4. Open the URL in mobile Safari/Chrome
+
+### What's Pre-installed
+
+- Node 22, npm
+- Firebase CLI, GitHub CLI, Claude Code CLI
+- ngrok for SSH tunneling
+- Java 21 (for Firebase emulators)
+- VS Code extensions for Angular, React, Firebase, NX
+
 ## Local Development Setup
 
 ### Prerequisites
