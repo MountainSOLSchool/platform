@@ -6,6 +6,9 @@
             "version": "21",
             "installGradle": false,
             "installMaven": false
+        },
+        "ghcr.io/devcontainers/features/sshd:1": {
+            "version": "latest"
         }
     },
     "forwardPorts": [4200, 4201, 5001, 4000, 9099, 8080],
