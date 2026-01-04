@@ -2,6 +2,39 @@
 
 This directory contains documentation about the Mountain SOL platform codebase patterns, conventions, and workflows. These documents are designed to help AI assistants (and developers) understand the project structure and coding standards.
 
+## GitHub Codespaces / Mobile Development
+
+This repository is configured for GitHub Codespaces, enabling development from any device including mobile.
+
+**Setup**: `.devcontainer/devcontainer.json`
+
+**What's pre-configured**:
+- Node 22 with npm
+- Firebase CLI and Claude Code CLI installed globally
+- Port forwarding for all dev servers and emulators
+- VS Code extensions for Angular, React, Firebase, and NX
+
+**Quick Start in Codespaces**:
+```bash
+# Dependencies are auto-installed via postCreateCommand
+# Start the Angular enrollment portal
+npx nx run enrollment-portal:serve:development
+
+# Or start the Next.js student portal
+npx nx run student-portal:serve:development
+
+# Or start Firebase emulators
+firebase emulators:start
+```
+
+**Forwarded Ports**:
+- 4200: Angular enrollment-portal
+- 4201: Next.js student-portal
+- 4000: Firebase Emulator UI
+- 5001: Firebase Functions
+- 8080: Firestore
+- 9099: Auth
+
 ## Documents
 
 ### [Angular Patterns](./ai/angular-patterns.md)
@@ -111,27 +144,38 @@ import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 
 ```
 apps/
-  enrollment-portal/          # Main Angular app
+  enrollment-portal/          # Angular app (localhost:4200)
+  student-portal/             # Next.js app (localhost:4201)
   functions/                  # Firebase Functions entry
 
 libs/
-  angular/
+  angular/                    # Angular-specific libraries
     classes/                  # Class enrollment
     braintree-client/         # Payment UI
     auth/                     # Authentication
     request/                  # HTTP utilities
+  react/                      # React-specific libraries
+    auth/                     # React auth hooks
+    request/                  # React request utilities
   firebase/
     enrollment-functions/     # Cloud Functions
     functions-api/            # Functions client
     config/                   # Configuration
+  ts/                         # Framework-agnostic TypeScript
+    payments/domain/          # Shared payment types
+    student/domain/           # Shared student types
 ```
 
 ### Key Commands
 
 ```bash
-# Development
-npx nx run enrollment-portal:serve:development
-npx nx run functions:serve:development
+# Development - Frontend Apps
+npx nx run enrollment-portal:serve:development  # Angular → localhost:4200
+npx nx run student-portal:serve:development     # Next.js → localhost:4201
+
+# Development - Firebase
+npx nx run functions:serve:development          # Functions only
+firebase emulators:start                        # All emulators
 
 # Testing
 npx nx affected:test
@@ -139,9 +183,25 @@ npx nx affected:test
 # Building
 npx nx affected:build
 
+# Linting
+npx nx affected:lint
+npx nx lint --fix
+
+# Dependency Graph
+npx nx graph
+
 # Deployment (automated via GitHub Actions)
 git push origin main  # Triggers deployment
 ```
+
+### Firebase Emulator Ports
+
+| Service   | Port | URL                    |
+|-----------|------|------------------------|
+| Functions | 5001 | http://localhost:5001  |
+| Firestore | 8080 | http://localhost:8080  |
+| Auth      | 9099 | http://localhost:9099  |
+| UI        | 4000 | http://localhost:4000  |
 
 ## Coding Principles
 

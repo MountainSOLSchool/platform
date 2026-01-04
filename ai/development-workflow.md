@@ -39,10 +39,13 @@ These files are gitignored and contain sensitive configuration.
 ### Frontend Development
 
 ```bash
-# Serve Angular app with hot reload
+# Serve Angular enrollment portal with hot reload
 npx nx run enrollment-portal:serve:development
-
 # Opens at http://localhost:4200
+
+# Serve Next.js student portal with hot reload
+npx nx run student-portal:serve:development
+# Opens at http://localhost:4201
 ```
 
 ### Firebase Emulators
@@ -499,7 +502,8 @@ Before submitting code for review:
 
 ```bash
 # Development
-npx nx run enrollment-portal:serve:development  # Serve Angular app
+npx nx run enrollment-portal:serve:development  # Serve Angular app → localhost:4200
+npx nx run student-portal:serve:development     # Serve Next.js app → localhost:4201
 npx nx run functions:serve:development          # Serve Firebase functions
 firebase emulators:start                        # Start Firebase emulators
 

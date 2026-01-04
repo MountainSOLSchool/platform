@@ -1,0 +1,69 @@
+{
+    "name": "Mountain SOL Platform",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+    "features": {
+        "ghcr.io/devcontainers/features/java:1": {
+            "version": "21",
+            "installGradle": false,
+            "installMaven": false
+        }
+    },
+    "forwardPorts": [4200, 4201, 5001, 4000, 9099, 8080],
+    "portsAttributes": {
+        "4200": {
+            "label": "Angular (enrollment-portal)",
+            "onAutoForward": "notify"
+        },
+        "4201": {
+            "label": "Next.js (student-portal)",
+            "onAutoForward": "notify"
+        },
+        "5001": {
+            "label": "Firebase Functions Emulator",
+            "onAutoForward": "silent"
+        },
+        "4000": {
+            "label": "Firebase Emulator UI",
+            "onAutoForward": "notify"
+        },
+        "9099": {
+            "label": "Firebase Auth Emulator",
+            "onAutoForward": "silent"
+        },
+        "8080": {
+            "label": "Firebase Firestore Emulator",
+            "onAutoForward": "silent"
+        }
+    },
+    "postCreateCommand": "npm ci && npm install -g firebase-tools @anthropic-ai/claude-code",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "angular.ng-template",
+                "nrwl.angular-console",
+                "esbenp.prettier-vscode",
+                "dbaeumer.vscode-eslint",
+                "bradlc.vscode-tailwindcss",
+                "ms-vscode.vscode-typescript-next",
+                "msjsdiag.vscode-react-native",
+                "dsznajder.es7-react-js-snippets",
+                "toba.vsfire",
+                "googlecloudtools.cloudcode",
+                "firsttris.vscode-jest-runner",
+                "orta.vscode-jest",
+                "eamodio.gitlens",
+                "github.copilot",
+                "github.vscode-pull-request-github"
+            ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "esbenp.prettier-vscode",
+                "editor.codeActionsOnSave": {
+                    "source.fixAll.eslint": "explicit"
+                },
+                "typescript.preferences.importModuleSpecifier": "non-relative",
+                "typescript.tsdk": "node_modules/typescript/lib"
+            }
+        }
+    }
+}
