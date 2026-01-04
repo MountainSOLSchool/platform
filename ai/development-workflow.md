@@ -18,9 +18,15 @@ Add these in **Repo → Settings → Secrets and variables → Codespaces**:
 
 | Secret | Purpose | How to Generate |
 |--------|---------|-----------------|
-| `FIREBASE_TOKEN` | Firebase CLI authentication | Run `firebase login:ci` locally |
+| `GOOGLE_APPLICATION_CREDENTIALS_JSON` | Firebase service account (base64) | See below |
 | `NGROK_AUTHTOKEN` | SSH tunnel for Termius | https://dashboard.ngrok.com |
 | `SSH_PASSWORD` | Termius login password | Choose any password |
+
+**Generating Firebase service account secret:**
+1. Go to [Firebase Console](https://console.firebase.google.com) → Project Settings → Service accounts
+2. Click **Generate new private key** → Download JSON
+3. Base64 encode: `base64 -i ~/Downloads/your-key.json | pbcopy` (Mac)
+4. Paste as the `GOOGLE_APPLICATION_CREDENTIALS_JSON` secret value
 
 ### Creating a Codespace
 

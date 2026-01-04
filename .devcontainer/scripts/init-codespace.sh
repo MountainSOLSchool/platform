@@ -6,14 +6,30 @@ set -e
 
 echo "=== Initializing Codespace ==="
 
-# --- Firebase Setup ---
-if [ -n "$FIREBASE_TOKEN" ]; then
-    echo "✓ Firebase token found, configuring..."
-    # Firebase CLI uses FIREBASE_TOKEN env var automatically for CI
+# --- Firebase Setup (Service Account) ---
+CREDS_FILE="$HOME/.config/firebase-service-account.json"
+
+if [ -n "$GOOGLE_APPLICATION_CREDENTIALS_JSON" ]; then
+    echo "✓ Firebase service account found, configuring..."
+
+    # Decode base64 and write to file
+    echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" | base64 -d > "$CREDS_FILE"
+
+    # Set environment variable for Firebase CLI and Admin SDK
+    export GOOGLE_APPLICATION_CREDENTIALS="$CREDS_FILE"
+
+    # Add to bashrc for future shells
+    echo "export GOOGLE_APPLICATION_CREDENTIALS=\"$CREDS_FILE\"" >> "$HOME/.bashrc"
+
+    echo "  Service account configured at $CREDS_FILE"
+elif [ -n "$FIREBASE_TOKEN" ]; then
+    echo "✓ Firebase token found (legacy), configuring..."
     export FIREBASE_TOKEN="$FIREBASE_TOKEN"
+    echo "export FIREBASE_TOKEN=\"$FIREBASE_TOKEN\"" >> "$HOME/.bashrc"
     echo "  Firebase CLI will use token from environment"
 else
-    echo "⚠ FIREBASE_TOKEN not set - run 'firebase login:ci' locally and add to Codespaces secrets"
+    echo "⚠ Firebase credentials not set"
+    echo "  Add GOOGLE_APPLICATION_CREDENTIALS_JSON (base64 service account) to Codespaces secrets"
 fi
 
 # --- ngrok Setup ---

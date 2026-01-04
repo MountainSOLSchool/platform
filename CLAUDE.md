@@ -43,9 +43,14 @@ For automatic setup, add these secrets to your repo:
 
 | Secret | Description | How to Get |
 |--------|-------------|------------|
-| `FIREBASE_TOKEN` | Firebase CI auth | Run `firebase login:ci` locally |
+| `GOOGLE_APPLICATION_CREDENTIALS_JSON` | Firebase service account (base64) | See below |
 | `NGROK_AUTHTOKEN` | ngrok tunnel auth | https://dashboard.ngrok.com |
 | `SSH_PASSWORD` | Termius login password | Choose any password |
+
+**Firebase service account setup:**
+1. Firebase Console → Project Settings → Service accounts → Generate new private key
+2. Base64 encode: `base64 -i ~/Downloads/your-key.json | pbcopy`
+3. Paste as secret value
 
 With secrets configured, the init script runs automatically on container start.
 

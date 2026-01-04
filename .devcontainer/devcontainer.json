@@ -16,8 +16,8 @@
         }
     },
     "secrets": {
-        "FIREBASE_TOKEN": {
-            "description": "Firebase CI token for authentication. Generate with: firebase login:ci"
+        "GOOGLE_APPLICATION_CREDENTIALS_JSON": {
+            "description": "Base64-encoded Firebase service account JSON. Generate key in Firebase Console → Project Settings → Service accounts"
         },
         "NGROK_AUTHTOKEN": {
             "description": "ngrok auth token for SSH tunneling. Get from: https://dashboard.ngrok.com"
