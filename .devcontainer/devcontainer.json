@@ -61,35 +61,5 @@
         }
     },
     "postCreateCommand": "npm ci && npm install -g firebase-tools && curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo 'deb https://ngrok-agent.s3.amazonaws.com buster main' | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok -y",
-    "postStartCommand": ".devcontainer/scripts/init-codespace.sh",
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "angular.ng-template",
-                "nrwl.angular-console",
-                "esbenp.prettier-vscode",
-                "dbaeumer.vscode-eslint",
-                "bradlc.vscode-tailwindcss",
-                "ms-vscode.vscode-typescript-next",
-                "msjsdiag.vscode-react-native",
-                "dsznajder.es7-react-js-snippets",
-                "toba.vsfire",
-                "googlecloudtools.cloudcode",
-                "firsttris.vscode-jest-runner",
-                "orta.vscode-jest",
-                "eamodio.gitlens",
-                "github.copilot",
-                "github.vscode-pull-request-github"
-            ],
-            "settings": {
-                "editor.formatOnSave": true,
-                "editor.defaultFormatter": "esbenp.prettier-vscode",
-                "editor.codeActionsOnSave": {
-                    "source.fixAll.eslint": "explicit"
-                },
-                "typescript.preferences.importModuleSpecifier": "non-relative",
-                "typescript.tsdk": "node_modules/typescript/lib"
-            }
-        }
-    }
+    "postStartCommand": ".devcontainer/scripts/init-codespace.sh"
 }
