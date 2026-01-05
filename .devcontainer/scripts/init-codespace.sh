@@ -24,6 +24,14 @@ if [ -n "$GOOGLE_APPLICATION_CREDENTIALS_JSON" ]; then
         fi
 
         echo "  Service account configured at $CREDS_FILE"
+
+        # Also set up as Application Default Credentials for Firebase CLI
+        mkdir -p "$HOME/.config/gcloud"
+        cp "$CREDS_FILE" "$HOME/.config/gcloud/application_default_credentials.json"
+        echo "  Application Default Credentials configured"
+
+        # Set active Firebase project
+        cd /workspaces/platform 2>/dev/null && firebase use mountain-sol-platform --non-interactive 2>/dev/null && echo "  Firebase project activated: mountain-sol-platform" || echo "  ⚠ Could not activate Firebase project"
     else
         echo "  ⚠ Failed to decode service account - check base64 encoding"
         echo "  Re-encode with: base64 -i your-key.json | tr -d '\\n' | pbcopy"

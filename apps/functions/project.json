@@ -30,7 +30,7 @@
             "options": {
                 "commands": [
                     "npx nx run functions:build --watch",
-                    "firebase emulators:start --only functions --project=dev"
+                    "firebase serve --only functions --project=dev --port=5001"
                 ],
                 "parallel": true
             },
@@ -38,14 +38,14 @@
                 "production": {
                     "commands": [
                         "npx nx run functions:build --watch",
-                        "firebase emulators:start --only functions --project=prod"
+                        "firebase serve --only functions --project=prod --port=5001"
                     ],
                     "parallel": true
                 },
                 "development": {
                     "commands": [
                         "npx nx run functions:build --watch",
-                        "firebase emulators:start --only functions --project=dev"
+                        "firebase serve --only functions --project=dev --port=5001"
                     ],
                     "parallel": true
                 }
