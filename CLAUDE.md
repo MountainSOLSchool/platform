@@ -4,66 +4,81 @@ This directory contains documentation about the Mountain SOL platform codebase p
 
 ## GitHub Codespaces / Mobile Development
 
-This repository is configured for GitHub Codespaces, enabling development from any device including mobile.
+This repository is configured for GitHub Codespaces, enabling development from any device including mobile (via Termius SSH app).
 
 **Setup**: `.devcontainer/devcontainer.json`
 
 **What's pre-configured**:
 - Node 22 with npm
+- Java 21 (for Firebase emulators)
 - Firebase CLI, GitHub CLI, and ngrok installed globally
 - SSH server for terminal access from mobile apps (Termius)
-- Port forwarding for all dev servers and emulators
-- VS Code extensions for Angular, React, Firebase, and NX
+- Port forwarding for all dev servers
 
 **Quick Start in Codespaces**:
 ```bash
-# Dependencies are auto-installed via postCreateCommand
-# Start the Angular enrollment portal
-npx nx run enrollment-portal:serve:development
+# One command to start everything:
+dev
 
-# Or start the Next.js student portal
-npx nx run student-portal:serve:development
-
-# Or start Firebase emulators
-firebase emulators:start
+# This builds Functions, starts Firebase serve, starts Angular,
+# and outputs the Safari URL for mobile testing
 ```
+
+**Architecture in Development**:
+```
+Browser → Angular (4200) → /api/* proxy → Functions (5001) → Remote Firestore/Auth
+```
+
+The Angular dev server proxies `/api/*` requests to local Firebase Functions, which connect to the production Firestore and Auth. This works identically on localhost and in Codespaces.
 
 **Forwarded Ports**:
 - 4200: Angular enrollment-portal
 - 4201: Next.js student-portal
-- 4000: Firebase Emulator UI
 - 5001: Firebase Functions
-- 8080: Firestore
-- 9099: Auth
 
-### Codespaces Secrets (Recommended)
+### Codespaces Secrets (Required)
 
-For automatic setup, add these secrets to your repo:
-**Repo → Settings → Secrets and variables → Codespaces**
+Add these secrets to your repo: **Repo → Settings → Secrets and variables → Codespaces**
 
 | Secret | Description | How to Get |
 |--------|-------------|------------|
 | `GOOGLE_APPLICATION_CREDENTIALS_JSON` | Firebase service account (base64) | See below |
 | `NGROK_AUTHTOKEN` | ngrok tunnel auth | https://dashboard.ngrok.com |
+| `NGROK_TCP_ADDRESS` | Static ngrok address (optional) | ngrok dashboard → Cloud Edge → Endpoints |
 | `SSH_PASSWORD` | Termius login password | Choose any password |
 
 **Firebase service account setup:**
 1. Firebase Console → Project Settings → Service accounts → Generate new private key
 2. Base64 encode: `base64 -i ~/Downloads/your-key.json | pbcopy`
 3. Paste as secret value
+4. **Required IAM roles** for the service account:
+   - Firebase Admin
+   - Service Usage Consumer (`roles/serviceusage.serviceUsageConsumer`)
 
-With secrets configured, the init script runs automatically on container start.
+**Firebase Auth domain:**
+Add `app.github.dev` to Firebase Auth authorized domains:
+Firebase Console → Authentication → Settings → Authorized domains
 
 ### Mobile SSH Access (Termius)
 
 To connect from Termius or other SSH clients on mobile:
 
-**Start SSH tunnel**:
+**With static ngrok address** (recommended - configure `NGROK_TCP_ADDRESS` secret):
+- Tunnel starts automatically on Codespace start
+- Connection details shown in init script output
+
+**Without static address**:
 ```bash
 ngrok tcp 2222
 ```
 
-This displays connection details (host, port) to enter in Termius. Username is `node`.
+Connection details: Use the host/port shown. Username is `node`.
+
+### First-Time Codespace Setup
+
+1. Run `firebase login` to authenticate the Firebase CLI
+2. Run `dev` to start all servers
+3. Open the Safari URL on your phone to test
 
 ## Documents
 
