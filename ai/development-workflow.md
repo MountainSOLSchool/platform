@@ -67,7 +67,6 @@ Phone Safari → Angular (4200) → Local Functions (5001) → Remote Firebase (
 - Node 22, npm
 - Firebase CLI, GitHub CLI
 - ngrok for SSH tunneling
-- Java 21 (for Firebase emulators if needed)
 
 ## Local Development Setup
 
