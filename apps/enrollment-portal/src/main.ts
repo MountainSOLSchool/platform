@@ -42,17 +42,17 @@ bootstrapApplication(AppComponent, {
         provideFunctions(() => {
             const functions = getFunctions();
             if (!environment.remoteFunctions) {
-                if (environment.useProxyFunctions) {
-                    // Codespace: proxy through Angular dev server via same origin
-                    connectFunctionsEmulator(
-                        functions,
-                        window.location.hostname,
-                        window.location.protocol === 'https:' ? 443 : 80
-                    );
-                } else {
-                    // Local dev: connect directly to local Functions emulator
-                    connectFunctionsEmulator(functions, 'localhost', 5001);
-                }
+                // Dev mode: use same-origin proxy (works locally and in Codespaces)
+                const port = window.location.port
+                    ? parseInt(window.location.port, 10)
+                    : window.location.protocol === 'https:'
+                      ? 443
+                      : 80;
+                connectFunctionsEmulator(
+                    functions,
+                    window.location.hostname,
+                    port
+                );
             }
             return functions;
         }),

@@ -1,7 +1,7 @@
 #!/bin/bash
 # Start development servers and output Safari URL for mobile testing
 # Angular app (with proxy) → local Functions → remote Firestore/Auth
-# Mobile Safari can access Functions via same URL using /mountain-sol-platform/* proxy
+# Functions accessed via same-origin proxy: /mountain-sol-platform/*
 
 echo "🚀 Starting development servers..."
 
@@ -14,7 +14,7 @@ echo "  Functions starting on port 5001 (PID: $FUNCTIONS_PID)"
 sleep 10
 
 # Start Angular app in background (connects to local Functions via proxy)
-npx nx run enrollment-portal:serve:codespace &>/tmp/angular.log &
+npx nx run enrollment-portal:serve:development &>/tmp/angular.log &
 ANGULAR_PID=$!
 echo "  Angular app starting on port 4200 (PID: $ANGULAR_PID)"
 
