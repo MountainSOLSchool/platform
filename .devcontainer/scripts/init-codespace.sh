@@ -73,6 +73,11 @@ if [ -n "$NGROK_AUTHTOKEN" ] && [ -n "$NGROK_TCP_ADDRESS" ]; then
     echo "  Logs: /tmp/ngrok.log"
 fi
 
+# --- Add dev alias ---
+if ! grep -q "alias dev=" "$HOME/.bashrc"; then
+    echo "alias dev='/workspaces/platform/.devcontainer/scripts/dev.sh'" >> "$HOME/.bashrc"
+fi
+
 echo ""
 echo "=== Codespace Ready ==="
 echo ""
@@ -84,7 +89,7 @@ if [ -n "$NGROK_TCP_ADDRESS" ]; then
     echo ""
 fi
 echo "Quick commands:"
-echo "  Start Angular app:    npx nx run enrollment-portal:serve:development"
+echo "  dev                   Start servers & get Safari URL"
 echo "  Start Firebase:       firebase emulators:start"
 if [ -z "$NGROK_TCP_ADDRESS" ]; then
     echo "  Start SSH tunnel:     ngrok tcp 2222"
