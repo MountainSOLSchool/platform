@@ -3,6 +3,12 @@
 # Angular app (with proxy) → local Functions → remote Firestore/Auth
 # Functions accessed via same-origin proxy: /mountain-sol-platform/*
 
+# Kill any existing servers on our ports
+echo "🧹 Cleaning up existing servers..."
+lsof -ti:4200 | xargs kill -9 2>/dev/null
+lsof -ti:5001 | xargs kill -9 2>/dev/null
+sleep 1
+
 echo "🚀 Starting development servers..."
 
 # Start Firebase Functions in background (connects to remote Firestore/Auth)
