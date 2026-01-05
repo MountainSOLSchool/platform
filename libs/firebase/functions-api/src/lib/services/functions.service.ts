@@ -31,9 +31,9 @@ export class FirebaseFunctionsService {
         } else {
             // Dev mode: use /api/* proxy
             return this.http
-                .post<{ result: T }>(`/api/${resourcePath}`, { data: request })
+                .post<{ data: T }>(`/api/${resourcePath}`, { data: request })
                 .pipe(
-                    map((response) => response.result),
+                    map((response) => response.data),
                     catchError(() => of(RequestState.Error)),
                     startWith(RequestState.Loading)
                 );
