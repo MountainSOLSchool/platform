@@ -45,20 +45,29 @@ Add these in **Repo → Settings → Secrets and variables → Codespaces**:
    - **Username**: `node`
    - **Password**: (your `SSH_PASSWORD` secret)
 
-### Viewing Web Apps on Mobile
+### Starting Development Servers
 
-1. Start the dev server: `npx nx run enrollment-portal:serve:development`
-2. Get the forwarded URL: `gh codespace ports`
-3. Set port 4200 to public: `gh codespace ports visibility 4200:public -c $CODESPACE_NAME`
-4. Open the URL in mobile Safari/Chrome
+Run the `dev` command to start everything:
+```bash
+dev
+```
+
+This starts:
+1. **Firebase Functions** on port 5001 (connects to remote Firestore/Auth)
+2. **Angular app** on port 4200 (connects to local Functions)
+3. Outputs the Safari URL
+
+**Architecture**:
+```
+Phone Safari → Angular (4200) → Local Functions (5001) → Remote Firebase (Firestore, Auth)
+```
 
 ### What's Pre-installed
 
 - Node 22, npm
 - Firebase CLI, GitHub CLI
 - ngrok for SSH tunneling
-- Java 21 (for Firebase emulators)
-- VS Code extensions for Angular, React, Firebase, NX
+- Java 21 (for Firebase emulators if needed)
 
 ## Local Development Setup
 

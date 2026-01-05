@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    remoteFunctions: true,
+    remoteFunctions: false,
 };

@@ -1,13 +1,21 @@
 #!/bin/bash
 # Start development servers and output Safari URL
-# Connects to production Firebase (no local emulators)
+# Angular app → local Functions → remote Firestore/Auth
 
-echo "🚀 Starting development server..."
+echo "🚀 Starting development servers..."
 
-# Start Angular app in background (connects to production Firebase)
+# Start Firebase Functions in background (connects to remote Firestore/Auth)
+npx nx run functions:serve:development &>/tmp/functions.log &
+FUNCTIONS_PID=$!
+echo "  Functions starting on port 5001 (PID: $FUNCTIONS_PID)"
+
+# Wait for functions to compile
+sleep 10
+
+# Start Angular app in background (connects to local Functions)
 npx nx run enrollment-portal:serve:development &>/tmp/angular.log &
 ANGULAR_PID=$!
-echo "  Angular app starting (PID: $ANGULAR_PID)"
+echo "  Angular app starting on port 4200 (PID: $ANGULAR_PID)"
 
 # Wait for Angular to compile
 echo "  Waiting for Angular to compile..."
@@ -26,12 +34,15 @@ fi
 
 echo ""
 echo "=========================================="
-echo "  ✅ Development server running!"
+echo "  ✅ Development servers running!"
 echo "=========================================="
 echo ""
 echo "  📱 Safari URL:"
 echo "  $PORT_URL"
 echo ""
-echo "  Log: tail -f /tmp/angular.log"
-echo "  Stop: kill $ANGULAR_PID"
+echo "  Logs:"
+echo "    Functions: tail -f /tmp/functions.log"
+echo "    Angular:   tail -f /tmp/angular.log"
+echo ""
+echo "  Stop all: kill $FUNCTIONS_PID $ANGULAR_PID"
 echo "=========================================="
