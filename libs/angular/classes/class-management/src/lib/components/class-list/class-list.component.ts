@@ -543,17 +543,16 @@ export class AdminClassListComponent {
             width: '450px',
         });
 
-        dialogRef.closed.subscribe(
-            (result: CopyClassDialogResult | undefined) => {
-                if (result) {
-                    this.router.navigate(
-                        ['/admin/classes/management/edit', result.classId],
-                        {
-                            queryParams: { semesterId: result.semesterId },
-                        }
-                    );
-                }
+        dialogRef.closed.subscribe((result) => {
+            const copyResult = result as CopyClassDialogResult | undefined;
+            if (copyResult) {
+                this.router.navigate(
+                    ['/admin/classes/management/edit', copyResult.classId],
+                    {
+                        queryParams: { semesterId: copyResult.semesterId },
+                    }
+                );
             }
-        );
+        });
     }
 }
