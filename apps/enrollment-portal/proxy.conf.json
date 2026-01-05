@@ -1,8 +1,11 @@
 {
-    "/mountain-sol-platform/*": {
+    "/api/*": {
         "target": "http://localhost:5001",
         "secure": false,
         "logLevel": "debug",
-        "changeOrigin": true
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/api": "/mountain-sol-platform/us-central1"
+        }
     }
 }

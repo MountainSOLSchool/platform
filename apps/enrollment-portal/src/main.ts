@@ -12,11 +12,7 @@ import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideFirebaseApp } from '@angular/fire/app';
-import {
-    connectFunctionsEmulator,
-    getFunctions,
-    provideFunctions,
-} from '@angular/fire/functions';
+import { getFunctions, provideFunctions } from '@angular/fire/functions';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import {
     provideFireAuth,
@@ -39,23 +35,7 @@ bootstrapApplication(AppComponent, {
             maxAge: 50,
         }),
         provideFirebaseApp(getSolApp),
-        provideFunctions(() => {
-            const functions = getFunctions();
-            if (!environment.remoteFunctions) {
-                // Dev mode: use same-origin proxy (works locally and in Codespaces)
-                const port = window.location.port
-                    ? parseInt(window.location.port, 10)
-                    : window.location.protocol === 'https:'
-                      ? 443
-                      : 80;
-                connectFunctionsEmulator(
-                    functions,
-                    window.location.hostname,
-                    port
-                );
-            }
-            return functions;
-        }),
+        provideFunctions(() => getFunctions()),
         provideAuth(() => getAuth()),
         provideFireAuth(),
         provideFireFunctions(),
