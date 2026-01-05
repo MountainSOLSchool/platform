@@ -11,23 +11,14 @@ sleep 1
 
 echo "🚀 Starting development servers..."
 
-# Build functions first if needed
-if [ ! -f dist/apps/functions/main.js ]; then
-    echo "  Building functions..."
-    npx nx run functions:build
-fi
-
-# Start functions build watch in background
-npx nx run functions:build --watch &>/tmp/functions-build.log &
-BUILD_PID=$!
+# Always build functions first (required before firebase serve)
+echo "  Building functions..."
+npx nx run functions:build
 
 # Start Firebase serve directly (bypassing nx which has issues in Codespaces)
 firebase serve --only functions --project=dev --port=5001 &>/tmp/functions.log &
 FUNCTIONS_PID=$!
-echo "  Functions starting on port 5001 (PID: $FUNCTIONS_PID)"
-
-# Wait for functions to start
-sleep 5
+echo "  Functions running on port 5001 (PID: $FUNCTIONS_PID)"
 
 # Start Angular app in background (connects to local Functions via proxy)
 npx nx run enrollment-portal:serve:development &>/tmp/angular.log &
@@ -61,5 +52,5 @@ echo "  Logs:"
 echo "    Functions: tail -f /tmp/functions.log"
 echo "    Angular:   tail -f /tmp/angular.log"
 echo ""
-echo "  Stop all: kill $BUILD_PID $FUNCTIONS_PID $ANGULAR_PID"
+echo "  Stop all: kill $FUNCTIONS_PID $ANGULAR_PID"
 echo "=========================================="
