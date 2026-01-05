@@ -2,6 +2,72 @@
 
 This document describes the development workflow, git practices, and deployment process for the Mountain SOL platform.
 
+## GitHub Codespaces (Mobile Development)
+
+The repository is configured for GitHub Codespaces, enabling development from any device including mobile phones/tablets via Termius.
+
+### Setup Files
+
+- `.devcontainer/devcontainer.json` - Container configuration
+- `.devcontainer/scripts/init-codespace.sh` - Auto-init script (runs on start)
+- `.devcontainer/scripts/ssh-tunnel.sh` - Manual SSH tunnel helper
+
+### Required Secrets
+
+Add these in **Repo → Settings → Secrets and variables → Codespaces**:
+
+| Secret | Purpose | How to Generate |
+|--------|---------|-----------------|
+| `GOOGLE_APPLICATION_CREDENTIALS_JSON` | Firebase service account (base64) | See below |
+| `NGROK_AUTHTOKEN` | SSH tunnel for Termius | https://dashboard.ngrok.com |
+| `SSH_PASSWORD` | Termius login password | Choose any password |
+
+**Generating Firebase service account secret:**
+1. Go to [Firebase Console](https://console.firebase.google.com) → Project Settings → Service accounts
+2. Click **Generate new private key** → Download JSON
+3. Base64 encode: `base64 -i ~/Downloads/your-key.json | pbcopy` (Mac)
+4. Paste as the `GOOGLE_APPLICATION_CREDENTIALS_JSON` secret value
+
+### Creating a Codespace
+
+1. Go to repo on GitHub
+2. Click **Code → Codespaces → Create codespace**
+3. Wait for container build (~3-5 min first time)
+4. Init script runs automatically, configuring Firebase and SSH
+
+### Connecting from Termius (Mobile)
+
+1. In Codespace terminal: `ngrok tcp 2222`
+2. Note the host and port (e.g., `4.tcp.ngrok.io:12345`)
+3. In Termius, create host with:
+   - **Hostname**: `4.tcp.ngrok.io`
+   - **Port**: `12345`
+   - **Username**: `node`
+   - **Password**: (your `SSH_PASSWORD` secret)
+
+### Starting Development Servers
+
+Run the `dev` command to start everything:
+```bash
+dev
+```
+
+This starts:
+1. **Firebase Functions** on port 5001 (connects to remote Firestore/Auth)
+2. **Angular app** on port 4200 (connects to local Functions)
+3. Outputs the Safari URL
+
+**Architecture**:
+```
+Phone Safari → Angular (4200) → Local Functions (5001) → Remote Firebase (Firestore, Auth)
+```
+
+### What's Pre-installed
+
+- Node 22, npm
+- Firebase CLI, GitHub CLI
+- ngrok for SSH tunneling
+
 ## Local Development Setup
 
 ### Prerequisites
@@ -39,10 +105,13 @@ These files are gitignored and contain sensitive configuration.
 ### Frontend Development
 
 ```bash
-# Serve Angular app with hot reload
+# Serve Angular enrollment portal with hot reload
 npx nx run enrollment-portal:serve:development
-
 # Opens at http://localhost:4200
+
+# Serve Next.js student portal with hot reload
+npx nx run student-portal:serve:development
+# Opens at http://localhost:4201
 ```
 
 ### Firebase Emulators
@@ -499,7 +568,8 @@ Before submitting code for review:
 
 ```bash
 # Development
-npx nx run enrollment-portal:serve:development  # Serve Angular app
+npx nx run enrollment-portal:serve:development  # Serve Angular app → localhost:4200
+npx nx run student-portal:serve:development     # Serve Next.js app → localhost:4201
 npx nx run functions:serve:development          # Serve Firebase functions
 firebase emulators:start                        # Start Firebase emulators
 

@@ -1,0 +1,60 @@
+{
+    "name": "Mountain SOL Platform",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+    "features": {
+        "ghcr.io/devcontainers/features/sshd:1": {
+            "version": "latest"
+        },
+        "ghcr.io/devcontainers/features/github-cli:1": {
+            "installDirectlyFromGitHubRelease": true,
+            "version": "latest"
+        }
+    },
+    "secrets": {
+        "GOOGLE_APPLICATION_CREDENTIALS_JSON": {
+            "description": "Base64-encoded Firebase service account JSON. Generate key in Firebase Console → Project Settings → Service accounts"
+        },
+        "NGROK_AUTHTOKEN": {
+            "description": "ngrok auth token for SSH tunneling. Get from: https://dashboard.ngrok.com"
+        },
+        "NGROK_TCP_ADDRESS": {
+            "description": "Static ngrok TCP address for SSH (e.g., 7.tcp.ngrok.io:20072). Reserve at: https://dashboard.ngrok.com/cloud-edge/tcp-addresses"
+        },
+        "SSH_PASSWORD": {
+            "description": "Password for SSH access via Termius (for the 'node' user)"
+        }
+    },
+    "forwardPorts": [4200, 4201, 5001, 4000, 9099, 8080, 2222],
+    "portsAttributes": {
+        "4200": {
+            "label": "Angular (enrollment-portal)",
+            "onAutoForward": "notify"
+        },
+        "4201": {
+            "label": "Next.js (student-portal)",
+            "onAutoForward": "notify"
+        },
+        "5001": {
+            "label": "Firebase Functions Emulator",
+            "onAutoForward": "silent"
+        },
+        "4000": {
+            "label": "Firebase Emulator UI",
+            "onAutoForward": "notify"
+        },
+        "9099": {
+            "label": "Firebase Auth Emulator",
+            "onAutoForward": "silent"
+        },
+        "8080": {
+            "label": "Firebase Firestore Emulator",
+            "onAutoForward": "silent"
+        },
+        "2222": {
+            "label": "SSH",
+            "onAutoForward": "silent"
+        }
+    },
+    "postCreateCommand": "npm ci && npm install -g firebase-tools && curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo 'deb https://ngrok-agent.s3.amazonaws.com buster main' | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok -y",
+    "postStartCommand": ".devcontainer/scripts/init-codespace.sh"
+}
