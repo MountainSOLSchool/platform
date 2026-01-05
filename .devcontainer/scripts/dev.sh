@@ -1,24 +1,17 @@
 #!/bin/bash
 # Start development servers and output Safari URL
+# Connects to production Firebase (no local emulators)
 
-echo "🚀 Starting development servers..."
+echo "🚀 Starting development server..."
 
-# Start Firebase emulators in background
-firebase emulators:start &>/tmp/firebase-emulators.log &
-FIREBASE_PID=$!
-echo "  Firebase emulators starting (PID: $FIREBASE_PID)"
-
-# Wait for emulators to be ready
-sleep 5
-
-# Start Angular app in background
+# Start Angular app in background (connects to production Firebase)
 npx nx run enrollment-portal:serve:development &>/tmp/angular.log &
 ANGULAR_PID=$!
 echo "  Angular app starting (PID: $ANGULAR_PID)"
 
 # Wait for Angular to compile
 echo "  Waiting for Angular to compile..."
-sleep 15
+sleep 20
 
 # Make port public and get URL
 gh codespace ports visibility 4200:public -c $CODESPACE_NAME 2>/dev/null
@@ -33,15 +26,12 @@ fi
 
 echo ""
 echo "=========================================="
-echo "  ✅ Development servers running!"
+echo "  ✅ Development server running!"
 echo "=========================================="
 echo ""
 echo "  📱 Safari URL:"
 echo "  $PORT_URL"
 echo ""
-echo "  Logs:"
-echo "    Firebase: tail -f /tmp/firebase-emulators.log"
-echo "    Angular:  tail -f /tmp/angular.log"
-echo ""
-echo "  Stop all: kill $FIREBASE_PID $ANGULAR_PID"
+echo "  Log: tail -f /tmp/angular.log"
+echo "  Stop: kill $ANGULAR_PID"
 echo "=========================================="
