@@ -8,13 +8,16 @@ The codebase uses **Nx** for monorepo management with the following structure:
 
 ```
 platform/
+├── .devcontainer/             # GitHub Codespaces configuration
 ├── apps/                      # Application projects
-│   ├── enrollment-portal/     # Main Angular app
+│   ├── enrollment-portal/     # Angular app (localhost:4200)
+│   ├── student-portal/        # Next.js app (localhost:4201)
 │   └── functions/             # Firebase Functions entry point
 ├── libs/                      # Shared libraries
 │   ├── angular/               # Angular-specific libraries
 │   ├── firebase/              # Firebase utilities and functions
-│   └── react/                 # React components (if any)
+│   ├── react/                 # React-specific libraries
+│   └── ts/                    # Framework-agnostic TypeScript
 ├── public/                    # Static assets
 ├── ai/                        # AI assistant documentation
 └── [config files]
@@ -39,6 +42,20 @@ apps/enrollment-portal/
 │   └── environments/
 └── project.json
 ```
+
+### student-portal
+
+The Next.js application for students to track progress and view learning materials.
+
+**Key directories**:
+```
+apps/student-portal/
+├── app/                         # Next.js App Router
+├── public/                      # Static assets
+└── project.json                 # Nx configuration
+```
+
+**Port**: `localhost:4201`
 
 ### functions
 

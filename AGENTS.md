@@ -2,6 +2,84 @@
 
 This directory contains documentation about the Mountain SOL platform codebase patterns, conventions, and workflows. These documents are designed to help AI assistants (and developers) understand the project structure and coding standards.
 
+## GitHub Codespaces / Mobile Development
+
+This repository is configured for GitHub Codespaces, enabling development from any device including mobile (via Termius SSH app).
+
+**Setup**: `.devcontainer/devcontainer.json`
+
+**What's pre-configured**:
+- Node 22 with npm
+- Java 21 (for Firebase emulators)
+- Firebase CLI, GitHub CLI, and ngrok installed globally
+- SSH server for terminal access from mobile apps (Termius)
+- Port forwarding for all dev servers
+
+**Quick Start in Codespaces**:
+```bash
+# One command to start everything:
+dev
+
+# This builds Functions, starts Firebase serve, starts Angular,
+# and outputs the Safari URL for mobile testing
+```
+
+**Architecture in Development**:
+```
+Browser → Angular (4200) → /api/* proxy → Functions (5001) → Remote Firestore/Auth
+```
+
+The Angular dev server proxies `/api/*` requests to local Firebase Functions, which connect to the production Firestore and Auth. This works identically on localhost and in Codespaces.
+
+**Forwarded Ports**:
+- 4200: Angular enrollment-portal
+- 4201: Next.js student-portal
+- 5001: Firebase Functions
+
+### Codespaces Secrets (Required)
+
+Add these secrets to your repo: **Repo → Settings → Secrets and variables → Codespaces**
+
+| Secret | Description | How to Get |
+|--------|-------------|------------|
+| `GOOGLE_APPLICATION_CREDENTIALS_JSON` | Firebase service account (base64) | See below |
+| `NGROK_AUTHTOKEN` | ngrok tunnel auth | https://dashboard.ngrok.com |
+| `NGROK_TCP_ADDRESS` | Static ngrok address (optional) | ngrok dashboard → Cloud Edge → Endpoints |
+| `SSH_PASSWORD` | Termius login password | Choose any password |
+
+**Firebase service account setup:**
+1. Firebase Console → Project Settings → Service accounts → Generate new private key
+2. Base64 encode: `base64 -i ~/Downloads/your-key.json | pbcopy`
+3. Paste as secret value
+4. **Required IAM roles** for the service account:
+   - Firebase Admin
+   - Service Usage Consumer (`roles/serviceusage.serviceUsageConsumer`)
+
+**Firebase Auth domain:**
+Add `app.github.dev` to Firebase Auth authorized domains:
+Firebase Console → Authentication → Settings → Authorized domains
+
+### Mobile SSH Access (Termius)
+
+To connect from Termius or other SSH clients on mobile:
+
+**With static ngrok address** (recommended - configure `NGROK_TCP_ADDRESS` secret):
+- Tunnel starts automatically on Codespace start
+- Connection details shown in init script output
+
+**Without static address**:
+```bash
+ngrok tcp 2222
+```
+
+Connection details: Use the host/port shown. Username is `node`.
+
+### First-Time Codespace Setup
+
+1. Run `firebase login` to authenticate the Firebase CLI
+2. Run `dev` to start all servers
+3. Open the Safari URL on your phone to test
+
 ## Documents
 
 ### [Angular Patterns](./ai/angular-patterns.md)
@@ -113,19 +191,24 @@ import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 
 ```
 apps/
-  enrollment-portal/          # Main Angular app
+  enrollment-portal/          # Angular app (localhost:4200)
+  student-portal/             # Next.js app (localhost:4201)
   functions/                  # Firebase Functions entry
 
 libs/
-  angular/
+  angular/                    # Angular-specific libraries
     classes/                  # Class enrollment & admin management
-      class-management/       # Admin class CRUD (create, list, edit)
+      class-management/       # Admin class CRUD (create, list, edit, copy)
         components/
           class-form/         # Class creation/editing form
+          class-list/         # Class list with copy functionality
           unit-selector/      # Unit selection with path columns
     braintree-client/         # Payment UI
     auth/                     # Authentication
     request/                  # HTTP utilities
+  react/                      # React-specific libraries
+    auth/                     # React auth hooks
+    request/                  # React request utilities
   firebase/
     enrollment-functions/     # Cloud Functions (one library per function!)
       class-admin/            # Admin class CRUD functions
@@ -133,14 +216,21 @@ libs/
       get-age-group-units/    # Fetch units for Mallards/Mapaches
     functions-api/            # Functions client
     config/                   # Configuration
+  ts/                         # Framework-agnostic TypeScript
+    payments/domain/          # Shared payment types
+    student/domain/           # Shared student types
 ```
 
 ### Key Commands
 
 ```bash
-# Development
-npx nx run enrollment-portal:serve:development
-npx nx run functions:serve:development
+# Development - Frontend Apps
+npx nx run enrollment-portal:serve:development  # Angular → localhost:4200
+npx nx run student-portal:serve:development     # Next.js → localhost:4201
+
+# Development - Firebase
+npx nx run functions:serve:development          # Functions only
+firebase emulators:start                        # All emulators
 
 # Testing
 npx nx affected:test
@@ -148,9 +238,25 @@ npx nx affected:test
 # Building
 npx nx affected:build
 
+# Linting
+npx nx affected:lint
+npx nx lint --fix
+
+# Dependency Graph
+npx nx graph
+
 # Deployment (automated via GitHub Actions)
 git push origin main  # Triggers deployment
 ```
+
+### Firebase Emulator Ports
+
+| Service   | Port | URL                    |
+|-----------|------|------------------------|
+| Functions | 5001 | http://localhost:5001  |
+| Firestore | 8080 | http://localhost:8080  |
+| Auth      | 9099 | http://localhost:9099  |
+| UI        | 4000 | http://localhost:4000  |
 
 ## Coding Principles
 
