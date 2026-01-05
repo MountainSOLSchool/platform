@@ -124,9 +124,7 @@ export class AddSemesterDialogComponent {
                 },
                 error: (err) => {
                     this.saving.set(false);
-                    this.error.set(
-                        err?.message || 'Failed to create semester'
-                    );
+                    this.error.set(err?.message || 'Failed to create semester');
                 },
             });
     }

@@ -231,13 +231,16 @@ type FormState = { message?: string } & (
                                     </mat-form-field>
 
                                     <mat-form-field appearance="outline">
-                                        <mat-label>Age Group (Optional)</mat-label>
+                                        <mat-label
+                                            >Age Group (Optional)</mat-label
+                                        >
                                         <mat-select
                                             [(ngModel)]="ageGroup"
                                             name="ageGroup"
                                         >
                                             <mat-option value=""
-                                                >Standard (Paths & Units)</mat-option
+                                                >Standard (Paths &
+                                                Units)</mat-option
                                             >
                                             <mat-option value="mallards"
                                                 >Mallards</mat-option

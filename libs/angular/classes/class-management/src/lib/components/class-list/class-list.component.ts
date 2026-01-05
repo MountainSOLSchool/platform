@@ -21,6 +21,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClassDetailDialogComponent } from './class-detail-dialog.component';
 import { AddSemesterDialogComponent } from './add-semester-dialog.component';
 import { ActiveSemesterDialogComponent } from './active-semester-dialog.component';
+import {
+    CopyClassDialogComponent,
+    CopyClassDialogResult,
+} from './copy-class-dialog.component';
 
 interface AdminClass {
     id: string;
@@ -91,7 +95,10 @@ interface Semester {
                                 [(ngModel)]="selectedSemesterId"
                                 (ngModelChange)="onSemesterChange($event)"
                             >
-                                @for (semester of semesters(); track semester.id) {
+                                @for (
+                                    semester of semesters();
+                                    track semester.id
+                                ) {
                                     <mat-option [value]="semester.id">{{
                                         semester.name
                                     }}</mat-option>
@@ -230,6 +237,13 @@ interface Semester {
                                     (click)="editClass(cls)"
                                 >
                                     <mat-icon>edit</mat-icon>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    matTooltip="Copy Class"
+                                    (click)="copyClass(cls)"
+                                >
+                                    <mat-icon>content_copy</mat-icon>
                                 </button>
                             </td>
                         </ng-container>
@@ -516,5 +530,30 @@ export class AdminClassListComponent {
                 window.location.reload();
             }
         });
+    }
+
+    copyClass(cls: AdminClass) {
+        const dialogRef = this.dialog.open(CopyClassDialogComponent, {
+            data: {
+                classId: cls.id,
+                className: cls.name,
+                currentSemesterId: this.selectedSemesterId(),
+                semesters: this.semesters(),
+            },
+            width: '450px',
+        });
+
+        dialogRef.closed.subscribe(
+            (result: CopyClassDialogResult | undefined) => {
+                if (result) {
+                    this.router.navigate(
+                        ['/admin/classes/management/edit', result.classId],
+                        {
+                            queryParams: { semesterId: result.semesterId },
+                        }
+                    );
+                }
+            }
+        );
     }
 }

@@ -39,3 +39,8 @@ export type {
     UpdateActiveSemesterConfigRequest,
     UpdateActiveSemesterConfigResponse,
 } from './lib/update-active-semester-config';
+export { copyClass } from './lib/copy-class';
+export type {
+    CopyClassRequest,
+    CopyClassResponse,
+} from './lib/copy-class';

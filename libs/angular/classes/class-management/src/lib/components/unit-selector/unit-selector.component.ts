@@ -165,16 +165,27 @@ interface PathUnitGroup {
                                             {{ group.groupName }}
                                         </div>
                                     }
-                                    @for (item of group.units; track item.unitId) {
+                                    @for (
+                                        item of group.units;
+                                        track item.unitId
+                                    ) {
                                         <div
                                             class="unit-item"
-                                            [class.selected]="isSelected(item.unitId)"
-                                            [class.is-elective]="group.isElective"
+                                            [class.selected]="
+                                                isSelected(item.unitId)
+                                            "
+                                            [class.is-elective]="
+                                                group.isElective
+                                            "
                                         >
                                             <div class="unit-item-header">
                                                 <mat-checkbox
-                                                    [checked]="isSelected(item.unitId)"
-                                                    (change)="toggleUnit(item.unitId)"
+                                                    [checked]="
+                                                        isSelected(item.unitId)
+                                                    "
+                                                    (change)="
+                                                        toggleUnit(item.unitId)
+                                                    "
                                                 >
                                                     <span class="unit-name">
                                                         {{ item.unitName }}
@@ -183,7 +194,9 @@ interface PathUnitGroup {
                                                 @if (item.unitDescription) {
                                                     <mat-icon
                                                         class="info-icon"
-                                                        [matTooltip]="item.unitDescription"
+                                                        [matTooltip]="
+                                                            item.unitDescription
+                                                        "
                                                         matTooltipPosition="above"
                                                     >
                                                         info_outline
@@ -218,7 +231,9 @@ interface PathUnitGroup {
                                             @if (unit.description) {
                                                 <mat-icon
                                                     class="info-icon"
-                                                    [matTooltip]="unit.description"
+                                                    [matTooltip]="
+                                                        unit.description
+                                                    "
                                                     matTooltipPosition="above"
                                                 >
                                                     info_outline
@@ -554,7 +569,9 @@ export class UnitSelectorComponent {
 
             if (electiveUnits.length > 0) {
                 // Sort elective units alphabetically
-                electiveUnits.sort((a, b) => a.unitName.localeCompare(b.unitName));
+                electiveUnits.sort((a, b) =>
+                    a.unitName.localeCompare(b.unitName)
+                );
                 groups.push({
                     groupName: elective.name,
                     isElective: true,
