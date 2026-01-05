@@ -28,25 +28,16 @@
         "serve": {
             "executor": "nx:run-commands",
             "options": {
-                "commands": [
-                    "npx nx run functions:build --watch",
-                    "firebase serve --only functions --project=dev --port=5001"
-                ],
+                "command": "npx nx run functions:build && (npx nx run functions:build --watch &) && firebase serve --only functions --project=dev --port=5001",
                 "cwd": "{workspaceRoot}"
             },
             "configurations": {
                 "production": {
-                    "commands": [
-                        "npx nx run functions:build --watch",
-                        "firebase serve --only functions --project=prod --port=5001"
-                    ],
+                    "command": "npx nx run functions:build && (npx nx run functions:build --watch &) && firebase serve --only functions --project=prod --port=5001",
                     "cwd": "{workspaceRoot}"
                 },
                 "development": {
-                    "commands": [
-                        "npx nx run functions:build --watch",
-                        "firebase serve --only functions --project=dev --port=5001"
-                    ],
+                    "command": "npx nx run functions:build && (npx nx run functions:build --watch &) && firebase serve --only functions --project=dev --port=5001",
                     "cwd": "{workspaceRoot}"
                 }
             },
