@@ -59,8 +59,9 @@ import { FormsModule } from '@angular/forms';
                                 End
                                 <p-sortIcon field="end"></p-sortIcon>
                             </th>
-                            <th style="width: 15%"></th>
-                            <th style="width: 15%"></th>
+                            <th style="width: 12%"></th>
+                            <th style="width: 12%"></th>
+                            <th style="width: 10%"></th>
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-data>
@@ -94,6 +95,20 @@ import { FormsModule } from '@angular/forms';
                                     >
                                     </p-button>
                                 </td>
+                                <td>
+                                    <p-button
+                                        class="sol-button"
+                                        [id]="row.id + 'copyBtn'"
+                                        label="Copy"
+                                        icon="pi pi-copy"
+                                        severity="secondary"
+                                        [loading]="
+                                            classIdBeingCopied() === row.id
+                                        "
+                                        (click)="copyClick.emit(row)"
+                                    >
+                                    </p-button>
+                                </td>
                             </tr>
                         }
                     </ng-template>
@@ -112,12 +127,14 @@ import { FormsModule } from '@angular/forms';
 export class ClassPrintoutsViewComponent {
     readonly rows = input.required<Array<ClassPrintoutRow> | undefined>();
     readonly classIdOfEmailsBeingCopied = input.required<string | undefined>();
+    readonly classIdBeingCopied = input.required<string | undefined>();
     readonly semesters = input.required<
         Array<{ id: string; name: string }> | undefined
     >();
     readonly selectedSemester = input.required<string | undefined>();
 
     copyEmailsClick = output<ClassPrintoutRow>();
+    copyClick = output<ClassPrintoutRow>();
 
     downloadClick = output<string>();
 

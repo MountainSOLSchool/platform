@@ -6,6 +6,7 @@ import {
     OnInit,
     signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { ClassPrintoutsViewComponent } from './class-printouts.view.component';
 import { ClassPrintoutRow } from '../../models/class-printout-row.type';
 import { rxResource } from '@angular/core/rxjs-interop';
@@ -16,20 +17,28 @@ import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { CopyClassEmailsService } from '../../services/copy-class-emails.service';
+import { CopyClassService } from '../../services/copy-class.service';
 import { Dialog } from '@angular/cdk/dialog';
 import { ClassPrintoutsDisplayComponent } from './class-printouts-display.component';
 import { ClassEmailsDialogComponent } from './class-emails.component';
+import {
+    CopyClassDialogComponent,
+    CopyClassDialogData,
+    CopyClassDialogResult,
+} from './copy-class-dialog.component';
 import { DialogContainerComponent } from '@sol/angular/dialog';
 
 @Component({
     template: `<sol-class-printouts-view
         [rows]="classRows.value()"
         [classIdOfEmailsBeingCopied]="rowOfEmailsBeingCopied()?.id"
+        [classIdBeingCopied]="rowBeingCopied()?.id"
         [semesters]="semesters.value()"
         [selectedSemester]="selectedSemester()"
         (selectedSemesterChange)="selectedSemesterChange($event)"
         (downloadClick)="downloadClick($event)"
         (copyEmailsClick)="copyEmailsClick($event)"
+        (copyClick)="copyClick($event)"
     ></sol-class-printouts-view>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ClassPrintoutsViewComponent],
@@ -38,7 +47,9 @@ export class ClassPrintoutsComponent implements OnInit {
     readonly #classSemesterListService = inject(ClassesSemesterListService);
     readonly #classListService = inject(ClassListService);
     readonly #copyClassEmailsService = inject(CopyClassEmailsService);
+    readonly #copyClassService = inject(CopyClassService);
     readonly #dialog = inject(Dialog);
+    readonly #router = inject(Router);
 
     readonly semesters = rxResource({
         stream: () =>
@@ -69,6 +80,8 @@ export class ClassPrintoutsComponent implements OnInit {
     readonly rowOfEmailsBeingCopied = signal<ClassPrintoutRow | undefined>(
         undefined
     );
+
+    readonly rowBeingCopied = signal<ClassPrintoutRow | undefined>(undefined);
 
     readonly #copyClassEmailsFor = rxMethod<ClassPrintoutRow | undefined>(
         pipe(
@@ -116,6 +129,51 @@ export class ClassPrintoutsComponent implements OnInit {
                 semesterId: this.selectedSemester(),
                 fullscreen: true,
             },
+        });
+    }
+
+    copyClick(row: ClassPrintoutRow) {
+        const semesters = this.semesters.value();
+        if (!semesters) return;
+
+        const dialogRef = this.#dialog.open<CopyClassDialogResult | undefined>(
+            CopyClassDialogComponent,
+            {
+                container: DialogContainerComponent,
+                data: {
+                    classTitle: row.title,
+                    currentSemesterId: this.selectedSemester(),
+                    semesters,
+                    title: 'Copy Class',
+                    fullscreen: false,
+                } as CopyClassDialogData & { title: string; fullscreen: boolean },
+            }
+        );
+
+        dialogRef.closed.subscribe((result) => {
+            if (!result) return;
+
+            this.rowBeingCopied.set(row);
+
+            this.#copyClassService
+                .copyClass({
+                    classId: row.id,
+                    sourceSemesterId: this.selectedSemester(),
+                    targetSemesterId: result.targetSemesterId,
+                    newSemesterName: result.newSemesterName,
+                })
+                .subscribe({
+                    next: (response) => {
+                        this.rowBeingCopied.set(undefined);
+                        this.#router.navigate([
+                            '/admin/classes/management/edit',
+                            response.newClassId,
+                        ]);
+                    },
+                    error: () => {
+                        this.rowBeingCopied.set(undefined);
+                    },
+                });
         });
     }
 

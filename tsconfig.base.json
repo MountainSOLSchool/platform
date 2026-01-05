@@ -96,6 +96,9 @@
             "@sol/firebase/enrollment-functions/classes-by-semester": [
                 "libs/firebase/enrollment-functions/classes-by-semester/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/copy-class": [
+                "libs/firebase/enrollment-functions/copy-class/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/create-enrollment-email": [
                 "libs/firebase/enrollment-functions/create-enrollment-email/src/index.ts"
             ],

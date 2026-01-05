@@ -3,6 +3,7 @@ export { signIn } from '@sol/firebase/enrollment-functions/sign-in';
 export { classes } from '@sol/firebase/enrollment-functions/classes';
 export { classesBySemester } from '@sol/firebase/enrollment-functions/classes-by-semester';
 export { classGroups } from '@sol/firebase/enrollment-functions/class-groups';
+export { copyClass } from '@sol/firebase/enrollment-functions/copy-class';
 export { availableEnrollmentClasses } from '@sol/firebase/enrollment-functions/available-enrollment-classes';
 export { semestersAvailableToEnroll } from '@sol/firebase/enrollment-functions/semesters-available-to-enroll';
 export { emails } from '@sol/firebase/enrollment-functions/emails';
