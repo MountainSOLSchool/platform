@@ -10,7 +10,7 @@ This repository is configured for GitHub Codespaces, enabling development from a
 
 **What's pre-configured**:
 - Node 22 with npm
-- Firebase CLI, Claude Code CLI, GitHub CLI, and ngrok installed globally
+- Firebase CLI, GitHub CLI, and ngrok installed globally
 - SSH server for terminal access from mobile apps (Termius)
 - Port forwarding for all dev servers and emulators
 - VS Code extensions for Angular, React, Firebase, and NX

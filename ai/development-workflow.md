@@ -55,7 +55,7 @@ Add these in **Repo → Settings → Secrets and variables → Codespaces**:
 ### What's Pre-installed
 
 - Node 22, npm
-- Firebase CLI, GitHub CLI, Claude Code CLI
+- Firebase CLI, GitHub CLI
 - ngrok for SSH tunneling
 - Java 21 (for Firebase emulators)
 - VS Code extensions for Angular, React, Firebase, NX
