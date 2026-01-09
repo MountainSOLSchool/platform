@@ -76,7 +76,8 @@
                     "buildTarget": "enrollment-portal:build:production"
                 },
                 "development": {
-                    "buildTarget": "enrollment-portal:build:development"
+                    "buildTarget": "enrollment-portal:build:development",
+                    "proxyConfig": "apps/enrollment-portal/proxy.conf.json"
                 }
             },
             "defaultConfiguration": "development",
