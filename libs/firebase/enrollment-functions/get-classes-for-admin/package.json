@@ -1,5 +1,5 @@
 {
-    "name": "@sol/firebase/enrollment-functions/class-admin",
+    "name": "@sol/firebase/enrollment-functions/get-classes-for-admin",
     "version": "0.0.1",
     "dependencies": {},
     "private": true
