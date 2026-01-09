@@ -34,6 +34,7 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
                     placeholder="e.g., Spring 2025"
                     [disabled]="saving()"
                 />
+                <mat-hint>Format: Season Year (e.g., Fall 2025, Summer 2026)</mat-hint>
             </mat-form-field>
 
             @if (error()) {

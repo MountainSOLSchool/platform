@@ -1485,6 +1485,9 @@ export class ClassFormComponent implements OnInit {
     }
 
     navigateToList() {
-        this.router.navigate(['/admin/classes/management']);
+        const semesterId = this.semesterId();
+        this.router.navigate(['/admin/classes/management'], {
+            queryParams: semesterId ? { semesterId } : {},
+        });
     }
 }
