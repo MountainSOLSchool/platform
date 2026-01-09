@@ -80,17 +80,60 @@ Firebase function calls emit a loading state followed by either data or error.
 
 **Service implementation**: `libs/firebase/functions-api/src/lib/services/functions.service.ts:28-32`
 
-### Using rxResource for Data Loading
+## Subscription-Free Patterns: rxResource and rxMethod
 
-For components that load data on init, use `rxResource()` from `@angular/core/rxjs-interop`:
+This codebase avoids manual `subscribe()` calls by using two key patterns:
+- **`rxResource`** - Declarative data loading tied to component lifecycle
+- **`rxMethod`** - Reactive side effects triggered by signal changes
+
+Both patterns handle subscription management automatically, eliminating memory leaks and cleanup boilerplate.
+
+### rxResource: Declarative Data Loading
+
+**Import**: `import { rxResource } from '@angular/core/rxjs-interop';`
+
+Use `rxResource` when you need to:
+- Load data on component initialization
+- Reload data when parameters change
+- Access loading/error/success states in templates
+
+#### Basic Usage (No Parameters)
 
 ```typescript
-readonly studentsResource = rxResource({
-    stream: () => this.#apiService.getAll(),
+readonly semesters = rxResource({
+    stream: () =>
+        this.#semesterService
+            .getAllSemesters()
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
 });
 ```
 
-Template handles loading/error/success states via `.status()` and `.value()`:
+**Reference**: `libs/angular/admin/class-printouts/src/lib/components/class-printouts-component/class-printouts.component.ts:43-48`
+
+#### Parameterized Loading (Auto-Refetch)
+
+When `params` references a signal, rxResource automatically refetches when that signal changes:
+
+```typescript
+readonly selectedSemester = linkedSignal(() => this.semesters.value()?.[0]?.id ?? '');
+
+readonly classRows = rxResource({
+    params: () => this.selectedSemester(),
+    stream: ({ params: selectedSemester }) =>
+        this.#classService
+            .getClassesBySemester(selectedSemester)
+            .pipe(
+                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                map((data) => this.#transformData(data))
+            ),
+});
+```
+
+**Reference**: `libs/angular/admin/class-printouts/src/lib/components/class-printouts-component/class-printouts.component.ts:50-67`
+
+#### Accessing rxResource Data
+
+In templates - use `.value()` and `.status()`:
 
 ```html
 @switch (studentsResource.status()) {
@@ -104,7 +147,196 @@ Template handles loading/error/success states via `.status()` and `.value()`:
 }
 ```
 
-**Example**: `libs/angular/account/src/lib/components/students/account-students.component.ts`
+In component code - use with `computed()`:
+
+```typescript
+readonly sizeCounts = computed(() => {
+    const students = this.students.value();
+    if (!students) return undefined;
+    return sizes.map((size) => ({ size, count: this.getCount(size, students) }));
+});
+```
+
+**Reference**: `apps/enrollment-portal/src/app/tshirts-component/tshirts.component.ts:64-71`
+
+**Available ResourceRef methods**:
+- `.value()` - The loaded data (T | undefined)
+- `.status()` - 'idle' | 'loading' | 'error' | 'success'
+- `.error()` - Error details if status is 'error'
+- `.reload()` - Manually trigger a reload
+
+**Full example**: `libs/angular/account/src/lib/components/students/account-students.component.ts`
+
+---
+
+### rxMethod: Reactive Side Effects
+
+**Import**: `import { rxMethod } from '@ngrx/signals/rxjs-interop';`
+
+Use `rxMethod` when you need to:
+- Trigger side effects (dialogs, API calls) in response to signal changes
+- Handle user actions that require async operations
+- Replace imperative subscribe() calls with declarative pipelines
+
+#### Pattern: Signal-Driven Side Effects
+
+Instead of subscribing to events, set a signal and let rxMethod react:
+
+```typescript
+// 1. Signal to trigger the effect
+readonly rowOfEmailsBeingCopied = signal<ClassPrintoutRow | undefined>(undefined);
+
+// 2. rxMethod that reacts to signal changes
+readonly #copyClassEmailsFor = rxMethod<ClassPrintoutRow | undefined>(
+    pipe(
+        filter((row): row is ClassPrintoutRow => !!row),
+        switchMap((row) =>
+            this.#emailService.getClassEmails({ classId: row.id }).pipe(
+                tap((emails) => this.#dialog.open(EmailsDialog, { data: { emails } })),
+                tap(() => this.rowOfEmailsBeingCopied.set(undefined))
+            )
+        )
+    )
+);
+
+// 3. Connect signal to rxMethod in ngOnInit
+ngOnInit() {
+    this.#copyClassEmailsFor(this.rowOfEmailsBeingCopied);
+}
+
+// 4. User action just sets the signal
+copyEmailsClick(row: ClassPrintoutRow) {
+    this.rowOfEmailsBeingCopied.set(row);
+}
+```
+
+**Reference**: `libs/angular/admin/class-printouts/src/lib/components/class-printouts-component/class-printouts.component.ts:69-108`
+
+#### Simpler Example: Opening a Dialog
+
+```typescript
+readonly studentBeingViewed = signal<StudentTableRow | undefined>(undefined);
+
+readonly #viewStudentInfo = rxMethod<StudentTableRow | undefined>(
+    pipe(
+        switchMap((student) => {
+            if (!student) return [];
+            this.#dialog.open(StudentInfoDialog, { data: { studentId: student.id } });
+            this.studentBeingViewed.set(undefined);
+            return [];
+        })
+    )
+);
+
+ngOnInit() {
+    this.#viewStudentInfo(this.studentBeingViewed);
+}
+
+viewInfoClick(student: StudentTableRow) {
+    this.studentBeingViewed.set(student);
+}
+```
+
+**Reference**: `libs/angular/admin/students/src/lib/sol-angular-admin-students/student-info-table.component.ts:43-73`
+
+#### Key rxMethod Concepts
+
+1. **Generator function**: Takes `source$: Observable<Input>` and returns `Observable<unknown>`
+2. **Input types**: Accepts `Input | Signal<Input> | Observable<Input>`
+3. **Auto-cleanup**: Destroys subscription when component is destroyed
+4. **Operator pipeline**: Use standard RxJS operators (filter, switchMap, tap, etc.)
+
+---
+
+### Comparison: Before and After
+
+#### Before (Manual Subscribe)
+
+```typescript
+// BAD: Manual subscription with cleanup boilerplate
+private destroy$ = new Subject<void>();
+
+ngOnInit() {
+    this.selectedSemester$.pipe(
+        switchMap(semester => this.api.getClasses(semester)),
+        takeUntil(this.destroy$)
+    ).subscribe(classes => {
+        this.classes = classes;
+    });
+}
+
+ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+}
+
+viewStudent(student: Student) {
+    this.studentService.getDetails(student.id).subscribe(details => {
+        this.dialog.open(StudentDialog, { data: details });
+    }); // Memory leak - no cleanup!
+}
+```
+
+#### After (rxResource + rxMethod)
+
+```typescript
+// GOOD: Declarative, auto-managed subscriptions
+readonly selectedSemester = linkedSignal(() => this.semesters.value()?.[0]?.id ?? '');
+
+readonly classes = rxResource({
+    params: () => this.selectedSemester(),
+    stream: ({ params: semester }) => this.api.getClasses(semester),
+});
+
+readonly studentBeingViewed = signal<Student | undefined>(undefined);
+
+readonly #viewStudent = rxMethod<Student | undefined>(
+    pipe(
+        filter((s): s is Student => !!s),
+        switchMap(student => this.studentService.getDetails(student.id).pipe(
+            tap(details => this.dialog.open(StudentDialog, { data: details })),
+            tap(() => this.studentBeingViewed.set(undefined))
+        ))
+    )
+);
+
+ngOnInit() {
+    this.#viewStudent(this.studentBeingViewed);
+}
+
+viewStudent(student: Student) {
+    this.studentBeingViewed.set(student);
+}
+// No ngOnDestroy needed - cleanup is automatic
+```
+
+---
+
+### When to Use Each Pattern
+
+| Pattern | Use When |
+|---------|----------|
+| `rxResource` | Loading data for display, especially with reactive parameters |
+| `rxMethod` | Side effects: dialogs, navigation, API calls triggered by user actions |
+| `toSignal()` | Converting a single observable to a signal (one-time setup) |
+| `computed()` | Deriving new values from existing signals |
+
+---
+
+### Common Patterns with RequestedOperatorsUtility
+
+Firebase function calls emit loading states. Use `RequestedOperatorsUtility.ignoreAllStatesButLoaded()` to filter:
+
+```typescript
+readonly data = rxResource({
+    stream: () =>
+        this.#functionsApi
+            .call<ResponseType>('functionName', params)
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
+});
+```
+
+**Operator implementation**: `libs/angular/request/src/lib/utilities/requested-operators.utility.ts:6-8`
 
 ## Conditional Rendering with Signals
 

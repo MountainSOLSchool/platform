@@ -9,7 +9,24 @@
       "Bash(npx nx build:*)",
       "Bash(grep:*)",
       "Bash(npx nx lint:*)",
-      "Bash(npx nx:*)"
+      "Bash(npx nx:*)",
+      "Bash(git add:*)",
+      "Bash(apps/functions/src/functions/index.ts )",
+      "Bash(libs/angular/classes/class-management/src/lib/components/class-list/active-semester-dialog.component.ts )",
+      "Bash(libs/angular/classes/class-management/src/lib/components/class-list/class-list.component.ts )",
+      "Bash(libs/angular/classes/class-semester-list/src/index.ts )",
+      "Bash(libs/angular/classes/class-semester-list/src/lib/semester-list/services/classes-semester-list.service.ts )",
+      "Bash(libs/firebase/enrollment-functions/class-admin/src/index.ts )",
+      "Bash(libs/firebase/enrollment-functions/class-admin/src/lib/archive-semester.ts )",
+      "Bash(libs/firebase/enrollment-functions/historical-semesters/src/lib/historical-semesters.ts)",
+      "Bash(git commit:*)",
+      "Bash(libs/angular/classes/class-management/src/lib/components/class-form/class-form.component.ts )",
+      "Bash(libs/angular/classes/class-management/src/lib/components/class-list/add-semester-dialog.component.ts )",
+      "Bash(libs/angular/classes/class-management/src/lib/components/class-list/copy-class-dialog.component.ts )",
+      "Bash(libs/firebase/enrollment-functions/class-admin/src/lib/create-semester.ts)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr edit 185 --title \"feat: class management improvements with semester archiving\" --body \"$\\(cat <<''EOF''\n## Summary\n\nAdds comprehensive class and semester management features to the admin interface:\n\n- **Semester archiving**: Archive test/old semesters to hide them from the semester dropdown. Archived semesters can be restored at any time.\n- **Copy class**: Duplicate classes across semesters with a new copy dialog\n- **Semester management UI**: New tabbed \"Manage Semesters\" dialog with Active Semesters and Archived tabs\n- **Semester validation**: Validate semester name format \\(Season Year\\) and generate normalized IDs\n- **UX improvements**: Preserve semester selection when navigating, add format hints\n\n## Changes\n\n### Semester Archiving\n- Add `archived` property to semester documents in Firestore\n- Create `archiveSemester` Firebase function for admins\n- Update semester list service to filter archived semesters by default\n- Replace \"Active Semesters\" button/dialog with \"Manage Semesters\" tabbed UI\n  - Active Semesters tab: primary semester and enrollable semesters config\n  - Archived tab: archive/unarchive semesters with badge showing count\n\n### Class Management\n- Add copy class dialog for duplicating classes to same or different semesters\n- Preserve `semesterId` query param when navigating back from class form\n\n### Semester Creation\n- Validate semester name format: \"Season Year\" \\(e.g., Spring 2025, Fall 2024\\)\n- Generate normalized semester IDs \\(e.g., \"spring2025\"\\)\n- Check for duplicate semesters before creating\n- Add format hint to add semester dialog\n\n## Test plan\n- [ ] Create a new semester and verify format validation works\n- [ ] Archive a test semester and verify it''s hidden from the dropdown\n- [ ] Unarchive a semester and verify it reappears\n- [ ] Copy a class to a different semester\n- [ ] Verify semester selection persists when editing a class and navigating back\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\nEOF\n\\)\")",
+      "Bash(cat:*)"
     ]
   }
 }

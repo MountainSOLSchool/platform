@@ -12,8 +12,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { toSignal, rxResource } from '@angular/core/rxjs-interop';
+import { map, pipe, filter, tap, switchMap, catchError, EMPTY, of } from 'rxjs';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -231,13 +232,16 @@ type FormState = { message?: string } & (
                                     </mat-form-field>
 
                                     <mat-form-field appearance="outline">
-                                        <mat-label>Age Group (Optional)</mat-label>
+                                        <mat-label
+                                            >Age Group (Optional)</mat-label
+                                        >
                                         <mat-select
                                             [(ngModel)]="ageGroup"
                                             name="ageGroup"
                                         >
                                             <mat-option value=""
-                                                >Standard (Paths & Units)</mat-option
+                                                >Standard (Paths &
+                                                Units)</mat-option
                                             >
                                             <mat-option value="mallards"
                                                 >Mallards</mat-option
@@ -851,27 +855,104 @@ type FormState = { message?: string } & (
     ],
 })
 export class ClassFormComponent implements OnInit {
-    private readonly functions = inject(FirebaseFunctionsService);
-    private readonly semesterService = inject(ClassesSemesterListService);
-    private readonly router = inject(Router);
-    private readonly route = inject(ActivatedRoute);
+    readonly #functions = inject(FirebaseFunctionsService);
+    readonly #semesterService = inject(ClassesSemesterListService);
+    readonly #router = inject(Router);
+    readonly #route = inject(ActivatedRoute);
 
-    private readonly semesterIdFromQuery = toSignal(
-        this.route.queryParamMap.pipe(
+    readonly #semesterIdFromQuery = toSignal(
+        this.#route.queryParamMap.pipe(
             map((params) => params.get('semesterId') ?? '')
         )
     );
 
-    private readonly classIdFromRoute = toSignal(
-        this.route.paramMap.pipe(map((params) => params.get('id') ?? ''))
+    readonly #classIdFromRoute = toSignal(
+        this.#route.paramMap.pipe(map((params) => params.get('id') ?? ''))
     );
 
-    editMode = computed(() => !!this.classIdFromRoute());
-    loadingClass = signal<boolean>(false);
+    readonly editMode = computed(() => !!this.#classIdFromRoute());
 
-    classTypeOptions = signal<string[]>([]);
+    // rxResource for instructors - loads once on init
+    readonly #instructorsResource = rxResource({
+        stream: () =>
+            this.#functions
+                .call<Instructor[]>('getInstructors')
+                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
+    });
 
-    filteredClassTypes = computed(() => {
+    readonly instructors = computed<Instructor[]>(
+        () => this.#instructorsResource.value() ?? []
+    );
+
+    // rxResource for class types - loads once on init
+    readonly #classTypesResource = rxResource({
+        stream: () =>
+            this.#functions
+                .call<{
+                    classTypes: Array<{ id: string; name: string }>;
+                }>('getClassTypes')
+                .pipe(
+                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                    map((result) => result.classTypes.map((ct) => ct.name))
+                ),
+    });
+
+    readonly classTypeOptions = computed<string[]>(
+        () => this.#classTypesResource.value() ?? []
+    );
+
+    // rxResource for locations - loads once on init
+    readonly #locationsResource = rxResource({
+        stream: () =>
+            this.#functions
+                .call<{
+                    locations: Array<{ id: string; name: string }>;
+                }>('getLocations')
+                .pipe(
+                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                    map((result) => result.locations.map((loc) => loc.name))
+                ),
+    });
+
+    readonly locationOptions = computed<string[]>(
+        () => this.#locationsResource.value() ?? []
+    );
+
+    // rxResource for loading class for edit - params-based
+    readonly #classForEditResource = rxResource({
+        params: () => ({
+            classId: this.#classIdFromRoute() ?? '',
+            semesterId: this.#semesterIdFromQuery() ?? '',
+        }),
+        stream: ({ params }) => {
+            if (!params.classId || !params.semesterId) {
+                return of(null);
+            }
+            return this.#functions
+                .call<{ class: ClassForEdit }>('getClassForEdit', {
+                    semesterId: params.semesterId,
+                    classId: params.classId,
+                })
+                .pipe(
+                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                    catchError((err) => {
+                        this.formState.set({
+                            status: 'error',
+                            message:
+                                err?.message ??
+                                'Failed to load class for editing',
+                        });
+                        return of(null);
+                    })
+                );
+        },
+    });
+
+    readonly loadingClass = computed(
+        () => this.#classForEditResource.status() === 'loading'
+    );
+
+    readonly filteredClassTypes = computed(() => {
         const options = this.classTypeOptions();
         const currentValue = this.classType().toLowerCase();
         if (!currentValue) {
@@ -1011,9 +1092,7 @@ export class ClassFormComponent implements OnInit {
         return `${start}-${end}`;
     });
 
-    locationOptions = signal<string[]>([]);
-
-    filteredLocations = computed(() => {
+    readonly filteredLocations = computed(() => {
         const options = this.locationOptions();
         const currentValue = this.location().toLowerCase();
         if (!currentValue) {
@@ -1068,17 +1147,125 @@ export class ClassFormComponent implements OnInit {
 
     formState = signal<FormState>({ status: 'idle' });
 
-    private semestersRaw = toSignal(
-        this.semesterService
-            .getAllSemestersWithCurrentFirst()
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+    readonly #semestersResource = rxResource({
+        stream: () =>
+            this.#semesterService
+                .getAllSemestersWithCurrentFirst()
+                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
+    });
+
+    readonly semesters = computed<Semester[]>(
+        () => this.#semestersResource.value() ?? []
     );
 
-    semesters = computed<Semester[]>(() => this.semestersRaw() ?? []);
+    // rxMethod for form submission
+    readonly #performSubmit = rxMethod<
+        | {
+              isUpdate: boolean;
+              classId?: string;
+              request: {
+                  semesterId: string;
+                  name: string;
+                  description: string;
+                  classType: string;
+                  gradeRangeStart: number;
+                  gradeRangeEnd: number;
+                  cost: number;
+                  paymentRangeLowest?: number;
+                  paymentRangeHighest?: number;
+                  location: string;
+                  instructorIds: string[];
+                  weekday: string;
+                  dailyTimes: string;
+                  startDate: string;
+                  endDate: string;
+                  registrationEndDate: string;
+                  minStudentSize: number;
+                  maxStudentSize: number;
+                  live: boolean;
+                  pausedForEnrollment: boolean;
+                  forInformationOnly: boolean;
+                  unitIds: string[];
+                  ageGroup?: string;
+              };
+          }
+        | undefined
+    >(
+        pipe(
+            filter((data): data is NonNullable<typeof data> => !!data),
+            tap(() => this.formState.set({ status: 'submitting' })),
+            switchMap((data) => {
+                if (data.isUpdate && data.classId) {
+                    const updateRequest = {
+                        ...data.request,
+                        classId: data.classId,
+                    };
+                    return this.#functions
+                        .call<{
+                            success: boolean;
+                        }>('updateClass', updateRequest)
+                        .pipe(
+                            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                            tap((result) => {
+                                if (result.success) {
+                                    this.formState.set({
+                                        status: 'success',
+                                        classId: data.classId!,
+                                    });
+                                } else {
+                                    this.formState.set({
+                                        status: 'error',
+                                        message: 'Failed to update class',
+                                    });
+                                }
+                            }),
+                            catchError((err) => {
+                                this.formState.set({
+                                    status: 'error',
+                                    message:
+                                        err?.message ??
+                                        'An unexpected error occurred',
+                                });
+                                return EMPTY;
+                            })
+                        );
+                } else {
+                    return this.#functions
+                        .call<{
+                            success: boolean;
+                            classId: string;
+                        }>('createClass', data.request)
+                        .pipe(
+                            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                            tap((result) => {
+                                if (result.success) {
+                                    this.formState.set({
+                                        status: 'success',
+                                        classId: result.classId,
+                                    });
+                                } else {
+                                    this.formState.set({
+                                        status: 'error',
+                                        message: 'Failed to create class',
+                                    });
+                                }
+                            }),
+                            catchError((err) => {
+                                this.formState.set({
+                                    status: 'error',
+                                    message:
+                                        err?.message ??
+                                        'An unexpected error occurred',
+                                });
+                                return EMPTY;
+                            })
+                        );
+                }
+            })
+        )
+    );
 
-    instructors = signal<Instructor[]>([]);
-
-    canSubmit = computed(() => {
+    readonly canSubmit = computed(() => {
         return (
             this.semesterId().length > 0 &&
             this.name().trim().length > 0 &&
@@ -1095,60 +1282,68 @@ export class ClassFormComponent implements OnInit {
     });
 
     constructor() {
+        // Set semester from query param
         effect(() => {
-            const queryParamSemesterId = this.semesterIdFromQuery();
+            const queryParamSemesterId = this.#semesterIdFromQuery();
             if (queryParamSemesterId && !this.semesterId()) {
                 this.semesterId.set(queryParamSemesterId);
+            }
+        });
+
+        // Populate form when class data loads (edit mode)
+        effect(() => {
+            const result = this.#classForEditResource.value();
+            if (result?.class) {
+                this.#populateFormFromClass(result.class);
             }
         });
     }
 
     ngOnInit() {
-        this.loadInstructors();
-        this.loadClassTypes();
-        this.loadLocations();
-        const classId = this.classIdFromRoute();
-        if (classId) {
-            this.loadClassForEdit(classId);
+        // All data loading is now handled by rxResource declarations
+        // rxMethod for submission is connected via signal
+    }
+
+    #populateFormFromClass(cls: ClassForEdit) {
+        const semesterId = this.#semesterIdFromQuery();
+        if (semesterId) {
+            this.semesterId.set(semesterId);
         }
+        this.name.set(cls.name);
+        this.description.set(cls.description);
+        this.classType.set(cls.classType);
+        this.startDate.set(cls.startDate ? new Date(cls.startDate) : null);
+        this.endDate.set(cls.endDate ? new Date(cls.endDate) : null);
+        this.registrationEndDate.set(
+            cls.registrationEndDate ? new Date(cls.registrationEndDate) : null
+        );
+        this.weekday.set(cls.weekday);
+        this.#parseAndSetWeekdays(cls.weekday);
+        this.dailyTimes.set(cls.dailyTimes);
+        this.#parseAndSetTimes(cls.dailyTimes);
+        this.location.set(cls.location);
+        this.gradeRangeStart.set(cls.gradeRangeStart);
+        this.gradeRangeEnd.set(cls.gradeRangeEnd);
+        this.minStudentSize.set(cls.minStudentSize);
+        this.maxStudentSize.set(cls.maxStudentSize);
+        this.cost.set(cls.cost);
+        if (
+            cls.paymentRangeLowest !== undefined &&
+            cls.paymentRangeHighest !== undefined
+        ) {
+            this.useSlidingScale.set(true);
+            this.paymentRangeLowest.set(cls.paymentRangeLowest);
+            this.paymentRangeHighest.set(cls.paymentRangeHighest);
+        }
+        this.selectedInstructorIds.set(cls.instructorIds);
+        this.live.set(cls.live);
+        this.pausedForEnrollment.set(cls.pausedForEnrollment);
+        this.forInformationOnly.set(cls.forInformationOnly);
+        this.selectedUnitIds.set(cls.unitIds ?? []);
+        this.ageGroup.set(cls.ageGroup ?? '');
     }
 
-    private loadInstructors() {
-        this.functions
-            .call<Instructor[]>('getInstructors')
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe((instructors) => {
-                this.instructors.set(instructors);
-            });
-    }
-
-    private loadClassTypes() {
-        this.functions
-            .call<{ classTypes: Array<{ id: string; name: string }> }>(
-                'getClassTypes'
-            )
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe((result) => {
-                this.classTypeOptions.set(
-                    result.classTypes.map((ct) => ct.name)
-                );
-            });
-    }
-
-    private loadLocations() {
-        this.functions
-            .call<{ locations: Array<{ id: string; name: string }> }>(
-                'getLocations'
-            )
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe((result) => {
-                this.locationOptions.set(
-                    result.locations.map((loc) => loc.name)
-                );
-            });
-    }
-
-    private parseAndSetTimes(dailyTimes: string) {
+    #parseAndSetTimes(dailyTimes: string) {
         if (!dailyTimes) return;
 
         const normalized = dailyTimes.toLowerCase().trim();
@@ -1195,7 +1390,7 @@ export class ClassFormComponent implements OnInit {
         }
     }
 
-    private parseAndSetWeekdays(weekday: string) {
+    #parseAndSetWeekdays(weekday: string) {
         if (!weekday) return;
 
         const normalized = weekday.toLowerCase().trim();
@@ -1223,8 +1418,8 @@ export class ClassFormComponent implements OnInit {
             /^([a-z]{1,4})\s*[-–]\s*([a-z]{1,4})$/i
         );
         if (rangeMatch) {
-            const startDay = this.findDayValue(rangeMatch[1]);
-            const endDay = this.findDayValue(rangeMatch[2]);
+            const startDay = this.#findDayValue(rangeMatch[1]);
+            const endDay = this.#findDayValue(rangeMatch[2]);
 
             if (startDay && endDay) {
                 const startIdx = dayOrder.indexOf(startDay);
@@ -1253,7 +1448,7 @@ export class ClassFormComponent implements OnInit {
         // Handle comma-separated or individual days
         const parts = normalized.split(/[,\s]+/).filter((p) => p.length > 0);
         for (const part of parts) {
-            const dayValue = this.findDayValue(part);
+            const dayValue = this.#findDayValue(part);
             if (dayValue && !selected.includes(dayValue)) {
                 selected.push(dayValue);
             }
@@ -1264,7 +1459,7 @@ export class ClassFormComponent implements OnInit {
         }
     }
 
-    private findDayValue(input: string): string | null {
+    #findDayValue(input: string): string | null {
         const normalized = input.toLowerCase().trim();
         for (const day of this.weekdayOptions) {
             if (
@@ -1278,84 +1473,10 @@ export class ClassFormComponent implements OnInit {
         return null;
     }
 
-    private loadClassForEdit(classId: string) {
-        const semesterId = this.semesterIdFromQuery();
-        if (!semesterId) {
-            this.formState.set({
-                status: 'error',
-                message: 'Semester ID is required to edit a class',
-            });
-            return;
-        }
-
-        this.loadingClass.set(true);
-        this.functions
-            .call<{ class: ClassForEdit }>('getClassForEdit', {
-                semesterId,
-                classId,
-            })
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe({
-                next: (result) => {
-                    const cls = result.class;
-                    this.semesterId.set(semesterId);
-                    this.name.set(cls.name);
-                    this.description.set(cls.description);
-                    this.classType.set(cls.classType);
-                    this.startDate.set(
-                        cls.startDate ? new Date(cls.startDate) : null
-                    );
-                    this.endDate.set(
-                        cls.endDate ? new Date(cls.endDate) : null
-                    );
-                    this.registrationEndDate.set(
-                        cls.registrationEndDate
-                            ? new Date(cls.registrationEndDate)
-                            : null
-                    );
-                    this.weekday.set(cls.weekday);
-                    this.parseAndSetWeekdays(cls.weekday);
-                    this.dailyTimes.set(cls.dailyTimes);
-                    this.parseAndSetTimes(cls.dailyTimes);
-                    this.location.set(cls.location);
-                    this.gradeRangeStart.set(cls.gradeRangeStart);
-                    this.gradeRangeEnd.set(cls.gradeRangeEnd);
-                    this.minStudentSize.set(cls.minStudentSize);
-                    this.maxStudentSize.set(cls.maxStudentSize);
-                    this.cost.set(cls.cost);
-                    if (
-                        cls.paymentRangeLowest !== undefined &&
-                        cls.paymentRangeHighest !== undefined
-                    ) {
-                        this.useSlidingScale.set(true);
-                        this.paymentRangeLowest.set(cls.paymentRangeLowest);
-                        this.paymentRangeHighest.set(cls.paymentRangeHighest);
-                    }
-                    this.selectedInstructorIds.set(cls.instructorIds);
-                    this.live.set(cls.live);
-                    this.pausedForEnrollment.set(cls.pausedForEnrollment);
-                    this.forInformationOnly.set(cls.forInformationOnly);
-                    this.selectedUnitIds.set(cls.unitIds ?? []);
-                    this.ageGroup.set(cls.ageGroup ?? '');
-                    this.loadingClass.set(false);
-                },
-                error: (err) => {
-                    this.loadingClass.set(false);
-                    this.formState.set({
-                        status: 'error',
-                        message:
-                            err?.message ?? 'Failed to load class for editing',
-                    });
-                },
-            });
-    }
-
-    submitForm() {
-        if (!this.canSubmit()) return;
-
-        this.formState.set({ status: 'submitting' });
-
-        const baseRequest = {
+    #buildBaseRequest() {
+        const paymentRangeLowest = this.paymentRangeLowest();
+        const paymentRangeHighest = this.paymentRangeHighest();
+        return {
             semesterId: this.semesterId(),
             name: this.name(),
             description: this.description(),
@@ -1363,12 +1484,14 @@ export class ClassFormComponent implements OnInit {
             gradeRangeStart: this.gradeRangeStart(),
             gradeRangeEnd: this.gradeRangeEnd(),
             cost: this.cost(),
-            paymentRangeLowest: this.useSlidingScale()
-                ? this.paymentRangeLowest()
-                : undefined,
-            paymentRangeHighest: this.useSlidingScale()
-                ? this.paymentRangeHighest()
-                : undefined,
+            paymentRangeLowest:
+                this.useSlidingScale() && paymentRangeLowest != null
+                    ? paymentRangeLowest
+                    : undefined,
+            paymentRangeHighest:
+                this.useSlidingScale() && paymentRangeHighest != null
+                    ? paymentRangeHighest
+                    : undefined,
             location: this.location(),
             instructorIds: this.selectedInstructorIds(),
             weekday: this.computedWeekday(),
@@ -1385,65 +1508,17 @@ export class ClassFormComponent implements OnInit {
             unitIds: this.selectedUnitIds(),
             ageGroup: this.ageGroup() || undefined,
         };
+    }
 
-        const classId = this.classIdFromRoute();
-        if (classId) {
-            const updateRequest = { ...baseRequest, classId };
-            this.functions
-                .call<{ success: boolean }>('updateClass', updateRequest)
-                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-                .subscribe({
-                    next: (result) => {
-                        if (result.success) {
-                            this.formState.set({
-                                status: 'success',
-                                classId,
-                            });
-                        } else {
-                            this.formState.set({
-                                status: 'error',
-                                message: 'Failed to update class',
-                            });
-                        }
-                    },
-                    error: (err) => {
-                        this.formState.set({
-                            status: 'error',
-                            message:
-                                err?.message ?? 'An unexpected error occurred',
-                        });
-                    },
-                });
-        } else {
-            this.functions
-                .call<{ success: boolean; classId: string }>(
-                    'createClass',
-                    baseRequest
-                )
-                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-                .subscribe({
-                    next: (result) => {
-                        if (result.success) {
-                            this.formState.set({
-                                status: 'success',
-                                classId: result.classId,
-                            });
-                        } else {
-                            this.formState.set({
-                                status: 'error',
-                                message: 'Failed to create class',
-                            });
-                        }
-                    },
-                    error: (err) => {
-                        this.formState.set({
-                            status: 'error',
-                            message:
-                                err?.message ?? 'An unexpected error occurred',
-                        });
-                    },
-                });
-        }
+    submitForm() {
+        if (!this.canSubmit()) return;
+
+        const classId = this.#classIdFromRoute();
+        this.#performSubmit({
+            isUpdate: !!classId,
+            classId: classId || undefined,
+            request: this.#buildBaseRequest(),
+        });
     }
 
     resetForm() {
@@ -1486,7 +1561,7 @@ export class ClassFormComponent implements OnInit {
 
     navigateToList() {
         const semesterId = this.semesterId();
-        this.router.navigate(['/admin/classes/management'], {
+        this.#router.navigate(['/admin/classes/management'], {
             queryParams: semesterId ? { semesterId } : {},
         });
     }

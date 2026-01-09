@@ -10,6 +10,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { pipe, filter, tap, of, map } from 'rxjs';
 
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -18,6 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UnitLimitWarningDialogComponent } from './unit-limit-warning-dialog.component';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 interface Unit {
     id: string;
@@ -165,16 +168,27 @@ interface PathUnitGroup {
                                             {{ group.groupName }}
                                         </div>
                                     }
-                                    @for (item of group.units; track item.unitId) {
+                                    @for (
+                                        item of group.units;
+                                        track item.unitId
+                                    ) {
                                         <div
                                             class="unit-item"
-                                            [class.selected]="isSelected(item.unitId)"
-                                            [class.is-elective]="group.isElective"
+                                            [class.selected]="
+                                                isSelected(item.unitId)
+                                            "
+                                            [class.is-elective]="
+                                                group.isElective
+                                            "
                                         >
                                             <div class="unit-item-header">
                                                 <mat-checkbox
-                                                    [checked]="isSelected(item.unitId)"
-                                                    (change)="toggleUnit(item.unitId)"
+                                                    [checked]="
+                                                        isSelected(item.unitId)
+                                                    "
+                                                    (change)="
+                                                        toggleUnit(item.unitId)
+                                                    "
                                                 >
                                                     <span class="unit-name">
                                                         {{ item.unitName }}
@@ -183,7 +197,9 @@ interface PathUnitGroup {
                                                 @if (item.unitDescription) {
                                                     <mat-icon
                                                         class="info-icon"
-                                                        [matTooltip]="item.unitDescription"
+                                                        [matTooltip]="
+                                                            item.unitDescription
+                                                        "
                                                         matTooltipPosition="above"
                                                     >
                                                         info_outline
@@ -218,7 +234,9 @@ interface PathUnitGroup {
                                             @if (unit.description) {
                                                 <mat-icon
                                                     class="info-icon"
-                                                    [matTooltip]="unit.description"
+                                                    [matTooltip]="
+                                                        unit.description
+                                                    "
                                                     matTooltipPosition="above"
                                                 >
                                                     info_outline
@@ -409,102 +427,144 @@ interface PathUnitGroup {
     ],
 })
 export class UnitSelectorComponent {
-    private readonly functions = inject(FirebaseFunctionsService);
-    private readonly dialog = inject(MatDialog);
+    readonly #functions = inject(FirebaseFunctionsService);
+    readonly #dialog = inject(MatDialog);
 
-    private static readonly SOFT_UNIT_LIMIT = 3;
+    static readonly SOFT_UNIT_LIMIT = 3;
 
     readonly initialSelectedIds = input<string[]>([]);
     readonly ageGroup = input<string>('');
     readonly selectionChange = output<string[]>();
 
-    loading = signal(true);
-    paths = signal<Path[]>([]);
-    units = signal<Record<string, Unit>>({});
-    selectedUnitIds = signal<string[]>([]);
-    ageGroupUnits = signal<
+    readonly selectedUnitIds = signal<string[]>([]);
+
+    #previousAgeGroup: string | null = null;
+
+    // rxResource for units and paths (standard classes)
+    readonly #unitsAndPathsResource = rxResource({
+        params: () => this.ageGroup(),
+        stream: ({ params: ageGroup }) => {
+            // Only load if no age group is set (standard classes)
+            if (ageGroup) {
+                return of(null);
+            }
+            return this.#functions
+                .call<UnitsAndPathsResponse>('fullUnitsAndPaths')
+                .pipe(
+                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                    map((result) => ({
+                        paths: [...result.paths].sort((a, b) => {
+                            if (a.name === 'Ranger') return -1;
+                            if (b.name === 'Ranger') return 1;
+                            return a.name.localeCompare(b.name);
+                        }),
+                        units: result.units,
+                    }))
+                );
+        },
+    });
+
+    // rxResource for age group units (Mallards/Mapaches)
+    readonly #ageGroupUnitsResource = rxResource({
+        params: () => this.ageGroup(),
+        stream: ({ params: ageGroup }) => {
+            // Only load if age group is set
+            if (!ageGroup) {
+                return of(null);
+            }
+            return this.#functions
+                .call<AgeGroupUnitsResponse>('getAgeGroupUnits', { ageGroup })
+                .pipe(
+                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                    map((result) =>
+                        [...result.units].sort((a, b) =>
+                            a.name.localeCompare(b.name)
+                        )
+                    )
+                );
+        },
+    });
+
+    readonly loading = computed(() => {
+        const ageGroup = this.ageGroup();
+        if (ageGroup) {
+            return this.#ageGroupUnitsResource.status() === 'loading';
+        }
+        return this.#unitsAndPathsResource.status() === 'loading';
+    });
+
+    readonly paths = computed<Path[]>(
+        () => this.#unitsAndPathsResource.value()?.paths ?? []
+    );
+
+    readonly units = computed<Record<string, Unit>>(
+        () => this.#unitsAndPathsResource.value()?.units ?? {}
+    );
+
+    readonly ageGroupUnits = computed<
         Array<{ id: string; name: string; description: string }>
-    >([]);
+    >(() => this.#ageGroupUnitsResource.value() ?? []);
 
-    private previousAgeGroup: string | null = null;
-
-    otherUnits = computed(() => {
+    readonly otherUnits = computed(() => {
         const unitsMap = this.units();
         const pathsList = this.paths();
 
         return Object.values(unitsMap)
-            .filter((unit) => !this.isUnitInAnyPathCheck(unit.id, pathsList))
+            .filter((unit) => !this.#isUnitInAnyPathCheck(unit.id, pathsList))
             .sort((a, b) => a.name.localeCompare(b.name));
     });
 
+    // rxMethod for handling unit limit warning dialog
+    readonly #handleUnitLimitConfirmation = rxMethod<
+        | {
+              unitId: string;
+              confirmed: boolean;
+          }
+        | undefined
+    >(
+        pipe(
+            filter((data): data is NonNullable<typeof data> => !!data),
+            filter((data) => data.confirmed),
+            tap((data) => {
+                const current = this.selectedUnitIds();
+                const updated = [...current, data.unitId];
+                this.selectedUnitIds.set(updated);
+                this.selectionChange.emit(updated);
+            })
+        )
+    );
+
     constructor() {
+        // Handle age group changes and initial selection
         effect(() => {
             const currentAgeGroup = this.ageGroup();
-            if (this.previousAgeGroup === null) {
-                // First load - don't clear selections, just load units
-                this.previousAgeGroup = currentAgeGroup;
-                this.loadUnits();
-            } else if (currentAgeGroup !== this.previousAgeGroup) {
+            if (this.#previousAgeGroup === null) {
+                // First load - set initial selections
+                this.#previousAgeGroup = currentAgeGroup;
+                this.selectedUnitIds.set([...this.initialSelectedIds()]);
+            } else if (currentAgeGroup !== this.#previousAgeGroup) {
                 // User changed age group - clear selections
-                this.previousAgeGroup = currentAgeGroup;
+                this.#previousAgeGroup = currentAgeGroup;
                 this.selectedUnitIds.set([]);
                 this.selectionChange.emit([]);
-                this.loadUnits();
             }
         });
-    }
 
-    private loadUnits() {
-        const ageGroup = this.ageGroup();
-        if (ageGroup) {
-            this.loadAgeGroupUnits(ageGroup);
-        } else {
-            this.loadUnitsAndPaths();
-        }
-    }
+        // Set initial selections when data loads
+        effect(() => {
+            const unitsData = this.#unitsAndPathsResource.value();
+            const ageGroupData = this.#ageGroupUnitsResource.value();
+            const initial = this.initialSelectedIds();
 
-    private loadUnitsAndPaths() {
-        this.loading.set(true);
-        this.functions
-            .call<UnitsAndPathsResponse>('fullUnitsAndPaths')
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe({
-                next: (result) => {
-                    const sortedPaths = [...result.paths].sort((a, b) => {
-                        if (a.name === 'Ranger') return -1;
-                        if (b.name === 'Ranger') return 1;
-                        return a.name.localeCompare(b.name);
-                    });
-                    this.paths.set(sortedPaths);
-                    this.units.set(result.units);
-                    this.selectedUnitIds.set([...this.initialSelectedIds()]);
-                    this.loading.set(false);
-                },
-                error: () => {
-                    this.loading.set(false);
-                },
-            });
-    }
-
-    private loadAgeGroupUnits(ageGroup: string) {
-        this.loading.set(true);
-        this.functions
-            .call<AgeGroupUnitsResponse>('getAgeGroupUnits', { ageGroup })
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe({
-                next: (result) => {
-                    const sortedUnits = [...result.units].sort((a, b) =>
-                        a.name.localeCompare(b.name)
-                    );
-                    this.ageGroupUnits.set(sortedUnits);
-                    this.selectedUnitIds.set([...this.initialSelectedIds()]);
-                    this.loading.set(false);
-                },
-                error: () => {
-                    this.ageGroupUnits.set([]);
-                    this.loading.set(false);
-                },
-            });
+            // Only set initial if we have data and selections haven't been modified
+            if (
+                (unitsData || ageGroupData) &&
+                this.selectedUnitIds().length === 0 &&
+                initial.length > 0
+            ) {
+                this.selectedUnitIds.set([...initial]);
+            }
+        });
     }
 
     getPathUnitGroups(path: Path): PathUnitGroup[] {
@@ -554,7 +614,9 @@ export class UnitSelectorComponent {
 
             if (electiveUnits.length > 0) {
                 // Sort elective units alphabetically
-                electiveUnits.sort((a, b) => a.unitName.localeCompare(b.unitName));
+                electiveUnits.sort((a, b) =>
+                    a.unitName.localeCompare(b.unitName)
+                );
                 groups.push({
                     groupName: elective.name,
                     isElective: true,
@@ -566,7 +628,7 @@ export class UnitSelectorComponent {
         return groups;
     }
 
-    private isUnitInAnyPathCheck(unitId: string, pathsList: Path[]): boolean {
+    #isUnitInAnyPathCheck(unitId: string, pathsList: Path[]): boolean {
         return pathsList.some((path) => {
             const inRequired = (path.unitIds ?? []).some(
                 (id) => id?.trim() === unitId
@@ -593,16 +655,16 @@ export class UnitSelectorComponent {
         }
 
         if (current.length >= UnitSelectorComponent.SOFT_UNIT_LIMIT) {
-            this.dialog
-                .open(UnitLimitWarningDialogComponent)
-                .afterClosed()
-                .subscribe((confirmed) => {
-                    if (confirmed) {
-                        const updated = [...current, unitId];
-                        this.selectedUnitIds.set(updated);
-                        this.selectionChange.emit(updated);
-                    }
-                });
+            const dialogRef = this.#dialog.open(
+                UnitLimitWarningDialogComponent
+            );
+            this.#handleUnitLimitConfirmation(
+                dialogRef
+                    .afterClosed()
+                    .pipe(
+                        map((confirmed) => ({ unitId, confirmed: !!confirmed }))
+                    )
+            );
         } else {
             const updated = [...current, unitId];
             this.selectedUnitIds.set(updated);

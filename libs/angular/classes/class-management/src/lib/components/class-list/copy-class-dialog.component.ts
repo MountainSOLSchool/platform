@@ -2,6 +2,7 @@ import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
+import { pipe, filter, tap, switchMap, catchError, EMPTY } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -12,8 +13,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 interface Semester {
     id: string;
@@ -162,26 +163,114 @@ export interface CopyClassDialogResult {
     ],
 })
 export class CopyClassDialogComponent implements OnInit {
-    private readonly dialogRef = inject(DialogRef<CopyClassDialogResult>);
-    private readonly semesterService = inject(ClassesSemesterListService);
-    private readonly functions = inject(FirebaseFunctionsService);
+    readonly #dialogRef = inject(DialogRef<CopyClassDialogResult>);
+    readonly #semesterService = inject(ClassesSemesterListService);
+    readonly #functions = inject(FirebaseFunctionsService);
     readonly data = inject<CopyClassDialogData>(DIALOG_DATA);
 
     newClassName = '';
     selectedSemesterId = '';
-    saving = signal(false);
-    error = signal<string | null>(null);
+    readonly saving = signal(false);
+    readonly error = signal<string | null>(null);
 
-    private semestersRaw = toSignal(
-        this.semesterService
-            .getAllSemestersWithCurrentFirst()
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+    readonly #semestersResource = rxResource({
+        stream: () =>
+            this.#semesterService
+                .getAllSemestersWithCurrentFirst()
+                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
+    });
+
+    readonly semesters = computed<Semester[]>(
+        () => this.#semestersResource.value() ?? []
     );
 
-    semesters = computed<Semester[]>(() => this.semestersRaw() ?? []);
-
-    canCopy = computed(
+    readonly canCopy = computed(
         () => this.newClassName.trim().length > 0 && this.selectedSemesterId
+    );
+
+    // rxMethod for copy operation
+    readonly #performCopy = rxMethod<
+        | {
+              sourceClassId: string;
+              sourceSemesterId: string;
+              newClassName: string;
+              destinationSemesterId: string;
+          }
+        | undefined
+    >(
+        pipe(
+            filter((data): data is NonNullable<typeof data> => !!data),
+            tap(() => {
+                this.saving.set(true);
+                this.error.set(null);
+            }),
+            switchMap((data) =>
+                this.#functions
+                    .call<{ class: ClassForEdit }>('getClassForEdit', {
+                        semesterId: data.sourceSemesterId,
+                        classId: data.sourceClassId,
+                    })
+                    .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                        switchMap((result) => {
+                            const cls = result.class;
+                            const createRequest = {
+                                semesterId: data.destinationSemesterId,
+                                name: data.newClassName,
+                                description: cls.description,
+                                classType: cls.classType,
+                                gradeRangeStart: cls.gradeRangeStart,
+                                gradeRangeEnd: cls.gradeRangeEnd,
+                                cost: cls.cost,
+                                paymentRangeLowest: cls.paymentRangeLowest,
+                                paymentRangeHighest: cls.paymentRangeHighest,
+                                location: cls.location,
+                                instructorIds: cls.instructorIds,
+                                weekday: cls.weekday,
+                                dailyTimes: cls.dailyTimes,
+                                startDate: cls.startDate,
+                                endDate: cls.endDate,
+                                registrationEndDate: cls.registrationEndDate,
+                                minStudentSize: cls.minStudentSize,
+                                maxStudentSize: cls.maxStudentSize,
+                                live: false,
+                                pausedForEnrollment: false,
+                                forInformationOnly: cls.forInformationOnly,
+                                unitIds: cls.unitIds ?? [],
+                                ageGroup: cls.ageGroup || undefined,
+                            };
+
+                            return this.#functions
+                                .call<{
+                                    success: boolean;
+                                    classId: string;
+                                }>('createClass', createRequest)
+                                .pipe(
+                                    RequestedOperatorsUtility.ignoreAllStatesButLoaded()
+                                );
+                        }),
+                        tap((result) => {
+                            this.saving.set(false);
+                            if (result.success) {
+                                this.#dialogRef.close({
+                                    newClassId: result.classId,
+                                    destinationSemesterId:
+                                        data.destinationSemesterId,
+                                });
+                            } else {
+                                this.error.set('Failed to create class copy');
+                            }
+                        }),
+                        catchError((err) => {
+                            this.saving.set(false);
+                            this.error.set(
+                                err?.message || 'Failed to copy class'
+                            );
+                            return EMPTY;
+                        })
+                    )
+            )
+        )
     );
 
     ngOnInit() {
@@ -190,79 +279,17 @@ export class CopyClassDialogComponent implements OnInit {
     }
 
     close() {
-        this.dialogRef.close();
+        this.#dialogRef.close();
     }
 
     copy() {
         if (!this.canCopy()) return;
 
-        this.saving.set(true);
-        this.error.set(null);
-
-        // First fetch the source class, then create the copy
-        this.functions
-            .call<{ class: ClassForEdit }>('getClassForEdit', {
-                semesterId: this.data.currentSemesterId,
-                classId: this.data.classId,
-            })
-            .pipe(
-                RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                switchMap((result) => {
-                    const cls = result.class;
-                    // Create the new class with copied data
-                    const createRequest = {
-                        semesterId: this.selectedSemesterId,
-                        name: this.newClassName.trim(),
-                        description: cls.description,
-                        classType: cls.classType,
-                        gradeRangeStart: cls.gradeRangeStart,
-                        gradeRangeEnd: cls.gradeRangeEnd,
-                        cost: cls.cost,
-                        paymentRangeLowest: cls.paymentRangeLowest,
-                        paymentRangeHighest: cls.paymentRangeHighest,
-                        location: cls.location,
-                        instructorIds: cls.instructorIds,
-                        weekday: cls.weekday,
-                        dailyTimes: cls.dailyTimes,
-                        startDate: cls.startDate,
-                        endDate: cls.endDate,
-                        registrationEndDate: cls.registrationEndDate,
-                        minStudentSize: cls.minStudentSize,
-                        maxStudentSize: cls.maxStudentSize,
-                        // Always start as draft
-                        live: false,
-                        pausedForEnrollment: false,
-                        forInformationOnly: cls.forInformationOnly,
-                        unitIds: cls.unitIds ?? [],
-                        ageGroup: cls.ageGroup || undefined,
-                    };
-
-                    return this.functions
-                        .call<{ success: boolean; classId: string }>(
-                            'createClass',
-                            createRequest
-                        )
-                        .pipe(
-                            RequestedOperatorsUtility.ignoreAllStatesButLoaded()
-                        );
-                })
-            )
-            .subscribe({
-                next: (result) => {
-                    this.saving.set(false);
-                    if (result.success) {
-                        this.dialogRef.close({
-                            newClassId: result.classId,
-                            destinationSemesterId: this.selectedSemesterId,
-                        });
-                    } else {
-                        this.error.set('Failed to create class copy');
-                    }
-                },
-                error: (err) => {
-                    this.saving.set(false);
-                    this.error.set(err?.message || 'Failed to copy class');
-                },
-            });
+        this.#performCopy({
+            sourceClassId: this.data.classId,
+            sourceSemesterId: this.data.currentSemesterId,
+            newClassName: this.newClassName.trim(),
+            destinationSemesterId: this.selectedSemesterId,
+        });
     }
 }

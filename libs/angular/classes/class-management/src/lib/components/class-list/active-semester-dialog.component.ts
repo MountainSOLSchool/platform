@@ -1,7 +1,15 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import {
+    Component,
+    inject,
+    signal,
+    computed,
+    effect,
+    OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogRef } from '@angular/cdk/dialog';
+import { pipe, filter, tap, switchMap, catchError, EMPTY } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,6 +27,8 @@ import {
     SemesterConfigData,
     Semester,
 } from '@sol/angular/classes/semester-list';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 @Component({
     selector: 'sol-active-semester-dialog',
@@ -136,11 +146,13 @@ import {
                                                     archiveSemester(semester)
                                                 "
                                                 [disabled]="
-                                                    archivingId() === semester.id
+                                                    archivingId() ===
+                                                    semester.id
                                                 "
                                             >
                                                 @if (
-                                                    archivingId() === semester.id
+                                                    archivingId() ===
+                                                    semester.id
                                                 ) {
                                                     <mat-spinner
                                                         diameter="20"
@@ -366,20 +378,34 @@ import {
     ],
 })
 export class ActiveSemesterDialogComponent {
-    private readonly dialogRef = inject(DialogRef);
-    private readonly functions = inject(FirebaseFunctionsService);
-    private readonly semesterService = inject(ClassesSemesterListService);
+    readonly #dialogRef = inject(DialogRef);
+    readonly #functions = inject(FirebaseFunctionsService);
+    readonly #semesterService = inject(ClassesSemesterListService);
 
-    loading = signal(true);
-    saving = signal(false);
-    error = signal<string | null>(null);
-    configData = signal<SemesterConfigData | null>(null);
-    archivingId = signal<string | null>(null);
+    readonly error = signal<string | null>(null);
+    readonly archivingId = signal<string | null>(null);
+    readonly saving = signal(false);
 
     activeSemesterId = '';
-    otherSemesterIds = signal<string[]>([]);
+    readonly otherSemesterIds = signal<string[]>([]);
 
-    availableSemesters = computed(() => {
+    // rxResource for loading config data
+    readonly #configResource = rxResource({
+        stream: () =>
+            this.#semesterService
+                .getSemesterConfigDataDirect()
+                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
+    });
+
+    readonly loading = computed(
+        () => this.#configResource.status() === 'loading'
+    );
+
+    readonly configData = computed<SemesterConfigData | null>(
+        () => this.#configResource.value() ?? null
+    );
+
+    readonly availableSemesters = computed(() => {
         const data = this.configData();
         if (!data) return [];
         return data.semesters
@@ -387,21 +413,97 @@ export class ActiveSemesterDialogComponent {
             .filter((s) => !s.archived);
     });
 
-    nonArchivedSemesters = computed(() => {
+    readonly nonArchivedSemesters = computed(() => {
         const data = this.configData();
         if (!data) return [];
         return data.semesters.filter((s) => !s.archived);
     });
 
-    archivedSemesters = computed(() => {
+    readonly archivedSemesters = computed(() => {
         const data = this.configData();
         if (!data) return [];
         return data.semesters.filter((s) => s.archived);
     });
 
-    constructor() {
-        this.loadData();
+    // rxMethod for archive/unarchive
+    readonly #performArchive = rxMethod<
+        | {
+              semester: Semester;
+              archived: boolean;
+          }
+        | undefined
+    >(
+        pipe(
+            filter((data): data is NonNullable<typeof data> => !!data),
+            tap((data) => {
+                this.archivingId.set(data.semester.id);
+                this.error.set(null);
+            }),
+            switchMap((data) =>
+                this.#functions
+                    .call<{ success: boolean }>('archiveSemester', {
+                        semesterId: data.semester.id,
+                        archived: data.archived,
+                    })
+                    .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                        tap(() => {
+                            this.archivingId.set(null);
+                            // Reload the resource to get fresh data
+                            this.#configResource.reload();
+                        }),
+                        catchError((err) => {
+                            this.archivingId.set(null);
+                            this.error.set(
+                                err?.message ||
+                                    `Failed to ${data.archived ? 'archive' : 'unarchive'} semester`
+                            );
+                            return EMPTY;
+                        })
+                    )
+            )
+        )
+    );
 
+    // rxMethod for save
+    readonly #performSave = rxMethod<
+        | {
+              activeSemesterId: string;
+              otherEnrollableSemesterIds: string[];
+          }
+        | undefined
+    >(
+        pipe(
+            filter((data): data is NonNullable<typeof data> => !!data),
+            tap(() => {
+                this.saving.set(true);
+                this.error.set(null);
+            }),
+            switchMap((data) =>
+                this.#functions
+                    .call<{
+                        success: boolean;
+                    }>('updateActiveSemesterConfig', data)
+                    .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                        tap(() => {
+                            this.saving.set(false);
+                            this.#dialogRef.close(true);
+                        }),
+                        catchError((err) => {
+                            this.saving.set(false);
+                            this.error.set(
+                                err?.message ||
+                                    'Failed to update semester configuration'
+                            );
+                            return EMPTY;
+                        })
+                    )
+            )
+        )
+    );
+
+    constructor() {
         effect(() => {
             const data = this.configData();
             if (data) {
@@ -409,22 +511,6 @@ export class ActiveSemesterDialogComponent {
                 this.otherSemesterIds.set([...data.otherEnrollableSemesterIds]);
             }
         });
-    }
-
-    private loadData() {
-        this.semesterService
-            .getSemesterConfigDataDirect()
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe({
-                next: (data: SemesterConfigData) => {
-                    this.configData.set(data);
-                    this.loading.set(false);
-                },
-                error: () => {
-                    this.error.set('Failed to load semesters');
-                    this.loading.set(false);
-                },
-            });
     }
 
     toggleOtherSemester(semesterId: string) {
@@ -439,79 +525,27 @@ export class ActiveSemesterDialogComponent {
     }
 
     archiveSemester(semester: Semester) {
-        this.setArchiveStatus(semester, true);
+        this.#performArchive({ semester, archived: true });
     }
 
     unarchiveSemester(semester: Semester) {
-        this.setArchiveStatus(semester, false);
-    }
-
-    private setArchiveStatus(semester: Semester, archived: boolean) {
-        this.archivingId.set(semester.id);
-        this.error.set(null);
-
-        this.functions
-            .call<{ success: boolean }>('archiveSemester', {
-                semesterId: semester.id,
-                archived,
-            })
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe({
-                next: () => {
-                    this.archivingId.set(null);
-                    const data = this.configData();
-                    if (data) {
-                        const updatedSemesters = data.semesters.map((s) =>
-                            s.id === semester.id ? { ...s, archived } : s
-                        );
-                        this.configData.set({
-                            ...data,
-                            semesters: updatedSemesters,
-                        });
-                    }
-                },
-                error: (err) => {
-                    this.archivingId.set(null);
-                    this.error.set(
-                        err?.message ||
-                            `Failed to ${archived ? 'archive' : 'unarchive'} semester`
-                    );
-                },
-            });
+        this.#performArchive({ semester, archived: false });
     }
 
     close() {
-        this.dialogRef.close();
+        this.#dialogRef.close();
     }
 
     save() {
         if (!this.activeSemesterId) return;
 
-        this.saving.set(true);
-        this.error.set(null);
-
         const filteredOtherIds = this.otherSemesterIds().filter(
             (id) => id !== this.activeSemesterId
         );
 
-        this.functions
-            .call<{ success: boolean }>('updateActiveSemesterConfig', {
-                activeSemesterId: this.activeSemesterId,
-                otherEnrollableSemesterIds: filteredOtherIds,
-            })
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe({
-                next: () => {
-                    this.saving.set(false);
-                    this.dialogRef.close(true);
-                },
-                error: (err) => {
-                    this.saving.set(false);
-                    this.error.set(
-                        err?.message ||
-                            'Failed to update semester configuration'
-                    );
-                },
-            });
+        this.#performSave({
+            activeSemesterId: this.activeSemesterId,
+            otherEnrollableSemesterIds: filteredOtherIds,
+        });
     }
 }

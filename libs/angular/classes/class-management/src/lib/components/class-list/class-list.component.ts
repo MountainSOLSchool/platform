@@ -1,13 +1,22 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import {
+    Component,
+    inject,
+    signal,
+    computed,
+    effect,
+    linkedSignal,
+    OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toSignal, rxResource } from '@angular/core/rxjs-interop';
 import { Dialog } from '@angular/cdk/dialog';
-import { map } from 'rxjs';
+import { map, of, pipe, filter, tap } from 'rxjs';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -97,7 +106,10 @@ interface Semester {
                                 [(ngModel)]="selectedSemesterId"
                                 (ngModelChange)="onSemesterChange($event)"
                             >
-                                @for (semester of semesters(); track semester.id) {
+                                @for (
+                                    semester of semesters();
+                                    track semester.id
+                                ) {
                                     <mat-option [value]="semester.id">{{
                                         semester.name
                                     }}</mat-option>
@@ -397,12 +409,12 @@ interface Semester {
         `,
     ],
 })
-export class AdminClassListComponent {
-    private readonly functions = inject(FirebaseFunctionsService);
-    private readonly semesterService = inject(ClassesSemesterListService);
-    private readonly router = inject(Router);
-    private readonly route = inject(ActivatedRoute);
-    private readonly dialog = inject(Dialog);
+export class AdminClassListComponent implements OnInit {
+    readonly #functions = inject(FirebaseFunctionsService);
+    readonly #semesterService = inject(ClassesSemesterListService);
+    readonly #router = inject(Router);
+    readonly #route = inject(ActivatedRoute);
+    readonly #dialog = inject(Dialog);
 
     displayedColumns = [
         'status',
@@ -415,113 +427,140 @@ export class AdminClassListComponent {
         'actions',
     ];
 
-    private readonly semesterIdFromQuery = toSignal(
-        this.route.queryParamMap.pipe(
+    readonly #semesterIdFromQuery = toSignal(
+        this.#route.queryParamMap.pipe(
             map((params) => params.get('semesterId') ?? '')
         )
     );
 
-    selectedSemesterId = signal<string>('');
-    classes = signal<AdminClass[]>([]);
-    loading = signal<boolean>(false);
-    private initialized = false;
+    readonly semestersResource = rxResource({
+        stream: () =>
+            this.#semesterService
+                .getAllSemestersWithCurrentFirst()
+                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded()),
+    });
 
-    private semestersRaw = toSignal(
-        this.semesterService
-            .getAllSemestersWithCurrentFirst()
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+    readonly semesters = computed<Semester[]>(
+        () => this.semestersResource.value() ?? []
     );
 
-    semesters = computed<Semester[]>(() => this.semestersRaw() ?? []);
+    readonly selectedSemesterId = linkedSignal<string>(() => {
+        const sems = this.semesters();
+        const queryParamSemesterId = this.#semesterIdFromQuery();
+        if (sems.length === 0) return '';
+        // Use query param if valid, otherwise default to first semester
+        return queryParamSemesterId &&
+            sems.some((s) => s.id === queryParamSemesterId)
+            ? queryParamSemesterId
+            : sems[0].id;
+    });
 
-    totalEnrolled = computed(() =>
+    readonly classesResource = rxResource({
+        params: () => this.selectedSemesterId(),
+        stream: ({ params: semesterId }) => {
+            if (!semesterId) return of({ classes: [] as AdminClass[] });
+            return this.#functions
+                .call<{ classes: AdminClass[] }>('getClassesForAdmin', {
+                    semesterId,
+                })
+                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded());
+        },
+    });
+
+    readonly classes = computed<AdminClass[]>(
+        () => this.classesResource.value()?.classes ?? []
+    );
+
+    readonly loading = computed(
+        () => this.classesResource.status() === 'loading'
+    );
+
+    readonly totalEnrolled = computed(() =>
         this.classes().reduce((sum, cls) => sum + cls.enrolledCount, 0)
     );
 
+    // rxMethod for handling copy class dialog result
+    readonly #handleCopyResult = rxMethod<CopyClassDialogResult | undefined>(
+        pipe(
+            filter((result): result is CopyClassDialogResult => !!result),
+            tap((result) => {
+                this.#router.navigate(
+                    ['/admin/classes/management/edit', result.newClassId],
+                    {
+                        queryParams: {
+                            semesterId: result.destinationSemesterId,
+                        },
+                    }
+                );
+            })
+        )
+    );
+
+    // rxMethod for handling add semester dialog result
+    readonly #handleAddSemesterResult = rxMethod<unknown>(
+        pipe(
+            filter((result) => !!result),
+            tap(() => window.location.reload())
+        )
+    );
+
+    // rxMethod for handling active semester dialog result
+    readonly #handleActiveSemesterResult = rxMethod<unknown>(
+        pipe(
+            filter((result) => !!result),
+            tap(() => window.location.reload())
+        )
+    );
+
     constructor() {
-        // Initialize semester selection once semesters are loaded
+        // Update URL when semester selection changes
         effect(() => {
-            const sems = this.semesters();
-            const queryParamSemesterId = this.semesterIdFromQuery();
-
-            if (sems.length > 0 && !this.initialized) {
-                this.initialized = true;
-                // Use query param if valid, otherwise default to first semester
-                const semesterToSelect =
-                    queryParamSemesterId &&
-                    sems.some((s) => s.id === queryParamSemesterId)
-                        ? queryParamSemesterId
-                        : sems[0].id;
-
-                this.selectedSemesterId.set(semesterToSelect);
-                this.loadClasses(semesterToSelect);
-
-                // Update URL if we defaulted to first semester
-                if (!queryParamSemesterId || queryParamSemesterId !== semesterToSelect) {
-                    this.updateUrlWithSemester(semesterToSelect);
-                }
+            const semesterId = this.selectedSemesterId();
+            if (semesterId) {
+                this.#updateUrlWithSemester(semesterId);
             }
         });
     }
 
-    onSemesterChange(semesterId: string) {
-        this.updateUrlWithSemester(semesterId);
-        this.loadClasses(semesterId);
+    ngOnInit() {
+        // rxMethods are connected via their observable inputs when dialogs open
     }
 
-    private updateUrlWithSemester(semesterId: string) {
-        this.router.navigate([], {
-            relativeTo: this.route,
+    onSemesterChange(semesterId: string) {
+        this.selectedSemesterId.set(semesterId);
+    }
+
+    #updateUrlWithSemester(semesterId: string) {
+        this.#router.navigate([], {
+            relativeTo: this.#route,
             queryParams: { semesterId },
             queryParamsHandling: 'merge',
             replaceUrl: true,
         });
     }
 
-    loadClasses(semesterId: string) {
-        if (!semesterId) return;
-
-        this.loading.set(true);
-        this.classes.set([]);
-
-        this.functions
-            .call<{ classes: AdminClass[] }>('getClassesForAdmin', {
-                semesterId,
-            })
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe({
-                next: (result) => {
-                    this.classes.set(result.classes);
-                    this.loading.set(false);
-                },
-                error: () => {
-                    this.loading.set(false);
-                },
-            });
-    }
-
     navigateToCreate() {
         const semesterId = this.selectedSemesterId();
-        this.router.navigate(['/admin/classes/management/create'], {
+        this.#router.navigate(['/admin/classes/management/create'], {
             queryParams: semesterId ? { semesterId } : {},
         });
     }
 
     viewClass(cls: AdminClass) {
-        this.dialog.open(ClassDetailDialogComponent, {
+        this.#dialog.open(ClassDetailDialogComponent, {
             data: cls,
             width: '600px',
         });
     }
 
     editClass(cls: AdminClass) {
-        this.router.navigate(['/admin/classes/management/edit', cls.id], {
+        this.#router.navigate(['/admin/classes/management/edit', cls.id], {
             queryParams: { semesterId: this.selectedSemesterId() },
         });
     }
 
     copyClass(cls: AdminClass) {
-        const dialogRef = this.dialog.open<
+        const dialogRef = this.#dialog.open<
             CopyClassDialogResult,
             CopyClassDialogData
         >(CopyClassDialogComponent, {
@@ -533,19 +572,7 @@ export class AdminClassListComponent {
             },
         });
 
-        dialogRef.closed.subscribe((result) => {
-            if (result) {
-                // Navigate to edit the newly created class
-                this.router.navigate(
-                    ['/admin/classes/management/edit', result.newClassId],
-                    {
-                        queryParams: {
-                            semesterId: result.destinationSemesterId,
-                        },
-                    }
-                );
-            }
-        });
+        this.#handleCopyResult(dialogRef.closed);
     }
 
     formatCost(cls: AdminClass): string {
@@ -567,26 +594,18 @@ export class AdminClassListComponent {
     }
 
     openAddSemesterDialog() {
-        const dialogRef = this.dialog.open(AddSemesterDialogComponent, {
+        const dialogRef = this.#dialog.open(AddSemesterDialogComponent, {
             width: '400px',
         });
 
-        dialogRef.closed.subscribe((result) => {
-            if (result) {
-                window.location.reload();
-            }
-        });
+        this.#handleAddSemesterResult(dialogRef.closed);
     }
 
     openActiveSemesterDialog() {
-        const dialogRef = this.dialog.open(ActiveSemesterDialogComponent, {
+        const dialogRef = this.#dialog.open(ActiveSemesterDialogComponent, {
             width: '500px',
         });
 
-        dialogRef.closed.subscribe((result) => {
-            if (result) {
-                window.location.reload();
-            }
-        });
+        this.#handleActiveSemesterResult(dialogRef.closed);
     }
 }

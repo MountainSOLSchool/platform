@@ -2,6 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogRef } from '@angular/cdk/dialog';
+import { pipe, filter, tap, switchMap, catchError, EMPTY } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 @Component({
     selector: 'sol-add-semester-dialog',
@@ -34,7 +36,10 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
                     placeholder="e.g., Spring 2025"
                     [disabled]="saving()"
                 />
-                <mat-hint>Format: Season Year (e.g., Fall 2025, Summer 2026)</mat-hint>
+                <mat-hint
+                    >Format: Season Year (e.g., Fall 2025, Summer
+                    2026)</mat-hint
+                >
             </mat-form-field>
 
             @if (error()) {
@@ -96,39 +101,52 @@ import { RequestedOperatorsUtility } from '@sol/angular/request';
     ],
 })
 export class AddSemesterDialogComponent {
-    private readonly dialogRef = inject(DialogRef);
-    private readonly functions = inject(FirebaseFunctionsService);
+    readonly #dialogRef = inject(DialogRef);
+    readonly #functions = inject(FirebaseFunctionsService);
 
     semesterName = '';
-    saving = signal(false);
-    error = signal<string | null>(null);
+    readonly saving = signal(false);
+    readonly error = signal<string | null>(null);
+
+    // rxMethod for save
+    readonly #performSave = rxMethod<string | undefined>(
+        pipe(
+            filter((name): name is string => !!name),
+            tap(() => {
+                this.saving.set(true);
+                this.error.set(null);
+            }),
+            switchMap((name) =>
+                this.#functions
+                    .call<{
+                        id: string;
+                        name: string;
+                    }>('createSemester', { name })
+                    .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                        tap((result) => {
+                            this.saving.set(false);
+                            this.#dialogRef.close(result);
+                        }),
+                        catchError((err) => {
+                            this.saving.set(false);
+                            this.error.set(
+                                err?.message || 'Failed to create semester'
+                            );
+                            return EMPTY;
+                        })
+                    )
+            )
+        )
+    );
 
     close() {
-        this.dialogRef.close();
+        this.#dialogRef.close();
     }
 
     save() {
-        if (!this.semesterName.trim()) return;
-
-        this.saving.set(true);
-        this.error.set(null);
-
-        this.functions
-            .call<{ id: string; name: string }>('createSemester', {
-                name: this.semesterName.trim(),
-            })
-            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
-            .subscribe({
-                next: (result) => {
-                    this.saving.set(false);
-                    this.dialogRef.close(result);
-                },
-                error: (err) => {
-                    this.saving.set(false);
-                    this.error.set(
-                        err?.message || 'Failed to create semester'
-                    );
-                },
-            });
+        const name = this.semesterName.trim();
+        if (!name) return;
+        this.#performSave(name);
     }
 }

@@ -166,7 +166,10 @@ interface AdminClass {
                 <section>
                     <h3>Instructors</h3>
                     <div class="instructors-list">
-                        @for (instructor of data.instructors; track instructor.id) {
+                        @for (
+                            instructor of data.instructors;
+                            track instructor.id
+                        ) {
                             <div class="instructor">
                                 <mat-icon>person</mat-icon>
                                 <span
