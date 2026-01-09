@@ -25,6 +25,7 @@ export { onSuccessfulEnrollDeleteDraft } from '@sol/firebase/enrollment-function
 export { deleteEnrollmentDraft } from '@sol/firebase/enrollment-functions/delete-enrollment-draft';
 export { allStudents } from '@sol/firebase/enrollment-functions/all-students';
 export { fullUnitsAndPaths } from '@sol/firebase/enrollment-functions/full-units-and-paths';
+export { getAgeGroupUnits } from '@sol/firebase/enrollment-functions/get-age-group-units';
 export { getCompletedUnits } from '@sol/firebase/enrollment-functions/get-completed-units';
 export { updateCompletedUnits } from '@sol/firebase/enrollment-functions/update-completed-units';
 export { getStudentCompletedUnits } from '@sol/firebase/enrollment-functions/get-student-completed-units';
@@ -33,3 +34,13 @@ export { studentInfoSheet } from '@sol/firebase/enrollment-functions/student-inf
 export { donateVenmo } from '@sol/firebase/enrollment-functions/donate-venmo';
 export { donate } from '@sol/firebase/enrollment-functions/donate';
 export { payment } from '@sol/firebase/enrollment-functions/payment';
+export { createClass } from '@sol/firebase/enrollment-functions/create-class';
+export { updateClass } from '@sol/firebase/enrollment-functions/update-class';
+export { getClassesForAdmin } from '@sol/firebase/enrollment-functions/get-classes-for-admin';
+export { getClassForEdit } from '@sol/firebase/enrollment-functions/get-class-for-edit';
+export { getInstructors } from '@sol/firebase/enrollment-functions/get-instructors';
+export { getClassTypes } from '@sol/firebase/enrollment-functions/get-class-types';
+export { getLocations } from '@sol/firebase/enrollment-functions/get-locations';
+export { createSemester } from '@sol/firebase/enrollment-functions/create-semester';
+export { archiveSemester } from '@sol/firebase/enrollment-functions/archive-semester';
+export { updateActiveSemesterConfig } from '@sol/firebase/enrollment-functions/update-active-semester-config';

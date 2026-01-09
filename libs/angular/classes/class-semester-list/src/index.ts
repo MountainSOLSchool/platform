@@ -1,1 +1,5 @@
-export { ClassesSemesterListService } from './lib/semester-list/services/classes-semester-list.service';
+export {
+    ClassesSemesterListService,
+    SemesterConfigData,
+    Semester,
+} from './lib/semester-list/services/classes-semester-list.service';

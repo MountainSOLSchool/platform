@@ -87,6 +87,36 @@
             "@sol/firebase/enrollment-functions/calculate-basket": [
                 "libs/firebase/enrollment-functions/calculate-basket/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/create-class": [
+                "libs/firebase/enrollment-functions/create-class/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/update-class": [
+                "libs/firebase/enrollment-functions/update-class/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-classes-for-admin": [
+                "libs/firebase/enrollment-functions/get-classes-for-admin/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-class-for-edit": [
+                "libs/firebase/enrollment-functions/get-class-for-edit/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-instructors": [
+                "libs/firebase/enrollment-functions/get-instructors/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-class-types": [
+                "libs/firebase/enrollment-functions/get-class-types/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-locations": [
+                "libs/firebase/enrollment-functions/get-locations/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/create-semester": [
+                "libs/firebase/enrollment-functions/create-semester/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/archive-semester": [
+                "libs/firebase/enrollment-functions/archive-semester/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/update-active-semester-config": [
+                "libs/firebase/enrollment-functions/update-active-semester-config/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/class-groups": [
                 "libs/firebase/enrollment-functions/class-groups/src/index.ts"
             ],
@@ -125,6 +155,9 @@
             ],
             "@sol/firebase/enrollment-functions/full-units-and-paths": [
                 "libs/firebase/enrollment-functions/full-units-and-paths/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-age-group-units": [
+                "libs/firebase/enrollment-functions/get-age-group-units/src/index.ts"
             ],
             "@sol/firebase/enrollment-functions/get-completed-units": [
                 "libs/firebase/enrollment-functions/get-completed-units/src/index.ts"

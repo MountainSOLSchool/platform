@@ -89,13 +89,15 @@ Patterns and best practices for Angular development in this codebase:
 - State machines for async operations
 - Firebase Functions integration
 - Form patterns and validation
-- Component communication
+- Component communication (outputs, signal inputs with effects)
+- Confirmation dialogs with MatDialog
 - Declarative vs imperative code
 
 **Reference implementation**: `apps/enrollment-portal/src/app/donate-full.component.ts`
 
 ### [Firebase Patterns](./ai/firebase-patterns.md)
 Firebase integration patterns including Cloud Functions, Firestore, and email:
+- **Library-per-function architecture** (IMPORTANT for nx affected deployment)
 - Cloud Functions v2 structure
 - Firestore repository pattern
 - Database objects (DBOs)
@@ -104,7 +106,7 @@ Firebase integration patterns including Cloud Functions, Firestore, and email:
 - Configuration management
 - Security rules
 
-**Reference implementation**: `libs/firebase/enrollment-functions/donate/src/lib/donate.ts`
+**Reference implementation**: `libs/firebase/enrollment-functions/get-age-group-units/`
 
 ### [Codebase Structure](./ai/codebase-structure.md)
 Overview of the monorepo architecture and organization:
@@ -194,8 +196,12 @@ apps/
   functions/                  # Firebase Functions entry
 
 libs/
-  angular/                    # Angular-specific libraries
-    classes/                  # Class enrollment
+  angular/
+    classes/                  # Class enrollment & admin management
+      class-management/       # Admin class CRUD (create, list, edit)
+        components/
+          class-form/         # Class creation/editing form
+          unit-selector/      # Unit selection with path columns
     braintree-client/         # Payment UI
     auth/                     # Authentication
     request/                  # HTTP utilities
@@ -203,7 +209,10 @@ libs/
     auth/                     # React auth hooks
     request/                  # React request utilities
   firebase/
-    enrollment-functions/     # Cloud Functions
+    enrollment-functions/     # Cloud Functions (one library per function!)
+      class-admin/            # Admin class CRUD functions
+      full-units-and-paths/   # Fetch paths & units for standard classes
+      get-age-group-units/    # Fetch units for Mallards/Mapaches
     functions-api/            # Functions client
     config/                   # Configuration
   ts/                         # Framework-agnostic TypeScript

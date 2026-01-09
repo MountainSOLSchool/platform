@@ -96,6 +96,13 @@ Admin-only features:
 - `enrollments/` - Enrollment management
 - `class-printouts/` - Printable class forms
 
+#### `/libs/angular/classes/class-management/`
+Admin class management (create, edit, list):
+- `components/class-form/` - Class creation/editing form
+- `components/class-list/` - Admin class list with view dialog
+- `components/unit-selector/` - Unit selection component with path columns
+- `class-management-routes.ts` - Routes for `/admin/classes/management/*`
+
 #### `/libs/angular/request/`
 HTTP request utilities:
 - `requested.type.ts` - Requested<T> type for async states
@@ -135,11 +142,21 @@ enrollment-functions/
 │   └── src/lib/payment.ts      # Service payment function (uses ServicePaymentHandler)
 ├── payment-token/
 │   └── src/lib/payment-token.ts
+├── class-admin/                # Admin class management functions
+│   └── src/lib/
+│       ├── create-class.ts     # Create a class in a semester
+│       ├── update-class.ts     # Update existing class
+│       ├── get-class-for-edit.ts  # Fetch class for editing
+│       ├── get-instructors.ts  # Fetch teachers for dropdown
+│       ├── get-classes-for-admin.ts  # List all classes (including drafts)
+│       └── create-semester.ts  # Create a new semester
+├── full-units-and-paths/       # Fetch all paths and units for standard classes
+├── get-age-group-units/        # Fetch units for Mallards/Mapaches age groups
 ├── enroll/
-└── index.ts                    # Exports all functions
+└── [other functions...]
 ```
 
-Each function is a separate library with its own `project.json`.
+**IMPORTANT**: Each function MUST be in its own library with its own `project.json`. This enables `nx affected` to deploy only changed functions. See `/ai/firebase-patterns.md` for details.
 
 #### `/libs/firebase/config/`
 Configuration management:

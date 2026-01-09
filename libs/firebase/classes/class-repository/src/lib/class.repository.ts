@@ -26,6 +26,7 @@ export type ClassDbo = {
     grade_range_end: number;
     paused_for_enrollment: boolean;
     daily_times: string;
+    min_student_size?: number;
     max_student_size: number;
     for_information_only?: boolean;
     additional_options?: Array<{

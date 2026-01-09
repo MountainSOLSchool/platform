@@ -4,9 +4,21 @@ import {
     RequestedOperatorsUtility,
     RequestService,
 } from '@sol/angular/request';
-import { AdditionalInfoPanel } from '@sol/classes/domain'; // Add to your imports
+import { AdditionalInfoPanel } from '@sol/classes/domain';
 
-type Semester = 'Spring' | 'Summer' | 'Fall' | 'Winter';
+type Season = 'Spring' | 'Summer' | 'Fall' | 'Winter';
+
+export interface Semester {
+    id: string;
+    name: string;
+    archived: boolean;
+}
+
+export interface SemesterConfigData {
+    semesters: Semester[];
+    activeSemesterId: string;
+    otherEnrollableSemesterIds: string[];
+}
 
 @Injectable({
     providedIn: 'root',
@@ -29,8 +41,9 @@ export class ClassesSemesterListService {
     private readonly getAllSemestersRequest =
         this.requestService.declareRequest(() =>
             this.functions.call<{
-                semesters: Array<{ id: string; name: string }>;
+                semesters: Semester[];
                 activeSemesterId: string;
+                otherEnrollableSemesterIds: string[];
             }>('historicalSemesters')
         );
 
@@ -40,19 +53,22 @@ export class ClassesSemesterListService {
             .pipe(RequestedOperatorsUtility.mapLoaded((r) => r.semesters));
     }
 
-    getAllSemestersWithCurrentFirst() {
+    getAllSemestersWithCurrentFirst(includeArchived = false) {
         return this.getAllSemestersRequest
             .getCachedAndLoadWhenEmptyOrFailed()
             .pipe(
                 RequestedOperatorsUtility.mapLoaded((r) => {
+                    const nonArchivedSemesters = includeArchived
+                        ? r.semesters
+                        : r.semesters.filter((s) => !s.archived);
                     const currentSemester =
-                        r.semesters.find(
+                        nonArchivedSemesters.find(
                             (semester) => semester.id === r.activeSemesterId
-                        ) ?? r.semesters[0];
+                        ) ?? nonArchivedSemesters[0];
                     return [
                         currentSemester,
                         ...this.sortSemesters(
-                            r.semesters
+                            nonArchivedSemesters
                                 .filter((semester) => !!semester.name)
                                 .filter(
                                     (semester) =>
@@ -64,8 +80,56 @@ export class ClassesSemesterListService {
             );
     }
 
-    private sortSemesters(semesters: Array<{ id: string; name: string }>) {
-        const order: Record<Semester, number> = {
+    getSemesterConfigDataDirect() {
+        return this.functions
+            .call<{
+                semesters: Semester[];
+                activeSemesterId: string;
+                otherEnrollableSemesterIds: string[];
+            }>('historicalSemesters')
+            .pipe(
+                RequestedOperatorsUtility.mapLoaded(
+                    (r): SemesterConfigData => ({
+                        semesters: this.sortSemestersForConfig(
+                            r.semesters.filter((s) => !!s.name)
+                        ),
+                        activeSemesterId: r.activeSemesterId,
+                        otherEnrollableSemesterIds:
+                            r.otherEnrollableSemesterIds ?? [],
+                    })
+                )
+            );
+    }
+
+    sortSemestersForConfig(semesters: Semester[]): Semester[] {
+        const seasonOrder: Record<Season, number> = {
+            Winter: 1,
+            Spring: 2,
+            Summer: 3,
+            Fall: 4,
+        };
+        const validSeasons = new Set(['Winter', 'Spring', 'Summer', 'Fall']);
+
+        return semesters.concat().sort(({ name: a }, { name: b }) => {
+            const [semA, yearA] = a.split(' ');
+            const [semB, yearB] = b.split(' ');
+
+            const aIsValid = validSeasons.has(semA) && !isNaN(parseInt(yearA));
+            const bIsValid = validSeasons.has(semB) && !isNaN(parseInt(yearB));
+
+            if (aIsValid && !bIsValid) return -1;
+            if (!aIsValid && bIsValid) return 1;
+            if (!aIsValid && !bIsValid) return a.localeCompare(b);
+
+            const yearDiff = parseInt(yearB) - parseInt(yearA);
+            if (yearDiff !== 0) return yearDiff;
+
+            return seasonOrder[semB as Season] - seasonOrder[semA as Season];
+        });
+    }
+
+    private sortSemesters(semesters: Semester[]): Semester[] {
+        const order: Record<Season, number> = {
             Winter: 1,
             Spring: 2,
             Summer: 3,
@@ -77,7 +141,7 @@ export class ClassesSemesterListService {
                 const [semA, yearA] = a.split(' ');
                 const [semB, yearB] = b.split(' ');
                 return yearA === yearB
-                    ? order[semA as Semester] - order[semB as Semester]
+                    ? order[semA as Season] - order[semB as Season]
                     : parseInt(yearA) - parseInt(yearB);
             })
             .reverse();

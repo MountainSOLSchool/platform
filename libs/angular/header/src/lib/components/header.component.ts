@@ -87,6 +87,11 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                     >
                 </li>
                 <li>
+                    <a routerLink="/admin/classes/management" (click)="display = false"
+                        >Manage Classes</a
+                    >
+                </li>
+                <li>
                     <a routerLink="/admin/report" (click)="display = false"
                         >Class Forms and Contacts</a
                     >
