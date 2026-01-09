@@ -39,3 +39,8 @@ export type {
     UpdateActiveSemesterConfigRequest,
     UpdateActiveSemesterConfigResponse,
 } from './lib/update-active-semester-config';
+export { archiveSemester } from './lib/archive-semester';
+export type {
+    ArchiveSemesterRequest,
+    ArchiveSemesterResponse,
+} from './lib/archive-semester';

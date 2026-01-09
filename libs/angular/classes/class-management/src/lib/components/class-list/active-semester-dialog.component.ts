@@ -8,13 +8,16 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import {
     ClassesSemesterListService,
     SemesterConfigData,
+    Semester,
 } from '@sol/angular/classes/semester-list';
 
 @Component({
@@ -28,11 +31,13 @@ import {
         MatSelectModule,
         MatProgressSpinnerModule,
         MatCheckboxModule,
-        MatDividerModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatTabsModule,
     ],
     template: `
         <div class="dialog-container">
-            <h2>Manage Active Semesters</h2>
+            <h2>Manage Semesters</h2>
 
             @if (loading()) {
                 <div class="loading-state">
@@ -40,54 +45,170 @@ import {
                     <p>Loading semesters...</p>
                 </div>
             } @else if (configData()) {
-                <div class="form-section">
-                    <h3>Primary Active Semester</h3>
-                    <p class="helper-text">
-                        This is the default semester for enrollment.
-                    </p>
-                    <mat-form-field appearance="outline" class="full-width">
-                        <mat-label>Active Semester</mat-label>
-                        <mat-select [(ngModel)]="activeSemesterId">
-                            @for (
-                                semester of configData()!.semesters;
-                                track semester.id
-                            ) {
-                                <mat-option [value]="semester.id">{{
-                                    semester.name
-                                }}</mat-option>
+                <mat-tab-group>
+                    <mat-tab label="Active Semesters">
+                        <div class="tab-content">
+                            <div class="form-section">
+                                <h3>Primary Active Semester</h3>
+                                <p class="helper-text">
+                                    This is the default semester for enrollment.
+                                </p>
+                                <mat-form-field
+                                    appearance="outline"
+                                    class="full-width"
+                                >
+                                    <mat-label>Active Semester</mat-label>
+                                    <mat-select [(ngModel)]="activeSemesterId">
+                                        @for (
+                                            semester of nonArchivedSemesters();
+                                            track semester.id
+                                        ) {
+                                            <mat-option [value]="semester.id">{{
+                                                semester.name
+                                            }}</mat-option>
+                                        }
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="form-section">
+                                <h3>Additional Enrollable Semesters</h3>
+                                <p class="helper-text">
+                                    Parents can also enroll in these semesters.
+                                </p>
+                                <div class="checkbox-list">
+                                    @for (
+                                        semester of availableSemesters();
+                                        track semester.id
+                                    ) {
+                                        <mat-checkbox
+                                            [checked]="
+                                                otherSemesterIds().includes(
+                                                    semester.id
+                                                )
+                                            "
+                                            (change)="
+                                                toggleOtherSemester(semester.id)
+                                            "
+                                        >
+                                            {{ semester.name }}
+                                        </mat-checkbox>
+                                    }
+                                    @if (availableSemesters().length === 0) {
+                                        <p class="no-semesters">
+                                            No other semesters available.
+                                        </p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            Archived
+                            @if (archivedSemesters().length > 0) {
+                                <span class="badge">{{
+                                    archivedSemesters().length
+                                }}</span>
                             }
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+                        </ng-template>
+                        <div class="tab-content">
+                            <div class="form-section">
+                                <h3>Archive Semesters</h3>
+                                <p class="helper-text">
+                                    Archived semesters are hidden from the
+                                    semester dropdown.
+                                </p>
+                                <div class="semester-list">
+                                    @for (
+                                        semester of nonArchivedSemesters();
+                                        track semester.id
+                                    ) {
+                                        <div class="semester-item">
+                                            <span class="semester-name">{{
+                                                semester.name
+                                            }}</span>
+                                            <button
+                                                mat-icon-button
+                                                matTooltip="Archive semester"
+                                                (click)="
+                                                    archiveSemester(semester)
+                                                "
+                                                [disabled]="
+                                                    archivingId() === semester.id
+                                                "
+                                            >
+                                                @if (
+                                                    archivingId() === semester.id
+                                                ) {
+                                                    <mat-spinner
+                                                        diameter="20"
+                                                    ></mat-spinner>
+                                                } @else {
+                                                    <mat-icon>archive</mat-icon>
+                                                }
+                                            </button>
+                                        </div>
+                                    }
+                                    @if (nonArchivedSemesters().length === 0) {
+                                        <p class="no-semesters">
+                                            All semesters are archived.
+                                        </p>
+                                    }
+                                </div>
+                            </div>
 
-                <mat-divider></mat-divider>
-
-                <div class="form-section">
-                    <h3>Additional Enrollable Semesters</h3>
-                    <p class="helper-text">
-                        Parents can also enroll in these semesters.
-                    </p>
-                    <div class="checkbox-list">
-                        @for (
-                            semester of availableSemesters();
-                            track semester.id
-                        ) {
-                            <mat-checkbox
-                                [checked]="
-                                    otherSemesterIds().includes(semester.id)
-                                "
-                                (change)="toggleOtherSemester(semester.id)"
-                            >
-                                {{ semester.name }}
-                            </mat-checkbox>
-                        }
-                        @if (availableSemesters().length === 0) {
-                            <p class="no-semesters">
-                                No other semesters available.
-                            </p>
-                        }
-                    </div>
-                </div>
+                            @if (archivedSemesters().length > 0) {
+                                <div class="form-section">
+                                    <h3>Archived Semesters</h3>
+                                    <p class="helper-text">
+                                        Click unarchive to restore a semester.
+                                    </p>
+                                    <div class="semester-list">
+                                        @for (
+                                            semester of archivedSemesters();
+                                            track semester.id
+                                        ) {
+                                            <div class="semester-item archived">
+                                                <span
+                                                    class="semester-name archived-name"
+                                                    >{{ semester.name }}</span
+                                                >
+                                                <button
+                                                    mat-icon-button
+                                                    matTooltip="Unarchive semester"
+                                                    (click)="
+                                                        unarchiveSemester(
+                                                            semester
+                                                        )
+                                                    "
+                                                    [disabled]="
+                                                        archivingId() ===
+                                                        semester.id
+                                                    "
+                                                >
+                                                    @if (
+                                                        archivingId() ===
+                                                        semester.id
+                                                    ) {
+                                                        <mat-spinner
+                                                            diameter="20"
+                                                        ></mat-spinner>
+                                                    } @else {
+                                                        <mat-icon
+                                                            >unarchive</mat-icon
+                                                        >
+                                                    }
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
 
                 @if (error()) {
                     <p class="error">{{ error() }}</p>
@@ -119,12 +240,12 @@ import {
                 background: white;
                 padding: 1.5rem;
                 border-radius: 8px;
-                min-width: 400px;
-                max-width: 500px;
+                min-width: 450px;
+                max-width: 550px;
             }
 
             h2 {
-                margin: 0 0 1.5rem;
+                margin: 0 0 1rem;
             }
 
             h3 {
@@ -139,8 +260,18 @@ import {
                 font-size: 0.875rem;
             }
 
-            .form-section {
+            .tab-content {
                 padding: 1rem 0;
+            }
+
+            .form-section {
+                padding: 0.5rem 0;
+            }
+
+            .form-section + .form-section {
+                margin-top: 1rem;
+                padding-top: 1rem;
+                border-top: 1px solid #eee;
             }
 
             .full-width {
@@ -183,14 +314,53 @@ import {
                 justify-content: flex-end;
                 gap: 8px;
                 margin-top: 1.5rem;
+                padding-top: 1rem;
+                border-top: 1px solid #eee;
             }
 
             .dialog-actions mat-spinner {
                 display: inline-block;
             }
 
-            mat-divider {
-                margin: 0.5rem 0;
+            .badge {
+                background-color: #e0e0e0;
+                color: #666;
+                border-radius: 10px;
+                padding: 2px 8px;
+                font-size: 12px;
+                margin-left: 8px;
+            }
+
+            .semester-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+                max-height: 200px;
+                overflow-y: auto;
+            }
+
+            .semester-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+            }
+
+            .semester-item:hover {
+                background-color: #f5f5f5;
+            }
+
+            .semester-item.archived {
+                background-color: #fafafa;
+            }
+
+            .semester-name {
+                font-size: 0.875rem;
+            }
+
+            .archived-name {
+                color: #999;
             }
         `,
     ],
@@ -204,6 +374,7 @@ export class ActiveSemesterDialogComponent {
     saving = signal(false);
     error = signal<string | null>(null);
     configData = signal<SemesterConfigData | null>(null);
+    archivingId = signal<string | null>(null);
 
     activeSemesterId = '';
     otherSemesterIds = signal<string[]>([]);
@@ -211,7 +382,21 @@ export class ActiveSemesterDialogComponent {
     availableSemesters = computed(() => {
         const data = this.configData();
         if (!data) return [];
-        return data.semesters.filter((s) => s.id !== this.activeSemesterId);
+        return data.semesters
+            .filter((s) => s.id !== this.activeSemesterId)
+            .filter((s) => !s.archived);
+    });
+
+    nonArchivedSemesters = computed(() => {
+        const data = this.configData();
+        if (!data) return [];
+        return data.semesters.filter((s) => !s.archived);
+    });
+
+    archivedSemesters = computed(() => {
+        const data = this.configData();
+        if (!data) return [];
+        return data.semesters.filter((s) => s.archived);
     });
 
     constructor() {
@@ -251,6 +436,48 @@ export class ActiveSemesterDialogComponent {
         } else {
             this.otherSemesterIds.set([...current, semesterId]);
         }
+    }
+
+    archiveSemester(semester: Semester) {
+        this.setArchiveStatus(semester, true);
+    }
+
+    unarchiveSemester(semester: Semester) {
+        this.setArchiveStatus(semester, false);
+    }
+
+    private setArchiveStatus(semester: Semester, archived: boolean) {
+        this.archivingId.set(semester.id);
+        this.error.set(null);
+
+        this.functions
+            .call<{ success: boolean }>('archiveSemester', {
+                semesterId: semester.id,
+                archived,
+            })
+            .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+            .subscribe({
+                next: () => {
+                    this.archivingId.set(null);
+                    const data = this.configData();
+                    if (data) {
+                        const updatedSemesters = data.semesters.map((s) =>
+                            s.id === semester.id ? { ...s, archived } : s
+                        );
+                        this.configData.set({
+                            ...data,
+                            semesters: updatedSemesters,
+                        });
+                    }
+                },
+                error: (err) => {
+                    this.archivingId.set(null);
+                    this.error.set(
+                        err?.message ||
+                            `Failed to ${archived ? 'archive' : 'unarchive'} semester`
+                    );
+                },
+            });
     }
 
     close() {

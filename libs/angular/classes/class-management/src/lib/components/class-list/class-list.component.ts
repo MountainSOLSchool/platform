@@ -1,12 +1,13 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Dialog } from '@angular/cdk/dialog';
+import { map } from 'rxjs';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +22,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClassDetailDialogComponent } from './class-detail-dialog.component';
 import { AddSemesterDialogComponent } from './add-semester-dialog.component';
 import { ActiveSemesterDialogComponent } from './active-semester-dialog.component';
+import {
+    CopyClassDialogComponent,
+    CopyClassDialogData,
+    CopyClassDialogResult,
+} from './copy-class-dialog.component';
 
 interface AdminClass {
     id: string;
@@ -110,7 +116,7 @@ interface Semester {
                             (click)="openActiveSemesterDialog()"
                         >
                             <mat-icon>settings</mat-icon>
-                            Active Semesters
+                            Manage Semesters
                         </button>
                     </div>
                 </mat-card-content>
@@ -230,6 +236,13 @@ interface Semester {
                                     (click)="editClass(cls)"
                                 >
                                     <mat-icon>edit</mat-icon>
+                                </button>
+                                <button
+                                    mat-icon-button
+                                    matTooltip="Copy Class"
+                                    (click)="copyClass(cls)"
+                                >
+                                    <mat-icon>content_copy</mat-icon>
                                 </button>
                             </td>
                         </ng-container>
@@ -388,6 +401,7 @@ export class AdminClassListComponent {
     private readonly functions = inject(FirebaseFunctionsService);
     private readonly semesterService = inject(ClassesSemesterListService);
     private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
     private readonly dialog = inject(Dialog);
 
     displayedColumns = [
@@ -401,9 +415,16 @@ export class AdminClassListComponent {
         'actions',
     ];
 
+    private readonly semesterIdFromQuery = toSignal(
+        this.route.queryParamMap.pipe(
+            map((params) => params.get('semesterId') ?? '')
+        )
+    );
+
     selectedSemesterId = signal<string>('');
     classes = signal<AdminClass[]>([]);
     loading = signal<boolean>(false);
+    private initialized = false;
 
     private semestersRaw = toSignal(
         this.semesterService
@@ -418,20 +439,43 @@ export class AdminClassListComponent {
     );
 
     constructor() {
-        const semesterCheck = setInterval(() => {
+        // Initialize semester selection once semesters are loaded
+        effect(() => {
             const sems = this.semesters();
-            if (sems.length > 0) {
-                clearInterval(semesterCheck);
-                this.selectedSemesterId.set(sems[0].id);
-                this.loadClasses(sems[0].id);
-            }
-        }, 100);
+            const queryParamSemesterId = this.semesterIdFromQuery();
 
-        setTimeout(() => clearInterval(semesterCheck), 10000);
+            if (sems.length > 0 && !this.initialized) {
+                this.initialized = true;
+                // Use query param if valid, otherwise default to first semester
+                const semesterToSelect =
+                    queryParamSemesterId &&
+                    sems.some((s) => s.id === queryParamSemesterId)
+                        ? queryParamSemesterId
+                        : sems[0].id;
+
+                this.selectedSemesterId.set(semesterToSelect);
+                this.loadClasses(semesterToSelect);
+
+                // Update URL if we defaulted to first semester
+                if (!queryParamSemesterId || queryParamSemesterId !== semesterToSelect) {
+                    this.updateUrlWithSemester(semesterToSelect);
+                }
+            }
+        });
     }
 
     onSemesterChange(semesterId: string) {
+        this.updateUrlWithSemester(semesterId);
         this.loadClasses(semesterId);
+    }
+
+    private updateUrlWithSemester(semesterId: string) {
+        this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { semesterId },
+            queryParamsHandling: 'merge',
+            replaceUrl: true,
+        });
     }
 
     loadClasses(semesterId: string) {
@@ -473,6 +517,34 @@ export class AdminClassListComponent {
     editClass(cls: AdminClass) {
         this.router.navigate(['/admin/classes/management/edit', cls.id], {
             queryParams: { semesterId: this.selectedSemesterId() },
+        });
+    }
+
+    copyClass(cls: AdminClass) {
+        const dialogRef = this.dialog.open<
+            CopyClassDialogResult,
+            CopyClassDialogData
+        >(CopyClassDialogComponent, {
+            width: '450px',
+            data: {
+                classId: cls.id,
+                className: cls.name,
+                currentSemesterId: this.selectedSemesterId(),
+            },
+        });
+
+        dialogRef.closed.subscribe((result) => {
+            if (result) {
+                // Navigate to edit the newly created class
+                this.router.navigate(
+                    ['/admin/classes/management/edit', result.newClassId],
+                    {
+                        queryParams: {
+                            semesterId: result.destinationSemesterId,
+                        },
+                    }
+                );
+            }
         });
     }
 

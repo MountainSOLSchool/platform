@@ -8,8 +8,14 @@ import { AdditionalInfoPanel } from '@sol/classes/domain';
 
 type Season = 'Spring' | 'Summer' | 'Fall' | 'Winter';
 
+export interface Semester {
+    id: string;
+    name: string;
+    archived: boolean;
+}
+
 export interface SemesterConfigData {
-    semesters: Array<{ id: string; name: string }>;
+    semesters: Semester[];
     activeSemesterId: string;
     otherEnrollableSemesterIds: string[];
 }
@@ -35,7 +41,7 @@ export class ClassesSemesterListService {
     private readonly getAllSemestersRequest =
         this.requestService.declareRequest(() =>
             this.functions.call<{
-                semesters: Array<{ id: string; name: string }>;
+                semesters: Semester[];
                 activeSemesterId: string;
                 otherEnrollableSemesterIds: string[];
             }>('historicalSemesters')
@@ -47,19 +53,22 @@ export class ClassesSemesterListService {
             .pipe(RequestedOperatorsUtility.mapLoaded((r) => r.semesters));
     }
 
-    getAllSemestersWithCurrentFirst() {
+    getAllSemestersWithCurrentFirst(includeArchived = false) {
         return this.getAllSemestersRequest
             .getCachedAndLoadWhenEmptyOrFailed()
             .pipe(
                 RequestedOperatorsUtility.mapLoaded((r) => {
+                    const nonArchivedSemesters = includeArchived
+                        ? r.semesters
+                        : r.semesters.filter((s) => !s.archived);
                     const currentSemester =
-                        r.semesters.find(
+                        nonArchivedSemesters.find(
                             (semester) => semester.id === r.activeSemesterId
-                        ) ?? r.semesters[0];
+                        ) ?? nonArchivedSemesters[0];
                     return [
                         currentSemester,
                         ...this.sortSemesters(
-                            r.semesters
+                            nonArchivedSemesters
                                 .filter((semester) => !!semester.name)
                                 .filter(
                                     (semester) =>
@@ -74,7 +83,7 @@ export class ClassesSemesterListService {
     getSemesterConfigDataDirect() {
         return this.functions
             .call<{
-                semesters: Array<{ id: string; name: string }>;
+                semesters: Semester[];
                 activeSemesterId: string;
                 otherEnrollableSemesterIds: string[];
             }>('historicalSemesters')
@@ -92,7 +101,7 @@ export class ClassesSemesterListService {
             );
     }
 
-    sortSemestersForConfig(semesters: Array<{ id: string; name: string }>) {
+    sortSemestersForConfig(semesters: Semester[]): Semester[] {
         const seasonOrder: Record<Season, number> = {
             Winter: 1,
             Spring: 2,
@@ -119,7 +128,7 @@ export class ClassesSemesterListService {
         });
     }
 
-    private sortSemesters(semesters: Array<{ id: string; name: string }>) {
+    private sortSemesters(semesters: Semester[]): Semester[] {
         const order: Record<Season, number> = {
             Winter: 1,
             Spring: 2,

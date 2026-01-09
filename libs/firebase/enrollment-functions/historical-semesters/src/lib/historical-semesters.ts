@@ -13,6 +13,7 @@ export const historicalSemesters = Functions.endpoint.handle<
         snapshot.docs.map((doc) => ({
             id: doc.id,
             name: doc.data().displayName,
+            archived: doc.data().archived ?? false,
         }))
     );
 

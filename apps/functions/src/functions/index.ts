@@ -44,4 +44,5 @@ export {
     getClassTypes,
     getLocations,
     updateActiveSemesterConfig,
+    archiveSemester,
 } from '@sol/firebase/enrollment-functions/class-admin';
