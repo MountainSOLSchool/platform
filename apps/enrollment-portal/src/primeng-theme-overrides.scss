@@ -216,6 +216,21 @@
   color: var(--sol-primary, #006633);
 }
 
+// Dialog close button - simple gray X with no background
+.p-dialog .p-dialog-header .p-dialog-header-icon {
+  background: transparent;
+  color: rgba(0, 0, 0, 0.6);
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: rgba(0, 0, 0, 0.87);
+  }
+
+  &:focus {
+    box-shadow: none;
+  }
+}
+
 // Card header styling
 .p-card .p-card-title {
   color: var(--sol-on-surface, #111111);
