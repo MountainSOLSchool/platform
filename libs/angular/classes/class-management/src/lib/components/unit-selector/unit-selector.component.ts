@@ -295,7 +295,7 @@ interface PathUnitGroup {
 
             .selected-count {
                 font-weight: 500;
-                color: #1976d2;
+                color: var(--sol-primary, #006633);
             }
 
             .columns-container {
@@ -408,7 +408,7 @@ interface PathUnitGroup {
             }
 
             .info-icon:hover {
-                color: #1976d2;
+                color: var(--sol-primary, #006633);
             }
 
             mat-checkbox {

@@ -205,11 +205,11 @@ interface ClassRow {
                     }
 
                     &.selected {
-                        background-color: #3b82f6;
+                        background-color: var(--sol-primary, #006633);
                         color: white;
 
                         &:hover {
-                            background-color: #2463eb;
+                            background-color: var(--sol-primary-hover, #004d26);
                         }
                     }
                 }

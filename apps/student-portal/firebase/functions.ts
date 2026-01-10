@@ -18,11 +18,17 @@ export class FirebaseFunctions {
         return _functions;
     }
 
-    static async getSemesters(): Promise<Array<{ name: string; id: string }>> {
+    static async getSemesters(): Promise<
+        Array<{ name: string; id: string; archived: boolean }>
+    > {
         const getSemestersFn = httpsCallable<
             void,
             {
-                semesters: Array<{ name: string; id: string }>;
+                semesters: Array<{
+                    name: string;
+                    id: string;
+                    archived: boolean;
+                }>;
                 currentSemesterId: string;
             }
         >(this.functions, 'historicalSemesters');

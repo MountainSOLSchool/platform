@@ -97,8 +97,8 @@ export interface ClassCardInfo {
                 }
 
                 &.selected {
-                    border: 3px solid #1976d2;
-                    box-shadow: 0 8px 24px rgba(25, 118, 210, 0.25);
+                    border: 3px solid var(--sol-primary, #006633);
+                    box-shadow: 0 8px 24px rgba(0, 102, 51, 0.25);
                 }
             }
 
@@ -321,7 +321,7 @@ export interface ClassCardInfo {
                     }
 
                     a {
-                        color: #1976d2;
+                        color: var(--sol-primary, #006633);
                         text-decoration: none;
                         font-weight: 500;
 
@@ -343,7 +343,7 @@ export interface ClassCardInfo {
                     }
 
                     &.selected-state {
-                        background-color: #3b82f6;
+                        background-color: var(--sol-primary, #006633);
                         color: white;
                     }
                 }
