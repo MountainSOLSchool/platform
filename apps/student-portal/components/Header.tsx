@@ -22,7 +22,7 @@ const Header = () => {
             onClick={() => router.push('/')}
         >
             <Image
-                src="https://www.mountainsol.org/wp-content/uploads/2020/03/SOL-horizontal-large-1024x234-1.jpg"
+                src="https://www.mountainsol.org/wp-content/uploads/2023/07/Banner-4.png"
                 alt="sol-logo"
                 width={isDefault ? 218 : 153}
                 height={isDefault ? 50 : 35}

@@ -52,7 +52,7 @@ export function UpdateStudentUnitsChangesView(
                 <div className="mb-4">
                     {additions.length > 0 && (
                         <div className="mb-3">
-                            <h3 className="text-lg font-semibold mb-2">
+                            <h3 className="font-semibold mb-2">
                                 Added Units{' '}
                                 <i className="pi pi-plus-circle text-green-600"></i>
                             </h3>
@@ -66,7 +66,7 @@ export function UpdateStudentUnitsChangesView(
 
                     {removals.length > 0 && (
                         <div>
-                            <h3 className="text-lg font-semibold mb-2">
+                            <h3 className="font-semibold mb-2">
                                 Removed Units{' '}
                                 <i className="pi pi-minus-circle text-red-600"></i>
                             </h3>
@@ -82,13 +82,13 @@ export function UpdateStudentUnitsChangesView(
 
             {hasRepeatableChanges && (
                 <div>
-                    <h3 className="text-lg font-semibold mb-3">
+                    <h3 className="font-semibold mb-3">
                         Give-Back Elective Changes
                     </h3>
 
                     {addedRepeatableCompletions.length > 0 && (
                         <div className="mb-3">
-                            <h4 className="text-md font-medium mb-2">
+                            <h4 className="font-medium mb-2">
                                 Added Completions{' '}
                                 <i className="pi pi-plus-circle text-green-600"></i>
                             </h4>
@@ -112,7 +112,7 @@ export function UpdateStudentUnitsChangesView(
 
                     {updatedRepeatableCompletions.length > 0 && (
                         <div className="mb-3">
-                            <h4 className="text-md font-medium mb-2">
+                            <h4 className="font-medium mb-2">
                                 Updated Assignments{' '}
                                 <i className="pi pi-pencil text-blue-600"></i>
                             </h4>
@@ -137,7 +137,7 @@ export function UpdateStudentUnitsChangesView(
 
                     {removedRepeatableCompletions.length > 0 && (
                         <div>
-                            <h4 className="text-md font-medium mb-2">
+                            <h4 className="font-medium mb-2">
                                 Removed Completions{' '}
                                 <i className="pi pi-minus-circle text-red-600"></i>
                             </h4>

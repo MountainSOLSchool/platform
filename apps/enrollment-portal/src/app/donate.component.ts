@@ -143,7 +143,7 @@ import * as browserDetection from '@braintree/browser-detection';
             .donation-card {
                 width: 100%;
                 max-width: 500px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 6px var(--sol-shadow-sm);
             }
 
             .donation-form {
@@ -210,14 +210,14 @@ import * as browserDetection from '@braintree/browser-detection';
                 font-size: 1.1rem;
                 font-weight: 600;
                 border-radius: 0.5rem;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, var(--sol-primary) 0%, var(--sol-primary-hover) 100%);
                 border: none;
                 transition: all 0.3s ease;
             }
 
             .donate-button:hover:not(:disabled) {
                 transform: translateY(-2px);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                box-shadow: 0 4px 12px var(--sol-shadow-md);
             }
 
             .donate-button:disabled {
@@ -236,7 +236,7 @@ import * as browserDetection from '@braintree/browser-detection';
 
             .success-icon {
                 font-size: 4rem;
-                color: #22c55e;
+                color: var(--sol-success);
                 margin-bottom: 0.5rem;
             }
 

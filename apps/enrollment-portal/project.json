@@ -25,13 +25,14 @@
                     }
                 ],
                 "styles": [
+                    "apps/enrollment-portal/src/design-tokens.scss",
                     "apps/enrollment-portal/src/custom-theme.scss",
                     "apps/enrollment-portal/src/styles.css",
                     "node_modules/primeflex/primeflex.css",
                     "node_modules/primeicons/primeicons.css",
                     "node_modules/primeng/resources/primeng.min.css",
                     "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
-                    "apps/enrollment-portal/src/theme-colors.scss"
+                    "apps/enrollment-portal/src/primeng-theme-overrides.scss"
                 ],
                 "scripts": []
             },

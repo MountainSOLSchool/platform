@@ -1,17 +1,18 @@
-// Custom Theming for Angular Material v19+
-// Using the new Material 3 theming system
+// Mountain SOL Custom Theme for Angular Material
+// Using the new Material 3 theming system with Mountain SOL green palette
 @use '@angular/material' as mat;
-@use './theme-colors' as colors; // Import your generated blue palettes
+@use './theme-colors' as colors;
 
 // Define theme using the new M3 theming API
 html {
     // Enable automatic light/dark mode switching based on user preference
     color-scheme: light;
 
-    // Apply the theme using your custom blue palette
-    @include mat.theme((color: colors.$primary-palette, // Your custom blue (#3B82F6) palette
-            typography: Roboto, // Use Roboto font family
-            density: 0 // Standard density (0 to -5, where 0 is default)
+    // Apply the theme using Mountain SOL green palette
+    // Using Nunito Sans as the base font (friendly, readable sans-serif)
+    @include mat.theme((color: colors.$primary-palette,
+            typography: Nunito Sans,
+            density: 0
         ));
 }
 
@@ -20,32 +21,95 @@ body {
     --mat-sys-surface: white;
     color: var(--mat-sys-on-surface);
     margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-family: 'Nunito Sans', 'Helvetica Neue', sans-serif;
 }
 
-// Optional: If you want to ensure buttons match PrimeNG lara-light-blue exactly
+// Material component headings use EB Garamond
+.mat-mdc-card-title,
+.mat-mdc-dialog-title,
+.mdc-dialog__title {
+    font-family: 'EB Garamond', Georgia, serif !important;
+}
+
+// Override Material button styles to match Mountain SOL branding
 .mat-mdc-raised-button.mat-primary {
-    // These overrides ensure exact color matching with PrimeNG
-    --mdc-filled-button-container-color: #3B82F6;
-    --mdc-filled-button-label-text-color: white;
+    --mdc-filled-button-container-color: var(--sol-primary, #006633);
+    --mdc-filled-button-label-text-color: var(--sol-primary-on, white);
 
     &:hover {
-        --mdc-filled-button-hover-container-color: #2563EB;
+        --mdc-filled-button-hover-container-color: var(--sol-primary-hover, #004d26);
     }
 
     &:active {
-        --mdc-filled-button-pressed-container-color: #1d4ed8;
+        --mdc-filled-button-pressed-container-color: var(--sol-primary-hover, #004d26);
     }
 
     &:disabled {
-        --mdc-filled-button-disabled-container-color: #e5e7eb;
-        --mdc-filled-button-disabled-label-text-color: #9ca3af;
+        --mdc-filled-button-disabled-container-color: var(--sol-disabled-bg, #e5e7eb);
+        --mdc-filled-button-disabled-label-text-color: var(--sol-disabled-text, #9ca3af);
     }
 }
 
-// If you need the accent color to be different (like your current pink)
-// You can define a separate theme for specific components or sections
+// Override flat buttons as well
+.mat-mdc-button.mat-primary {
+    --mdc-text-button-label-text-color: var(--sol-primary, #006633);
+
+    &:hover {
+        --mat-text-button-state-layer-color: var(--sol-primary, #006633);
+    }
+}
+
+// Override FAB buttons
+.mat-mdc-fab.mat-primary,
+.mat-mdc-mini-fab.mat-primary {
+    --mdc-fab-container-color: var(--sol-primary, #006633);
+
+    &:hover {
+        --mdc-fab-hover-container-color: var(--sol-primary-hover, #004d26);
+    }
+}
+
+// Override form field focus colors
+.mat-mdc-form-field.mat-focused {
+    .mdc-floating-label {
+        color: var(--sol-primary, #006633);
+    }
+
+    .mdc-line-ripple::after {
+        border-bottom-color: var(--sol-primary, #006633);
+    }
+}
+
+// Override checkbox and radio colors
+.mat-mdc-checkbox.mat-primary {
+    --mdc-checkbox-selected-checkmark-color: white;
+    --mdc-checkbox-selected-focus-icon-color: var(--sol-primary, #006633);
+    --mdc-checkbox-selected-hover-icon-color: var(--sol-primary, #006633);
+    --mdc-checkbox-selected-icon-color: var(--sol-primary, #006633);
+    --mdc-checkbox-selected-pressed-icon-color: var(--sol-primary, #006633);
+}
+
+.mat-mdc-radio-button.mat-primary {
+    --mdc-radio-selected-focus-icon-color: var(--sol-primary, #006633);
+    --mdc-radio-selected-hover-icon-color: var(--sol-primary, #006633);
+    --mdc-radio-selected-icon-color: var(--sol-primary, #006633);
+    --mdc-radio-selected-pressed-icon-color: var(--sol-primary, #006633);
+}
+
+// Override progress spinner
+.mat-mdc-progress-spinner.mat-primary {
+    --mdc-circular-progress-active-indicator-color: var(--sol-primary, #006633);
+}
+
+// Override slide toggle
+.mat-mdc-slide-toggle.mat-primary {
+    --mdc-switch-selected-track-color: var(--sol-primary, #006633);
+    --mdc-switch-selected-hover-track-color: var(--sol-primary-hover, #004d26);
+    --mdc-switch-selected-focus-track-color: var(--sol-primary, #006633);
+    --mdc-switch-selected-pressed-track-color: var(--sol-primary-hover, #004d26);
+}
+
+// If you need the accent color (tertiary - teal/cyan)
 .accent-theme {
-    @include mat.theme((color: mat.$magenta-palette, // Or use colors.$tertiary-palette from your generated file
-        ));
+    @include mat.theme((color: colors.$tertiary-palette));
 }

@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+/* Mountain SOL Enrollment Portal - Global Styles */
 
 html,
 body {
@@ -8,19 +8,37 @@ body {
 
 body {
     margin: 0;
-    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    font-family: 'Nunito Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* Heading typography - EB Garamond for elegant, nature-forward feel */
+/* Using !important to override PrimeNG/PrimeFlex utility classes */
+/* Font sizes use design tokens for consistency across apps */
+h1, h2, h3, h4 {
+    font-family: var(--sol-font-heading, 'EB Garamond', Georgia, serif) !important;
+    font-weight: 500;
+}
+
+h1 {
+    font-size: var(--sol-text-4xl, 2.5rem) !important;
+    font-weight: 600;
+}
+
+h2 {
+    font-size: var(--sol-text-3xl, 2rem) !important;
+    font-weight: 500;
+}
+
+h3 {
+    font-size: var(--sol-text-2xl, 1.5rem) !important;
+    font-weight: 500;
+}
+
+h4 {
+    font-size: var(--sol-text-xl, 1.25rem) !important;
+    font-weight: 500;
 }
 
 .sol-button {
     padding: 5px;
-}
-
-html,
-body {
-    height: 100%;
-}
-
-body {
-    margin: 0;
-    font-family: Roboto, 'Helvetica Neue', sans-serif;
 }

@@ -36,7 +36,7 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                 <div routerLink="/" class="p-toolbar-group-left">
                     <div>
                         <img
-                            [src]="size === 'default' ? 'https://www.mountainsol.org/wp-content/uploads/2020/03/SOL-horizontal-large-1024x234-1.jpg' : 'https://firebasestorage.googleapis.com/v0/b/mountain-sol-platform.appspot.com/o/SOL-horizontal-large-1024x234-1.jpg?alt=media&token=ec0f774c-3862-41b6-a646-c834468a3cb1'"
+                            [src]="size === 'default' ? 'https://www.mountainsol.org/wp-content/uploads/2023/07/Banner-4.png' : 'https://firebasestorage.googleapis.com/v0/b/mountain-sol-platform.appspot.com/o/SOL-horizontal-large-1024x234-1.jpg?alt=media&token=ec0f774c-3862-41b6-a646-c834468a3cb1'"
                             alt="sol-logo"
                             [ngStyle]="{
                                 'margin-right': '10px',

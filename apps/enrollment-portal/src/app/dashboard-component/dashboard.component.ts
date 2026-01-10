@@ -57,30 +57,28 @@ export class DashboardComponent {
 
     readonly chartOptions: ChartOptions = {};
 
+    // Nature-inspired chart colors (Mountain SOL brand palette)
     readonly #colors = [
-        'red',
-        'orange',
-        'green',
-        'indigo',
-        'violet',
-        'magenta',
-        'deeppink',
-        'indianred',
-        'darksalmon',
-        'blue',
-        'greenyellow',
-        'lightseagreen',
-        'mediumturquoise',
-        'LemonChiffon',
-        'lightpink',
-        'yellow',
-        'powderblue',
-        'rebeccapurple',
-        'palegreen',
-        'midnightblue',
-        'plum',
-        'slateblue',
-        'seagreen',
+        '#006633', // Forest green (primary)
+        '#357214', // Light forest green
+        '#4a7c23', // Moss green
+        '#8B4513', // Saddle brown
+        '#A0522D', // Sienna
+        '#CD853F', // Peru
+        '#4682B4', // Steel blue (sky/water)
+        '#5F9EA0', // Cadet blue (water)
+        '#D2691E', // Chocolate (autumn)
+        '#B8860B', // Dark goldenrod (autumn)
+        '#2E8B57', // Sea green
+        '#6B8E23', // Olive drab
+        '#8FBC8F', // Dark sea green
+        '#DAA520', // Goldenrod
+        '#BC8F8F', // Rosy brown
+        '#9ACD32', // Yellow green
+        '#708090', // Slate gray
+        '#556B2F', // Dark olive green
+        '#BDB76B', // Dark khaki
+        '#CD5C5C', // Indian red (autumn leaf)
     ];
 
     #getSemesterEnrollmentChart(semesterId: string) {
@@ -98,14 +96,16 @@ export class DashboardComponent {
                         labels: response.classes.map(({ title }) => title),
                         datasets: [
                             {
-                                backgroundColor: 'rgba(0, 110, 255, 0.5)',
+                                backgroundColor: 'rgba(0, 102, 51, 0.5)', // Mountain SOL green with transparency
                                 label: 'Enrolled Students',
                                 data: response.classes.map(
                                     ({ enrolledCount }) => Number(enrolledCount)
                                 ),
                                 pointBackgroundColor: response.classes.map(
                                     (_, i) => {
-                                        return this.#colors[i];
+                                        return this.#colors[
+                                            i % this.#colors.length
+                                        ];
                                     }
                                 ),
                             },

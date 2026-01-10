@@ -1,0 +1,80 @@
+/* Mountain SOL Design Tokens
+ * Centralized CSS custom properties for consistent theming across the student portal
+ * Matches the enrollment portal theming for unified brand identity
+ */
+
+:root {
+  /* Typography - Font families */
+  /* EB Garamond: Elegant serif for headings (matches WordPress site) */
+  /* Nunito Sans: Friendly, rounded sans-serif for body/UI */
+  --sol-font-heading: 'EB Garamond', Georgia, serif;
+  --sol-font-body: 'Nunito Sans', 'Helvetica Neue', sans-serif;
+
+  /* Typography - Font sizes (unified across apps) */
+  --sol-text-xs: 0.75rem;     /* 12px - small labels, hints */
+  --sol-text-sm: 0.875rem;    /* 14px - secondary text, captions */
+  --sol-text-base: 1rem;      /* 16px - body text */
+  --sol-text-lg: 1.125rem;    /* 18px - emphasized body */
+  --sol-text-xl: 1.25rem;     /* 20px - h4, small headings */
+  --sol-text-2xl: 1.5rem;     /* 24px - h3 */
+  --sol-text-3xl: 2rem;       /* 32px - h2 */
+  --sol-text-4xl: 2.5rem;     /* 40px - h1, page titles */
+
+  /* Typography - Header title (app bar) */
+  --sol-header-title: 2.25rem; /* 36px - consistent header title size */
+
+  /* Brand colors (Mountain SOL green palette from mountainsol.org) */
+  --sol-primary: #006633;
+  --sol-primary-hover: #004d26;
+  --sol-primary-light: #357214;
+  --sol-primary-on: #ffffff;
+
+  /* Header dark green (from WordPress site) */
+  --sol-header-bg: rgb(20, 51, 0);
+  --sol-header-text: #ffffff;
+
+  /* Semantic colors */
+  --sol-success: #22c55e;
+  --sol-success-light: #dcfce7;
+  --sol-error: #c62828;
+  --sol-error-light: #ffebee;
+  --sol-warning: #e65100;
+  --sol-warning-light: #fff3e0;
+  --sol-info: #006633;
+
+  /* Surface & text */
+  --sol-surface: #ffffff;
+  --sol-surface-variant: #f5f5f5;
+  --sol-on-surface: #111111;
+  --sol-on-surface-secondary: #333333;
+  --sol-on-surface-variant: #666666;
+
+  /* Form elements */
+  --sol-input-border: rgba(0, 0, 0, 0.23);
+  --sol-input-focus: var(--sol-primary);
+  --sol-input-placeholder: rgba(0, 0, 0, 0.42);
+  --sol-label-color: rgba(0, 0, 0, 0.87);
+  --sol-hint-color: rgba(0, 0, 0, 0.6);
+
+  /* Disabled states */
+  --sol-disabled-bg: #e5e7eb;
+  --sol-disabled-text: #9ca3af;
+  --sol-disabled-bg-alpha: rgba(0, 0, 0, 0.12);
+  --sol-disabled-text-alpha: rgba(0, 0, 0, 0.38);
+
+  /* Shadows */
+  --sol-shadow-sm: rgba(0, 0, 0, 0.1);
+  --sol-shadow-md: rgba(0, 0, 0, 0.15);
+
+  /* Nature-inspired chart palette */
+  --sol-chart-1: #006633;  /* Forest green (primary) */
+  --sol-chart-2: #357214;  /* Light forest green */
+  --sol-chart-3: #4a7c23;  /* Moss green */
+  --sol-chart-4: #8B4513;  /* Saddle brown */
+  --sol-chart-5: #A0522D;  /* Sienna */
+  --sol-chart-6: #CD853F;  /* Peru */
+  --sol-chart-7: #4682B4;  /* Steel blue (sky/water) */
+  --sol-chart-8: #5F9EA0;  /* Cadet blue (water) */
+  --sol-chart-9: #D2691E;  /* Chocolate (autumn) */
+  --sol-chart-10: #B8860B; /* Dark goldenrod (autumn) */
+}

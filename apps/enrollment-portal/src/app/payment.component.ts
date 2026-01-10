@@ -296,7 +296,7 @@ import { MatIconModule } from '@angular/material/icon';
             }
 
             mat-card-subtitle a {
-                color: #1976d2;
+                color: var(--sol-primary);
                 text-decoration: none;
             }
 
@@ -319,19 +319,19 @@ import { MatIconModule } from '@angular/material/icon';
             .field-label {
                 font-weight: 500;
                 font-size: 0.875rem;
-                color: rgba(0, 0, 0, 0.87);
+                color: var(--sol-label-color);
             }
 
             .field-label.required::after {
                 content: ' *';
-                color: #f44336;
+                color: var(--sol-error);
             }
 
             .form-input {
                 width: 100%;
                 padding: 0.75rem;
                 font-size: 1rem;
-                border: 1px solid rgba(0, 0, 0, 0.23);
+                border: 1px solid var(--sol-input-border);
                 border-radius: 4px;
                 background: white;
                 box-sizing: border-box;
@@ -342,12 +342,12 @@ import { MatIconModule } from '@angular/material/icon';
 
             .form-input:focus {
                 outline: none;
-                border-color: #3b82f6;
-                box-shadow: 0 0 0 1px #3b82f6;
+                border-color: var(--sol-input-focus);
+                box-shadow: 0 0 0 1px var(--sol-input-focus);
             }
 
             .form-input::placeholder {
-                color: rgba(0, 0, 0, 0.42);
+                color: var(--sol-input-placeholder);
             }
 
             .form-input.uppercase {
@@ -375,7 +375,7 @@ import { MatIconModule } from '@angular/material/icon';
             .currency-prefix {
                 position: absolute;
                 left: 0.75rem;
-                color: rgba(0, 0, 0, 0.6);
+                color: var(--sol-hint-color);
                 font-size: 1rem;
                 pointer-events: none;
             }
@@ -386,20 +386,20 @@ import { MatIconModule } from '@angular/material/icon';
 
             .field-hint {
                 font-size: 0.75rem;
-                color: rgba(0, 0, 0, 0.6);
+                color: var(--sol-hint-color);
             }
 
             .field-error {
                 font-size: 0.75rem;
-                color: #c62828;
+                color: var(--sol-error);
             }
 
             .field-error a {
-                color: #c62828;
+                color: var(--sol-error);
             }
 
             .input-error {
-                border-color: #c62828 !important;
+                border-color: var(--sol-error) !important;
             }
 
             .error-banner {
@@ -407,8 +407,8 @@ import { MatIconModule } from '@angular/material/icon';
                 align-items: center;
                 gap: 0.5rem;
                 padding: 1rem;
-                background-color: #ffebee;
-                color: #c62828;
+                background-color: var(--sol-error-light);
+                color: var(--sol-error);
                 border-radius: 4px;
                 margin-bottom: 1rem;
             }
@@ -422,8 +422,8 @@ import { MatIconModule } from '@angular/material/icon';
                 align-items: center;
                 gap: 0.5rem;
                 padding: 0.75rem;
-                background-color: #fff3e0;
-                color: #e65100;
+                background-color: var(--sol-warning-light);
+                color: var(--sol-warning);
                 border-radius: 4px;
             }
 
@@ -431,16 +431,16 @@ import { MatIconModule } from '@angular/material/icon';
                 height: 48px;
                 font-size: 1rem;
                 margin-top: 0.5rem;
-                background-color: #3b82f6 !important;
-                color: white !important;
+                background-color: var(--sol-primary) !important;
+                color: var(--sol-primary-on) !important;
                 display: inline-flex !important;
                 align-items: center;
                 justify-content: center;
             }
 
             .submit-button:disabled {
-                background-color: rgba(0, 0, 0, 0.12) !important;
-                color: rgba(0, 0, 0, 0.38) !important;
+                background-color: var(--sol-disabled-bg-alpha) !important;
+                color: var(--sol-disabled-text-alpha) !important;
             }
 
             .submit-button ::ng-deep .mdc-button__label {
@@ -466,31 +466,31 @@ import { MatIconModule } from '@angular/material/icon';
                 font-size: 64px;
                 width: 64px;
                 height: 64px;
-                color: #4caf50;
+                color: var(--sol-success);
             }
 
             .success-content h2 {
                 margin: 0 0 1rem 0;
-                color: #333;
+                color: var(--sol-on-surface-secondary);
             }
 
             .success-content p {
                 margin: 0.5rem 0;
-                color: #666;
+                color: var(--sol-on-surface-variant);
             }
 
             .transaction-id {
                 margin-top: 1rem !important;
                 padding: 0.5rem;
-                background-color: #f5f5f5;
+                background-color: var(--sol-surface-variant);
                 border-radius: 4px;
                 font-family: monospace;
             }
 
             .success-content button {
                 margin-top: 1.5rem;
-                background-color: #3b82f6 !important;
-                color: white !important;
+                background-color: var(--sol-primary) !important;
+                color: var(--sol-primary-on) !important;
             }
 
             @media (max-width: 768px) {
