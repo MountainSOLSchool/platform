@@ -20,7 +20,9 @@ export type State = {
     students: Requested<
         Array<{ first_name: string; last_name: string; id: string }>
     >;
-    semesters: Requested<Array<{ displayName: string; semesterId: string }>>;
+    semesters: Requested<
+        Array<{ displayName: string; semesterId: string; archived: boolean }>
+    >;
     classes: Requested<
         Array<{
             displayName: string;
@@ -78,7 +80,11 @@ export const updateUnitsSlice = createSlice({
         semestersLoadSucceeded: (
             state,
             action: {
-                payload: Array<{ displayName: string; semesterId: string }>;
+                payload: Array<{
+                    displayName: string;
+                    semesterId: string;
+                    archived: boolean;
+                }>;
             }
         ) => {
             state.semesters = action.payload;

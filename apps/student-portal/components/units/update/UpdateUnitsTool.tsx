@@ -138,7 +138,7 @@ export function UpdateUnitsTool(props: {
                                 className="mb-2 border-b pb-4 last:border-b-0"
                             >
                                 <div className="flex justify-between items-center mb-2">
-                                    <h3 className="text-lg font-semibold">
+                                    <h3 className="font-semibold">
                                         {unit.name}
                                     </h3>
                                 </div>
@@ -315,7 +315,7 @@ export function UpdateUnitsTool(props: {
                                     )
                                     .map((elective) => (
                                         <div key={elective.name}>
-                                            <h3 className="text-lg font-semibold">
+                                            <h3 className="font-semibold">
                                                 {elective.name}
                                             </h3>
                                             <div>
@@ -406,14 +406,14 @@ export function UpdateUnitsTool(props: {
                 .sort(([a], [b]) => a.localeCompare(b))
                 .map(([category, units]) => (
                     <div key={category} className="mb-8">
-                        <h2 className="text-xl font-bold mb-4">
+                        <h2 className="font-bold mb-4">
                             Category:{' '}
                             {category.charAt(0).toUpperCase() +
                                 category.slice(1)}
                         </h2>
                         {units.map((unit) => (
                             <div key={unit.id} className="mb-4">
-                                <h3 className="text-lg font-semibold">
+                                <h3 className="font-semibold">
                                     {unit.name}
                                 </h3>
                                 <p>{unit.description}</p>
@@ -435,7 +435,7 @@ export function UpdateUnitsTool(props: {
     return (
         <div className="mb-8">
             <div className="mb-1 flex justify-content-between align-items-center">
-                <h2 className="text-3xl font-bold">Completed Units</h2>
+                <h2 className="font-bold">Completed Units</h2>
                 <Button
                     label="View Student's Paths Tree"
                     icon="pi pi-window-maximize"

@@ -3,6 +3,9 @@ import 'primereact/resources/themes/lara-light-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
+import './design-tokens.css';
+import './primereact-theme-overrides.css';
+import './styles.css';
 import Head from 'next/head';
 import { Provider } from 'react-redux';
 import { addEpic, store } from '../store/store';
@@ -20,6 +23,18 @@ function RootLayout({ children }: { children: React.ReactNode }) {
 
     return (
         <html>
+            <head>
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link
+                    rel="preconnect"
+                    href="https://fonts.gstatic.com"
+                    crossOrigin="anonymous"
+                />
+                <link
+                    href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Nunito+Sans:wght@300;400;500;600;700&display=swap"
+                    rel="stylesheet"
+                />
+            </head>
             <body style={{ margin: 0 }}>
                 <PrimeReactProvider>
                     <Provider store={store}>

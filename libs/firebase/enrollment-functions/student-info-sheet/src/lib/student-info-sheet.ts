@@ -78,13 +78,13 @@ class StudentInfoSheetFactory {
         }
         
         .header {
-            border-bottom: 3px solid #2563eb;
+            border-bottom: 3px solid #006633;
             padding-bottom: 12px;
             margin-bottom: 20px;
         }
-        
+
         .header h1 {
-            color: #2563eb;
+            color: #006633;
             font-size: 28px;
             margin-bottom: 8px;
         }
@@ -159,7 +159,7 @@ class StudentInfoSheetFactory {
         }
         
         .lives-with {
-            color: #2563eb;
+            color: #006633;
             font-size: 12px;
         }
         
@@ -266,26 +266,26 @@ class StudentInfoSheetFactory {
         .signature-value {
             font-size: 14px;
             font-style: italic;
-            color: #2563eb;
+            color: #006633;
             border-bottom: 1px solid #ccc;
             min-width: 200px;
             text-align: center;
             padding: 4px;
         }
-        
+
         .signature-date {
             font-size: 12px;
             color: #666;
             text-align: right;
         }
-        
+
         .signature-info {
             font-size: 13px;
             margin-top: 12px;
         }
-        
+
         .signature-info strong {
-            color: #2563eb;
+            color: #006633;
         }
         
         .footer {

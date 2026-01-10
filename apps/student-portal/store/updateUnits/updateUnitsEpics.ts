@@ -35,9 +35,10 @@ export const loadSemestersEpic: Epic<
             return fromPromise(FirebaseFunctions.getSemesters()).pipe(
                 map((semesters) =>
                     updateUnitsSlice.actions.semestersLoadSucceeded(
-                        semesters.map(({ name, id }) => ({
+                        semesters.map(({ name, id, archived }) => ({
                             displayName: name,
                             semesterId: id,
+                            archived,
                         }))
                     )
                 ),

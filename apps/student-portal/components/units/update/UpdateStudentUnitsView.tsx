@@ -16,7 +16,9 @@ export interface UpdateStudentUnitsViewProps {
     students: Requested<
         Array<{ first_name: string; last_name: string; id: string }>
     >;
-    semesters: Requested<Array<{ displayName: string; semesterId: string }>>;
+    semesters: Requested<
+        Array<{ displayName: string; semesterId: string; archived: boolean }>
+    >;
     selectionType: StudentSelectionType;
     classes: Requested<Array<{ displayName: string; classId: string }>>;
     selectedSemesterId: string;
@@ -124,7 +126,9 @@ export function UpdateStudentUnitsView(
                                 )}
                                 semesters={
                                     RequestedUtility.isLoaded(props.semesters)
-                                        ? props.semesters
+                                        ? props.semesters.filter(
+                                              (s) => !s.archived
+                                          )
                                         : []
                                 }
                                 onSelected={(semesterId) =>

@@ -783,7 +783,7 @@ type FormState = { message?: string } & (
 
             .weekday-preview,
             .time-preview {
-                color: #1976d2;
+                color: var(--sol-primary, #006633);
             }
 
             .sliding-scale-toggle {

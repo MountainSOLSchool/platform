@@ -4,21 +4,21 @@
 }
 
 :host ::ng-deep .p-togglebutton.p-button {
-    border-color: #3b82f6;
-    color: #3b82f6;
+    border-color: var(--sol-primary, #006633);
+    color: var(--sol-primary, #006633);
 }
 
 :host ::ng-deep .p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover {
-    border-color: #3b82f6;
-    color: #3b82f6;
+    border-color: var(--sol-primary, #006633);
+    color: var(--sol-primary, #006633);
 }
 
 :host ::ng-deep .p-togglebutton.p-button .p-button-icon-left {
-    color: #3b82f6;
+    color: var(--sol-primary, #006633);
 }
 
 :host ::ng-deep .p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover .p-button-icon-left {
-    color: #3b82f6;
+    color: var(--sol-primary, #006633);
 }
 
 :host ::ng-deep .p-togglebutton.p-button.p-highlight {
