@@ -39,6 +39,7 @@ import {
 import { classValidationSuite } from '@sol/classes/domain';
 
 import { UnitSelectorComponent } from '../unit-selector/unit-selector.component';
+import { MarkdownEditorComponent } from '../markdown-editor/markdown-editor.component';
 
 interface Instructor {
     id: string;
@@ -106,6 +107,7 @@ type FormState = { message?: string } & (
         MatAutocompleteModule,
         UnitSelectorComponent,
         MessagesComponent,
+        MarkdownEditorComponent,
     ],
     template: `
         <div class="form-container">
@@ -210,16 +212,17 @@ type FormState = { message?: string } & (
                                         />
                                     </mat-form-field>
 
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Description</mat-label>
-                                        <textarea
-                                            matInput
+                                    <div class="description-field">
+                                        <label class="field-label"
+                                            >Description</label
+                                        >
+                                        <sol-markdown-editor
                                             [(ngModel)]="description"
                                             name="description"
-                                            rows="3"
                                             placeholder="Describe what students will learn..."
-                                        ></textarea>
-                                    </mat-form-field>
+                                            [rows]="5"
+                                        ></sol-markdown-editor>
+                                    </div>
 
                                     <mat-form-field appearance="outline">
                                         <mat-label>Class Type</mat-label>
@@ -807,6 +810,18 @@ type FormState = { message?: string } & (
 
             mat-form-field {
                 width: 100%;
+            }
+
+            .description-field {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .field-label {
+                font-size: 14px;
+                color: rgba(0, 0, 0, 0.6);
+                font-weight: 400;
             }
 
             .date-row,
