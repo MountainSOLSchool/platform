@@ -15,6 +15,7 @@ export { RequestedOperatorsUtility } from './lib/utilities/requested-operators.u
 export { RequestedUtility } from './lib/utilities/requested.utility';
 export { RequestService } from './lib/services/request.service';
 export { provideRequests } from './lib/store/request.provider';
+export { declareFunction, declareFunctionWithState } from './lib/utilities/declare-function.utility';
 export const requestStateDirectives = [
     SolLoadedDirective,
     SolLoadingDirective,

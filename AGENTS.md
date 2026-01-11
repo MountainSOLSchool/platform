@@ -164,10 +164,11 @@ Day-to-day development practices and tooling:
 **Reference**: `apps/enrollment-portal/src/app/donate-full.component.ts:450-476`
 
 **Firebase function calls**:
-- Use `RequestedOperatorsUtility.ignoreAllStatesButLoaded()`
-- Handle only loaded state in subscription
+- Use `MountainSolApiService` from `@sol/angular/firebase/api` for typed function calls
+- Types are shared via `@sol/ts/firebase/api-types` (no backend dependencies)
+- Use `RequestedOperatorsUtility.ignoreAllStatesButLoaded()` when using raw `FirebaseFunctionsService`
 
-**Reference**: `apps/enrollment-portal/src/app/donate-full.component.ts:516-546`
+**Reference**: `libs/angular/firebase/api/src/lib/services/mountain-sol-api.service.ts`
 
 **Conditional rendering with signals**:
 - Return `undefined` when loading
@@ -180,9 +181,9 @@ Day-to-day development practices and tooling:
 All library imports use `@sol/` prefix:
 
 ```typescript
-import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
+import { MountainSolApiService } from '@sol/angular/firebase/api';
+import { CreateClassRequest } from '@sol/ts/firebase/api-types';
 import { UserService } from '@sol/auth/user';
-import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 ```
 
 **Defined in**: `tsconfig.base.json`
@@ -201,21 +202,30 @@ libs/
       class-management/       # Admin class CRUD (create, list, edit)
         components/
           class-form/         # Class creation/editing form
+          image-upload/       # Drag-drop image upload component
           unit-selector/      # Unit selection with path columns
+        services/
+          class-form.service  # Form submission logic
+    firebase/
+      api/                    # MountainSolApiService (typed Firebase function calls)
     braintree-client/         # Payment UI
     auth/                     # Authentication
-    request/                  # HTTP utilities
+    request/                  # HTTP utilities, declareFunction
   react/                      # React-specific libraries
     auth/                     # React auth hooks
     request/                  # React request utilities
   firebase/
     enrollment-functions/     # Cloud Functions (one library per function!)
-      class-admin/            # Admin class CRUD functions
+      create-class/           # Create class function
+      update-class/           # Update class function
+      upload-class-image/     # Upload class image to Storage
       full-units-and-paths/   # Fetch paths & units for standard classes
       get-age-group-units/    # Fetch units for Mallards/Mapaches
-    functions-api/            # Functions client
+    functions-api/            # Low-level functions client
     config/                   # Configuration
   ts/                         # Framework-agnostic TypeScript
+    firebase/
+      api-types/              # Shared request/response types (frontend + backend)
     payments/domain/          # Shared payment types
     student/domain/           # Shared student types
 ```

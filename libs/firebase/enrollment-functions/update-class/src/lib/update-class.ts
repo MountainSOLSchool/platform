@@ -1,39 +1,13 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { validateClassForPublish } from '@sol/classes/domain';
+import type {
+    UpdateClassRequest,
+    UpdateClassResponse,
+} from '@sol/ts/firebase/api-types';
 import admin from 'firebase-admin';
 
-export interface UpdateClassRequest {
-    semesterId: string;
-    classId: string;
-    name: string;
-    description: string;
-    classType: string;
-    gradeRangeStart: number;
-    gradeRangeEnd: number;
-    cost: number;
-    paymentRangeLowest?: number;
-    paymentRangeHighest?: number;
-    location: string;
-    instructorIds: string[];
-    weekday: string;
-    dailyTimes: string;
-    startDate: string;
-    endDate: string;
-    registrationEndDate: string;
-    minStudentSize?: number;
-    maxStudentSize?: number;
-    thumbnailUrl?: string;
-    live: boolean;
-    pausedForEnrollment?: boolean;
-    forInformationOnly?: boolean;
-    unitIds?: string[];
-    ageGroup?: string;
-}
-
-export interface UpdateClassResponse {
-    success: boolean;
-}
+export type { UpdateClassRequest, UpdateClassResponse };
 
 export const updateClass = Functions.endpoint
     .restrictedToRoles(Role.Admin)

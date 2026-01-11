@@ -61,24 +61,42 @@ Use discriminated unions to represent async operation states declaratively.
 
 ## Firebase Functions Integration
 
-### Pattern: Using RequestedOperatorsUtility
+### MountainSolApiService (Preferred)
 
-Firebase function calls emit a loading state followed by either data or error.
+The preferred way to call Firebase functions is via `MountainSolApiService`, which provides typed, declarative function calls.
+
+**Service location**: `libs/angular/firebase/api/src/lib/services/mountain-sol-api.service.ts`
+
+**Import**: `import { MountainSolApiService } from '@sol/angular/firebase/api';`
+
+**Usage**:
+```typescript
+readonly #api = inject(MountainSolApiService);
+
+this.#api.createClass({ semesterId: '...', name: 'Math 101' })
+    .subscribe(response => console.log(response.classId));
+```
+
+**Key benefits**:
+- Types imported from `@sol/ts/firebase/api-types` (no backend dependencies)
+- Functions declared once with types in the service
+- Automatically applies `RequestedOperatorsUtility.ignoreAllStatesButLoaded()`
+
+**Adding new functions**: See `libs/angular/firebase/api/src/lib/services/mountain-sol-api.service.ts` for pattern.
+
+**declareFunction utility**: `libs/angular/request/src/lib/utilities/declare-function.utility.ts`
+
+### Low-Level: FirebaseFunctionsService
+
+For cases not covered by `MountainSolApiService`, use the lower-level service.
 
 **Service implementation**: `libs/firebase/functions-api/src/lib/services/functions.service.ts:16-26`
 
 **Key points**:
-- `.call()` returns `Observable<Requested<T>>` which emits `Loading` (line 24), then data or `Error` (line 23)
+- `.call()` returns `Observable<Requested<T>>` which emits `Loading`, then data or `Error`
 - Use `RequestedOperatorsUtility.ignoreAllStatesButLoaded()` to filter out loading/error states
-- Don't use separate `next` and `error` handlers - errors are converted to `RequestState.Error` by the service
 
 **Operator implementation**: `libs/angular/request/src/lib/utilities/requested-operators.utility.ts:6-8`
-
-**Usage example**: `apps/enrollment-portal/src/app/donate-full.component.ts:516-546`
-
-### Alternative: callFn for Simple Cases
-
-**Service implementation**: `libs/firebase/functions-api/src/lib/services/functions.service.ts:28-32`
 
 ## Subscription-Free Patterns: rxResource and rxMethod
 
