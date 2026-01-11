@@ -1,5 +1,6 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
+import { validateClassForPublish } from '@sol/classes/domain';
 import admin from 'firebase-admin';
 
 export interface CreateClassRequest {
@@ -45,15 +46,24 @@ export const createClass = Functions.endpoint
 
         // Full validation only required when publishing (live = true)
         if (data.live) {
-            if (!data.name) {
-                response.status(400).send({ error: 'name is required' });
-                return;
-            }
+            const validation = validateClassForPublish({
+                semesterId: data.semesterId,
+                name: data.name,
+                classType: data.classType,
+                startDate: data.startDate,
+                endDate: data.endDate,
+                registrationEndDate: data.registrationEndDate,
+                weekday: data.weekday,
+                dailyTimes: data.dailyTimes,
+                location: data.location,
+                instructorIds: data.instructorIds,
+            });
 
-            if (!data.instructorIds || data.instructorIds.length === 0) {
-                response
-                    .status(400)
-                    .send({ error: 'At least one instructor is required' });
+            if (!validation.valid) {
+                response.status(400).send({
+                    error: 'Validation failed',
+                    errors: validation.errors,
+                });
                 return;
             }
         }

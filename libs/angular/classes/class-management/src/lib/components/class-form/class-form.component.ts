@@ -36,9 +36,9 @@ import {
     ValidationErrorsDialogComponent,
     ValidationErrorsDialogData,
 } from '@sol/form/validity';
+import { classValidationSuite } from '@sol/classes/domain';
 
 import { UnitSelectorComponent } from '../unit-selector/unit-selector.component';
-import { classFormSuite } from './class-form.suite';
 
 interface Instructor {
     id: string;
@@ -1215,7 +1215,7 @@ export class ClassFormComponent implements OnInit {
 
     // Vest validation - runs the suite and returns the result
     readonly #validation = computed(() => {
-        return classFormSuite({
+        return classValidationSuite({
             semesterId: this.semesterId(),
             name: this.name(),
             classType: this.classType(),
