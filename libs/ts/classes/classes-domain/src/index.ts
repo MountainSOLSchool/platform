@@ -11,3 +11,4 @@ export * from './lib/models/path/path-db-entry';
 export * from './lib/models/path/unit-db-entry';
 export * from './lib/models/semester-panel-config';
 export * from './lib/utilities/enrollment.utility';
+export * from './lib/validation/class-validation.suite';

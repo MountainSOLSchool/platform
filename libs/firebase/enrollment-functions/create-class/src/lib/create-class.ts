@@ -1,5 +1,6 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
+import { validateClassForPublish } from '@sol/classes/domain';
 import admin from 'firebase-admin';
 
 export interface CreateClassRequest {
@@ -43,16 +44,28 @@ export const createClass = Functions.endpoint
             return;
         }
 
-        if (!data.name) {
-            response.status(400).send({ error: 'name is required' });
-            return;
-        }
+        // Full validation only required when publishing (live = true)
+        if (data.live) {
+            const validation = validateClassForPublish({
+                semesterId: data.semesterId,
+                name: data.name,
+                classType: data.classType,
+                startDate: data.startDate,
+                endDate: data.endDate,
+                registrationEndDate: data.registrationEndDate,
+                weekday: data.weekday,
+                dailyTimes: data.dailyTimes,
+                location: data.location,
+                instructorIds: data.instructorIds,
+            });
 
-        if (!data.instructorIds || data.instructorIds.length === 0) {
-            response
-                .status(400)
-                .send({ error: 'At least one instructor is required' });
-            return;
+            if (!validation.valid) {
+                response.status(400).send({
+                    error: 'Validation failed',
+                    errors: validation.errors,
+                });
+                return;
+            }
         }
 
         const db = DatabaseUtility.getDatabase();
@@ -60,12 +73,12 @@ export const createClass = Functions.endpoint
             `semesters/${data.semesterId}/classes`
         );
 
-        const instructorRefs = data.instructorIds.map((id) =>
+        const instructorRefs = (data.instructorIds ?? []).map((id) =>
             db.doc(`teachers/${id}`)
         );
 
         const classDoc: Record<string, unknown> = {
-            name: data.name,
+            name: data.name || '',
             description: data.description || '',
             class_type: data.classType || '',
             grade_range_start: data.gradeRangeStart ?? 0,
@@ -75,11 +88,6 @@ export const createClass = Functions.endpoint
             instructors: instructorRefs,
             weekday: data.weekday || '',
             daily_times: data.dailyTimes || '',
-            start: admin.firestore.Timestamp.fromDate(new Date(data.startDate)),
-            end: admin.firestore.Timestamp.fromDate(new Date(data.endDate)),
-            registration_end_date: admin.firestore.Timestamp.fromDate(
-                new Date(data.registrationEndDate)
-            ),
             live: data.live ?? false,
             paused_for_enrollment: false,
             for_information_only: data.forInformationOnly ?? false,
@@ -88,6 +96,23 @@ export const createClass = Functions.endpoint
             max_student_size: data.maxStudentSize ?? 12,
             thumbnailUrl: data.thumbnailUrl || '',
         };
+
+        // Only set date fields if they have values
+        if (data.startDate) {
+            classDoc['start'] = admin.firestore.Timestamp.fromDate(
+                new Date(data.startDate)
+            );
+        }
+        if (data.endDate) {
+            classDoc['end'] = admin.firestore.Timestamp.fromDate(
+                new Date(data.endDate)
+            );
+        }
+        if (data.registrationEndDate) {
+            classDoc['registration_end_date'] = admin.firestore.Timestamp.fromDate(
+                new Date(data.registrationEndDate)
+            );
+        }
 
         if (data.paymentRangeLowest && data.paymentRangeHighest) {
             classDoc['payment_range_lowest'] = data.paymentRangeLowest;

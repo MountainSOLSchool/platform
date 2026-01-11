@@ -1,7 +1,7 @@
 @let vm = viewModel$ | async;
 @if (vm) {
     @if (vm.hasCreatedAccount) {
-        <sol-messages [messages]="vm.errors['hasPaymentMethod']"></sol-messages>
+        <sol-messages [messages]="vm.errors['hasPaymentMethod']" variant="primeng"></sol-messages>
         <sol-payment-collector
             [randomValueThatResetsPaymentCollector]="
                 randomValueThatResetsPaymentCollector
