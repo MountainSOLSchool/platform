@@ -87,6 +87,32 @@ export { functionName } from '@sol/firebase/enrollment-functions/{function-name}
 
 **Reference implementation**: `libs/firebase/enrollment-functions/get-age-group-units/`
 
+### Shared API Types
+
+Request/response types for Firebase functions are defined in a shared library that both Angular and Firebase functions import from. This ensures type safety across the frontend/backend boundary without creating dependencies on backend code.
+
+**Types library**: `libs/ts/firebase/api-types/`
+
+**Import path**: `@sol/ts/firebase/api-types`
+
+**Pattern**:
+1. Define types in `libs/ts/firebase/api-types/src/lib/{feature}.types.ts`
+2. Export from `libs/ts/firebase/api-types/src/index.ts`
+3. Import in both Angular services and Firebase functions using `import type`
+
+**Reference**: `libs/ts/firebase/api-types/src/lib/class-management.types.ts`
+
+**Usage in Firebase function** (`libs/firebase/enrollment-functions/create-class/src/lib/create-class.ts`):
+```typescript
+import type { CreateClassRequest, CreateClassResponse } from '@sol/ts/firebase/api-types';
+export type { CreateClassRequest, CreateClassResponse };
+```
+
+**Usage in Angular** (`libs/angular/firebase/api/src/lib/services/mountain-sol-api.service.ts`):
+```typescript
+import type { CreateClassRequest, CreateClassResponse } from '@sol/ts/firebase/api-types';
+```
+
 ### Function Structure
 
 Cloud Functions are located in `/libs/firebase/enrollment-functions/*/src/lib/`.
