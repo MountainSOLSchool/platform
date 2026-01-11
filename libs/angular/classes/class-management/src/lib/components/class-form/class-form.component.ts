@@ -13,7 +13,7 @@ import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { toSignal, rxResource } from '@angular/core/rxjs-interop';
-import { map, pipe, filter, tap, switchMap, catchError, EMPTY, of } from 'rxjs';
+import { map, pipe, filter, tap, switchMap, of, catchError } from 'rxjs';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 
 import { MatCardModule } from '@angular/material/card';
@@ -40,6 +40,13 @@ import { classValidationSuite } from '@sol/classes/domain';
 
 import { UnitSelectorComponent } from '../unit-selector/unit-selector.component';
 import { MarkdownEditorComponent } from '../markdown-editor/markdown-editor.component';
+import {
+    ImageUploadComponent,
+    ImageUploadState,
+} from '../image-upload/image-upload.component';
+import { WeekdaySelectorComponent } from '../weekday-selector/weekday-selector.component';
+import { TimeRangeSelectorComponent } from '../time-range-selector/time-range-selector.component';
+import { ClassFormService } from '../../services/class-form.service';
 
 interface Instructor {
     id: string;
@@ -86,6 +93,16 @@ type FormState = { message?: string } & (
     | { status: 'error'; message: string }
 );
 
+const WEEKDAY_OPTIONS = [
+    { value: 'Su', fullName: 'sunday', aliases: ['sun'] },
+    { value: 'M', fullName: 'monday', aliases: ['mon'] },
+    { value: 'Tu', fullName: 'tuesday', aliases: ['tue', 'tues'] },
+    { value: 'W', fullName: 'wednesday', aliases: ['wed'] },
+    { value: 'Th', fullName: 'thursday', aliases: ['thu', 'thur', 'thurs'] },
+    { value: 'F', fullName: 'friday', aliases: ['fri'] },
+    { value: 'Sa', fullName: 'saturday', aliases: ['sat'] },
+];
+
 @Component({
     selector: 'sol-class-form',
     standalone: true,
@@ -108,6 +125,9 @@ type FormState = { message?: string } & (
         UnitSelectorComponent,
         MessagesComponent,
         MarkdownEditorComponent,
+        ImageUploadComponent,
+        WeekdaySelectorComponent,
+        TimeRangeSelectorComponent,
     ],
     template: `
         <div class="form-container">
@@ -277,6 +297,26 @@ type FormState = { message?: string } & (
                                 <mat-divider></mat-divider>
 
                                 <section class="form-section">
+                                    <h3>Class Image</h3>
+                                    <p class="section-description">
+                                        Upload an image to display on the class
+                                        card.
+                                    </p>
+
+                                    <sol-image-upload
+                                        [(previewUrl)]="imagePreviewUrl"
+                                        [(state)]="imageUploadState"
+                                        alt="Class thumbnail preview"
+                                        (fileSelected)="
+                                            onImageFileSelected($event)
+                                        "
+                                        (removed)="onImageRemoved()"
+                                    />
+                                </section>
+
+                                <mat-divider></mat-divider>
+
+                                <section class="form-section">
                                     <h3>Schedule</h3>
 
                                     <div class="date-row">
@@ -320,9 +360,7 @@ type FormState = { message?: string } & (
                                                 #endPicker
                                             ></mat-datepicker>
                                             <sol-messages
-                                                [messages]="
-                                                    errors()['endDate']
-                                                "
+                                                [messages]="errors()['endDate']"
                                             />
                                         </mat-form-field>
                                     </div>
@@ -352,107 +390,22 @@ type FormState = { message?: string } & (
                                         />
                                     </mat-form-field>
 
-                                    <div class="weekday-section">
-                                        <div class="field-preview">
-                                            <small
-                                                >Will be shown as:
-                                                {{
-                                                    computedWeekday() ||
-                                                    '(select days)'
-                                                }}</small
-                                            >
-                                        </div>
-                                        <mat-form-field appearance="outline">
-                                            <mat-label
-                                                >Day(s) of Week</mat-label
-                                            >
-                                            <mat-select
-                                                [(ngModel)]="selectedWeekdays"
-                                                name="selectedWeekdays"
-                                                multiple
-                                                required
-                                            >
-                                                @for (
-                                                    day of weekdayOptions;
-                                                    track day.value
-                                                ) {
-                                                    <mat-option
-                                                        [value]="day.value"
-                                                        >{{
-                                                            day.label
-                                                        }}</mat-option
-                                                    >
-                                                }
-                                            </mat-select>
-                                            <sol-messages
-                                                [messages]="errors()['weekday']"
-                                            />
-                                        </mat-form-field>
-                                        @if (weekday() && editMode()) {
-                                            <div
-                                                class="existing-weekday-display"
-                                            >
-                                                <small
-                                                    >Current value:
-                                                    {{ weekday() }}</small
-                                                >
-                                            </div>
-                                        }
-                                    </div>
+                                    <sol-weekday-selector
+                                        [(selectedDays)]="selectedWeekdays"
+                                        [errors]="errors()['weekday'] ?? []"
+                                        [existingValue]="weekday()"
+                                        [showExisting]="editMode()"
+                                        [required]="true"
+                                    />
 
-                                    <div class="time-section">
-                                        <div class="field-preview">
-                                            <small
-                                                >Will be shown as:
-                                                {{
-                                                    computedDailyTimes() ||
-                                                    '(select times)'
-                                                }}</small
-                                            >
-                                        </div>
-                                        <div class="time-row">
-                                            <mat-form-field
-                                                appearance="outline"
-                                            >
-                                                <mat-label
-                                                    >Start Time</mat-label
-                                                >
-                                                <input
-                                                    matInput
-                                                    type="time"
-                                                    [(ngModel)]="startTime"
-                                                    name="startTime"
-                                                    required
-                                                />
-                                                <sol-messages
-                                                    [messages]="
-                                                        errors()['dailyTimes']
-                                                    "
-                                                />
-                                            </mat-form-field>
-
-                                            <mat-form-field
-                                                appearance="outline"
-                                            >
-                                                <mat-label>End Time</mat-label>
-                                                <input
-                                                    matInput
-                                                    type="time"
-                                                    [(ngModel)]="endTime"
-                                                    name="endTime"
-                                                    required
-                                                />
-                                            </mat-form-field>
-                                        </div>
-                                        @if (dailyTimes() && editMode()) {
-                                            <div class="existing-time-display">
-                                                <small
-                                                    >Current value:
-                                                    {{ dailyTimes() }}</small
-                                                >
-                                            </div>
-                                        }
-                                    </div>
+                                    <sol-time-range-selector
+                                        [(startTime)]="startTime"
+                                        [(endTime)]="endTime"
+                                        [errors]="errors()['dailyTimes'] ?? []"
+                                        [existingValue]="dailyTimes()"
+                                        [showExisting]="editMode()"
+                                        [required]="true"
+                                    />
 
                                     <mat-form-field appearance="outline">
                                         <mat-label>Location</mat-label>
@@ -828,29 +781,10 @@ type FormState = { message?: string } & (
             .schedule-row,
             .grade-row,
             .payment-range-row,
-            .time-row,
             .student-size-row {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 1rem;
-            }
-
-            .weekday-section,
-            .time-section {
-                display: flex;
-                flex-direction: column;
-                gap: 0.25rem;
-            }
-
-            .field-preview {
-                color: var(--sol-primary, #006633);
-                margin-bottom: 0;
-            }
-
-            .existing-weekday-display,
-            .existing-time-display {
-                color: #666;
-                font-style: italic;
             }
 
             .sliding-scale-toggle {
@@ -938,7 +872,6 @@ type FormState = { message?: string } & (
                 .schedule-row,
                 .grade-row,
                 .payment-range-row,
-                .time-row,
                 .student-size-row {
                     grid-template-columns: 1fr;
                 }
@@ -947,6 +880,7 @@ type FormState = { message?: string } & (
     ],
 })
 export class ClassFormComponent implements OnInit {
+    readonly #classFormService = inject(ClassFormService);
     readonly #functions = inject(FirebaseFunctionsService);
     readonly #semesterService = inject(ClassesSemesterListService);
     readonly #router = inject(Router);
@@ -1012,7 +946,10 @@ export class ClassFormComponent implements OnInit {
     );
 
     // rxResource for loading class for edit - params-based
-    readonly #classForEditResource = rxResource({
+    readonly #classForEditResource = rxResource<
+        { class: ClassForEdit } | null,
+        { classId: string; semesterId: string }
+    >({
         params: () => ({
             classId: this.#classIdFromRoute() ?? '',
             semesterId: this.#semesterIdFromQuery() ?? '',
@@ -1028,7 +965,7 @@ export class ClassFormComponent implements OnInit {
                 })
                 .pipe(
                     RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                    catchError((err) => {
+                    catchError((err: Error) => {
                         this.formState.set({
                             status: 'error',
                             message:
@@ -1055,51 +992,6 @@ export class ClassFormComponent implements OnInit {
             opt.toLowerCase().includes(currentValue)
         );
     });
-
-    readonly weekdayOptions = [
-        {
-            value: 'Su',
-            label: 'Sunday',
-            fullName: 'Sunday',
-            aliases: ['sun', 'su'],
-        },
-        {
-            value: 'M',
-            label: 'Monday',
-            fullName: 'Monday',
-            aliases: ['mon', 'm'],
-        },
-        {
-            value: 'Tu',
-            label: 'Tuesday',
-            fullName: 'Tuesday',
-            aliases: ['tue', 'tu', 'tues'],
-        },
-        {
-            value: 'W',
-            label: 'Wednesday',
-            fullName: 'Wednesday',
-            aliases: ['wed', 'w'],
-        },
-        {
-            value: 'Th',
-            label: 'Thursday',
-            fullName: 'Thursday',
-            aliases: ['thu', 'th', 'thur', 'thurs'],
-        },
-        {
-            value: 'F',
-            label: 'Friday',
-            fullName: 'Friday',
-            aliases: ['fri', 'f'],
-        },
-        {
-            value: 'Sa',
-            label: 'Saturday',
-            fullName: 'Saturday',
-            aliases: ['sat', 'sa'],
-        },
-    ];
 
     selectedWeekdays = signal<string[]>([]);
 
@@ -1223,6 +1115,11 @@ export class ClassFormComponent implements OnInit {
     selectedUnitIds = signal<string[]>([]);
     ageGroup = signal<string>('');
 
+    thumbnailUrl = signal<string>('');
+    imagePreviewUrl = signal<string>('');
+    imageUploadState = signal<ImageUploadState>({ status: 'idle' });
+    #pendingImageFile = signal<File | null>(null);
+
     formState = signal<FormState>({ status: 'idle' });
 
     // Track whether to show validation errors (when live or after attempting to go live)
@@ -1270,108 +1167,46 @@ export class ClassFormComponent implements OnInit {
         () => this.#semestersResource.value() ?? []
     );
 
-    // rxMethod for form submission
-    readonly #performSubmit = rxMethod<
-        | {
-              isUpdate: boolean;
-              classId?: string;
-              request: {
-                  semesterId: string;
-                  name: string;
-                  description: string;
-                  classType: string;
-                  gradeRangeStart: number;
-                  gradeRangeEnd: number;
-                  cost: number;
-                  paymentRangeLowest?: number;
-                  paymentRangeHighest?: number;
-                  location: string;
-                  instructorIds: string[];
-                  weekday: string;
-                  dailyTimes: string;
-                  startDate: string;
-                  endDate: string;
-                  registrationEndDate: string;
-                  minStudentSize: number;
-                  maxStudentSize: number;
-                  live: boolean;
-                  pausedForEnrollment: boolean;
-                  forInformationOnly: boolean;
-                  unitIds: string[];
-                  ageGroup?: string;
-              };
-          }
-        | undefined
-    >(
+    readonly #performSubmit = rxMethod<{
+        classId?: string;
+        pendingImageFile?: File;
+    } | void>(
         pipe(
-            filter((data): data is NonNullable<typeof data> => !!data),
+            filter(
+                (data): data is { classId?: string; pendingImageFile?: File } =>
+                    data !== undefined
+            ),
             tap(() => this.formState.set({ status: 'submitting' })),
-            switchMap((data) => {
-                if (data.isUpdate && data.classId) {
-                    const updateRequest = {
-                        ...data.request,
-                        classId: data.classId,
-                    };
-                    return this.#functions
-                        .call<{
-                            success: boolean;
-                        }>('updateClass', updateRequest)
-                        .pipe(
-                            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                            tap((result) => {
-                                if (result.success) {
-                                    this.formState.set({
-                                        status: 'success',
-                                        classId: data.classId!,
-                                    });
-                                } else {
-                                    this.formState.set({
-                                        status: 'error',
-                                        message: 'Failed to update class',
-                                    });
-                                }
-                            }),
-                            catchError((err) => {
-                                this.formState.set({
-                                    status: 'error',
-                                    message:
-                                        err?.message ??
-                                        'An unexpected error occurred',
-                                });
-                                return EMPTY;
-                            })
-                        );
+            tap((data) => {
+                if (data.pendingImageFile) {
+                    this.imageUploadState.set({ status: 'uploading' });
+                }
+            }),
+            switchMap((data) =>
+                this.#classFormService.submitWithImage({
+                    formData: this.#buildBaseRequest(),
+                    pendingImageFile: data.pendingImageFile,
+                    existingClassId: data.classId,
+                })
+            ),
+            tap((result) => {
+                if (result.success) {
+                    this.thumbnailUrl.set(this.imagePreviewUrl());
+                    this.imageUploadState.set({ status: 'success' });
+                    this.#pendingImageFile.set(null);
+                    this.formState.set({
+                        status: 'success',
+                        classId: result.classId,
+                    });
                 } else {
-                    return this.#functions
-                        .call<{
-                            success: boolean;
-                            classId: string;
-                        }>('createClass', data.request)
-                        .pipe(
-                            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                            tap((result) => {
-                                if (result.success) {
-                                    this.formState.set({
-                                        status: 'success',
-                                        classId: result.classId,
-                                    });
-                                } else {
-                                    this.formState.set({
-                                        status: 'error',
-                                        message: 'Failed to create class',
-                                    });
-                                }
-                            }),
-                            catchError((err) => {
-                                this.formState.set({
-                                    status: 'error',
-                                    message:
-                                        err?.message ??
-                                        'An unexpected error occurred',
-                                });
-                                return EMPTY;
-                            })
-                        );
+                    this.imageUploadState.set({
+                        status: 'error',
+                        message: result.error,
+                    });
+                    this.formState.set({
+                        status: 'error',
+                        message: result.error,
+                    });
                 }
             })
         )
@@ -1452,6 +1287,10 @@ export class ClassFormComponent implements OnInit {
         this.forInformationOnly.set(cls.forInformationOnly);
         this.selectedUnitIds.set(cls.unitIds ?? []);
         this.ageGroup.set(cls.ageGroup ?? '');
+        if (cls.thumbnailUrl) {
+            this.thumbnailUrl.set(cls.thumbnailUrl);
+            this.imagePreviewUrl.set(cls.thumbnailUrl);
+        }
         // Show validation errors if loading a live class
         this.showValidationErrors.set(cls.live);
     }
@@ -1566,10 +1405,10 @@ export class ClassFormComponent implements OnInit {
 
     #findDayValue(input: string): string | null {
         const normalized = input.toLowerCase().trim();
-        for (const day of this.weekdayOptions) {
+        for (const day of WEEKDAY_OPTIONS) {
             if (
                 day.value.toLowerCase() === normalized ||
-                day.fullName.toLowerCase() === normalized ||
+                day.fullName === normalized ||
                 day.aliases.includes(normalized)
             ) {
                 return day.value;
@@ -1612,17 +1451,16 @@ export class ClassFormComponent implements OnInit {
             forInformationOnly: this.forInformationOnly(),
             unitIds: this.selectedUnitIds(),
             ageGroup: this.ageGroup() || undefined,
+            thumbnailUrl: this.thumbnailUrl() || undefined,
         };
     }
 
     submitForm() {
         if (!this.canSubmit()) return;
 
-        const classId = this.#classIdFromRoute();
         this.#performSubmit({
-            isUpdate: !!classId,
-            classId: classId || undefined,
-            request: this.#buildBaseRequest(),
+            classId: this.#classIdFromRoute() || undefined,
+            pendingImageFile: this.#pendingImageFile() || undefined,
         });
     }
 
@@ -1653,6 +1491,10 @@ export class ClassFormComponent implements OnInit {
         this.forInformationOnly.set(false);
         this.selectedUnitIds.set([]);
         this.ageGroup.set('');
+        this.thumbnailUrl.set('');
+        this.imagePreviewUrl.set('');
+        this.#pendingImageFile.set(null);
+        this.imageUploadState.set({ status: 'idle' });
         this.formState.set({ status: 'idle' });
         this.showValidationErrors.set(false);
     }
@@ -1690,5 +1532,14 @@ export class ClassFormComponent implements OnInit {
         this.#router.navigate(['/admin/classes/management'], {
             queryParams: semesterId ? { semesterId } : {},
         });
+    }
+
+    onImageFileSelected(file: File) {
+        this.#pendingImageFile.set(file);
+    }
+
+    onImageRemoved() {
+        this.thumbnailUrl.set('');
+        this.#pendingImageFile.set(null);
     }
 }

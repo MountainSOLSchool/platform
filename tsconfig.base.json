@@ -43,6 +43,9 @@
             "@sol/angular/firebase/adapter": [
                 "libs/angular/firebase/adapter/src/index.ts"
             ],
+            "@sol/angular/firebase/api": [
+                "libs/angular/firebase/api/src/index.ts"
+            ],
             "@sol/angular/request": ["libs/angular/request/src/index.ts"],
             "@sol/auth/interceptor": [
                 "libs/angular/auth/interceptor/src/index.ts"
@@ -116,6 +119,9 @@
             ],
             "@sol/firebase/enrollment-functions/update-active-semester-config": [
                 "libs/firebase/enrollment-functions/update-active-semester-config/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/upload-class-image": [
+                "libs/firebase/enrollment-functions/upload-class-image/src/index.ts"
             ],
             "@sol/firebase/enrollment-functions/class-groups": [
                 "libs/firebase/enrollment-functions/class-groups/src/index.ts"
@@ -255,6 +261,9 @@
             ],
             "@sol/ts/firebase/firebase-config": [
                 "libs/ts/firebase/firebase-config/src/index.ts"
+            ],
+            "@sol/ts/firebase/api-types": [
+                "libs/ts/firebase/api-types/src/index.ts"
             ]
         }
     },

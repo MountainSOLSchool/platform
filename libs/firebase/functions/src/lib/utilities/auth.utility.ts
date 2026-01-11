@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
+import type { DecodedIdToken } from 'firebase-admin/auth';
 import { Request } from 'firebase-functions/v2/https';
 import * as express from 'express';
 import { DatabaseUtility } from '@sol/firebase/database';

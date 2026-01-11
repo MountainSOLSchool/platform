@@ -44,3 +44,4 @@ export { getLocations } from '@sol/firebase/enrollment-functions/get-locations';
 export { createSemester } from '@sol/firebase/enrollment-functions/create-semester';
 export { archiveSemester } from '@sol/firebase/enrollment-functions/archive-semester';
 export { updateActiveSemesterConfig } from '@sol/firebase/enrollment-functions/update-active-semester-config';
+export { uploadClassImage } from '@sol/firebase/enrollment-functions/upload-class-image';

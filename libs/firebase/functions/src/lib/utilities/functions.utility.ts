@@ -1,6 +1,10 @@
 import { AuthUtility, Role } from './auth.utility';
-import { defineSecret, defineString } from 'firebase-functions/params';
-import { params } from 'firebase-functions/lib/params/types';
+import {
+    defineSecret,
+    defineString,
+    type SecretParam,
+    type StringParam,
+} from 'firebase-functions/params';
 import { onRequest } from 'firebase-functions/v2/https';
 import { type Request } from 'firebase-functions/v2/https';
 import * as express from 'express';
@@ -52,13 +56,13 @@ const corsMiddleware = (
 
 class FunctionBuilder<SecretNames extends string, StringNames extends string> {
     constructor(
-        private secrets: Record<SecretNames, params.SecretParam> = {} as Record<
+        private secrets: Record<SecretNames, SecretParam> = {} as Record<
             SecretNames,
-            params.SecretParam
+            SecretParam
         >,
-        private strings: Record<StringNames, params.StringParam> = {} as Record<
+        private strings: Record<StringNames, StringParam> = {} as Record<
             StringNames,
-            params.StringParam
+            StringParam
         >,
         private roles: Array<Role> = []
     ) {}
@@ -67,11 +71,11 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
         SecretNamesParam extends Array<string>,
         SecretNames extends string = SecretNamesParam[number],
     >(...secretNames: SecretNamesParam) {
-        const secrets: Record<SecretNames, params.SecretParam> = secretNames
+        const secrets: Record<SecretNames, SecretParam> = secretNames
             .map((secret) => defineSecret(secret))
             .reduce(
                 (all, secret) => ({ ...all, [secret.name]: secret }),
-                {} as Record<SecretNames, params.SecretParam>
+                {} as Record<SecretNames, SecretParam>
             );
         return new FunctionBuilder(secrets, this.strings, this.roles);
     }
@@ -80,11 +84,11 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
         StringNamesParam extends Array<string>,
         StringNames extends string = StringNamesParam[number],
     >(...stringNames: StringNamesParam) {
-        const strings: Record<StringNames, params.StringParam> = stringNames
+        const strings: Record<StringNames, StringParam> = stringNames
             .map((string) => defineString(string))
             .reduce((all, string) => ({ ...all, [string.name]: string }), {
                 ALLOWED_ORIGINS: ALLOWED_ORIGINS,
-            } as Record<StringNames, params.StringParam>);
+            } as Record<StringNames, StringParam>);
         return new FunctionBuilder(this.secrets, strings, this.roles);
     }
 
@@ -125,7 +129,7 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
                             Object.entries(this.secrets)
                                 .map(
                                     (pair) =>
-                                        pair as [string, params.SecretParam]
+                                        pair as [string, SecretParam]
                                 )
                                 .map(([key, secret]) => [key, secret.value()])
                         ),
@@ -133,7 +137,7 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
                             Object.entries(this.strings)
                                 .map(
                                     (pair) =>
-                                        pair as [string, params.StringParam]
+                                        pair as [string, StringParam]
                                 )
                                 .map(([key, string]) => [key, string.value()])
                         )
