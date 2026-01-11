@@ -1,14 +1,48 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    input,
+} from '@angular/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-messages',
-    template: `@for (message of messages; track message) {
-        <small class="p-error block" style="margin-top:4px; margin-left:2px">{{
-            message
-        }}</small>
+    standalone: true,
+    template: `@for (message of resolvedMessages(); track message) {
+        <small [class]="errorClass()">{{ message }}</small>
     }`,
+    styles: [
+        `
+            :host {
+                display: block;
+            }
+
+            small {
+                display: block;
+                margin-top: 4px;
+                margin-left: 2px;
+            }
+
+            /* PrimeNG variant (default) */
+            small.p-error {
+                color: var(--red-500, #ef4444);
+            }
+
+            /* Material variant */
+            small.mat-error {
+                color: var(--mat-form-field-error-text-color, #f44336);
+                font-size: 75%;
+            }
+        `,
+    ],
 })
 export class MessagesComponent {
-    @Input() messages: string[] = [];
+    readonly messages = input<string[] | undefined>();
+    readonly variant = input<'material' | 'primeng'>('material');
+
+    readonly resolvedMessages = computed(() => this.messages() ?? []);
+    readonly errorClass = computed(() =>
+        this.variant() === 'primeng' ? 'p-error block' : 'mat-error'
+    );
 }

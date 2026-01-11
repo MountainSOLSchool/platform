@@ -49,16 +49,19 @@ export const updateClass = Functions.endpoint
             return;
         }
 
-        if (!data.name) {
-            response.status(400).send({ error: 'name is required' });
-            return;
-        }
+        // Full validation only required when publishing (live = true)
+        if (data.live) {
+            if (!data.name) {
+                response.status(400).send({ error: 'name is required' });
+                return;
+            }
 
-        if (!data.instructorIds || data.instructorIds.length === 0) {
-            response
-                .status(400)
-                .send({ error: 'At least one instructor is required' });
-            return;
+            if (!data.instructorIds || data.instructorIds.length === 0) {
+                response
+                    .status(400)
+                    .send({ error: 'At least one instructor is required' });
+                return;
+            }
         }
 
         const db = DatabaseUtility.getDatabase();
@@ -72,12 +75,12 @@ export const updateClass = Functions.endpoint
             return;
         }
 
-        const instructorRefs = data.instructorIds.map((id) =>
+        const instructorRefs = (data.instructorIds ?? []).map((id) =>
             db.doc(`teachers/${id}`)
         );
 
         const updateData: Record<string, unknown> = {
-            name: data.name,
+            name: data.name || '',
             description: data.description || '',
             class_type: data.classType || '',
             grade_range_start: data.gradeRangeStart ?? 0,
@@ -87,11 +90,6 @@ export const updateClass = Functions.endpoint
             instructors: instructorRefs,
             weekday: data.weekday || '',
             daily_times: data.dailyTimes || '',
-            start: admin.firestore.Timestamp.fromDate(new Date(data.startDate)),
-            end: admin.firestore.Timestamp.fromDate(new Date(data.endDate)),
-            registration_end_date: admin.firestore.Timestamp.fromDate(
-                new Date(data.registrationEndDate)
-            ),
             live: data.live ?? false,
             paused_for_enrollment: data.pausedForEnrollment ?? false,
             for_information_only: data.forInformationOnly ?? false,
@@ -99,6 +97,31 @@ export const updateClass = Functions.endpoint
             max_student_size: data.maxStudentSize ?? 12,
             thumbnailUrl: data.thumbnailUrl || '',
         };
+
+        // Only set date fields if they have values, otherwise delete them
+        if (data.startDate) {
+            updateData['start'] = admin.firestore.Timestamp.fromDate(
+                new Date(data.startDate)
+            );
+        } else {
+            updateData['start'] = admin.firestore.FieldValue.delete();
+        }
+        if (data.endDate) {
+            updateData['end'] = admin.firestore.Timestamp.fromDate(
+                new Date(data.endDate)
+            );
+        } else {
+            updateData['end'] = admin.firestore.FieldValue.delete();
+        }
+        if (data.registrationEndDate) {
+            updateData['registration_end_date'] =
+                admin.firestore.Timestamp.fromDate(
+                    new Date(data.registrationEndDate)
+                );
+        } else {
+            updateData['registration_end_date'] =
+                admin.firestore.FieldValue.delete();
+        }
 
         if (
             data.paymentRangeLowest !== undefined &&

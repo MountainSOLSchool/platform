@@ -29,8 +29,16 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialog } from '@angular/material/dialog';
+
+import {
+    MessagesComponent,
+    ValidationErrorsDialogComponent,
+    ValidationErrorsDialogData,
+} from '@sol/form/validity';
 
 import { UnitSelectorComponent } from '../unit-selector/unit-selector.component';
+import { classFormSuite } from './class-form.suite';
 
 interface Instructor {
     id: string;
@@ -97,6 +105,7 @@ type FormState = { message?: string } & (
         MatDividerModule,
         MatAutocompleteModule,
         UnitSelectorComponent,
+        MessagesComponent,
     ],
     template: `
         <div class="form-container">
@@ -138,15 +147,14 @@ type FormState = { message?: string } & (
                                         ? 'Class updated successfully!'
                                         : 'Class created successfully!'
                                 }}</span>
-                                @if (editMode()) {
-                                    <button
-                                        mat-button
-                                        color="primary"
-                                        (click)="navigateToList()"
-                                    >
-                                        Back to List
-                                    </button>
-                                } @else {
+                                <button
+                                    mat-button
+                                    color="primary"
+                                    (click)="navigateToList()"
+                                >
+                                    Back to List
+                                </button>
+                                @if (!editMode()) {
                                     <button
                                         mat-button
                                         color="primary"
@@ -183,6 +191,9 @@ type FormState = { message?: string } & (
                                                 >
                                             }
                                         </mat-select>
+                                        <sol-messages
+                                            [messages]="errors()['semesterId']"
+                                        />
                                     </mat-form-field>
 
                                     <mat-form-field appearance="outline">
@@ -193,6 +204,9 @@ type FormState = { message?: string } & (
                                             name="name"
                                             required
                                             placeholder="e.g., Forest Explorers"
+                                        />
+                                        <sol-messages
+                                            [messages]="errors()['name']"
                                         />
                                     </mat-form-field>
 
@@ -229,19 +243,19 @@ type FormState = { message?: string } & (
                                                 }}</mat-option>
                                             }
                                         </mat-autocomplete>
+                                        <sol-messages
+                                            [messages]="errors()['classType']"
+                                        />
                                     </mat-form-field>
 
                                     <mat-form-field appearance="outline">
-                                        <mat-label
-                                            >Age Group (Optional)</mat-label
-                                        >
+                                        <mat-label>Age Group</mat-label>
                                         <mat-select
                                             [(ngModel)]="ageGroup"
                                             name="ageGroup"
                                         >
                                             <mat-option value=""
-                                                >Standard (Paths &
-                                                Units)</mat-option
+                                                >Zorros and Jaguares</mat-option
                                             >
                                             <mat-option value="mallards"
                                                 >Mallards</mat-option
@@ -251,8 +265,8 @@ type FormState = { message?: string } & (
                                             >
                                         </mat-select>
                                         <mat-hint
-                                            >Select Mallards or Mapaches for
-                                            younger age group units</mat-hint
+                                            >Zorros and Jaguares is the standard
+                                            age group</mat-hint
                                         >
                                     </mat-form-field>
                                 </section>
@@ -279,6 +293,11 @@ type FormState = { message?: string } & (
                                             <mat-datepicker
                                                 #startPicker
                                             ></mat-datepicker>
+                                            <sol-messages
+                                                [messages]="
+                                                    errors()['startDate']
+                                                "
+                                            />
                                         </mat-form-field>
 
                                         <mat-form-field appearance="outline">
@@ -297,6 +316,11 @@ type FormState = { message?: string } & (
                                             <mat-datepicker
                                                 #endPicker
                                             ></mat-datepicker>
+                                            <sol-messages
+                                                [messages]="
+                                                    errors()['endDate']
+                                                "
+                                            />
                                         </mat-form-field>
                                     </div>
 
@@ -318,9 +342,23 @@ type FormState = { message?: string } & (
                                         <mat-datepicker
                                             #regPicker
                                         ></mat-datepicker>
+                                        <sol-messages
+                                            [messages]="
+                                                errors()['registrationEndDate']
+                                            "
+                                        />
                                     </mat-form-field>
 
                                     <div class="weekday-section">
+                                        <div class="field-preview">
+                                            <small
+                                                >Will be shown as:
+                                                {{
+                                                    computedWeekday() ||
+                                                    '(select days)'
+                                                }}</small
+                                            >
+                                        </div>
                                         <mat-form-field appearance="outline">
                                             <mat-label
                                                 >Day(s) of Week</mat-label
@@ -343,6 +381,9 @@ type FormState = { message?: string } & (
                                                     >
                                                 }
                                             </mat-select>
+                                            <sol-messages
+                                                [messages]="errors()['weekday']"
+                                            />
                                         </mat-form-field>
                                         @if (weekday() && editMode()) {
                                             <div
@@ -354,15 +395,18 @@ type FormState = { message?: string } & (
                                                 >
                                             </div>
                                         }
-                                        <div class="weekday-preview">
-                                            <small
-                                                >Will be shown as:
-                                                {{ computedWeekday() }}</small
-                                            >
-                                        </div>
                                     </div>
 
                                     <div class="time-section">
+                                        <div class="field-preview">
+                                            <small
+                                                >Will be shown as:
+                                                {{
+                                                    computedDailyTimes() ||
+                                                    '(select times)'
+                                                }}</small
+                                            >
+                                        </div>
                                         <div class="time-row">
                                             <mat-form-field
                                                 appearance="outline"
@@ -370,46 +414,31 @@ type FormState = { message?: string } & (
                                                 <mat-label
                                                     >Start Time</mat-label
                                                 >
-                                                <mat-select
+                                                <input
+                                                    matInput
+                                                    type="time"
                                                     [(ngModel)]="startTime"
                                                     name="startTime"
                                                     required
-                                                >
-                                                    @for (
-                                                        time of timeOptions;
-                                                        track time.value
-                                                    ) {
-                                                        <mat-option
-                                                            [value]="time.value"
-                                                            >{{
-                                                                time.label
-                                                            }}</mat-option
-                                                        >
-                                                    }
-                                                </mat-select>
+                                                />
+                                                <sol-messages
+                                                    [messages]="
+                                                        errors()['dailyTimes']
+                                                    "
+                                                />
                                             </mat-form-field>
 
                                             <mat-form-field
                                                 appearance="outline"
                                             >
                                                 <mat-label>End Time</mat-label>
-                                                <mat-select
+                                                <input
+                                                    matInput
+                                                    type="time"
                                                     [(ngModel)]="endTime"
                                                     name="endTime"
                                                     required
-                                                >
-                                                    @for (
-                                                        time of timeOptions;
-                                                        track time.value
-                                                    ) {
-                                                        <mat-option
-                                                            [value]="time.value"
-                                                            >{{
-                                                                time.label
-                                                            }}</mat-option
-                                                        >
-                                                    }
-                                                </mat-select>
+                                                />
                                             </mat-form-field>
                                         </div>
                                         @if (dailyTimes() && editMode()) {
@@ -420,14 +449,6 @@ type FormState = { message?: string } & (
                                                 >
                                             </div>
                                         }
-                                        <div class="time-preview">
-                                            <small
-                                                >Will be shown as:
-                                                {{
-                                                    computedDailyTimes()
-                                                }}</small
-                                            >
-                                        </div>
                                     </div>
 
                                     <mat-form-field appearance="outline">
@@ -452,6 +473,9 @@ type FormState = { message?: string } & (
                                                 }}</mat-option>
                                             }
                                         </mat-autocomplete>
+                                        <sol-messages
+                                            [messages]="errors()['location']"
+                                        />
                                     </mat-form-field>
                                 </section>
 
@@ -628,6 +652,11 @@ type FormState = { message?: string } & (
                                                 </mat-option>
                                             }
                                         </mat-select>
+                                        <sol-messages
+                                            [messages]="
+                                                errors()['instructorIds']
+                                            "
+                                        />
                                     </mat-form-field>
                                 </section>
 
@@ -657,9 +686,21 @@ type FormState = { message?: string } & (
                                         <mat-slide-toggle
                                             [(ngModel)]="live"
                                             name="live"
+                                            [disabled]="!isValid()"
                                         >
                                             Publish class (visible to public)
                                         </mat-slide-toggle>
+                                        @if (!isValid()) {
+                                            <button
+                                                type="button"
+                                                mat-button
+                                                class="validation-hint"
+                                                (click)="showWhyCannotPublish()"
+                                            >
+                                                <mat-icon>info</mat-icon>
+                                                Why can't I publish?
+                                            </button>
+                                        }
 
                                         <mat-slide-toggle
                                             [(ngModel)]="pausedForEnrollment"
@@ -677,6 +718,17 @@ type FormState = { message?: string } & (
                                         </mat-slide-toggle>
                                     </div>
                                 </section>
+
+                                @if (live() && !isValid()) {
+                                    <div class="live-validation-warning">
+                                        <mat-icon>warning</mat-icon>
+                                        <span>
+                                            Cannot save: Please fix the errors
+                                            above before saving a published
+                                            class.
+                                        </span>
+                                    </div>
+                                }
 
                                 <div class="form-actions">
                                     <button
@@ -772,18 +824,18 @@ type FormState = { message?: string } & (
             .time-section {
                 display: flex;
                 flex-direction: column;
-                gap: 0.5rem;
+                gap: 0.25rem;
+            }
+
+            .field-preview {
+                color: var(--sol-primary, #006633);
+                margin-bottom: 0;
             }
 
             .existing-weekday-display,
             .existing-time-display {
                 color: #666;
                 font-style: italic;
-            }
-
-            .weekday-preview,
-            .time-preview {
-                color: var(--sol-primary, #006633);
             }
 
             .sliding-scale-toggle {
@@ -794,6 +846,20 @@ type FormState = { message?: string } & (
                 display: flex;
                 flex-direction: column;
                 gap: 1rem;
+            }
+
+            .validation-hint {
+                align-self: flex-start;
+                margin-top: -0.5rem;
+                color: #666;
+                font-size: 0.875rem;
+            }
+
+            .validation-hint mat-icon {
+                font-size: 18px;
+                height: 18px;
+                width: 18px;
+                margin-right: 4px;
             }
 
             .form-actions {
@@ -813,6 +879,17 @@ type FormState = { message?: string } & (
                 border-radius: 4px;
                 color: #c62828;
                 margin-bottom: 1rem;
+            }
+
+            .live-validation-warning {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 1rem;
+                background-color: #fff3e0;
+                border-radius: 4px;
+                color: #e65100;
+                margin-top: 1rem;
             }
 
             .success-banner {
@@ -859,6 +936,7 @@ export class ClassFormComponent implements OnInit {
     readonly #semesterService = inject(ClassesSemesterListService);
     readonly #router = inject(Router);
     readonly #route = inject(ActivatedRoute);
+    readonly #dialog = inject(MatDialog);
 
     readonly #semesterIdFromQuery = toSignal(
         this.#route.queryParamMap.pipe(
@@ -1054,43 +1132,31 @@ export class ClassFormComponent implements OnInit {
         return dayOrder.filter((d) => selected.includes(d)).join(', ');
     });
 
-    readonly timeOptions = [
-        { value: '5am', label: '5:00 AM' },
-        { value: '6am', label: '6:00 AM' },
-        { value: '7am', label: '7:00 AM' },
-        { value: '8am', label: '8:00 AM' },
-        { value: '9am', label: '9:00 AM' },
-        { value: '10am', label: '10:00 AM' },
-        { value: '11am', label: '11:00 AM' },
-        { value: '12pm', label: '12:00 PM' },
-        { value: '1pm', label: '1:00 PM' },
-        { value: '2pm', label: '2:00 PM' },
-        { value: '3pm', label: '3:00 PM' },
-        { value: '4pm', label: '4:00 PM' },
-        { value: '5pm', label: '5:00 PM' },
-        { value: '6pm', label: '6:00 PM' },
-        { value: '7pm', label: '7:00 PM' },
-        { value: '8pm', label: '8:00 PM' },
-        { value: '9pm', label: '9:00 PM' },
-        { value: '10pm', label: '10:00 PM' },
-        { value: '11pm', label: '11:00 PM' },
-        { value: 'All Day', label: 'All Day' },
-    ];
-
     startTime = signal<string>('');
     endTime = signal<string>('');
 
     computedDailyTimes = computed(() => {
         const start = this.startTime();
         const end = this.endTime();
-        if (start === 'All Day' || end === 'All Day') {
-            return 'All Day';
-        }
         if (!start || !end) {
             return '';
         }
-        return `${start}-${end}`;
+        return `${this.#formatTime(start)}-${this.#formatTime(end)}`;
     });
+
+    #formatTime(time: string): string {
+        // Handle HH:mm format from native time input
+        const [hours, minutes] = time.split(':').map(Number);
+        if (isNaN(hours)) return time;
+
+        const period = hours >= 12 ? 'pm' : 'am';
+        const hour12 = hours % 12 || 12;
+
+        if (minutes === 0) {
+            return `${hour12}${period}`;
+        }
+        return `${hour12}:${minutes.toString().padStart(2, '0')}${period}`;
+    }
 
     readonly filteredLocations = computed(() => {
         const options = this.locationOptions();
@@ -1104,9 +1170,6 @@ export class ClassFormComponent implements OnInit {
     });
 
     readonly grades = [
-        { value: -1, label: 'Pre-K' },
-        { value: 0, label: 'Kindergarten' },
-        { value: 1, label: '1st Grade' },
         { value: 2, label: '2nd Grade' },
         { value: 3, label: '3rd Grade' },
         { value: 4, label: '4th Grade' },
@@ -1130,7 +1193,7 @@ export class ClassFormComponent implements OnInit {
     weekday = signal<string>('');
     dailyTimes = signal<string>('');
     location = signal<string>('');
-    gradeRangeStart = signal<number>(0);
+    gradeRangeStart = signal<number>(2);
     gradeRangeEnd = signal<number>(12);
     minStudentSize = signal<number>(5);
     maxStudentSize = signal<number>(12);
@@ -1146,6 +1209,40 @@ export class ClassFormComponent implements OnInit {
     ageGroup = signal<string>('');
 
     formState = signal<FormState>({ status: 'idle' });
+
+    // Track whether to show validation errors (when live or after attempting to go live)
+    showValidationErrors = signal<boolean>(false);
+
+    // Vest validation - runs the suite and returns the result
+    readonly #validation = computed(() => {
+        return classFormSuite({
+            semesterId: this.semesterId(),
+            name: this.name(),
+            classType: this.classType(),
+            startDate: this.startDate(),
+            endDate: this.endDate(),
+            registrationEndDate: this.registrationEndDate(),
+            weekday: this.computedWeekday(),
+            dailyTimes: this.computedDailyTimes(),
+            location: this.location(),
+            instructorIds: this.selectedInstructorIds(),
+        });
+    });
+
+    // Errors dictionary: { fieldName: string[] } - matches vest pattern used elsewhere
+    readonly errors = computed(() => {
+        const interacted = this.showValidationErrors();
+        return interacted ? this.#validation().getErrors() : {};
+    });
+
+    // All validation errors as a flat array (for dialog display)
+    readonly validationErrors = computed(() => {
+        const allErrors = this.#validation().getErrors();
+        return Object.values(allErrors).flat();
+    });
+
+    // Whether the form passes full validation
+    readonly isValid = computed(() => this.#validation().isValid());
 
     readonly #semestersResource = rxResource({
         stream: () =>
@@ -1265,20 +1362,19 @@ export class ClassFormComponent implements OnInit {
         )
     );
 
+    // Can submit if:
+    // - Draft mode: always allow (save in any state)
+    // - Live mode: only if valid (no errors)
     readonly canSubmit = computed(() => {
-        return (
-            this.semesterId().length > 0 &&
-            this.name().trim().length > 0 &&
-            this.classType().length > 0 &&
-            this.startDate() !== null &&
-            this.endDate() !== null &&
-            this.registrationEndDate() !== null &&
-            this.computedWeekday().length > 0 &&
-            this.computedDailyTimes().length > 0 &&
-            this.location().length > 0 &&
-            this.selectedInstructorIds().length > 0 &&
-            this.formState().status !== 'submitting'
-        );
+        if (this.formState().status === 'submitting') {
+            return false;
+        }
+        // In live mode, require full validation
+        if (this.live()) {
+            return this.isValid();
+        }
+        // In draft mode, allow saving with any amount of information
+        return true;
     });
 
     constructor() {
@@ -1341,6 +1437,8 @@ export class ClassFormComponent implements OnInit {
         this.forInformationOnly.set(cls.forInformationOnly);
         this.selectedUnitIds.set(cls.unitIds ?? []);
         this.ageGroup.set(cls.ageGroup ?? '');
+        // Show validation errors if loading a live class
+        this.showValidationErrors.set(cls.live);
     }
 
     #parseAndSetTimes(dailyTimes: string) {
@@ -1348,45 +1446,37 @@ export class ClassFormComponent implements OnInit {
 
         const normalized = dailyTimes.toLowerCase().trim();
 
-        if (normalized === 'all day') {
-            this.startTime.set('All Day');
-            this.endTime.set('All Day');
-            return;
-        }
-
-        // Match patterns like "9am-12pm", "9am-4pm", "1pm-4pm", "5pm-11am"
-        const timeRegex = /(\d{1,2})\s*(am|pm)\s*[-–]\s*(\d{1,2})\s*(am|pm)/i;
+        // Match patterns like "9am-12pm", "9:30am-4pm", "1pm-4:15pm"
+        const timeRegex =
+            /(\d{1,2})(?::(\d{2}))?\s*(am|pm)\s*[-–]\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i;
         const match = normalized.match(timeRegex);
 
         if (match) {
-            const startHour = match[1];
-            const startPeriod = match[2].toLowerCase();
-            const endHour = match[3];
-            const endPeriod = match[4].toLowerCase();
+            const startHour = parseInt(match[1]);
+            const startMinutes = match[2] ? parseInt(match[2]) : 0;
+            const startPeriod = match[3].toLowerCase();
+            const endHour = parseInt(match[4]);
+            const endMinutes = match[5] ? parseInt(match[5]) : 0;
+            const endPeriod = match[6].toLowerCase();
 
-            const startValue = `${startHour}${startPeriod}`;
-            const endValue = `${endHour}${endPeriod}`;
+            // Convert to 24-hour format for native time input
+            const start24 = this.#to24Hour(startHour, startPeriod);
+            const end24 = this.#to24Hour(endHour, endPeriod);
 
-            // Check if these values exist in our options
-            const validStart = this.timeOptions.some(
-                (opt) => opt.value.toLowerCase() === startValue
+            this.startTime.set(
+                `${start24.toString().padStart(2, '0')}:${startMinutes.toString().padStart(2, '0')}`
             );
-            const validEnd = this.timeOptions.some(
-                (opt) => opt.value.toLowerCase() === endValue
+            this.endTime.set(
+                `${end24.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`
             );
+        }
+    }
 
-            if (validStart) {
-                const matchedStart = this.timeOptions.find(
-                    (opt) => opt.value.toLowerCase() === startValue
-                );
-                this.startTime.set(matchedStart?.value ?? '');
-            }
-            if (validEnd) {
-                const matchedEnd = this.timeOptions.find(
-                    (opt) => opt.value.toLowerCase() === endValue
-                );
-                this.endTime.set(matchedEnd?.value ?? '');
-            }
+    #to24Hour(hour: number, period: string): number {
+        if (period === 'am') {
+            return hour === 12 ? 0 : hour;
+        } else {
+            return hour === 12 ? 12 : hour + 12;
         }
     }
 
@@ -1534,7 +1624,7 @@ export class ClassFormComponent implements OnInit {
         this.startTime.set('');
         this.endTime.set('');
         this.location.set('');
-        this.gradeRangeStart.set(0);
+        this.gradeRangeStart.set(2);
         this.gradeRangeEnd.set(12);
         this.minStudentSize.set(5);
         this.maxStudentSize.set(12);
@@ -1549,10 +1639,31 @@ export class ClassFormComponent implements OnInit {
         this.selectedUnitIds.set([]);
         this.ageGroup.set('');
         this.formState.set({ status: 'idle' });
+        this.showValidationErrors.set(false);
     }
 
     onUnitSelectionChange(unitIds: string[]) {
         this.selectedUnitIds.set(unitIds);
+    }
+
+    showWhyCannotPublish() {
+        this.showValidationErrors.set(true);
+        this.#openValidationErrorsDialog();
+    }
+
+    #openValidationErrorsDialog() {
+        this.#dialog.open<
+            ValidationErrorsDialogComponent,
+            ValidationErrorsDialogData
+        >(ValidationErrorsDialogComponent, {
+            data: {
+                errors: this.validationErrors(),
+                title: 'Cannot Publish Class',
+                message:
+                    'This class cannot be published until the following issues are resolved:',
+            },
+            width: '450px',
+        });
     }
 
     cancel() {
