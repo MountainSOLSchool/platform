@@ -25,6 +25,11 @@ export interface AdminClass {
     pausedForEnrollment: boolean;
     forInformationOnly: boolean;
     thumbnailUrl?: string;
+    additionalOptions?: Array<{
+        id: string;
+        description: string;
+        cost: number;
+    }>;
 }
 
 export interface GetClassesForAdminRequest {
@@ -98,6 +103,17 @@ export const getClassesForAdmin = Functions.endpoint
                     pausedForEnrollment: data.paused_for_enrollment ?? false,
                     forInformationOnly: data.for_information_only ?? false,
                     thumbnailUrl: data.thumbnailUrl,
+                    additionalOptions: data.additional_options?.map(
+                        (opt: {
+                            id: string;
+                            description: string;
+                            cost: number;
+                        }) => ({
+                            id: opt.id,
+                            description: opt.description,
+                            cost: opt.cost,
+                        })
+                    ),
                 };
             })
         );

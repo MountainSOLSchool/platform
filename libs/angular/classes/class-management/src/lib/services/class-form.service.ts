@@ -84,6 +84,7 @@ export class ClassFormService {
             forInformationOnly: data.forInformationOnly,
             unitIds: data.unitIds,
             ageGroup: data.ageGroup,
+            additionalOptions: data.additionalOptions,
         };
 
         return this.#api.createClass(request).pipe(
@@ -128,6 +129,7 @@ export class ClassFormService {
             forInformationOnly: data.forInformationOnly,
             unitIds: data.unitIds,
             ageGroup: data.ageGroup,
+            additionalOptions: data.additionalOptions,
         };
 
         return this.#api.updateClass(request).pipe(

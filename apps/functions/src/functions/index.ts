@@ -45,3 +45,5 @@ export { createSemester } from '@sol/firebase/enrollment-functions/create-semest
 export { archiveSemester } from '@sol/firebase/enrollment-functions/archive-semester';
 export { updateActiveSemesterConfig } from '@sol/firebase/enrollment-functions/update-active-semester-config';
 export { uploadClassImage } from '@sol/firebase/enrollment-functions/upload-class-image';
+export { getSemesterInfoPanel } from '@sol/firebase/enrollment-functions/get-semester-info-panel';
+export { updateSemesterInfoPanel } from '@sol/firebase/enrollment-functions/update-semester-info-panel';

@@ -102,6 +102,12 @@
             "@sol/firebase/enrollment-functions/get-class-for-edit": [
                 "libs/firebase/enrollment-functions/get-class-for-edit/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/get-semester-info-panel": [
+                "libs/firebase/enrollment-functions/get-semester-info-panel/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/update-semester-info-panel": [
+                "libs/firebase/enrollment-functions/update-semester-info-panel/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/get-instructors": [
                 "libs/firebase/enrollment-functions/get-instructors/src/index.ts"
             ],

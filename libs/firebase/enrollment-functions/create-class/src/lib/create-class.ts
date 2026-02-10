@@ -107,6 +107,16 @@ export const createClass = Functions.endpoint
             classDoc['age_group'] = data.ageGroup;
         }
 
+        if (data.additionalOptions && data.additionalOptions.length > 0) {
+            classDoc['additional_options'] = data.additionalOptions.map(
+                (opt) => ({
+                    id: opt.id,
+                    description: opt.description,
+                    cost: opt.cost,
+                })
+            );
+        }
+
         const docRef = await classesCollection.add(classDoc);
 
         const result: CreateClassResponse = {

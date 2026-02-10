@@ -47,6 +47,7 @@ import {
 import { WeekdaySelectorComponent } from '../weekday-selector/weekday-selector.component';
 import { TimeRangeSelectorComponent } from '../time-range-selector/time-range-selector.component';
 import { ClassFormService } from '../../services/class-form.service';
+import type { AdditionalOptionInput } from '@sol/angular/firebase/api';
 
 interface Instructor {
     id: string;
@@ -84,6 +85,7 @@ interface ClassForEdit {
     thumbnailUrl?: string;
     unitIds?: string[];
     ageGroup?: string;
+    additionalOptions?: AdditionalOptionInput[];
 }
 
 type FormState = { message?: string } & (
@@ -92,6 +94,11 @@ type FormState = { message?: string } & (
     | { status: 'success'; classId: string }
     | { status: 'error'; message: string }
 );
+
+const OPTION_DESCRIPTION_SUGGESTIONS = [
+    'Additional hour before class, 8am-9am',
+    'Additional hour after class, 4pm-5pm',
+];
 
 const WEEKDAY_OPTIONS = [
     { value: 'Su', fullName: 'sunday', aliases: ['sun'] },
@@ -584,6 +591,129 @@ const WEEKDAY_OPTIONS = [
                                 <mat-divider></mat-divider>
 
                                 <section class="form-section">
+                                    <h3>Additional Options</h3>
+                                    <p class="section-description">
+                                        Optional paid add-ons that students can
+                                        select during enrollment.
+                                    </p>
+
+                                    <div class="sliding-scale-toggle">
+                                        <mat-slide-toggle
+                                            [(ngModel)]="useAdditionalOptions"
+                                            name="useAdditionalOptions"
+                                        >
+                                            Enable additional options
+                                        </mat-slide-toggle>
+                                    </div>
+
+                                    @if (useAdditionalOptions()) {
+                                        @for (
+                                            option of additionalOptions();
+                                            track option.id;
+                                            let i = $index
+                                        ) {
+                                            <div class="additional-option-row">
+                                                <mat-form-field
+                                                    appearance="outline"
+                                                    class="option-description"
+                                                >
+                                                    <mat-label
+                                                        >Description</mat-label
+                                                    >
+                                                    <input
+                                                        matInput
+                                                        [ngModel]="
+                                                            option.description
+                                                        "
+                                                        (ngModelChange)="
+                                                            updateOption(
+                                                                i,
+                                                                'description',
+                                                                $event
+                                                            )
+                                                        "
+                                                        [name]="
+                                                            'optionDesc_' +
+                                                            option.id
+                                                        "
+                                                        [matAutocomplete]="
+                                                            optionDescAuto
+                                                        "
+                                                        placeholder="e.g., Field trip fee"
+                                                    />
+                                                    <mat-autocomplete
+                                                        #optionDescAuto="matAutocomplete"
+                                                    >
+                                                        @for (
+                                                            suggestion of filteredOptionSuggestions(
+                                                                option.description
+                                                            );
+                                                            track suggestion
+                                                        ) {
+                                                            <mat-option
+                                                                [value]="
+                                                                    suggestion
+                                                                "
+                                                                >{{
+                                                                    suggestion
+                                                                }}</mat-option
+                                                            >
+                                                        }
+                                                    </mat-autocomplete>
+                                                </mat-form-field>
+                                                <mat-form-field
+                                                    appearance="outline"
+                                                    class="option-cost"
+                                                >
+                                                    <mat-label
+                                                        >Cost ($)</mat-label
+                                                    >
+                                                    <span matPrefix
+                                                        >$&nbsp;</span
+                                                    >
+                                                    <input
+                                                        matInput
+                                                        type="number"
+                                                        [ngModel]="option.cost"
+                                                        (ngModelChange)="
+                                                            updateOption(
+                                                                i,
+                                                                'cost',
+                                                                $event
+                                                            )
+                                                        "
+                                                        [name]="
+                                                            'optionCost_' +
+                                                            option.id
+                                                        "
+                                                        min="0"
+                                                    />
+                                                </mat-form-field>
+                                                <button
+                                                    mat-icon-button
+                                                    type="button"
+                                                    color="warn"
+                                                    (click)="removeOption(i)"
+                                                    class="option-remove"
+                                                >
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </div>
+                                        }
+                                        <button
+                                            mat-stroked-button
+                                            type="button"
+                                            (click)="addOption()"
+                                        >
+                                            <mat-icon>add</mat-icon>
+                                            Add Option
+                                        </button>
+                                    }
+                                </section>
+
+                                <mat-divider></mat-divider>
+
+                                <section class="form-section">
                                     <h3>Instructors</h3>
 
                                     <mat-form-field appearance="outline">
@@ -867,6 +997,25 @@ const WEEKDAY_OPTIONS = [
                 display: inline-block;
             }
 
+            .additional-option-row {
+                display: grid;
+                grid-template-columns: 1fr 120px auto;
+                gap: 0.5rem;
+                align-items: start;
+            }
+
+            .option-description {
+                width: 100%;
+            }
+
+            .option-cost {
+                width: 100%;
+            }
+
+            .option-remove {
+                margin-top: 8px;
+            }
+
             @media (max-width: 600px) {
                 .date-row,
                 .schedule-row,
@@ -874,6 +1023,14 @@ const WEEKDAY_OPTIONS = [
                 .payment-range-row,
                 .student-size-row {
                     grid-template-columns: 1fr;
+                }
+
+                .additional-option-row {
+                    grid-template-columns: 1fr auto;
+                }
+
+                .additional-option-row .option-cost {
+                    grid-column: 1;
                 }
             }
         `,
@@ -1114,6 +1271,8 @@ export class ClassFormComponent implements OnInit {
     forInformationOnly = signal<boolean>(false);
     selectedUnitIds = signal<string[]>([]);
     ageGroup = signal<string>('');
+    additionalOptions = signal<AdditionalOptionInput[]>([]);
+    useAdditionalOptions = signal<boolean>(false);
 
     thumbnailUrl = signal<string>('');
     imagePreviewUrl = signal<string>('');
@@ -1291,6 +1450,10 @@ export class ClassFormComponent implements OnInit {
             this.thumbnailUrl.set(cls.thumbnailUrl);
             this.imagePreviewUrl.set(cls.thumbnailUrl);
         }
+        if (cls.additionalOptions && cls.additionalOptions.length > 0) {
+            this.useAdditionalOptions.set(true);
+            this.additionalOptions.set(cls.additionalOptions);
+        }
         // Show validation errors if loading a live class
         this.showValidationErrors.set(cls.live);
     }
@@ -1452,7 +1615,43 @@ export class ClassFormComponent implements OnInit {
             unitIds: this.selectedUnitIds(),
             ageGroup: this.ageGroup() || undefined,
             thumbnailUrl: this.thumbnailUrl() || undefined,
+            additionalOptions: this.useAdditionalOptions()
+                ? this.additionalOptions().filter((o) => o.description.trim())
+                : undefined,
         };
+    }
+
+    addOption() {
+        const options = this.additionalOptions();
+        const id = crypto.randomUUID();
+        this.additionalOptions.set([
+            ...options,
+            { id, description: '', cost: 0 },
+        ]);
+    }
+
+    removeOption(index: number) {
+        const options = [...this.additionalOptions()];
+        options.splice(index, 1);
+        this.additionalOptions.set(options);
+    }
+
+    filteredOptionSuggestions(currentValue: string): string[] {
+        const lower = (currentValue || '').toLowerCase();
+        if (!lower) return OPTION_DESCRIPTION_SUGGESTIONS;
+        return OPTION_DESCRIPTION_SUGGESTIONS.filter((s) =>
+            s.toLowerCase().includes(lower)
+        );
+    }
+
+    updateOption(
+        index: number,
+        field: 'description' | 'cost',
+        value: string | number
+    ) {
+        const options = [...this.additionalOptions()];
+        options[index] = { ...options[index], [field]: value };
+        this.additionalOptions.set(options);
     }
 
     submitForm() {
@@ -1491,6 +1690,8 @@ export class ClassFormComponent implements OnInit {
         this.forInformationOnly.set(false);
         this.selectedUnitIds.set([]);
         this.ageGroup.set('');
+        this.additionalOptions.set([]);
+        this.useAdditionalOptions.set(false);
         this.thumbnailUrl.set('');
         this.imagePreviewUrl.set('');
         this.#pendingImageFile.set(null);

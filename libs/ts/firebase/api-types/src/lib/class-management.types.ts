@@ -5,6 +5,12 @@
  * and Firebase Cloud Functions backend.
  */
 
+export interface AdditionalOptionInput {
+    id: string;
+    description: string;
+    cost: number;
+}
+
 export interface CreateClassRequest {
     semesterId: string;
     name: string;
@@ -29,6 +35,7 @@ export interface CreateClassRequest {
     forInformationOnly?: boolean;
     unitIds?: string[];
     ageGroup?: string;
+    additionalOptions?: AdditionalOptionInput[];
 }
 
 export interface CreateClassResponse {
@@ -62,6 +69,7 @@ export interface UpdateClassRequest {
     forInformationOnly?: boolean;
     unitIds?: string[];
     ageGroup?: string;
+    additionalOptions?: AdditionalOptionInput[];
 }
 
 export interface UpdateClassResponse {
