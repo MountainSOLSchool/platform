@@ -75,7 +75,7 @@ type SignUpState =
         h2 { margin-top: 0; }
     `],
     template: `
-        <h2>Mountain SOL Medical - Class Registration</h2>
+        <h2>Mountain SOL Medic Class Registration</h2>
 
         @switch (state().status) {
             @case ('loading') {
