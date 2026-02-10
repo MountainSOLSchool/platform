@@ -32,9 +32,7 @@ export interface GetMedicClassesResponse {
         name: string;
         description: string;
         cost: number;
-        minStudents: number;
         maxStudents: number;
-        status: string;
         enrolledCount: number;
     }>;
 }

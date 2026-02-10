@@ -7,7 +7,7 @@ import {
     HttpInterceptorFn,
 } from '@angular/common/http';
 
-import { filter, from, map, Observable, switchMap, take } from 'rxjs';
+import { from, map, Observable, switchMap, take } from 'rxjs';
 import { UserService } from '@sol/auth/user';
 
 @Injectable()
@@ -19,9 +19,11 @@ export class AuthInterceptor implements HttpInterceptor {
         next: HttpHandler
     ): Observable<HttpEvent<T>> {
         return this.user.pipe(
-            filter(<T>(user: T): user is NonNullable<T> => !!user),
             take(1),
             switchMap((user) => {
+                if (!user) {
+                    return next.handle(req);
+                }
                 return from(user.getIdToken()).pipe(
                     map((idToken) =>
                         req.clone({
@@ -41,9 +43,11 @@ export class AuthInterceptor implements HttpInterceptor {
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const user = inject(UserService).getUser();
     return from(user).pipe(
-        filter((user) => !!user),
         take(1),
         switchMap((user) => {
+            if (!user) {
+                return next(req);
+            }
             return from(user.getIdToken()).pipe(
                 map((idToken) =>
                     req.clone({
