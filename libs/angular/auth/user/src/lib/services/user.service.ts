@@ -33,4 +33,10 @@ export class UserService {
     isAdmin(): Observable<boolean> {
         return this.getRoles().pipe(map((roles) => roles.includes('admin')));
     }
+
+    isMedicAdmin(): Observable<boolean> {
+        return this.getRoles().pipe(
+            map((roles) => roles.includes('medic_admin'))
+        );
+    }
 }

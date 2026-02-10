@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-get-medic-classes",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/get-medic-classes/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-get-medic-classes --web",
+    "targets": {}
+}

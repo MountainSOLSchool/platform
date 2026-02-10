@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { HeaderComponent } from '@sol/header';
 import { adminGuard } from './admin.guard';
+import { medicAdminGuard } from './medic-admin.guard';
 import { userGuard } from './user.guard';
 import { provideClassList } from '@sol/angular/classes/list';
 import { provideRequests } from '@sol/angular/request';
@@ -144,7 +145,22 @@ export const appRoutes: Routes = [
                                 (m) => m.DonateComponent
                             ),
                     },
+                    {
+                        path: 'medic/sign-up',
+                        loadComponent: () =>
+                            import('@sol/angular/medic/sign-up').then(
+                                (m) => m.MedicSignUpComponent
+                            ),
+                    },
                 ],
+            },
+            {
+                path: 'medic/admin',
+                canActivate: [userGuard, medicAdminGuard],
+                loadChildren: () =>
+                    import('@sol/angular/medic/admin').then(
+                        (m) => m.medicAdminRoutes
+                    ),
             },
             {
                 path: '**',

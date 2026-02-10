@@ -17,3 +17,17 @@ export type {
     UpdateSemesterInfoPanelRequest,
     UpdateSemesterInfoPanelResponse,
 } from './lib/semester-info-panel.types';
+
+// Medic Class Management
+export type {
+    CreateMedicClassRequest,
+    CreateMedicClassResponse,
+    UpdateMedicClassRequest,
+    UpdateMedicClassResponse,
+    GetMedicClassesResponse,
+    GetMedicClassesAdminResponse,
+    MedicEnrollRequest,
+    MedicEnrollResponse,
+    GetMedicEnrollmentsRequest,
+    GetMedicEnrollmentsResponse,
+} from './lib/medic.types';

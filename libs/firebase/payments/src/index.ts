@@ -6,3 +6,6 @@ export * from './lib/factories/service-payment.factory';
 export * from './lib/factories/donation.factory';
 export * from './lib/email-strategies/service-payment.email-strategy';
 export * from './lib/email-strategies/donation.email-strategy';
+export * from './lib/handlers/medic-payment.handler';
+export * from './lib/factories/medic-payment.factory';
+export * from './lib/email-strategies/medic.email-strategy';

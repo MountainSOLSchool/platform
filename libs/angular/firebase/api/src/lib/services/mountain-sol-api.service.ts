@@ -14,6 +14,16 @@ import type {
     GetSemesterInfoPanelResponse,
     UpdateSemesterInfoPanelRequest,
     UpdateSemesterInfoPanelResponse,
+    CreateMedicClassRequest,
+    CreateMedicClassResponse,
+    UpdateMedicClassRequest,
+    UpdateMedicClassResponse,
+    GetMedicClassesResponse,
+    GetMedicClassesAdminResponse,
+    MedicEnrollRequest,
+    MedicEnrollResponse,
+    GetMedicEnrollmentsRequest,
+    GetMedicEnrollmentsResponse,
 } from '@sol/ts/firebase/api-types';
 
 // Re-export types for consumers
@@ -30,6 +40,16 @@ export type {
     GetSemesterInfoPanelResponse,
     UpdateSemesterInfoPanelRequest,
     UpdateSemesterInfoPanelResponse,
+    CreateMedicClassRequest,
+    CreateMedicClassResponse,
+    UpdateMedicClassRequest,
+    UpdateMedicClassResponse,
+    GetMedicClassesResponse,
+    GetMedicClassesAdminResponse,
+    MedicEnrollRequest,
+    MedicEnrollResponse,
+    GetMedicEnrollmentsRequest,
+    GetMedicEnrollmentsResponse,
 };
 
 /**
@@ -103,4 +123,38 @@ export class MountainSolApiService {
         UpdateSemesterInfoPanelRequest,
         UpdateSemesterInfoPanelResponse
     >(this.#functions, 'updateSemesterInfoPanel');
+
+    // =========================================================================
+    // Medic Class Management
+    // =========================================================================
+
+    readonly createMedicClass = declareFunction<
+        CreateMedicClassRequest,
+        CreateMedicClassResponse
+    >(this.#functions, 'createMedicClass');
+
+    readonly updateMedicClass = declareFunction<
+        UpdateMedicClassRequest,
+        UpdateMedicClassResponse
+    >(this.#functions, 'updateMedicClass');
+
+    readonly getMedicClasses = declareFunction<
+        void,
+        GetMedicClassesResponse
+    >(this.#functions, 'getMedicClasses');
+
+    readonly getMedicClassesAdmin = declareFunction<
+        void,
+        GetMedicClassesAdminResponse
+    >(this.#functions, 'getMedicClassesAdmin');
+
+    readonly enrollMedic = declareFunction<
+        MedicEnrollRequest,
+        MedicEnrollResponse
+    >(this.#functions, 'enrollMedic');
+
+    readonly getMedicEnrollments = declareFunction<
+        GetMedicEnrollmentsRequest,
+        GetMedicEnrollmentsResponse
+    >(this.#functions, 'getMedicEnrollments');
 }
