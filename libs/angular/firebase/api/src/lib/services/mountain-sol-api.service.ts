@@ -2,22 +2,34 @@ import { Injectable, inject } from '@angular/core';
 import { declareFunction } from '@sol/angular/request';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import type {
+    AdditionalOptionInput,
+    AdditionalInfoPanel,
     CreateClassRequest,
     CreateClassResponse,
     UpdateClassRequest,
     UpdateClassResponse,
     UploadClassImageRequest,
     UploadClassImageResponse,
+    GetSemesterInfoPanelRequest,
+    GetSemesterInfoPanelResponse,
+    UpdateSemesterInfoPanelRequest,
+    UpdateSemesterInfoPanelResponse,
 } from '@sol/ts/firebase/api-types';
 
 // Re-export types for consumers
 export type {
+    AdditionalOptionInput,
+    AdditionalInfoPanel,
     CreateClassRequest,
     CreateClassResponse,
     UpdateClassRequest,
     UpdateClassResponse,
     UploadClassImageRequest,
     UploadClassImageResponse,
+    GetSemesterInfoPanelRequest,
+    GetSemesterInfoPanelResponse,
+    UpdateSemesterInfoPanelRequest,
+    UpdateSemesterInfoPanelResponse,
 };
 
 /**
@@ -77,4 +89,18 @@ export class MountainSolApiService {
         UploadClassImageRequest,
         UploadClassImageResponse
     >(this.#functions, 'uploadClassImage');
+
+    // =========================================================================
+    // Semester Info Panel
+    // =========================================================================
+
+    readonly getSemesterInfoPanel = declareFunction<
+        GetSemesterInfoPanelRequest,
+        GetSemesterInfoPanelResponse
+    >(this.#functions, 'getSemesterInfoPanel');
+
+    readonly updateSemesterInfoPanel = declareFunction<
+        UpdateSemesterInfoPanelRequest,
+        UpdateSemesterInfoPanelResponse
+    >(this.#functions, 'updateSemesterInfoPanel');
 }

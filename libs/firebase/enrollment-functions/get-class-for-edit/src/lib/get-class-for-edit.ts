@@ -32,6 +32,11 @@ export interface ClassForEdit {
     thumbnailUrl?: string;
     unitIds?: string[];
     ageGroup?: string;
+    additionalOptions?: Array<{
+        id: string;
+        description: string;
+        cost: number;
+    }>;
 }
 
 export interface GetClassForEditResponse {
@@ -99,6 +104,13 @@ export const getClassForEdit = Functions.endpoint
             thumbnailUrl: data.thumbnailUrl,
             unitIds: unitIds.length > 0 ? unitIds : undefined,
             ageGroup: data.age_group || undefined,
+            additionalOptions: data.additional_options?.map(
+                (opt: { id: string; description: string; cost: number }) => ({
+                    id: opt.id,
+                    description: opt.description,
+                    cost: opt.cost,
+                })
+            ),
         };
 
         response.send({ class: classForEdit });

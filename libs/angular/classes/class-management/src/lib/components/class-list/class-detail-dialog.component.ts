@@ -30,6 +30,11 @@ interface AdminClass {
     pausedForEnrollment: boolean;
     forInformationOnly: boolean;
     thumbnailUrl?: string;
+    additionalOptions?: Array<{
+        id: string;
+        description: string;
+        cost: number;
+    }>;
 }
 
 @Component({
@@ -160,6 +165,30 @@ interface AdminClass {
                         </div>
                     </div>
                 </section>
+
+                @if (
+                    data.additionalOptions &&
+                    data.additionalOptions.length > 0
+                ) {
+                    <mat-divider></mat-divider>
+
+                    <section>
+                        <h3>Additional Options</h3>
+                        <div class="options-list">
+                            @for (
+                                option of data.additionalOptions;
+                                track option.id
+                            ) {
+                                <div class="option-item">
+                                    <span>{{ option.description }}</span>
+                                    <span class="option-cost"
+                                        >+{{ '$' + option.cost }}</span
+                                    >
+                                </div>
+                            }
+                        </div>
+                    </section>
+                }
 
                 <mat-divider></mat-divider>
 
@@ -313,6 +342,28 @@ interface AdminClass {
                 font-size: 20px;
                 width: 20px;
                 height: 20px;
+            }
+
+            .options-list {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .option-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 12px;
+                background: #f5f5f5;
+                border-radius: 6px;
+            }
+
+            .option-cost {
+                font-weight: 600;
+                color: #2e7d32;
+                white-space: nowrap;
+                margin-left: 1rem;
             }
 
             .no-data {

@@ -137,6 +137,19 @@ export const updateClass = Functions.endpoint
             updateData['age_group'] = admin.firestore.FieldValue.delete();
         }
 
+        if (data.additionalOptions && data.additionalOptions.length > 0) {
+            updateData['additional_options'] = data.additionalOptions.map(
+                (opt) => ({
+                    id: opt.id,
+                    description: opt.description,
+                    cost: opt.cost,
+                })
+            );
+        } else {
+            updateData['additional_options'] =
+                admin.firestore.FieldValue.delete();
+        }
+
         await classRef.update(updateData);
 
         const result: UpdateClassResponse = {

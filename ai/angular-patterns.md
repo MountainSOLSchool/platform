@@ -478,6 +478,89 @@ Dialog components use:
 
 **Why Material**: Better long-term support, more comprehensive component set, better accessibility, no breaking styling changes in updates
 
+### Design Tokens
+
+**IMPORTANT**: Use CSS custom properties (design tokens) instead of hardcoded hex/rgb colors.
+
+**Token definitions**: `apps/enrollment-portal/src/design-tokens.scss`
+
+**Available tokens**:
+- Brand: `--sol-primary`, `--sol-primary-hover`, `--sol-primary-on` (white text on primary)
+- Semantic: `--sol-success`, `--sol-error`, `--sol-warning`, `--sol-info`
+- Surfaces: `--sol-surface` (white), `--sol-surface-variant` (#f5f5f5)
+- Text: `--sol-on-surface`, `--sol-on-surface-secondary`, `--sol-on-surface-variant`
+- Forms: `--sol-input-border`, `--sol-hint-color`, `--sol-input-focus`
+- Disabled: `--sol-disabled-bg`, `--sol-disabled-text`
+- Shadows: `--sol-shadow-sm`, `--sol-shadow-md`
+
+**Usage**:
+```css
+.my-element {
+    color: var(--sol-on-surface-variant);
+    border: 1px solid var(--sol-input-border);
+    background: var(--sol-surface-variant);
+}
+.error { color: var(--sol-error); }
+.success { color: var(--sol-primary); }
+```
+
+### Inline CSS Budget Limits
+
+The build enforces CSS budget limits on inline component styles:
+- **Warning**: 2 KB
+- **Error**: 4 KB
+
+If a component's inline styles exceed 4 KB, the build will fail. Strategies to stay under budget:
+- Consolidate shared properties (e.g., `.a, .b { display: flex; }`)
+- Remove CSS comments
+- Remove non-essential styling (hover effects, transitions)
+- Use design token vars instead of duplicating color values
+- Remove rules that duplicate inherited or default styles
+
+**Reference**: The info-panel-editor component is near the budget limit — be careful when adding styles to `libs/angular/classes/class-management/src/lib/components/info-panel-editor/info-panel-editor.component.ts`.
+
+### Material 3 Theme & Button Color (Known Issue #193)
+
+The M3 theme is configured in `apps/enrollment-portal/src/custom-theme.scss` with `mat.theme()` applied inside `html { }`. This generates high-specificity selectors that override CSS custom property overrides for button colors.
+
+**Current status**: Primary buttons (`mat-raised-button color="primary"`) don't reliably show the brand green. Tracked in GitHub issue #193.
+
+### Markdown Inside List Items
+
+When using `ngx-markdown`'s `<markdown>` component inside `<li>` elements, the rendered `<p>` tag breaks bullet point layout (marker on one line, text on the next).
+
+**Fix**: Apply `display: contents` to the `<markdown>` element and `display: inline; margin: 0` on the inner `<p>`:
+
+```css
+.info-card li > markdown { display: contents; }
+.info-card li > markdown p { display: inline; margin: 0; }
+```
+
+**Reference**: `libs/angular/classes/class-enrollment/src/lib/components/info-panel/info-panel.component.ts:231-238`
+
+### Discriminated Unions in Templates
+
+Angular templates cannot narrow discriminated union types. Accessing `state().message` where `message` only exists on certain variants causes `TS2339`.
+
+**Fix**: Use a `computed()` signal that handles the narrowing in TypeScript:
+
+```typescript
+type SaveState =
+    | { status: 'idle' }
+    | { status: 'saving' }
+    | { status: 'error'; message: string };
+
+saveState = signal<SaveState>({ status: 'idle' });
+
+// BAD: {{ saveState().message }} — TS2339 in template
+// GOOD: extract with computed
+readonly saveErrorMessage = computed(() => {
+    const state = this.saveState();
+    return state.status === 'error' ? state.message : '';
+});
+// Template: {{ saveErrorMessage() }}
+```
+
 ## Best Practices
 
 ### 1. Prefer Declarative Over Imperative

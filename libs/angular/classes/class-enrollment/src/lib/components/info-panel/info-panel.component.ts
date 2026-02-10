@@ -228,6 +228,15 @@ export interface PanelConfig {
                 padding-left: 16px;
             }
 
+            .info-card li > markdown {
+                display: contents;
+            }
+
+            .info-card li > markdown p {
+                display: inline;
+                margin: 0;
+            }
+
             .highlight-box {
                 border-radius: 8px;
                 padding: 16px;

@@ -59,6 +59,11 @@ interface AdminClass {
     pausedForEnrollment: boolean;
     forInformationOnly: boolean;
     thumbnailUrl?: string;
+    additionalOptions?: Array<{
+        id: string;
+        description: string;
+        cost: number;
+    }>;
 }
 
 interface Semester {
@@ -128,6 +133,15 @@ interface Semester {
                         >
                             <mat-icon>settings</mat-icon>
                             Manage Semesters
+                        </button>
+                        <button
+                            mat-stroked-button
+                            (click)="navigateToInfoPanel()"
+                            [disabled]="!selectedSemesterId()"
+                            matTooltip="Edit the info panel displayed on the enrollment page for this semester"
+                        >
+                            <mat-icon>info</mat-icon>
+                            Info Panel
                         </button>
                     </div>
                 </mat-card-content>
@@ -543,6 +557,16 @@ export class AdminClassListComponent implements OnInit {
         this.#router.navigate(['/admin/classes/management/create'], {
             queryParams: semesterId ? { semesterId } : {},
         });
+    }
+
+    navigateToInfoPanel() {
+        const semesterId = this.selectedSemesterId();
+        if (semesterId) {
+            this.#router.navigate([
+                '/admin/classes/management/info-panel',
+                semesterId,
+            ]);
+        }
     }
 
     viewClass(cls: AdminClass) {
