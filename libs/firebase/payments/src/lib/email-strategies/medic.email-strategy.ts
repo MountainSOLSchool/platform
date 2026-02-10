@@ -11,7 +11,7 @@ import {
 
 export class MedicPaymentEmailStrategy implements PaymentEmailStrategy {
     getSubject(): string {
-        return 'Mountain SOL Medical - Class Registration Confirmation';
+        return 'Mountain SOL Medic - Class Registration Confirmation';
     }
 
     generateContent(config: PaymentEmailConfig): PaymentEmailContent {
@@ -41,7 +41,7 @@ export class MedicPaymentEmailStrategy implements PaymentEmailStrategy {
                     <div class="content">
                         <p>Dear ${recipientName},</p>
 
-                        <p>Thank you for registering for a Mountain SOL Medical class. Your spot has been reserved.</p>
+                        <p>Thank you for registering for a Mountain SOL Medic class. Your spot has been reserved.</p>
 
                         <div class="receipt">
                             <h2 style="margin-top: 0;">Registration Receipt</h2>
@@ -74,11 +74,11 @@ export class MedicPaymentEmailStrategy implements PaymentEmailStrategy {
                         <p>If you have any questions about your registration, please don't hesitate to reach out.</p>
 
                         <p>Thank you,<br>
-                        <strong>The Mountain SOL Medical Team</strong></p>
+                        <strong>The Mountain SOL Medic Team</strong></p>
                     </div>
 
                     <div class="footer">
-                        <p>Mountain SOL Medical<br>
+                        <p>Mountain SOL Medic<br>
                         Email: <a href="mailto:info@mountainsol.org">info@mountainsol.org</a><br>
                         Website: <a href="https://mountainsol.org">mountainsol.org</a></p>
                     </div>
@@ -89,7 +89,7 @@ export class MedicPaymentEmailStrategy implements PaymentEmailStrategy {
 
 Dear ${recipientName},
 
-Thank you for registering for a Mountain SOL Medical class. Your spot has been reserved.
+Thank you for registering for a Mountain SOL Medic class. Your spot has been reserved.
 
 REGISTRATION RECEIPT
 ================
@@ -104,10 +104,10 @@ Amount Paid: $${amount.toFixed(2)}
 If you have any questions about your registration, please don't hesitate to reach out.
 
 Thank you,
-The Mountain SOL Medical Team
+The Mountain SOL Medic Team
 
 ---
-Mountain SOL Medical
+Mountain SOL Medic
 Email: info@mountainsol.org
 Website: mountainsol.org`;
 
