@@ -69,6 +69,9 @@ type SignUpState =
         .confirmation mat-icon { font-size: 64px; width: 64px; height: 64px; color: var(--sol-primary, #006633); }
         .spinner-container { display: flex; justify-content: center; padding: 3rem; }
         .selected-class-summary { background: var(--sol-surface-variant, #f5f5f5); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
+        .empty-state { text-align: center; padding: 3rem 1rem; }
+        .empty-state mat-icon { font-size: 64px; width: 64px; height: 64px; color: var(--sol-on-surface-variant, #666); margin-bottom: 1rem; }
+        .empty-state p { color: var(--sol-on-surface-variant, #666); }
         h2 { margin-top: 0; }
     `],
     template: `
@@ -109,7 +112,11 @@ type SignUpState =
                             </mat-card-content>
                         </mat-card>
                     } @empty {
-                        <p>No classes are currently available for registration.</p>
+                        <div class="empty-state">
+                            <mat-icon>event_busy</mat-icon>
+                            <h3>No Classes Available</h3>
+                            <p>There are no classes open for registration at this time. Please check back soon!</p>
+                        </div>
                     }
                 </div>
             }
