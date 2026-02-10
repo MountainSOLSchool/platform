@@ -53,7 +53,7 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                     </h2>
                 </div>
                 <div class="p-toolbar-group-right">
-                    @if ((isLoggedIn$ | async) && (isAdmin$ | async)) {
+                    @if ((isLoggedIn$ | async) && ((isAdmin$ | async) || (isMedicAdmin$ | async))) {
                         <div style="margin-right: 1rem">
                             <p-button
                                 type="text"
@@ -121,6 +121,19 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                         Student Units
                     </a>
                 </li>
+                @if (isMedicAdmin$ | async) {
+                    <h4 style="margin-bottom:4px">Medic Admin</h4>
+                    <li>
+                        <a routerLink="/medic/admin/classes" (click)="display = false"
+                            >Manage Medic Classes</a
+                        >
+                    </li>
+                    <li>
+                        <a routerLink="/medic/admin/enrollments" (click)="display = false"
+                            >Medic Enrollments</a
+                        >
+                    </li>
+                }
             </ul>
         </p-sidebar>`,
 })
@@ -137,6 +150,7 @@ export class HeaderComponent {
 
     isLoggedIn$ = this.userService.isLoggedIn();
     isAdmin$ = this.userService.isAdmin();
+    isMedicAdmin$ = this.userService.isMedicAdmin();
 
     assertSize(size: string): 'default' | 'small' {
         return size as 'default' | 'small';

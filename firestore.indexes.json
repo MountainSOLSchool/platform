@@ -1,4 +1,13 @@
 {
-    "indexes": [],
+    "indexes": [
+        {
+            "collectionGroup": "medic_enrollments",
+            "queryScope": "COLLECTION",
+            "fields": [
+                { "fieldPath": "classId", "order": "ASCENDING" },
+                { "fieldPath": "timestamp", "order": "DESCENDING" }
+            ]
+        }
+    ],
     "fieldOverrides": []
 }

@@ -47,3 +47,9 @@ export { updateActiveSemesterConfig } from '@sol/firebase/enrollment-functions/u
 export { uploadClassImage } from '@sol/firebase/enrollment-functions/upload-class-image';
 export { getSemesterInfoPanel } from '@sol/firebase/enrollment-functions/get-semester-info-panel';
 export { updateSemesterInfoPanel } from '@sol/firebase/enrollment-functions/update-semester-info-panel';
+export { createMedicClass } from '@sol/firebase/enrollment-functions/create-medic-class';
+export { updateMedicClass } from '@sol/firebase/enrollment-functions/update-medic-class';
+export { getMedicClasses } from '@sol/firebase/enrollment-functions/get-medic-classes';
+export { getMedicClassesAdmin } from '@sol/firebase/enrollment-functions/get-medic-classes-admin';
+export { enrollMedic } from '@sol/firebase/enrollment-functions/enroll-medic';
+export { getMedicEnrollments } from '@sol/firebase/enrollment-functions/get-medic-enrollments';

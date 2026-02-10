@@ -6,6 +6,7 @@ import { DatabaseUtility } from '@sol/firebase/database';
 
 export enum Role {
     Admin = 'admin',
+    MedicAdmin = 'medic_admin',
 }
 
 export class AuthUtility {
@@ -17,6 +18,9 @@ export class AuthUtility {
         switch (role) {
             case Role.Admin:
                 AuthUtility.validateIsAdmin(request, response);
+                break;
+            case Role.MedicAdmin:
+                AuthUtility.validateIsMedicAdmin(request, response);
                 break;
         }
     }
@@ -43,6 +47,28 @@ export class AuthUtility {
         return !!admin;
     }
 
+    public static async validateIsMedicAdmin(req: Request, res: express.Response) {
+        const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
+        if (!decoded) {
+            res.status(403).send('Unauthorized');
+            return;
+        } else {
+            const isMedicAdmin = await AuthUtility.isMedicAdmin(decoded.uid);
+            if (!isMedicAdmin) {
+                res.status(403).send();
+            }
+        }
+    }
+
+    private static async isMedicAdmin(userId: string): Promise<boolean> {
+        const db = DatabaseUtility.getDatabase();
+        const medicAdmin = await DatabaseUtility.fetchFirstMatchingDocument(
+            db.collection('medic_admins'),
+            ['userId', '==', userId]
+        );
+        return !!medicAdmin;
+    }
+
     public static async getUserStudentIds(
         user: admin.auth.UserRecord
     ): Promise<Array<string>> {
@@ -64,6 +90,9 @@ export class AuthUtility {
         const roles = new Array<Role>();
         if (await AuthUtility.isAdmin(user.uid)) {
             roles.push(Role.Admin);
+        }
+        if (await AuthUtility.isMedicAdmin(user.uid)) {
+            roles.push(Role.MedicAdmin);
         }
         return roles;
     }
