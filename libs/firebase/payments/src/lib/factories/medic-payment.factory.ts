@@ -9,9 +9,18 @@ import {
 } from '@sol/payments/domain';
 import { MedicPaymentEmailStrategy } from '../email-strategies/medic.email-strategy';
 
+export interface MedicClassDetails {
+    className: string;
+    location?: string;
+    date?: string;
+    time?: string;
+}
+
 export class MedicPaymentFactory
     implements PaymentFactory<BasePaymentRequest>
 {
+    constructor(private readonly classDetails?: MedicClassDetails) {}
+
     validate(request: BasePaymentRequest): ValidationResult {
         const errors: string[] = [];
 
@@ -57,6 +66,6 @@ export class MedicPaymentFactory
     }
 
     getEmailStrategy(): PaymentEmailStrategy {
-        return new MedicPaymentEmailStrategy();
+        return new MedicPaymentEmailStrategy(this.classDetails);
     }
 }

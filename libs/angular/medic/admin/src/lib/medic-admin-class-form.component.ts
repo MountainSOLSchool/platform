@@ -104,6 +104,23 @@ type FormState =
                     </mat-form-field>
                 </div>
 
+                <mat-form-field>
+                    <mat-label>Location</mat-label>
+                    <input matInput [formControl]="form.controls.location" />
+                </mat-form-field>
+
+                <div class="row">
+                    <mat-form-field>
+                        <mat-label>Date</mat-label>
+                        <input matInput [formControl]="form.controls.date" placeholder="e.g. March 15, 2026" />
+                    </mat-form-field>
+
+                    <mat-form-field>
+                        <mat-label>Time</mat-label>
+                        <input matInput [formControl]="form.controls.time" placeholder="e.g. 9:00 AM - 3:00 PM" />
+                    </mat-form-field>
+                </div>
+
                 <div class="row">
                     <mat-form-field>
                         <mat-label>Min Students</mat-label>
@@ -158,6 +175,9 @@ export class MedicAdminClassFormComponent {
         name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
         description: new FormControl('', { nonNullable: true }),
         cost: new FormControl(0, { nonNullable: true, validators: [Validators.required, Validators.min(0.01)] }),
+        location: new FormControl('', { nonNullable: true }),
+        date: new FormControl('', { nonNullable: true }),
+        time: new FormControl('', { nonNullable: true }),
         minStudents: new FormControl(1, { nonNullable: true, validators: [Validators.min(1)] }),
         maxStudents: new FormControl(20, { nonNullable: true, validators: [Validators.min(1)] }),
         status: new FormControl<'draft' | 'published' | 'archived'>('draft', { nonNullable: true }),
@@ -181,6 +201,9 @@ export class MedicAdminClassFormComponent {
                         name: cls.name,
                         description: cls.description,
                         cost: cls.cost,
+                        location: cls.location,
+                        date: cls.date,
+                        time: cls.time,
                         minStudents: cls.minStudents,
                         maxStudents: cls.maxStudents,
                         status: cls.status as 'draft' | 'published' | 'archived',

@@ -22,6 +22,9 @@ interface MedicClassAdmin {
     cost: number;
     minStudents: number;
     maxStudents: number;
+    location: string;
+    date: string;
+    time: string;
     status: string;
     enrolledCount: number;
     createdAt: string;
@@ -88,6 +91,17 @@ type ListState =
                             <td mat-cell *matCellDef="let cls">{{ cls.name }}</td>
                         </ng-container>
 
+                        <ng-container matColumnDef="date">
+                            <th mat-header-cell *matHeaderCellDef>Date & Time</th>
+                            <td mat-cell *matCellDef="let cls">
+                                @if (cls.date) {
+                                    {{ cls.date }}@if (cls.time) {, {{ cls.time }}}
+                                } @else {
+                                    —
+                                }
+                            </td>
+                        </ng-container>
+
                         <ng-container matColumnDef="cost">
                             <th mat-header-cell *matHeaderCellDef>Cost</th>
                             <td mat-cell *matCellDef="let cls">{{ cls.cost | currency }}</td>
@@ -135,7 +149,7 @@ export class MedicAdminClassListComponent {
 
     readonly state = signal<ListState>({ status: 'loading' });
     readonly showArchived = signal(false);
-    readonly displayedColumns = ['name', 'cost', 'enrollment', 'status', 'actions'];
+    readonly displayedColumns = ['name', 'date', 'cost', 'enrollment', 'status', 'actions'];
 
     readonly allClasses = computed(() => {
         const s = this.state();

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserButtonComponent } from '@sol/auth/login';
 import { UserService } from '@sol/auth/user';
 import { ButtonModule } from 'primeng/button';
@@ -27,14 +27,37 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                     padding: 10px;
                 }
             }
+            .program-tabs {
+                display: flex;
+                gap: 0;
+                background: var(--sol-surface-variant, #f5f5f5);
+                padding: 3px;
+                border-radius: 6px;
+                margin-left: 12px;
+            }
+            .program-tabs a {
+                text-align: center;
+                padding: 4px 12px;
+                border-radius: 4px;
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 13px;
+                color: var(--sol-on-surface-variant, #666);
+                transition: background 0.2s, color 0.2s;
+                cursor: pointer;
+            }
+            .program-tabs a.active {
+                background: var(--sol-primary, #006633);
+                color: #fff;
+            }
         `,
     ],
     template: `@let size = size$ | async;
     @if (size) {
     <header>
             <p-toolbar>
-                <div routerLink="/" class="p-toolbar-group-left">
-                    <div>
+                <div class="p-toolbar-group-left" style="align-items: center;">
+                    <div routerLink="/" style="display: flex; align-items: center; cursor: pointer;">
                         <img
                             [src]="size === 'default' ? 'https://www.mountainsol.org/wp-content/uploads/2023/07/Banner-4.png' : 'https://firebasestorage.googleapis.com/v0/b/mountain-sol-platform.appspot.com/o/SOL-horizontal-large-1024x234-1.jpg?alt=media&token=ec0f774c-3862-41b6-a646-c834468a3cb1'"
                             alt="sol-logo"
@@ -43,14 +66,16 @@ import { AsyncPipe, NgStyle } from '@angular/common';
                                 height: size === 'default' ? '50px' : '35px'
                             }"
                         />
+                        <h2 style="margin: 0;">Registration</h2>
                     </div>
-                    <h2 style="margin: 0; cursor: pointer;">
-                        {{
-                            size === 'default'
-                                ? 'Registration Portal'
-                                : 'Portal'
-                        }}
-                    </h2>
+                    @if (showProgramTabs()) {
+                    <nav class="program-tabs">
+                        <a routerLink="/classes/enrollment"
+                           [class.active]="isYouthActive()">Youth</a>
+                        <a routerLink="/medic/sign-up"
+                           [class.active]="isMedicActive()">Medic</a>
+                    </nav>
+                    }
                 </div>
                 <div class="p-toolbar-group-right">
                     @if ((isLoggedIn$ | async) && ((isAdmin$ | async) || (isMedicAdmin$ | async))) {
@@ -139,6 +164,7 @@ import { AsyncPipe, NgStyle } from '@angular/common';
 })
 export class HeaderComponent {
     private readonly userService = inject(UserService);
+    private readonly router = inject(Router);
 
     readonly size$ = inject(BreakpointObserver)
         .observe('(min-width: 620px)')
@@ -154,5 +180,18 @@ export class HeaderComponent {
 
     assertSize(size: string): 'default' | 'small' {
         return size as 'default' | 'small';
+    }
+
+    showProgramTabs(): boolean {
+        const url = this.router.url;
+        return url.startsWith('/classes') || url.startsWith('/medic/sign-up') || url === '/';
+    }
+
+    isYouthActive(): boolean {
+        return !this.router.url.startsWith('/medic');
+    }
+
+    isMedicActive(): boolean {
+        return this.router.url.startsWith('/medic/sign-up');
     }
 }

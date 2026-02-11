@@ -8,8 +8,11 @@ import {
     formatDate,
     formatPaymentMethod,
 } from './base-email.styles';
+import type { MedicClassDetails } from '../factories/medic-payment.factory';
 
 export class MedicPaymentEmailStrategy implements PaymentEmailStrategy {
+    constructor(private readonly classDetails?: MedicClassDetails) {}
+
     getSubject(): string {
         return 'Mountain SOL Medic - Class Registration Confirmation';
     }
@@ -23,8 +26,31 @@ export class MedicPaymentEmailStrategy implements PaymentEmailStrategy {
             paymentMethod,
         } = config;
 
+        const className = this.classDetails?.className;
+        const classLocation = this.classDetails?.location;
+        const classDate = this.classDetails?.date;
+        const classTime = this.classDetails?.time;
+
         const currentDate = formatDate();
         const paymentMethodDisplay = formatPaymentMethod(paymentMethod);
+
+        const classDescription = className
+            ? `<strong>${className}</strong>`
+            : 'a Mountain SOL Medic class';
+
+        const classDetailsHtml = (classDate || classTime || classLocation)
+            ? `<div class="receipt" style="margin-bottom: 20px;">
+                            <h2 style="margin-top: 0;">Class Details</h2>
+                            ${className ? `<div class="receipt-row"><span class="label">Class:</span><span class="value">${className}</span></div>` : ''}
+                            ${classDate ? `<div class="receipt-row"><span class="label">Date:</span><span class="value">${classDate}</span></div>` : ''}
+                            ${classTime ? `<div class="receipt-row"><span class="label">Time:</span><span class="value">${classTime}</span></div>` : ''}
+                            ${classLocation ? `<div class="receipt-row"><span class="label">Location:</span><span class="value">${classLocation}</span></div>` : ''}
+                        </div>`
+            : '';
+
+        const classDetailsText = (classDate || classTime || classLocation)
+            ? `\nCLASS DETAILS\n================\n${className ? `Class: ${className}\n` : ''}${classDate ? `Date: ${classDate}\n` : ''}${classTime ? `Time: ${classTime}\n` : ''}${classLocation ? `Location: ${classLocation}\n` : ''}`
+            : '';
 
         const html = `
             <!DOCTYPE html>
@@ -41,7 +67,9 @@ export class MedicPaymentEmailStrategy implements PaymentEmailStrategy {
                     <div class="content">
                         <p>Dear ${recipientName},</p>
 
-                        <p>Thank you for registering for a Mountain SOL Medic class. Your spot has been reserved.</p>
+                        <p>Thank you for registering for ${classDescription}. Your spot has been reserved.</p>
+
+                        ${classDetailsHtml}
 
                         <div class="receipt">
                             <h2 style="margin-top: 0;">Registration Receipt</h2>
@@ -89,8 +117,8 @@ export class MedicPaymentEmailStrategy implements PaymentEmailStrategy {
 
 Dear ${recipientName},
 
-Thank you for registering for a Mountain SOL Medic class. Your spot has been reserved.
-
+Thank you for registering for ${className || 'a Mountain SOL Medic class'}. Your spot has been reserved.
+${classDetailsText}
 REGISTRATION RECEIPT
 ================
 Date: ${currentDate}

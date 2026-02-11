@@ -5,6 +5,9 @@ export interface MedicClass {
     cost: number;
     minStudents: number;
     maxStudents: number;
+    location: string;
+    date: string;
+    time: string;
     status: MedicClassStatus;
     enrolledCount: number;
     createdAt: string;
