@@ -4,6 +4,9 @@ export interface CreateMedicClassRequest {
     cost: number;
     minStudents: number;
     maxStudents: number;
+    location: string;
+    date: string;
+    time: string;
     status: 'draft' | 'published';
 }
 
@@ -19,6 +22,9 @@ export interface UpdateMedicClassRequest {
     cost: number;
     minStudents: number;
     maxStudents: number;
+    location: string;
+    date: string;
+    time: string;
     status: 'draft' | 'published' | 'archived';
 }
 
@@ -32,6 +38,9 @@ export interface GetMedicClassesResponse {
         name: string;
         description: string;
         cost: number;
+        location: string;
+        date: string;
+        time: string;
         maxStudents: number;
         enrolledCount: number;
     }>;
@@ -45,6 +54,9 @@ export interface GetMedicClassesAdminResponse {
         cost: number;
         minStudents: number;
         maxStudents: number;
+        location: string;
+        date: string;
+        time: string;
         status: string;
         enrolledCount: number;
         createdAt: string;

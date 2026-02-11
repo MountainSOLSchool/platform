@@ -33,6 +33,9 @@ export const updateMedicClass = Functions.endpoint
             cost: data.cost,
             minStudents: data.minStudents ?? 1,
             maxStudents: data.maxStudents ?? 20,
+            location: data.location || '',
+            date: data.date || '',
+            time: data.time || '',
             status: data.status,
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });

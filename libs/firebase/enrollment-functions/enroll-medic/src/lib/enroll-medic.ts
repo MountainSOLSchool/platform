@@ -34,7 +34,12 @@ export const enrollMedic = Functions.endpoint
 
         try {
             const braintree = new Braintree(secrets, strings);
-            const handler = new MedicPaymentHandler(braintree);
+            const handler = new MedicPaymentHandler(braintree, {
+                className: classData.name,
+                location: classData.location || '',
+                date: classData.date || '',
+                time: classData.time || '',
+            });
 
             const paymentResult = await handler.handle({
                 amount: classData.cost,

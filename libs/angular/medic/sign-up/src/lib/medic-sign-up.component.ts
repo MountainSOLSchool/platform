@@ -24,6 +24,9 @@ interface MedicClassOption {
     name: string;
     description: string;
     cost: number;
+    location: string;
+    date: string;
+    time: string;
     enrolledCount: number;
     maxStudents: number;
 }
@@ -53,7 +56,7 @@ type SignUpState =
         CurrencyPipe,
     ],
     styles: [`
-        :host { display: block; max-width: 800px; margin: 0 auto; }
+        :host { display: block; max-width: 1100px; margin: 0 auto; }
         .class-list { display: flex; flex-direction: column; gap: 1rem; }
         .class-card { cursor: pointer; transition: box-shadow 0.2s; }
         .class-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
@@ -68,6 +71,8 @@ type SignUpState =
         .confirmation { text-align: center; padding: 2rem; }
         .confirmation mat-icon { font-size: 64px; width: 64px; height: 64px; color: var(--sol-primary, #006633); }
         .spinner-container { display: flex; justify-content: center; padding: 3rem; }
+        .class-details, .summary-details { display: flex; flex-direction: column; gap: 0.25rem; margin: 0.5rem 0; font-size: 0.875rem; color: var(--sol-on-surface-variant, #666); }
+        .class-details mat-icon, .summary-details mat-icon { font-size: 16px; vertical-align: middle; margin-right: 4px; }
         .selected-class-summary { background: var(--sol-surface-variant, #f5f5f5); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; }
         .empty-state { text-align: center; padding: 3rem 1rem; }
         .empty-state mat-icon { font-size: 64px; width: 64px; height: 64px; color: var(--sol-on-surface-variant, #666); margin-bottom: 1rem; }
@@ -99,6 +104,16 @@ type SignUpState =
                             </mat-card-header>
                             <mat-card-content>
                                 <p>{{ cls.description }}</p>
+                                @if (cls.date || cls.time || cls.location) {
+                                    <div class="class-details">
+                                        @if (cls.date) {
+                                            <span><mat-icon inline>calendar_today</mat-icon> {{ cls.date }}@if (cls.time) {, {{ cls.time }}}</span>
+                                        }
+                                        @if (cls.location) {
+                                            <span><mat-icon inline>location_on</mat-icon> {{ cls.location }}</span>
+                                        }
+                                    </div>
+                                }
                                 <div class="class-info">
                                     <span class="class-cost">{{ cls.cost | currency }}</span>
                                     <span class="spots-left">
@@ -125,6 +140,16 @@ type SignUpState =
                 @if (formClass(); as cls) {
                     <div class="selected-class-summary">
                         <strong>{{ cls.name }}</strong> - {{ cls.cost | currency }}
+                        @if (cls.date || cls.time || cls.location) {
+                            <div class="summary-details">
+                                @if (cls.date) {
+                                    <span><mat-icon inline>calendar_today</mat-icon> {{ cls.date }}@if (cls.time) {, {{ cls.time }}}</span>
+                                }
+                                @if (cls.location) {
+                                    <span><mat-icon inline>location_on</mat-icon> {{ cls.location }}</span>
+                                }
+                            </div>
+                        }
                     </div>
                 }
                 <div class="form-fields">

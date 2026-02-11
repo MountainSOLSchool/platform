@@ -6,6 +6,7 @@ import { FirebaseFunctions } from '../../firebase/functions';
 export function useAuth() {
     const [user, setUser] = useState<User | null>(null);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isMedicAdmin, setIsMedicAdmin] = useState(false);
     const auth = getSolAuthClient();
 
     useEffect(() => {
@@ -15,12 +16,15 @@ export function useAuth() {
                 try {
                     const roles = await FirebaseFunctions.getRoles();
                     setIsAdmin(roles.includes('admin'));
+                    setIsMedicAdmin(roles.includes('medic_admin'));
                 } catch (error) {
                     console.error('Error checking admin status:', error);
                     setIsAdmin(false);
+                    setIsMedicAdmin(false);
                 }
             } else {
                 setIsAdmin(false);
+                setIsMedicAdmin(false);
             }
         });
 
@@ -39,6 +43,7 @@ export function useAuth() {
         user,
         isLoggedIn: !!user,
         isAdmin,
+        isMedicAdmin,
         signOut,
     };
 }

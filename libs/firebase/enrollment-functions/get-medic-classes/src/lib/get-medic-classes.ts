@@ -18,6 +18,9 @@ export const getMedicClasses = Functions.endpoint
                 name: data.name,
                 description: data.description,
                 cost: data.cost,
+                location: data.location || '',
+                date: data.date || '',
+                time: data.time || '',
                 maxStudents: data.maxStudents,
                 enrolledCount: data.enrolledCount ?? 0,
             };
