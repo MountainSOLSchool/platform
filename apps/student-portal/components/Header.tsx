@@ -15,7 +15,7 @@ const ENROLLMENT_BASE = 'https://enrollment.mountainsol.org';
 const Header = () => {
     const isDesktop = useMediaQuery({ minWidth: 600 });
     const router = useRouter();
-    const { user, isAdmin, signOut } = useAuth();
+    const { user, isAdmin, isMedicAdmin, signOut } = useAuth();
 
     const adminMenuRef = useRef<Menu>(null);
     const userMenuRef = useRef<Menu>(null);
@@ -33,6 +33,12 @@ const Header = () => {
         { label: 'Enrollments', url: `${ENROLLMENT_BASE}/admin/enrollments` },
         { label: 'Class Calendar', url: `${ENROLLMENT_BASE}/calendar/classes` },
         { label: 'Student Units', command: () => router.push('/units') },
+        ...(isMedicAdmin ? [
+            { separator: true },
+            { label: 'Medic Admin', disabled: true, style: { fontSize: '12px', opacity: 0.6 } },
+            { label: 'Manage Medic Classes', url: `${ENROLLMENT_BASE}/medic/admin/classes` },
+            { label: 'Medic Enrollments', url: `${ENROLLMENT_BASE}/medic/admin/enrollments` },
+        ] : []),
     ];
 
     const emailDisplay = user?.email
@@ -64,6 +70,12 @@ const Header = () => {
             { label: 'Enrollments', url: `${ENROLLMENT_BASE}/admin/enrollments` },
             { label: 'Class Calendar', url: `${ENROLLMENT_BASE}/calendar/classes` },
             { label: 'Student Units', command: () => router.push('/units') },
+        ] : []),
+        ...(isMedicAdmin ? [
+            { separator: true },
+            { label: 'Medic Admin', disabled: true, style: { fontSize: '12px', opacity: 0.6 } },
+            { label: 'Manage Medic Classes', url: `${ENROLLMENT_BASE}/medic/admin/classes` },
+            { label: 'Medic Enrollments', url: `${ENROLLMENT_BASE}/medic/admin/enrollments` },
         ] : []),
     ];
 
@@ -109,7 +121,7 @@ const Header = () => {
     const rightContents = (
         <div className="flex items-center">
             {isDesktop ? (
-                isAdmin ? (
+                (isAdmin || isMedicAdmin) ? (
                     <div style={splitButtonStyle}>
                         <Button
                             icon="pi pi-bars"
