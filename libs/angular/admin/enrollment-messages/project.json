@@ -1,0 +1,14 @@
+{
+    "name": "angular-admin-enrollment-messages",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/angular/admin/enrollment-messages/src",
+    "prefix": "sol",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "lint": {
+            "executor": "@nx/eslint:lint",
+            "outputs": ["{options.outputFile}"]
+        }
+    }
+}

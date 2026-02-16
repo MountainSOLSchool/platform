@@ -24,6 +24,19 @@ import type {
     MedicEnrollResponse,
     GetMedicEnrollmentsRequest,
     GetMedicEnrollmentsResponse,
+    GetDiscountsResponse,
+    GetDiscountRequest,
+    GetDiscountResponse,
+    CreateDiscountRequest,
+    CreateDiscountResponse,
+    UpdateDiscountRequest,
+    UpdateDiscountResponse,
+    DeleteDiscountRequest,
+    DeleteDiscountResponse,
+    GetEnrollmentMessagesResponse,
+    GetEnrollmentMessagesAdminResponse,
+    UpdateEnrollmentMessagesRequest,
+    UpdateEnrollmentMessagesResponse,
 } from '@sol/ts/firebase/api-types';
 
 // Re-export types for consumers
@@ -50,6 +63,19 @@ export type {
     MedicEnrollResponse,
     GetMedicEnrollmentsRequest,
     GetMedicEnrollmentsResponse,
+    GetDiscountsResponse,
+    GetDiscountRequest,
+    GetDiscountResponse,
+    CreateDiscountRequest,
+    CreateDiscountResponse,
+    UpdateDiscountRequest,
+    UpdateDiscountResponse,
+    DeleteDiscountRequest,
+    DeleteDiscountResponse,
+    GetEnrollmentMessagesResponse,
+    GetEnrollmentMessagesAdminResponse,
+    UpdateEnrollmentMessagesRequest,
+    UpdateEnrollmentMessagesResponse,
 };
 
 /**
@@ -157,4 +183,52 @@ export class MountainSolApiService {
         GetMedicEnrollmentsRequest,
         GetMedicEnrollmentsResponse
     >(this.#functions, 'getMedicEnrollments');
+
+    // =========================================================================
+    // Discount Management
+    // =========================================================================
+
+    readonly getDiscounts = declareFunction<void, GetDiscountsResponse>(
+        this.#functions,
+        'getDiscounts'
+    );
+
+    readonly getDiscount = declareFunction<
+        GetDiscountRequest,
+        GetDiscountResponse
+    >(this.#functions, 'getDiscount');
+
+    readonly createDiscount = declareFunction<
+        CreateDiscountRequest,
+        CreateDiscountResponse
+    >(this.#functions, 'createDiscount');
+
+    readonly updateDiscount = declareFunction<
+        UpdateDiscountRequest,
+        UpdateDiscountResponse
+    >(this.#functions, 'updateDiscount');
+
+    readonly deleteDiscount = declareFunction<
+        DeleteDiscountRequest,
+        DeleteDiscountResponse
+    >(this.#functions, 'deleteDiscount');
+
+    // =========================================================================
+    // Enrollment Messages
+    // =========================================================================
+
+    readonly getEnrollmentMessages = declareFunction<
+        void,
+        GetEnrollmentMessagesResponse
+    >(this.#functions, 'getEnrollmentMessages');
+
+    readonly getEnrollmentMessagesAdmin = declareFunction<
+        void,
+        GetEnrollmentMessagesAdminResponse
+    >(this.#functions, 'getEnrollmentMessagesAdmin');
+
+    readonly updateEnrollmentMessages = declareFunction<
+        UpdateEnrollmentMessagesRequest,
+        UpdateEnrollmentMessagesResponse
+    >(this.#functions, 'updateEnrollmentMessages');
 }

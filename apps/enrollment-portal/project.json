@@ -101,6 +101,27 @@
                 "jestConfig": "apps/enrollment-portal/jest.config.ts",
                 "tsConfig": "apps/enrollment-portal/tsconfig.spec.json"
             }
+        },
+        "storybook": {
+            "executor": "@storybook/angular:start-storybook",
+            "options": {
+                "configDir": "apps/enrollment-portal/.storybook",
+                "browserTarget": "enrollment-portal:build",
+                "compodoc": false,
+                "tsConfig": "apps/enrollment-portal/.storybook/tsconfig.storybook.json",
+                "port": 4400
+            }
+        },
+        "build-storybook": {
+            "executor": "@storybook/angular:build-storybook",
+            "outputs": ["{options.outputDir}"],
+            "options": {
+                "configDir": "apps/enrollment-portal/.storybook",
+                "browserTarget": "enrollment-portal:build",
+                "compodoc": false,
+                "tsConfig": "apps/enrollment-portal/.storybook/tsconfig.storybook.json",
+                "outputDir": "dist/storybook/enrollment-portal"
+            }
         }
     }
 }

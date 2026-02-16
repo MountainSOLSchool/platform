@@ -13,7 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { filter, map, of, shareReplay, take, timer } from 'rxjs';
+import { filter, map, of, shareReplay, take } from 'rxjs';
 import { ClassesComponent } from '../classes/class-list/class-list.component';
 import { InfoComponent } from '../info/info.component';
 import { AccountComponent } from '../account/account.component';
@@ -39,6 +39,7 @@ import { StartOverDialogComponent } from '../start-over-dialog/start-over-dialog
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FirebaseRemoteConfigService } from '@sol/firebase/remote-config-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
+import { MountainSolApiService } from '@sol/angular/firebase/api';
 import { AcknowledgeOutOfDateComponent } from '../acknowledge-out-of-date/acknowledge-out-of-date.component';
 
 @Component({
@@ -122,6 +123,7 @@ import { AcknowledgeOutOfDateComponent } from '../acknowledge-out-of-date/acknow
 export class ClassEnrollmentComponent {
     private readonly store = inject(EnrollmentWorkflowStore);
     private readonly remoteConfig = inject(FirebaseRemoteConfigService);
+    private readonly api = inject(MountainSolApiService);
 
     private readonly user$ = inject(UserService).getUser().pipe(shareReplay());
 
@@ -134,11 +136,9 @@ export class ClassEnrollmentComponent {
 
     readonly isStudentLoading = this.store.isStudentLoading;
 
-    readonly earlyBirdEnd = Date.parse('2025-04-01T23:59:59.999Z');
-
-    readonly isNowBeforeEarlyBirdEnd$ = timer(0, 5000).pipe(
-        map(() => Date.now() < this.earlyBirdEnd)
-    );
+    readonly enrollmentMessages = rxResource({
+        stream: () => this.api.getEnrollmentMessages(undefined as never),
+    });
 
     readonly stepperOrientation = inject(BreakpointObserver)
         .observe('(min-width: 800px)')

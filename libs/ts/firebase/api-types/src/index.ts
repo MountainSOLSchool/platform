@@ -31,3 +31,28 @@ export type {
     GetMedicEnrollmentsRequest,
     GetMedicEnrollmentsResponse,
 } from './lib/medic.types';
+
+// Discount Management
+export type {
+    DiscountType,
+    DiscountAdmin,
+    GetDiscountsResponse,
+    CreateDiscountRequest,
+    CreateDiscountResponse,
+    UpdateDiscountRequest,
+    UpdateDiscountResponse,
+    DeleteDiscountRequest,
+    DeleteDiscountResponse,
+    GetDiscountRequest,
+    GetDiscountResponse,
+} from './lib/discount.types';
+
+// Enrollment Messages
+export type {
+    EnrollmentMessageSeverity,
+    EnrollmentMessage,
+    GetEnrollmentMessagesResponse,
+    GetEnrollmentMessagesAdminResponse,
+    UpdateEnrollmentMessagesRequest,
+    UpdateEnrollmentMessagesResponse,
+} from './lib/enrollment-message.types';

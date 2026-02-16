@@ -53,3 +53,11 @@ export { getMedicClasses } from '@sol/firebase/enrollment-functions/get-medic-cl
 export { getMedicClassesAdmin } from '@sol/firebase/enrollment-functions/get-medic-classes-admin';
 export { enrollMedic } from '@sol/firebase/enrollment-functions/enroll-medic';
 export { getMedicEnrollments } from '@sol/firebase/enrollment-functions/get-medic-enrollments';
+export { getDiscounts } from '@sol/firebase/enrollment-functions/get-discounts';
+export { getDiscount } from '@sol/firebase/enrollment-functions/get-discount';
+export { createDiscount } from '@sol/firebase/enrollment-functions/create-discount';
+export { updateDiscount } from '@sol/firebase/enrollment-functions/update-discount';
+export { deleteDiscount } from '@sol/firebase/enrollment-functions/delete-discount';
+export { getEnrollmentMessages } from '@sol/firebase/enrollment-functions/get-enrollment-messages';
+export { getEnrollmentMessagesAdmin } from '@sol/firebase/enrollment-functions/get-enrollment-messages-admin';
+export { updateEnrollmentMessages } from '@sol/firebase/enrollment-functions/update-enrollment-messages';

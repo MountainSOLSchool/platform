@@ -5,4 +5,5 @@ if (admin.apps.length === 0) {
 }
 export const db = admin.firestore();
 
-db.settings({ ignoreUndefinedProperties: true, preferRest: true });
+const useEmulator = !!process.env['FIRESTORE_EMULATOR_HOST'];
+db.settings({ ignoreUndefinedProperties: true, preferRest: !useEmulator });
