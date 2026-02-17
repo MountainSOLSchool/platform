@@ -18,3 +18,4 @@ export {
     ImageUploadResult,
     ImageUploadData,
 } from './lib/services/class-form.service';
+export { MarkdownEditorComponent } from './lib/components/markdown-editor/markdown-editor.component';

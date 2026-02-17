@@ -1,0 +1,23 @@
+{
+    "name": "functions-integration-tests",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/functions-integration-tests/src",
+    "projectType": "application",
+    "tags": ["type:e2e"],
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/apps/functions-integration-tests"],
+            "options": {
+                "jestConfig": "apps/functions-integration-tests/jest.config.ts",
+                "runInBand": true
+            }
+        },
+        "test-with-emulators": {
+            "executor": "nx:run-commands",
+            "options": {
+                "command": "npx nx run functions:build && firebase emulators:exec --project=dev --only auth,firestore,functions \"npx nx run functions-integration-tests:test\""
+            }
+        }
+    }
+}

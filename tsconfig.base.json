@@ -295,6 +295,36 @@
             "@sol/medic/domain": [
                 "libs/ts/medic/domain/src/index.ts"
             ],
+            "@sol/angular/admin/discounts": [
+                "libs/angular/admin/discounts/src/index.ts"
+            ],
+            "@sol/angular/admin/enrollment-messages": [
+                "libs/angular/admin/enrollment-messages/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-discounts": [
+                "libs/firebase/enrollment-functions/get-discounts/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-discount": [
+                "libs/firebase/enrollment-functions/get-discount/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/create-discount": [
+                "libs/firebase/enrollment-functions/create-discount/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/update-discount": [
+                "libs/firebase/enrollment-functions/update-discount/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/delete-discount": [
+                "libs/firebase/enrollment-functions/delete-discount/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-enrollment-messages": [
+                "libs/firebase/enrollment-functions/get-enrollment-messages/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-enrollment-messages-admin": [
+                "libs/firebase/enrollment-functions/get-enrollment-messages-admin/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/update-enrollment-messages": [
+                "libs/firebase/enrollment-functions/update-enrollment-messages/src/index.ts"
+            ],
             "@sol/ts/firebase/api-types": [
                 "libs/ts/firebase/api-types/src/index.ts"
             ]

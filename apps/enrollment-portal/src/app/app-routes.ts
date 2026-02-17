@@ -96,6 +96,25 @@ export const appRoutes: Routes = [
                                             },
                                         ],
                                     },
+                                    {
+                                        path: 'discounts',
+                                        loadChildren: () =>
+                                            import(
+                                                '@sol/angular/admin/discounts'
+                                            ).then(
+                                                (m) => m.discountRoutes
+                                            ),
+                                    },
+                                    {
+                                        path: 'messages',
+                                        loadComponent: () =>
+                                            import(
+                                                '@sol/angular/admin/enrollment-messages'
+                                            ).then(
+                                                (m) =>
+                                                    m.EnrollmentMessagesEditorComponent
+                                            ),
+                                    },
                                 ],
                             },
                         ],

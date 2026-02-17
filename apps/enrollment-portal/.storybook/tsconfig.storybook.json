@@ -1,0 +1,19 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "emitDecoratorMetadata": true,
+        "moduleResolution": "bundler"
+    },
+    "include": [
+        "../src/**/*.ts",
+        "./**/*.ts",
+        "../../../libs/angular/admin/discounts/src/**/*.ts",
+        "../../../libs/angular/admin/enrollment-messages/src/**/*.ts"
+    ],
+    "exclude": [
+        "../src/**/*.spec.ts",
+        "../src/**/*.test.ts",
+        "../../../libs/angular/admin/*/src/**/*.spec.ts",
+        "../../../libs/angular/admin/*/src/**/*.test.ts"
+    ]
+}

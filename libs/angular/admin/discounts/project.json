@@ -1,0 +1,14 @@
+{
+    "name": "angular-admin-discounts",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/angular/admin/discounts/src",
+    "prefix": "sol",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "lint": {
+            "executor": "@nx/eslint:lint",
+            "outputs": ["{options.outputFile}"]
+        }
+    }
+}

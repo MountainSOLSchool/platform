@@ -18,17 +18,14 @@
         </ng-template>
     </p-messages>
 }
-@if ((isNowBeforeEarlyBirdEnd$ | async) === true) {
-    <div style="width: 100%; background-color: yellow">
-        <p-messages severity="early-bird">
+@if (enrollmentMessages.value(); as msgData) {
+    @for (msg of msgData.messages; track msg.id) {
+        <p-messages [severity]="msg.severity">
             <ng-template pTemplate>
-                <div class="ml-2">
-                    You're an early bird! Use the discount code
-                    <b>EARLYBIRD23</b> at checkout for $20 off.
-                </div>
+                <markdown class="ml-2" [data]="msg.text"></markdown>
             </ng-template>
         </p-messages>
-    </div>
+    }
 }
 @if (showSecretAutofill$ | async) {
     <button (click)="fillOutForTest()">Fill out form for test</button>
