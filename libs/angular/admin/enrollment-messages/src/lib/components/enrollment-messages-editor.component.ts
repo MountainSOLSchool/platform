@@ -5,6 +5,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { pipe, tap, switchMap, catchError, of, map, filter } from 'rxjs';
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { MountainSolApiService } from '@sol/angular/firebase/api';
+import { MarkdownEditorComponent } from '@sol/classes/class-management';
 import type {
     EnrollmentMessage,
     EnrollmentMessageSeverity,
@@ -64,6 +65,7 @@ let nextId = 0;
         MatDividerModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MarkdownEditorComponent,
     ],
     template: `
         <div class="page-container">
@@ -144,25 +146,14 @@ let nextId = 0;
                                 </button>
                             </div>
 
-                            <mat-form-field
-                                appearance="outline"
-                                class="full-width"
-                            >
-                                <mat-label>Message Text</mat-label>
-                                <textarea
-                                    matInput
-                                    [ngModel]="msg.text"
-                                    (ngModelChange)="
-                                        updateField(i, 'text', $event)
-                                    "
-                                    rows="2"
-                                    placeholder="Use <b>bold</b> for emphasis"
-                                ></textarea>
-                                <mat-hint
-                                    >Supports basic HTML: &lt;b&gt;,
-                                    &lt;a&gt;</mat-hint
-                                >
-                            </mat-form-field>
+                            <sol-markdown-editor
+                                [ngModel]="msg.text"
+                                (ngModelChange)="
+                                    updateField(i, 'text', $event)
+                                "
+                                placeholder="Use **bold** for emphasis, [link](url) for links"
+                                [rows]="3"
+                            ></sol-markdown-editor>
 
                             <div class="row">
                                 <mat-form-field appearance="outline">
@@ -299,9 +290,6 @@ let nextId = 0;
             }
             .message-header button {
                 margin-left: auto;
-            }
-            .full-width {
-                width: 100%;
             }
             .row {
                 display: flex;

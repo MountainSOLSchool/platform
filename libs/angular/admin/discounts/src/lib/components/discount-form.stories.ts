@@ -200,3 +200,25 @@ export const EditBuyXClassTypePercent: Story = {
         }),
     ],
 };
+
+export const DuplicateCodeError: Story = {
+    decorators: [
+        moduleMetadata({
+            providers: [
+                {
+                    provide: MountainSolApiService,
+                    useValue: createMockApiService({
+                        createDiscount: (() =>
+                            of({
+                                success: false,
+                                discountId: '',
+                                error: 'DUPLICATE_CODE' as const,
+                            })) as ReturnType<
+                            typeof createMockApiService
+                        >['createDiscount'],
+                    }),
+                },
+            ],
+        }),
+    ],
+};

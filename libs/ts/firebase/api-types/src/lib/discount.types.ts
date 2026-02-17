@@ -38,6 +38,7 @@ export interface CreateDiscountRequest {
 export interface CreateDiscountResponse {
     success: boolean;
     discountId: string;
+    error?: 'DUPLICATE_CODE';
 }
 
 export interface UpdateDiscountRequest {
@@ -55,6 +56,7 @@ export interface UpdateDiscountRequest {
 
 export interface UpdateDiscountResponse {
     success: boolean;
+    error?: 'DUPLICATE_CODE';
 }
 
 export interface DeleteDiscountRequest {

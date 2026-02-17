@@ -22,7 +22,7 @@
     @for (msg of msgData.messages; track msg.id) {
         <p-messages [severity]="msg.severity">
             <ng-template pTemplate>
-                <div class="ml-2" [innerHTML]="msg.text"></div>
+                <markdown class="ml-2" [data]="msg.text"></markdown>
             </ng-template>
         </p-messages>
     }

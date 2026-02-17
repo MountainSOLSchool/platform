@@ -25,8 +25,25 @@ export const updateDiscount = Functions.endpoint
             return;
         }
 
+        const code = data.code.toUpperCase();
+
+        const duplicates = await db
+            .collection('discounts')
+            .where('code', '==', code)
+            .limit(2)
+            .get();
+
+        const hasDuplicate = duplicates.docs.some((doc) => doc.id !== data.id);
+        if (hasDuplicate) {
+            response.send({
+                success: false,
+                error: 'DUPLICATE_CODE',
+            } satisfies UpdateDiscountResponse);
+            return;
+        }
+
         const doc: Record<string, unknown> = {
-            code: data.code.toUpperCase(),
+            code,
             type: data.type,
             active: data.active ?? false,
         };

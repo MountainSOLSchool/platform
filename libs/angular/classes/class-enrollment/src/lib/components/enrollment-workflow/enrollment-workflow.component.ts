@@ -41,6 +41,7 @@ import { FirebaseRemoteConfigService } from '@sol/firebase/remote-config-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { MountainSolApiService } from '@sol/angular/firebase/api';
 import { AcknowledgeOutOfDateComponent } from '../acknowledge-out-of-date/acknowledge-out-of-date.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -75,6 +76,7 @@ import { AcknowledgeOutOfDateComponent } from '../acknowledge-out-of-date/acknow
         SelectStudentComponent,
         ReleasesComponent,
         AcknowledgeOutOfDateComponent,
+        MarkdownModule,
     ],
     styles: [
         `
@@ -84,11 +86,18 @@ import { AcknowledgeOutOfDateComponent } from '../acknowledge-out-of-date/acknow
             ::ng-deep .mat-horizontal-content-container {
                 overflow: unset !important;
             }
-            :host ::ng-deep .p-message-early-bird {
+            :host ::ng-deep .p-message-promotional {
                 background-color: #ffff99;
                 border: solid #ffcc00;
                 border-width: 0 0 0 6px;
                 color: black;
+            }
+            :host ::ng-deep p-messages markdown {
+                display: contents;
+            }
+            :host ::ng-deep p-messages markdown p {
+                display: inline;
+                margin: 0;
             }
             :host ::ng-deep .mat-vertical-content-container {
                 margin-left: -5px;

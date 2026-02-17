@@ -251,6 +251,136 @@ describe('Discount Functions', () => {
         });
     });
 
+    describe('Duplicate code prevention', () => {
+        let existingId: string;
+
+        beforeAll(async () => {
+            const result = await callFunction<
+                CreateDiscountRequest,
+                CreateDiscountResponse
+            >({
+                functionName: 'createDiscount',
+                data: {
+                    code: 'UNIQUECODE',
+                    type: 'amount',
+                    active: true,
+                    amount: 10,
+                },
+                idToken: adminUser.idToken,
+            });
+            existingId = result.data!.discountId;
+        });
+
+        afterAll(async () => {
+            await callFunction<{ id: string }>({
+                functionName: 'deleteDiscount',
+                data: { id: existingId },
+                idToken: adminUser.idToken,
+            });
+        });
+
+        it('should reject create with duplicate code', async () => {
+            const result = await callFunction<
+                CreateDiscountRequest,
+                CreateDiscountResponse
+            >({
+                functionName: 'createDiscount',
+                data: {
+                    code: 'UNIQUECODE',
+                    type: 'percent',
+                    active: true,
+                    percent: 5,
+                },
+                idToken: adminUser.idToken,
+            });
+
+            expect(result.status).toBe(200);
+            expect(result.data?.success).toBe(false);
+            expect(result.data?.error).toBe('DUPLICATE_CODE');
+        });
+
+        it('should reject create with duplicate code (case-insensitive)', async () => {
+            const result = await callFunction<
+                CreateDiscountRequest,
+                CreateDiscountResponse
+            >({
+                functionName: 'createDiscount',
+                data: {
+                    code: 'uniquecode',
+                    type: 'percent',
+                    active: true,
+                    percent: 5,
+                },
+                idToken: adminUser.idToken,
+            });
+
+            expect(result.status).toBe(200);
+            expect(result.data?.success).toBe(false);
+            expect(result.data?.error).toBe('DUPLICATE_CODE');
+        });
+
+        it('should reject update to a code used by another discount', async () => {
+            const second = await callFunction<
+                CreateDiscountRequest,
+                CreateDiscountResponse
+            >({
+                functionName: 'createDiscount',
+                data: {
+                    code: 'SECONDCODE',
+                    type: 'amount',
+                    active: true,
+                    amount: 5,
+                },
+                idToken: adminUser.idToken,
+            });
+
+            const result = await callFunction<
+                UpdateDiscountRequest,
+                UpdateDiscountResponse
+            >({
+                functionName: 'updateDiscount',
+                data: {
+                    id: second.data!.discountId,
+                    code: 'UNIQUECODE',
+                    type: 'amount',
+                    active: true,
+                    amount: 5,
+                },
+                idToken: adminUser.idToken,
+            });
+
+            expect(result.status).toBe(200);
+            expect(result.data?.success).toBe(false);
+            expect(result.data?.error).toBe('DUPLICATE_CODE');
+
+            await callFunction<{ id: string }>({
+                functionName: 'deleteDiscount',
+                data: { id: second.data!.discountId },
+                idToken: adminUser.idToken,
+            });
+        });
+
+        it('should allow updating a discount keeping its own code', async () => {
+            const result = await callFunction<
+                UpdateDiscountRequest,
+                UpdateDiscountResponse
+            >({
+                functionName: 'updateDiscount',
+                data: {
+                    id: existingId,
+                    code: 'UNIQUECODE',
+                    type: 'percent',
+                    active: false,
+                    percent: 50,
+                },
+                idToken: adminUser.idToken,
+            });
+
+            expect(result.status).toBe(200);
+            expect(result.data?.success).toBe(true);
+        });
+    });
+
     describe('Multiple discounts', () => {
         const createdIds: string[] = [];
 

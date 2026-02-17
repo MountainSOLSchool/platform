@@ -75,9 +75,13 @@ const DISCOUNT_TYPES: { value: DiscountType; label: string }[] = [
                                 <input
                                     matInput
                                     [(ngModel)]="code"
+                                    (ngModelChange)="clearCodeError()"
                                     placeholder="e.g. EARLYBIRD23"
                                     style="text-transform: uppercase"
                                 />
+                                @if (codeError()) {
+                                    <mat-error>{{ codeError() }}</mat-error>
+                                }
                             </mat-form-field>
 
                             <mat-form-field appearance="outline">
@@ -289,6 +293,7 @@ export class DiscountFormComponent {
     minimum = signal<number | undefined>(undefined);
 
     formState = signal<FormState>({ status: 'idle' });
+    codeError = signal('');
 
     readonly errorMessage = computed(() => {
         const state = this.formState();
@@ -383,23 +388,22 @@ export class DiscountFormComponent {
                     return this.#api
                         .updateDiscount({ id: editId, ...base })
                         .pipe(
-                            map(() => ({ success: true })),
-                            catchError((err) =>
-                                of({
-                                    success: false,
-                                    error:
-                                        err?.message ?? 'Failed to update',
-                                })
+                            map((res) => ({
+                                success: res.success,
+                                duplicateCode: res.error === 'DUPLICATE_CODE',
+                            })),
+                            catchError(() =>
+                                of({ success: false, duplicateCode: false })
                             )
                         );
                 } else {
                     return this.#api.createDiscount(base).pipe(
-                        map(() => ({ success: true })),
-                        catchError((err) =>
-                            of({
-                                success: false,
-                                error: err?.message ?? 'Failed to create',
-                            })
+                        map((res) => ({
+                            success: res.success,
+                            duplicateCode: res.error === 'DUPLICATE_CODE',
+                        })),
+                        catchError(() =>
+                            of({ success: false, duplicateCode: false })
                         )
                     );
                 }
@@ -408,24 +412,28 @@ export class DiscountFormComponent {
                 if (result.success) {
                     this.formState.set({ status: 'success' });
                     setTimeout(() => this.navigateBack(), 1000);
+                } else if (result.duplicateCode) {
+                    this.codeError.set(
+                        `Code '${this.code().toUpperCase()}' is already in use`
+                    );
+                    this.formState.set({ status: 'idle' });
                 } else {
                     this.formState.set({
                         status: 'error',
-                        message:
-                            (result as { error: string }).error ??
-                            'An error occurred',
+                        message: 'An error occurred. Please try again.',
                     });
                 }
             })
         )
     );
 
+    clearCodeError() {
+        this.codeError.set('');
+    }
+
     save() {
         if (!this.code()) {
-            this.formState.set({
-                status: 'error',
-                message: 'Discount code is required',
-            });
+            this.codeError.set('Discount code is required');
             return;
         }
         this.#submitForm(undefined as never);

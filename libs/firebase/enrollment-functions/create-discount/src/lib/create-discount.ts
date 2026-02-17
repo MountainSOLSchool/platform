@@ -19,9 +19,25 @@ export const createDiscount = Functions.endpoint
         }
 
         const db = DatabaseUtility.getDatabase();
+        const code = data.code.toUpperCase();
+
+        const existing = await db
+            .collection('discounts')
+            .where('code', '==', code)
+            .limit(1)
+            .get();
+
+        if (!existing.empty) {
+            response.send({
+                success: false,
+                discountId: '',
+                error: 'DUPLICATE_CODE',
+            } satisfies CreateDiscountResponse);
+            return;
+        }
 
         const doc: Record<string, unknown> = {
-            code: data.code.toUpperCase(),
+            code,
             type: data.type,
             active: data.active ?? false,
         };

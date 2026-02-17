@@ -2,7 +2,7 @@ import type { EnrollmentMessage } from '@sol/ts/firebase/api-types';
 
 export const mockMessageEarlyBird: EnrollmentMessage = {
     id: 'msg-001',
-    text: 'Use code <b>EARLYBIRD23</b> for $15 off each class when you enroll before June 1st!',
+    text: 'Use code **EARLYBIRD23** for $15 off each class when you enroll before June 1st!',
     severity: 'promotional',
     active: true,
     endDate: '2026-06-01T23:59:59.999Z',
