@@ -100,7 +100,9 @@ export const getClassesForAdmin = Functions.endpoint
                     maxStudentSize: data.max_student_size || 0,
                     enrolledCount: studentRefs.length,
                     live: data.live ?? false,
-                    pausedForEnrollment: data.paused_for_enrollment ?? false,
+                    pausedForEnrollment: data.max_student_size
+                        ? studentRefs.length >= data.max_student_size
+                        : (data.paused_for_enrollment ?? false),
                     forInformationOnly: data.for_information_only ?? false,
                     thumbnailUrl: data.thumbnailUrl,
                     additionalOptions: data.additional_options?.map(

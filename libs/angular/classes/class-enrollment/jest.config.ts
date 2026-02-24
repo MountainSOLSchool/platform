@@ -1,6 +1,6 @@
 export default {
     displayName: 'classes-class-enrollment',
-    preset: '../../../jest.preset.js',
+    preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
     globals: {
         'ts-jest': {
@@ -9,7 +9,7 @@ export default {
         },
     },
     coverageDirectory:
-        '../../../coverage/libs/angular/classes/class-enrollment',
+        '../../../../coverage/libs/angular/classes/class-enrollment',
     transform: {
         '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
     },
