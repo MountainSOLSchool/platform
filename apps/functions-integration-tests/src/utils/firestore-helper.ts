@@ -2,6 +2,14 @@ import { EMULATOR_CONFIG } from './emulator-config';
 
 const FIRESTORE_URL = `http://${EMULATOR_CONFIG.firestoreHost}`;
 
+export class FirestoreRef {
+    constructor(public readonly path: string) {}
+}
+
+export class FirestoreTimestamp {
+    constructor(public readonly date: Date) {}
+}
+
 export async function clearFirestoreEmulator(): Promise<void> {
     const url = `${FIRESTORE_URL}/emulator/v1/projects/${EMULATOR_CONFIG.projectId}/databases/(default)/documents`;
     await fetch(url, { method: 'DELETE' });
@@ -45,6 +53,17 @@ function convertToFirestoreFields(
 function convertValue(value: unknown): unknown {
     if (value === null || value === undefined) {
         return { nullValue: null };
+    }
+    if (value instanceof FirestoreRef) {
+        return {
+            referenceValue: `projects/${EMULATOR_CONFIG.projectId}/databases/(default)/documents/${value.path}`,
+        };
+    }
+    if (value instanceof FirestoreTimestamp) {
+        return { timestampValue: value.date.toISOString() };
+    }
+    if (value instanceof Date) {
+        return { timestampValue: value.toISOString() };
     }
     if (typeof value === 'string') {
         return { stringValue: value };

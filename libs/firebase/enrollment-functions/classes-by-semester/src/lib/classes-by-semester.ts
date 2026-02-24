@@ -386,7 +386,7 @@ export async function _getCategorizedClassesOptimizedBatched(
                     extractIdFromReference
                 ),
                 pausedForEnrollment: classDbo.max_student_size
-                    ? (classDbo.students ?? []).length >
+                    ? (classDbo.students ?? []).length >=
                       classDbo.max_student_size
                     : classDbo.paused_for_enrollment || false,
                 semesterId: semesterId,
