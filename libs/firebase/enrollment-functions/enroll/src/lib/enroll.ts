@@ -75,6 +75,15 @@ export const enroll = Functions.endpoint
             await _getClasses(selectedClasses)
         ).flatMap((c) => c);
 
+        const fullClasses = classes.filter((c) => c.pausedForEnrollment);
+        if (fullClasses.length > 0) {
+            response.status(400).send({
+                error: 'One or more selected classes are full',
+                fullClassIds: fullClasses.map((c) => c.id),
+            });
+            return;
+        }
+
         const classesWithUserCostsApplied = EnrollmentUtility.applyUserCosts(
             classes,
             userCostsToSelectedClassIds
@@ -176,19 +185,29 @@ export const enroll = Functions.endpoint
                 status: 'enrolled',
             });
 
-            await Promise.all(
+            const enrollmentResults = await Promise.allSettled(
                 classes.map(async (c) => {
                     await Semester.of(c.semesterId).classes.addStudentToClass(
                         studentRef.id,
                         c.id,
                         additionalOptionIdsByClassId[c.id] ?? []
                     );
+                    return c.id;
                 })
             );
+
+            const failedClasses = enrollmentResults
+                .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+                .map((r) => r.reason?.message ?? 'Unknown error');
+
+            if (failedClasses.length > 0) {
+                console.error('Some class enrollments failed after payment:', failedClasses);
+            }
 
             response.send({
                 success,
                 email: student.contactEmail,
+                ...(failedClasses.length > 0 ? { failedClasses } : {}),
             });
         } else {
             await ClassEnrollmentRepository.create({

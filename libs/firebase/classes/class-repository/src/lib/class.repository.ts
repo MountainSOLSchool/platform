@@ -135,7 +135,7 @@ export class ClassRepository {
             thumbnailUrl: dbo.thumbnailUrl,
             studentIds: dbo.students?.map((ref) => ref.id) ?? [],
             pausedForEnrollment: dbo.max_student_size
-                ? (dbo.students ?? []).length > dbo.max_student_size
+                ? (dbo.students ?? []).length >= dbo.max_student_size
                 : false,
             semesterId: await this.semester.getId(),
             forInformationOnly: dbo.for_information_only ?? false,
@@ -170,6 +170,14 @@ export class ClassRepository {
         const classData = (await classRef.get()).data() as ClassDbo | undefined;
 
         const enrolledStudents = classData?.students ?? [];
+
+        if (
+            classData?.max_student_size &&
+            enrolledStudents.length >= classData.max_student_size
+        ) {
+            throw new Error(`Class ${classId} is full`);
+        }
+
         if (
             !enrolledStudents
                 ?.map((ref) => ref.id)
