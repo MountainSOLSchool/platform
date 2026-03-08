@@ -1,7 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    input,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { UserService } from '@sol/auth/user';
+
 import { FirebaseAuthService } from '@sol/angular/auth/firebase';
 import { map } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,13 +30,20 @@ import { ProgramTabsComponent } from './program-tabs.component';
         ProgramTabsComponent,
         FirebaseAuthService,
     ],
-    styles: [`
-        :host { display: contents; }
-        .menu-section { padding: 0 16px; font-size: 12px; font-weight: 500; color: var(--sol-on-surface-variant, #999); margin: 8px 0 4px; }
-    `],
-    template: `
-        <button mat-icon-button [matMenuTriggerFor]="mobileMenu" aria-label="Menu" style="color: #fff;">
-            <mat-icon>menu</mat-icon>
+    styles: [
+        `
+            :host {
+                display: contents;
+            }
+        `,
+    ],
+    template: ` <button
+            mat-icon-button
+            [matMenuTriggerFor]="mobileMenu"
+            aria-label="Account menu"
+            style="color: #fff;"
+        >
+            <mat-icon>person</mat-icon>
         </button>
 
         <mat-menu #mobileMenu="matMenu">
@@ -41,7 +55,9 @@ import { ProgramTabsComponent } from './program-tabs.component';
             }
             @if (email()) {
                 <button mat-menu-item disabled>{{ emailDisplay() }}</button>
-                <a mat-menu-item routerLink="/account/enrollments">Enrollments</a>
+                <a mat-menu-item routerLink="/account/enrollments"
+                    >Enrollments</a
+                >
                 <a mat-menu-item routerLink="/account/students">Students</a>
                 <a mat-menu-item routerLink="/account/manage">Manage Account</a>
                 <mat-divider></mat-divider>
@@ -54,24 +70,6 @@ import { ProgramTabsComponent } from './program-tabs.component';
                     <mat-icon>login</mat-icon>
                     <span>Register / Sign In</span>
                 </a>
-            }
-            @if (isAdmin() || isMedicAdmin()) {
-                <mat-divider></mat-divider>
-                <div class="menu-section">Admin</div>
-                <a mat-menu-item routerLink="/admin">Dashboard</a>
-                <a mat-menu-item routerLink="/admin/classes/management">Manage Classes</a>
-                <a mat-menu-item routerLink="/admin/report">Class Forms and Contacts</a>
-                <a mat-menu-item routerLink="/admin/students">Student Info Sheets</a>
-                <a mat-menu-item routerLink="/admin/t-shirts">T-shirt Sizes</a>
-                <a mat-menu-item routerLink="/admin/enrollments">Enrollments</a>
-                <a mat-menu-item routerLink="/calendar/classes">Class Calendar</a>
-                <a mat-menu-item href="https://students.mountainsol.org/units" target="_blank">Student Units</a>
-            }
-            @if (isMedicAdmin()) {
-                <mat-divider></mat-divider>
-                <div class="menu-section">Medic Admin</div>
-                <a mat-menu-item routerLink="/medic/admin/classes">Manage Medic Classes</a>
-                <a mat-menu-item routerLink="/medic/admin/enrollments">Medic Enrollments</a>
             }
         </mat-menu>`,
 })
@@ -91,9 +89,6 @@ export class MobileMenuComponent {
         if (!e) return 'User';
         return e.length > 20 ? e.substring(0, 20) + '...' : e;
     });
-
-    readonly isAdmin = toSignal(this.userService.isAdmin(), { initialValue: false });
-    readonly isMedicAdmin = toSignal(this.userService.isMedicAdmin(), { initialValue: false });
 
     signOut() {
         this.auth.logout();

@@ -5,7 +5,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { Dialog } from '@angular/cdk/dialog';
 import { firstValueFrom } from 'rxjs';
 import { MountainSolApiService } from '@sol/angular/firebase/api';
-import type { DiscountAdmin } from '@sol/ts/firebase/api-types';
+import type { DiscountAdmin, DiscountType } from '@sol/ts/firebase/api-types';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,6 +14,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import {
     ConfirmDeleteDialogComponent,
@@ -41,6 +44,9 @@ const DISCOUNT_TYPE_LABELS: Record<string, string> = {
         MatProgressSpinnerModule,
         MatChipsModule,
         MatTooltipModule,
+        MatButtonToggleModule,
+        MatSelectModule,
+        MatFormFieldModule,
     ],
     template: `
         <div class="page-container">
@@ -61,7 +67,7 @@ const DISCOUNT_TYPE_LABELS: Record<string, string> = {
                     <mat-spinner diameter="48"></mat-spinner>
                     <p>Loading discounts...</p>
                 </div>
-            } @else if (discounts().length === 0) {
+            } @else if (!hasAnyDiscounts()) {
                 <mat-card class="empty-state">
                     <mat-card-content>
                         <mat-icon>local_offer</mat-icon>
@@ -77,76 +83,126 @@ const DISCOUNT_TYPE_LABELS: Record<string, string> = {
                     </mat-card-content>
                 </mat-card>
             } @else {
-                <mat-card class="table-card">
-                    <table mat-table [dataSource]="discounts()">
-                        <ng-container matColumnDef="status">
-                            <th mat-header-cell *matHeaderCellDef>Status</th>
-                            <td mat-cell *matCellDef="let d">
-                                @if (d.active) {
-                                    <span class="chip active">Active</span>
-                                } @else {
-                                    <span class="chip inactive"
-                                        >Inactive</span
-                                    >
-                                }
-                            </td>
-                        </ng-container>
+                <div class="filter-bar">
+                    <mat-button-toggle-group
+                        [value]="statusFilter()"
+                        (change)="statusFilter.set($event.value)"
+                        hideSingleSelectionIndicator
+                    >
+                        <mat-button-toggle value="active"
+                            >Active</mat-button-toggle
+                        >
+                        <mat-button-toggle value="inactive"
+                            >Inactive</mat-button-toggle
+                        >
+                        <mat-button-toggle value="all">All</mat-button-toggle>
+                    </mat-button-toggle-group>
 
-                        <ng-container matColumnDef="code">
-                            <th mat-header-cell *matHeaderCellDef>Code</th>
-                            <td mat-cell *matCellDef="let d">
-                                <strong>{{ d.code }}</strong>
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="type">
-                            <th mat-header-cell *matHeaderCellDef>Type</th>
-                            <td mat-cell *matCellDef="let d">
-                                {{ getTypeLabel(d.type) }}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="details">
-                            <th mat-header-cell *matHeaderCellDef>Details</th>
-                            <td mat-cell *matCellDef="let d">
-                                {{ getDetails(d) }}
-                            </td>
-                        </ng-container>
-
-                        <ng-container matColumnDef="actions">
-                            <th mat-header-cell *matHeaderCellDef>Actions</th>
-                            <td mat-cell *matCellDef="let d">
-                                <button
-                                    mat-icon-button
-                                    matTooltip="Edit"
-                                    (click)="editDiscount(d)"
-                                >
-                                    <mat-icon>edit</mat-icon>
-                                </button>
-                                <button
-                                    mat-icon-button
-                                    matTooltip="Delete"
-                                    (click)="confirmDelete(d)"
-                                >
-                                    <mat-icon>delete</mat-icon>
-                                </button>
-                            </td>
-                        </ng-container>
-
-                        <tr
-                            mat-header-row
-                            *matHeaderRowDef="displayedColumns"
-                        ></tr>
-                        <tr
-                            mat-row
-                            *matRowDef="let row; columns: displayedColumns"
-                        ></tr>
-                    </table>
-                </mat-card>
-
-                <div class="summary">
-                    <p>{{ getSummary() }}</p>
+                    <mat-form-field
+                        appearance="outline"
+                        subscriptSizing="dynamic"
+                    >
+                        <mat-label>Type</mat-label>
+                        <mat-select
+                            [value]="typeFilter()"
+                            (selectionChange)="typeFilter.set($event.value)"
+                        >
+                            <mat-option value="all">All Types</mat-option>
+                            @for (entry of typeOptions; track entry.value) {
+                                <mat-option [value]="entry.value">{{
+                                    entry.label
+                                }}</mat-option>
+                            }
+                        </mat-select>
+                    </mat-form-field>
                 </div>
+
+                @if (filteredDiscounts().length === 0) {
+                    <mat-card class="empty-state">
+                        <mat-card-content>
+                            <mat-icon>filter_list_off</mat-icon>
+                            <h3>No matching discounts</h3>
+                            <p>Try adjusting your filters.</p>
+                        </mat-card-content>
+                    </mat-card>
+                } @else {
+                    <mat-card class="table-card">
+                        <table mat-table [dataSource]="filteredDiscounts()">
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    Status
+                                </th>
+                                <td mat-cell *matCellDef="let d">
+                                    @if (d.active) {
+                                        <span class="chip active">Active</span>
+                                    } @else {
+                                        <span class="chip inactive"
+                                            >Inactive</span
+                                        >
+                                    }
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="code">
+                                <th mat-header-cell *matHeaderCellDef>Code</th>
+                                <td mat-cell *matCellDef="let d">
+                                    <strong>{{ d.code }}</strong>
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="type">
+                                <th mat-header-cell *matHeaderCellDef>Type</th>
+                                <td mat-cell *matCellDef="let d">
+                                    {{ getTypeLabel(d.type) }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="details">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    Details
+                                </th>
+                                <td mat-cell *matCellDef="let d">
+                                    {{ getDetails(d) }}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef>
+                                    Actions
+                                </th>
+                                <td mat-cell *matCellDef="let d">
+                                    <button
+                                        mat-icon-button
+                                        matTooltip="Edit"
+                                        (click)="editDiscount(d)"
+                                    >
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button
+                                        mat-icon-button
+                                        matTooltip="Delete"
+                                        (click)="confirmDelete(d)"
+                                    >
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <tr
+                                mat-header-row
+                                *matHeaderRowDef="displayedColumns"
+                            ></tr>
+                            <tr
+                                mat-row
+                                *matRowDef="let row; columns: displayedColumns"
+                            ></tr>
+                        </table>
+                    </mat-card>
+
+                    <div class="summary">
+                        <p>{{ summary() }}</p>
+                    </div>
+                }
             }
         </div>
     `,
@@ -223,6 +279,13 @@ const DISCOUNT_TYPE_LABELS: Record<string, string> = {
             .summary p {
                 margin: 0;
             }
+            .filter-bar {
+                display: flex;
+                gap: 1rem;
+                align-items: center;
+                margin-bottom: 1rem;
+                flex-wrap: wrap;
+            }
         `,
     ],
 })
@@ -235,6 +298,13 @@ export class DiscountListComponent {
 
     displayedColumns = ['status', 'code', 'type', 'details', 'actions'];
 
+    readonly statusFilter = signal<'active' | 'inactive' | 'all'>('active');
+    readonly typeFilter = signal<DiscountType | 'all'>('all');
+
+    readonly typeOptions = Object.entries(DISCOUNT_TYPE_LABELS).map(
+        ([value, label]) => ({ value, label })
+    );
+
     readonly discountsResource = rxResource({
         params: () => this.#refreshTrigger(),
         stream: () => this.#api.getDiscounts(undefined as never),
@@ -244,9 +314,34 @@ export class DiscountListComponent {
         () => this.discountsResource.value()?.discounts ?? []
     );
 
+    readonly hasAnyDiscounts = computed(() => this.discounts().length > 0);
+
+    readonly filteredDiscounts = computed(() => {
+        let items = this.discounts();
+        const status = this.statusFilter();
+        const type = this.typeFilter();
+
+        if (status === 'active') items = items.filter((d) => d.active);
+        else if (status === 'inactive') items = items.filter((d) => !d.active);
+
+        if (type !== 'all') items = items.filter((d) => d.type === type);
+
+        return items;
+    });
+
     readonly loading = computed(
         () => this.discountsResource.status() === 'loading'
     );
+
+    readonly summary = computed(() => {
+        const total = this.discounts().length;
+        const activeTotal = this.discounts().filter((d) => d.active).length;
+        const filtered = this.filteredDiscounts().length;
+        if (filtered === total) {
+            return `${total} discount${total !== 1 ? 's' : ''} \u2022 ${activeTotal} active`;
+        }
+        return `Showing ${filtered} of ${total} discount${total !== 1 ? 's' : ''} \u2022 ${activeTotal} active total`;
+    });
 
     navigateToCreate() {
         this.#router.navigate(['/admin/discounts/create']);
@@ -293,11 +388,5 @@ export class DiscountListComponent {
             default:
                 return '';
         }
-    }
-
-    getSummary(): string {
-        const count = this.discounts().length;
-        const activeCount = this.discounts().filter((d) => d.active).length;
-        return `${count} discount${count !== 1 ? 's' : ''} • ${activeCount} active`;
     }
 }

@@ -5,10 +5,7 @@ import { Router } from '@angular/router';
 import { Dialog } from '@angular/cdk/dialog';
 import { MountainSolApiService } from '@sol/angular/firebase/api';
 import { DiscountListComponent } from './discount-list.component';
-import {
-    mockDiscounts,
-    mockDiscountsEmpty,
-} from '../../../../../../../apps/enrollment-portal/.storybook/fixtures';
+import { mockDiscountsEmpty } from '../../../../../../../apps/enrollment-portal/.storybook/fixtures';
 import { createMockApiService } from '../../../../../../../apps/enrollment-portal/.storybook/mocks/api-service.mock';
 
 const meta: Meta<DiscountListComponent> = {
