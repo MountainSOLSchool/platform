@@ -154,6 +154,7 @@ import { AdminDrawerNavComponent } from './admin-drawer-nav.component';
         <mat-sidenav-container>
             @if (isAdminUser()) {
                 <mat-sidenav
+                    position="end"
                     [mode]="drawerMode()"
                     [opened]="drawerOpen()"
                     (openedChange)="drawerOpen.set($event)"
