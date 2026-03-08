@@ -201,14 +201,10 @@ const DISCOUNT_TYPES: { value: DiscountType; label: string }[] = [
                                 mat-raised-button
                                 color="primary"
                                 (click)="save()"
-                                [disabled]="
-                                    formState().status === 'submitting'
-                                "
+                                [disabled]="formState().status === 'submitting'"
                             >
                                 @if (formState().status === 'submitting') {
-                                    <mat-spinner
-                                        diameter="20"
-                                    ></mat-spinner>
+                                    <mat-spinner diameter="20"></mat-spinner>
                                 } @else {
                                     {{ isEdit() ? 'Update' : 'Create' }}
                                     Discount
@@ -365,9 +361,10 @@ export class DiscountFormComponent {
                     active: this.active(),
                     amount: this.showAmount() ? this.amount() : undefined,
                     percent: this.showPercent() ? this.percent() : undefined,
-                    date: this.showDate() && this.expiryDate()
-                        ? this.expiryDate()!.toISOString()
-                        : undefined,
+                    date:
+                        this.showDate() && this.expiryDate()
+                            ? this.expiryDate()!.toISOString()
+                            : undefined,
                     classOrGroupIds: this.showClassOrGroupIds()
                         ? this.classOrGroupIdsText()
                               .split(',')

@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    viewChild,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { UserService } from '@sol/auth/user';
@@ -21,14 +27,34 @@ import { MatDividerModule } from '@angular/material/divider';
         MatDividerModule,
         FirebaseAuthService,
     ],
-    styles: [`
-        :host { display: contents; }
-        .sign-in-link { text-decoration: none; color: #fff; padding: 0 12px !important; white-space: nowrap; font-size: 14px; font-weight: 500; display: flex; align-items: center; height: 40px; }
-        .sign-in-btn { color: #fff !important; }
-    `],
-    template: `
-        @if (email()) {
-            <button mat-icon-button [matMenuTriggerFor]="userMenu" aria-label="User menu" style="color: #fff;">
+    styles: [
+        `
+            :host {
+                display: contents;
+            }
+            .sign-in-link {
+                text-decoration: none;
+                color: #fff;
+                padding: 0 12px !important;
+                white-space: nowrap;
+                font-size: 14px;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                height: 40px;
+            }
+            .sign-in-btn {
+                color: #fff !important;
+            }
+        `,
+    ],
+    template: ` @if (email()) {
+            <button
+                mat-icon-button
+                [matMenuTriggerFor]="userMenu"
+                aria-label="User menu"
+                style="color: #fff;"
+            >
                 <mat-icon>account_circle</mat-icon>
             </button>
         } @else {
