@@ -83,6 +83,7 @@ import { AdminDrawerNavComponent } from './admin-drawer-nav.component';
             }
             mat-sidenav-container {
                 flex: 1;
+                background: #fff;
             }
             mat-sidenav {
                 width: 260px;
