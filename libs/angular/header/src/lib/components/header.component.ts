@@ -69,6 +69,18 @@ import { AdminDrawerNavComponent } from './admin-drawer-nav.component';
                 display: flex;
                 align-items: center;
             }
+            .split-btn {
+                display: flex;
+                align-items: center;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                border-radius: 24px;
+                overflow: hidden;
+            }
+            .split-divider {
+                width: 1px;
+                height: 24px;
+                background: rgba(255, 255, 255, 0.3);
+            }
             mat-sidenav-container {
                 flex: 1;
             }
@@ -89,16 +101,6 @@ import { AdminDrawerNavComponent } from './admin-drawer-nav.component';
         <header>
             <mat-toolbar class="toolbar">
                 <div class="toolbar-left">
-                    @if (isAdminUser()) {
-                        <button
-                            mat-icon-button
-                            (click)="toggleDrawer()"
-                            aria-label="Toggle admin menu"
-                            style="color: #fff;"
-                        >
-                            <mat-icon>menu</mat-icon>
-                        </button>
-                    }
                     <a class="logo-group" routerLink="/">
                         <img
                             [src]="logoSrc()"
@@ -114,8 +116,33 @@ import { AdminDrawerNavComponent } from './admin-drawer-nav.component';
 
                 <div class="toolbar-right">
                     @if (isDesktop()) {
-                        <sol-user-menu />
+                        @if (isAdminUser()) {
+                            <div class="split-btn">
+                                <button
+                                    mat-icon-button
+                                    (click)="toggleDrawer()"
+                                    aria-label="Toggle admin menu"
+                                    style="color: #fff;"
+                                >
+                                    <mat-icon>menu</mat-icon>
+                                </button>
+                                <div class="split-divider"></div>
+                                <sol-user-menu />
+                            </div>
+                        } @else {
+                            <sol-user-menu />
+                        }
                     } @else {
+                        @if (isAdminUser()) {
+                            <button
+                                mat-icon-button
+                                (click)="toggleDrawer()"
+                                aria-label="Toggle admin menu"
+                                style="color: #fff;"
+                            >
+                                <mat-icon>menu</mat-icon>
+                            </button>
+                        }
                         <sol-mobile-menu
                             [showProgramTabs]="showProgramTabs()"
                         />
