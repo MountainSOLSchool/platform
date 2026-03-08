@@ -155,7 +155,7 @@ import { AdminDrawerNavComponent } from './admin-drawer-nav.component';
             @if (isAdminUser()) {
                 <mat-sidenav
                     position="end"
-                    [mode]="drawerMode()"
+                    mode="over"
                     [opened]="drawerOpen()"
                     (openedChange)="drawerOpen.set($event)"
                 >
@@ -200,16 +200,7 @@ export class HeaderComponent {
         () => this.isAdmin() || this.isMedicAdmin()
     );
 
-    readonly isOnAdminRoute = computed(() => {
-        const u = this.url();
-        return u.startsWith('/admin') || u.startsWith('/medic/admin');
-    });
-
     readonly drawerOpen = signal(false);
-
-    readonly drawerMode = computed<'side' | 'over'>(() =>
-        this.isDesktop() && this.isOnAdminRoute() ? 'side' : 'over'
-    );
 
     readonly logoSrc = computed(() =>
         this.isDesktop()
@@ -235,9 +226,7 @@ export class HeaderComponent {
     constructor() {
         effect(() => {
             this.url();
-            if (!this.isDesktop() || !this.isOnAdminRoute()) {
-                this.drawerOpen.set(false);
-            }
+            this.drawerOpen.set(false);
         });
     }
 }
