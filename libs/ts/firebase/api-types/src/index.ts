@@ -7,6 +7,15 @@ export type {
     UpdateClassResponse,
     UploadClassImageRequest,
     UploadClassImageResponse,
+    AdminClassGroup,
+    GetClassGroupsForAdminRequest,
+    GetClassGroupsForAdminResponse,
+    CreateClassGroupRequest,
+    CreateClassGroupResponse,
+    UpdateClassGroupRequest,
+    UpdateClassGroupResponse,
+    DeleteClassGroupRequest,
+    DeleteClassGroupResponse,
 } from './lib/class-management.types';
 
 // Semester Info Panel

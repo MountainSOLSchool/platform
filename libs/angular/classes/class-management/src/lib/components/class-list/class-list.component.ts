@@ -143,6 +143,15 @@ interface Semester {
                             <mat-icon>info</mat-icon>
                             Info Panel
                         </button>
+                        <button
+                            mat-stroked-button
+                            (click)="navigateToGroups()"
+                            [disabled]="!selectedSemesterId()"
+                            matTooltip="Manage class groups for bundled pricing"
+                        >
+                            <mat-icon>group_work</mat-icon>
+                            Class Groups
+                        </button>
                     </div>
                 </mat-card-content>
             </mat-card>
@@ -567,6 +576,12 @@ export class AdminClassListComponent implements OnInit {
                 semesterId,
             ]);
         }
+    }
+
+    navigateToGroups() {
+        this.#router.navigate(['/admin/classes/management/groups'], {
+            queryParams: { semesterId: this.selectedSemesterId() },
+        });
     }
 
     viewClass(cls: AdminClass) {

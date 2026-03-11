@@ -1,7 +1,5 @@
 import { Functions } from '@sol/firebase/functions';
-import { DiscountRepository } from '@sol/classes/repository';
-import { Discount, EnrollmentUtility } from '@sol/classes/domain';
-import { Semester } from '@sol/firebase/classes/semester';
+import { _calculateEnrollmentCost } from '@sol/firebase/enrollment-functions/shared';
 
 export const calculateBasket = Functions.endpoint.handle<{
     codes: Array<string>;
@@ -19,82 +17,19 @@ export const calculateBasket = Functions.endpoint.handle<{
         userCostsToClassIds,
         overrideCosts,
     } = request.body.data;
-    const discounts = (
-        await Promise.all(
-            codes.map(async (code) => await DiscountRepository.get(code))
-        )
-    ).filter((code): code is Discount<unknown> => !!code);
 
-    const classIds = requestClasses.map(({ id }) => id);
-    const semesterIds = Array.from(
-        new Set(requestClasses.map(({ semesterId }) => semesterId))
-    );
-    const groups = await Promise.all(
-        semesterIds.map(async (semesterId) => {
-            const groups =
-                await Semester.of(semesterId).groups.getByClassIds(classIds);
-            return groups;
-        })
-    ).then((groups) => groups.flat());
+    const result = await _calculateEnrollmentCost({
+        selectedClasses: requestClasses,
+        discountCodes: codes,
+        userCostsToClassIds,
+        overrideCosts,
+    });
 
-    const standaloneClasses = requestClasses.filter(
-        (requestClass) =>
-            !groups.some(
-                (group) =>
-                    group.classes.some((c) => c.id === requestClass.id) &&
-                    group.classes.every((groupClass) =>
-                        requestClasses.some((rc) => rc.id === groupClass.id)
-                    )
-            )
-    );
-
-    const classIdsBySemesterId = standaloneClasses.reduce(
-        (acc, { id, semesterId }) => {
-            if (!acc[semesterId]) {
-                acc[semesterId] = [];
-            }
-            acc[semesterId].push(id);
-            return acc;
-        },
-        {} as Record<string, Array<string>>
-    );
-    const classes = await Promise.all(
-        Object.entries(classIdsBySemesterId).map(
-            async ([semesterId, classIds]) => {
-                const classes =
-                    await Semester.of(semesterId).classes.getMany(classIds);
-                return classes;
-            }
-        )
-    ).then((classes) => classes.flat());
-
-    const classesWithUserCostsApplied = EnrollmentUtility.applyUserCosts(
-        classes,
-        userCostsToClassIds
-    );
-
-    if ('error' in classesWithUserCostsApplied) {
-        response.status(400).send(classesWithUserCostsApplied);
+    if ('error' in result) {
+        response.status(400).send(result);
         return;
     }
 
-    const classesWithOverrides = overrideCosts
-        ? classesWithUserCostsApplied.map((c) =>
-              overrideCosts[c.id] !== undefined
-                  ? { ...c, cost: overrideCosts[c.id] }
-                  : c
-          )
-        : classesWithUserCostsApplied;
-
-    const { discountAmounts, finalTotal, originalTotal } =
-        EnrollmentUtility.getEnrollmentCost(
-            discounts,
-            classesWithOverrides,
-            groups,
-            requestClasses.flatMap(
-                ({ additionalOptionIds }) => additionalOptionIds
-            )
-        );
-
+    const { discountAmounts, finalTotal, originalTotal } = result;
     response.send({ discountAmounts, finalTotal, originalTotal });
 });

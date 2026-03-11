@@ -63,5 +63,17 @@ jobs:
             - run: npm ci
             - name: Build functions
               run: npx nx run functions:build
+            - name: Create secret overrides for emulator
+              run: |
+                  cat <<'EOF' > .secret.local
+                  BRAINTREE_MERCHANT_ID=fake_merchant_id
+                  BRAINTREE_PUBLIC_KEY=fake_public_key
+                  BRAINTREE_PRIVATE_KEY=fake_private_key
+                  BRAINTREE_MERCHANT_ID_PROD=fake_merchant_id_prod
+                  BRAINTREE_PUBLIC_KEY_PROD=fake_public_key_prod
+                  BRAINTREE_PRIVATE_KEY_PROD=fake_private_key_prod
+                  BRAINTREE_VENMO_PROFILE_ID=fake_venmo_profile_id
+                  BRAINTREE_VENMO_PROFILE_ID_PROD=fake_venmo_profile_id_prod
+                  EOF
             - name: Run integration tests with emulators
               run: npx firebase emulators:exec --project=dev --only auth,firestore,functions "npx nx run functions-integration-tests:test"

@@ -1,8 +1,6 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { Braintree } from '@sol/payments/braintree';
 import { StudentForm } from '@sol/student/domain';
-import { DiscountRepository } from '@sol/classes/repository';
-import { Discount, EnrollmentUtility } from '@sol/classes/domain';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
@@ -10,7 +8,7 @@ import { Semester } from '@sol/firebase/classes/semester';
 import {
     _assertUserCanManageStudent,
     _getClasses,
-    _getClassGroupsFromClasses,
+    _calculateEnrollmentCost,
     _mapStudentFormToStudentDbEntry,
 } from '@sol/firebase/enrollment-functions/shared';
 
@@ -28,6 +26,7 @@ export const enrollAddendum = Functions.endpoint
         paymentMethod?: { nonce: string; deviceData: string };
         userCostsToSelectedClassIds: Record<string, number | undefined>;
         newAdditionalOptionIdsByClassId: { [classId: string]: Array<string> };
+        expectedTotal?: number;
     }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
 
@@ -44,6 +43,7 @@ export const enrollAddendum = Functions.endpoint
             paymentMethod,
             userCostsToSelectedClassIds,
             newAdditionalOptionIdsByClassId,
+            expectedTotal,
         } = request.body.data;
 
         // Validate original enrollment
@@ -73,18 +73,16 @@ export const enrollAddendum = Functions.endpoint
             await _assertUserCanManageStudent(user, student.id, response);
         }
 
-        // Determine what's truly new:
-        // newClasses = brand new class enrollments
-        // newAdditionalOptionIdsByClassId = new options (could be for existing or new classes)
-
+        // Determine what's truly new
         const hasNewClasses = newClasses.length > 0;
-        const hasNewOptions = Object.values(newAdditionalOptionIdsByClassId).some(
-            (opts) => opts.length > 0
-        );
+        const hasNewOptions = Object.values(
+            newAdditionalOptionIdsByClassId
+        ).some((opts) => opts.length > 0);
 
         if (!hasNewClasses && !hasNewOptions) {
             // Only student info update, no cost
-            const updatedStudentDbEntry = _mapStudentFormToStudentDbEntry(student);
+            const updatedStudentDbEntry =
+                _mapStudentFormToStudentDbEntry(student);
             if ('id' in updatedStudentDbEntry) {
                 await StudentRepository.update(updatedStudentDbEntry);
             }
@@ -112,105 +110,102 @@ export const enrollAddendum = Functions.endpoint
             return;
         }
 
-        // Build the list of all items to price for the addendum
-        // Combine new classes + existing classes that have new options
-        const classesToPrice = [
-            ...newClasses,
-            ...Object.keys(newAdditionalOptionIdsByClassId)
-                .filter(
-                    (classId) =>
-                        !newClasses.some((nc) => nc.id === classId) &&
-                        newAdditionalOptionIdsByClassId[classId].length > 0
-                )
-                .map((classId) => {
-                    // Find this class's semester from original enrollment
-                    if (!('classes' in originalEnrollment)) {
-                        throw new Error('Legacy enrollment format not supported');
-                    }
-                    const originalClass = originalEnrollment.classes.find(
-                        (c) => c.id === classId
-                    );
-                    if (!originalClass) {
-                        throw new Error(
-                            `Class ${classId} not found in original enrollment`
-                        );
-                    }
-                    return originalClass;
-                }),
-        ];
+        // Build list of all items to price for the addendum
+        // New classes + existing classes that have new options
+        const classesToPrice: Array<{
+            id: string;
+            semesterId: string;
+            additionalOptionIds: Array<string>;
+        }> = [];
+        const overrideCosts: Record<string, number> = {};
 
-        // Fetch class details for new classes (need to check availability)
-        const newClassDetails = newClasses.length > 0
-            ? Object.values(await _getClasses(newClasses)).flatMap((c) => c)
-            : [];
+        for (const c of newClasses) {
+            const allOptionIds = newAdditionalOptionIdsByClassId[c.id] ?? [];
+            classesToPrice.push({
+                ...c,
+                additionalOptionIds: allOptionIds,
+            });
+        }
+
+        // Existing classes with new options — zero the class cost
+        for (const [classId, optionIds] of Object.entries(
+            newAdditionalOptionIdsByClassId
+        )) {
+            if (newClasses.some((nc) => nc.id === classId)) continue;
+            if (optionIds.length === 0) continue;
+
+            if (!('classes' in originalEnrollment)) {
+                response
+                    .status(400)
+                    .send({ error: 'Legacy enrollment format not supported' });
+                return;
+            }
+            const originalClass = originalEnrollment.classes.find(
+                (c) => c.id === classId
+            );
+            if (!originalClass) {
+                response.status(400).send({
+                    error: `Class ${classId} not found in original enrollment`,
+                });
+                return;
+            }
+            classesToPrice.push({
+                id: classId,
+                semesterId: originalClass.semesterId,
+                additionalOptionIds: optionIds,
+            });
+            overrideCosts[classId] = 0;
+        }
 
         // Check new classes aren't full
-        const fullClasses = newClassDetails.filter(
-            (c) => c.pausedForEnrollment
-        );
-        if (fullClasses.length > 0) {
-            response.status(400).send({
-                error: 'One or more selected classes are full',
-                fullClassIds: fullClasses.map((c) => c.id),
+        if (hasNewClasses) {
+            const newClassDetails = Object.values(
+                await _getClasses(newClasses)
+            ).flatMap((c) => c);
+            const fullClasses = newClassDetails.filter(
+                (c) => c.pausedForEnrollment
+            );
+            if (fullClasses.length > 0) {
+                response.status(400).send({
+                    error: 'One or more selected classes are full',
+                    fullClassIds: fullClasses.map((c) => c.id),
+                });
+                return;
+            }
+        }
+
+        // Use shared cost calculation (same logic as calculateBasket)
+        const costResult = await _calculateEnrollmentCost({
+            selectedClasses: classesToPrice,
+            discountCodes,
+            userCostsToClassIds: userCostsToSelectedClassIds,
+            overrideCosts:
+                Object.keys(overrideCosts).length > 0
+                    ? overrideCosts
+                    : undefined,
+        });
+
+        if ('error' in costResult) {
+            response.status(400).send(costResult);
+            return;
+        }
+
+        const { finalTotal, discountAmounts } = costResult;
+
+        // Charge-time validation: reject if computed cost doesn't match preview
+        if (
+            expectedTotal !== undefined &&
+            Math.abs(finalTotal - expectedTotal) > 0.01
+        ) {
+            response.status(409).send({
+                error: 'Price changed since preview. Please review the updated cost.',
+                expectedTotal,
+                computedTotal: finalTotal,
             });
             return;
         }
 
-        // For pricing: get all class details we need
-        const allClassDetails = classesToPrice.length > 0
-            ? Object.values(await _getClasses(classesToPrice)).flatMap((c) => c)
-            : [];
-
-        // Apply user costs for new classes only
-        const classesWithUserCostsApplied = EnrollmentUtility.applyUserCosts(
-            allClassDetails,
-            userCostsToSelectedClassIds
-        );
-
-        if ('error' in classesWithUserCostsApplied) {
-            response.status(400).send(classesWithUserCostsApplied);
-            return;
-        }
-
-        // For existing classes where we're only adding options, set cost to 0
-        // so we don't charge for the class itself again
-        const pricingClasses = classesWithUserCostsApplied.map((c) => {
-            const isExistingClass = !newClasses.some((nc) => nc.id === c.id);
-            if (isExistingClass) {
-                return { ...c, cost: 0 };
-            }
-            return c;
-        });
-
-        const classGroups = newClasses.length > 0
-            ? Object.values(
-                  await _getClassGroupsFromClasses(newClasses)
-              ).flatMap((g) => g)
-            : [];
-
-        const discounts = (
-            await Promise.all(
-                discountCodes.map(
-                    async (code) => await DiscountRepository.get(code)
-                )
-            )
-        ).filter((d): d is Discount<unknown> => !!d);
-
-        // All additional option IDs for pricing (only the new ones)
-        const allNewOptionIds = Object.values(
-            newAdditionalOptionIdsByClassId
-        ).flat();
-
-        const { finalTotal, discountAmounts } =
-            EnrollmentUtility.getEnrollmentCost(
-                discounts,
-                pricingClasses,
-                classGroups,
-                allNewOptionIds
-            );
-
         // Build the addendum enrollment record
-        // Include new classes AND existing classes that have new options
         const addendumClasses = classesToPrice.map((c) => ({
             id: c.id,
             semesterId: c.semesterId,
@@ -221,9 +216,7 @@ export const enrollAddendum = Functions.endpoint
             studentName: `${student.firstName} ${student.lastName}`,
             contactEmail: student.contactEmail,
             finalCost: finalTotal,
-            discountIds: discounts
-                .map((d) => d.id)
-                .filter((d): d is string => !!d),
+            discountIds: discountCodes,
             discounts: discountAmounts.map((da) => ({
                 description: da.code,
                 amount: da.amount,
@@ -305,20 +298,18 @@ export const enrollAddendum = Functions.endpoint
                     )
                     .filter(([, optionIds]) => optionIds.length > 0)
                     .map(async ([classId, optionIds]) => {
-                        // Find the semester for this class from original enrollment
                         if (!('classes' in originalEnrollment)) {
                             throw new Error('Legacy format not supported');
                         }
-                        const originalClass = originalEnrollment.classes.find(
-                            (c) => c.id === classId
-                        );
+                        const originalClass =
+                            originalEnrollment.classes.find(
+                                (c) => c.id === classId
+                            );
                         if (!originalClass) {
                             throw new Error(
                                 `Class ${classId} not found in original enrollment`
                             );
                         }
-                        // addStudentToClass handles deduplication of student ref
-                        // and adds to option student arrays
                         await Semester.of(
                             originalClass.semesterId
                         ).classes.addStudentToClass(
@@ -336,7 +327,8 @@ export const enrollAddendum = Functions.endpoint
             ];
             const failedClasses = allResults
                 .filter(
-                    (r): r is PromiseRejectedResult => r.status === 'rejected'
+                    (r): r is PromiseRejectedResult =>
+                        r.status === 'rejected'
                 )
                 .map((r) => r.reason?.message ?? 'Unknown error');
 

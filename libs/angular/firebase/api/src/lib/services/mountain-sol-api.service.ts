@@ -38,6 +38,14 @@ import type {
     GetEnrollmentMessagesAdminResponse,
     UpdateEnrollmentMessagesRequest,
     UpdateEnrollmentMessagesResponse,
+    GetClassGroupsForAdminRequest,
+    GetClassGroupsForAdminResponse,
+    CreateClassGroupRequest,
+    CreateClassGroupResponse,
+    UpdateClassGroupRequest,
+    UpdateClassGroupResponse,
+    DeleteClassGroupRequest,
+    DeleteClassGroupResponse,
 } from '@sol/ts/firebase/api-types';
 
 // Re-export types for consumers
@@ -78,6 +86,14 @@ export type {
     GetEnrollmentMessagesAdminResponse,
     UpdateEnrollmentMessagesRequest,
     UpdateEnrollmentMessagesResponse,
+    GetClassGroupsForAdminRequest,
+    GetClassGroupsForAdminResponse,
+    CreateClassGroupRequest,
+    CreateClassGroupResponse,
+    UpdateClassGroupRequest,
+    UpdateClassGroupResponse,
+    DeleteClassGroupRequest,
+    DeleteClassGroupResponse,
 };
 
 /**
@@ -238,4 +254,28 @@ export class MountainSolApiService {
         UpdateEnrollmentMessagesRequest,
         UpdateEnrollmentMessagesResponse
     >(this.#functions, 'updateEnrollmentMessages');
+
+    // =========================================================================
+    // Class Group Management
+    // =========================================================================
+
+    readonly getClassGroupsForAdmin = declareFunction<
+        GetClassGroupsForAdminRequest,
+        GetClassGroupsForAdminResponse
+    >(this.#functions, 'getClassGroupsForAdmin');
+
+    readonly createClassGroup = declareFunction<
+        CreateClassGroupRequest,
+        CreateClassGroupResponse
+    >(this.#functions, 'createClassGroup');
+
+    readonly updateClassGroup = declareFunction<
+        UpdateClassGroupRequest,
+        UpdateClassGroupResponse
+    >(this.#functions, 'updateClassGroup');
+
+    readonly deleteClassGroup = declareFunction<
+        DeleteClassGroupRequest,
+        DeleteClassGroupResponse
+    >(this.#functions, 'deleteClassGroup');
 }

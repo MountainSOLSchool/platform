@@ -9,6 +9,7 @@ import admin from 'firebase-admin';
 
 export class Braintree {
     private readonly venmoProfileId: string;
+    private readonly isEmulator: boolean;
 
     constructor(
         private readonly secrets: Record<
@@ -20,6 +21,12 @@ export class Braintree {
             string
         >
     ) {
+        this.isEmulator = process.env['FUNCTIONS_EMULATOR'] === 'true';
+        if (this.isEmulator) {
+            this.gateway = undefined as unknown as BraintreeGateway;
+            this.venmoProfileId = '';
+            return;
+        }
         const isProd = this.strings.BRAINTREE_ENV === 'PROD';
         const envSuffix = isProd ? '_PROD' : '';
         this.gateway = new BraintreeGateway({
@@ -46,7 +53,20 @@ export class Braintree {
 
     private gateway: BraintreeGateway;
 
+    private static readonly EMULATOR_MOCK_TRANSACTION = {
+        success: true,
+        transaction: { id: 'emulator-mock-txn' },
+        errors: undefined,
+    } as unknown as {
+        success: boolean;
+        transaction: import('braintree').Transaction;
+        errors: import('braintree').ValidationErrorsCollection | undefined;
+    };
+
     public async getClientToken(user: admin.auth.UserRecord) {
+        if (this.isEmulator) {
+            return 'emulator-mock-client-token';
+        }
         let customer: Customer | undefined;
         try {
             customer = await this.gateway.customer.find(user.uid);
@@ -67,6 +87,9 @@ export class Braintree {
     }
 
     public async transact(transaction: PreparedTransaction) {
+        if (this.isEmulator) {
+            return Braintree.EMULATOR_MOCK_TRANSACTION;
+        }
         return await this.gateway.transaction.sale({
             amount: transaction.amount.toFixed(2),
             paymentMethodNonce: transaction.nonce,
@@ -83,6 +106,9 @@ export class Braintree {
             customFields?: Record<string, string>;
         }
     ) {
+        if (this.isEmulator) {
+            return Braintree.EMULATOR_MOCK_TRANSACTION;
+        }
         const transactionRequest: TransactionRequest = {
             amount: transaction.amount.toFixed(2),
             paymentMethodNonce: transaction.nonce,
@@ -100,6 +126,9 @@ export class Braintree {
     }
 
     public async getAnonymousClientToken() {
+        if (this.isEmulator) {
+            return 'emulator-mock-anonymous-client-token';
+        }
         const response = await this.gateway.clientToken.generate({});
         return response.clientToken;
     }
