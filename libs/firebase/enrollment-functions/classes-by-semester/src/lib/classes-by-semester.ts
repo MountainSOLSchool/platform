@@ -48,7 +48,7 @@ function extractIdFromReference(
     ref: admin.firestore.DocumentReference | string
 ): string {
     if (typeof ref === 'string') return ref;
-    return ref.path[ref.path.length - 1];
+    return ref.id;
 }
 
 async function fetchInstructorData(

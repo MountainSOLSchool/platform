@@ -137,20 +137,46 @@ export const updateClass = Functions.endpoint
             updateData['age_group'] = admin.firestore.FieldValue.delete();
         }
 
-        if (data.additionalOptions && data.additionalOptions.length > 0) {
-            updateData['additional_options'] = data.additionalOptions.map(
-                (opt) => ({
-                    id: opt.id,
-                    description: opt.description,
-                    cost: opt.cost,
-                })
-            );
-        } else {
-            updateData['additional_options'] =
-                admin.firestore.FieldValue.delete();
-        }
+        // Remove the inline field if it exists (options live in subcollection)
+        updateData['additional_options'] =
+            admin.firestore.FieldValue.delete();
 
         await classRef.update(updateData);
+
+        // Sync additional options subcollection
+        const optionsCollection = classRef.collection('additional_options');
+        const existingOptionDocs = await optionsCollection.get();
+        const existingOptionsById = new Map(
+            existingOptionDocs.docs.map((doc) => [doc.id, doc])
+        );
+
+        const incomingOptionIds = new Set(
+            (data.additionalOptions ?? []).map((opt) => opt.id)
+        );
+
+        // Delete removed options
+        for (const [id, doc] of existingOptionsById) {
+            if (!incomingOptionIds.has(id)) {
+                await doc.ref.delete();
+            }
+        }
+
+        // Create or update options (preserving students)
+        for (const opt of data.additionalOptions ?? []) {
+            const existingDoc = existingOptionsById.get(opt.id);
+            if (existingDoc) {
+                await existingDoc.ref.update({
+                    description: opt.description,
+                    cost: opt.cost,
+                });
+            } else {
+                await optionsCollection.doc(opt.id).set({
+                    description: opt.description,
+                    cost: opt.cost,
+                    students: [],
+                });
+            }
+        }
 
         const result: UpdateClassResponse = {
             success: true,

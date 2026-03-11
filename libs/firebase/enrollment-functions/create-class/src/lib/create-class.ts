@@ -107,17 +107,18 @@ export const createClass = Functions.endpoint
             classDoc['age_group'] = data.ageGroup;
         }
 
+        const docRef = await classesCollection.add(classDoc);
+
         if (data.additionalOptions && data.additionalOptions.length > 0) {
-            classDoc['additional_options'] = data.additionalOptions.map(
-                (opt) => ({
-                    id: opt.id,
+            const optionsCollection = docRef.collection('additional_options');
+            for (const opt of data.additionalOptions) {
+                await optionsCollection.doc(opt.id).set({
                     description: opt.description,
                     cost: opt.cost,
-                })
-            );
+                    students: [],
+                });
+            }
         }
-
-        const docRef = await classesCollection.add(classDoc);
 
         const result: CreateClassResponse = {
             success: true,
