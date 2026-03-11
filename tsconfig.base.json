@@ -189,6 +189,9 @@
             "@sol/firebase/enrollment-functions/enroll": [
                 "libs/firebase/enrollment-functions/enroll/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/enroll-addendum": [
+                "libs/firebase/enrollment-functions/enroll-addendum/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/enrollments": [
                 "libs/firebase/enrollment-functions/enrollments/src/index.ts"
             ],
@@ -200,6 +203,9 @@
             ],
             "@sol/firebase/enrollment-functions/get-completed-units": [
                 "libs/firebase/enrollment-functions/get-completed-units/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/get-enrollment-for-addendum": [
+                "libs/firebase/enrollment-functions/get-enrollment-for-addendum/src/index.ts"
             ],
             "@sol/firebase/enrollment-functions/get-my-student": [
                 "libs/firebase/enrollment-functions/get-my-student/src/index.ts"

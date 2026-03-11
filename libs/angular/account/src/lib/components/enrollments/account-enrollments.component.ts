@@ -1,10 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { SemesterEnrollment } from '@sol/classes/domain';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { AccountEnrollmentsApiService } from '../../services/account-enrollments-api.service';
 import { EnrollmentComponent } from './enrollment.component';
 import { EnrollmentSkeletonComponent } from './enrollment-skeleton.component';
+import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
+import {
+    RequestedOperatorsUtility,
+} from '@sol/angular/request';
+import { map } from 'rxjs';
 
 @Component({
     selector: 'sol-account-enrollments',
@@ -29,6 +34,7 @@ import { EnrollmentSkeletonComponent } from './enrollment-skeleton.component';
                         <div style="margin-top: 2rem">
                             <sol-enrollment-view
                                 [enrollment]="enrollment"
+                                [enrollableSemesterIds]="enrollableSemesterIds() ?? []"
                             ></sol-enrollment-view>
                         </div>
                     }
@@ -45,10 +51,18 @@ export class AccountEnrollmentsComponent {
     readonly #accountEnrollmentsApiService = inject(
         AccountEnrollmentsApiService
     );
+    readonly #semesterListService = inject(ClassesSemesterListService);
 
     readonly enrollments = rxResource({
         stream: () => this.#accountEnrollmentsApiService.getAll(),
     });
+
+    readonly enrollableSemesterIds = toSignal(
+        this.#semesterListService.getEnrollableSemesters().pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+            map((semesters) => semesters.map((s) => s.id))
+        )
+    );
 
     public sortEnrollments(
         enrollments: Array<SemesterEnrollment>

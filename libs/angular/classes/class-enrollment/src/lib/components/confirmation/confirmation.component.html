@@ -139,7 +139,7 @@
         </div>
 
         <div class="section">
-            <p-fieldset legend="Total">
+            <p-fieldset [legend]="isAddendumMode() ? 'Additional Charges' : 'Total'">
                 <div>
                     <p>
                         Subtotal: {{ vm.basketCosts.originalTotal | currency }}
@@ -154,7 +154,7 @@
                     </p>
                     <p>
                         <b>
-                            Final Total:
+                            {{ isAddendumMode() ? 'Amount Due' : 'Final Total' }}:
                             {{ vm.basketCosts.finalTotal | currency }}
                         </b>
                     </p>

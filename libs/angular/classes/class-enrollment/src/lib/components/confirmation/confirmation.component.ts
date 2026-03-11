@@ -50,6 +50,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class ConfirmationComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
     private readonly classList = inject(ClassListService);
+    readonly isAddendumMode = this.workflow.isAddendumMode;
 
     readonly userEmail$ = inject(UserService)
         .getUser()

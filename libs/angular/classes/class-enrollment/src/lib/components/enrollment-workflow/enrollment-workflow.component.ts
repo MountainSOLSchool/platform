@@ -4,9 +4,10 @@ import {
     Component,
     computed,
     inject,
+    OnInit,
     viewChild,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { EnrollmentWorkflowStore } from './enrollment-workflow.store';
 import { StepsModule } from 'primeng/steps';
 import { ButtonModule } from 'primeng/button';
@@ -129,10 +130,11 @@ import { MarkdownModule } from 'ngx-markdown';
         `,
     ],
 })
-export class ClassEnrollmentComponent {
+export class ClassEnrollmentComponent implements OnInit {
     private readonly store = inject(EnrollmentWorkflowStore);
     private readonly remoteConfig = inject(FirebaseRemoteConfigService);
     private readonly api = inject(MountainSolApiService);
+    private readonly route = inject(ActivatedRoute);
 
     private readonly user$ = inject(UserService).getUser().pipe(shareReplay());
 
@@ -175,9 +177,20 @@ export class ClassEnrollmentComponent {
         },
     ];
 
+    readonly isAddendumMode = this.store.isAddendumMode;
+    readonly addendumLoading = this.store.addendumLoading;
+    readonly addendumError = this.store.addendumError;
+
     readonly didLoadFromDraft = computed(
         () => !!this.store.state().draftEnrollment
     );
+
+    ngOnInit() {
+        const enrollmentId = this.route.snapshot.paramMap.get('enrollmentId');
+        if (enrollmentId) {
+            this.store.initAddendum(enrollmentId);
+        }
+    }
 
     readonly isSubmitting$ = this.store.submitting$;
     readonly failureDialogState$ = this.store.failed$.pipe(

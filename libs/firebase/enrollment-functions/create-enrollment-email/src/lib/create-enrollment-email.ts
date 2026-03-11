@@ -5,6 +5,7 @@ import { DatabaseUtility } from '@sol/firebase/database';
 import { Semester } from '@sol/firebase/classes/semester';
 import { SemesterClass } from '@sol/classes/domain';
 import { _getClasses, _getSemestersAvailableToEnroll } from '@sol/firebase/enrollment-functions/shared';
+import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 
 export const createEnrollmentEmail = onDocumentCreated(
     'enrollment/{enrollmentId}',
@@ -34,6 +35,24 @@ export const createEnrollmentEmail = onDocumentCreated(
                         enrollmentRecord.classIds
                     );
 
+            // For addendum enrollments, determine which classes are existing
+            // (only new options added) vs truly new
+            let existingClassIds: Set<string> = new Set();
+            if (
+                enrollmentRecord.enrollmentType === 'addendum' &&
+                enrollmentRecord.originalEnrollmentId
+            ) {
+                const originalEnrollment =
+                    await ClassEnrollmentRepository.getById(
+                        enrollmentRecord.originalEnrollmentId
+                    );
+                if (originalEnrollment && 'classes' in originalEnrollment) {
+                    existingClassIds = new Set(
+                        originalEnrollment.classes.map((c) => c.id)
+                    );
+                }
+            }
+
             const classesWithOptions = classes.map((c) => {
                 const optionDetails =
                     c.additionalOptions?.filter((option) =>
@@ -41,9 +60,13 @@ export const createEnrollmentEmail = onDocumentCreated(
                             c.id
                         ]?.includes(option.id)
                     ) || [];
+                const isExistingClass = existingClassIds.has(c.id);
                 return {
                     ...c,
+                    // For addendum: zero out base cost for existing classes
+                    cost: isExistingClass ? 0 : c.cost,
                     additionalOptions: optionDetails,
+                    isExistingClass,
                 };
             });
 
@@ -63,11 +86,14 @@ export const createEnrollmentEmail = onDocumentCreated(
                 enrollmentRecord.finalCost - (classesCost - totalDiscounts);
             const user = await AuthUtility.getUser(enrollmentRecord.userId);
 
+            const isAddendum = enrollmentRecord.enrollmentType === 'addendum';
+
             const { html, text } = generateEmailContent(
                 enrollmentRecord,
                 classesWithOptions,
                 semesterNamesById,
-                differenceBetweenFinalCostAndOriginalCostWithDiscounts
+                differenceBetweenFinalCostAndOriginalCostWithDiscounts,
+                isAddendum
             );
 
             await DatabaseUtility.getDatabase()
@@ -75,7 +101,9 @@ export const createEnrollmentEmail = onDocumentCreated(
                 .add({
                     to: user.email ?? enrollmentRecord.contactEmail,
                     message: {
-                        subject: `Class confirmation for ${enrollmentRecord.studentName}`,
+                        subject: isAddendum
+                            ? `Enrollment addendum for ${enrollmentRecord.studentName}`
+                            : `Class confirmation for ${enrollmentRecord.studentName}`,
                         from: `Mountain SOL School <info@mountainsol.org>`,
                         replyTo: `Mountain SOL School <info@mountainsol.org>`,
                         messageId: `<${enrollmentRecord.transactionId}.${Date.now()}@mountainsol.org>`,
@@ -102,10 +130,12 @@ function generateEmailContent(
                 cost: number;
                 studentsIds?: Array<string>;
             }>;
+            isExistingClass?: boolean;
         }
     >,
     semesterNamesById: Record<string, string>,
-    differenceBetweenFinalCostAndOriginalCostWithDiscounts: number
+    differenceBetweenFinalCostAndOriginalCostWithDiscounts: number,
+    isAddendum = false
 ): EmailContent {
     const backpackItems = [
         'Water bottle',
@@ -118,6 +148,7 @@ function generateEmailContent(
         title: c.title,
         semester: semesterNamesById[c.semesterId] ?? '--',
         baseCost: c.cost,
+        isExistingClass: c.isExistingClass ?? false,
         options: c.additionalOptions.map((opt) => ({
             description: opt.description,
             cost: opt.cost,
@@ -132,7 +163,25 @@ function generateEmailContent(
         .indent { padding-left: 20px; color: #666; }
         .total-row td { font-weight: bold; border-top: 2px solid #333; }
         .discount-row { color: #2d862d; }
+        .existing-class { color: #666; font-style: italic; }
     `;
+
+    const introText = isAddendum
+        ? `<p>This is a confirmation of changes to ${enrollmentRecord.studentName}'s enrollment.</p>`
+        : `<p>Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!</p>`;
+
+    const backpackSection = isAddendum
+        ? ''
+        : `<p>Here's a quick reminder of what your student should bring in their backpack:
+                <ul>
+                ${backpackItems.map((item) => `<li>${item}</li>`).join('\n')}
+                </ul>
+                </p>
+
+                <p>Got questions? Just reply to this email or reach out to your instructor directly!</p>`;
+
+    const receiptLabel = isAddendum ? 'Additional charges' : 'receipt';
+    const totalLabel = isAddendum ? 'Amount Due' : 'Total';
 
     const html = `
         <!DOCTYPE html>
@@ -142,21 +191,15 @@ function generateEmailContent(
                 <style>${styles}</style>
             </head>
             <body>
-                <p>Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!</p>
+                ${introText}
 
-                <p>You can check out all your enrollments anytime by logging in here: 
+                <p>You can check out all your enrollments anytime by logging in here:
                     <a href="https://enrollment.mountainsol.org/account/enrollments">https://enrollment.mountainsol.org/account/enrollments</a>
                 </p>
 
-                <p>Here's a quick reminder of what your student should bring in their backpack:
-                <ul>
-                ${backpackItems.map((item) => `<li>${item}</li>`).join('\n')}
-                </ul>
-                </p>
+                ${backpackSection}
 
-                <p>Got questions? Just reply to this email or reach out to your instructor directly!</p>
-
-                <p>Here's your receipt:</p>
+                <p>Here's your ${receiptLabel}:</p>
 
                 <table>
                 <thead>
@@ -171,12 +214,20 @@ function generateEmailContent(
                     ${classesContent
             .map(
                 (c) => `
-                    <tr>
+                    ${c.isExistingClass
+                        ? `<tr class="existing-class">
+                        <td>${c.title}</td>
+                        <td>${c.semester}</td>
+                        <td>Already enrolled</td>
+                        <td>--</td>
+                    </tr>`
+                        : `<tr>
                         <td>${c.title}</td>
                         <td>${c.semester}</td>
                         <td>Base registration</td>
                         <td>$${c.baseCost}</td>
-                    </tr>
+                    </tr>`
+                    }
                     ${c.options
                         .map(
                             (opt) => `
@@ -184,7 +235,7 @@ function generateEmailContent(
                         <td></td>
                         <td></td>
                         <td class="indent">+ ${opt.description}</td>
-                        <td>$${opt.cost}</td>
+                        <td>+$${opt.cost}</td>
                     </tr>`
                         )
                         .join('')}`
@@ -210,7 +261,7 @@ function generateEmailContent(
             : ''
         }
                 <tr class="total-row">
-                    <td colspan="3">Total</td>
+                    <td colspan="3">${totalLabel}</td>
                     <td>$${enrollmentRecord.finalCost.toFixed(2)}</td>
                 </tr>
                 </tbody>
@@ -221,25 +272,33 @@ function generateEmailContent(
         </html>`;
 
     // Plain Text Version
-    const text = `Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!
+    const introTextPlain = isAddendum
+        ? `This is a confirmation of changes to ${enrollmentRecord.studentName}'s enrollment.`
+        : `Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!`;
 
-You can check out all your enrollments anytime by logging in here: 
-https://enrollment.mountainsol.org/account/enrollments
-
+    const backpackSectionPlain = isAddendum
+        ? ''
+        : `
 Here's a quick reminder of what your student should bring in their backpack:
 ${backpackItems.map((item) => `• ${item}`).join('\n')}
 
 Got questions? Just reply to this email or reach out to your instructor directly!
+`;
 
-Here's your receipt:
+    const text = `${introTextPlain}
+
+You can check out all your enrollments anytime by logging in here:
+https://enrollment.mountainsol.org/account/enrollments
+${backpackSectionPlain}
+Here's your ${receiptLabel}:
 
 ${classesContent
             .map(
                 (c) => `
 ${c.title}
 Semester: ${c.semester}
-Base registration: $${c.baseCost}${c.options
-                        .map((opt) => `\n+ ${opt.description}: $${opt.cost}`)
+${c.isExistingClass ? 'Already enrolled' : `Base registration: $${c.baseCost}`}${c.options
+                        .map((opt) => `\n+ ${opt.description}: +$${opt.cost}`)
                         .join('')}
 `
             )
@@ -255,7 +314,7 @@ ${differenceBetweenFinalCostAndOriginalCostWithDiscounts != 0
             : ''
         }
 
-Total: $${enrollmentRecord.finalCost.toFixed(2)}
+${totalLabel}: $${enrollmentRecord.finalCost.toFixed(2)}
 
 Transaction ID: ${enrollmentRecord.transactionId || 'N/A'}`;
 

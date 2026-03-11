@@ -4,6 +4,12 @@ import { provideClassList } from '@sol/angular/classes/list';
 
 export const enrollmentRoutes: Route[] = [
     {
+        path: 'addendum/:enrollmentId',
+        component: ClassEnrollmentComponent,
+        providers: [provideClassList()],
+        children: [{ path: '', redirectTo: 'classes', pathMatch: 'full' }],
+    },
+    {
         path: '',
         component: ClassEnrollmentComponent,
         providers: [provideClassList()],

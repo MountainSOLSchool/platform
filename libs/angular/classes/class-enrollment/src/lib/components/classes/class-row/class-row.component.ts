@@ -47,6 +47,7 @@ interface ClassRow {
         userCost?: number;
         initialCost: number;
         additionalCost: number;
+        newOptionsCost?: number;
         additionalOptions?: Array<{
             description: string;
             cost: number;
@@ -255,6 +256,10 @@ interface ClassRow {
 })
 export class ClassRowComponent {
     readonly row = input.required<ClassRow>();
+    readonly lockedClassIds = input<Array<string>>([]);
+    readonly lockedAdditionalOptionIdsByClassId = input<
+        Record<string, Array<string>>
+    >({});
 
     @Output() classSelection = new EventEmitter<{
         classSelection: { id: string; semesterId: string };
@@ -267,23 +272,49 @@ export class ClassRowComponent {
         return Math.random();
     }
 
+    readonly isRowLocked = computed(() => {
+        const locked = this.lockedClassIds();
+        return this.row().classes.every((c) => locked.includes(c.id));
+    });
+
+    isClassLocked(classId: string): boolean {
+        return this.lockedClassIds().includes(classId);
+    }
+
+    getLockedOptionIds(classId: string): Array<string> {
+        return this.lockedAdditionalOptionIdsByClassId()[classId] ?? [];
+    }
+
+
     readonly beforeSelectOptionsByClass = computed(() => {
-        const classInfo = this.row().classes.map((c) => ({
-            classId: c.id,
-            className: c.title,
-            slidingScale: c.paymentRange
-                ? {
-                      paymentRange: c.paymentRange,
-                      initialCost: c.initialCost,
-                  }
-                : undefined,
-            additionalOptions: c.additionalOptions
-                ? {
-                      options: c.additionalOptions,
-                      selected: [],
-                  }
-                : undefined,
-        }));
+        const locked = this.lockedClassIds();
+        const lockedOptions = this.lockedAdditionalOptionIdsByClassId();
+        const classInfo = this.row().classes.map((c) => {
+            const isLocked = locked.includes(c.id);
+            const lockedOptIds = lockedOptions[c.id] ?? [];
+            const availableOptions = c.additionalOptions?.filter(
+                (o) => !lockedOptIds.includes(o.id)
+            );
+            return {
+                classId: c.id,
+                className: c.title,
+                slidingScale: isLocked
+                    ? undefined
+                    : c.paymentRange
+                      ? {
+                            paymentRange: c.paymentRange,
+                            initialCost: c.initialCost,
+                        }
+                      : undefined,
+                additionalOptions:
+                    availableOptions && availableOptions.length > 0
+                        ? {
+                              options: availableOptions,
+                              selected: [],
+                          }
+                        : undefined,
+            };
+        });
         return classInfo;
     });
 
@@ -299,6 +330,13 @@ export class ClassRowComponent {
 
     hasPausedClass(): boolean {
         return this.row().classes.some((c) => c.pausedForEnrollment);
+    }
+
+    getRowNewOptionsCost(): number {
+        return this.row().classes.reduce(
+            (agg, c) => agg + (c.newOptionsCost ?? 0),
+            0
+        );
     }
 
     rowSelectedChange(selected: boolean) {
