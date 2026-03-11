@@ -124,9 +124,15 @@ interface BasketResponse {
     discountAmounts: Array<{ code: string; amount: number }>;
 }
 
+const FAKE_PAYMENT_METHOD = {
+    nonce: 'fake-valid-nonce',
+    deviceData: '{}',
+};
+
 interface EnrollResponse {
     success: boolean;
     email: string;
+    finalCost: number;
 }
 
 async function seedGroupedClasses() {
@@ -393,6 +399,7 @@ describe('Class Group Cost Consistency', () => {
                     userCostsToSelectedClassIds: {},
                     additionalOptionIdsByClassId: {},
                     expectedTotal: previewedTotal,
+                    paymentMethod: FAKE_PAYMENT_METHOD,
                 },
                 idToken: enrollmentUser.idToken,
             });
@@ -400,6 +407,7 @@ describe('Class Group Cost Consistency', () => {
             // Should succeed — no price mismatch
             expect(enrollResult.status).toBe(200);
             expect(enrollResult.data!.success).toBe(true);
+            expect(enrollResult.data!.finalCost).toBe(previewedTotal);
         });
 
         it('should compute the same cost for standalone classes', async () => {
@@ -435,12 +443,14 @@ describe('Class Group Cost Consistency', () => {
                     userCostsToSelectedClassIds: {},
                     additionalOptionIdsByClassId: {},
                     expectedTotal: previewedTotal,
+                    paymentMethod: FAKE_PAYMENT_METHOD,
                 },
                 idToken: enrollmentUser.idToken,
             });
 
             expect(enrollResult.status).toBe(200);
             expect(enrollResult.data!.success).toBe(true);
+            expect(enrollResult.data!.finalCost).toBe(previewedTotal);
         });
 
         it('should compute the same cost for grouped + standalone combined', async () => {
@@ -490,12 +500,14 @@ describe('Class Group Cost Consistency', () => {
                     userCostsToSelectedClassIds: {},
                     additionalOptionIdsByClassId: {},
                     expectedTotal: previewedTotal,
+                    paymentMethod: FAKE_PAYMENT_METHOD,
                 },
                 idToken: enrollmentUser.idToken,
             });
 
             expect(enrollResult.status).toBe(200);
             expect(enrollResult.data!.success).toBe(true);
+            expect(enrollResult.data!.finalCost).toBe(170);
         });
 
         it('should compute the same cost for grouped classes with additional options', async () => {
@@ -541,12 +553,14 @@ describe('Class Group Cost Consistency', () => {
                         'afternoon-opts': ['snack-opt'],
                     },
                     expectedTotal: previewedTotal,
+                    paymentMethod: FAKE_PAYMENT_METHOD,
                 },
                 idToken: enrollmentUser.idToken,
             });
 
             expect(enrollResult.status).toBe(200);
             expect(enrollResult.data!.success).toBe(true);
+            expect(enrollResult.data!.finalCost).toBe(145);
         });
     });
 
@@ -566,6 +580,7 @@ describe('Class Group Cost Consistency', () => {
                     discountCodes: [],
                     userCostsToSelectedClassIds: {},
                     additionalOptionIdsByClassId: {},
+                    paymentMethod: FAKE_PAYMENT_METHOD,
                 },
                 idToken: enrollmentUser.idToken,
             });
@@ -720,12 +735,14 @@ describe('Class Group Cost Consistency', () => {
                     userCostsToSelectedClassIds: {},
                     additionalOptionIdsByClassId: {},
                     expectedTotal: 50,
+                    paymentMethod: FAKE_PAYMENT_METHOD,
                 },
                 idToken: enrollmentUser.idToken,
             });
 
             expect(result.status).toBe(200);
             expect(result.data!.success).toBe(true);
+            expect(result.data!.finalCost).toBe(50);
         });
 
         it('should accept enroll when expectedTotal is not provided (backwards compat)', async () => {
@@ -743,12 +760,14 @@ describe('Class Group Cost Consistency', () => {
                     userCostsToSelectedClassIds: {},
                     additionalOptionIdsByClassId: {},
                     // No expectedTotal — should still work
+                    paymentMethod: FAKE_PAYMENT_METHOD,
                 },
                 idToken: enrollmentUser.idToken,
             });
 
             expect(result.status).toBe(200);
             expect(result.data!.success).toBe(true);
+            expect(result.data!.finalCost).toBe(50);
         });
 
         it('should reject enroll and create no enrollment record when group expectedTotal is wrong', async () => {
@@ -873,12 +892,14 @@ describe('Class Group Cost Consistency', () => {
                     userCostsToSelectedClassIds: {},
                     additionalOptionIdsByClassId: {},
                     expectedTotal: 100,
+                    paymentMethod: FAKE_PAYMENT_METHOD,
                 },
                 idToken: enrollmentUser.idToken,
             });
 
             expect(enrollResult.status).toBe(200);
             expect(enrollResult.data!.success).toBe(true);
+            expect(enrollResult.data!.finalCost).toBe(100);
         });
 
         it('should apply percent discount to group cost', async () => {
@@ -929,12 +950,14 @@ describe('Class Group Cost Consistency', () => {
                     userCostsToSelectedClassIds: {},
                     additionalOptionIdsByClassId: {},
                     expectedTotal: 60,
+                    paymentMethod: FAKE_PAYMENT_METHOD,
                 },
                 idToken: enrollmentUser.idToken,
             });
 
             expect(enrollResult.status).toBe(200);
             expect(enrollResult.data!.success).toBe(true);
+            expect(enrollResult.data!.finalCost).toBe(60);
         });
 
         it('should not apply inactive discount', async () => {

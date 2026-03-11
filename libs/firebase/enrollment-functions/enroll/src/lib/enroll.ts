@@ -222,6 +222,7 @@ export const enroll = Functions.endpoint
             response.send({
                 success,
                 email: student.contactEmail,
+                finalCost: finalTotal,
                 ...(failedClasses.length > 0 ? { failedClasses } : {}),
             });
         } else {
