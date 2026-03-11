@@ -90,27 +90,27 @@
                     ></p-button>
                 }
             </div>
-            @if (hasSelectedSummerClass()) {
-                @if (selectedSummerClasses()) {
+            @if (multiClassDiscount(); as discount) {
+                @if (hasSelectedDiscountClass()) {
                     <p>
                         <span
                             [ngStyle]="{
                                 color:
-                                    selectedSummerClasses().length > 3
+                                    selectedDiscountClasses().length >= discount.minimum
                                         ? '#3c82f7'
                                         : 'black',
                             }"
                             ><b
-                                >({{ selectedSummerClasses().length }}/4
+                                >({{ selectedDiscountClasses().length }}/{{ discount.minimum }}
                                 selected
-                                @if (selectedSummerClasses().length > 3) {
+                                @if (selectedDiscountClasses().length >= discount.minimum) {
                                     🥳
                                 }
                                 )</b
                             ></span
                         >
-                        Use code <b>4SUMMER2025</b> at checkout when you select
-                        4 summer camps to get 10% off!
+                        Use code <b>{{ discount.code }}</b> at checkout when you select
+                        {{ discount.minimum }} {{ discount.classTypes.slice(0, -1).join(', ') }}{{ discount.classTypes.length > 1 ? ', or ' + discount.classTypes[discount.classTypes.length - 1] : discount.classTypes[0] }} classes to get {{ discount.percent }}% off!
                     </p>
                 }
             }

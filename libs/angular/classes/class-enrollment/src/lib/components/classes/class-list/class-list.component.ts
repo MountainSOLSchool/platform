@@ -50,6 +50,7 @@ import {
     requestStateDirectives,
 } from '@sol/angular/request';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { MountainSolApiService } from '@sol/angular/firebase/api';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { TabViewModule } from 'primeng/tabview';
 import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
@@ -106,6 +107,7 @@ export class ClassesComponent {
     }
     private readonly classListService = inject(ClassListService);
     private readonly semesterListService = inject(ClassesSemesterListService);
+    private readonly api = inject(MountainSolApiService);
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
 
@@ -371,17 +373,23 @@ export class ClassesComponent {
         return this.classes()?.filter((c) => selected.includes(c.id));
     });
 
-    selectedSummerClasses = computed(
-        () =>
-            this.selectedClasses()?.filter((c) =>
-                ['Summer Camp Full Day', 'Summer Camp Half Day'].includes(
-                    c.classType
-                )
-            ) ?? []
+    readonly multiClassDiscount = toSignal(
+        this.api.getActiveMultiClassDiscount().pipe(
+            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+            map((res) => res.discount)
+        )
     );
 
-    hasSelectedSummerClass = computed(
-        () => this.selectedSummerClasses().length > 0
+    selectedDiscountClasses = computed(() => {
+        const discount = this.multiClassDiscount();
+        if (!discount) return [];
+        return this.selectedClasses()?.filter((c) =>
+            discount.classTypes.includes(c.classType)
+        ) ?? [];
+    });
+
+    hasSelectedDiscountClass = computed(
+        () => this.selectedDiscountClasses().length > 0
     );
 
     selectionChanged({

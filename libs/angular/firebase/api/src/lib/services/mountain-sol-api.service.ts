@@ -27,6 +27,7 @@ import type {
     GetDiscountsResponse,
     GetDiscountRequest,
     GetDiscountResponse,
+    GetActiveMultiClassDiscountResponse,
     CreateDiscountRequest,
     CreateDiscountResponse,
     UpdateDiscountRequest,
@@ -66,6 +67,7 @@ export type {
     GetDiscountsResponse,
     GetDiscountRequest,
     GetDiscountResponse,
+    GetActiveMultiClassDiscountResponse,
     CreateDiscountRequest,
     CreateDiscountResponse,
     UpdateDiscountRequest,
@@ -212,6 +214,11 @@ export class MountainSolApiService {
         DeleteDiscountRequest,
         DeleteDiscountResponse
     >(this.#functions, 'deleteDiscount');
+
+    readonly getActiveMultiClassDiscount = declareFunction<
+        void,
+        GetActiveMultiClassDiscountResponse
+    >(this.#functions, 'getActiveMultiClassDiscount');
 
     // =========================================================================
     // Enrollment Messages
