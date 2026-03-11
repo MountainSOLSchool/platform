@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { ClassFormComponent } from './components/class-form/class-form.component';
 import { AdminClassListComponent } from './components/class-list/class-list.component';
 import { InfoPanelEditorComponent } from './components/info-panel-editor/info-panel-editor.component';
+import { ClassGroupListComponent } from './components/class-group-list/class-group-list.component';
 
 export const classManagementRoutes: Route[] = [
     {
@@ -23,5 +24,10 @@ export const classManagementRoutes: Route[] = [
         path: 'info-panel/:semesterId',
         pathMatch: 'full',
         component: InfoPanelEditorComponent,
+    },
+    {
+        path: 'groups',
+        pathMatch: 'full',
+        component: ClassGroupListComponent,
     },
 ];

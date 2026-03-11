@@ -381,6 +381,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                                         userCostsToSelectedClassIds:
                                             enrollment.userCostsToSelectedClassIds,
                                         newAdditionalOptionIdsByClassId,
+                                        expectedTotal: state.basketCosts.finalTotal,
                                     }
                                 )
                                 .pipe(
@@ -409,6 +410,10 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                                     ...[
                                         {},
                                         enrollment,
+                                        {
+                                            expectedTotal:
+                                                state.basketCosts.finalTotal,
+                                        },
                                         ...(doesStudentInfoRequireReview
                                             ? [
                                                   {

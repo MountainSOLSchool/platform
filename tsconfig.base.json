@@ -159,6 +159,18 @@
             "@sol/firebase/enrollment-functions/class-groups": [
                 "libs/firebase/enrollment-functions/class-groups/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/get-class-groups-for-admin": [
+                "libs/firebase/enrollment-functions/get-class-groups-for-admin/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/create-class-group": [
+                "libs/firebase/enrollment-functions/create-class-group/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/update-class-group": [
+                "libs/firebase/enrollment-functions/update-class-group/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/delete-class-group": [
+                "libs/firebase/enrollment-functions/delete-class-group/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/classes": [
                 "libs/firebase/enrollment-functions/classes/src/index.ts"
             ],

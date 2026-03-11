@@ -6,3 +6,5 @@ export { _getClassGroupsFromClasses } from './lib/_getClassGroupsFromClasses';
 export { _getSemestersAvailableToEnroll } from './lib/_getSemestersAvailableToEnroll';
 export { _doesStudentInfoRequireReview } from './lib/_doesStudentInfoRequireReview';
 export { _mapStudentFormToStudentDbEntry } from './lib/_mapStudentFormToStudentDbEntry';
+export { _calculateEnrollmentCost } from './lib/_calculateEnrollmentCost';
+export type { CalculateEnrollmentCostInput, CalculateEnrollmentCostResult } from './lib/_calculateEnrollmentCost';

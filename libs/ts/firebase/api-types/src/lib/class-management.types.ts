@@ -87,3 +87,53 @@ export interface UploadClassImageResponse {
     success: boolean;
     url: string;
 }
+
+// Class Group Management
+
+export interface AdminClassGroup {
+    id: string;
+    name: string;
+    cost: number;
+    classes: Array<{ id: string; name: string; cost: number }>;
+}
+
+export interface GetClassGroupsForAdminRequest {
+    semesterId: string;
+}
+
+export interface GetClassGroupsForAdminResponse {
+    groups: AdminClassGroup[];
+}
+
+export interface CreateClassGroupRequest {
+    semesterId: string;
+    name: string;
+    cost: number;
+    classIds: string[];
+}
+
+export interface CreateClassGroupResponse {
+    success: boolean;
+    groupId: string;
+}
+
+export interface UpdateClassGroupRequest {
+    semesterId: string;
+    groupId: string;
+    name: string;
+    cost: number;
+    classIds: string[];
+}
+
+export interface UpdateClassGroupResponse {
+    success: boolean;
+}
+
+export interface DeleteClassGroupRequest {
+    semesterId: string;
+    groupId: string;
+}
+
+export interface DeleteClassGroupResponse {
+    success: boolean;
+}

@@ -62,5 +62,9 @@ export { createDiscount } from '@sol/firebase/enrollment-functions/create-discou
 export { updateDiscount } from '@sol/firebase/enrollment-functions/update-discount';
 export { deleteDiscount } from '@sol/firebase/enrollment-functions/delete-discount';
 export { getEnrollmentMessages } from '@sol/firebase/enrollment-functions/get-enrollment-messages';
+export { getClassGroupsForAdmin } from '@sol/firebase/enrollment-functions/get-class-groups-for-admin';
+export { createClassGroup } from '@sol/firebase/enrollment-functions/create-class-group';
+export { updateClassGroup } from '@sol/firebase/enrollment-functions/update-class-group';
+export { deleteClassGroup } from '@sol/firebase/enrollment-functions/delete-class-group';
 export { getEnrollmentMessagesAdmin } from '@sol/firebase/enrollment-functions/get-enrollment-messages-admin';
 export { updateEnrollmentMessages } from '@sol/firebase/enrollment-functions/update-enrollment-messages';

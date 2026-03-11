@@ -1,20 +1,19 @@
 import { AuthUtility, Functions } from '@sol/firebase/functions';
 import { Braintree } from '@sol/payments/braintree';
-import {
-    StudentDbEntry,
-    StudentForm,
-} from '@sol/student/domain';
-import { DiscountRepository } from '@sol/classes/repository';
-import { Discount, EnrollmentUtility } from '@sol/classes/domain';
+import { StudentForm } from '@sol/student/domain';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 import { Transaction, ValidationErrorsCollection } from 'braintree';
 import { StudentRepository } from '@sol/student/repository';
 import { Semester } from '@sol/firebase/classes/semester';
-import { _assertUserCanManageStudent, _getClasses, _getClassGroupsFromClasses, _doesStudentInfoRequireReview, _mapStudentFormToStudentDbEntry } from '@sol/firebase/enrollment-functions/shared';
+import {
+    _assertUserCanManageStudent,
+    _getClasses,
+    _calculateEnrollmentCost,
+    _doesStudentInfoRequireReview,
+    _mapStudentFormToStudentDbEntry,
+} from '@sol/firebase/enrollment-functions/shared';
 import { Request } from 'firebase-functions/v2/https';
 import * as express from 'express';
-
-
 
 export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
@@ -31,6 +30,7 @@ export const enroll = Functions.endpoint
         userCostsToSelectedClassIds: Record<string, number | undefined>;
         additionalOptionIdsByClassId: { [classId: string]: Array<string> };
         hasConfirmedAccuracy?: boolean;
+        expectedTotal?: number;
     }>(async (request, response, secrets, strings) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
 
@@ -47,22 +47,35 @@ export const enroll = Functions.endpoint
             releaseSignatures,
             userCostsToSelectedClassIds,
             additionalOptionIdsByClassId,
-            hasConfirmedAccuracy
+            hasConfirmedAccuracy,
+            expectedTotal,
         } = request.body.data;
 
         if (student?.id) {
             await _assertUserCanManageStudent(user, student.id, response);
         }
 
-        const updatedStudentDbEntry = Object.assign(...[
-            {},
-            _mapStudentFormToStudentDbEntry(student),
-            ...(hasConfirmedAccuracy
-                ? [{ last_reviewed_student_info_timestamp: new Date().toISOString(), }]
-                : []
-            )
-        ]);
-        const okay = hasConfirmedAccuracy || !('id' in updatedStudentDbEntry) || await _assertStudentInfoUpToDate(updatedStudentDbEntry.id, { request, response });
+        const updatedStudentDbEntry = Object.assign(
+            ...[
+                {},
+                _mapStudentFormToStudentDbEntry(student),
+                ...(hasConfirmedAccuracy
+                    ? [
+                          {
+                              last_reviewed_student_info_timestamp:
+                                  new Date().toISOString(),
+                          },
+                      ]
+                    : []),
+            ]
+        );
+        const okay =
+            hasConfirmedAccuracy ||
+            !('id' in updatedStudentDbEntry) ||
+            (await _assertStudentInfoUpToDate(updatedStudentDbEntry.id, {
+                request,
+                response,
+            }));
 
         if (!okay) {
             response.status(400).send({
@@ -71,11 +84,12 @@ export const enroll = Functions.endpoint
             return;
         }
 
-        const classes = Object.values(
+        // Check class availability
+        const allClasses = Object.values(
             await _getClasses(selectedClasses)
         ).flatMap((c) => c);
 
-        const fullClasses = classes.filter((c) => c.pausedForEnrollment);
+        const fullClasses = allClasses.filter((c) => c.pausedForEnrollment);
         if (fullClasses.length > 0) {
             response.status(400).send({
                 error: 'One or more selected classes are full',
@@ -84,53 +98,49 @@ export const enroll = Functions.endpoint
             return;
         }
 
-        const classesWithUserCostsApplied = EnrollmentUtility.applyUserCosts(
-            classes,
-            userCostsToSelectedClassIds
-        );
+        // Use shared cost calculation (same logic as calculateBasket)
+        const classesWithOptions = selectedClasses.map((c) => ({
+            ...c,
+            additionalOptionIds: additionalOptionIdsByClassId[c.id] ?? [],
+        }));
 
-        if ('error' in classesWithUserCostsApplied) {
-            response.status(400).send(classesWithUserCostsApplied);
+        const costResult = await _calculateEnrollmentCost({
+            selectedClasses: classesWithOptions,
+            discountCodes,
+            userCostsToClassIds: userCostsToSelectedClassIds,
+        });
+
+        if ('error' in costResult) {
+            response.status(400).send(costResult);
             return;
         }
 
-        const classGroups = Object.values(
-            await _getClassGroupsFromClasses(selectedClasses)
-        ).flatMap((g) => g);
+        const { finalTotal, discountAmounts } = costResult;
 
-        const discounts = (
-            await Promise.all(
-                discountCodes.map(
-                    async (code) => await DiscountRepository.get(code)
-                )
-            )
-        ).filter((d): d is Discount<unknown> => !!d);
-
-        const additionalOptionIds = Object.values(
-            additionalOptionIdsByClassId
-        ).flat();
-
-        const { finalTotal, discountAmounts } =
-            EnrollmentUtility.getEnrollmentCost(
-                discounts,
-                classesWithUserCostsApplied,
-                classGroups,
-                additionalOptionIds
-            );
+        // Charge-time validation: reject if computed cost doesn't match preview
+        if (
+            expectedTotal !== undefined &&
+            Math.abs(finalTotal - expectedTotal) > 0.01
+        ) {
+            response.status(409).send({
+                error: 'Price changed since preview. Please review the updated cost.',
+                expectedTotal,
+                computedTotal: finalTotal,
+            });
+            return;
+        }
 
         const enrollmentRecord = {
             userId: user.uid,
             studentName: `${student.firstName} ${student.lastName}`,
             contactEmail: student.contactEmail,
             finalCost: finalTotal,
-            discountIds: discounts
-                .map((d) => d.id)
-                .filter((d): d is string => !!d),
+            discountIds: discountCodes,
             discounts: discountAmounts.map((da) => ({
                 description: da.code,
                 amount: da.amount,
             })),
-            classes: classes.map((c) => ({
+            classes: selectedClasses.map((c) => ({
                 id: c.id,
                 semesterId: c.semesterId,
             })),
@@ -153,17 +163,17 @@ export const enroll = Functions.endpoint
                 transaction: theTransaction,
                 errors: transactionErrors,
             } = paymentMethod
-                    ? await braintree.transact({
-                        amount: finalTotal,
-                        nonce: paymentMethod.nonce,
-                        customer: { email: enrollmentRecord.contactEmail },
-                        deviceData: paymentMethod.deviceData,
-                    })
-                    : {
-                        success: false,
-                        transaction: undefined,
-                        errors: undefined,
-                    };
+                ? await braintree.transact({
+                      amount: finalTotal,
+                      nonce: paymentMethod.nonce,
+                      customer: { email: enrollmentRecord.contactEmail },
+                      deviceData: paymentMethod.deviceData,
+                  })
+                : {
+                      success: false,
+                      transaction: undefined,
+                      errors: undefined,
+                  };
             success = transactionSuccess;
             transaction = theTransaction;
             errors = transactionErrors;
@@ -186,7 +196,7 @@ export const enroll = Functions.endpoint
             });
 
             const enrollmentResults = await Promise.allSettled(
-                classes.map(async (c) => {
+                allClasses.map(async (c) => {
                     await Semester.of(c.semesterId).classes.addStudentToClass(
                         studentRef.id,
                         c.id,
@@ -197,11 +207,16 @@ export const enroll = Functions.endpoint
             );
 
             const failedClasses = enrollmentResults
-                .filter((r): r is PromiseRejectedResult => r.status === 'rejected')
+                .filter(
+                    (r): r is PromiseRejectedResult => r.status === 'rejected'
+                )
                 .map((r) => r.reason?.message ?? 'Unknown error');
 
             if (failedClasses.length > 0) {
-                console.error('Some class enrollments failed after payment:', failedClasses);
+                console.error(
+                    'Some class enrollments failed after payment:',
+                    failedClasses
+                );
             }
 
             response.send({
@@ -213,7 +228,8 @@ export const enroll = Functions.endpoint
             await ClassEnrollmentRepository.create({
                 ...enrollmentRecord,
                 relatedId: studentEnrollmentId,
-                failures: errors?.deepErrors().map((e) => e.message) ?? [],
+                failures:
+                    errors?.deepErrors().map((e) => e.message) ?? [],
                 releaseSignatures,
                 status: 'failed',
             });
@@ -221,15 +237,16 @@ export const enroll = Functions.endpoint
         }
     });
 
-
 async function _assertStudentInfoUpToDate(
-
     studentId: string,
     userContext: {
         request: Request;
         response: express.Response;
     }
 ) {
-    const isOutOfDate = await _doesStudentInfoRequireReview(studentId, userContext);
+    const isOutOfDate = await _doesStudentInfoRequireReview(
+        studentId,
+        userContext
+    );
     return !isOutOfDate;
 }
