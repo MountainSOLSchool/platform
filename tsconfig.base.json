@@ -141,6 +141,9 @@
             "@sol/firebase/enrollment-functions/update-medic-class": [
                 "libs/firebase/enrollment-functions/update-medic-class/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/get-active-multi-class-discount": [
+                "libs/firebase/enrollment-functions/get-active-multi-class-discount/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/get-medic-classes": [
                 "libs/firebase/enrollment-functions/get-medic-classes/src/index.ts"
             ],

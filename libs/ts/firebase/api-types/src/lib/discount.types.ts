@@ -74,3 +74,14 @@ export interface GetDiscountRequest {
 export interface GetDiscountResponse {
     discount: DiscountAdmin | null;
 }
+
+export interface ActiveMultiClassDiscount {
+    classTypes: string[];
+    minimum: number;
+    percent: number;
+    code: string;
+}
+
+export interface GetActiveMultiClassDiscountResponse {
+    discount: ActiveMultiClassDiscount | null;
+}

@@ -45,6 +45,8 @@ export type {
     DeleteDiscountResponse,
     GetDiscountRequest,
     GetDiscountResponse,
+    ActiveMultiClassDiscount,
+    GetActiveMultiClassDiscountResponse,
 } from './lib/discount.types';
 
 // Enrollment Messages

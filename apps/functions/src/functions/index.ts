@@ -54,6 +54,7 @@ export { getMedicClassesAdmin } from '@sol/firebase/enrollment-functions/get-med
 export { enrollMedic } from '@sol/firebase/enrollment-functions/enroll-medic';
 export { getMedicEnrollments } from '@sol/firebase/enrollment-functions/get-medic-enrollments';
 export { getDiscounts } from '@sol/firebase/enrollment-functions/get-discounts';
+export { getActiveMultiClassDiscount } from '@sol/firebase/enrollment-functions/get-active-multi-class-discount';
 export { getDiscount } from '@sol/firebase/enrollment-functions/get-discount';
 export { createDiscount } from '@sol/firebase/enrollment-functions/create-discount';
 export { updateDiscount } from '@sol/firebase/enrollment-functions/update-discount';
