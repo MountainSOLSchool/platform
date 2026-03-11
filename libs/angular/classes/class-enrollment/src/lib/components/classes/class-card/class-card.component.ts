@@ -366,6 +366,9 @@ export class ClassCardComponent {
     @Input() selected = false;
     @Input() showOnlyAddedCost = false;
     @Input() width: 'wider' | 'narrower' = 'narrower';
+    @Input() locked = false;
+    @Input() lockedOptionIds: Array<string> = [];
+    @Input() newOptionsCost = 0;
     readonly classInfo = input.required<ClassCardInfo>();
 
     @Output() selectedChange = new EventEmitter<{
@@ -380,25 +383,41 @@ export class ClassCardComponent {
 
     readonly beforeSelectOptionsByClass = computed(() => {
         const classInfo = this.classInfo();
+        const lockedIds = this.lockedOptionIds;
+        const availableOptions = classInfo.additionalOptions?.filter(
+            (o) => !lockedIds.includes(o.id)
+        );
         return [
             {
                 classId: classInfo.id,
                 className: classInfo.title,
-                slidingScale: classInfo.paymentRange
-                    ? {
-                          paymentRange: classInfo.paymentRange,
-                          initialCost: classInfo.initialCost,
-                      }
-                    : undefined,
-                additionalOptions: classInfo.additionalOptions
-                    ? {
-                          options: classInfo.additionalOptions,
-                          selected: this.selectedAdditionalOptionIds(),
-                      }
-                    : undefined,
+                slidingScale: this.locked
+                    ? undefined
+                    : classInfo.paymentRange
+                      ? {
+                            paymentRange: classInfo.paymentRange,
+                            initialCost: classInfo.initialCost,
+                        }
+                      : undefined,
+                additionalOptions:
+                    availableOptions && availableOptions.length > 0
+                        ? {
+                              options: availableOptions,
+                              selected: this.selectedAdditionalOptionIds(),
+                          }
+                        : undefined,
             },
         ];
     });
+
+    readonly hasUnlockedOptions = computed(() => {
+        const classInfo = this.classInfo();
+        const lockedIds = this.lockedOptionIds;
+        return (classInfo.additionalOptions ?? []).some(
+            (o) => !lockedIds.includes(o.id)
+        );
+    });
+
 
     readonly fallbackImageUrl =
         'https://firebasestorage.googleapis.com/v0/b/mountain-sol-platform.appspot.com/o/default_class.png?alt=media&token=258cef64-a8b9-416b-855c-51bb57a86b37';

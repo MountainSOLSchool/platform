@@ -111,6 +111,10 @@ export class ClassesComponent {
     private readonly datePipe = inject(DatePipe);
     readonly workflow = inject(EnrollmentWorkflowStore);
 
+    readonly lockedClassIds = this.workflow.lockedClassIds;
+    readonly lockedAdditionalOptionIdsByClassId =
+        this.workflow.lockedAdditionalOptionIdsByClassId;
+
     private search = signal('');
 
     private gradeFilter = signal<[] | [number, number]>([]);
@@ -335,20 +339,22 @@ export class ClassesComponent {
                               selected: row.classes.every((c) =>
                                   this.selectedClassIds().includes(c.id)
                               ),
-                              classes: row.classes.map((c) => ({
-                                  ...c,
-                                  selected: this.selectedClassIds().includes(
-                                      c.id
-                                  ),
-                                  userCost:
-                                      this.userCostsToSelectedClassIds()[c.id],
-                                  initialCost: c.cost,
-                                  additionalCost: (() => {
-                                      const additional =
-                                          this.selectedAdditionalOptionIdsByClassId()[
-                                              c.id
-                                          ] ?? [];
-                                      return (
+                              classes: row.classes.map((c) => {
+                                  const additional =
+                                      this.selectedAdditionalOptionIdsByClassId()[
+                                          c.id
+                                      ] ?? [];
+                                  const lockedOptIds =
+                                      this.lockedAdditionalOptionIdsByClassId()[c.id] ?? [];
+                                  return {
+                                      ...c,
+                                      selected: this.selectedClassIds().includes(
+                                          c.id
+                                      ),
+                                      userCost:
+                                          this.userCostsToSelectedClassIds()[c.id],
+                                      initialCost: c.cost,
+                                      additionalCost:
                                           (c.additionalOptions ?? [])
                                               .filter((option) =>
                                                   additional.includes(option.id)
@@ -356,10 +362,20 @@ export class ClassesComponent {
                                               .reduce(
                                                   (agg, o) => agg + o.cost,
                                                   0
-                                              ) ?? 0
-                                      );
-                                  })(),
-                              })),
+                                              ) ?? 0,
+                                      newOptionsCost:
+                                          (c.additionalOptions ?? [])
+                                              .filter(
+                                                  (option) =>
+                                                      additional.includes(option.id) &&
+                                                      !lockedOptIds.includes(option.id)
+                                              )
+                                              .reduce(
+                                                  (agg, o) => agg + o.cost,
+                                                  0
+                                              ),
+                                  };
+                              }),
                           }));
                           return [semesterId, result] as const;
                       }
@@ -403,36 +419,46 @@ export class ClassesComponent {
         selectedAdditionalOptionIds?: Array<string>;
         userCost?: number;
     }) {
-        this.workflow.patchState((s) => ({
-            enrollment: {
-                ...s.enrollment,
-                selectedClasses: selected
-                    ? Array.from(
-                          new Set([
-                              ...s.enrollment.selectedClasses,
+        const locked = this.lockedClassIds();
+        if (!selected && locked.includes(classSelection.id)) {
+            return;
+        }
+        this.workflow.patchState((s) => {
+            const lockedOptionIds =
+                this.lockedAdditionalOptionIdsByClassId()[classSelection.id] ?? [];
+            const mergedOptionIds = selected
+                ? Array.from(
+                      new Set([
+                          ...lockedOptionIds,
+                          ...(selectedAdditionalOptionIds ?? []),
+                      ])
+                  )
+                : [];
+            return {
+                enrollment: {
+                    ...s.enrollment,
+                    selectedClasses: selected
+                        ? [
+                              ...s.enrollment.selectedClasses.filter(
+                                  (c) => c.id !== classSelection.id
+                              ),
                               classSelection,
-                          ])
-                      )
-                    : s.enrollment.selectedClasses.filter(
-                          (selectedClass) =>
-                              selectedClass.id !== classSelection.id
-                      ),
-                userCostsToSelectedClassIds: {
-                    ...s.enrollment.userCostsToSelectedClassIds,
-                    [classSelection.id]: userCost,
+                          ]
+                        : s.enrollment.selectedClasses.filter(
+                              (selectedClass) =>
+                                  selectedClass.id !== classSelection.id
+                          ),
+                    userCostsToSelectedClassIds: {
+                        ...s.enrollment.userCostsToSelectedClassIds,
+                        [classSelection.id]: userCost,
+                    },
+                    additionalOptionIdsByClassId: {
+                        ...s.enrollment.additionalOptionIdsByClassId,
+                        [classSelection.id]: mergedOptionIds,
+                    },
                 },
-                additionalOptionIdsByClassId: selected
-                    ? {
-                          ...s.enrollment.additionalOptionIdsByClassId,
-                          [classSelection.id]:
-                              selectedAdditionalOptionIds ?? [],
-                      }
-                    : {
-                          ...s.enrollment.additionalOptionIdsByClassId,
-                          [classSelection.id]: [],
-                      },
-            },
-        }));
+            };
+        });
     }
 
     searchChange(search: string) {

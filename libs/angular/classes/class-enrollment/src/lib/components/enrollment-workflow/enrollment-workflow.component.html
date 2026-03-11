@@ -1,5 +1,25 @@
 <div style="max-width: 1100px; margin: auto; ">
-@if (didLoadFromDraft()) {
+@if (addendumLoading()) {
+    <div style="text-align: center; padding: 3rem">
+        <p-progressSpinner></p-progressSpinner>
+        <p>Loading enrollment details...</p>
+    </div>
+} @else if (addendumError(); as error) {
+    <p-messages severity="error" [closable]="false">
+        <ng-template pTemplate>{{ error }}</ng-template>
+    </p-messages>
+}
+@if (isAddendumMode()) {
+    <p-messages severity="info" [closable]="false">
+        <ng-template pTemplate>
+            <div>
+                You are adding to an existing enrollment. Already-enrolled classes
+                are shown as selected and cannot be removed.
+            </div>
+        </ng-template>
+    </p-messages>
+}
+@if (didLoadFromDraft() && !isAddendumMode()) {
     <p-messages severity="info" [closable]="false">
         <ng-template pTemplate>
             <div class="flex justify-content-between align-items-center w-full">
@@ -67,9 +87,15 @@
             </ng-template>
         </mat-step>
     }
-    <mat-step #account label="Account">
+    <mat-step #account label="Account"
+        [completed]="isAddendumMode()"
+        [editable]="!isAddendumMode()">
         <ng-template matStepContent>
-            @if (stepper.selected === account) {
+            @if (isAddendumMode()) {
+                <h2>Account</h2>
+                <p>You are already logged in. No changes needed.</p>
+                <ng-container *ngTemplateOutlet="navigation"></ng-container>
+            } @else if (stepper.selected === account) {
                 <h2>Account</h2>
                 <sol-class-account
                     (validityChange)="account.hasError = !$event"
@@ -79,9 +105,15 @@
             }
         </ng-template>
     </mat-step>
-    <mat-step #selectStudent label="Student Selection">
+    <mat-step #selectStudent label="Student Selection"
+        [completed]="isAddendumMode()"
+        [editable]="!isAddendumMode()">
         <ng-template matStepContent>
-            @if (stepper.selected === selectStudent) {
+            @if (isAddendumMode()) {
+                <h2>Student Selection</h2>
+                <p>Student is pre-selected from the original enrollment.</p>
+                <ng-container *ngTemplateOutlet="navigation"></ng-container>
+            } @else if (stepper.selected === selectStudent) {
                 <h2>Student Selection</h2>
                 <sol-student-selection
                     [interacted]="selectStudent.interacted"
@@ -95,14 +127,22 @@
         <ng-template matStepContent>
             @if (stepper.selected === studentInfo) {
                 <h2>Student Info</h2>
-                @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
-                    <sol-acknowledge-out-of-date>
+                @if (isAddendumMode() || allStepsComplete(isUserLoggedIn, selectStudent)) {
+                    @if (!isAddendumMode()) {
+                        <sol-acknowledge-out-of-date>
+                            <sol-student-info
+                                [interacted]="studentInfo.interacted"
+                                [isStudentLoading]="isStudentLoading()"
+                                (validityChange)="studentInfo.hasError = !$event"
+                            ></sol-student-info>
+                        </sol-acknowledge-out-of-date>
+                    } @else {
                         <sol-student-info
                             [interacted]="studentInfo.interacted"
                             [isStudentLoading]="isStudentLoading()"
                             (validityChange)="studentInfo.hasError = !$event"
                         ></sol-student-info>
-                    </sol-acknowledge-out-of-date>
+                    }
                 } @else {
                     <ng-container
                         *ngTemplateOutlet="mustSelectStudent"
@@ -116,13 +156,20 @@
         <ng-template matStepContent>
             @if (stepper.selected === medicalInfo) {
                 <h2>Medical Info</h2>
-                @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
-                    <sol-acknowledge-out-of-date>
+                @if (isAddendumMode() || allStepsComplete(isUserLoggedIn, selectStudent)) {
+                    @if (!isAddendumMode()) {
+                        <sol-acknowledge-out-of-date>
+                            <sol-medical
+                                [interacted]="medicalInfo.interacted"
+                                (validityChange)="medicalInfo.hasError = !$event"
+                            ></sol-medical>
+                        </sol-acknowledge-out-of-date>
+                    } @else {
                         <sol-medical
                             [interacted]="medicalInfo.interacted"
                             (validityChange)="medicalInfo.hasError = !$event"
                         ></sol-medical>
-                    </sol-acknowledge-out-of-date>
+                    }
                 } @else {
                     <ng-container
                         *ngTemplateOutlet="mustSelectStudent"
@@ -132,9 +179,15 @@
             }
         </ng-template>
     </mat-step>
-    <mat-step #releases label="Releases">
+    <mat-step #releases label="Releases"
+        [completed]="isAddendumMode()"
+        [editable]="!isAddendumMode()">
         <ng-template matStepContent>
-            @if (stepper.selected === releases) {
+            @if (isAddendumMode()) {
+                <h2>Releases</h2>
+                <p>Releases were completed with the original enrollment.</p>
+                <ng-container *ngTemplateOutlet="navigation"></ng-container>
+            } @else if (stepper.selected === releases) {
                 <h2>Releases</h2>
                 @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
                     <sol-releases
@@ -257,7 +310,7 @@
 @let shouldShow = shouldShowSuccess$ | async;
 @if (shouldShow) {
     <p-dialog
-        header="Successfully enrolled!"
+        [header]="isAddendumMode() ? 'Addendum submitted!' : 'Successfully enrolled!'"
         [visible]="shouldShow"
         [closable]="false"
         [modal]="true"
@@ -278,11 +331,19 @@
             >.
         </div>
         <div style="margin-top: 1rem">
-            <button
-                pButton
-                label="Enroll Another Student"
-                (click)="enrollAnother(stepper)"
-            ></button>
+            @if (isAddendumMode()) {
+                <button
+                    pButton
+                    label="Back to Enrollments"
+                    (click)="enrollAnother(stepper)"
+                ></button>
+            } @else {
+                <button
+                    pButton
+                    label="Enroll Another Student"
+                    (click)="enrollAnother(stepper)"
+                ></button>
+            }
         </div>
     </p-dialog>
 }

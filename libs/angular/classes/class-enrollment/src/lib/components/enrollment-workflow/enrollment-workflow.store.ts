@@ -5,6 +5,7 @@ import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import {
     debounceTime,
     filter,
+    map,
     pairwise,
     Subject,
     switchMap,
@@ -46,6 +47,13 @@ type State = {
     hasAcknowledgedOutOfDate: boolean;
     accuracyConfirmations: { [item: string]: boolean };
     draftEnrollment: Partial<Enrollment> | undefined;
+    // Addendum mode
+    addendumMode: boolean;
+    originalEnrollmentId: string | undefined;
+    lockedClassIds: Array<string>;
+    lockedAdditionalOptionIdsByClassId: Record<string, Array<string>>;
+    addendumLoading: boolean;
+    addendumError: string | undefined;
 };
 
 const initialState: State = {
@@ -55,6 +63,12 @@ const initialState: State = {
     doesStudentInfoRequireReview: false,
     hasAcknowledgedOutOfDate: false,
     accuracyConfirmations: {},
+    addendumMode: false,
+    originalEnrollmentId: undefined,
+    lockedClassIds: [],
+    lockedAdditionalOptionIdsByClassId: {},
+    addendumLoading: false,
+    addendumError: undefined,
     enrollment: {
         selectedClasses: [],
         userCostsToSelectedClassIds: {},
@@ -153,28 +167,91 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         this.selectEnrollment,
         (enrollment) => enrollment.additionalOptionIdsByClassId
     );
+    private readonly selectAddendumState = createSelector(
+        this.selectState,
+        (state) => ({
+            addendumMode: state.addendumMode,
+            lockedClassIds: state.lockedClassIds,
+            lockedAdditionalOptionIdsByClassId: state.lockedAdditionalOptionIdsByClassId,
+        })
+    );
     private readonly selectBasktCostRequest = createSelector(
         this.selectDiscountCodes,
         this.selectSelectedClasses,
         this.selectUserCostsToSelectedClassIds,
         this.selectAdditionalOptionIdsByClassId,
+        this.selectAddendumState,
         (
             codes,
             classes,
             userCostsToClassIds,
-            selectedAdditionalOptionIdsByClassId
-        ) => ({
-            codes,
-            classes: classes.map(({ id, semesterId }) => ({
-                id,
-                semesterId,
-                additionalOptionIds:
-                    selectedAdditionalOptionIdsByClassId[id] ?? [],
-            })),
-            userCostsToClassIds,
-        })
+            selectedAdditionalOptionIdsByClassId,
+            addendum
+        ) => {
+            if (!addendum.addendumMode) {
+                return {
+                    codes,
+                    classes: classes.map(({ id, semesterId }) => ({
+                        id,
+                        semesterId,
+                        additionalOptionIds:
+                            selectedAdditionalOptionIdsByClassId[id] ?? [],
+                    })),
+                    userCostsToClassIds,
+                    overrideCosts: undefined as Record<string, number> | undefined,
+                };
+            }
+            // In addendum mode, include new classes + locked classes that have new options
+            const pricingClasses: Array<{
+                id: string;
+                semesterId: string;
+                additionalOptionIds: Array<string>;
+            }> = [];
+            const newUserCosts: Record<string, number | undefined> = {};
+            const overrideCosts: Record<string, number> = {};
+
+            for (const c of classes) {
+                const isLocked = addendum.lockedClassIds.includes(c.id);
+                const allOptionIds = selectedAdditionalOptionIdsByClassId[c.id] ?? [];
+                const lockedOptionIds = addendum.lockedAdditionalOptionIdsByClassId[c.id] ?? [];
+                const newOptionIds = allOptionIds.filter(
+                    (id) => !lockedOptionIds.includes(id)
+                );
+
+                if (!isLocked) {
+                    pricingClasses.push({
+                        id: c.id,
+                        semesterId: c.semesterId,
+                        additionalOptionIds: allOptionIds,
+                    });
+                    newUserCosts[c.id] = userCostsToClassIds[c.id];
+                } else if (newOptionIds.length > 0) {
+                    // Locked class with new options — zero the class cost, only price new options
+                    pricingClasses.push({
+                        id: c.id,
+                        semesterId: c.semesterId,
+                        additionalOptionIds: newOptionIds,
+                    });
+                    overrideCosts[c.id] = 0;
+                }
+            }
+
+            return {
+                codes,
+                classes: pricingClasses,
+                userCostsToClassIds: newUserCosts,
+                overrideCosts,
+            };
+        }
     );
     readonly isStudentLoading = computed(() => this.state().isLoadingStudent);
+    readonly isAddendumMode = computed(() => this.state().addendumMode);
+    readonly addendumLoading = computed(() => this.state().addendumLoading);
+    readonly addendumError = computed(() => this.state().addendumError);
+    readonly lockedClassIds = computed(() => this.state().lockedClassIds);
+    readonly lockedAdditionalOptionIdsByClassId = computed(
+        () => this.state().lockedAdditionalOptionIdsByClassId
+    );
 
     readonly setStatusToDraft = this.updater((state) => ({
         ...state,
@@ -184,6 +261,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     readonly loadDraft = this.effect(() => {
         return this.isLoggedIn$.pipe(
             filter(Boolean),
+            filter(() => !this.state().addendumMode),
             switchMap(() =>
                 this.functions
                     .call<{
@@ -215,7 +293,9 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     });
 
     readonly saveDraft = this.effect(() => {
-        return this.select((state) => state.enrollment).pipe(
+        return this.select((state) => state).pipe(
+            filter((state) => !state.addendumMode),
+            map((state) => state.enrollment),
             debounceTime(500),
             filter((enrollment) => enrollment !== initialState.enrollment),
             tap((enrollmentPatch) =>
@@ -260,65 +340,111 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         return submit$.pipe(
             tap(() => this.patchState({ status: 'submitted' })),
             switchMap(() => {
-                return this.select((enrollment) => enrollment).pipe(
+                return this.select((s) => s).pipe(
                     take(1),
-                    switchMap(
-                        ({
+                    switchMap((state) => {
+                        const {
                             enrollment,
                             doesStudentInfoRequireReview,
                             accuracyConfirmations,
-                        }) => {
+                            addendumMode,
+                            originalEnrollmentId,
+                            lockedClassIds,
+                            lockedAdditionalOptionIdsByClassId,
+                        } = state;
+
+                        if (addendumMode && originalEnrollmentId) {
+                            // Addendum submission
+                            const newClasses = enrollment.selectedClasses
+                                .filter((c) => !lockedClassIds.includes(c.id));
+                            const newAdditionalOptionIdsByClassId: Record<string, Array<string>> = {};
+                            for (const [classId, optionIds] of Object.entries(
+                                enrollment.additionalOptionIdsByClassId
+                            )) {
+                                const locked = lockedAdditionalOptionIdsByClassId[classId] ?? [];
+                                const newOpts = (optionIds ?? []).filter(
+                                    (id) => !locked.includes(id)
+                                );
+                                if (newOpts.length > 0) {
+                                    newAdditionalOptionIdsByClassId[classId] = newOpts;
+                                }
+                            }
                             return this.functions
-                                .call<{
-                                    email: string;
-                                    success: boolean;
-                                }>(
-                                    'enroll',
-                                    Object.assign(
-                                        ...[
-                                            {},
-                                            enrollment,
-                                            ...(doesStudentInfoRequireReview
-                                                ? [
-                                                      {
-                                                          hasConfirmedAccuracy:
-                                                              Object.values(
-                                                                  accuracyConfirmations
-                                                              ).length > 0 &&
-                                                              Object.values(
-                                                                  accuracyConfirmations
-                                                              ).every(Boolean),
-                                                      },
-                                                  ]
-                                                : []),
-                                        ]
-                                    )
+                                .call<{ email: string; success: boolean }>(
+                                    'enrollAddendum',
+                                    {
+                                        originalEnrollmentId,
+                                        newClasses,
+                                        student: enrollment.student,
+                                        discountCodes: enrollment.discountCodes,
+                                        paymentMethod: enrollment.paymentMethod,
+                                        userCostsToSelectedClassIds:
+                                            enrollment.userCostsToSelectedClassIds,
+                                        newAdditionalOptionIdsByClassId,
+                                    }
                                 )
                                 .pipe(
                                     tap((response) => {
-                                        if (
-                                            RequestedUtility.isLoaded(response)
-                                        ) {
-                                            if (response.success) {
-                                                this.patchState({
-                                                    status: 'enrolled',
-                                                });
-                                            } else {
-                                                this.patchState({
-                                                    status: 'failed',
-                                                });
-                                            }
-                                        } else if (
-                                            RequestedUtility.isError(response)
-                                        ) {
+                                        if (RequestedUtility.isLoaded(response)) {
                                             this.patchState({
-                                                status: 'failed',
+                                                status: response.success
+                                                    ? 'enrolled'
+                                                    : 'failed',
                                             });
+                                        } else if (RequestedUtility.isError(response)) {
+                                            this.patchState({ status: 'failed' });
                                         }
                                     })
                                 );
                         }
-                    )
+
+                        // Normal enrollment submission
+                        return this.functions
+                            .call<{
+                                email: string;
+                                success: boolean;
+                            }>(
+                                'enroll',
+                                Object.assign(
+                                    ...[
+                                        {},
+                                        enrollment,
+                                        ...(doesStudentInfoRequireReview
+                                            ? [
+                                                  {
+                                                      hasConfirmedAccuracy:
+                                                          Object.values(
+                                                              accuracyConfirmations
+                                                          ).length > 0 &&
+                                                          Object.values(
+                                                              accuracyConfirmations
+                                                          ).every(Boolean),
+                                                  },
+                                              ]
+                                            : []),
+                                    ]
+                                )
+                            )
+                            .pipe(
+                                tap((response) => {
+                                    if (
+                                        RequestedUtility.isLoaded(response)
+                                    ) {
+                                        this.patchState({
+                                            status: response.success
+                                                ? 'enrolled'
+                                                : 'failed',
+                                        });
+                                    } else if (
+                                        RequestedUtility.isError(response)
+                                    ) {
+                                        this.patchState({
+                                            status: 'failed',
+                                        });
+                                    }
+                                })
+                            );
+                    })
                 );
             })
         );
@@ -327,6 +453,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     readonly getDoesStudentInfoRequireReview = this.effect(() => {
         return this.select(this.selectStudentId).pipe(
             filter(Boolean),
+            filter(() => !this.state().addendumMode),
             switchMap((studentId) => {
                 return this.functions
                     .call<{ isOutOfDate: boolean }>(
@@ -347,6 +474,55 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         );
     });
 
+    readonly initAddendum = this.effect<string>((enrollmentId$) => {
+        return enrollmentId$.pipe(
+            tap(() =>
+                this.patchState({
+                    addendumMode: true,
+                    addendumLoading: true,
+                    addendumError: undefined,
+                })
+            ),
+            tap(() => this.functions.call('deleteEnrollmentDraft')),
+            switchMap((enrollmentId) =>
+                this.functions
+                    .call<{
+                        enrollment: {
+                            id: string;
+                            studentId: string;
+                            studentName: string;
+                            classes: Array<{ id: string; semesterId: string }>;
+                            additionalOptionIdsByClassId: Record<string, Array<string>>;
+                            openSemesterIds: Array<string>;
+                        };
+                    }>('getEnrollmentForAddendum', { enrollmentId })
+                    .pipe(
+                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                        tap(({ enrollment: orig }) => {
+                            this.patchState((state) => ({
+                                originalEnrollmentId: orig.id,
+                                lockedClassIds: orig.classes.map((c) => c.id),
+                                lockedAdditionalOptionIdsByClassId:
+                                    orig.additionalOptionIdsByClassId,
+                                addendumLoading: false,
+                                enrollment: {
+                                    ...state.enrollment,
+                                    selectedClasses: orig.classes,
+                                    additionalOptionIdsByClassId:
+                                        orig.additionalOptionIdsByClassId,
+                                    student: {
+                                        ...state.enrollment.student,
+                                        id: orig.studentId,
+                                    },
+                                    isStudentNew: false,
+                                },
+                            }));
+                        })
+                    )
+            )
+        );
+    });
+
     readonly calculateBasket = this.effect(() => {
         return this.select(this.selectBasktCostRequest).pipe(
             pairwise(),
@@ -354,7 +530,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
             filter(
                 ([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)
             ),
-            switchMap(([, { codes, classes, userCostsToClassIds }]) => {
+            switchMap(([, { codes, classes, userCostsToClassIds, overrideCosts }]) => {
                 this.patchState({ isLoadingDiscounts: true });
                 return this.functions
                     .call<{
@@ -368,6 +544,9 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                         codes,
                         classes,
                         userCostsToClassIds,
+                        ...(overrideCosts && Object.keys(overrideCosts).length > 0
+                            ? { overrideCosts }
+                            : {}),
                     })
                     .pipe(
                         RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
@@ -398,12 +577,15 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
     readonly startOver = this.effect((trigger$) => {
         return trigger$.pipe(
             tap(() => {
+                const wasAddendum = this.state().addendumMode;
                 this.setState({
                     ...initialState,
                     randomValueThatResetsPaymentCollector:
                         Math.random().toString(),
                 });
-                this.router.navigate(['/']);
+                this.router.navigate(
+                    wasAddendum ? ['/account/enrollments'] : ['/']
+                );
             }),
             tap(() => this.functions.call('deleteEnrollmentDraft'))
         );

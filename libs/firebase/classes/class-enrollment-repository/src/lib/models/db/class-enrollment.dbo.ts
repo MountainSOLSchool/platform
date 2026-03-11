@@ -23,6 +23,8 @@ export type ClassEnrollmentDbo = {
         signature: string;
     }>;
     additionalOptionIdsByClassId: Record<string, Array<string>>;
+    enrollmentType?: 'standard' | 'addendum';
+    originalEnrollmentId?: string;
 } & (
     | {
           /** @deprecated Only old records have unqualified classes */

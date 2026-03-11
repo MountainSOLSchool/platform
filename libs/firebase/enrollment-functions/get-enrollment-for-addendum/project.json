@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-get-enrollment-for-addendum",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/get-enrollment-for-addendum/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-get-enrollment-for-addendum --web",
+    "targets": {}
+}

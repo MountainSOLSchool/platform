@@ -129,6 +129,26 @@
                 <mat-icon>email</mat-icon>
                 Contact <a href="mailto:info@mountainsol.org">info&#64;mountainsol.org</a> for more information.
             </div>
+        } @else if (locked) {
+            @if (hasUnlockedOptions()) {
+                <button mat-raised-button
+                        color="accent"
+                        class="select-button selected-state"
+                        (click)="beforeSelectingForm.toggle($event)">
+                    <mat-icon>check_circle</mat-icon>
+                    {{ newOptionsCost > 0
+                        ? 'Enrolled — Update Options (+$' + newOptionsCost.toFixed(2) + ')'
+                        : 'Enrolled — Add Options' }}
+                </button>
+            } @else {
+                <button mat-raised-button
+                        color="accent"
+                        class="select-button selected-state"
+                        [disabled]="true">
+                    <mat-icon>check_circle</mat-icon>
+                    Enrolled
+                </button>
+            }
         } @else {
             @if (requiresPromptBeforeSelecting(classInfoValue)) {
                 @if (!selected) {

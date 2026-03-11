@@ -40,6 +40,32 @@ export class ClassEnrollmentRepository {
         return doc.data() as ClassEnrollmentDbo;
     }
 
+    static async getById(
+        enrollmentId: string
+    ): Promise<(ClassEnrollmentDbo & { id: string }) | null> {
+        const doc = await this.database
+            .collection('enrollment')
+            .doc(enrollmentId)
+            .get();
+        if (!doc.exists) {
+            return null;
+        }
+        return { ...(doc.data() as ClassEnrollmentDbo), id: doc.id };
+    }
+
+    static async getAddendumsByOriginalId(
+        originalEnrollmentId: string
+    ): Promise<Array<ClassEnrollmentDbo>> {
+        const snapshot = await this.database
+            .collection('enrollment')
+            .where('originalEnrollmentId', '==', originalEnrollmentId)
+            .where('status', '==', 'enrolled')
+            .get();
+        return snapshot.docs.map(
+            (doc) => ({ ...(doc.data() as ClassEnrollmentDbo), id: doc.id })
+        );
+    }
+
     static async getCurrentSemesterEnrollments(): Promise<
         Array<SemesterEnrollment>
     > {
@@ -51,6 +77,7 @@ export class ClassEnrollmentRepository {
             snapshot.docs.map(async (doc) => {
                 const dbo = doc.data();
                 return {
+                    id: doc.id,
                     studentName: dbo.studentName,
                     studentId: dbo.studentId,
                     finalCost: dbo.finalCost,
@@ -59,6 +86,10 @@ export class ClassEnrollmentRepository {
                     transactionId: dbo.transactionId,
                     timestamp: dbo.timestamp,
                     discounts: dbo.discounts,
+                    enrollmentType: dbo.enrollmentType,
+                    originalEnrollmentId: dbo.originalEnrollmentId,
+                    additionalOptionIdsByClassId:
+                        dbo.additionalOptionIdsByClassId,
                 };
             })
         );
@@ -88,6 +119,7 @@ export class ClassEnrollmentRepository {
             for (const doc of snapshot.docs) {
                 const dbo = doc.data();
                 results.push({
+                    id: doc.id,
                     studentName: dbo.studentName,
                     studentId: dbo.studentId,
                     finalCost: dbo.finalCost,
@@ -96,6 +128,10 @@ export class ClassEnrollmentRepository {
                     transactionId: dbo.transactionId,
                     timestamp: dbo.timestamp,
                     discounts: dbo.discounts,
+                    enrollmentType: dbo.enrollmentType,
+                    originalEnrollmentId: dbo.originalEnrollmentId,
+                    additionalOptionIdsByClassId:
+                        dbo.additionalOptionIdsByClassId,
                 });
             }
         }
@@ -121,6 +157,7 @@ export class ClassEnrollmentRepository {
             snapshot.docs.map(async (doc) => {
                 const dbo = doc.data();
                 return {
+                    id: doc.id,
                     studentName: dbo.studentName,
                     studentId: dbo.studentId,
                     finalCost: dbo.finalCost,
@@ -129,6 +166,10 @@ export class ClassEnrollmentRepository {
                     transactionId: dbo.transactionId,
                     timestamp: dbo.timestamp,
                     discounts: dbo.discounts,
+                    enrollmentType: dbo.enrollmentType,
+                    originalEnrollmentId: dbo.originalEnrollmentId,
+                    additionalOptionIdsByClassId:
+                        dbo.additionalOptionIdsByClassId,
                 };
             })
         );

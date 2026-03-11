@@ -11,11 +11,13 @@ export const calculateBasket = Functions.endpoint.handle<{
         additionalOptionIds: Array<string>;
     }>;
     userCostsToClassIds: Record<string, number | undefined>;
+    overrideCosts?: Record<string, number>;
 }>(async (request, response) => {
     const {
         codes,
         classes: requestClasses,
         userCostsToClassIds,
+        overrideCosts,
     } = request.body.data;
     const discounts = (
         await Promise.all(
@@ -76,10 +78,18 @@ export const calculateBasket = Functions.endpoint.handle<{
         return;
     }
 
+    const classesWithOverrides = overrideCosts
+        ? classesWithUserCostsApplied.map((c) =>
+              overrideCosts[c.id] !== undefined
+                  ? { ...c, cost: overrideCosts[c.id] }
+                  : c
+          )
+        : classesWithUserCostsApplied;
+
     const { discountAmounts, finalTotal, originalTotal } =
         EnrollmentUtility.getEnrollmentCost(
             discounts,
-            classesWithUserCostsApplied,
+            classesWithOverrides,
             groups,
             requestClasses.flatMap(
                 ({ additionalOptionIds }) => additionalOptionIds

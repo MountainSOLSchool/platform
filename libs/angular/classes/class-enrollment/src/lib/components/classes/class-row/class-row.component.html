@@ -38,7 +38,28 @@
 
                     @let paused = hasPausedClass();
 
-                    @if (requiresPromptBeforeSelecting(rowValue.classes)) {
+                    @if (isRowLocked()) {
+                        @if (requiresPromptBeforeSelecting(rowValue.classes)) {
+                            @let rowNewCost = getRowNewOptionsCost();
+                            <button mat-raised-button
+                                    color="accent"
+                                    class="select-all-button selected"
+                                    (click)="beforeSelectingForm.toggle($event)">
+                                <mat-icon>check_circle</mat-icon>
+                                {{ rowNewCost > 0
+                                    ? 'Enrolled — Update Options (+$' + rowNewCost.toFixed(2) + ')'
+                                    : 'Enrolled — Add Options' }}
+                            </button>
+                        } @else {
+                            <button mat-raised-button
+                                    color="accent"
+                                    class="select-all-button selected"
+                                    [disabled]="true">
+                                <mat-icon>check_circle</mat-icon>
+                                Enrolled
+                            </button>
+                        }
+                    } @else if (requiresPromptBeforeSelecting(rowValue.classes)) {
                         @if (!rowValue.selected) {
                             <button mat-raised-button
                                     color="primary"
@@ -92,6 +113,9 @@
                  }">
                 <sol-class-card
                     [selected]="rowClass.selected"
+                    [locked]="isClassLocked(rowClass.id)"
+                    [lockedOptionIds]="getLockedOptionIds(rowClass.id)"
+                    [newOptionsCost]="rowClass.newOptionsCost ?? 0"
                     [showOnlyAddedCost]="rowValue.classes.length > 1"
                     [width]="rowValue.classes.length > 1 ? 'narrower' : 'wider'"
                     [classInfo]="rowClass"
