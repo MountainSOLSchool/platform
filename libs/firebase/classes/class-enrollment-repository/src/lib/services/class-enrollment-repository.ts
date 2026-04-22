@@ -66,12 +66,22 @@ export class ClassEnrollmentRepository {
         );
     }
 
+    static async updateStatus(
+        enrollmentId: string,
+        status: ClassEnrollmentDbo['status']
+    ): Promise<void> {
+        await this.database
+            .collection('enrollment')
+            .doc(enrollmentId)
+            .update({ status });
+    }
+
     static async getCurrentSemesterEnrollments(): Promise<
         Array<SemesterEnrollment>
     > {
         const snapshot = await this.database
             .collection('enrollment')
-            .where('status', '==', 'enrolled')
+            .where('status', 'in', ['enrolled', 'revoked'])
             .get();
         return await Promise.all(
             snapshot.docs.map(async (doc) => {
@@ -86,6 +96,7 @@ export class ClassEnrollmentRepository {
                     transactionId: dbo.transactionId,
                     timestamp: dbo.timestamp,
                     discounts: dbo.discounts,
+                    status: dbo.status,
                     enrollmentType: dbo.enrollmentType,
                     originalEnrollmentId: dbo.originalEnrollmentId,
                     additionalOptionIdsByClassId:

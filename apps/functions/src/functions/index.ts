@@ -68,3 +68,4 @@ export { updateClassGroup } from '@sol/firebase/enrollment-functions/update-clas
 export { deleteClassGroup } from '@sol/firebase/enrollment-functions/delete-class-group';
 export { getEnrollmentMessagesAdmin } from '@sol/firebase/enrollment-functions/get-enrollment-messages-admin';
 export { updateEnrollmentMessages } from '@sol/firebase/enrollment-functions/update-enrollment-messages';
+export { revokeEnrollment } from '@sol/firebase/enrollment-functions/revoke-enrollment';

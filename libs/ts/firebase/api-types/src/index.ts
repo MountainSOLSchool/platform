@@ -58,6 +58,12 @@ export type {
     GetActiveMultiClassDiscountResponse,
 } from './lib/discount.types';
 
+// Enrollment Management
+export type {
+    RevokeEnrollmentRequest,
+    RevokeEnrollmentResponse,
+} from './lib/enrollment.types';
+
 // Enrollment Messages
 export type {
     EnrollmentMessageSeverity,

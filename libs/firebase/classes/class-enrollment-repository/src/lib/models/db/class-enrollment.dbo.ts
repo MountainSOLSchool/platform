@@ -15,7 +15,7 @@ export type ClassEnrollmentDbo = {
         description: string;
     }>;
     transactionId?: string;
-    status: 'pending' | 'enrolled' | 'failed';
+    status: 'pending' | 'enrolled' | 'failed' | 'revoked';
     failures?: Array<string>;
     isSignedUpForSolsticeEmails?: boolean;
     releaseSignatures?: Array<{
