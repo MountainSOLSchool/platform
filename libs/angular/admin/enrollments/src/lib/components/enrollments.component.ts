@@ -130,10 +130,10 @@ export class EnrollmentsComponent {
                     })
                 );
                 this.#refreshTrigger.next();
-            } catch (e: unknown) {
-                const message =
-                    e instanceof Error ? e.message : 'Revocation failed. Please try again.';
-                this.revokeError.set(message);
+            } catch {
+                this.revokeError.set(
+                    'Revocation failed. The refund may not have been processed — check Braintree before retrying.'
+                );
             } finally {
                 this.revoking.set(null);
             }
