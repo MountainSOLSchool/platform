@@ -76,6 +76,18 @@ export class ClassEnrollmentRepository {
             .update({ status });
     }
 
+    static async updateEnrollmentClasses(
+        enrollmentId: string,
+        classes: Array<{ id: string; semesterId: string }>,
+        additionalOptionIdsByClassId: Record<string, Array<string>>,
+        finalCost: number
+    ): Promise<void> {
+        await this.database
+            .collection('enrollment')
+            .doc(enrollmentId)
+            .update({ classes, additionalOptionIdsByClassId, finalCost });
+    }
+
     static async getCurrentSemesterEnrollments(): Promise<
         Array<SemesterEnrollment>
     > {

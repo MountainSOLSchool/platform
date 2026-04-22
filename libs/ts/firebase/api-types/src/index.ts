@@ -62,6 +62,8 @@ export type {
 export type {
     RevokeEnrollmentRequest,
     RevokeEnrollmentResponse,
+    PreviewPartialRevokeRequest,
+    PreviewPartialRevokeResponse,
 } from './lib/enrollment.types';
 
 // Enrollment Messages

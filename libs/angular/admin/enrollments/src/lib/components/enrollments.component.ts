@@ -13,6 +13,7 @@ import { Dialog } from '@angular/cdk/dialog';
 import {
     ConfirmRevokeDialogComponent,
     ConfirmRevokeDialogData,
+    ConfirmRevokeDialogResult,
 } from './confirm-revoke-dialog.component';
 import { MountainSolApiService } from '@sol/angular/firebase/api';
 
@@ -99,24 +100,34 @@ export class EnrollmentsComponent {
     );
 
     async confirmRevoke(enrollment: SemesterEnrollment & { date: number }) {
-        const dialogRef = this.#dialog.open<boolean, ConfirmRevokeDialogData>(
-            ConfirmRevokeDialogComponent,
-            {
-                width: '400px',
-                data: {
-                    studentName: enrollment.studentName,
-                    finalCost: enrollment.finalCost,
-                },
-            }
-        );
+        const classes = 'classes' in enrollment
+            ? enrollment.classes
+            : [];
 
-        const confirmed = await firstValueFrom(dialogRef.closed);
-        if (confirmed) {
+        const dialogRef = this.#dialog.open<
+            ConfirmRevokeDialogResult | undefined,
+            ConfirmRevokeDialogData
+        >(ConfirmRevokeDialogComponent, {
+            width: '450px',
+            data: {
+                enrollmentId: enrollment.id,
+                studentName: enrollment.studentName,
+                finalCost: enrollment.finalCost,
+                classes,
+            },
+        });
+
+        const result = await firstValueFrom(dialogRef.closed);
+        if (result) {
             this.revoking.set(enrollment.id);
             this.revokeError.set(null);
             try {
                 await firstValueFrom(
-                    this.#api.revokeEnrollment({ enrollmentId: enrollment.id })
+                    this.#api.revokeEnrollment({
+                        enrollmentId: enrollment.id,
+                        classIdsToRevoke: result.classIdsToRevoke,
+                        refundAmount: result.refundAmount,
+                    })
                 );
                 this.#refreshTrigger.next();
             } catch (e: unknown) {

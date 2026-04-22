@@ -12,7 +12,7 @@ export const revokeEnrollment = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)
     .usingStrings(...Braintree.STRING_NAMES)
     .handle<RevokeEnrollmentRequest>(async (request, response, secrets, strings) => {
-        const { enrollmentId } = request.body.data;
+        const { enrollmentId, classIdsToRevoke, refundAmount } = request.body.data;
 
         if (!enrollmentId) {
             response.status(400).send({ error: 'enrollmentId is required' });
@@ -31,12 +31,24 @@ export const revokeEnrollment = Functions.endpoint
             return;
         }
 
-        let refunded = false;
-        const refundAmount = enrollment.finalCost;
+        const allClasses = 'classes' in enrollment
+            ? enrollment.classes
+            : (enrollment as { classIds: string[] }).classIds.map((id) => ({ id, semesterId: '' }));
 
-        if (enrollment.transactionId && enrollment.finalCost > 0) {
+        const classesToRevoke = classIdsToRevoke?.length
+            ? allClasses.filter((c) => classIdsToRevoke.includes(c.id))
+            : allClasses;
+
+        const isFullRevocation = classesToRevoke.length >= allClasses.length;
+        const effectiveRefundAmount = refundAmount ?? enrollment.finalCost;
+
+        let refunded = false;
+
+        if (enrollment.transactionId && effectiveRefundAmount > 0) {
             const braintree = new Braintree(secrets, strings);
-            const result = await braintree.refund(enrollment.transactionId);
+            const result = isFullRevocation
+                ? await braintree.refund(enrollment.transactionId)
+                : await braintree.refund(enrollment.transactionId, effectiveRefundAmount);
 
             if (!result.success) {
                 response.status(500).send({
@@ -49,13 +61,9 @@ export const revokeEnrollment = Functions.endpoint
             refunded = true;
         }
 
-        const classes = 'classes' in enrollment
-            ? enrollment.classes
-            : (enrollment as { classIds: string[] }).classIds.map((id) => ({ id, semesterId: '' }));
-
         if (enrollment.studentId) {
             await Promise.allSettled(
-                classes
+                classesToRevoke
                     .filter((c) => c.semesterId)
                     .map((c) =>
                         Semester.of(c.semesterId).classes.removeStudentFromClass(
@@ -67,12 +75,32 @@ export const revokeEnrollment = Functions.endpoint
             );
         }
 
-        await ClassEnrollmentRepository.updateStatus(enrollmentId, 'revoked');
+        if (isFullRevocation) {
+            await ClassEnrollmentRepository.updateStatus(enrollmentId, 'revoked');
+        } else {
+            const remainingClasses = allClasses.filter(
+                (c) => !classIdsToRevoke!.includes(c.id)
+            );
+            const remainingOptions: Record<string, Array<string>> = {};
+            for (const c of remainingClasses) {
+                if (enrollment.additionalOptionIdsByClassId[c.id]) {
+                    remainingOptions[c.id] =
+                        enrollment.additionalOptionIdsByClassId[c.id];
+                }
+            }
+            const newCost = enrollment.finalCost - effectiveRefundAmount;
+            await ClassEnrollmentRepository.updateEnrollmentClasses(
+                enrollmentId,
+                remainingClasses,
+                remainingOptions,
+                newCost
+            );
+        }
 
         const result: RevokeEnrollmentResponse = {
             success: true,
             refunded,
-            refundAmount,
+            refundAmount: effectiveRefundAmount,
         };
         response.send(result);
     });
