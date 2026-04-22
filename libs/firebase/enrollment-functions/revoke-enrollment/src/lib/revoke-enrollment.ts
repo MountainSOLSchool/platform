@@ -51,9 +51,14 @@ export const revokeEnrollment = Functions.endpoint
                 : await braintree.refund(enrollment.transactionId, effectiveRefundAmount);
 
             if (!result.success) {
-                response.status(500).send({
-                    error: 'Refund failed',
-                    details: result.errors?.deepErrors().map((e) => e.message) ?? [],
+                const details = result.errors?.deepErrors().map((e) => e.message) ?? [];
+                const isSettlementIssue = details.some((d) =>
+                    d.toLowerCase().includes('settled')
+                );
+                response.status(400).send({
+                    error: isSettlementIssue
+                        ? 'Transaction has not settled yet. Partial refunds require a settled transaction. Please try again later or use a full revocation (void).'
+                        : 'Refund failed: ' + details.join('; '),
                 });
                 return;
             }
