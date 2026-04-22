@@ -37,6 +37,7 @@ export class EnrollmentsComponent {
     readonly #refreshTrigger = new Subject<void>();
 
     readonly revoking = signal<string | null>(null);
+    readonly revokeError = signal<string | null>(null);
 
     readonly enrollments$ = this.#refreshTrigger.pipe(
         startWith(undefined),
@@ -109,14 +110,19 @@ export class EnrollmentsComponent {
             }
         );
 
-        const result = await firstValueFrom(dialogRef.closed);
-        if (result) {
+        const confirmed = await firstValueFrom(dialogRef.closed);
+        if (confirmed) {
             this.revoking.set(enrollment.id);
+            this.revokeError.set(null);
             try {
                 await firstValueFrom(
                     this.#api.revokeEnrollment({ enrollmentId: enrollment.id })
                 );
                 this.#refreshTrigger.next();
+            } catch (e: unknown) {
+                const message =
+                    e instanceof Error ? e.message : 'Revocation failed. Please try again.';
+                this.revokeError.set(message);
             } finally {
                 this.revoking.set(null);
             }
