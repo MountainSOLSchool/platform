@@ -69,3 +69,4 @@ export { deleteClassGroup } from '@sol/firebase/enrollment-functions/delete-clas
 export { getEnrollmentMessagesAdmin } from '@sol/firebase/enrollment-functions/get-enrollment-messages-admin';
 export { updateEnrollmentMessages } from '@sol/firebase/enrollment-functions/update-enrollment-messages';
 export { revokeEnrollment } from '@sol/firebase/enrollment-functions/revoke-enrollment';
+export { previewPartialRevoke } from '@sol/firebase/enrollment-functions/preview-partial-revoke';

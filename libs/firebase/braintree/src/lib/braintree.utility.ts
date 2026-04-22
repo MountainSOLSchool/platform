@@ -125,9 +125,15 @@ export class Braintree {
         return await this.gateway.transaction.sale(transactionRequest);
     }
 
-    public async refund(transactionId: string) {
+    public async refund(transactionId: string, amount?: number) {
         if (this.isEmulator) {
             return Braintree.EMULATOR_MOCK_TRANSACTION;
+        }
+        if (amount !== undefined) {
+            return await this.gateway.transaction.refund(
+                transactionId,
+                amount.toFixed(2)
+            );
         }
         const voidResult = await this.gateway.transaction.void(transactionId);
         if (voidResult.success) {

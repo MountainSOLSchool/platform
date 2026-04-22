@@ -48,6 +48,8 @@ import type {
     DeleteClassGroupResponse,
     RevokeEnrollmentRequest,
     RevokeEnrollmentResponse,
+    PreviewPartialRevokeRequest,
+    PreviewPartialRevokeResponse,
 } from '@sol/ts/firebase/api-types';
 
 // Re-export types for consumers
@@ -98,6 +100,8 @@ export type {
     DeleteClassGroupResponse,
     RevokeEnrollmentRequest,
     RevokeEnrollmentResponse,
+    PreviewPartialRevokeRequest,
+    PreviewPartialRevokeResponse,
 };
 
 /**
@@ -291,4 +295,9 @@ export class MountainSolApiService {
         RevokeEnrollmentRequest,
         RevokeEnrollmentResponse
     >(this.#functions, 'revokeEnrollment');
+
+    readonly previewPartialRevoke = declareFunction<
+        PreviewPartialRevokeRequest,
+        PreviewPartialRevokeResponse
+    >(this.#functions, 'previewPartialRevoke');
 }
