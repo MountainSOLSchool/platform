@@ -1,5 +1,4 @@
 <h1>Enrollments</h1>
-<!-- div with button flex aligned to right -->
 <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem">
     <button
         type="button"
@@ -36,6 +35,9 @@
             <th pSortableColumn="finalCost">
                 Final Cost <p-sortIcon field="finalCost"></p-sortIcon>
             </th>
+            <th pSortableColumn="status">
+                Status <p-sortIcon field="status"></p-sortIcon>
+            </th>
             @for (
                 discount of longestDiscounts$ | async;
                 track discount;
@@ -54,13 +56,22 @@
                     ></p-sortIcon>
                 </th>
             }
+            <th>Actions</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-enrollment>
-        <tr>
+        <tr [style.opacity]="enrollment.status === 'revoked' ? '0.6' : '1'">
             <td>{{ enrollment.studentName }}</td>
             <td>{{ enrollment.date | date }}</td>
             <td>{{ enrollment.finalCost | currency }}</td>
+            <td>
+                <span
+                    [style.color]="enrollment.status === 'revoked' ? 'var(--sol-error, #b00020)' : 'inherit'"
+                    [style.font-weight]="enrollment.status === 'revoked' ? '500' : 'normal'"
+                >
+                    {{ enrollment.status === 'revoked' ? 'Revoked' : 'Enrolled' }}
+                </span>
+            </td>
             @for (
                 discount of longestDiscounts$ | async;
                 track discount;
@@ -73,6 +84,18 @@
                     }}
                 </td>
             }
+            <td>
+                @if (enrollment.status !== 'revoked') {
+                    <button
+                        mat-stroked-button
+                        color="warn"
+                        [disabled]="revoking() === enrollment.id"
+                        (click)="confirmRevoke(enrollment)"
+                    >
+                        {{ revoking() === enrollment.id ? 'Revoking...' : 'Revoke & Refund' }}
+                    </button>
+                }
+            </td>
         </tr>
     </ng-template>
 </p-table>

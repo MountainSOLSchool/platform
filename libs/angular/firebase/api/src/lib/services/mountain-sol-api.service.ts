@@ -46,6 +46,8 @@ import type {
     UpdateClassGroupResponse,
     DeleteClassGroupRequest,
     DeleteClassGroupResponse,
+    RevokeEnrollmentRequest,
+    RevokeEnrollmentResponse,
 } from '@sol/ts/firebase/api-types';
 
 // Re-export types for consumers
@@ -94,6 +96,8 @@ export type {
     UpdateClassGroupResponse,
     DeleteClassGroupRequest,
     DeleteClassGroupResponse,
+    RevokeEnrollmentRequest,
+    RevokeEnrollmentResponse,
 };
 
 /**
@@ -278,4 +282,13 @@ export class MountainSolApiService {
         DeleteClassGroupRequest,
         DeleteClassGroupResponse
     >(this.#functions, 'deleteClassGroup');
+
+    // =========================================================================
+    // Enrollment Management
+    // =========================================================================
+
+    readonly revokeEnrollment = declareFunction<
+        RevokeEnrollmentRequest,
+        RevokeEnrollmentResponse
+    >(this.#functions, 'revokeEnrollment');
 }

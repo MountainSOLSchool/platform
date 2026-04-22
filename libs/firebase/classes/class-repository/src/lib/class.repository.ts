@@ -155,6 +155,52 @@ export class ClassRepository {
         return domain;
     }
 
+    async removeStudentFromClass(
+        studentId: string,
+        classId: string,
+        additionalOptionIds: Array<string>
+    ): Promise<void> {
+        const classRef = await DatabaseUtility.getDocumentRef(
+            `${await this.getClassesPath()}/${classId}`
+        );
+        const studentRef = await DatabaseUtility.getDocumentRef(
+            `students/${studentId}`
+        );
+
+        const classData = (await classRef.get()).data() as ClassDbo | undefined;
+        const enrolledStudents = classData?.students ?? [];
+
+        const updatedStudents = enrolledStudents.filter(
+            (ref) => ref.id !== studentRef.id
+        );
+
+        if (updatedStudents.length !== enrolledStudents.length) {
+            await classRef.update({ students: updatedStudents });
+        }
+
+        const additionalOptionsCollection =
+            classRef.collection('additional_options');
+
+        for (const optionId of additionalOptionIds) {
+            const optionRef = additionalOptionsCollection.doc(optionId);
+            const optionDoc = await optionRef.get();
+
+            if (optionDoc.exists) {
+                const optionData = optionDoc.data();
+                const currentStudents = optionData?.students ?? [];
+                const updatedOptionStudents = currentStudents.filter(
+                    (ref: DocumentReference) => ref.id !== studentRef.id
+                );
+
+                if (updatedOptionStudents.length !== currentStudents.length) {
+                    await optionRef.update({
+                        students: updatedOptionStudents,
+                    });
+                }
+            }
+        }
+    }
+
     async addStudentToClass(
         studentId: string,
         classId: string,

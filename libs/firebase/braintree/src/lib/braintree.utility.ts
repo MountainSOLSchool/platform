@@ -125,6 +125,17 @@ export class Braintree {
         return await this.gateway.transaction.sale(transactionRequest);
     }
 
+    public async refund(transactionId: string) {
+        if (this.isEmulator) {
+            return Braintree.EMULATOR_MOCK_TRANSACTION;
+        }
+        try {
+            return await this.gateway.transaction.refund(transactionId);
+        } catch {
+            return await this.gateway.transaction.void(transactionId);
+        }
+    }
+
     public async getAnonymousClientToken() {
         if (this.isEmulator) {
             return 'emulator-mock-anonymous-client-token';

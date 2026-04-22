@@ -6,6 +6,7 @@ export type SemesterEnrollment = {
     transactionId: string;
     timestamp: { _seconds: number };
     discounts: Array<{ amount: number; description: string }>;
+    status?: 'enrolled' | 'revoked';
     enrollmentType?: 'standard' | 'addendum';
     originalEnrollmentId?: string;
     additionalOptionIdsByClassId?: Record<string, Array<string>>;

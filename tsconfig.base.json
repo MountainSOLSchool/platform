@@ -337,6 +337,9 @@
             "@sol/firebase/enrollment-functions/delete-discount": [
                 "libs/firebase/enrollment-functions/delete-discount/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/revoke-enrollment": [
+                "libs/firebase/enrollment-functions/revoke-enrollment/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/get-enrollment-messages": [
                 "libs/firebase/enrollment-functions/get-enrollment-messages/src/index.ts"
             ],
