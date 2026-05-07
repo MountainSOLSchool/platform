@@ -10,16 +10,35 @@ import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
 export const createEnrollmentEmail = onDocumentCreated(
     'enrollment/{enrollmentId}',
     async (event) => {
+        const enrollmentId = event.params.enrollmentId;
         const enrollmentRecord =
             event.data && (event.data.data() as ClassEnrollmentDbo);
 
+        if (!enrollmentRecord) {
+            console.warn(
+                `[createEnrollmentEmail] Skipped: no enrollment data for ${enrollmentId}`
+            );
+            return;
+        }
+
+        const hasPaymentOrFree =
+            !!enrollmentRecord.transactionId ||
+            enrollmentRecord.finalCost === 0;
+        const hasClasses =
+            'classIds' in enrollmentRecord || 'classes' in enrollmentRecord;
+
         if (
-            enrollmentRecord &&
-            enrollmentRecord.status === 'enrolled' &&
-            (!!enrollmentRecord.transactionId ||
-                enrollmentRecord.finalCost === 0) &&
-            ('classIds' in enrollmentRecord || 'classes' in enrollmentRecord)
+            enrollmentRecord.status !== 'enrolled' ||
+            !hasPaymentOrFree ||
+            !hasClasses
         ) {
+            console.info(
+                `[createEnrollmentEmail] Skipped ${enrollmentId}: status=${enrollmentRecord.status}, hasPaymentOrFree=${hasPaymentOrFree}, hasClasses=${hasClasses}`
+            );
+            return;
+        }
+
+        try {
             const semesters = await _getSemestersAvailableToEnroll();
             const semesterNamesById = semesters.reduce(
                 (acc, s) => ({ ...acc, [s.id]: s.name }),
@@ -86,6 +105,14 @@ export const createEnrollmentEmail = onDocumentCreated(
                 enrollmentRecord.finalCost - (classesCost - totalDiscounts);
             const user = await AuthUtility.getUser(enrollmentRecord.userId);
 
+            const recipient = user.email ?? enrollmentRecord.contactEmail;
+            if (!recipient) {
+                console.error(
+                    `[createEnrollmentEmail] Cannot send for ${enrollmentId}: no recipient email (userId=${enrollmentRecord.userId}, no contactEmail on record)`
+                );
+                return;
+            }
+
             const isAddendum = enrollmentRecord.enrollmentType === 'addendum';
 
             const { html, text } = generateEmailContent(
@@ -96,14 +123,16 @@ export const createEnrollmentEmail = onDocumentCreated(
                 isAddendum
             );
 
-            await DatabaseUtility.getDatabase()
+            const subject = isAddendum
+                ? `Enrollment addendum for ${enrollmentRecord.studentName}`
+                : `Class confirmation for ${enrollmentRecord.studentName}`;
+
+            const mailDoc = await DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
-                    to: user.email ?? enrollmentRecord.contactEmail,
+                    to: recipient,
                     message: {
-                        subject: isAddendum
-                            ? `Enrollment addendum for ${enrollmentRecord.studentName}`
-                            : `Class confirmation for ${enrollmentRecord.studentName}`,
+                        subject,
                         from: `Mountain SOL School <info@mountainsol.org>`,
                         replyTo: `Mountain SOL School <info@mountainsol.org>`,
                         messageId: `<${enrollmentRecord.transactionId}.${Date.now()}@mountainsol.org>`,
@@ -111,6 +140,16 @@ export const createEnrollmentEmail = onDocumentCreated(
                         text,
                     },
                 });
+
+            console.info(
+                `[createEnrollmentEmail] Queued mail/${mailDoc.id} for enrollment ${enrollmentId} to ${recipient}`
+            );
+        } catch (error) {
+            console.error(
+                `[createEnrollmentEmail] Failed for enrollment ${enrollmentId}:`,
+                error
+            );
+            throw error;
         }
     }
 );
