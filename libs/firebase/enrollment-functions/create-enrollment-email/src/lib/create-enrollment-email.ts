@@ -1,11 +1,21 @@
 import { onDocumentCreated } from 'firebase-functions/v2/firestore';
+import { marked } from 'marked';
 import { ClassEnrollmentDbo } from '@sol/classes/enrollment/repository';
 import { AuthUtility } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { Semester } from '@sol/firebase/classes/semester';
 import { SemesterClass } from '@sol/classes/domain';
-import { _getClasses, _getSemestersAvailableToEnroll } from '@sol/firebase/enrollment-functions/shared';
+import {
+    _getClasses,
+    _getSemestersAvailableToEnroll,
+} from '@sol/firebase/enrollment-functions/shared';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
+
+interface EnrollmentSemester {
+    id: string;
+    name: string;
+    enrollmentEmailContent?: string;
+}
 
 export const createEnrollmentEmail = onDocumentCreated(
     'enrollment/{enrollmentId}',
@@ -40,6 +50,10 @@ export const createEnrollmentEmail = onDocumentCreated(
 
         try {
             const semesters = await _getSemestersAvailableToEnroll();
+            const semestersById = semesters.reduce(
+                (acc, s) => ({ ...acc, [s.id]: s }),
+                {} as Record<string, (typeof semesters)[number]>
+            );
             const semesterNamesById = semesters.reduce(
                 (acc, s) => ({ ...acc, [s.id]: s.name }),
                 {} as Record<string, string>
@@ -48,11 +62,11 @@ export const createEnrollmentEmail = onDocumentCreated(
             const classes =
                 'classes' in enrollmentRecord
                     ? Object.values(
-                        await _getClasses(enrollmentRecord.classes)
-                    ).flatMap((cl) => cl)
+                          await _getClasses(enrollmentRecord.classes)
+                      ).flatMap((cl) => cl)
                     : await Semester.active().classes.getMany(
-                        enrollmentRecord.classIds
-                    );
+                          enrollmentRecord.classIds
+                      );
 
             // For addendum enrollments, determine which classes are existing
             // (only new options added) vs truly new
@@ -115,10 +129,16 @@ export const createEnrollmentEmail = onDocumentCreated(
 
             const isAddendum = enrollmentRecord.enrollmentType === 'addendum';
 
+            const semestersInEnrollment = collectSemestersInEnrollment(
+                classesWithOptions,
+                semestersById
+            );
+
             const { html, text } = generateEmailContent(
                 enrollmentRecord,
                 classesWithOptions,
                 semesterNamesById,
+                semestersInEnrollment,
                 differenceBetweenFinalCostAndOriginalCostWithDiscounts,
                 isAddendum
             );
@@ -159,6 +179,60 @@ interface EmailContent {
     text: string;
 }
 
+function collectSemestersInEnrollment(
+    classesWithOptions: Array<SemesterClass & { isExistingClass?: boolean }>,
+    semestersById: Record<string, EnrollmentSemester>
+): Array<EnrollmentSemester> {
+    const seen = new Set<string>();
+    const ordered: Array<EnrollmentSemester> = [];
+    for (const c of classesWithOptions) {
+        if (!c.semesterId || seen.has(c.semesterId)) continue;
+        seen.add(c.semesterId);
+        const semester = semestersById[c.semesterId];
+        if (semester) ordered.push(semester);
+    }
+    return ordered;
+}
+
+const DEFAULT_BACKPACK_ITEMS = [
+    'Water bottle',
+    'Peanut-free snack',
+    'Bugspray/sunscreen',
+    'Rain jacket',
+];
+
+function renderSemesterContentHtml(
+    semester: EnrollmentSemester,
+    showSemesterHeader: boolean
+): string {
+    const heading = showSemesterHeader
+        ? `<h3 style="margin-bottom: 4px;">${semester.name}</h3>`
+        : '';
+    if (semester.enrollmentEmailContent?.trim()) {
+        const rendered = marked.parse(semester.enrollmentEmailContent, {
+            async: false,
+        }) as string;
+        return `${heading}<div>${rendered}</div>`;
+    }
+    const list = `<ul>${DEFAULT_BACKPACK_ITEMS.map(
+        (item) => `<li>${item}</li>`
+    ).join('')}</ul>`;
+    const intro = `<p>Here's a quick reminder of what your student should bring in their backpack:</p>`;
+    return `${heading}${intro}${list}`;
+}
+
+function renderSemesterContentText(
+    semester: EnrollmentSemester,
+    showSemesterHeader: boolean
+): string {
+    const heading = showSemesterHeader ? `${semester.name}\n` : '';
+    if (semester.enrollmentEmailContent?.trim()) {
+        return `${heading}${semester.enrollmentEmailContent.trim()}\n`;
+    }
+    const list = DEFAULT_BACKPACK_ITEMS.map((item) => `• ${item}`).join('\n');
+    return `${heading}Here's a quick reminder of what your student should bring in their backpack:\n${list}\n`;
+}
+
 function generateEmailContent(
     enrollmentRecord: ClassEnrollmentDbo,
     classesWithOptions: Array<
@@ -173,16 +247,10 @@ function generateEmailContent(
         }
     >,
     semesterNamesById: Record<string, string>,
+    semestersInEnrollment: Array<EnrollmentSemester>,
     differenceBetweenFinalCostAndOriginalCostWithDiscounts: number,
     isAddendum = false
 ): EmailContent {
-    const backpackItems = [
-        'Water bottle',
-        'Peanut-free snack',
-        'Bugspray/sunscreen',
-        'Rain jacket',
-    ];
-
     const classesContent = classesWithOptions.map((c) => ({
         title: c.title,
         semester: semesterNamesById[c.semesterId] ?? '--',
@@ -209,14 +277,15 @@ function generateEmailContent(
         ? `<p>This is a confirmation of changes to ${enrollmentRecord.studentName}'s enrollment.</p>`
         : `<p>Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!</p>`;
 
+    const showSemesterHeaders = semestersInEnrollment.length > 1;
+    const semesterSectionsHtml = isAddendum
+        ? ''
+        : semestersInEnrollment
+              .map((s) => renderSemesterContentHtml(s, showSemesterHeaders))
+              .join('');
     const backpackSection = isAddendum
         ? ''
-        : `<p>Here's a quick reminder of what your student should bring in their backpack:
-                <ul>
-                ${backpackItems.map((item) => `<li>${item}</li>`).join('\n')}
-                </ul>
-                </p>
-
+        : `${semesterSectionsHtml}
                 <p>Got questions? Just reply to this email or reach out to your instructor directly!</p>`;
 
     const receiptLabel = isAddendum ? 'Additional charges' : 'receipt';
@@ -251,16 +320,17 @@ function generateEmailContent(
                 </thead>
                 <tbody>
                     ${classesContent
-            .map(
-                (c) => `
-                    ${c.isExistingClass
-                        ? `<tr class="existing-class">
+                        .map(
+                            (c) => `
+                    ${
+                        c.isExistingClass
+                            ? `<tr class="existing-class">
                         <td>${c.title}</td>
                         <td>${c.semester}</td>
                         <td>Already enrolled</td>
                         <td>--</td>
                     </tr>`
-                        : `<tr>
+                            : `<tr>
                         <td>${c.title}</td>
                         <td>${c.semester}</td>
                         <td>Base registration</td>
@@ -278,27 +348,28 @@ function generateEmailContent(
                     </tr>`
                         )
                         .join('')}`
-            )
-            .join('')}
+                        )
+                        .join('')}
                 ${enrollmentRecord.discounts
-            .map(
-                (d) => `
+                    .map(
+                        (d) => `
                     <tr class="discount-row">
                         <td colspan="3">${d.description}</td>
                         <td>-$${d.amount.toFixed(2)}</td>
                     </tr>`
-            )
-            .join('')}
-                ${differenceBetweenFinalCostAndOriginalCostWithDiscounts != 0
-            ? `
+                    )
+                    .join('')}
+                ${
+                    differenceBetweenFinalCostAndOriginalCostWithDiscounts != 0
+                        ? `
                     <tr class="discount-row">
                         <td colspan="3">Other Adjustments</td>
                         <td>${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0 ? '+' : '-'}$${Math.abs(
-                differenceBetweenFinalCostAndOriginalCostWithDiscounts
-            ).toFixed(2)}</td>
+                            differenceBetweenFinalCostAndOriginalCostWithDiscounts
+                        ).toFixed(2)}</td>
                     </tr>`
-            : ''
-        }
+                        : ''
+                }
                 <tr class="total-row">
                     <td colspan="3">${totalLabel}</td>
                     <td>$${enrollmentRecord.finalCost.toFixed(2)}</td>
@@ -315,12 +386,15 @@ function generateEmailContent(
         ? `This is a confirmation of changes to ${enrollmentRecord.studentName}'s enrollment.`
         : `Hey there! Thanks for signing up ${enrollmentRecord.studentName} for classes!`;
 
+    const semesterSectionsPlain = isAddendum
+        ? ''
+        : semestersInEnrollment
+              .map((s) => renderSemesterContentText(s, showSemesterHeaders))
+              .join('\n');
     const backpackSectionPlain = isAddendum
         ? ''
         : `
-Here's a quick reminder of what your student should bring in their backpack:
-${backpackItems.map((item) => `• ${item}`).join('\n')}
-
+${semesterSectionsPlain}
 Got questions? Just reply to this email or reach out to your instructor directly!
 `;
 
@@ -332,26 +406,28 @@ ${backpackSectionPlain}
 Here's your ${receiptLabel}:
 
 ${classesContent
-            .map(
-                (c) => `
+    .map(
+        (c) => `
 ${c.title}
 Semester: ${c.semester}
 ${c.isExistingClass ? 'Already enrolled' : `Base registration: $${c.baseCost}`}${c.options
-                        .map((opt) => `\n+ ${opt.description}: +$${opt.cost}`)
-                        .join('')}
+            .map((opt) => `\n+ ${opt.description}: +$${opt.cost}`)
+            .join('')}
 `
-            )
-            .join('\n')}
+    )
+    .join('\n')}
 ${enrollmentRecord.discounts
-            .map((d) => `${d.description}: -$${d.amount.toFixed(2)}`)
-            .join('\n')}
-${differenceBetweenFinalCostAndOriginalCostWithDiscounts != 0
-            ? `Other Adjustments: ${differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0
-                ? '+'
-                : '-'
-            }$${Math.abs(differenceBetweenFinalCostAndOriginalCostWithDiscounts).toFixed(2)}`
-            : ''
-        }
+    .map((d) => `${d.description}: -$${d.amount.toFixed(2)}`)
+    .join('\n')}
+${
+    differenceBetweenFinalCostAndOriginalCostWithDiscounts != 0
+        ? `Other Adjustments: ${
+              differenceBetweenFinalCostAndOriginalCostWithDiscounts > 0
+                  ? '+'
+                  : '-'
+          }$${Math.abs(differenceBetweenFinalCostAndOriginalCostWithDiscounts).toFixed(2)}`
+        : ''
+}
 
 ${totalLabel}: $${enrollmentRecord.finalCost.toFixed(2)}
 

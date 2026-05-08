@@ -145,6 +145,15 @@ interface Semester {
                         </button>
                         <button
                             mat-stroked-button
+                            (click)="navigateToEnrollmentEmail()"
+                            [disabled]="!selectedSemesterId()"
+                            matTooltip="Edit the content added to enrollment confirmation emails for this semester"
+                        >
+                            <mat-icon>mail</mat-icon>
+                            Email Content
+                        </button>
+                        <button
+                            mat-stroked-button
                             (click)="navigateToGroups()"
                             [disabled]="!selectedSemesterId()"
                             matTooltip="Manage class groups for bundled pricing"
@@ -573,6 +582,16 @@ export class AdminClassListComponent implements OnInit {
         if (semesterId) {
             this.#router.navigate([
                 '/admin/classes/management/info-panel',
+                semesterId,
+            ]);
+        }
+    }
+
+    navigateToEnrollmentEmail() {
+        const semesterId = this.selectedSemesterId();
+        if (semesterId) {
+            this.#router.navigate([
+                '/admin/classes/management/enrollment-email',
                 semesterId,
             ]);
         }

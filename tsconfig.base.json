@@ -114,6 +114,12 @@
             "@sol/firebase/enrollment-functions/update-semester-info-panel": [
                 "libs/firebase/enrollment-functions/update-semester-info-panel/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/get-semester-enrollment-email-content": [
+                "libs/firebase/enrollment-functions/get-semester-enrollment-email-content/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/update-semester-enrollment-email-content": [
+                "libs/firebase/enrollment-functions/update-semester-enrollment-email-content/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/get-instructors": [
                 "libs/firebase/enrollment-functions/get-instructors/src/index.ts"
             ],
@@ -274,9 +280,7 @@
                 "libs/firebase/enrollment-functions/update-enrollment-draft/src/index.ts"
             ],
             "@sol/firebase/functions": ["libs/firebase/functions/src/index.ts"],
-            "@sol/firebase/payments": [
-                "libs/firebase/payments/src/index.ts"
-            ],
+            "@sol/firebase/payments": ["libs/firebase/payments/src/index.ts"],
             "@sol/firebase/functions-api": [
                 "libs/firebase/functions-api/src/index.ts"
             ],
@@ -290,9 +294,7 @@
             "@sol/payments/braintree-client": [
                 "libs/angular/braintree-client/src/index.ts"
             ],
-            "@sol/payments/domain": [
-                "libs/ts/payments/domain/src/index.ts"
-            ],
+            "@sol/payments/domain": ["libs/ts/payments/domain/src/index.ts"],
             "@sol/payments/transactions": ["libs/ts/transactions/src/index.ts"],
             "@sol/react/auth": ["libs/react/auth/src/index.ts"],
             "@sol/react/request": ["libs/react/request/src/index.ts"],
@@ -313,9 +315,7 @@
             "@sol/ts/firebase/firebase-config": [
                 "libs/ts/firebase/firebase-config/src/index.ts"
             ],
-            "@sol/medic/domain": [
-                "libs/ts/medic/domain/src/index.ts"
-            ],
+            "@sol/medic/domain": ["libs/ts/medic/domain/src/index.ts"],
             "@sol/angular/admin/discounts": [
                 "libs/angular/admin/discounts/src/index.ts"
             ],
