@@ -49,13 +49,6 @@ export interface EnrollmentEmailContent {
     text: string;
 }
 
-const DEFAULT_BACKPACK_ITEMS = [
-    'Water bottle',
-    'Peanut-free snack',
-    'Bugspray/sunscreen',
-    'Rain jacket',
-];
-
 const STYLES = `
     body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
     table { width: 100%; border-collapse: collapse; margin: 20px 0; }
@@ -73,32 +66,27 @@ function renderSemesterContentHtml(
     semester: EmailSemester,
     showSemesterHeader: boolean
 ): string {
+    if (!semester.enrollmentEmailContent?.trim()) {
+        return '';
+    }
     const heading = showSemesterHeader
         ? `<h3 style="margin-bottom: 4px;">${semester.name}</h3>`
         : '';
-    if (semester.enrollmentEmailContent?.trim()) {
-        const rendered = marked.parse(semester.enrollmentEmailContent, {
-            async: false,
-        }) as string;
-        return `${heading}<div>${rendered}</div>`;
-    }
-    const list = `<ul>${DEFAULT_BACKPACK_ITEMS.map(
-        (item) => `<li>${item}</li>`
-    ).join('')}</ul>`;
-    const intro = `<p>Here's a quick reminder of what your student should bring in their backpack:</p>`;
-    return `${heading}${intro}${list}`;
+    const rendered = marked.parse(semester.enrollmentEmailContent, {
+        async: false,
+    }) as string;
+    return `${heading}<div>${rendered}</div>`;
 }
 
 function renderSemesterContentText(
     semester: EmailSemester,
     showSemesterHeader: boolean
 ): string {
-    const heading = showSemesterHeader ? `${semester.name}\n` : '';
-    if (semester.enrollmentEmailContent?.trim()) {
-        return `${heading}${semester.enrollmentEmailContent.trim()}\n`;
+    if (!semester.enrollmentEmailContent?.trim()) {
+        return '';
     }
-    const list = DEFAULT_BACKPACK_ITEMS.map((item) => `• ${item}`).join('\n');
-    return `${heading}Here's a quick reminder of what your student should bring in their backpack:\n${list}\n`;
+    const heading = showSemesterHeader ? `${semester.name}\n` : '';
+    return `${heading}${semester.enrollmentEmailContent.trim()}\n`;
 }
 
 function renderAttachmentsHtml(attachments: Array<EmailAttachment>): string {
@@ -155,10 +143,13 @@ export function renderEnrollmentEmail(
         ? `<p>This is a confirmation of changes to ${studentName}'s enrollment.</p>`
         : `<p>Hey there! Thanks for signing up ${studentName} for classes!</p>`;
 
-    const showSemesterHeaders = semesters.length > 1;
+    const semestersWithContent = semesters.filter((s) =>
+        s.enrollmentEmailContent?.trim()
+    );
+    const showSemesterHeaders = semestersWithContent.length > 1;
     const semesterSectionsHtml = isAddendum
         ? ''
-        : semesters
+        : semestersWithContent
               .map((s) => renderSemesterContentHtml(s, showSemesterHeaders))
               .join('');
     const backpackSection = isAddendum
@@ -267,7 +258,7 @@ export function renderEnrollmentEmail(
 
     const semesterSectionsPlain = isAddendum
         ? ''
-        : semesters
+        : semestersWithContent
               .map((s) => renderSemesterContentText(s, showSemesterHeaders))
               .join('\n');
     const backpackSectionPlain = isAddendum
