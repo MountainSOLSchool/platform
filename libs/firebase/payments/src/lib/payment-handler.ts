@@ -14,9 +14,7 @@ interface TransactionResult {
     errors?: string[];
 }
 
-export abstract class PaymentHandler<
-    TRequest extends BasePaymentRequest,
-> {
+export abstract class PaymentHandler<TRequest extends BasePaymentRequest> {
     constructor(protected readonly braintree: Braintree) {}
 
     protected abstract getFactory(): PaymentFactory<TRequest>;
@@ -99,10 +97,9 @@ export abstract class PaymentHandler<
                 };
             }
 
-            const errorMessages =
-                result.errors?.deepErrors().map((e) => e.message) ?? [
-                    'Transaction failed',
-                ];
+            const errorMessages = result.errors
+                ?.deepErrors()
+                .map((e) => e.message) ?? ['Transaction failed'];
             return {
                 success: false,
                 errors: errorMessages,
@@ -111,7 +108,9 @@ export abstract class PaymentHandler<
             console.error('Payment transaction error:', error);
             return {
                 success: false,
-                errors: ['An unexpected error occurred during payment processing'],
+                errors: [
+                    'An unexpected error occurred during payment processing',
+                ],
             };
         }
     }
@@ -135,6 +134,8 @@ export abstract class PaymentHandler<
         });
         const subject = strategy.getSubject();
 
+        const messageIdLocalPart = transactionId || `payment-${Date.now()}`;
+
         await DatabaseUtility.getDatabase()
             .collection('mail')
             .add({
@@ -143,7 +144,10 @@ export abstract class PaymentHandler<
                     subject,
                     from: 'Mountain SOL School <info@mountainsol.org>',
                     replyTo: 'Mountain SOL School <info@mountainsol.org>',
-                    messageId: `<${transactionId}.${Date.now()}@mountainsol.org>`,
+                    messageId: `<${messageIdLocalPart}.${Date.now()}@mountainsol.org>`,
+                    headers: {
+                        'Auto-Submitted': 'auto-generated',
+                    },
                     html,
                     text,
                 },

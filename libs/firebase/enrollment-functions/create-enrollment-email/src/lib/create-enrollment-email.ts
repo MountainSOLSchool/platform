@@ -147,6 +147,9 @@ export const createEnrollmentEmail = onDocumentCreated(
                 ? `Enrollment addendum for ${enrollmentRecord.studentName}`
                 : `Class confirmation for ${enrollmentRecord.studentName}`;
 
+            const messageIdLocalPart =
+                enrollmentRecord.transactionId ?? `enrollment-${enrollmentId}`;
+
             const mailDoc = await DatabaseUtility.getDatabase()
                 .collection('mail')
                 .add({
@@ -155,7 +158,10 @@ export const createEnrollmentEmail = onDocumentCreated(
                         subject,
                         from: `Mountain SOL School <info@mountainsol.org>`,
                         replyTo: `Mountain SOL School <info@mountainsol.org>`,
-                        messageId: `<${enrollmentRecord.transactionId}.${Date.now()}@mountainsol.org>`,
+                        messageId: `<${messageIdLocalPart}.${Date.now()}@mountainsol.org>`,
+                        headers: {
+                            'Auto-Submitted': 'auto-generated',
+                        },
                         html,
                         text,
                     },
