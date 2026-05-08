@@ -27,6 +27,14 @@ export type {
     UpdateSemesterInfoPanelResponse,
 } from './lib/semester-info-panel.types';
 
+// Semester Enrollment Email Content
+export type {
+    GetSemesterEnrollmentEmailContentRequest,
+    GetSemesterEnrollmentEmailContentResponse,
+    UpdateSemesterEnrollmentEmailContentRequest,
+    UpdateSemesterEnrollmentEmailContentResponse,
+} from './lib/semester-enrollment-email-content.types';
+
 // Medic Class Management
 export type {
     CreateMedicClassRequest,

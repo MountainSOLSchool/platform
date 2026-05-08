@@ -3,6 +3,7 @@ import { ClassFormComponent } from './components/class-form/class-form.component
 import { AdminClassListComponent } from './components/class-list/class-list.component';
 import { InfoPanelEditorComponent } from './components/info-panel-editor/info-panel-editor.component';
 import { ClassGroupListComponent } from './components/class-group-list/class-group-list.component';
+import { EnrollmentEmailContentEditorComponent } from './components/enrollment-email-content-editor/enrollment-email-content-editor.component';
 
 export const classManagementRoutes: Route[] = [
     {
@@ -24,6 +25,11 @@ export const classManagementRoutes: Route[] = [
         path: 'info-panel/:semesterId',
         pathMatch: 'full',
         component: InfoPanelEditorComponent,
+    },
+    {
+        path: 'enrollment-email/:semesterId',
+        pathMatch: 'full',
+        component: EnrollmentEmailContentEditorComponent,
     },
     {
         path: 'groups',

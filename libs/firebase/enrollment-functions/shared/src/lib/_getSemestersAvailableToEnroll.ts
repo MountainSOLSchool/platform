@@ -25,11 +25,17 @@ export async function _getSemestersAvailableToEnroll() {
                 );
                 const semester = await semesterDoc.get();
                 const semesterData = semester.data();
-                
+
                 return {
                     id: semesterId,
                     name: semesterData?.displayName as string,
-                    additionalInfoPanel: semesterData?.additionalInfoPanel as AdditionalInfoPanel | undefined,
+                    additionalInfoPanel: semesterData?.additionalInfoPanel as
+                        | AdditionalInfoPanel
+                        | undefined,
+                    enrollmentEmailContent:
+                        typeof semesterData?.enrollmentEmailContent === 'string'
+                            ? (semesterData.enrollmentEmailContent as string)
+                            : undefined,
                 };
             }
         )

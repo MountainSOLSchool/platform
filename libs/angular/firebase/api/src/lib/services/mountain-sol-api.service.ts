@@ -14,6 +14,10 @@ import type {
     GetSemesterInfoPanelResponse,
     UpdateSemesterInfoPanelRequest,
     UpdateSemesterInfoPanelResponse,
+    GetSemesterEnrollmentEmailContentRequest,
+    GetSemesterEnrollmentEmailContentResponse,
+    UpdateSemesterEnrollmentEmailContentRequest,
+    UpdateSemesterEnrollmentEmailContentResponse,
     CreateMedicClassRequest,
     CreateMedicClassResponse,
     UpdateMedicClassRequest,
@@ -66,6 +70,10 @@ export type {
     GetSemesterInfoPanelResponse,
     UpdateSemesterInfoPanelRequest,
     UpdateSemesterInfoPanelResponse,
+    GetSemesterEnrollmentEmailContentRequest,
+    GetSemesterEnrollmentEmailContentResponse,
+    UpdateSemesterEnrollmentEmailContentRequest,
+    UpdateSemesterEnrollmentEmailContentResponse,
     CreateMedicClassRequest,
     CreateMedicClassResponse,
     UpdateMedicClassRequest,
@@ -177,6 +185,20 @@ export class MountainSolApiService {
     >(this.#functions, 'updateSemesterInfoPanel');
 
     // =========================================================================
+    // Semester Enrollment Email Content
+    // =========================================================================
+
+    readonly getSemesterEnrollmentEmailContent = declareFunction<
+        GetSemesterEnrollmentEmailContentRequest,
+        GetSemesterEnrollmentEmailContentResponse
+    >(this.#functions, 'getSemesterEnrollmentEmailContent');
+
+    readonly updateSemesterEnrollmentEmailContent = declareFunction<
+        UpdateSemesterEnrollmentEmailContentRequest,
+        UpdateSemesterEnrollmentEmailContentResponse
+    >(this.#functions, 'updateSemesterEnrollmentEmailContent');
+
+    // =========================================================================
     // Medic Class Management
     // =========================================================================
 
@@ -190,10 +212,10 @@ export class MountainSolApiService {
         UpdateMedicClassResponse
     >(this.#functions, 'updateMedicClass');
 
-    readonly getMedicClasses = declareFunction<
-        void,
-        GetMedicClassesResponse
-    >(this.#functions, 'getMedicClasses');
+    readonly getMedicClasses = declareFunction<void, GetMedicClassesResponse>(
+        this.#functions,
+        'getMedicClasses'
+    );
 
     readonly getMedicClassesAdmin = declareFunction<
         void,
