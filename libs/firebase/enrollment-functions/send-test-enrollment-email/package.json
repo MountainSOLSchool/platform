@@ -1,0 +1,6 @@
+{
+    "name": "@sol/firebase/enrollment-functions/send-test-enrollment-email",
+    "version": "0.0.1",
+    "dependencies": {},
+    "private": true
+}

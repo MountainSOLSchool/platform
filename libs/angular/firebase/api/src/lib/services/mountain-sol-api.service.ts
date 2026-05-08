@@ -18,6 +18,13 @@ import type {
     GetSemesterEnrollmentEmailContentResponse,
     UpdateSemesterEnrollmentEmailContentRequest,
     UpdateSemesterEnrollmentEmailContentResponse,
+    UploadSemesterEmailAttachmentRequest,
+    UploadSemesterEmailAttachmentResponse,
+    DeleteSemesterEmailAttachmentRequest,
+    DeleteSemesterEmailAttachmentResponse,
+    SendTestEnrollmentEmailRequest,
+    SendTestEnrollmentEmailResponse,
+    SemesterEmailAttachment,
     CreateMedicClassRequest,
     CreateMedicClassResponse,
     UpdateMedicClassRequest,
@@ -74,6 +81,13 @@ export type {
     GetSemesterEnrollmentEmailContentResponse,
     UpdateSemesterEnrollmentEmailContentRequest,
     UpdateSemesterEnrollmentEmailContentResponse,
+    UploadSemesterEmailAttachmentRequest,
+    UploadSemesterEmailAttachmentResponse,
+    DeleteSemesterEmailAttachmentRequest,
+    DeleteSemesterEmailAttachmentResponse,
+    SendTestEnrollmentEmailRequest,
+    SendTestEnrollmentEmailResponse,
+    SemesterEmailAttachment,
     CreateMedicClassRequest,
     CreateMedicClassResponse,
     UpdateMedicClassRequest,
@@ -197,6 +211,21 @@ export class MountainSolApiService {
         UpdateSemesterEnrollmentEmailContentRequest,
         UpdateSemesterEnrollmentEmailContentResponse
     >(this.#functions, 'updateSemesterEnrollmentEmailContent');
+
+    readonly uploadSemesterEmailAttachment = declareFunction<
+        UploadSemesterEmailAttachmentRequest,
+        UploadSemesterEmailAttachmentResponse
+    >(this.#functions, 'uploadSemesterEmailAttachment');
+
+    readonly deleteSemesterEmailAttachment = declareFunction<
+        DeleteSemesterEmailAttachmentRequest,
+        DeleteSemesterEmailAttachmentResponse
+    >(this.#functions, 'deleteSemesterEmailAttachment');
+
+    readonly sendTestEnrollmentEmail = declareFunction<
+        SendTestEnrollmentEmailRequest,
+        SendTestEnrollmentEmailResponse
+    >(this.#functions, 'sendTestEnrollmentEmail');
 
     // =========================================================================
     // Medic Class Management

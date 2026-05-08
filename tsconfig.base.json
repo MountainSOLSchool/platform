@@ -120,6 +120,18 @@
             "@sol/firebase/enrollment-functions/update-semester-enrollment-email-content": [
                 "libs/firebase/enrollment-functions/update-semester-enrollment-email-content/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/upload-semester-email-attachment": [
+                "libs/firebase/enrollment-functions/upload-semester-email-attachment/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/delete-semester-email-attachment": [
+                "libs/firebase/enrollment-functions/delete-semester-email-attachment/src/index.ts"
+            ],
+            "@sol/firebase/enrollment-functions/send-test-enrollment-email": [
+                "libs/firebase/enrollment-functions/send-test-enrollment-email/src/index.ts"
+            ],
+            "@sol/ts/enrollment-email-template": [
+                "libs/ts/enrollment-email-template/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/get-instructors": [
                 "libs/firebase/enrollment-functions/get-instructors/src/index.ts"
             ],

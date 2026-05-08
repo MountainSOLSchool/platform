@@ -29,10 +29,17 @@ export type {
 
 // Semester Enrollment Email Content
 export type {
+    SemesterEmailAttachment,
     GetSemesterEnrollmentEmailContentRequest,
     GetSemesterEnrollmentEmailContentResponse,
     UpdateSemesterEnrollmentEmailContentRequest,
     UpdateSemesterEnrollmentEmailContentResponse,
+    UploadSemesterEmailAttachmentRequest,
+    UploadSemesterEmailAttachmentResponse,
+    DeleteSemesterEmailAttachmentRequest,
+    DeleteSemesterEmailAttachmentResponse,
+    SendTestEnrollmentEmailRequest,
+    SendTestEnrollmentEmailResponse,
 } from './lib/semester-enrollment-email-content.types';
 
 // Medic Class Management
