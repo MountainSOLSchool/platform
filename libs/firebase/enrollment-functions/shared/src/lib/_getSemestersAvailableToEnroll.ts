@@ -26,6 +26,15 @@ export async function _getSemestersAvailableToEnroll() {
                 const semester = await semesterDoc.get();
                 const semesterData = semester.data();
 
+                const rawAttachments = semesterData?.enrollmentEmailAttachments;
+                const enrollmentEmailAttachments = Array.isArray(rawAttachments)
+                    ? (rawAttachments as Array<{
+                          name: string;
+                          url: string;
+                          storagePath?: string;
+                      }>)
+                    : undefined;
+
                 return {
                     id: semesterId,
                     name: semesterData?.displayName as string,
@@ -36,6 +45,7 @@ export async function _getSemestersAvailableToEnroll() {
                         typeof semesterData?.enrollmentEmailContent === 'string'
                             ? (semesterData.enrollmentEmailContent as string)
                             : undefined,
+                    enrollmentEmailAttachments,
                 };
             }
         )

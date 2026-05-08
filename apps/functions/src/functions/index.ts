@@ -51,6 +51,9 @@ export { getSemesterInfoPanel } from '@sol/firebase/enrollment-functions/get-sem
 export { updateSemesterInfoPanel } from '@sol/firebase/enrollment-functions/update-semester-info-panel';
 export { getSemesterEnrollmentEmailContent } from '@sol/firebase/enrollment-functions/get-semester-enrollment-email-content';
 export { updateSemesterEnrollmentEmailContent } from '@sol/firebase/enrollment-functions/update-semester-enrollment-email-content';
+export { uploadSemesterEmailAttachment } from '@sol/firebase/enrollment-functions/upload-semester-email-attachment';
+export { deleteSemesterEmailAttachment } from '@sol/firebase/enrollment-functions/delete-semester-email-attachment';
+export { sendTestEnrollmentEmail } from '@sol/firebase/enrollment-functions/send-test-enrollment-email';
 export { createMedicClass } from '@sol/firebase/enrollment-functions/create-medic-class';
 export { updateMedicClass } from '@sol/firebase/enrollment-functions/update-medic-class';
 export { getMedicClasses } from '@sol/firebase/enrollment-functions/get-medic-classes';

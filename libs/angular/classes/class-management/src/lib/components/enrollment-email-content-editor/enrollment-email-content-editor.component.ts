@@ -1,4 +1,12 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import {
+    Component,
+    computed,
+    effect,
+    ElementRef,
+    inject,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,13 +19,29 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { MountainSolApiService } from '@sol/angular/firebase/api';
+import {
+    MountainSolApiService,
+    type SemesterEmailAttachment,
+} from '@sol/angular/firebase/api';
+import { previewEnrollmentEmail } from '@sol/ts/enrollment-email-template';
 import { MarkdownEditorComponent } from '../markdown-editor/markdown-editor.component';
 
 type SaveState =
     | { status: 'idle' }
     | { status: 'saving' }
     | { status: 'success' }
+    | { status: 'error'; message: string };
+
+type AttachmentState =
+    | { status: 'idle' }
+    | { status: 'uploading'; filename: string }
+    | { status: 'deleting'; storagePath: string }
+    | { status: 'error'; message: string };
+
+type TestSendState =
+    | { status: 'idle' }
+    | { status: 'sending' }
+    | { status: 'sent'; sentTo: string }
     | { status: 'error'; message: string };
 
 @Component({
@@ -52,13 +76,16 @@ type SaveState =
                         <p>
                             This content is added to the class confirmation
                             email parents receive when they enroll a student in
-                            a class from this semester.
+                            a class from
+                            <strong>{{ semesterName() }}</strong
+                            >.
                         </p>
                         <p>
                             If a parent enrolls in classes from multiple
                             semesters in a single transaction, the email shows a
-                            section per semester, each with that semester's
-                            content under its name.
+                            section per semester, each under that semester's
+                            name. Attachments from all involved semesters are
+                            included on the email.
                         </p>
                         <p>
                             Markdown is supported (lists, links, bold, etc.).
@@ -69,16 +96,142 @@ type SaveState =
                     </mat-card-content>
                 </mat-card>
 
-                <mat-card class="form-card">
-                    <mat-card-content>
-                        <sol-markdown-editor
-                            [(ngModel)]="content"
-                            name="content"
-                            placeholder="e.g., Reminders for what to bring, links to handouts, parking notes…"
-                            [rows]="14"
-                        ></sol-markdown-editor>
-                    </mat-card-content>
-                </mat-card>
+                <div class="editor-grid">
+                    <div class="left-column">
+                        <mat-card class="form-card">
+                            <mat-card-header>
+                                <mat-card-title>Content</mat-card-title>
+                                <mat-card-subtitle
+                                    >Markdown — used in the per-semester section
+                                    of the email.</mat-card-subtitle
+                                >
+                            </mat-card-header>
+                            <mat-card-content>
+                                <sol-markdown-editor
+                                    [(ngModel)]="content"
+                                    name="content"
+                                    placeholder="e.g., What to bring, links to handouts, parking notes…"
+                                    [rows]="14"
+                                ></sol-markdown-editor>
+                            </mat-card-content>
+                        </mat-card>
+
+                        <mat-card class="form-card">
+                            <mat-card-header>
+                                <mat-card-title>Attachments</mat-card-title>
+                                <mat-card-subtitle
+                                    >PDFs attached to every confirmation email
+                                    for this semester (and linked in the email
+                                    body).</mat-card-subtitle
+                                >
+                            </mat-card-header>
+                            <mat-card-content>
+                                <input
+                                    #fileInput
+                                    type="file"
+                                    accept="application/pdf"
+                                    hidden
+                                    (change)="onFileSelected($event)"
+                                />
+                                <button
+                                    mat-stroked-button
+                                    type="button"
+                                    (click)="fileInput.click()"
+                                    [disabled]="
+                                        attachmentState().status ===
+                                            'uploading' ||
+                                        attachmentState().status === 'deleting'
+                                    "
+                                >
+                                    <mat-icon>upload_file</mat-icon>
+                                    Upload PDF
+                                </button>
+
+                                @if (attachmentState().status === 'uploading') {
+                                    <div class="attachment-status">
+                                        <mat-spinner
+                                            diameter="20"
+                                        ></mat-spinner>
+                                        <span
+                                            >Uploading
+                                            {{ uploadingFilename() }}…</span
+                                        >
+                                    </div>
+                                }
+                                @if (attachmentState().status === 'error') {
+                                    <div class="attachment-status error">
+                                        <mat-icon>error</mat-icon>
+                                        <span>{{
+                                            attachmentErrorMessage()
+                                        }}</span>
+                                    </div>
+                                }
+
+                                @if (attachments().length === 0) {
+                                    <p class="attachment-empty">
+                                        No attachments yet.
+                                    </p>
+                                } @else {
+                                    <ul class="attachment-list">
+                                        @for (
+                                            a of attachments();
+                                            track a.storagePath
+                                        ) {
+                                            <li>
+                                                <mat-icon class="pdf-icon"
+                                                    >picture_as_pdf</mat-icon
+                                                >
+                                                <a
+                                                    [href]="a.url"
+                                                    target="_blank"
+                                                    rel="noopener"
+                                                    >{{ a.name }}</a
+                                                >
+                                                <button
+                                                    mat-icon-button
+                                                    type="button"
+                                                    color="warn"
+                                                    (click)="
+                                                        deleteAttachment(a)
+                                                    "
+                                                    [disabled]="
+                                                        attachmentState()
+                                                            .status !== 'idle'
+                                                    "
+                                                    matTooltip="Remove attachment"
+                                                >
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+
+                    <div class="right-column">
+                        <mat-card class="preview-card">
+                            <mat-card-header>
+                                <mat-card-title>Preview</mat-card-title>
+                                <mat-card-subtitle
+                                    >Live render of the actual confirmation
+                                    email HTML with sample enrollment
+                                    data.</mat-card-subtitle
+                                >
+                            </mat-card-header>
+                            <mat-card-content>
+                                <iframe
+                                    #previewFrame
+                                    class="preview-frame"
+                                    [srcdoc]="previewHtml()"
+                                    sandbox="allow-same-origin"
+                                    title="Email preview"
+                                ></iframe>
+                            </mat-card-content>
+                        </mat-card>
+                    </div>
+                </div>
 
                 <div class="form-actions-bar">
                     <div class="form-actions-status">
@@ -98,7 +251,36 @@ type SaveState =
                                 {{ saveErrorMessage() }}
                             </span>
                         }
+                        @if (testSendState().status === 'sending') {
+                            <mat-spinner diameter="20"></mat-spinner>
+                            <span>Sending test…</span>
+                        }
+                        @if (testSendState().status === 'sent') {
+                            <span class="save-success">
+                                <mat-icon>mark_email_read</mat-icon>
+                                Test sent to {{ testSentRecipient() }}
+                            </span>
+                        }
+                        @if (testSendState().status === 'error') {
+                            <span class="save-error">
+                                <mat-icon>error</mat-icon>
+                                {{ testSendErrorMessage() }}
+                            </span>
+                        }
                     </div>
+                    <button
+                        mat-stroked-button
+                        type="button"
+                        (click)="sendTest()"
+                        [disabled]="
+                            saveState().status === 'saving' ||
+                            testSendState().status === 'sending'
+                        "
+                        matTooltip="Send the saved version of this email to your own admin address. Save first if you want to test unsaved edits."
+                    >
+                        <mat-icon>send</mat-icon>
+                        Send test to me
+                    </button>
                     <button mat-button type="button" (click)="navigateBack()">
                         Cancel
                     </button>
@@ -117,25 +299,22 @@ type SaveState =
     styles: [
         `
             .editor-container {
-                max-width: 900px;
+                max-width: 1200px;
                 margin: 0 auto;
                 padding: 24px;
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
             }
-
             .editor-header {
                 display: flex;
                 align-items: center;
                 gap: 8px;
             }
-
             .editor-header h1 {
                 margin: 0;
                 font-size: 24px;
             }
-
             .loading-container {
                 display: flex;
                 flex-direction: column;
@@ -143,37 +322,89 @@ type SaveState =
                 gap: 12px;
                 padding: 48px 0;
             }
-
             .info-card p {
                 margin: 0 0 8px 0;
             }
-
             .info-card p:last-child {
                 margin-bottom: 0;
             }
-
+            .editor-grid {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                gap: 16px;
+            }
+            @media (max-width: 1024px) {
+                .editor-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+            .left-column,
+            .right-column {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                min-width: 0;
+            }
+            .preview-frame {
+                width: 100%;
+                min-height: 600px;
+                border: 1px solid var(--sol-input-border, #ccc);
+                border-radius: 4px;
+                background: white;
+            }
+            .attachment-status {
+                margin-top: 12px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .attachment-status.error {
+                color: var(--sol-error, #c62828);
+            }
+            .attachment-empty {
+                color: var(--sol-on-surface-variant, #666);
+                margin-top: 12px;
+            }
+            .attachment-list {
+                list-style: none;
+                padding: 0;
+                margin: 12px 0 0;
+            }
+            .attachment-list li {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 4px 0;
+            }
+            .attachment-list a {
+                flex: 1;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .pdf-icon {
+                color: var(--sol-error, #c62828);
+            }
             .form-actions-bar {
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
                 gap: 12px;
                 padding: 8px 0;
+                flex-wrap: wrap;
             }
-
             .form-actions-status {
                 margin-right: auto;
                 display: flex;
                 align-items: center;
                 gap: 8px;
             }
-
             .save-success {
                 color: var(--sol-success, #2d862d);
                 display: inline-flex;
                 align-items: center;
                 gap: 4px;
             }
-
             .save-error {
                 color: var(--sol-error, #c62828);
                 display: inline-flex;
@@ -188,6 +419,8 @@ export class EnrollmentEmailContentEditorComponent {
     readonly #router = inject(Router);
     readonly #route = inject(ActivatedRoute);
 
+    readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
+
     readonly #semesterIdFromRoute = toSignal(
         this.#route.paramMap.pipe(
             map((params) => params.get('semesterId') ?? '')
@@ -195,20 +428,66 @@ export class EnrollmentEmailContentEditorComponent {
     );
 
     content = signal('');
+    semesterName = signal('This Semester');
+    attachments = signal<Array<SemesterEmailAttachment>>([]);
+
     saveState = signal<SaveState>({ status: 'idle' });
+    attachmentState = signal<AttachmentState>({ status: 'idle' });
+    testSendState = signal<TestSendState>({ status: 'idle' });
 
     readonly saveErrorMessage = computed(() => {
-        const state = this.saveState();
-        return state.status === 'error' ? state.message : '';
+        const s = this.saveState();
+        return s.status === 'error' ? s.message : '';
+    });
+    readonly attachmentErrorMessage = computed(() => {
+        const s = this.attachmentState();
+        return s.status === 'error' ? s.message : '';
+    });
+    readonly uploadingFilename = computed(() => {
+        const s = this.attachmentState();
+        return s.status === 'uploading' ? s.filename : '';
+    });
+    readonly testSendErrorMessage = computed(() => {
+        const s = this.testSendState();
+        return s.status === 'error' ? s.message : '';
+    });
+    readonly testSentRecipient = computed(() => {
+        const s = this.testSendState();
+        return s.status === 'sent' ? s.sentTo : '';
+    });
+
+    readonly previewHtml = computed(() => {
+        return previewEnrollmentEmail({
+            semesterName: this.semesterName(),
+            enrollmentEmailContent: this.content(),
+            attachments: this.attachments().map((a) => ({
+                name: a.name,
+                url: a.url,
+            })),
+        }).html;
     });
 
     readonly #contentResource = rxResource({
         params: () => this.#semesterIdFromRoute() ?? '',
         stream: ({ params: semesterId }) => {
-            if (!semesterId) return of({ content: null as string | null });
+            if (!semesterId) {
+                return of({
+                    semesterName: 'This Semester',
+                    content: null as string | null,
+                    attachments: [] as Array<SemesterEmailAttachment>,
+                });
+            }
             return this.#api
                 .getSemesterEnrollmentEmailContent({ semesterId })
-                .pipe(catchError(() => of({ content: null })));
+                .pipe(
+                    catchError(() =>
+                        of({
+                            semesterName: 'This Semester',
+                            content: null as string | null,
+                            attachments: [] as Array<SemesterEmailAttachment>,
+                        })
+                    )
+                );
         },
     });
 
@@ -221,6 +500,8 @@ export class EnrollmentEmailContentEditorComponent {
             const result = this.#contentResource.value();
             if (result) {
                 this.content.set(result.content ?? '');
+                this.semesterName.set(result.semesterName ?? 'This Semester');
+                this.attachments.set(result.attachments ?? []);
             }
         });
     }
@@ -241,7 +522,9 @@ export class EnrollmentEmailContentEditorComponent {
                                 this.saveState.set({ status: 'success' });
                                 setTimeout(
                                     () =>
-                                        this.saveState.set({ status: 'idle' }),
+                                        this.saveState.set({
+                                            status: 'idle',
+                                        }),
                                     3000
                                 );
                             } else {
@@ -267,6 +550,119 @@ export class EnrollmentEmailContentEditorComponent {
 
     save() {
         this.#performSave(this.content());
+    }
+
+    onFileSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (!file) return;
+
+        if (file.type !== 'application/pdf') {
+            this.attachmentState.set({
+                status: 'error',
+                message: 'Only PDF files are accepted.',
+            });
+            input.value = '';
+            return;
+        }
+
+        this.attachmentState.set({
+            status: 'uploading',
+            filename: file.name,
+        });
+
+        const reader = new FileReader();
+        reader.onerror = () => {
+            this.attachmentState.set({
+                status: 'error',
+                message: 'Failed to read file.',
+            });
+            input.value = '';
+        };
+        reader.onload = () => {
+            const result = reader.result;
+            if (typeof result !== 'string') {
+                this.attachmentState.set({
+                    status: 'error',
+                    message: 'Unexpected file read result.',
+                });
+                input.value = '';
+                return;
+            }
+            const base64 = result.split(',')[1] ?? '';
+            const semesterId = this.#semesterIdFromRoute() ?? '';
+            this.#api
+                .uploadSemesterEmailAttachment({
+                    semesterId,
+                    filename: file.name,
+                    fileBase64: base64,
+                })
+                .subscribe({
+                    next: (response) => {
+                        this.attachments.set(response.attachments);
+                        this.attachmentState.set({ status: 'idle' });
+                        input.value = '';
+                    },
+                    error: (err) => {
+                        this.attachmentState.set({
+                            status: 'error',
+                            message: err?.message ?? 'Upload failed',
+                        });
+                        input.value = '';
+                    },
+                });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    deleteAttachment(attachment: SemesterEmailAttachment) {
+        const semesterId = this.#semesterIdFromRoute() ?? '';
+        if (!semesterId) return;
+        this.attachmentState.set({
+            status: 'deleting',
+            storagePath: attachment.storagePath,
+        });
+        this.#api
+            .deleteSemesterEmailAttachment({
+                semesterId,
+                storagePath: attachment.storagePath,
+            })
+            .subscribe({
+                next: (response) => {
+                    this.attachments.set(response.attachments);
+                    this.attachmentState.set({ status: 'idle' });
+                },
+                error: (err) => {
+                    this.attachmentState.set({
+                        status: 'error',
+                        message: err?.message ?? 'Delete failed',
+                    });
+                },
+            });
+    }
+
+    sendTest() {
+        const semesterId = this.#semesterIdFromRoute() ?? '';
+        if (!semesterId) return;
+        this.testSendState.set({ status: 'sending' });
+        this.#api.sendTestEnrollmentEmail({ semesterId }).subscribe({
+            next: (response) => {
+                this.testSendState.set({
+                    status: 'sent',
+                    sentTo: response.sentTo,
+                });
+                setTimeout(
+                    () => this.testSendState.set({ status: 'idle' }),
+                    8000
+                );
+            },
+            error: (err) => {
+                this.testSendState.set({
+                    status: 'error',
+                    message: err?.message ?? 'Test send failed',
+                });
+            },
+        });
     }
 
     navigateBack() {
