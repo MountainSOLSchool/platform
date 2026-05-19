@@ -1,5 +1,5 @@
 import { Component, inject, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { Router } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { Dialog } from '@angular/cdk/dialog';
@@ -36,7 +36,6 @@ const DISCOUNT_TYPE_LABELS: Record<string, string> = {
     selector: 'sol-discount-list',
     standalone: true,
     imports: [
-        CommonModule,
         MatCardModule,
         MatButtonModule,
         MatIconModule,

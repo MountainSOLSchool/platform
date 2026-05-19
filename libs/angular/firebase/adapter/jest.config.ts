@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'firebase-angular-adapter',
     preset: '../../../../jest.preset.js',
     testEnvironment: 'node',

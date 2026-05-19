@@ -272,9 +272,9 @@ export function UpdateUnitsTool(props: {
                                                       unitId,
                                                       path.name
                                                   )
-                                                : props.isCompletedByUnitId[
+                                                : (props.isCompletedByUnitId[
                                                       unitId
-                                                  ] ?? false;
+                                                  ] ?? false);
 
                                             return (
                                                 <UnitCheckboxWithTooltip
@@ -336,10 +336,10 @@ export function UpdateUnitsTool(props: {
                                                                       unitId,
                                                                       path.name
                                                                   )
-                                                                : props
+                                                                : (props
                                                                       .isCompletedByUnitId[
                                                                       unitId
-                                                                  ] ?? false;
+                                                                  ] ?? false);
 
                                                         return (
                                                             <UnitCheckboxWithTooltip

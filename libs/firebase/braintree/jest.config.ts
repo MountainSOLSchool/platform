@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'payments-braintree',
     preset: '../../../jest.preset.js',
     globals: {

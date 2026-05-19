@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'functions',
     preset: '../../jest.preset.js',
     globals: {

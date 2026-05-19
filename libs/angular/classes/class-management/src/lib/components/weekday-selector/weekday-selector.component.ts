@@ -1,5 +1,5 @@
 import { Component, input, model, computed, forwardRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
     ControlValueAccessor,
     FormsModule,
@@ -25,7 +25,6 @@ const DAY_ORDER = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
     selector: 'sol-weekday-selector',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatFormFieldModule,
         MatSelectModule,

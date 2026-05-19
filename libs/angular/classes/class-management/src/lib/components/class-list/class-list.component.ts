@@ -5,7 +5,7 @@ import {
     effect,
     linkedSignal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
@@ -74,7 +74,6 @@ interface Semester {
     selector: 'sol-admin-class-list',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatCardModule,
         MatButtonModule,

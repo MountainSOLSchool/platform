@@ -9,9 +9,7 @@ import {
 } from '@sol/payments/domain';
 import { ServicePaymentEmailStrategy } from '../email-strategies/service-payment.email-strategy';
 
-export class ServicePaymentFactory
-    implements PaymentFactory<ServicePaymentRequest>
-{
+export class ServicePaymentFactory implements PaymentFactory<ServicePaymentRequest> {
     validate(request: ServicePaymentRequest): ValidationResult {
         const errors: string[] = [];
 

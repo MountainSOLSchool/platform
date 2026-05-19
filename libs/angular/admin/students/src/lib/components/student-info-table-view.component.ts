@@ -43,19 +43,34 @@ export interface StudentTableRow {
                     [rows]="25"
                     [showCurrentPageReport]="true"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} students"
-                    [globalFilterFields]="['firstName', 'lastName', 'school', 'email']"
+                    [globalFilterFields]="[
+                        'firstName',
+                        'lastName',
+                        'school',
+                        'email',
+                    ]"
                     responsiveLayout="scroll"
                     sortMode="single"
                 >
                     <ng-template pTemplate="caption">
-                        <div class="flex justify-between align-items-center gap-4">
-                            <span>Total Students: {{ studentsValue.length }}</span>
+                        <div
+                            class="flex justify-between align-items-center gap-4"
+                        >
+                            <span
+                                >Total Students:
+                                {{ studentsValue.length }}</span
+                            >
                             <span class="p-input-icon-left">
                                 <i class="pi pi-search"></i>
                                 <input
                                     pInputText
                                     type="text"
-                                    (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                                    (input)="
+                                        dt.filterGlobal(
+                                            $any($event.target).value,
+                                            'contains'
+                                        )
+                                    "
                                     placeholder="Search students..."
                                 />
                             </span>
@@ -80,7 +95,10 @@ export interface StudentTableRow {
                     <ng-template pTemplate="body" let-student let-dt="dt">
                         <tr>
                             <td>
-                                <strong>{{ student.lastName }}, {{ student.firstName }}</strong>
+                                <strong
+                                    >{{ student.lastName }},
+                                    {{ student.firstName }}</strong
+                                >
                             </td>
                             <td>{{ student.age }}</td>
                             <td>{{ student.school }}</td>
@@ -110,7 +128,9 @@ export interface StudentTableRow {
                                     label="View Info Sheet"
                                     icon="pi pi-eye"
                                     size="small"
-                                    [loading]="studentIdBeingViewed() === student.id"
+                                    [loading]="
+                                        studentIdBeingViewed() === student.id
+                                    "
                                     (click)="viewInfoClick.emit(student)"
                                 >
                                 </p-button>

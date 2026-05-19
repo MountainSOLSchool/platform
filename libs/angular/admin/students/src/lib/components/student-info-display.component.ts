@@ -28,7 +28,11 @@ import { rxResource } from '@angular/core/rxjs-interop';
                 <iframe
                     class="w-full border rounded-lg"
                     style="height: 80vh"
-                    [src]="sanitize.bypassSecurityTrustResourceUrl(createBlobUrl(infoSheetValue.html))"
+                    [src]="
+                        sanitize.bypassSecurityTrustResourceUrl(
+                            createBlobUrl(infoSheetValue.html)
+                        )
+                    "
                     frameborder="0"
                 ></iframe>
             </div>

@@ -1,5 +1,5 @@
 import { Component, input, signal, forwardRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import {
     FormsModule,
     NG_VALUE_ACCESSOR,
@@ -17,7 +17,6 @@ import { MarkdownModule } from 'ngx-markdown';
     selector: 'sol-markdown-editor',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatFormFieldModule,
         MatInputModule,

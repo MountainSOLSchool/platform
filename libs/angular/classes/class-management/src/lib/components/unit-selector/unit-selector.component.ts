@@ -7,7 +7,7 @@ import {
     output,
     effect,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { pipe, filter, tap, of, map } from 'rxjs';
@@ -67,7 +67,6 @@ interface PathUnitGroup {
     selector: 'sol-unit-selector',
     standalone: true,
     imports: [
-        CommonModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
         MatTooltipModule,

@@ -1,5 +1,5 @@
 import { Component, input, model, computed, output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -14,7 +14,6 @@ export interface TimeRange {
     selector: 'sol-time-range-selector',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatFormFieldModule,
         MatInputModule,

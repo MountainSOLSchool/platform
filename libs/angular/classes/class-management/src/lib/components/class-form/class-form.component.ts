@@ -1,5 +1,4 @@
 import { Component, inject, signal, computed, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
@@ -107,7 +106,6 @@ const WEEKDAY_OPTIONS = [
     selector: 'sol-class-form',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatCardModule,
         MatFormFieldModule,

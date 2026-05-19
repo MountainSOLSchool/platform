@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { DialogRef } from '@angular/cdk/dialog';
 import { pipe, filter, tap, switchMap, catchError, EMPTY } from 'rxjs';
@@ -17,7 +17,6 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
     selector: 'sol-add-semester-dialog',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatButtonModule,
         MatFormFieldModule,

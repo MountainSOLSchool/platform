@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'functions-integration-tests',
     preset: '../../jest.preset.js',
     testEnvironment: 'node',

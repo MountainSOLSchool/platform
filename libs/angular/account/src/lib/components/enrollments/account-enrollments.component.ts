@@ -32,7 +32,9 @@ import { map } from 'rxjs';
                         <div style="margin-top: 2rem">
                             <sol-enrollment-view
                                 [enrollment]="enrollment"
-                                [enrollableSemesterIds]="enrollableSemesterIds() ?? []"
+                                [enrollableSemesterIds]="
+                                    enrollableSemesterIds() ?? []
+                                "
                             ></sol-enrollment-view>
                         </div>
                     }
