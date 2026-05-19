@@ -418,7 +418,6 @@ export class ClassCardComponent {
         );
     });
 
-
     readonly fallbackImageUrl =
         'https://firebasestorage.googleapis.com/v0/b/mountain-sol-platform.appspot.com/o/default_class.png?alt=media&token=258cef64-a8b9-416b-855c-51bb57a86b37';
 

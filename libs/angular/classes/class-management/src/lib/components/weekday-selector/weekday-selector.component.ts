@@ -103,8 +103,12 @@ export class WeekdaySelectorComponent implements ControlValueAccessor {
 
     readonly weekdayOptions = WEEKDAY_OPTIONS;
 
-    #onChange: (value: string[]) => void = () => {};
-    #onTouched: () => void = () => {};
+    #onChange: (value: string[]) => void = () => {
+        // Default no-op, will be replaced by registerOnChange
+    };
+    #onTouched: () => void = () => {
+        // Default no-op, will be replaced by registerOnTouched
+    };
 
     readonly formattedDisplay = computed(() => {
         const selected = this.selectedDays();

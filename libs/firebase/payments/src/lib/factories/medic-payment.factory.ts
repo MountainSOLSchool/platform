@@ -16,9 +16,7 @@ export interface MedicClassDetails {
     time?: string;
 }
 
-export class MedicPaymentFactory
-    implements PaymentFactory<BasePaymentRequest>
-{
+export class MedicPaymentFactory implements PaymentFactory<BasePaymentRequest> {
     constructor(private readonly classDetails?: MedicClassDetails) {}
 
     validate(request: BasePaymentRequest): ValidationResult {
@@ -47,9 +45,7 @@ export class MedicPaymentFactory
             : validationFailure(errors);
     }
 
-    createPayment(
-        request: BasePaymentRequest
-    ): Omit<PaymentDbo, 'timestamp'> {
+    createPayment(request: BasePaymentRequest): Omit<PaymentDbo, 'timestamp'> {
         const isVenmo = request.paymentMethodType === 'VenmoAccount';
 
         return {

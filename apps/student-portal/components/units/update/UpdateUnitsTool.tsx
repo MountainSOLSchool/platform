@@ -413,9 +413,7 @@ export function UpdateUnitsTool(props: {
                         </h2>
                         {units.map((unit) => (
                             <div key={unit.id} className="mb-4">
-                                <h3 className="font-semibold">
-                                    {unit.name}
-                                </h3>
+                                <h3 className="font-semibold">{unit.name}</h3>
                                 <p>{unit.description}</p>
                             </div>
                         ))}

@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -81,7 +81,9 @@ interface ClassSelection {
                                         min="0"
                                         step="0.01"
                                         [ngModel]="refundAmountInput()"
-                                        (ngModelChange)="refundAmountInput.set($event)"
+                                        (ngModelChange)="
+                                            refundAmountInput.set($event)
+                                        "
                                         class="refund-input"
                                     />
                                 </div>
@@ -95,7 +97,9 @@ interface ClassSelection {
                                 <p class="revoke-note">
                                     Student will remain enrolled in
                                     {{ remainingCount() }}
-                                    class{{ remainingCount() === 1 ? '' : 'es' }}.
+                                    class{{
+                                        remainingCount() === 1 ? '' : 'es'
+                                    }}.
                                 </p>
                             }
                         }
@@ -110,7 +114,9 @@ interface ClassSelection {
                 <button
                     mat-raised-button
                     color="warn"
-                    [disabled]="selectedCount() === 0 || loading() || previewLoading()"
+                    [disabled]="
+                        selectedCount() === 0 || loading() || previewLoading()
+                    "
                     (click)="confirm()"
                 >
                     Revoke & Refund
@@ -124,7 +130,8 @@ interface ClassSelection {
                 display: block;
                 background: white;
                 border-radius: 8px;
-                box-shadow: 0 11px 15px -7px rgba(0, 0, 0, 0.2),
+                box-shadow:
+                    0 11px 15px -7px rgba(0, 0, 0, 0.2),
                     0 24px 38px 3px rgba(0, 0, 0, 0.14),
                     0 9px 46px 8px rgba(0, 0, 0, 0.12);
             }
@@ -188,7 +195,9 @@ interface ClassSelection {
 })
 export class ConfirmRevokeDialogComponent {
     readonly data = inject<ConfirmRevokeDialogData>(DIALOG_DATA);
-    readonly dialogRef = inject(DialogRef<ConfirmRevokeDialogResult | undefined>);
+    readonly dialogRef = inject(
+        DialogRef<ConfirmRevokeDialogResult | undefined>
+    );
     readonly #api = inject(MountainSolApiService);
 
     readonly loading = signal(true);

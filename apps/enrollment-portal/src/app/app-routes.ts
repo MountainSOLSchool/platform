@@ -101,9 +101,7 @@ export const appRoutes: Routes = [
                                         loadChildren: () =>
                                             import(
                                                 '@sol/angular/admin/discounts'
-                                            ).then(
-                                                (m) => m.discountRoutes
-                                            ),
+                                            ).then((m) => m.discountRoutes),
                                     },
                                     {
                                         path: 'messages',

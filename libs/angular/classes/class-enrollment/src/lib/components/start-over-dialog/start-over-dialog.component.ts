@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
 import { ButtonModule } from 'primeng/button';

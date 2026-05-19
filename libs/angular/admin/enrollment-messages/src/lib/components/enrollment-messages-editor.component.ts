@@ -126,9 +126,7 @@ let nextId = 0;
                     <mat-card class="message-card">
                         <mat-card-content>
                             <div class="message-header">
-                                <span class="message-number"
-                                    >#{{ i + 1 }}</span
-                                >
+                                <span class="message-number">#{{ i + 1 }}</span>
                                 <mat-slide-toggle
                                     [ngModel]="msg.active"
                                     (ngModelChange)="
@@ -148,9 +146,7 @@ let nextId = 0;
 
                             <sol-markdown-editor
                                 [ngModel]="msg.text"
-                                (ngModelChange)="
-                                    updateField(i, 'text', $event)
-                                "
+                                (ngModelChange)="updateField(i, 'text', $event)"
                                 placeholder="Use **bold** for emphasis, [link](url) for links"
                                 [rows]="3"
                             ></sol-markdown-editor>
@@ -161,11 +157,7 @@ let nextId = 0;
                                     <mat-select
                                         [ngModel]="msg.severity"
                                         (ngModelChange)="
-                                            updateField(
-                                                i,
-                                                'severity',
-                                                $event
-                                            )
+                                            updateField(i, 'severity', $event)
                                         "
                                     >
                                         @for (
@@ -186,11 +178,7 @@ let nextId = 0;
                                         [matDatepicker]="startPicker"
                                         [ngModel]="msg.startDate"
                                         (ngModelChange)="
-                                            updateField(
-                                                i,
-                                                'startDate',
-                                                $event
-                                            )
+                                            updateField(i, 'startDate', $event)
                                         "
                                     />
                                     <mat-datepicker-toggle
@@ -209,20 +197,14 @@ let nextId = 0;
                                         [matDatepicker]="endPicker"
                                         [ngModel]="msg.endDate"
                                         (ngModelChange)="
-                                            updateField(
-                                                i,
-                                                'endDate',
-                                                $event
-                                            )
+                                            updateField(i, 'endDate', $event)
                                         "
                                     />
                                     <mat-datepicker-toggle
                                         matIconSuffix
                                         [for]="endPicker"
                                     ></mat-datepicker-toggle>
-                                    <mat-datepicker
-                                        #endPicker
-                                    ></mat-datepicker>
+                                    <mat-datepicker #endPicker></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </mat-card-content>
@@ -324,8 +306,7 @@ export class EnrollmentMessagesEditorComponent {
     });
 
     readonly messagesResource = rxResource({
-        stream: () =>
-            this.#api.getEnrollmentMessagesAdmin(undefined as never),
+        stream: () => this.#api.getEnrollmentMessagesAdmin(undefined as never),
     });
 
     readonly loading = computed(
@@ -368,15 +349,9 @@ export class EnrollmentMessagesEditorComponent {
         this.messages.update((msgs) => msgs.filter((_, i) => i !== index));
     }
 
-    updateField(
-        index: number,
-        field: keyof MessageForm,
-        value: unknown
-    ) {
+    updateField(index: number, field: keyof MessageForm, value: unknown) {
         this.messages.update((msgs) =>
-            msgs.map((m, i) =>
-                i === index ? { ...m, [field]: value } : m
-            )
+            msgs.map((m, i) => (i === index ? { ...m, [field]: value } : m))
         );
     }
 

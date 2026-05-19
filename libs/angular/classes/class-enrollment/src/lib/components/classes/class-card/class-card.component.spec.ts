@@ -57,9 +57,7 @@ describe('ClassCardComponent', () => {
         });
 
         it('should display the "Full" badge', () => {
-            const badge = fixture.debugElement.query(
-                By.css('.full-badge')
-            );
+            const badge = fixture.debugElement.query(By.css('.full-badge'));
             expect(badge).toBeTruthy();
             expect(badge.nativeElement.textContent.trim()).toBe('Full');
         });
@@ -75,32 +73,24 @@ describe('ClassCardComponent', () => {
         });
 
         it('should disable the select button', () => {
-            const button = fixture.debugElement.query(
-                By.css('.select-button')
-            );
+            const button = fixture.debugElement.query(By.css('.select-button'));
             expect(button).toBeTruthy();
             expect(button.nativeElement.disabled).toBe(true);
         });
 
         it('should show "Class Full" text on the button', () => {
-            const button = fixture.debugElement.query(
-                By.css('.select-button')
-            );
+            const button = fixture.debugElement.query(By.css('.select-button'));
             expect(button.nativeElement.textContent).toContain('Class Full');
         });
 
         it('should apply grayscale to the header image', () => {
-            const header = fixture.debugElement.query(
-                By.css('.card-header')
-            );
+            const header = fixture.debugElement.query(By.css('.card-header'));
             expect(header.nativeElement.classList).toContain('grayscale');
         });
 
         it('should not emit selectedChange when trying to select', () => {
             const spy = jest.spyOn(component.selectedChange, 'emit');
-            const button = fixture.debugElement.query(
-                By.css('.select-button')
-            );
+            const button = fixture.debugElement.query(By.css('.select-button'));
             button.nativeElement.click();
             expect(spy).not.toHaveBeenCalled();
         });
@@ -116,9 +106,7 @@ describe('ClassCardComponent', () => {
         });
 
         it('should not display the "Full" badge', () => {
-            const badge = fixture.debugElement.query(
-                By.css('.full-badge')
-            );
+            const badge = fixture.debugElement.query(By.css('.full-badge'));
             expect(badge).toBeNull();
         });
 
@@ -130,32 +118,24 @@ describe('ClassCardComponent', () => {
         });
 
         it('should enable the select button', () => {
-            const button = fixture.debugElement.query(
-                By.css('.select-button')
-            );
+            const button = fixture.debugElement.query(By.css('.select-button'));
             expect(button).toBeTruthy();
             expect(button.nativeElement.disabled).toBe(false);
         });
 
         it('should show "Select Class" text on the button', () => {
-            const button = fixture.debugElement.query(
-                By.css('.select-button')
-            );
+            const button = fixture.debugElement.query(By.css('.select-button'));
             expect(button.nativeElement.textContent).toContain('Select Class');
         });
 
         it('should not apply grayscale to the header image', () => {
-            const header = fixture.debugElement.query(
-                By.css('.card-header')
-            );
+            const header = fixture.debugElement.query(By.css('.card-header'));
             expect(header.nativeElement.classList).not.toContain('grayscale');
         });
 
         it('should emit selectedChange when selecting', () => {
             const spy = jest.spyOn(component.selectedChange, 'emit');
-            const button = fixture.debugElement.query(
-                By.css('.select-button')
-            );
+            const button = fixture.debugElement.query(By.css('.select-button'));
             button.nativeElement.click();
             fixture.detectChanges();
             expect(spy).toHaveBeenCalledWith(
@@ -216,9 +196,7 @@ describe('ClassCardComponent', () => {
         });
 
         it('should disable the select button when full', () => {
-            const button = fixture.debugElement.query(
-                By.css('.select-button')
-            );
+            const button = fixture.debugElement.query(By.css('.select-button'));
             expect(button).toBeTruthy();
             expect(button.nativeElement.disabled).toBe(true);
         });

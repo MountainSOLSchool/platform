@@ -210,7 +210,11 @@ import * as browserDetection from '@braintree/browser-detection';
                 font-size: 1.1rem;
                 font-weight: 600;
                 border-radius: 0.5rem;
-                background: linear-gradient(135deg, var(--sol-primary) 0%, var(--sol-primary-hover) 100%);
+                background: linear-gradient(
+                    135deg,
+                    var(--sol-primary) 0%,
+                    var(--sol-primary-hover) 100%
+                );
                 border: none;
                 transition: all 0.3s ease;
             }

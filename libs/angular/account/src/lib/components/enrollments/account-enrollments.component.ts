@@ -6,9 +6,7 @@ import { AccountEnrollmentsApiService } from '../../services/account-enrollments
 import { EnrollmentComponent } from './enrollment.component';
 import { EnrollmentSkeletonComponent } from './enrollment-skeleton.component';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
-import {
-    RequestedOperatorsUtility,
-} from '@sol/angular/request';
+import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { map } from 'rxjs';
 
 @Component({

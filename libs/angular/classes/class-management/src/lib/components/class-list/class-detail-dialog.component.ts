@@ -167,8 +167,7 @@ interface AdminClass {
                 </section>
 
                 @if (
-                    data.additionalOptions &&
-                    data.additionalOptions.length > 0
+                    data.additionalOptions && data.additionalOptions.length > 0
                 ) {
                     <mat-divider></mat-divider>
 

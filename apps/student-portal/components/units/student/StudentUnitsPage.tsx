@@ -25,9 +25,15 @@ export function StudentUnitsPage({ studentId }: StudentUnitsPageProps) {
     return (
         <div className="student-units-page">
             <div className="tree-container">
-                <SmartTreeChart studentId={studentId} onUnitSelect={handleUnitSelect} />
+                <SmartTreeChart
+                    studentId={studentId}
+                    onUnitSelect={handleUnitSelect}
+                />
             </div>
-            <UnitDetailsPanel unitDetails={selectedUnit} isSelected={isUnitSelected} />
+            <UnitDetailsPanel
+                unitDetails={selectedUnit}
+                isSelected={isUnitSelected}
+            />
         </div>
     );
 }

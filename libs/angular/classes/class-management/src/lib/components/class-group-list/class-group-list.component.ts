@@ -80,10 +80,7 @@ interface AdminClass {
                             [(ngModel)]="selectedSemesterId"
                             (ngModelChange)="onSemesterChange($event)"
                         >
-                            @for (
-                                semester of semesters();
-                                track semester.id
-                            ) {
+                            @for (semester of semesters(); track semester.id) {
                                 <mat-option [value]="semester.id">{{
                                     semester.name
                                 }}</mat-option>
@@ -104,8 +101,8 @@ interface AdminClass {
                         <mat-icon>group_work</mat-icon>
                         <h3>No class groups</h3>
                         <p>
-                            Class groups bundle classes together at a
-                            discounted price. Create one to get started.
+                            Class groups bundle classes together at a discounted
+                            price. Create one to get started.
                         </p>
                         <button
                             mat-raised-button
@@ -134,9 +131,7 @@ interface AdminClass {
                                         <button
                                             mat-icon-button
                                             matTooltip="Delete Group"
-                                            (click)="
-                                                confirmDeleteGroup(group)
-                                            "
+                                            (click)="confirmDeleteGroup(group)"
                                         >
                                             <mat-icon>delete</mat-icon>
                                         </button>
@@ -145,9 +140,7 @@ interface AdminClass {
 
                                 <div class="group-cost">
                                     Group Price:
-                                    <strong>{{
-                                        group.cost | currency
-                                    }}</strong>
+                                    <strong>{{ group.cost | currency }}</strong>
                                     @if (getSavings(group); as savings) {
                                         <span class="savings-badge">
                                             <mat-icon>local_offer</mat-icon>
@@ -180,7 +173,11 @@ interface AdminClass {
                 </div>
 
                 <div class="summary">
-                    <p>{{ groups().length }} group{{ groups().length !== 1 ? 's' : '' }}</p>
+                    <p>
+                        {{ groups().length }} group{{
+                            groups().length !== 1 ? 's' : ''
+                        }}
+                    </p>
                 </div>
             }
         </div>
@@ -488,8 +485,7 @@ export class ClassGroupListComponent {
             .map((c) => ({ id: c.id, name: c.name, cost: c.cost }))
             .filter(
                 (c) =>
-                    groupClassIds.has(c.id) ||
-                    !otherGroupedClassIds.has(c.id)
+                    groupClassIds.has(c.id) || !otherGroupedClassIds.has(c.id)
             );
 
         const dialogRef = this.#dialog.open<

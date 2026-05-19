@@ -1,6 +1,19 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    signal,
+} from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
-import { Observable, map, shareReplay, firstValueFrom, Subject, switchMap, startWith } from 'rxjs';
+import {
+    Observable,
+    map,
+    shareReplay,
+    firstValueFrom,
+    Subject,
+    switchMap,
+    startWith,
+} from 'rxjs';
 import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TableModule } from 'primeng/table';
@@ -45,9 +58,7 @@ export class EnrollmentsComponent {
         switchMap(() =>
             this.#functions
                 .call<Array<SemesterEnrollment>>('adminEnrollments')
-                .pipe(
-                    RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                )
+                .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
         ),
         map((enrollments) => {
             return enrollments
@@ -58,8 +69,7 @@ export class EnrollmentsComponent {
                     date: enrollment.timestamp._seconds * 1000,
                     ...enrollment.discounts
                         .map((discount, i) => ({
-                            [`discount${i}_description`]:
-                                discount.description,
+                            [`discount${i}_description`]: discount.description,
                             [`discount${i}_amount`]: discount.amount,
                         }))
                         .reduce((acc, cur) => ({ ...acc, ...cur }), {}),
@@ -100,9 +110,7 @@ export class EnrollmentsComponent {
     );
 
     async confirmRevoke(enrollment: SemesterEnrollment & { date: number }) {
-        const classes = 'classes' in enrollment
-            ? enrollment.classes
-            : [];
+        const classes = 'classes' in enrollment ? enrollment.classes : [];
 
         const dialogRef = this.#dialog.open<
             ConfirmRevokeDialogResult | undefined,

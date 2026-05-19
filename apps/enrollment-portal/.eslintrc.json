@@ -32,6 +32,14 @@
             "files": ["*.html"],
             "extends": ["plugin:@nx/angular-template"],
             "rules": {}
+        },
+        {
+            "files": [".storybook/**/*.ts"],
+            "parserOptions": {
+                "project": [
+                    "apps/enrollment-portal/.storybook/tsconfig.storybook.json"
+                ]
+            }
         }
     ]
 }

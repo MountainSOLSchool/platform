@@ -190,14 +190,19 @@ export class PaymentCollectorStore extends ComponentStore<{
                                             // For fresh card entry: paymentMethodIsSelected is false, but type is 'CreditCard'
                                             // For Venmo: type is 'VenmoAccount'
                                             if (
-                                                this.get().readyForUserInteraction
+                                                this.get()
+                                                    .readyForUserInteraction
                                             ) {
-                                                if (event.paymentMethodIsSelected) {
+                                                if (
+                                                    event.paymentMethodIsSelected
+                                                ) {
                                                     // Vaulted payment method selected - tokenize immediately
                                                     this.prepare();
                                                 } else if (
-                                                    event.type === 'CreditCard' ||
-                                                    event.type === 'VenmoAccount'
+                                                    event.type ===
+                                                        'CreditCard' ||
+                                                    event.type ===
+                                                        'VenmoAccount'
                                                 ) {
                                                     // Fresh card/Venmo - tokenize after a short delay
                                                     // to ensure the Drop-in UI has settled

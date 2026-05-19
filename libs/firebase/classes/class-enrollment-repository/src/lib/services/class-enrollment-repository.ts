@@ -61,9 +61,10 @@ export class ClassEnrollmentRepository {
             .where('originalEnrollmentId', '==', originalEnrollmentId)
             .where('status', '==', 'enrolled')
             .get();
-        return snapshot.docs.map(
-            (doc) => ({ ...(doc.data() as ClassEnrollmentDbo), id: doc.id })
-        );
+        return snapshot.docs.map((doc) => ({
+            ...(doc.data() as ClassEnrollmentDbo),
+            id: doc.id,
+        }));
     }
 
     static async updateStatus(

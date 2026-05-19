@@ -345,14 +345,19 @@ export class ClassesComponent {
                                           c.id
                                       ] ?? [];
                                   const lockedOptIds =
-                                      this.lockedAdditionalOptionIdsByClassId()[c.id] ?? [];
+                                      this.lockedAdditionalOptionIdsByClassId()[
+                                          c.id
+                                      ] ?? [];
                                   return {
                                       ...c,
-                                      selected: this.selectedClassIds().includes(
-                                          c.id
-                                      ),
+                                      selected:
+                                          this.selectedClassIds().includes(
+                                              c.id
+                                          ),
                                       userCost:
-                                          this.userCostsToSelectedClassIds()[c.id],
+                                          this.userCostsToSelectedClassIds()[
+                                              c.id
+                                          ],
                                       initialCost: c.cost,
                                       additionalCost:
                                           (c.additionalOptions ?? [])
@@ -363,17 +368,19 @@ export class ClassesComponent {
                                                   (agg, o) => agg + o.cost,
                                                   0
                                               ) ?? 0,
-                                      newOptionsCost:
-                                          (c.additionalOptions ?? [])
-                                              .filter(
-                                                  (option) =>
-                                                      additional.includes(option.id) &&
-                                                      !lockedOptIds.includes(option.id)
-                                              )
-                                              .reduce(
-                                                  (agg, o) => agg + o.cost,
-                                                  0
-                                              ),
+                                      newOptionsCost: (
+                                          c.additionalOptions ?? []
+                                      )
+                                          .filter(
+                                              (option) =>
+                                                  additional.includes(
+                                                      option.id
+                                                  ) &&
+                                                  !lockedOptIds.includes(
+                                                      option.id
+                                                  )
+                                          )
+                                          .reduce((agg, o) => agg + o.cost, 0),
                                   };
                               }),
                           }));
@@ -399,9 +406,11 @@ export class ClassesComponent {
     selectedDiscountClasses = computed(() => {
         const discount = this.multiClassDiscount();
         if (!discount) return [];
-        return this.selectedClasses()?.filter((c) =>
-            discount.classTypes.includes(c.classType)
-        ) ?? [];
+        return (
+            this.selectedClasses()?.filter((c) =>
+                discount.classTypes.includes(c.classType)
+            ) ?? []
+        );
     });
 
     hasSelectedDiscountClass = computed(
@@ -425,7 +434,8 @@ export class ClassesComponent {
         }
         this.workflow.patchState((s) => {
             const lockedOptionIds =
-                this.lockedAdditionalOptionIdsByClassId()[classSelection.id] ?? [];
+                this.lockedAdditionalOptionIdsByClassId()[classSelection.id] ??
+                [];
             const mergedOptionIds = selected
                 ? Array.from(
                       new Set([

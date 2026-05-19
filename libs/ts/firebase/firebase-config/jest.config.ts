@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'firebase-config',
     preset: '../../../../jest.preset.js',

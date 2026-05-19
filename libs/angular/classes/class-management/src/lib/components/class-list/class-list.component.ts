@@ -4,7 +4,6 @@ import {
     computed,
     effect,
     linkedSignal,
-    OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -440,7 +439,7 @@ interface Semester {
         `,
     ],
 })
-export class AdminClassListComponent implements OnInit {
+export class AdminClassListComponent {
     readonly #functions = inject(FirebaseFunctionsService);
     readonly #semesterService = inject(ClassesSemesterListService);
     readonly #router = inject(Router);
@@ -551,10 +550,6 @@ export class AdminClassListComponent implements OnInit {
                 this.#updateUrlWithSemester(semesterId);
             }
         });
-    }
-
-    ngOnInit() {
-        // rxMethods are connected via their observable inputs when dialogs open
     }
 
     onSemesterChange(semesterId: string) {

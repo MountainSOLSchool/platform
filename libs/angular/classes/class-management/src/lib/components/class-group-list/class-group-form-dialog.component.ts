@@ -84,9 +84,7 @@ export type ClassGroupFormDialogResult = 'saved';
                                 [disabled]="saving()"
                             >
                                 <span class="class-name">{{ cls.name }}</span>
-                                <span class="class-cost"
-                                    >\${{ cls.cost }}</span
-                                >
+                                <span class="class-cost">\${{ cls.cost }}</span>
                             </mat-checkbox>
                         </label>
                     }
@@ -252,10 +250,7 @@ export class ClassGroupFormDialogComponent implements OnInit {
     readonly savingsDisplay = computed(() => {
         const selected = this.availableClasses.filter((c) => c.selected);
         if (selected.length < 2 || this.groupCost <= 0) return null;
-        const individualTotal = selected.reduce(
-            (sum, c) => sum + c.cost,
-            0
-        );
+        const individualTotal = selected.reduce((sum, c) => sum + c.cost, 0);
         const savings = individualTotal - this.groupCost;
         if (savings <= 0) return null;
         return `$${savings} savings vs. individual prices ($${individualTotal})`;

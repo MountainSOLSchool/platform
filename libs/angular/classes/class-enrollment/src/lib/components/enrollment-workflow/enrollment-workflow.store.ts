@@ -172,7 +172,8 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
         (state) => ({
             addendumMode: state.addendumMode,
             lockedClassIds: state.lockedClassIds,
-            lockedAdditionalOptionIdsByClassId: state.lockedAdditionalOptionIdsByClassId,
+            lockedAdditionalOptionIdsByClassId:
+                state.lockedAdditionalOptionIdsByClassId,
         })
     );
     private readonly selectBasktCostRequest = createSelector(
@@ -198,7 +199,9 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                             selectedAdditionalOptionIdsByClassId[id] ?? [],
                     })),
                     userCostsToClassIds,
-                    overrideCosts: undefined as Record<string, number> | undefined,
+                    overrideCosts: undefined as
+                        | Record<string, number>
+                        | undefined,
                 };
             }
             // In addendum mode, include new classes + locked classes that have new options
@@ -212,8 +215,10 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
 
             for (const c of classes) {
                 const isLocked = addendum.lockedClassIds.includes(c.id);
-                const allOptionIds = selectedAdditionalOptionIdsByClassId[c.id] ?? [];
-                const lockedOptionIds = addendum.lockedAdditionalOptionIdsByClassId[c.id] ?? [];
+                const allOptionIds =
+                    selectedAdditionalOptionIdsByClassId[c.id] ?? [];
+                const lockedOptionIds =
+                    addendum.lockedAdditionalOptionIdsByClassId[c.id] ?? [];
                 const newOptionIds = allOptionIds.filter(
                     (id) => !lockedOptionIds.includes(id)
                 );
@@ -355,18 +360,27 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
 
                         if (addendumMode && originalEnrollmentId) {
                             // Addendum submission
-                            const newClasses = enrollment.selectedClasses
-                                .filter((c) => !lockedClassIds.includes(c.id));
-                            const newAdditionalOptionIdsByClassId: Record<string, Array<string>> = {};
+                            const newClasses =
+                                enrollment.selectedClasses.filter(
+                                    (c) => !lockedClassIds.includes(c.id)
+                                );
+                            const newAdditionalOptionIdsByClassId: Record<
+                                string,
+                                Array<string>
+                            > = {};
                             for (const [classId, optionIds] of Object.entries(
                                 enrollment.additionalOptionIdsByClassId
                             )) {
-                                const locked = lockedAdditionalOptionIdsByClassId[classId] ?? [];
+                                const locked =
+                                    lockedAdditionalOptionIdsByClassId[
+                                        classId
+                                    ] ?? [];
                                 const newOpts = (optionIds ?? []).filter(
                                     (id) => !locked.includes(id)
                                 );
                                 if (newOpts.length > 0) {
-                                    newAdditionalOptionIdsByClassId[classId] = newOpts;
+                                    newAdditionalOptionIdsByClassId[classId] =
+                                        newOpts;
                                 }
                             }
                             return this.functions
@@ -381,19 +395,26 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                                         userCostsToSelectedClassIds:
                                             enrollment.userCostsToSelectedClassIds,
                                         newAdditionalOptionIdsByClassId,
-                                        expectedTotal: state.basketCosts.finalTotal,
+                                        expectedTotal:
+                                            state.basketCosts.finalTotal,
                                     }
                                 )
                                 .pipe(
                                     tap((response) => {
-                                        if (RequestedUtility.isLoaded(response)) {
+                                        if (
+                                            RequestedUtility.isLoaded(response)
+                                        ) {
                                             this.patchState({
                                                 status: response.success
                                                     ? 'enrolled'
                                                     : 'failed',
                                             });
-                                        } else if (RequestedUtility.isError(response)) {
-                                            this.patchState({ status: 'failed' });
+                                        } else if (
+                                            RequestedUtility.isError(response)
+                                        ) {
+                                            this.patchState({
+                                                status: 'failed',
+                                            });
                                         }
                                     })
                                 );
@@ -432,9 +453,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                             )
                             .pipe(
                                 tap((response) => {
-                                    if (
-                                        RequestedUtility.isLoaded(response)
-                                    ) {
+                                    if (RequestedUtility.isLoaded(response)) {
                                         this.patchState({
                                             status: response.success
                                                 ? 'enrolled'
@@ -497,7 +516,10 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                             studentId: string;
                             studentName: string;
                             classes: Array<{ id: string; semesterId: string }>;
-                            additionalOptionIdsByClassId: Record<string, Array<string>>;
+                            additionalOptionIdsByClassId: Record<
+                                string,
+                                Array<string>
+                            >;
                             openSemesterIds: Array<string>;
                         };
                     }>('getEnrollmentForAddendum', { enrollmentId })
@@ -535,34 +557,40 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
             filter(
                 ([prev, next]) => JSON.stringify(prev) !== JSON.stringify(next)
             ),
-            switchMap(([, { codes, classes, userCostsToClassIds, overrideCosts }]) => {
-                this.patchState({ isLoadingDiscounts: true });
-                return this.functions
-                    .call<{
-                        discountAmounts: Array<{
-                            code: string;
-                            amount: number;
-                        }>;
-                        finalTotal: number;
-                        originalTotal: number;
-                    }>('calculateBasket', {
-                        codes,
-                        classes,
-                        userCostsToClassIds,
-                        ...(overrideCosts && Object.keys(overrideCosts).length > 0
-                            ? { overrideCosts }
-                            : {}),
-                    })
-                    .pipe(
-                        RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
-                        tap((basketCosts) => {
-                            this.patchState(() => ({
-                                basketCosts,
-                                isLoadingDiscounts: false,
-                            }));
+            switchMap(
+                ([
+                    ,
+                    { codes, classes, userCostsToClassIds, overrideCosts },
+                ]) => {
+                    this.patchState({ isLoadingDiscounts: true });
+                    return this.functions
+                        .call<{
+                            discountAmounts: Array<{
+                                code: string;
+                                amount: number;
+                            }>;
+                            finalTotal: number;
+                            originalTotal: number;
+                        }>('calculateBasket', {
+                            codes,
+                            classes,
+                            userCostsToClassIds,
+                            ...(overrideCosts &&
+                            Object.keys(overrideCosts).length > 0
+                                ? { overrideCosts }
+                                : {}),
                         })
-                    );
-            })
+                        .pipe(
+                            RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
+                            tap((basketCosts) => {
+                                this.patchState(() => ({
+                                    basketCosts,
+                                    isLoadingDiscounts: false,
+                                }));
+                            })
+                        );
+                }
+            )
         );
     });
 

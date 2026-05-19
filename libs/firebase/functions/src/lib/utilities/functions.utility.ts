@@ -127,18 +127,12 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
                         } as express.Response,
                         Object.fromEntries(
                             Object.entries(this.secrets)
-                                .map(
-                                    (pair) =>
-                                        pair as [string, SecretParam]
-                                )
+                                .map((pair) => pair as [string, SecretParam])
                                 .map(([key, secret]) => [key, secret.value()])
                         ),
                         Object.fromEntries(
                             Object.entries(this.strings)
-                                .map(
-                                    (pair) =>
-                                        pair as [string, StringParam]
-                                )
+                                .map((pair) => pair as [string, StringParam])
                                 .map(([key, string]) => [key, string.value()])
                         )
                     );

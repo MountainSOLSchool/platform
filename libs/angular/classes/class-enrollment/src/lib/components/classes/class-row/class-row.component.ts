@@ -285,7 +285,6 @@ export class ClassRowComponent {
         return this.lockedAdditionalOptionIdsByClassId()[classId] ?? [];
     }
 
-
     readonly beforeSelectOptionsByClass = computed(() => {
         const locked = this.lockedClassIds();
         const lockedOptions = this.lockedAdditionalOptionIdsByClassId();
