@@ -2,7 +2,10 @@
     "name": "@sol/ts/firebase/firebase-config",
     "version": "0.0.1",
     "dependencies": {
-        "tslib": "^2.3.0"
+        "tslib": "^2.3.0",
+        "firebase": "^11.3.1",
+        "@sol/ts/firebase/adapter": "0.0.1",
+        "@firebase/app": "0.13.1"
     },
     "type": "commonjs",
     "main": "./src/index.js",

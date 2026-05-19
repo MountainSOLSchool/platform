@@ -159,7 +159,9 @@ import { MatDialogModule } from '@angular/material/dialog';
                                     <input
                                         type="number"
                                         [ngModel]="donationAmount()"
-                                        (ngModelChange)="donationAmount.set($event)"
+                                        (ngModelChange)="
+                                            donationAmount.set($event)
+                                        "
                                         name="donationAmount"
                                         placeholder="25.00"
                                         min="1"

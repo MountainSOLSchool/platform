@@ -23,7 +23,9 @@ import { Requested } from '../models/requested.type';
  * ```
  */
 export function declareFunction<TReq, TRes>(
-    functionsService: { call<T>(name: string, request?: unknown): Observable<Requested<T>> },
+    functionsService: {
+        call<T>(name: string, request?: unknown): Observable<Requested<T>>;
+    },
     name: string
 ): (request: TReq) => Observable<TRes> {
     return (request: TReq) =>
@@ -37,7 +39,9 @@ export function declareFunction<TReq, TRes>(
  * Use this when you need access to loading/error states.
  */
 export function declareFunctionWithState<TReq, TRes>(
-    functionsService: { call<T>(name: string, request?: unknown): Observable<Requested<T>> },
+    functionsService: {
+        call<T>(name: string, request?: unknown): Observable<Requested<T>>;
+    },
     name: string
 ): (request: TReq) => Observable<Requested<TRes>> {
     return (request: TReq) => functionsService.call<TRes>(name, request);

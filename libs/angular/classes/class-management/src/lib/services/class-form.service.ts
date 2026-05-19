@@ -7,7 +7,10 @@ import {
     UploadClassImageRequest,
 } from '@sol/angular/firebase/api';
 
-export type ClassFormData = Omit<CreateClassRequest, 'minStudentSize' | 'maxStudentSize'> & {
+export type ClassFormData = Omit<
+    CreateClassRequest,
+    'minStudentSize' | 'maxStudentSize'
+> & {
     minStudentSize: number;
     maxStudentSize: number;
     pausedForEnrollment: boolean;
@@ -32,7 +35,9 @@ export class ClassFormService {
     readonly #api = inject(MountainSolApiService);
 
     uploadImage(data: ImageUploadData): Observable<ImageUploadResult> {
-        const request: Omit<UploadClassImageRequest, 'imageBase64'> & { imageBase64?: string } = {
+        const request: Omit<UploadClassImageRequest, 'imageBase64'> & {
+            imageBase64?: string;
+        } = {
             semesterId: data.semesterId,
             classId: data.classId,
             contentType: data.file.type,
@@ -91,7 +96,10 @@ export class ClassFormService {
             map((result) =>
                 result.success
                     ? { success: true as const, classId: result.classId }
-                    : { success: false as const, error: 'Failed to create class' }
+                    : {
+                          success: false as const,
+                          error: 'Failed to create class',
+                      }
             ),
             catchError((err) =>
                 of({
@@ -102,7 +110,10 @@ export class ClassFormService {
         );
     }
 
-    updateClass(classId: string, data: ClassFormData): Observable<SubmitResult> {
+    updateClass(
+        classId: string,
+        data: ClassFormData
+    ): Observable<SubmitResult> {
         const request: UpdateClassRequest = {
             classId,
             semesterId: data.semesterId,
@@ -136,7 +147,10 @@ export class ClassFormService {
             map((result) =>
                 result.success
                     ? { success: true as const, classId }
-                    : { success: false as const, error: 'Failed to update class' }
+                    : {
+                          success: false as const,
+                          error: 'Failed to update class',
+                      }
             ),
             catchError((err) =>
                 of({

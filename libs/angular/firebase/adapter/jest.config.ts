@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
     displayName: 'firebase-angular-adapter',
     preset: '../../../../jest.preset.js',

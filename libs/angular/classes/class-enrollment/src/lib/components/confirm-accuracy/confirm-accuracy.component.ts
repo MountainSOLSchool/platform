@@ -27,7 +27,10 @@ import { MessagesComponent } from '@sol/form/validity';
                     I have reviewed this section and confirm it is up-to-date
                 </label>
             </div>
-            <sol-messages [messages]="messages()" variant="primeng"></sol-messages>
+            <sol-messages
+                [messages]="messages()"
+                variant="primeng"
+            ></sol-messages>
         </div>
     }`,
     imports: [CheckboxModule, FormsModule, MessagesComponent],

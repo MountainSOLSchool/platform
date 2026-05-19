@@ -38,19 +38,21 @@ export class MedicPaymentEmailStrategy implements PaymentEmailStrategy {
             ? `<strong>${className}</strong>`
             : 'a Mountain SOL Medic class';
 
-        const classDetailsHtml = (classDate || classTime || classLocation)
-            ? `<div class="receipt" style="margin-bottom: 20px;">
+        const classDetailsHtml =
+            classDate || classTime || classLocation
+                ? `<div class="receipt" style="margin-bottom: 20px;">
                             <h2 style="margin-top: 0;">Class Details</h2>
                             ${className ? `<div class="receipt-row"><span class="label">Class:</span><span class="value">${className}</span></div>` : ''}
                             ${classDate ? `<div class="receipt-row"><span class="label">Date:</span><span class="value">${classDate}</span></div>` : ''}
                             ${classTime ? `<div class="receipt-row"><span class="label">Time:</span><span class="value">${classTime}</span></div>` : ''}
                             ${classLocation ? `<div class="receipt-row"><span class="label">Location:</span><span class="value">${classLocation}</span></div>` : ''}
                         </div>`
-            : '';
+                : '';
 
-        const classDetailsText = (classDate || classTime || classLocation)
-            ? `\nCLASS DETAILS\n================\n${className ? `Class: ${className}\n` : ''}${classDate ? `Date: ${classDate}\n` : ''}${classTime ? `Time: ${classTime}\n` : ''}${classLocation ? `Location: ${classLocation}\n` : ''}`
-            : '';
+        const classDetailsText =
+            classDate || classTime || classLocation
+                ? `\nCLASS DETAILS\n================\n${className ? `Class: ${className}\n` : ''}${classDate ? `Date: ${classDate}\n` : ''}${classTime ? `Time: ${classTime}\n` : ''}${classLocation ? `Location: ${classLocation}\n` : ''}`
+                : '';
 
         const html = `
             <!DOCTYPE html>

@@ -43,7 +43,8 @@ export class AcknowledgeOutOfDateComponent {
 
     readonly isOutOfDateAndNotAcknowledged = this.#workflow.selectSignal(
         (state) =>
-            !state.hasAcknowledgedOutOfDate && state.doesStudentInfoRequireReview
+            !state.hasAcknowledgedOutOfDate &&
+            state.doesStudentInfoRequireReview
     );
 
     acknowledgeOutOfDate() {

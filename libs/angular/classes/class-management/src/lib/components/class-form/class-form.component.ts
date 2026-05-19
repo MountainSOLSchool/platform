@@ -1,11 +1,4 @@
-import {
-    Component,
-    inject,
-    signal,
-    computed,
-    OnInit,
-    effect,
-} from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -1036,7 +1029,7 @@ const WEEKDAY_OPTIONS = [
         `,
     ],
 })
-export class ClassFormComponent implements OnInit {
+export class ClassFormComponent {
     readonly #classFormService = inject(ClassFormService);
     readonly #functions = inject(FirebaseFunctionsService);
     readonly #semesterService = inject(ClassesSemesterListService);
@@ -1402,11 +1395,6 @@ export class ClassFormComponent implements OnInit {
                 this.#populateFormFromClass(result.class);
             }
         });
-    }
-
-    ngOnInit() {
-        // All data loading is now handled by rxResource declarations
-        // rxMethod for submission is connected via signal
     }
 
     #populateFormFromClass(cls: ClassForEdit) {

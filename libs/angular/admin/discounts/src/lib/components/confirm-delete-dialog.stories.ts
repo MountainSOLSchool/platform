@@ -15,7 +15,7 @@ const meta: Meta<ConfirmDeleteDialogComponent> = {
                 },
                 {
                     provide: DialogRef,
-                    useValue: { close: () => {} },
+                    useValue: { close: () => undefined },
                 },
             ],
         }),

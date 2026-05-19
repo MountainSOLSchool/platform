@@ -62,9 +62,10 @@ export const classValidationSuite = create(
     }
 );
 
-export function validateClassForPublish(
-    data: ClassValidationData
-): { valid: boolean; errors: string[] } {
+export function validateClassForPublish(data: ClassValidationData): {
+    valid: boolean;
+    errors: string[];
+} {
     const result = classValidationSuite(data);
     const errors = result.getErrors();
 

@@ -1,10 +1,4 @@
-import {
-    Component,
-    inject,
-    signal,
-    computed,
-    effect,
-} from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -27,10 +21,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-import {
-    InfoPanelComponent,
-    type PanelConfig,
-} from '@sol/classes/enrollment';
+import { InfoPanelComponent, type PanelConfig } from '@sol/classes/enrollment';
 import {
     MountainSolApiService,
     type AdditionalInfoPanel,
@@ -158,14 +149,25 @@ interface Semester {
                                 </button>
                             } @else {
                                 <div class="copy-from-controls">
-                                    <mat-form-field appearance="outline" class="copy-semester-select">
+                                    <mat-form-field
+                                        appearance="outline"
+                                        class="copy-semester-select"
+                                    >
                                         <mat-label>Copy from</mat-label>
                                         <mat-select
                                             [(ngModel)]="copyFromSemesterId"
                                             name="copyFromSemesterId"
                                         >
-                                            @for (semester of otherSemesters(); track semester.id) {
-                                                <mat-option [value]="semester.id">{{ semester.name }}</mat-option>
+                                            @for (
+                                                semester of otherSemesters();
+                                                track semester.id
+                                            ) {
+                                                <mat-option
+                                                    [value]="semester.id"
+                                                    >{{
+                                                        semester.name
+                                                    }}</mat-option
+                                                >
                                             }
                                         </mat-select>
                                     </mat-form-field>
@@ -173,11 +175,16 @@ interface Semester {
                                         mat-raised-button
                                         color="primary"
                                         type="button"
-                                        [disabled]="!copyFromSemesterId() || copyState().status === 'loading'"
+                                        [disabled]="
+                                            !copyFromSemesterId() ||
+                                            copyState().status === 'loading'
+                                        "
                                         (click)="copyFromSemester()"
                                     >
                                         @if (copyState().status === 'loading') {
-                                            <mat-spinner diameter="18"></mat-spinner>
+                                            <mat-spinner
+                                                diameter="18"
+                                            ></mat-spinner>
                                         } @else {
                                             Import
                                         }
@@ -191,10 +198,14 @@ interface Semester {
                                     </button>
                                 </div>
                                 @if (copyState().status === 'error') {
-                                    <span class="copy-error">{{ copyErrorMessage() }}</span>
+                                    <span class="copy-error">{{
+                                        copyErrorMessage()
+                                    }}</span>
                                 }
                                 @if (copyState().status === 'success') {
-                                    <span class="copy-success">Panel imported successfully</span>
+                                    <span class="copy-success"
+                                        >Panel imported successfully</span
+                                    >
                                 }
                             }
                         </div>
@@ -244,19 +255,33 @@ interface Semester {
                                 <div class="gradient-section">
                                     <label class="field-label">Gradient</label>
                                     <div class="gradient-presets">
-                                        @for (preset of gradientPresets; track preset.name) {
+                                        @for (
+                                            preset of gradientPresets;
+                                            track preset.name
+                                        ) {
                                             <button
                                                 type="button"
                                                 class="gradient-swatch"
-                                                [class.selected]="gradient() === preset.value"
-                                                [style.background]="preset.value"
+                                                [class.selected]="
+                                                    gradient() === preset.value
+                                                "
+                                                [style.background]="
+                                                    preset.value
+                                                "
                                                 [matTooltip]="preset.name"
-                                                (click)="gradient.set(preset.value)"
+                                                (click)="
+                                                    gradient.set(preset.value)
+                                                "
                                             ></button>
                                         }
                                     </div>
-                                    <mat-form-field appearance="outline" class="gradient-input">
-                                        <mat-label>Custom CSS Gradient</mat-label>
+                                    <mat-form-field
+                                        appearance="outline"
+                                        class="gradient-input"
+                                    >
+                                        <mat-label
+                                            >Custom CSS Gradient</mat-label
+                                        >
                                         <input
                                             matInput
                                             [(ngModel)]="gradient"
@@ -272,42 +297,78 @@ interface Semester {
                         <mat-card class="form-section-card">
                             <mat-card-header>
                                 <mat-card-title>Highlight Boxes</mat-card-title>
-                                <mat-card-subtitle>Colored banners for announcements, warnings, or promotions</mat-card-subtitle>
+                                <mat-card-subtitle
+                                    >Colored banners for announcements,
+                                    warnings, or promotions</mat-card-subtitle
+                                >
                             </mat-card-header>
                             <mat-card-content>
-                                @for (box of highlightBoxes(); track box.id; let i = $index) {
+                                @for (
+                                    box of highlightBoxes();
+                                    track box.id;
+                                    let i = $index
+                                ) {
                                     <div class="highlight-box-row">
-                                        <mat-form-field appearance="outline" class="type-select">
+                                        <mat-form-field
+                                            appearance="outline"
+                                            class="type-select"
+                                        >
                                             <mat-label>Type</mat-label>
                                             <mat-select
                                                 [ngModel]="box.type"
-                                                (ngModelChange)="updateHighlightBox(i, 'type', $event)"
+                                                (ngModelChange)="
+                                                    updateHighlightBox(
+                                                        i,
+                                                        'type',
+                                                        $event
+                                                    )
+                                                "
                                                 [name]="'boxType_' + box.id"
                                             >
                                                 <mat-option value="info">
-                                                    <span class="type-indicator info-indicator"></span>
+                                                    <span
+                                                        class="type-indicator info-indicator"
+                                                    ></span>
                                                     Info
                                                 </mat-option>
                                                 <mat-option value="success">
-                                                    <span class="type-indicator success-indicator"></span>
+                                                    <span
+                                                        class="type-indicator success-indicator"
+                                                    ></span>
                                                     Success
                                                 </mat-option>
                                                 <mat-option value="warning">
-                                                    <span class="type-indicator warning-indicator"></span>
+                                                    <span
+                                                        class="type-indicator warning-indicator"
+                                                    ></span>
                                                     Warning
                                                 </mat-option>
                                                 <mat-option value="promotional">
-                                                    <span class="type-indicator promotional-indicator"></span>
+                                                    <span
+                                                        class="type-indicator promotional-indicator"
+                                                    ></span>
                                                     Promotional
                                                 </mat-option>
                                             </mat-select>
                                         </mat-form-field>
-                                        <mat-form-field appearance="outline" class="box-text">
-                                            <mat-label>Text (supports markdown)</mat-label>
+                                        <mat-form-field
+                                            appearance="outline"
+                                            class="box-text"
+                                        >
+                                            <mat-label
+                                                >Text (supports
+                                                markdown)</mat-label
+                                            >
                                             <textarea
                                                 matInput
                                                 [ngModel]="box.text"
-                                                (ngModelChange)="updateHighlightBox(i, 'text', $event)"
+                                                (ngModelChange)="
+                                                    updateHighlightBox(
+                                                        i,
+                                                        'text',
+                                                        $event
+                                                    )
+                                                "
                                                 [name]="'boxText_' + box.id"
                                                 rows="2"
                                             ></textarea>
@@ -338,165 +399,402 @@ interface Semester {
                         <mat-card class="form-section-card">
                             <mat-card-header>
                                 <mat-card-title>Info Cards</mat-card-title>
-                                <mat-card-subtitle>Cards with titles, icons, and content sections</mat-card-subtitle>
+                                <mat-card-subtitle
+                                    >Cards with titles, icons, and content
+                                    sections</mat-card-subtitle
+                                >
                             </mat-card-header>
                             <mat-card-content>
                                 <mat-accordion multi>
-                                    @for (card of infoCards(); track card.id; let cardIdx = $index) {
+                                    @for (
+                                        card of infoCards();
+                                        track card.id;
+                                        let cardIdx = $index
+                                    ) {
                                         <mat-expansion-panel>
                                             <mat-expansion-panel-header>
                                                 <mat-panel-title>
                                                     @if (card.icon) {
-                                                        <span class="card-icon-preview">{{ card.icon }}</span>
+                                                        <span
+                                                            class="card-icon-preview"
+                                                            >{{
+                                                                card.icon
+                                                            }}</span
+                                                        >
                                                     }
-                                                    {{ card.title || 'Untitled Card' }}
+                                                    {{
+                                                        card.title ||
+                                                            'Untitled Card'
+                                                    }}
                                                 </mat-panel-title>
                                                 <mat-panel-description>
-                                                    {{ card.content.length }} content section{{ card.content.length !== 1 ? 's' : '' }}
+                                                    {{ card.content.length }}
+                                                    content section{{
+                                                        card.content.length !==
+                                                        1
+                                                            ? 's'
+                                                            : ''
+                                                    }}
                                                 </mat-panel-description>
                                             </mat-expansion-panel-header>
 
                                             <div class="card-fields">
                                                 <div class="card-header-row">
-                                                    <mat-form-field appearance="outline" class="card-title-field">
-                                                        <mat-label>Card Title</mat-label>
+                                                    <mat-form-field
+                                                        appearance="outline"
+                                                        class="card-title-field"
+                                                    >
+                                                        <mat-label
+                                                            >Card
+                                                            Title</mat-label
+                                                        >
                                                         <input
                                                             matInput
-                                                            [ngModel]="card.title"
-                                                            (ngModelChange)="updateInfoCard(cardIdx, 'title', $event)"
-                                                            [name]="'cardTitle_' + card.id"
+                                                            [ngModel]="
+                                                                card.title
+                                                            "
+                                                            (ngModelChange)="
+                                                                updateInfoCard(
+                                                                    cardIdx,
+                                                                    'title',
+                                                                    $event
+                                                                )
+                                                            "
+                                                            [name]="
+                                                                'cardTitle_' +
+                                                                card.id
+                                                            "
                                                             placeholder="e.g., Schedule & Dates"
                                                         />
                                                     </mat-form-field>
-                                                    <mat-form-field appearance="outline" class="card-icon-field">
-                                                        <mat-label>Icon (emoji)</mat-label>
+                                                    <mat-form-field
+                                                        appearance="outline"
+                                                        class="card-icon-field"
+                                                    >
+                                                        <mat-label
+                                                            >Icon
+                                                            (emoji)</mat-label
+                                                        >
                                                         <input
                                                             matInput
-                                                            [ngModel]="card.icon"
-                                                            (ngModelChange)="updateInfoCard(cardIdx, 'icon', $event)"
-                                                            [name]="'cardIcon_' + card.id"
+                                                            [ngModel]="
+                                                                card.icon
+                                                            "
+                                                            (ngModelChange)="
+                                                                updateInfoCard(
+                                                                    cardIdx,
+                                                                    'icon',
+                                                                    $event
+                                                                )
+                                                            "
+                                                            [name]="
+                                                                'cardIcon_' +
+                                                                card.id
+                                                            "
                                                         />
                                                     </mat-form-field>
                                                 </div>
 
-                                                @for (section of card.content; track section.id; let sectionIdx = $index) {
-                                                    <div class="content-section">
-                                                        <div class="content-section-header">
+                                                @for (
+                                                    section of card.content;
+                                                    track section.id;
+                                                    let sectionIdx = $index
+                                                ) {
+                                                    <div
+                                                        class="content-section"
+                                                    >
+                                                        <div
+                                                            class="content-section-header"
+                                                        >
                                                             <mat-button-toggle-group
-                                                                [ngModel]="section.type"
-                                                                (ngModelChange)="updateContentType(cardIdx, sectionIdx, $event)"
-                                                                [name]="'contentType_' + section.id"
+                                                                [ngModel]="
+                                                                    section.type
+                                                                "
+                                                                (ngModelChange)="
+                                                                    updateContentType(
+                                                                        cardIdx,
+                                                                        sectionIdx,
+                                                                        $event
+                                                                    )
+                                                                "
+                                                                [name]="
+                                                                    'contentType_' +
+                                                                    section.id
+                                                                "
                                                             >
-                                                                <mat-button-toggle value="text">Text</mat-button-toggle>
-                                                                <mat-button-toggle value="list">List</mat-button-toggle>
-                                                                <mat-button-toggle value="grid">Grid</mat-button-toggle>
+                                                                <mat-button-toggle
+                                                                    value="text"
+                                                                    >Text</mat-button-toggle
+                                                                >
+                                                                <mat-button-toggle
+                                                                    value="list"
+                                                                    >List</mat-button-toggle
+                                                                >
+                                                                <mat-button-toggle
+                                                                    value="grid"
+                                                                    >Grid</mat-button-toggle
+                                                                >
                                                             </mat-button-toggle-group>
                                                             <button
                                                                 mat-icon-button
                                                                 color="warn"
                                                                 type="button"
-                                                                (click)="removeContentSection(cardIdx, sectionIdx)"
+                                                                (click)="
+                                                                    removeContentSection(
+                                                                        cardIdx,
+                                                                        sectionIdx
+                                                                    )
+                                                                "
                                                                 matTooltip="Remove content section"
                                                             >
-                                                                <mat-icon>delete</mat-icon>
+                                                                <mat-icon
+                                                                    >delete</mat-icon
+                                                                >
                                                             </button>
                                                         </div>
 
-                                                        @if (section.type === 'text') {
-                                                            <mat-form-field appearance="outline">
-                                                                <mat-label>Text (supports markdown)</mat-label>
+                                                        @if (
+                                                            section.type ===
+                                                            'text'
+                                                        ) {
+                                                            <mat-form-field
+                                                                appearance="outline"
+                                                            >
+                                                                <mat-label
+                                                                    >Text
+                                                                    (supports
+                                                                    markdown)</mat-label
+                                                                >
                                                                 <textarea
                                                                     matInput
-                                                                    [ngModel]="section.text"
-                                                                    (ngModelChange)="updateContentText(cardIdx, sectionIdx, $event)"
-                                                                    [name]="'contentText_' + section.id"
+                                                                    [ngModel]="
+                                                                        section.text
+                                                                    "
+                                                                    (ngModelChange)="
+                                                                        updateContentText(
+                                                                            cardIdx,
+                                                                            sectionIdx,
+                                                                            $event
+                                                                        )
+                                                                    "
+                                                                    [name]="
+                                                                        'contentText_' +
+                                                                        section.id
+                                                                    "
                                                                     rows="3"
                                                                 ></textarea>
                                                             </mat-form-field>
                                                         }
 
-                                                        @if (section.type === 'list') {
-                                                            <div class="list-items">
-                                                                @for (item of section.items; track item.id; let itemIdx = $index) {
-                                                                    <div class="list-item-row">
-                                                                        <mat-form-field appearance="outline">
-                                                                            <mat-label>Item {{ itemIdx + 1 }}</mat-label>
+                                                        @if (
+                                                            section.type ===
+                                                            'list'
+                                                        ) {
+                                                            <div
+                                                                class="list-items"
+                                                            >
+                                                                @for (
+                                                                    item of section.items;
+                                                                    track item.id;
+                                                                    let itemIdx = $index
+                                                                ) {
+                                                                    <div
+                                                                        class="list-item-row"
+                                                                    >
+                                                                        <mat-form-field
+                                                                            appearance="outline"
+                                                                        >
+                                                                            <mat-label
+                                                                                >Item
+                                                                                {{
+                                                                                    itemIdx +
+                                                                                        1
+                                                                                }}</mat-label
+                                                                            >
                                                                             <input
                                                                                 matInput
-                                                                                [ngModel]="item.value"
-                                                                                (ngModelChange)="updateListItem(cardIdx, sectionIdx, itemIdx, $event)"
-                                                                                [name]="'listItem_' + item.id"
+                                                                                [ngModel]="
+                                                                                    item.value
+                                                                                "
+                                                                                (ngModelChange)="
+                                                                                    updateListItem(
+                                                                                        cardIdx,
+                                                                                        sectionIdx,
+                                                                                        itemIdx,
+                                                                                        $event
+                                                                                    )
+                                                                                "
+                                                                                [name]="
+                                                                                    'listItem_' +
+                                                                                    item.id
+                                                                                "
                                                                             />
                                                                         </mat-form-field>
                                                                         <button
                                                                             mat-icon-button
                                                                             color="warn"
                                                                             type="button"
-                                                                            (click)="removeListItem(cardIdx, sectionIdx, itemIdx)"
+                                                                            (click)="
+                                                                                removeListItem(
+                                                                                    cardIdx,
+                                                                                    sectionIdx,
+                                                                                    itemIdx
+                                                                                )
+                                                                            "
                                                                         >
-                                                                            <mat-icon>close</mat-icon>
+                                                                            <mat-icon
+                                                                                >close</mat-icon
+                                                                            >
                                                                         </button>
                                                                     </div>
                                                                 }
                                                                 <button
                                                                     mat-stroked-button
                                                                     type="button"
-                                                                    (click)="addListItem(cardIdx, sectionIdx)"
+                                                                    (click)="
+                                                                        addListItem(
+                                                                            cardIdx,
+                                                                            sectionIdx
+                                                                        )
+                                                                    "
                                                                 >
-                                                                    <mat-icon>add</mat-icon>
+                                                                    <mat-icon
+                                                                        >add</mat-icon
+                                                                    >
                                                                     Add Item
                                                                 </button>
                                                             </div>
                                                         }
 
-                                                        @if (section.type === 'grid') {
-                                                            <div class="grid-items">
-                                                                @for (gridItem of section.gridItems; track gridItem.id; let gridIdx = $index) {
-                                                                    <div class="grid-item-row">
-                                                                        <mat-form-field appearance="outline" class="grid-label">
-                                                                            <mat-label>Label</mat-label>
+                                                        @if (
+                                                            section.type ===
+                                                            'grid'
+                                                        ) {
+                                                            <div
+                                                                class="grid-items"
+                                                            >
+                                                                @for (
+                                                                    gridItem of section.gridItems;
+                                                                    track gridItem.id;
+                                                                    let gridIdx = $index
+                                                                ) {
+                                                                    <div
+                                                                        class="grid-item-row"
+                                                                    >
+                                                                        <mat-form-field
+                                                                            appearance="outline"
+                                                                            class="grid-label"
+                                                                        >
+                                                                            <mat-label
+                                                                                >Label</mat-label
+                                                                            >
                                                                             <input
                                                                                 matInput
-                                                                                [ngModel]="gridItem.label"
-                                                                                (ngModelChange)="updateGridItem(cardIdx, sectionIdx, gridIdx, 'label', $event)"
-                                                                                [name]="'gridLabel_' + gridItem.id"
+                                                                                [ngModel]="
+                                                                                    gridItem.label
+                                                                                "
+                                                                                (ngModelChange)="
+                                                                                    updateGridItem(
+                                                                                        cardIdx,
+                                                                                        sectionIdx,
+                                                                                        gridIdx,
+                                                                                        'label',
+                                                                                        $event
+                                                                                    )
+                                                                                "
+                                                                                [name]="
+                                                                                    'gridLabel_' +
+                                                                                    gridItem.id
+                                                                                "
                                                                             />
                                                                         </mat-form-field>
-                                                                        <mat-form-field appearance="outline" class="grid-value">
-                                                                            <mat-label>Value</mat-label>
+                                                                        <mat-form-field
+                                                                            appearance="outline"
+                                                                            class="grid-value"
+                                                                        >
+                                                                            <mat-label
+                                                                                >Value</mat-label
+                                                                            >
                                                                             <input
                                                                                 matInput
-                                                                                [ngModel]="gridItem.value"
-                                                                                (ngModelChange)="updateGridItem(cardIdx, sectionIdx, gridIdx, 'value', $event)"
-                                                                                [name]="'gridValue_' + gridItem.id"
+                                                                                [ngModel]="
+                                                                                    gridItem.value
+                                                                                "
+                                                                                (ngModelChange)="
+                                                                                    updateGridItem(
+                                                                                        cardIdx,
+                                                                                        sectionIdx,
+                                                                                        gridIdx,
+                                                                                        'value',
+                                                                                        $event
+                                                                                    )
+                                                                                "
+                                                                                [name]="
+                                                                                    'gridValue_' +
+                                                                                    gridItem.id
+                                                                                "
                                                                             />
                                                                         </mat-form-field>
-                                                                        <mat-form-field appearance="outline" class="grid-desc">
-                                                                            <mat-label>Description</mat-label>
+                                                                        <mat-form-field
+                                                                            appearance="outline"
+                                                                            class="grid-desc"
+                                                                        >
+                                                                            <mat-label
+                                                                                >Description</mat-label
+                                                                            >
                                                                             <input
                                                                                 matInput
-                                                                                [ngModel]="gridItem.description"
-                                                                                (ngModelChange)="updateGridItem(cardIdx, sectionIdx, gridIdx, 'description', $event)"
-                                                                                [name]="'gridDesc_' + gridItem.id"
+                                                                                [ngModel]="
+                                                                                    gridItem.description
+                                                                                "
+                                                                                (ngModelChange)="
+                                                                                    updateGridItem(
+                                                                                        cardIdx,
+                                                                                        sectionIdx,
+                                                                                        gridIdx,
+                                                                                        'description',
+                                                                                        $event
+                                                                                    )
+                                                                                "
+                                                                                [name]="
+                                                                                    'gridDesc_' +
+                                                                                    gridItem.id
+                                                                                "
                                                                             />
                                                                         </mat-form-field>
                                                                         <button
                                                                             mat-icon-button
                                                                             color="warn"
                                                                             type="button"
-                                                                            (click)="removeGridItem(cardIdx, sectionIdx, gridIdx)"
+                                                                            (click)="
+                                                                                removeGridItem(
+                                                                                    cardIdx,
+                                                                                    sectionIdx,
+                                                                                    gridIdx
+                                                                                )
+                                                                            "
                                                                         >
-                                                                            <mat-icon>close</mat-icon>
+                                                                            <mat-icon
+                                                                                >close</mat-icon
+                                                                            >
                                                                         </button>
                                                                     </div>
                                                                 }
                                                                 <button
                                                                     mat-stroked-button
                                                                     type="button"
-                                                                    (click)="addGridItem(cardIdx, sectionIdx)"
+                                                                    (click)="
+                                                                        addGridItem(
+                                                                            cardIdx,
+                                                                            sectionIdx
+                                                                        )
+                                                                    "
                                                                 >
-                                                                    <mat-icon>add</mat-icon>
-                                                                    Add Grid Item
+                                                                    <mat-icon
+                                                                        >add</mat-icon
+                                                                    >
+                                                                    Add Grid
+                                                                    Item
                                                                 </button>
                                                             </div>
                                                         }
@@ -506,7 +804,11 @@ interface Semester {
                                                 <button
                                                     mat-stroked-button
                                                     type="button"
-                                                    (click)="addContentSection(cardIdx)"
+                                                    (click)="
+                                                        addContentSection(
+                                                            cardIdx
+                                                        )
+                                                    "
                                                     class="add-content-btn"
                                                 >
                                                     <mat-icon>add</mat-icon>
@@ -520,9 +822,15 @@ interface Semester {
                                                         mat-button
                                                         color="warn"
                                                         type="button"
-                                                        (click)="removeInfoCard(cardIdx)"
+                                                        (click)="
+                                                            removeInfoCard(
+                                                                cardIdx
+                                                            )
+                                                        "
                                                     >
-                                                        <mat-icon>delete</mat-icon>
+                                                        <mat-icon
+                                                            >delete</mat-icon
+                                                        >
                                                         Remove Card
                                                     </button>
                                                 </div>
@@ -585,11 +893,15 @@ interface Semester {
                         <div class="preview-wrapper">
                             <div class="preview-label">Preview</div>
                             @if (previewConfig(); as config) {
-                                <sol-info-panel [config]="config"></sol-info-panel>
+                                <sol-info-panel
+                                    [config]="config"
+                                ></sol-info-panel>
                             } @else {
                                 <div class="preview-empty">
                                     <mat-icon>visibility_off</mat-icon>
-                                    <p>Add a title and content to see a preview</p>
+                                    <p>
+                                        Add a title and content to see a preview
+                                    </p>
                                 </div>
                             }
                         </div>
@@ -619,15 +931,20 @@ interface Semester {
                 flex: 1;
             }
 
-            .save-success, .save-error {
+            .save-success,
+            .save-error {
                 display: flex;
                 align-items: center;
                 gap: 4px;
                 font-size: 14px;
             }
 
-            .save-success { color: var(--sol-primary); }
-            .save-error { color: var(--sol-error); }
+            .save-success {
+                color: var(--sol-primary);
+            }
+            .save-error {
+                color: var(--sol-error);
+            }
 
             .form-actions-bar {
                 position: sticky;
@@ -724,7 +1041,6 @@ interface Semester {
                 box-shadow: 0 0 0 2px var(--sol-primary);
             }
 
-
             .highlight-box-row {
                 display: grid;
                 grid-template-columns: 140px 1fr auto;
@@ -756,7 +1072,6 @@ interface Semester {
             .promotional-indicator {
                 background: #ff8a80;
             }
-
 
             mat-accordion {
                 display: flex;
@@ -824,7 +1139,6 @@ interface Semester {
                 padding-top: 0.5rem;
             }
 
-
             .preview-column {
                 position: sticky;
                 top: 1rem;
@@ -856,7 +1170,6 @@ interface Semester {
                 text-align: center;
             }
 
-
             .copy-from-row {
                 display: flex;
                 flex-direction: column;
@@ -874,9 +1187,16 @@ interface Semester {
                 width: 260px;
             }
 
-            .copy-error, .copy-success { font-size: 13px; }
-            .copy-error { color: var(--sol-error); }
-            .copy-success { color: var(--sol-primary); }
+            .copy-error,
+            .copy-success {
+                font-size: 13px;
+            }
+            .copy-error {
+                color: var(--sol-error);
+            }
+            .copy-success {
+                color: var(--sol-primary);
+            }
 
             @media (max-width: 1024px) {
                 .editor-layout {
@@ -998,9 +1318,9 @@ export class InfoPanelEditorComponent {
         params: () => this.#semesterIdFromRoute() ?? '',
         stream: ({ params: semesterId }) => {
             if (!semesterId) return of(null);
-            return this.#api.getSemesterInfoPanel({ semesterId }).pipe(
-                catchError(() => of({ panel: null }))
-            );
+            return this.#api
+                .getSemesterInfoPanel({ semesterId })
+                .pipe(catchError(() => of({ panel: null })));
         },
     });
 
@@ -1071,7 +1391,8 @@ export class InfoPanelEditorComponent {
                             if (result.success) {
                                 this.saveState.set({ status: 'success' });
                                 setTimeout(
-                                    () => this.saveState.set({ status: 'idle' }),
+                                    () =>
+                                        this.saveState.set({ status: 'idle' }),
                                     3000
                                 );
                             } else {
@@ -1085,7 +1406,8 @@ export class InfoPanelEditorComponent {
                             this.saveState.set({
                                 status: 'error',
                                 message:
-                                    err?.message ?? 'An unexpected error occurred',
+                                    err?.message ??
+                                    'An unexpected error occurred',
                             });
                             return of(null);
                         })
@@ -1287,11 +1609,7 @@ export class InfoPanelEditorComponent {
         this.infoCards.set(cards);
     }
 
-    updateContentText(
-        cardIndex: number,
-        sectionIndex: number,
-        text: string
-    ) {
+    updateContentText(cardIndex: number, sectionIndex: number, text: string) {
         const cards = [...this.infoCards()];
         const card = { ...cards[cardIndex] };
         const content = [...card.content];
@@ -1317,11 +1635,7 @@ export class InfoPanelEditorComponent {
         this.infoCards.set(cards);
     }
 
-    removeListItem(
-        cardIndex: number,
-        sectionIndex: number,
-        itemIndex: number
-    ) {
+    removeListItem(cardIndex: number, sectionIndex: number, itemIndex: number) {
         const cards = [...this.infoCards()];
         const card = { ...cards[cardIndex] };
         const content = [...card.content];
@@ -1375,11 +1689,7 @@ export class InfoPanelEditorComponent {
         this.infoCards.set(cards);
     }
 
-    removeGridItem(
-        cardIndex: number,
-        sectionIndex: number,
-        gridIndex: number
-    ) {
+    removeGridItem(cardIndex: number, sectionIndex: number, gridIndex: number) {
         const cards = [...this.infoCards()];
         const card = { ...cards[cardIndex] };
         const content = [...card.content];

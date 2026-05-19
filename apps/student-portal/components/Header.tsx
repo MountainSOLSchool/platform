@@ -22,61 +22,146 @@ const Header = () => {
     const mobileMenuRef = useRef<Menu>(null);
 
     const adminMenuItems = [
-        { label: 'Class Registration', url: `${ENROLLMENT_BASE}/classes/enrollment` },
+        {
+            label: 'Class Registration',
+            url: `${ENROLLMENT_BASE}/classes/enrollment`,
+        },
         { separator: true },
-        { label: 'Admin', disabled: true, style: { fontSize: '12px', opacity: 0.6 } },
+        {
+            label: 'Admin',
+            disabled: true,
+            style: { fontSize: '12px', opacity: 0.6 },
+        },
         { label: 'Dashboard', url: `${ENROLLMENT_BASE}/admin` },
-        { label: 'Manage Classes', url: `${ENROLLMENT_BASE}/admin/classes/management` },
-        { label: 'Class Forms and Contacts', url: `${ENROLLMENT_BASE}/admin/report` },
-        { label: 'Student Info Sheets', url: `${ENROLLMENT_BASE}/admin/students` },
+        {
+            label: 'Manage Classes',
+            url: `${ENROLLMENT_BASE}/admin/classes/management`,
+        },
+        {
+            label: 'Class Forms and Contacts',
+            url: `${ENROLLMENT_BASE}/admin/report`,
+        },
+        {
+            label: 'Student Info Sheets',
+            url: `${ENROLLMENT_BASE}/admin/students`,
+        },
         { label: 'T-shirt Sizes', url: `${ENROLLMENT_BASE}/admin/t-shirts` },
         { label: 'Enrollments', url: `${ENROLLMENT_BASE}/admin/enrollments` },
         { label: 'Class Calendar', url: `${ENROLLMENT_BASE}/calendar/classes` },
         { label: 'Student Units', command: () => router.push('/units') },
-        ...(isMedicAdmin ? [
-            { separator: true },
-            { label: 'Medic Admin', disabled: true, style: { fontSize: '12px', opacity: 0.6 } },
-            { label: 'Manage Medic Classes', url: `${ENROLLMENT_BASE}/medic/admin/classes` },
-            { label: 'Medic Enrollments', url: `${ENROLLMENT_BASE}/medic/admin/enrollments` },
-        ] : []),
+        ...(isMedicAdmin
+            ? [
+                  { separator: true },
+                  {
+                      label: 'Medic Admin',
+                      disabled: true,
+                      style: { fontSize: '12px', opacity: 0.6 },
+                  },
+                  {
+                      label: 'Manage Medic Classes',
+                      url: `${ENROLLMENT_BASE}/medic/admin/classes`,
+                  },
+                  {
+                      label: 'Medic Enrollments',
+                      url: `${ENROLLMENT_BASE}/medic/admin/enrollments`,
+                  },
+              ]
+            : []),
     ];
 
     const emailDisplay = user?.email
-        ? (user.email.length > 20 ? user.email.substring(0, 20) + '...' : user.email)
+        ? user.email.length > 20
+            ? user.email.substring(0, 20) + '...'
+            : user.email
         : 'User';
 
-    const userMenuItems = user ? [
-        { label: emailDisplay, disabled: true },
-        { separator: true },
-        { label: 'Sign Out', icon: 'pi pi-sign-out', command: () => signOut() },
-    ] : [];
+    const userMenuItems = user
+        ? [
+              { label: emailDisplay, disabled: true },
+              { separator: true },
+              {
+                  label: 'Sign Out',
+                  icon: 'pi pi-sign-out',
+                  command: () => signOut(),
+              },
+          ]
+        : [];
 
     const mobileMenuItems = [
-        ...(user ? [
-            { label: emailDisplay, disabled: true },
-            { separator: true },
-            { label: 'Sign Out', icon: 'pi pi-sign-out', command: () => signOut() },
-        ] : [
-            { label: 'Register / Sign In', icon: 'pi pi-sign-in', command: () => router.push('/user/create') },
-        ]),
-        ...(isAdmin ? [
-            { separator: true },
-            { label: 'Admin', disabled: true, style: { fontSize: '12px', opacity: 0.6 } },
-            { label: 'Dashboard', url: `${ENROLLMENT_BASE}/admin` },
-            { label: 'Manage Classes', url: `${ENROLLMENT_BASE}/admin/classes/management` },
-            { label: 'Class Forms and Contacts', url: `${ENROLLMENT_BASE}/admin/report` },
-            { label: 'Student Info Sheets', url: `${ENROLLMENT_BASE}/admin/students` },
-            { label: 'T-shirt Sizes', url: `${ENROLLMENT_BASE}/admin/t-shirts` },
-            { label: 'Enrollments', url: `${ENROLLMENT_BASE}/admin/enrollments` },
-            { label: 'Class Calendar', url: `${ENROLLMENT_BASE}/calendar/classes` },
-            { label: 'Student Units', command: () => router.push('/units') },
-        ] : []),
-        ...(isMedicAdmin ? [
-            { separator: true },
-            { label: 'Medic Admin', disabled: true, style: { fontSize: '12px', opacity: 0.6 } },
-            { label: 'Manage Medic Classes', url: `${ENROLLMENT_BASE}/medic/admin/classes` },
-            { label: 'Medic Enrollments', url: `${ENROLLMENT_BASE}/medic/admin/enrollments` },
-        ] : []),
+        ...(user
+            ? [
+                  { label: emailDisplay, disabled: true },
+                  { separator: true },
+                  {
+                      label: 'Sign Out',
+                      icon: 'pi pi-sign-out',
+                      command: () => signOut(),
+                  },
+              ]
+            : [
+                  {
+                      label: 'Register / Sign In',
+                      icon: 'pi pi-sign-in',
+                      command: () => router.push('/user/create'),
+                  },
+              ]),
+        ...(isAdmin
+            ? [
+                  { separator: true },
+                  {
+                      label: 'Admin',
+                      disabled: true,
+                      style: { fontSize: '12px', opacity: 0.6 },
+                  },
+                  { label: 'Dashboard', url: `${ENROLLMENT_BASE}/admin` },
+                  {
+                      label: 'Manage Classes',
+                      url: `${ENROLLMENT_BASE}/admin/classes/management`,
+                  },
+                  {
+                      label: 'Class Forms and Contacts',
+                      url: `${ENROLLMENT_BASE}/admin/report`,
+                  },
+                  {
+                      label: 'Student Info Sheets',
+                      url: `${ENROLLMENT_BASE}/admin/students`,
+                  },
+                  {
+                      label: 'T-shirt Sizes',
+                      url: `${ENROLLMENT_BASE}/admin/t-shirts`,
+                  },
+                  {
+                      label: 'Enrollments',
+                      url: `${ENROLLMENT_BASE}/admin/enrollments`,
+                  },
+                  {
+                      label: 'Class Calendar',
+                      url: `${ENROLLMENT_BASE}/calendar/classes`,
+                  },
+                  {
+                      label: 'Student Units',
+                      command: () => router.push('/units'),
+                  },
+              ]
+            : []),
+        ...(isMedicAdmin
+            ? [
+                  { separator: true },
+                  {
+                      label: 'Medic Admin',
+                      disabled: true,
+                      style: { fontSize: '12px', opacity: 0.6 },
+                  },
+                  {
+                      label: 'Manage Medic Classes',
+                      url: `${ENROLLMENT_BASE}/medic/admin/classes`,
+                  },
+                  {
+                      label: 'Medic Enrollments',
+                      url: `${ENROLLMENT_BASE}/medic/admin/enrollments`,
+                  },
+              ]
+            : []),
     ];
 
     const iconButtonStyle: React.CSSProperties = {
@@ -121,7 +206,7 @@ const Header = () => {
     const rightContents = (
         <div className="flex items-center">
             {isDesktop ? (
-                (isAdmin || isMedicAdmin) ? (
+                isAdmin || isMedicAdmin ? (
                     <div style={splitButtonStyle}>
                         <Button
                             icon="pi pi-bars"
@@ -140,7 +225,13 @@ const Header = () => {
                         ) : (
                             <Button
                                 label="Sign In"
-                                style={{ ...iconButtonStyle, width: 'auto', padding: '0 12px', fontSize: '14px', fontWeight: 500 }}
+                                style={{
+                                    ...iconButtonStyle,
+                                    width: 'auto',
+                                    padding: '0 12px',
+                                    fontSize: '14px',
+                                    fontWeight: 500,
+                                }}
                                 onClick={() => router.push('/user/create')}
                             />
                         )}
@@ -150,13 +241,21 @@ const Header = () => {
                         size="large"
                         icon="pi pi-user"
                         onClick={(e) => userMenuRef.current?.toggle(e)}
-                        style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: '#fff', cursor: 'pointer' }}
+                        style={{
+                            backgroundColor: 'rgba(255,255,255,0.2)',
+                            color: '#fff',
+                            cursor: 'pointer',
+                        }}
                     />
                 ) : (
                     <Button
                         onClick={() => router.push('/user/create')}
                         label="Register / Sign In"
-                        style={{ background: 'transparent', border: '1px solid #fff', color: '#fff' }}
+                        style={{
+                            background: 'transparent',
+                            border: '1px solid #fff',
+                            color: '#fff',
+                        }}
                     />
                 )
             ) : (

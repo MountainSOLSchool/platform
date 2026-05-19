@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, InjectionToken } from '@angular/core';
 import {
     Requested,
     RequestedOperatorsUtility,
@@ -7,7 +7,14 @@ import {
 } from '@sol/angular/request';
 import { catchError, from, map, Observable, of, startWith } from 'rxjs';
 import { FIRE_FUNCTIONS } from '@sol/angular/firebase/adapter';
-import { environment } from 'apps/enrollment-portal/src/environments/environment';
+
+export const USE_REMOTE_FUNCTIONS = new InjectionToken<boolean>(
+    'USE_REMOTE_FUNCTIONS',
+    {
+        providedIn: 'root',
+        factory: () => false,
+    }
+);
 
 @Injectable({
     providedIn: 'root',
@@ -15,12 +22,13 @@ import { environment } from 'apps/enrollment-portal/src/environments/environment
 export class FirebaseFunctionsService {
     private readonly fns = inject(FIRE_FUNCTIONS);
     private readonly http = inject(HttpClient);
+    private readonly useRemoteFunctions = inject(USE_REMOTE_FUNCTIONS);
 
     public call<T>(
         resourcePath: string,
         request?: unknown
     ): Observable<Requested<T>> {
-        if (environment.remoteFunctions) {
+        if (this.useRemoteFunctions) {
             // Production: use Firebase SDK
             const fn = this.fns.httpsCallable(resourcePath);
             return from(fn(request)).pipe(

@@ -28,7 +28,9 @@ export function createMockApiService(
         getEnrollmentMessages: (() =>
             of({ messages: [] })) as MockApiService['getEnrollmentMessages'],
         getEnrollmentMessagesAdmin: (() =>
-            of({ messages: [] })) as MockApiService['getEnrollmentMessagesAdmin'],
+            of({
+                messages: [],
+            })) as MockApiService['getEnrollmentMessagesAdmin'],
         updateEnrollmentMessages: (() =>
             of({
                 success: true,

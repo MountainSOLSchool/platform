@@ -47,7 +47,10 @@ export class AuthUtility {
         return !!admin;
     }
 
-    public static async validateIsMedicAdmin(req: Request, res: express.Response) {
+    public static async validateIsMedicAdmin(
+        req: Request,
+        res: express.Response
+    ) {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
             res.status(403).send('Unauthorized');

@@ -37,6 +37,13 @@
                                 "sourceTag": "*",
                                 "onlyDependOnLibsWithTags": ["*"]
                             }
+                        ],
+                        "ignoredCircularDependencies": [
+                            ["enrollment-portal", "angular-admin-discounts"],
+                            [
+                                "enrollment-portal",
+                                "angular-admin-enrollment-messages"
+                            ]
                         ]
                     }
                 ]
@@ -56,6 +63,21 @@
             "rules": {
                 "@typescript-eslint/no-extra-semi": "error",
                 "no-extra-semi": "off"
+            }
+        },
+        {
+            "files": ["*.tsx"],
+            "parser": "@typescript-eslint/parser",
+            "parserOptions": {
+                "ecmaVersion": "latest",
+                "sourceType": "module",
+                "ecmaFeatures": { "jsx": true }
+            }
+        },
+        {
+            "files": ["**/*.stories.ts", "**/*.stories.tsx"],
+            "rules": {
+                "@nx/enforce-module-boundaries": "off"
             }
         },
         {

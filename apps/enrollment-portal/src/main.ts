@@ -6,6 +6,7 @@ import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { authInterceptor } from '@sol/auth/interceptor';
+import { USE_REMOTE_FUNCTIONS } from '@sol/firebase/functions-api';
 import { MessageService } from 'primeng/api';
 import { appRoutes } from './app/app-routes';
 import { AppComponent } from './app/app.component';
@@ -45,5 +46,9 @@ bootstrapApplication(AppComponent, {
         provideEffects(),
         provideRouter(appRoutes),
         provideMarkdown(),
+        {
+            provide: USE_REMOTE_FUNCTIONS,
+            useValue: environment.remoteFunctions,
+        },
     ],
 });
