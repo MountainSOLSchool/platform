@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { pipe, filter, tap, switchMap, catchError, EMPTY } from 'rxjs';
@@ -62,7 +62,6 @@ export interface CopyClassDialogResult {
     selector: 'sol-copy-class-dialog',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatButtonModule,
         MatFormFieldModule,

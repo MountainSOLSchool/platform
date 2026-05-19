@@ -9,4 +9,4 @@ const jestConfig = {
     coverageDirectory: '../../coverage/apps/student-portal',
 };
 
-export default jestConfig;
+module.exports = jestConfig;

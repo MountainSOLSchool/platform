@@ -32,7 +32,7 @@ import { map, Observable } from 'rxjs';
                     (click)="menu.toggle($event)"
                     [style]="{
                         'background-color': '#aaa',
-                        color: '#ffffff'
+                        color: '#ffffff',
                     }"
                 ></p-avatar>
                 <p-menu
@@ -64,7 +64,7 @@ export class UserButtonComponent implements OnInit {
                 {
                     label:
                         (user?.email?.substring(0, 15) ?? 'User email') +
-                        (user?.email?.length ?? 0 > 15 ? '...' : ''),
+                        ((user?.email?.length ?? 0 > 15) ? '...' : ''),
                     disabled: true,
                 },
                 {

@@ -6,7 +6,7 @@ import {
     model,
     computed,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -20,12 +20,7 @@ export type ImageUploadState =
 @Component({
     selector: 'sol-image-upload',
     standalone: true,
-    imports: [
-        CommonModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-    ],
+    imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule],
     template: `
         <div class="image-upload-container">
             @if (previewUrl()) {

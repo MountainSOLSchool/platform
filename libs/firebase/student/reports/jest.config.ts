@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'student-reports',
     preset: '../../../jest.preset.js',
     globals: {

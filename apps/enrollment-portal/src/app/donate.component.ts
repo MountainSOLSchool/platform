@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
@@ -17,7 +17,6 @@ import * as browserDetection from '@braintree/browser-detection';
     selector: 'sol-donate',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         PaymentCollectorComponent,
         ButtonModule,

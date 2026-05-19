@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'record-domain',
     preset: '../../../jest.preset.js',
     globals: {

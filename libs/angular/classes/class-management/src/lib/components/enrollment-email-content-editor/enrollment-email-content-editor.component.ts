@@ -7,7 +7,7 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
@@ -48,7 +48,6 @@ type TestSendState =
     selector: 'sol-enrollment-email-content-editor',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatButtonModule,
         MatCardModule,

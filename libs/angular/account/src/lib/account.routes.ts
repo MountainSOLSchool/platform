@@ -5,9 +5,9 @@ export const accountRoutes: Routes = [
     {
         path: 'enrollments',
         loadComponent: () =>
-            import(
-                './components/enrollments/account-enrollments.component'
-            ).then((m) => m.AccountEnrollmentsComponent),
+            import('./components/enrollments/account-enrollments.component').then(
+                (m) => m.AccountEnrollmentsComponent
+            ),
         children: [],
         providers: [provideClassList()],
     },

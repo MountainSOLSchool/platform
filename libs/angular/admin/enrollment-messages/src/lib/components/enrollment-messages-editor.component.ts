@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { pipe, tap, switchMap, catchError, of, map, filter } from 'rxjs';
@@ -52,7 +52,6 @@ let nextId = 0;
     selector: 'sol-enrollment-messages-editor',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatCardModule,
         MatFormFieldModule,

@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'firebase-functions',
     preset: '../../../jest.preset.js',
     globals: {

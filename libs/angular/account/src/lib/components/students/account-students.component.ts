@@ -28,14 +28,18 @@ import {
                     [style]="{
                         'background-color': avatarColor(),
                         color: '#ffffff',
-                        'font-weight': '600'
+                        'font-weight': '600',
                     }"
                 />
                 <div class="student-info">
                     <h3 class="student-name">{{ s.name }}</h3>
                     @if (s.currentClasses.length > 0) {
                         <p-tag
-                            [value]="s.currentClasses.length + ' Active Class' + (s.currentClasses.length > 1 ? 'es' : '')"
+                            [value]="
+                                s.currentClasses.length +
+                                ' Active Class' +
+                                (s.currentClasses.length > 1 ? 'es' : '')
+                            "
                             severity="success"
                         />
                     }
@@ -48,7 +52,9 @@ import {
                     <span class="stat-label">Units Completed</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-value">{{ s.currentClasses.length }}</span>
+                    <span class="stat-value">{{
+                        s.currentClasses.length
+                    }}</span>
                     <span class="stat-label">Current Classes</span>
                 </div>
             </div>

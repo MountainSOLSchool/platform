@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'classes-class-repository',
     preset: '../../../jest.preset.js',
     globals: {

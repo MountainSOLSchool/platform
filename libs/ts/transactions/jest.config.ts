@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'payments-transactions',
     preset: '../../../jest.preset.js',
     globals: {

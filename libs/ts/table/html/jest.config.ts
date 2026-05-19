@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'table-html',
     preset: '../../../jest.preset.js',
     globals: {

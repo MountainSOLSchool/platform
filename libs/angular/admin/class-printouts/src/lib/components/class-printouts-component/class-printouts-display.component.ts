@@ -29,7 +29,10 @@ import { rxResource } from '@angular/core/rxjs-interop';
                         (click)="print()"
                     ></button>
                 </div>
-                <p-tabView (activeIndexChange)="activeTabIndex.set($event)" class="flex-1">
+                <p-tabView
+                    (activeIndexChange)="activeTabIndex.set($event)"
+                    class="flex-1"
+                >
                     <p-tabPanel header="Class Roster">
                         <div
                             class="overflow-auto"

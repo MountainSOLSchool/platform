@@ -106,7 +106,7 @@ export class ClassRepository {
                     ? Number(dbo.registration_end_date._seconds) * 1000
                     : 0,
             enrolledCount: Array.isArray(dbo.students)
-                ? dbo.students?.length ?? 0
+                ? (dbo.students?.length ?? 0)
                 : 0,
             id: dbo.id,
             classType: dbo.class_type,

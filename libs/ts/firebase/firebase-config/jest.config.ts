@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'firebase-config',
     preset: '../../../../jest.preset.js',
     testEnvironment: 'node',

@@ -12,7 +12,7 @@ export const jestConfig = {
             },
         ],
     },
-    transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
+    transformIgnorePatterns: ['node_modules/(?!(marked|.*\\.mjs$))'],
     snapshotSerializers: [
         'jest-preset-angular/build/serializers/no-ng-attributes',
         'jest-preset-angular/build/serializers/ng-snapshot',
@@ -20,4 +20,4 @@ export const jestConfig = {
     ],
 };
 
-export default jestConfig;
+module.exports = jestConfig;

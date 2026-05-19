@@ -37,7 +37,9 @@ export class EnrollmentUtility {
         }
         return classes.map((c) => ({
             ...c,
-            cost: c.paymentRange ? userCostsToClassIds[c.id] ?? c.cost : c.cost,
+            cost: c.paymentRange
+                ? (userCostsToClassIds[c.id] ?? c.cost)
+                : c.cost,
         }));
     }
 

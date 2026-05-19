@@ -41,26 +41,22 @@ export const appRoutes: Routes = [
                                     {
                                         path: '',
                                         loadChildren: () =>
-                                            import(
-                                                './dashboard-component/dashboard-routes'
-                                            ).then((m) => m.dashboardRoutes),
+                                            import('./dashboard-component/dashboard-routes').then(
+                                                (m) => m.dashboardRoutes
+                                            ),
                                     },
                                     {
                                         path: 'report',
                                         providers: [provideClassList()],
                                         loadComponent: () =>
-                                            import(
-                                                '@sol/admin/class-printouts'
-                                            ).then(
+                                            import('@sol/admin/class-printouts').then(
                                                 (m) => m.ClassPrintoutsComponent
                                             ),
                                     },
                                     {
                                         path: 'students',
                                         loadComponent: () =>
-                                            import(
-                                                '@sol/angular/admin/students'
-                                            ).then(
+                                            import('@sol/angular/admin/students').then(
                                                 (m) =>
                                                     m.StudentInfoTableComponent
                                             ),
@@ -68,16 +64,14 @@ export const appRoutes: Routes = [
                                     {
                                         path: 't-shirts',
                                         loadChildren: () =>
-                                            import(
-                                                './tshirts-component/tshirt-routes'
-                                            ).then((m) => m.tshirtRoutes),
+                                            import('./tshirts-component/tshirt-routes').then(
+                                                (m) => m.tshirtRoutes
+                                            ),
                                     },
                                     {
                                         path: 'enrollments',
                                         loadComponent: () =>
-                                            import(
-                                                '@sol/angular/admin/enrollments'
-                                            ).then(
+                                            import('@sol/angular/admin/enrollments').then(
                                                 (m) => m.EnrollmentsComponent
                                             ),
                                     },
@@ -87,9 +81,7 @@ export const appRoutes: Routes = [
                                             {
                                                 path: 'management',
                                                 loadChildren: () =>
-                                                    import(
-                                                        '@sol/classes/class-management'
-                                                    ).then(
+                                                    import('@sol/classes/class-management').then(
                                                         (m) =>
                                                             m.classManagementRoutes
                                                     ),
@@ -99,16 +91,14 @@ export const appRoutes: Routes = [
                                     {
                                         path: 'discounts',
                                         loadChildren: () =>
-                                            import(
-                                                '@sol/angular/admin/discounts'
-                                            ).then((m) => m.discountRoutes),
+                                            import('@sol/angular/admin/discounts').then(
+                                                (m) => m.discountRoutes
+                                            ),
                                     },
                                     {
                                         path: 'messages',
                                         loadComponent: () =>
-                                            import(
-                                                '@sol/angular/admin/enrollment-messages'
-                                            ).then(
+                                            import('@sol/angular/admin/enrollment-messages').then(
                                                 (m) =>
                                                     m.EnrollmentMessagesEditorComponent
                                             ),

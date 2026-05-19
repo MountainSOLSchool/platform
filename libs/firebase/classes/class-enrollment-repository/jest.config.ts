@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     displayName: 'classes-class-enrollment-repository',
     preset: '../../../jest.preset.js',
     globals: {

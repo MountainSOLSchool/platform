@@ -1,5 +1,5 @@
 import { Component, inject, signal, computed, effect } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { toSignal, rxResource } from '@angular/core/rxjs-interop';
@@ -38,7 +38,6 @@ const DISCOUNT_TYPES: { value: DiscountType; label: string }[] = [
     selector: 'sol-discount-form',
     standalone: true,
     imports: [
-        CommonModule,
         FormsModule,
         MatCardModule,
         MatFormFieldModule,
