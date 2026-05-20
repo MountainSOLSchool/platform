@@ -304,9 +304,11 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
             debounceTime(500),
             filter((enrollment) => enrollment !== initialState.enrollment),
             tap((enrollmentPatch) =>
-                this.functions.call<{
-                    enrollmentPatch: Partial<PaidEnrollment>;
-                }>('updateEnrollmentDraft', enrollmentPatch)
+                this.functions
+                    .call<{
+                        enrollmentPatch: Partial<PaidEnrollment>;
+                    }>('updateEnrollmentDraft', enrollmentPatch)
+                    .subscribe()
             )
         );
     });
@@ -507,7 +509,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                     addendumError: undefined,
                 })
             ),
-            tap(() => this.functions.call('deleteEnrollmentDraft')),
+            tap(() => this.functions.call('deleteEnrollmentDraft').subscribe()),
             switchMap((enrollmentId) =>
                 this.functions
                     .call<{
@@ -620,7 +622,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                     wasAddendum ? ['/account/enrollments'] : ['/']
                 );
             }),
-            tap(() => this.functions.call('deleteEnrollmentDraft'))
+            tap(() => this.functions.call('deleteEnrollmentDraft').subscribe())
         );
     });
 }
