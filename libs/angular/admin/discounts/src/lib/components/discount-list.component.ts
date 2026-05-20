@@ -52,7 +52,7 @@ const DISCOUNT_TYPE_LABELS: Record<string, string> = {
             <div class="page-header">
                 <h1>Manage Discounts</h1>
                 <button
-                    mat-raised-button
+                    mat-stroked-button
                     color="primary"
                     (click)="navigateToCreate()"
                 >

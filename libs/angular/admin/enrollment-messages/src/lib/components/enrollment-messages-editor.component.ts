@@ -71,13 +71,16 @@ let nextId = 0;
             <div class="page-header">
                 <h1>Enrollment Messages</h1>
                 <div class="header-actions">
-                    <button mat-stroked-button (click)="addMessage()">
+                    <button
+                        mat-stroked-button
+                        color="primary"
+                        (click)="addMessage()"
+                    >
                         <mat-icon>add</mat-icon>
                         Add Message
                     </button>
                     <button
-                        mat-raised-button
-                        color="primary"
+                        mat-stroked-button
                         (click)="save()"
                         [disabled]="saveState().status === 'saving'"
                     >
