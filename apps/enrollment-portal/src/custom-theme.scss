@@ -77,10 +77,24 @@ body {
     }
 }
 
+// mat-raised-button color="warn" — destructive primary action
+.mat-mdc-raised-button.mat-warn {
+    --mat-button-protected-container-color: var(--sol-error, #b00020);
+    --mat-button-protected-label-text-color: white;
+    --mdc-filled-button-container-color: var(--sol-error, #b00020);
+    --mdc-filled-button-label-text-color: white;
+}
+
 // mat-flat-button → M3 "filled" button
 .mat-mdc-unelevated-button.mat-primary {
     --mat-button-filled-container-color: var(--sol-primary, #006633);
     --mat-button-filled-label-text-color: var(--sol-primary-on, white);
+}
+
+// mat-flat-button color="warn"
+.mat-mdc-unelevated-button.mat-warn {
+    --mat-button-filled-container-color: var(--sol-error, #b00020);
+    --mat-button-filled-label-text-color: white;
 }
 
 // mat-stroked-button → M3 "outlined" button
