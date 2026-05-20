@@ -23,8 +23,7 @@
         </div>
     }
     @if (didLoadFromDraft() && !isAddendumMode()) {
-        <div class="alert alert-info">
-            <mat-icon>info</mat-icon>
+        <div class="alert alert-success">
             <div
                 class="flex justify-content-between align-items-center w-full"
                 style="flex: 1"
@@ -34,7 +33,11 @@
                     session. Please review each step to ensure accuracy.
                 </div>
                 <div>
-                    <button mat-stroked-button (click)="showStartOverDialog()">
+                    <button
+                        mat-stroked-button
+                        color="primary"
+                        (click)="showStartOverDialog()"
+                    >
                         Start Over
                     </button>
                 </div>
