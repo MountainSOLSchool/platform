@@ -222,11 +222,14 @@ import { MatIconModule } from '@angular/material/icon';
                             >
                                 @if (processing()) {
                                     <mat-spinner diameter="20"></mat-spinner>
-                                    <span>Processing...</span>
                                 } @else {
                                     <mat-icon>check</mat-icon>
-                                    <span>Submit Payment</span>
                                 }
+                                <span>{{
+                                    processing()
+                                        ? 'Processing...'
+                                        : 'Submit Payment'
+                                }}</span>
                             </button>
                         </form>
                     } @else {

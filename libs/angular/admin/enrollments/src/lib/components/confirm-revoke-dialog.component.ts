@@ -3,7 +3,6 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MountainSolApiService } from '@sol/angular/firebase/api';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
@@ -35,7 +34,6 @@ interface ClassSelection {
         MatButtonModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
-        CurrencyPipe,
         FormsModule,
     ],
     template: `
