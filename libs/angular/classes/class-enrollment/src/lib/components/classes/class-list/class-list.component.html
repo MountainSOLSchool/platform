@@ -159,7 +159,7 @@
 }
 @defer (when semesterOptions()) {
     <div style="margin-top: 1rem">
-        <mat-tab-group>
+        <mat-tab-group [mat-stretch-tabs]="false">
             @for (
                 semester of semesterOptions();
                 track semester;

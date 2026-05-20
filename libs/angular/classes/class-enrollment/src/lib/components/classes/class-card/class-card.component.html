@@ -166,7 +166,7 @@
             @if (hasUnlockedOptions()) {
                 <button
                     mat-raised-button
-                    color="accent"
+                    color="primary"
                     class="select-button selected-state"
                     [matMenuTriggerFor]="beforeSelectingForm"
                 >
@@ -182,7 +182,7 @@
             } @else {
                 <button
                     mat-raised-button
-                    color="accent"
+                    color="primary"
                     class="select-button selected-state"
                     [disabled]="true"
                 >
@@ -194,7 +194,7 @@
             @if (requiresPromptBeforeSelecting(classInfoValue)) {
                 @if (!selected) {
                     <button
-                        mat-raised-button
+                        mat-stroked-button
                         color="primary"
                         class="select-button"
                         [disabled]="classInfoValue.pausedForEnrollment"
@@ -206,7 +206,7 @@
                 } @else {
                     <button
                         mat-raised-button
-                        color="accent"
+                        color="primary"
                         class="select-button selected-state"
                         (click)="deselected()"
                     >
@@ -226,7 +226,7 @@
             } @else {
                 @if (!selected) {
                     <button
-                        mat-raised-button
+                        mat-stroked-button
                         color="primary"
                         class="select-button"
                         [disabled]="classInfoValue.pausedForEnrollment"
@@ -242,7 +242,7 @@
                 } @else {
                     <button
                         mat-raised-button
-                        color="accent"
+                        color="primary"
                         class="select-button selected-state"
                         (click)="selected = false; selectionToggled()"
                     >

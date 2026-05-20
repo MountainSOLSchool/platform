@@ -31,37 +31,67 @@ body {
     font-family: 'EB Garamond', Georgia, serif !important;
 }
 
-// Override Material button styles to match Mountain SOL branding
+// Override Material button styles to match Mountain SOL branding.
+// Angular Material 21 uses M3 tokens with the --mat-{variant}-button-* prefix,
+// not the older --mdc-* token names. We set both for safety.
+
+// mat-raised-button → M3 "protected" button
 .mat-mdc-raised-button.mat-primary {
+    --mat-button-protected-container-color: var(--sol-primary, #006633);
+    --mat-button-protected-label-text-color: var(--sol-primary-on, white);
     --mdc-filled-button-container-color: var(--sol-primary, #006633);
     --mdc-filled-button-label-text-color: var(--sol-primary-on, white);
 
     &:hover {
+        --mat-button-protected-hover-state-layer-color: var(--sol-primary-hover, #004d26);
         --mdc-filled-button-hover-container-color: var(--sol-primary-hover, #004d26);
     }
 
     &:active {
+        --mat-button-protected-pressed-state-layer-color: var(--sol-primary-hover, #004d26);
         --mdc-filled-button-pressed-container-color: var(--sol-primary-hover, #004d26);
     }
 
     &:disabled {
+        --mat-button-protected-disabled-container-color: var(--sol-disabled-bg, #e5e7eb);
+        --mat-button-protected-disabled-label-text-color: var(--sol-disabled-text, #9ca3af);
         --mdc-filled-button-disabled-container-color: var(--sol-disabled-bg, #e5e7eb);
         --mdc-filled-button-disabled-label-text-color: var(--sol-disabled-text, #9ca3af);
     }
 }
 
-// Override flat buttons as well
+// mat-flat-button → M3 "filled" button
+.mat-mdc-unelevated-button.mat-primary {
+    --mat-button-filled-container-color: var(--sol-primary, #006633);
+    --mat-button-filled-label-text-color: var(--sol-primary-on, white);
+}
+
+// mat-stroked-button → M3 "outlined" button
+.mat-mdc-outlined-button.mat-primary {
+    --mat-button-outlined-label-text-color: var(--sol-primary, #006633);
+    --mat-button-outlined-outline-color: var(--sol-primary, #006633);
+}
+
+// mat-stroked-button color="warn"
+.mat-mdc-outlined-button.mat-warn {
+    --mat-button-outlined-label-text-color: var(--sol-error, #b00020);
+    --mat-button-outlined-outline-color: var(--sol-error, #b00020);
+}
+
+// mat-button (text variant) → M3 "text" button
 .mat-mdc-button.mat-primary {
+    --mat-button-text-label-text-color: var(--sol-primary, #006633);
     --mdc-text-button-label-text-color: var(--sol-primary, #006633);
 
     &:hover {
-        --mat-text-button-state-layer-color: var(--sol-primary, #006633);
+        --mat-button-text-state-layer-color: var(--sol-primary, #006633);
     }
 }
 
 // Override FAB buttons
 .mat-mdc-fab.mat-primary,
 .mat-mdc-mini-fab.mat-primary {
+    --mat-fab-container-color: var(--sol-primary, #006633);
     --mdc-fab-container-color: var(--sol-primary, #006633);
 
     &:hover {
