@@ -43,6 +43,9 @@ body {
     --mat-button-outlined-label-text-weight: 400;
     --mat-button-text-label-text-size: 14px;
     --mat-button-text-label-text-weight: 400;
+    // Paginator default is body-small (0.75rem = 10.5px against our 14px root) — too small.
+    --mat-paginator-container-text-size: 14px;
+    --mat-paginator-select-trigger-text-size: 14px;
 }
 
 // Override Material button styles to match Mountain SOL branding.
