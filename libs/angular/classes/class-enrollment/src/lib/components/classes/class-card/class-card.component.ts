@@ -336,7 +336,7 @@ export interface ClassCardInfo {
                 }
             }
 
-            // Material theme adjustments
+            /* Material theme adjustments */
             ::ng-deep {
                 .mat-mdc-card {
                     --mdc-elevated-card-container-color: white;

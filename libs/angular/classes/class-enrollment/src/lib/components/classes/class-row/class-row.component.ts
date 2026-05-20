@@ -233,7 +233,7 @@ interface ClassRow {
                 }
             }
 
-            // Material button overrides for the select button
+            /* Material button overrides for the select button */
             ::ng-deep {
                 .select-all-button {
                     font-size: 1rem;
