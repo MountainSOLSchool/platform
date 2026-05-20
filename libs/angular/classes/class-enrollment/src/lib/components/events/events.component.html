@@ -9,44 +9,44 @@
         height: 'fit-content',
     }"
 >
-    <p-card>
-        <ng-template pTemplate="header"></ng-template>
-        <div style="position: relative; margin-top: -2.5rem">
-            <h2>Summer Solstice Celebration and Skills Test</h2>
-        </div>
-        <div
-            class="flex align-items-center"
-            style="margin-bottom: 1.5rem; margin-top: 1rem"
-        >
-            <p-chip
-                label="June 21st, 5pm-9pm"
-                icon="pi pi-calendar"
-                styleClass="mr-2 custom-chip"
-            ></p-chip>
-        </div>
-        <p>
-            <b>Location:</b> Chestnut Ridge Park and Campground<br /><br />
-            <b>Description:</b> <br />
-            Join us for our annual Mountain SOL community summer celebration!
-            This special event includes our skills test out, where students can
-            demonstrate their mastery of various outdoor skills. The skills
-            testing will be led by Jason and Lila, along with other experienced
-            instructors. Students will have the opportunity to test out of
-            required units for their paths.<br /><br />
-            All Mountain SOL community members are welcome to participate in
-            this summer evening of achievement and celebration.<br /><br />
-        </p>
-        <div style="margin-top: 2rem; margin-bottom: -1rem">
-            <add-to-calendar-button
-                name="Summer Solstice Celebration and Skills Test"
-                options="'Apple','Google','iCal','Outlook.com','Yahoo'"
-                location="Chestnut Ridge Park and Campground"
-                startDate="2025-06-21"
-                endDate="2025-06-21"
-                startTime="17:00"
-                endTime="21:00"
-                timeZone="America/New_York"
-            ></add-to-calendar-button>
-        </div>
-    </p-card>
+    <mat-card>
+        <mat-card-content>
+            <div style="position: relative; margin-top: -0.5rem">
+                <h2>Summer Solstice Celebration and Skills Test</h2>
+            </div>
+            <div
+                class="flex align-items-center"
+                style="margin-bottom: 1.5rem; margin-top: 1rem"
+            >
+                <span class="chip mr-2">
+                    <mat-icon>calendar_today</mat-icon>
+                    June 21st, 5pm-9pm
+                </span>
+            </div>
+            <p>
+                <b>Location:</b> Chestnut Ridge Park and Campground<br /><br />
+                <b>Description:</b> <br />
+                Join us for our annual Mountain SOL community summer
+                celebration! This special event includes our skills test out,
+                where students can demonstrate their mastery of various outdoor
+                skills. The skills testing will be led by Jason and Lila, along
+                with other experienced instructors. Students will have the
+                opportunity to test out of required units for their paths.<br /><br />
+                All Mountain SOL community members are welcome to participate in
+                this summer evening of achievement and celebration.<br /><br />
+            </p>
+            <div style="margin-top: 2rem; margin-bottom: -1rem">
+                <add-to-calendar-button
+                    name="Summer Solstice Celebration and Skills Test"
+                    options="'Apple','Google','iCal','Outlook.com','Yahoo'"
+                    location="Chestnut Ridge Park and Campground"
+                    startDate="2025-06-21"
+                    endDate="2025-06-21"
+                    startTime="17:00"
+                    endTime="21:00"
+                    timeZone="America/New_York"
+                ></add-to-calendar-button>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>

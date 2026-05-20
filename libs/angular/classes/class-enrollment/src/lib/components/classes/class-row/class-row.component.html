@@ -5,94 +5,136 @@
         <div class="paired-class-header">
             <!-- Background with Angled Split -->
             <div class="split-background">
-                <div 
+                <div
                     class="morning-section"
-                    [style.background-image]="'url(' + (rowValue.classes[0].thumbnailUrl ?? '/assets/default-class.jpg') + ')'"
+                    [style.background-image]="
+                        'url(' +
+                        (rowValue.classes[0].thumbnailUrl ??
+                            '/assets/default-class.jpg') +
+                        ')'
+                    "
                 ></div>
-                <div 
+                <div
                     class="afternoon-section"
-                    [style.background-image]="'url(' + (rowValue.classes[1].thumbnailUrl ?? '/assets/default-class.jpg') + ')'"
+                    [style.background-image]="
+                        'url(' +
+                        (rowValue.classes[1].thumbnailUrl ??
+                            '/assets/default-class.jpg') +
+                        ')'
+                    "
                 ></div>
             </div>
 
             <!-- Content Overlay -->
             <div class="header-content">
                 <h2 class="header-title">{{ rowValue.group.name }}</h2>
-                
+
                 <div class="action-container">
                     @if (getClassRowSavings() !== 0) {
                         <div class="discount-badge">
                             <mat-icon>local_offer</mat-icon>
-                            <span>{{ getClassRowSavings() | currency }} all-day discount</span>
+                            <span
+                                >{{ getClassRowSavings() | currency }} all-day
+                                discount</span
+                            >
                         </div>
                     }
 
-                    <p-overlayPanel pAutoFocus #beforeSelectingForm>
-                        @if (beforeSelectingForm.overlayVisible) {
-                            <sol-class-before-select-options-form
-                                [optionsByClass]="beforeSelectOptionsByClass()"
-                                (confirmed)="confirmedExtras(beforeSelectingForm, $event)"
-                            ></sol-class-before-select-options-form>
-                        }
-                    </p-overlayPanel>
+                    <mat-menu #beforeSelectingForm="matMenu">
+                        <ng-template matMenuContent>
+                            <div
+                                style="padding: 1rem"
+                                (click)="$event.stopPropagation()"
+                            >
+                                <sol-class-before-select-options-form
+                                    [optionsByClass]="
+                                        beforeSelectOptionsByClass()
+                                    "
+                                    (confirmed)="confirmedExtras($event)"
+                                ></sol-class-before-select-options-form>
+                            </div>
+                        </ng-template>
+                    </mat-menu>
 
                     @let paused = hasPausedClass();
 
                     @if (isRowLocked()) {
                         @if (requiresPromptBeforeSelecting(rowValue.classes)) {
                             @let rowNewCost = getRowNewOptionsCost();
-                            <button mat-raised-button
-                                    color="accent"
-                                    class="select-all-button selected"
-                                    (click)="beforeSelectingForm.toggle($event)">
+                            <button
+                                mat-raised-button
+                                color="accent"
+                                class="select-all-button selected"
+                                [matMenuTriggerFor]="beforeSelectingForm"
+                            >
                                 <mat-icon>check_circle</mat-icon>
-                                {{ rowNewCost > 0
-                                    ? 'Enrolled — Update Options (+$' + rowNewCost.toFixed(2) + ')'
-                                    : 'Enrolled — Add Options' }}
+                                {{
+                                    rowNewCost > 0
+                                        ? 'Enrolled — Update Options (+$' +
+                                          rowNewCost.toFixed(2) +
+                                          ')'
+                                        : 'Enrolled — Add Options'
+                                }}
                             </button>
                         } @else {
-                            <button mat-raised-button
-                                    color="accent"
-                                    class="select-all-button selected"
-                                    [disabled]="true">
+                            <button
+                                mat-raised-button
+                                color="accent"
+                                class="select-all-button selected"
+                                [disabled]="true"
+                            >
                                 <mat-icon>check_circle</mat-icon>
                                 Enrolled
                             </button>
                         }
-                    } @else if (requiresPromptBeforeSelecting(rowValue.classes)) {
+                    } @else if (
+                        requiresPromptBeforeSelecting(rowValue.classes)
+                    ) {
                         @if (!rowValue.selected) {
-                            <button mat-raised-button
-                                    color="primary"
-                                    class="select-all-button"
-                                    [disabled]="paused"
-                                    (click)="beforeSelectingForm.toggle($event)">
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                class="select-all-button"
+                                [disabled]="paused"
+                                [matMenuTriggerFor]="beforeSelectingForm"
+                            >
                                 <mat-icon>add_circle_outline</mat-icon>
                                 Select All
                             </button>
                         } @else {
-                            <button mat-raised-button
-                                    color="accent"
-                                    class="select-all-button selected"
-                                    (click)="rowSelectedChange(false)">
+                            <button
+                                mat-raised-button
+                                color="accent"
+                                class="select-all-button selected"
+                                (click)="rowSelectedChange(false)"
+                            >
                                 <mat-icon>check_circle</mat-icon>
                                 Selected All
                             </button>
                         }
                     } @else {
                         @if (!rowValue.selected) {
-                            <button mat-raised-button
-                                    color="primary"
-                                    class="select-all-button"
-                                    [disabled]="paused"
-                                    (click)="rowSelectedChange(true)">
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                class="select-all-button"
+                                [disabled]="paused"
+                                (click)="rowSelectedChange(true)"
+                            >
                                 <mat-icon>add_circle_outline</mat-icon>
-                                {{ paused ? 'One or more classes are full' : 'Select Full Day' }}
+                                {{
+                                    paused
+                                        ? 'One or more classes are full'
+                                        : 'Select Full Day'
+                                }}
                             </button>
                         } @else {
-                            <button mat-raised-button
-                                    color="accent"
-                                    class="select-all-button selected"
-                                    (click)="rowSelectedChange(false)">
+                            <button
+                                mat-raised-button
+                                color="accent"
+                                class="select-all-button selected"
+                                (click)="rowSelectedChange(false)"
+                            >
                                 <mat-icon>check_circle</mat-icon>
                                 Selected Full Day
                             </button>
@@ -106,11 +148,13 @@
     <!-- Individual Class Cards -->
     <div class="cards-container">
         @for (rowClass of rowValue.classes; track rowClass.id) {
-            <div class="card-wrapper"
-                 [ngClass]="{
-                     'half-width': rowValue.classes.length > 1,
-                     'full-width': rowValue.classes.length === 1
-                 }">
+            <div
+                class="card-wrapper"
+                [ngClass]="{
+                    'half-width': rowValue.classes.length > 1,
+                    'full-width': rowValue.classes.length === 1,
+                }"
+            >
                 <sol-class-card
                     [selected]="rowClass.selected"
                     [locked]="isClassLocked(rowClass.id)"

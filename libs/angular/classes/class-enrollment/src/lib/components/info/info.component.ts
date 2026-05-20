@@ -4,30 +4,24 @@ import {
     computed,
     inject,
     input,
-    ViewChild,
 } from '@angular/core';
 import { map } from 'rxjs';
-import { InputTextModule } from 'primeng/inputtext';
-import { CalendarModule } from 'primeng/calendar';
-import { ButtonModule } from 'primeng/button';
-import { InputMaskModule } from 'primeng/inputmask';
-import { FieldsetModule } from 'primeng/fieldset';
-import { RippleModule } from 'primeng/ripple';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { AccordionModule } from 'primeng/accordion';
-import { ToggleButtonModule } from 'primeng/togglebutton';
-import { SelectButtonModule } from 'primeng/selectbutton';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { create, test, enforce, group } from 'vest';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { StudentForm } from '@sol/student/domain';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
-import { DropdownModule } from 'primeng/dropdown';
-import { MessagesModule } from 'primeng/messages';
 import { NgStyle } from '@angular/common';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { outputFromObservable, toObservable } from '@angular/core/rxjs-interop';
 import { ConfirmAccuracyComponent } from '../confirm-accuracy/confirm-accuracy.component';
 
@@ -35,24 +29,19 @@ import { ConfirmAccuracyComponent } from '../confirm-accuracy/confirm-accuracy.c
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
-        InputTextModule,
-        CalendarModule,
-        ButtonModule,
-        InputMaskModule,
-        FieldsetModule,
-        RippleModule,
-        InputTextareaModule,
-        InputNumberModule,
-        AccordionModule,
-        ToggleButtonModule,
-        SelectButtonModule,
         FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatButtonModule,
+        MatIconModule,
+        MatExpansionModule,
+        MatButtonToggleModule,
+        MatSelectModule,
+        MatProgressSpinnerModule,
         ValidDirective,
         MessagesComponent,
-        OverlayPanelModule,
-        DropdownModule,
-        MessagesModule,
-        ProgressSpinnerModule,
         ConfirmAccuracyComponent,
     ],
     selector: 'sol-student-info',
@@ -376,8 +365,6 @@ export class InfoComponent {
         { name: 'Adult 2XL', value: '2XL' },
     ];
 
-    @ViewChild('op') op!: OverlayPanel;
-
     sectionConfirmationChanged(sectionName: string, confirmed: boolean) {
         this.workflow.patchState((s) => ({
             accuracyConfirmations: {
@@ -397,7 +384,6 @@ export class InfoComponent {
                 },
             },
         }));
-        this.op?.hide();
     }
 
     removeGuardian(index: number): void {

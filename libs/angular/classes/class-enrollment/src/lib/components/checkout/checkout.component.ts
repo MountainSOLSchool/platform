@@ -7,9 +7,6 @@ import {
 } from '@angular/core';
 import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
-import { ButtonModule } from 'primeng/button';
-import { ChipModule } from 'primeng/chip';
-import { InputTextModule } from 'primeng/inputtext';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { MessagesComponent } from '@sol/form/validity';
 import { create, enforce, test } from 'vest';
@@ -20,14 +17,7 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        PaymentCollectorComponent,
-        ButtonModule,
-        InputTextModule,
-        ChipModule,
-        MessagesComponent,
-        AsyncPipe,
-    ],
+    imports: [PaymentCollectorComponent, MessagesComponent, AsyncPipe],
     selector: 'sol-checkout',
     templateUrl: './checkout.component.html',
 })

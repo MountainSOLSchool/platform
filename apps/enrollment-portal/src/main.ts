@@ -11,7 +11,6 @@ import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { authInterceptor } from '@sol/auth/interceptor';
 import { USE_REMOTE_FUNCTIONS } from '@sol/firebase/functions-api';
-import { MessageService } from 'primeng/api';
 import { appRoutes } from './app/app-routes';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
@@ -36,7 +35,6 @@ bootstrapApplication(AppComponent, {
         provideZoneChangeDetection(),
         importProvidersFrom(BrowserModule),
         provideAnimations(),
-        MessageService,
         provideStoreDevtools({
             maxAge: 50,
         }),

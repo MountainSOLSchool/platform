@@ -1,166 +1,240 @@
 @if (allStepsComplete) {
     @let vm = viewModel$ | async;
-    @defer (when !!vm){
+    @defer (when !!vm) {
         @if (vm) {
-
-        <div class="section">
-            @let student = student$ | async;
-            @if (student) {
-                <p-fieldset legend="Student">
-                    <p>Name: {{ student?.firstName }} {{ student?.lastName }}</p>
-                    <p>Birthdate: {{ student?.birthdate | date }}</p>
-                </p-fieldset>
-            }
-        </div>
-
-        <div class="section">
-            <p-fieldset legend="Class Cost Summary">
-                <sol-class-summary-table
-                    [classes]="vm.enrollment.selectedClasses"
-                    [groups]="selectedClassGroups() ?? []"
-                    [finalCostsToClassIds]="finalCostsToClassIds()"
-                    [finalCostsToGroupIds]="finalCostsToGroupIds()"
-                    [additionalOptionIdsByClassId]="
-                        vm.enrollment.additionalOptionIdsByClassId
-                    "
-                ></sol-class-summary-table>
-            </p-fieldset>
-        </div>
-
-        <div class="section">
-            <p-fieldset legend="Discounts">
-                <h3 style="margin-top: 0.5rem">Apply Discount</h3>
-                <div class="field" style="margin-top: 2rem">
-                    <span class="p-float-label">
-                        <input
-                            id="discountCode"
-                            name="discountCode"
-                            pInputText
-                            [style]="{ 'text-transform': 'uppercase' }"
-                            #discountCode
-                            (keyup.enter)="applyDiscountCode(discountCode)"
-                        />
-                        <label for="discountCode">Code</label>
-                        <button
-                            pButton
-                            type="button"
-                            label="Apply"
-                            [loading]="vm.isLoadingDiscounts"
-                            style="margin-left: 0.5rem"
-                            (click)="applyDiscountCode(discountCode)"
-                        ></button>
-                    </span>
-                </div>
-                @if (!vm.isLoadingDiscounts) {
-                    <div
-                    class="flex align-items-center"
-                    style="margin-top: 1rem"
-                >
-                @for (discount of vm.validDiscountAmounts; track discount.code) {
-                    <p-chip
-                        [label]="
-                            discount.code +
-                            ' (-' +
-                            (discount.amount | currency) +
-                            ')'
-                        "
-                        styleClass="mr-2 valid-chip"
-                        [removable]="true"
-                        (onRemove)="removeDiscountCode(discount.code)"
-                    ></p-chip>
+            <div class="section">
+                @let student = student$ | async;
+                @if (student) {
+                    <mat-card>
+                        <mat-card-header>
+                            <mat-card-title>Student</mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <p>
+                                Name: {{ student?.firstName }}
+                                {{ student?.lastName }}
+                            </p>
+                            <p>Birthdate: {{ student?.birthdate | date }}</p>
+                        </mat-card-content>
+                    </mat-card>
                 }
-                </div>
-                @if (vm.invalidCodes.length > 0) {
-                    <div style="margin-top: 1rem">
-                        <div>
-                            Could not find a discount matching these codes:
-                        </div>
+            </div>
+
+            <div class="section">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Class Cost Summary</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <sol-class-summary-table
+                            [classes]="vm.enrollment.selectedClasses"
+                            [groups]="selectedClassGroups() ?? []"
+                            [finalCostsToClassIds]="finalCostsToClassIds()"
+                            [finalCostsToGroupIds]="finalCostsToGroupIds()"
+                            [additionalOptionIdsByClassId]="
+                                vm.enrollment.additionalOptionIdsByClassId
+                            "
+                        ></sol-class-summary-table>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <div class="section">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Discounts</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <h3 style="margin-top: 0.5rem">Apply Discount</h3>
                         <div
-                            class="flex align-items-center"
-                            style="margin-top: 0.5rem"
+                            class="field"
+                            style="
+                                margin-top: 2rem;
+                                display: flex;
+                                align-items: center;
+                                gap: 0.5rem;
+                            "
                         >
-                            @for (code of vm.invalidCodes; track code) {
-                                <p-chip
-                                    [label]="code"
-                                    styleClass="mr-2"
-                                    [removable]="true"
-                                    (onRemove)="removeDiscountCode(code)"
-                                ></p-chip>
+                            <mat-form-field appearance="outline">
+                                <mat-label>Code</mat-label>
+                                <input
+                                    matInput
+                                    id="discountCode"
+                                    name="discountCode"
+                                    style="text-transform: uppercase"
+                                    #discountCode
+                                    (keyup.enter)="
+                                        applyDiscountCode(discountCode)
+                                    "
+                                />
+                            </mat-form-field>
+                            <button
+                                mat-flat-button
+                                type="button"
+                                [disabled]="vm.isLoadingDiscounts"
+                                (click)="applyDiscountCode(discountCode)"
+                            >
+                                @if (vm.isLoadingDiscounts) {
+                                    <mat-progress-spinner
+                                        mode="indeterminate"
+                                        diameter="18"
+                                    ></mat-progress-spinner>
+                                } @else {
+                                    Apply
+                                }
+                            </button>
+                        </div>
+                        @if (!vm.isLoadingDiscounts) {
+                            <div
+                                class="flex align-items-center"
+                                style="margin-top: 1rem"
+                            >
+                                <mat-chip-set>
+                                    @for (
+                                        discount of vm.validDiscountAmounts;
+                                        track discount.code
+                                    ) {
+                                        <mat-chip
+                                            class="valid-chip"
+                                            (removed)="
+                                                removeDiscountCode(
+                                                    discount.code
+                                                )
+                                            "
+                                        >
+                                            {{ discount.code }} (-{{
+                                                discount.amount | currency
+                                            }})
+                                            <button matChipRemove>
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                        </mat-chip>
+                                    }
+                                </mat-chip-set>
+                            </div>
+                            @if (vm.invalidCodes.length > 0) {
+                                <div style="margin-top: 1rem">
+                                    <div>
+                                        Could not find a discount matching these
+                                        codes:
+                                    </div>
+                                    <div
+                                        class="flex align-items-center"
+                                        style="margin-top: 0.5rem"
+                                    >
+                                        <mat-chip-set>
+                                            @for (
+                                                code of vm.invalidCodes;
+                                                track code
+                                            ) {
+                                                <mat-chip
+                                                    (removed)="
+                                                        removeDiscountCode(code)
+                                                    "
+                                                >
+                                                    {{ code }}
+                                                    <button matChipRemove>
+                                                        <mat-icon
+                                                            >close</mat-icon
+                                                        >
+                                                    </button>
+                                                </mat-chip>
+                                            }
+                                        </mat-chip-set>
+                                    </div>
+                                </div>
+                            }
+                        } @else {
+                            <mat-progress-spinner
+                                mode="indeterminate"
+                                diameter="50"
+                            ></mat-progress-spinner>
+                        }
+                        <p>
+                            Note: We offer need-based scholarships on a
+                            case-by-case basis, so if cost is a barrier to your
+                            participation, please check out the
+                            <a
+                                href="https://www.mountainsol.org/scholarships/"
+                                target="_blank"
+                                >scholarships page on our website</a
+                            >.
+                        </p>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+            <div class="section">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>Payment Method</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        @if (finalTotal()) {
+                            @let randomValueThatResetsPaymentCollector =
+                                randomValueThatResetsPaymentCollector$ | async;
+                            @if (randomValueThatResetsPaymentCollector) {
+                                <sol-checkout
+                                    [randomValueThatResetsPaymentCollector]="
+                                        randomValueThatResetsPaymentCollector
+                                    "
+                                    [interacted]="interacted"
+                                    (validityChange)="
+                                        validityChange.next($event)
+                                    "
+                                ></sol-checkout>
+                            }
+                        } @else {
+                            <p>No payment method is required at this time.</p>
+                        }
+                        <div>
+                            @let email = userEmail$ | async;
+                            @if (email) {
+                                <p>Receipt Email: {{ email }}</p>
                             }
                         </div>
-                    </div>
-                }
-                } @else {
-                    <p-progressSpinner
-                        [style]="{ width: '50px', height: '50px' }"
-                        styleClass="custom-spinner"
-                        strokeWidth="8"
-                        fill="var(--surface-ground)"
-                        animationDuration=".5s"
-                    ></p-progressSpinner>
-                }
-                <p>
-                    Note: We offer need-based scholarships on a case-by-case
-                    basis, so if cost is a barrier to your participation, please
-                    check out the
-                    <a
-                        href="https://www.mountainsol.org/scholarships/"
-                        target="_blank"
-                        >scholarships page on our website</a
-                    >.
-                </p>
-            </p-fieldset>
-        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
 
-        <div class="section">
-            <p-fieldset legend="Payment Method">
-                @if (finalTotal()) {
-                    @let randomValueThatResetsPaymentCollector = randomValueThatResetsPaymentCollector$ | async;
-                    @if (randomValueThatResetsPaymentCollector) {
-                        <sol-checkout
-                            [randomValueThatResetsPaymentCollector]="
-                                randomValueThatResetsPaymentCollector
-                            "
-                            [interacted]="interacted"
-                            (validityChange)="validityChange.next($event)"
-                        ></sol-checkout>}
-                } @else {
-                    <p>No payment method is required at this time.</p>
-                }
-                <div>
-                    @let email = userEmail$ | async;
-                    @if (email) {
-                        <p>
-                            Receipt Email: {{ email }}
-                        </p>
-                    }
-                </div>
-            </p-fieldset>
-        </div>
-
-        <div class="section">
-            <p-fieldset [legend]="isAddendumMode() ? 'Additional Charges' : 'Total'">
-                <div>
-                    <p>
-                        Subtotal: {{ vm.basketCosts.originalTotal | currency }}
-                    </p>
-                    <p>
-                        Total Discounts:
-                        {{ vm.basketCosts.discountAmounts.length > 0 ? '-' : ''
-                        }}{{
-                            vm.basketCosts.originalTotal -
-                                vm.basketCosts.finalTotal | currency
-                        }}
-                    </p>
-                    <p>
-                        <b>
-                            {{ isAddendumMode() ? 'Amount Due' : 'Final Total' }}:
-                            {{ vm.basketCosts.finalTotal | currency }}
-                        </b>
-                    </p>
-                </div>
-            </p-fieldset>
-        </div>
+            <div class="section">
+                <mat-card>
+                    <mat-card-header>
+                        <mat-card-title>{{
+                            isAddendumMode() ? 'Additional Charges' : 'Total'
+                        }}</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div>
+                            <p>
+                                Subtotal:
+                                {{ vm.basketCosts.originalTotal | currency }}
+                            </p>
+                            <p>
+                                Total Discounts:
+                                {{
+                                    vm.basketCosts.discountAmounts.length > 0
+                                        ? '-'
+                                        : ''
+                                }}{{
+                                    vm.basketCosts.originalTotal -
+                                        vm.basketCosts.finalTotal | currency
+                                }}
+                            </p>
+                            <p>
+                                <b>
+                                    {{
+                                        isAddendumMode()
+                                            ? 'Amount Due'
+                                            : 'Final Total'
+                                    }}:
+                                    {{ vm.basketCosts.finalTotal | currency }}
+                                </b>
+                            </p>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
         }
     } @loading (minimum 500ms) {
         <div style="width: 100%; margin-top: 1rem">
@@ -171,7 +245,10 @@
                     width: fit-content;
                 "
             >
-                <p-progressSpinner></p-progressSpinner>
+                <mat-progress-spinner
+                    mode="indeterminate"
+                    diameter="50"
+                ></mat-progress-spinner>
             </div>
         </div>
     }

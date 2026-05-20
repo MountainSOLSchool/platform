@@ -7,14 +7,14 @@ import {
 } from '@angular/core';
 import { AccountCreationMethod, Login, LoginStore } from './login.store';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AsyncPipe } from '@angular/common';
-import { ToastModule } from 'primeng/toast';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { CardModule } from 'primeng/card';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,22 +23,48 @@ import { CardModule } from 'primeng/card';
         AsyncPipe,
         LoginStore,
         FormsModule,
-        ButtonModule,
-        InputTextModule,
-        MessagesModule,
-        MessageModule,
-        ToastModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
         RouterModule,
-        CardModule,
     ],
     templateUrl: './login.component.html',
     styles: [
         `
-            :host ::ng-deep .p-message-boring {
+            .sol-login-card {
+                width: 100%;
+                max-width: 600px;
+                margin: 2rem auto;
+            }
+            .sol-login-info {
                 background-color: #f0f0f0;
-                border: solid lightgray;
-                border-width: 0 0 0 6px;
+                border-left: 6px solid lightgray;
                 color: black;
+                padding: 0.75rem 1rem;
+                margin-bottom: 1rem;
+                border-radius: 4px;
+            }
+            .sol-login-warn {
+                background-color: #fff4e5;
+                border-left: 6px solid #ffa726;
+                color: #663c00;
+                padding: 0.75rem 1rem;
+                margin-top: 1rem;
+                border-radius: 4px;
+            }
+            .sol-login-error {
+                color: red;
+                margin: 0.25rem 0 0;
+            }
+            .sol-login-form mat-form-field {
+                width: 100%;
+            }
+            .sol-login-action {
+                width: 100%;
+                margin-top: 0.5rem;
             }
         `,
     ],

@@ -1,78 +1,81 @@
 <h1>Admin Dashboard</h1>
 <div style="display: flex; flex-wrap: wrap">
-    <div style="margin-right: 20px">
-        <p-panel header="Quick Navigation">
-            <ul style="font-size: 16px">
-                <li>
-                    <a routerLink="/admin/report">Class Forms and Contacts</a>
-                </li>
-                <li>
-                    <a routerLink="/admin/students">Student Info Sheets</a>
-                </li>
-                <li>
-                    <a routerLink="/admin/t-shirts">T-shirt Sizes</a>
-                </li>
-                <li>
-                    <a routerLink="/admin/enrollments">Enrollments</a>
-                </li>
-                <li>
-                    <a routerLink="/calendar/classes">Class Calendar</a>
-                </li>
-                <li>
-                    <a routerLink="/admin/classes/management"
-                        >Manage Classes</a
-                    >
-                </li>
-                <li>
-                    <a routerLink="/admin/discounts"
-                        >Manage Discounts</a
-                    >
-                </li>
-                <li>
-                    <a routerLink="/admin/messages"
-                        >Enrollment Messages</a
-                    >
-                </li>
-            </ul>
-        </p-panel>
+    <div>
+        <mat-card class="nav-card">
+            <mat-card-header>
+                <mat-card-title>Quick Navigation</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <ul style="font-size: 16px">
+                    <li>
+                        <a routerLink="/admin/report"
+                            >Class Forms and Contacts</a
+                        >
+                    </li>
+                    <li>
+                        <a routerLink="/admin/students">Student Info Sheets</a>
+                    </li>
+                    <li>
+                        <a routerLink="/admin/t-shirts">T-shirt Sizes</a>
+                    </li>
+                    <li>
+                        <a routerLink="/admin/enrollments">Enrollments</a>
+                    </li>
+                    <li>
+                        <a routerLink="/calendar/classes">Class Calendar</a>
+                    </li>
+                    <li>
+                        <a routerLink="/admin/classes/management"
+                            >Manage Classes</a
+                        >
+                    </li>
+                    <li>
+                        <a routerLink="/admin/discounts">Manage Discounts</a>
+                    </li>
+                    <li>
+                        <a routerLink="/admin/messages">Enrollment Messages</a>
+                    </li>
+                </ul>
+            </mat-card-content>
+        </mat-card>
     </div>
-        <div>
+    <div>
         @if (semesters.value(); as semesters) {
-            <p-panel>
-                <ng-template pTemplate="header">
+            <mat-card class="chart-card">
+                <mat-card-header>
                     <div style="display: flex; align-items: center; gap: 10px">
-                        <p-dropdown
-                            [options]="semesters"
-                            placeholder="Select a semester"
-                            optionLabel="name"
-                            optionValue="id"
-                            [showClear]="false"
-                            [ngModel]="selectedSemester()"
-                            (ngModelChange)="selectedSemester.set($event)"
-                        ></p-dropdown>
+                        <mat-form-field
+                            appearance="outline"
+                            subscriptSizing="dynamic"
+                        >
+                            <mat-label>Semester</mat-label>
+                            <mat-select
+                                [ngModel]="selectedSemester()"
+                                (ngModelChange)="selectedSemester.set($event)"
+                            >
+                                @for (s of semesters; track s.id) {
+                                    <mat-option [value]="s.id">{{
+                                        s.name
+                                    }}</mat-option>
+                                }
+                            </mat-select>
+                        </mat-form-field>
                         <span class="font-bold">Enrollment</span>
                     </div>
-                </ng-template>
-                <div style="width: 500px; margin-top: 10px">
+                </mat-card-header>
+                <mat-card-content>
                     @defer (when semesterEnrollmentChartData.hasValue()) {
-                        <p-chart
-                            type="radar"
-                            [data]="semesterEnrollmentChartData.value()"
-                            [options]="chartOptions"
-                            [style]="{ height: '200px' }"
-                        ></p-chart>
+                        <canvas #chartCanvas class="chart-canvas"></canvas>
                     } @placeholder (minimum 1s) {
-                        <div
-                            style="
-                                margin-left: auto;
-                                margin-right: auto;
-                                width: fit-content;
-                            "
-                        >
-                            <p-progressSpinner></p-progressSpinner>
+                        <div class="chart-spinner">
+                            <mat-progress-spinner
+                                mode="indeterminate"
+                                diameter="32"
+                            ></mat-progress-spinner>
                         </div>
-                    }</div
-            ></p-panel>
+                    }
+                </mat-card-content>
+            </mat-card>
         }
     </div>
 </div>

@@ -5,57 +5,63 @@ import {
     signal,
 } from '@angular/core';
 import { DownloadClassFormsService } from '../../services/download-class-forms.service';
-import { TabViewModule } from 'primeng/tabview';
-import { ButtonModule } from 'primeng/button';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { rxResource } from '@angular/core/rxjs-interop';
 
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TabViewModule, ButtonModule, ProgressSpinnerModule],
+    imports: [
+        MatTabsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+    ],
     template: `<div class="flex flex-col m-4">
         @let printoutsContentValue = printoutsContent.value();
         @if (printoutsContentValue) {
             <div class="relative w-full">
                 <div class="flex justify-between items-center mb-2">
                     <div></div>
-                    <button
-                        pButton
-                        icon="pi pi-print"
-                        label="Print"
-                        class="p-button-primary"
-                        (click)="print()"
-                    ></button>
+                    <button mat-flat-button color="primary" (click)="print()">
+                        <mat-icon>print</mat-icon>
+                        Print
+                    </button>
                 </div>
-                <p-tabView
-                    (activeIndexChange)="activeTabIndex.set($event)"
+                <mat-tab-group
+                    (selectedIndexChange)="activeTabIndex.set($event)"
                     class="flex-1"
                 >
-                    <p-tabPanel header="Class Roster">
+                    <mat-tab label="Class Roster">
                         <div
                             class="overflow-auto"
                             [innerHTML]="printoutsContentValue.roster.html"
                         ></div>
-                    </p-tabPanel>
-                    <p-tabPanel header="Sign In/Out Sheet">
+                    </mat-tab>
+                    <mat-tab label="Sign In/Out Sheet">
                         <div
                             class="overflow-auto"
                             [innerHTML]="printoutsContentValue.signIn.html"
                         ></div>
-                    </p-tabPanel>
-                    <p-tabPanel header="Student Health">
+                    </mat-tab>
+                    <mat-tab label="Student Health">
                         <div
                             class="overflow-auto"
                             [innerHTML]="printoutsContentValue.health.html"
                         ></div>
-                    </p-tabPanel>
-                </p-tabView>
+                    </mat-tab>
+                </mat-tab-group>
             </div>
         } @else {
             <div class="flex-1 flex justify-content-center items-center">
-                <p-progressSpinner />
+                <mat-progress-spinner
+                    mode="indeterminate"
+                    diameter="50"
+                ></mat-progress-spinner>
             </div>
         }
     </div>`,

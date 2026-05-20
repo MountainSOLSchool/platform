@@ -1,10 +1,14 @@
-<mat-card class="program-card" [ngClass]="{'selected': selected}">
+<mat-card class="program-card" [ngClass]="{ selected: selected }">
     @let classInfoValue = classInfo();
-    
+
     <!-- Header with background image and gradient overlay -->
-    <div class="card-header"
-         [style.background-image]="'url(' + (classInfoValue.thumbnailUrl ?? fallbackImageUrl) + ')'"
-         [ngClass]="{'grayscale': classInfoValue.pausedForEnrollment}">
+    <div
+        class="card-header"
+        [style.background-image]="
+            'url(' + (classInfoValue.thumbnailUrl ?? fallbackImageUrl) + ')'
+        "
+        [ngClass]="{ grayscale: classInfoValue.pausedForEnrollment }"
+    >
         <div class="header-overlay">
             <h2 class="card-title">
                 {{ classInfoValue.title }}
@@ -38,32 +42,40 @@
                 <mat-icon color="primary">style</mat-icon>
                 <div class="detail-content">
                     <span class="detail-label">Class Type</span>
-                    <span class="detail-value">{{ classInfoValue.classType }}</span>
+                    <span class="detail-value">{{
+                        classInfoValue.classType
+                    }}</span>
                 </div>
             </div>
-            
+
             <div class="detail-item">
                 <mat-icon color="primary">school</mat-icon>
                 <div class="detail-content">
                     <span class="detail-label">Grades</span>
                     <span class="detail-value">
-                        @if (classInfoValue.gradeRangeStart && classInfoValue.gradeRangeEnd) {
-                            {{ classInfoValue.gradeRangeStart }} - {{ classInfoValue.gradeRangeEnd }}
+                        @if (
+                            classInfoValue.gradeRangeStart &&
+                            classInfoValue.gradeRangeEnd
+                        ) {
+                            {{ classInfoValue.gradeRangeStart }} -
+                            {{ classInfoValue.gradeRangeEnd }}
                         } @else {
                             All Ages
                         }
                     </span>
                 </div>
             </div>
-            
+
             <div class="detail-item">
                 <mat-icon color="primary">place</mat-icon>
                 <div class="detail-content">
                     <span class="detail-label">Location</span>
-                    <span class="detail-value">{{ classInfoValue.location }}</span>
+                    <span class="detail-value">{{
+                        classInfoValue.location
+                    }}</span>
                 </div>
             </div>
-            
+
             <div class="detail-item">
                 <mat-icon color="primary">payments</mat-icon>
                 <div class="detail-content">
@@ -72,7 +84,9 @@
                         @if (!classInfoValue.paymentRange) {
                             ${{ classInfoValue.cost }}
                         } @else {
-                            ${{ classInfoValue.paymentRange.lowest }} - ${{ classInfoValue.paymentRange.highest }}
+                            ${{ classInfoValue.paymentRange.lowest }} - ${{
+                                classInfoValue.paymentRange.highest
+                            }}
                         }
                     </span>
                 </div>
@@ -88,8 +102,13 @@
                 Instructors
             </h3>
             <p class="instructor-names">
-                @for (instructor of classInfoValue.instructors; track instructor; let isLast = $last) {
-                    {{ instructor.firstName }} {{ instructor.lastName }}{{ isLast ? '' : ', ' }}
+                @for (
+                    instructor of classInfoValue.instructors;
+                    track instructor;
+                    let isLast = $last
+                ) {
+                    {{ instructor.firstName }} {{ instructor.lastName
+                    }}{{ isLast ? '' : ', ' }}
                 }
             </p>
         </div>
@@ -101,7 +120,9 @@
                 About This Class
             </h3>
             <div class="description-content">
-                <markdown style="word-break: break-word;">{{ classInfoValue.description }}</markdown>
+                <markdown style="word-break: break-word">{{
+                    classInfoValue.description
+                }}</markdown>
             </div>
         </div>
     </mat-card-content>
@@ -111,40 +132,60 @@
         @if (classInfoValue.pausedForEnrollment) {
             <div class="enrollment-notice">
                 <mat-icon>info_outline</mat-icon>
-                <span>This class is not accepting additional students at this time.</span>
+                <span
+                    >This class is not accepting additional students at this
+                    time.</span
+                >
             </div>
         }
 
-        <p-overlayPanel pAutoFocus #beforeSelectingForm>
-            @if (beforeSelectingForm.overlayVisible) {
-                <sol-class-before-select-options-form
-                    [optionsByClass]="beforeSelectOptionsByClass()"
-                    (confirmed)="confirmed(beforeSelectingForm, $event)"
-                ></sol-class-before-select-options-form>
-            }
-        </p-overlayPanel>
+        <mat-menu #beforeSelectingForm="matMenu">
+            <ng-template matMenuContent>
+                <div
+                    class="before-select-menu-content"
+                    (click)="$event.stopPropagation()"
+                >
+                    <sol-class-before-select-options-form
+                        [optionsByClass]="beforeSelectOptionsByClass()"
+                        (confirmed)="confirmed($event)"
+                    ></sol-class-before-select-options-form>
+                </div>
+            </ng-template>
+        </mat-menu>
 
         @if (classInfoValue.forInformationOnly) {
             <div class="info-only-notice">
                 <mat-icon>email</mat-icon>
-                Contact <a href="mailto:info@mountainsol.org">info&#64;mountainsol.org</a> for more information.
+                Contact
+                <a href="mailto:info@mountainsol.org"
+                    >info&#64;mountainsol.org</a
+                >
+                for more information.
             </div>
         } @else if (locked) {
             @if (hasUnlockedOptions()) {
-                <button mat-raised-button
-                        color="accent"
-                        class="select-button selected-state"
-                        (click)="beforeSelectingForm.toggle($event)">
+                <button
+                    mat-raised-button
+                    color="accent"
+                    class="select-button selected-state"
+                    [matMenuTriggerFor]="beforeSelectingForm"
+                >
                     <mat-icon>check_circle</mat-icon>
-                    {{ newOptionsCost > 0
-                        ? 'Enrolled — Update Options (+$' + newOptionsCost.toFixed(2) + ')'
-                        : 'Enrolled — Add Options' }}
+                    {{
+                        newOptionsCost > 0
+                            ? 'Enrolled — Update Options (+$' +
+                              newOptionsCost.toFixed(2) +
+                              ')'
+                            : 'Enrolled — Add Options'
+                    }}
                 </button>
             } @else {
-                <button mat-raised-button
-                        color="accent"
-                        class="select-button selected-state"
-                        [disabled]="true">
+                <button
+                    mat-raised-button
+                    color="accent"
+                    class="select-button selected-state"
+                    [disabled]="true"
+                >
                     <mat-icon>check_circle</mat-icon>
                     Enrolled
                 </button>
@@ -152,40 +193,59 @@
         } @else {
             @if (requiresPromptBeforeSelecting(classInfoValue)) {
                 @if (!selected) {
-                    <button mat-raised-button
-                            color="primary"
-                            class="select-button"
-                            [disabled]="classInfoValue.pausedForEnrollment"
-                            (click)="beforeSelectingForm.toggle($event)">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="select-button"
+                        [disabled]="classInfoValue.pausedForEnrollment"
+                        [matMenuTriggerFor]="beforeSelectingForm"
+                    >
                         <mat-icon>add_circle_outline</mat-icon>
                         Select Class
                     </button>
                 } @else {
-                    <button mat-raised-button
-                            color="accent"
-                            class="select-button selected-state"
-                            (click)="deselected()">
+                    <button
+                        mat-raised-button
+                        color="accent"
+                        class="select-button selected-state"
+                        (click)="deselected()"
+                    >
                         <mat-icon>check_circle</mat-icon>
-                        Selected{{classCostLabel(showOnlyAddedCost
-                                ? classInfoValue.additionalCost
-                                : (classInfoValue.userCost ?? classInfoValue.initialCost) + classInfoValue.additionalCost, showOnlyAddedCost)}}
+                        Selected{{
+                            classCostLabel(
+                                showOnlyAddedCost
+                                    ? classInfoValue.additionalCost
+                                    : (classInfoValue.userCost ??
+                                          classInfoValue.initialCost) +
+                                          classInfoValue.additionalCost,
+                                showOnlyAddedCost
+                            )
+                        }}
                     </button>
                 }
             } @else {
                 @if (!selected) {
-                    <button mat-raised-button
-                            color="primary"
-                            class="select-button"
-                            [disabled]="classInfoValue.pausedForEnrollment"
-                            (click)="selected = true; selectionToggled()">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="select-button"
+                        [disabled]="classInfoValue.pausedForEnrollment"
+                        (click)="selected = true; selectionToggled()"
+                    >
                         <mat-icon>add_circle_outline</mat-icon>
-                        {{ classInfoValue.pausedForEnrollment ? 'Class Full' : 'Select Class' }}
+                        {{
+                            classInfoValue.pausedForEnrollment
+                                ? 'Class Full'
+                                : 'Select Class'
+                        }}
                     </button>
                 } @else {
-                    <button mat-raised-button
-                            color="accent"
-                            class="select-button selected-state"
-                            (click)="selected = false; selectionToggled()">
+                    <button
+                        mat-raised-button
+                        color="accent"
+                        class="select-button selected-state"
+                        (click)="selected = false; selectionToggled()"
+                    >
                         <mat-icon>check_circle</mat-icon>
                         Selected
                     </button>

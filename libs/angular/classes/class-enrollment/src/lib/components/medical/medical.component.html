@@ -1,564 +1,601 @@
 @if ((isUpdatingExistingStudent$ | async) === true) {
-    <p-messages
-    [enableService]="false"
-    severity="info"
->
-    <ng-template pTemplate>
-        <div class="ml-2">
-            <i class="pi pi-info-circle" style="margin-right: 4px"></i>
+    <div class="alert alert-info">
+        <mat-icon>info</mat-icon>
+        <span>
             Your student's medical information from the previous enrollment has
             been automatically filled in. Please review and update as needed.
-        </div>
-    </ng-template>
-</p-messages>
+        </span>
+    </div>
 }
 @if (isStudentLoading()) {
     <div style="width: 100%; margin-top: 1rem">
         <div style="margin-left: auto; margin-right: auto; width: fit-content">
-            <p-progressSpinner></p-progressSpinner>
+            <mat-progress-spinner
+                mode="indeterminate"
+                diameter="50"
+            ></mat-progress-spinner>
         </div>
     </div>
-} @else {    
-        @let vm = viewModel();
-        @let sectionConfirmation = accuracyConfirmations();
-        @if (vm) {
-            <p-accordion>
-                <p-accordionTab [selected]="true">
-                    <ng-template pTemplate="header">
-                        @let valid = !vm.hasErrorsByGroup['contacts'];
-                        <div
-                        [solValid]="valid"
-                    >
+} @else {
+    @let vm = viewModel();
+    @let sectionConfirmation = accuracyConfirmations();
+    @if (vm) {
+        <mat-accordion>
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    @let contactsValid = !vm.hasErrorsByGroup['contacts'];
+                    <mat-panel-title [solValid]="contactsValid">
                         Emergency Contacts
-                        @if (!valid) {
+                        @if (!contactsValid) {
                             ⚠️
                         }
-                    </div>
-                </ng-template>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
                 <form>
-                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['contacts']" [messages]="vm.errors['confirmedAccuracyContacts']" (sectionConfirmedChange)="sectionConfirmationChanged('contacts', $event)"></sol-confirm-accuracy>
-                    <div class="p-fluid">
-                        <h3>Emergency Contacts</h3>
-                        <p>
-                            Please list two relatives, friends or neighbors that you
-                            have notified and who have agreed to assume temporary
-                            care of your child if you cannot be reached.
-                        </p>
-    
-                        @for (contact of vm.student.emergencyContacts; track trackByIndex(i); let i = $index; let last = $last) {
-                            <div
-                                style="margin-bottom: 1rem"
-                                [ngStyle]="{
-                                    'border-bottom': last
-                                        ? 'none'
-                                        : '1px solid lightgray'
-                                }"
-                            >
-                                <div class="formgrid grid">
-                                    <div
-                                        class="field col"
-                                    >
-                                        @let contactName = 'contact_' + i + '_name';
-                                        <span class="p-float-label">
-                                            <input
-                                                type="text"
-                                                [id]="contactName"
-                                                [name]="contactName"
-                                                pInputText
-                                                [solValid]="!vm.errors[contactName]"
-                                                [(ngModel)]="contact.name"
-                                                (ngModelChange)="
-                                                    updateStudentMedicalInfo(vm.student)
-                                                "
-                                            />
-                                            <label [for]="contactName">Name</label>
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[contactName]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                    <div
-                                        class="field col"
-                                    >
-                                        @let contactRelationship = 'contact_' + i + '_relationship';
-                                        <span class="p-float-label">
-                                            <input
-                                                type="text"
-                                                [id]="contactRelationship"
-                                                [name]="contactRelationship"
-                                                pInputText
-                                                [solValid]="!vm.errors[contactRelationship]"
-                                                [(ngModel)]="contact.relationship"
-                                                (ngModelChange)="
-                                                    updateStudentMedicalInfo(vm.student)
-                                                "
-                                            />
-                                            <label [for]="contactRelationship"
-                                                >Relationship to Student</label
-                                            >
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[contactRelationship]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                    <div
-                                        class="field col"
-                                    >
-                                        @let contactPhone = 'contact_' + i + '_phone';
-                                        <span class="p-float-label">
-                                            <p-inputMask
-                                                type="text"
-                                                [id]="contactPhone"
-                                                [name]="contactPhone"
-                                                mask="999-999-9999"
-                                                [solValid]="!vm.errors[contactPhone]"
-                                                [(ngModel)]="contact.phone"
-                                                (ngModelChange)="
-                                                    updateStudentMedicalInfo(vm.student)
-                                                "
-                                            ></p-inputMask>
-                                            <label [for]="contactPhone"
-                                                >Phone Number</label
-                                            >
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[contactPhone]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                </div>
-                                @if (i > 1) {
-                                    <div style="width: 10rem; margin-bottom: 1rem">
-                                        <button
-                                            label="Remove"
-                                            type="button"
-                                            pRipple
-                                            pButton
-                                            class="p-button-outlined p-button-danger"
-                                            (click)="removeContact(i)"
-                                        ></button>
-                                    </div>
-                                }
-                            </div>
-                        }
-    
-                        <div class="col-6" style="padding-bottom: 20px">
-                            <button
-                                pButton
-                                type="button"
-                                label="Add Emergency Contact"
-                                class="p-button-outlined"
-                                (click)="addContact()"
-                            ></button>
-                        </div>
-                    </div>
-                </form>
-            </p-accordionTab>
-    
-            <p-accordionTab>
-                <ng-template pTemplate="header">
-                    @let valid = !vm.hasErrorsByGroup['health'];
-                    <div
-                        [solValid]="valid"
-                    >
-                        Student Health Information
-                        @if (!valid) {
-                            ⚠️
-                        }
-                    </div>
-                </ng-template>
-                <form>
-                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['health']" [messages]="vm.errors['confirmedAccuracyHealth']" (sectionConfirmedChange)="sectionConfirmationChanged('health', $event)"></sol-confirm-accuracy>
-                    <div class="p-fluid">
-                        <h3>Student Information</h3>
-                        <div class="formgrid grid">
-                            <div class="field col" style="max-width: 50%">
-                                <span class="p-float-label">
-                                    <p-inputNumber
-                                        id="weight"
-                                        inputId="weight"
-                                        suffix=" lbs"
-                                        [name]="'weight'"
-                                        [solValid]="!vm.errors['weight']"
-                                        [(ngModel)]="vm.student.weightImperial"
-                                        (ngModelChange)="
-                                            updateStudentMedicalInfo(vm.student)
-                                        "
-                                    ></p-inputNumber>
-                                    <label for="weight">Weight (lbs)</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['weight']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                        </div>
-                        <div class="formgrid grid">
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <p-inputNumber
-                                        id="heightFeet"
-                                        [name]="'heightFeet'"
-                                        inputId="heightFeet"
-                                        suffix=" ft"
-                                        [solValid]="!vm.errors['heightFeet']"
-                                        [(ngModel)]="vm.student.heightFeet"
-                                        (ngModelChange)="
-                                            updateStudentMedicalInfo(vm.student)
-                                        "
-                                    ></p-inputNumber>
-                                    <label for="heightFeet">Height (feet)</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['heightFeet']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <p-inputNumber
-                                        id="heightInches"
-                                        [name]="'heightInches'"
-                                        inputId="heightInches"
-                                        suffix=" in"
-                                        [solValid]="!vm.errors['heightInches']"
-                                        [(ngModel)]="vm.student.heightInches"
-                                        (ngModelChange)="
-                                            updateStudentMedicalInfo(vm.student)
-                                        "
-                                    ></p-inputNumber>
-                                    <label for="heightInches"
-                                        >Height (inches)</label
-                                    >
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['heightInches']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                        </div>
-    
-                        <h3>Primary Physician</h3>
-    
-                        <div class="formgrid grid">
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <input
-                                        required
-                                        type="text"
-                                        id="docName"
-                                        name="docName"
-                                        pInputText
-                                        [solValid]="!vm.errors['doctorName']"
-                                        [(ngModel)]="vm.student.doctorName"
-                                        (ngModelChange)="
-                                            updateStudentMedicalInfo(vm.student)
-                                        "
-                                        [ngModelOptions]="{ updateOn: 'blur' }"
-                                    />
-                                    <label for="docName">Doctor's Name</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['doctorName']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <p-inputMask
-                                        type="text"
-                                        id="docPhone"
-                                        name="docPhone"
-                                        mask="999-999-9999"
-                                        [solValid]="!vm.errors['doctorPhone']"
-                                        [(ngModel)]="vm.student.doctorPhone"
-                                        (ngModelChange)="
-                                            updateStudentMedicalInfo(vm.student)
-                                        "
-                                        [ngModelOptions]="{ updateOn: 'blur' }"
-                                    ></p-inputMask>
-                                    <label for="docPhone">Doctor's Phone</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['doctorPhone']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                        </div>
-    
-                        <h3>Insurance Information</h3>
-                        <p>If you have insurance, please add it here.</p>
-                        <div class="formgrid grid">
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <input
-                                        required
-                                        type="text"
-                                        id="insuranceCo"
-                                        name="insuranceCo"
-                                        pInputText
-                                        [solValid]="!vm.errors['insuranceCompany']"
-                                        [(ngModel)]="vm.student.insuranceCompany"
-                                        (ngModelChange)="
-                                            updateStudentMedicalInfo(vm.student)
-                                        "
-                                        [ngModelOptions]="{ updateOn: 'blur' }"
-                                    />
-                                    <label for="insuranceCo"
-                                        >Insurance Company</label
-                                    >
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['insuranceCompany']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-    
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <input
-                                        type="text"
-                                        id="insuranceNo"
-                                        name="insuranceNo"
-                                        pInputText
-                                        [solValid]="!vm.errors['insuranceId']"
-                                        [(ngModel)]="vm.student.insuranceId"
-                                        (ngModelChange)="
-                                            updateStudentMedicalInfo(vm.student)
-                                        "
-                                        [ngModelOptions]="{ updateOn: 'blur' }"
-                                    />
-                                    <label for="insuranceNo"
-                                        >Medical Insurance ID Number</label
-                                    >
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['insuranceId']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                        </div>
-    
-                        <h3>Allergies</h3>
-                        <div class="field col-12 md:col-6">
-                            <p-selectButton
-                                name="hasAllergies"
-                                [options]="lifeThreateningOptions"
-                                optionLabel="name"
-                                optionValue="value"
-                                [solValid]="!vm.errors['lifeThreateningAllergy']"
-                                [(ngModel)]="vm.student.hasLifeThreateningAllergies"
-                                (ngModelChange)="
-                                    updateStudentMedicalInfo(vm.student)
-                                "
-                            ></p-selectButton>
-                            <sol-messages
-                                [messages]="
-                                    vm.errors['hasLifeThreateningAllergies']
-                                "
-                             variant="primeng"></sol-messages>
-                        </div>
-                        <p>
-                            Please be specific about any allergies the child has and
-                            list the protocols for each allergy, especially if the
-                            allergy requires an Epi-Pen (or similar).
-                        </p>
-                        <div class="field">
-                            <span class="p-float-label">
-                                <textarea
-                                    id="allergies"
-                                    name="allergies"
-                                    [rows]="5"
-                                    [cols]="50"
-                                    pInputTextarea
-                                    [autoResize]="true"
-                                    [(ngModel)]="vm.student.allergies"
-                                    (ngModelChange)="
-                                        updateStudentMedicalInfo(vm.student)
-                                    "
-                                    [ngModelOptions]="{ updateOn: 'blur' }"
-                                ></textarea>
-                                <label for="allergies"
-                                    >Notes on Allergies (Optional)</label
-                                ><br /><br />
-                            </span>
-                        </div>
-    
-                        <h3>Medications</h3>
-                        <p>
-                            If your child routinely takes medication, please fill
-                            out the following, even if the medication is not
-                            dispensed during Mountain SOL programs. Any medication
-                            needed during the program should be given to a
-                            designated staff member and will be dispensed by the
-                            designated staff member. Please list the following
-                            information for each medication.
-                        </p>
-    
-                        @for (medication of vm.student.medications; track trackByIndex(i); let i = $index; let last = $last) {
+                    <sol-confirm-accuracy
+                        [sectionConfirmed]="sectionConfirmation['contacts']"
+                        [messages]="vm.errors['confirmedAccuracyContacts']"
+                        (sectionConfirmedChange)="
+                            sectionConfirmationChanged('contacts', $event)
+                        "
+                    ></sol-confirm-accuracy>
+                    <h3>Emergency Contacts</h3>
+                    <p>
+                        Please list two relatives, friends or neighbors that you
+                        have notified and who have agreed to assume temporary
+                        care of your child if you cannot be reached.
+                    </p>
 
-                            <div
+                    @for (
+                        contact of vm.student.emergencyContacts;
+                        track trackByIndex(i);
+                        let i = $index;
+                        let last = $last
+                    ) {
+                        <div
                             style="margin-bottom: 1rem"
                             [ngStyle]="{
                                 'border-bottom': last
                                     ? 'none'
-                                    : '1px solid lightgray'
+                                    : '1px solid lightgray',
                             }"
                         >
                             <div class="formgrid grid">
-                                <div
-                                    class="field col"
-                                >
-                                    @let medicationName = 'medication_' + i + '_name';
-                                    <span class="p-float-label">
+                                <div class="field col">
+                                    @let contactName = 'contact_' + i + '_name';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Name</mat-label>
                                         <input
+                                            matInput
+                                            type="text"
+                                            [id]="contactName"
+                                            [name]="contactName"
+                                            [solValid]="!vm.errors[contactName]"
+                                            [(ngModel)]="contact.name"
+                                            (ngModelChange)="
+                                                updateStudentMedicalInfo(
+                                                    vm.student
+                                                )
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="vm.errors[contactName]"
+                                    ></sol-messages>
+                                </div>
+                                <div class="field col">
+                                    @let contactRelationship =
+                                        'contact_' + i + '_relationship';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label
+                                            >Relationship to Student</mat-label
+                                        >
+                                        <input
+                                            matInput
+                                            type="text"
+                                            [id]="contactRelationship"
+                                            [name]="contactRelationship"
+                                            [solValid]="
+                                                !vm.errors[contactRelationship]
+                                            "
+                                            [(ngModel)]="contact.relationship"
+                                            (ngModelChange)="
+                                                updateStudentMedicalInfo(
+                                                    vm.student
+                                                )
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="
+                                            vm.errors[contactRelationship]
+                                        "
+                                    ></sol-messages>
+                                </div>
+                                <div class="field col">
+                                    @let contactPhone =
+                                        'contact_' + i + '_phone';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Phone Number</mat-label>
+                                        <input
+                                            matInput
+                                            type="tel"
+                                            [id]="contactPhone"
+                                            [name]="contactPhone"
+                                            placeholder="555-555-5555"
+                                            [solValid]="
+                                                !vm.errors[contactPhone]
+                                            "
+                                            [(ngModel)]="contact.phone"
+                                            (ngModelChange)="
+                                                updateStudentMedicalInfo(
+                                                    vm.student
+                                                )
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="vm.errors[contactPhone]"
+                                    ></sol-messages>
+                                </div>
+                            </div>
+                            @if (i > 1) {
+                                <div style="width: 10rem; margin-bottom: 1rem">
+                                    <button
+                                        mat-stroked-button
+                                        color="warn"
+                                        type="button"
+                                        (click)="removeContact(i)"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <div class="col-6" style="padding-bottom: 20px">
+                        <button
+                            mat-stroked-button
+                            type="button"
+                            (click)="addContact()"
+                        >
+                            Add Emergency Contact
+                        </button>
+                    </div>
+                </form>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    @let healthValid = !vm.hasErrorsByGroup['health'];
+                    <mat-panel-title [solValid]="healthValid">
+                        Student Health Information
+                        @if (!healthValid) {
+                            ⚠️
+                        }
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <form>
+                    <sol-confirm-accuracy
+                        [sectionConfirmed]="sectionConfirmation['health']"
+                        [messages]="vm.errors['confirmedAccuracyHealth']"
+                        (sectionConfirmedChange)="
+                            sectionConfirmationChanged('health', $event)
+                        "
+                    ></sol-confirm-accuracy>
+                    <h3>Student Information</h3>
+                    <div class="formgrid grid">
+                        <div class="field col" style="max-width: 50%">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Weight (lbs)</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    id="weight"
+                                    name="weight"
+                                    [solValid]="!vm.errors['weight']"
+                                    [(ngModel)]="vm.student.weightImperial"
+                                    (ngModelChange)="
+                                        updateStudentMedicalInfo(vm.student)
+                                    "
+                                />
+                                <span matTextSuffix>lbs</span>
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['weight']"
+                            ></sol-messages>
+                        </div>
+                    </div>
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Height (feet)</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    id="heightFeet"
+                                    name="heightFeet"
+                                    [solValid]="!vm.errors['heightFeet']"
+                                    [(ngModel)]="vm.student.heightFeet"
+                                    (ngModelChange)="
+                                        updateStudentMedicalInfo(vm.student)
+                                    "
+                                />
+                                <span matTextSuffix>ft</span>
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['heightFeet']"
+                            ></sol-messages>
+                        </div>
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Height (inches)</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    id="heightInches"
+                                    name="heightInches"
+                                    [solValid]="!vm.errors['heightInches']"
+                                    [(ngModel)]="vm.student.heightInches"
+                                    (ngModelChange)="
+                                        updateStudentMedicalInfo(vm.student)
+                                    "
+                                />
+                                <span matTextSuffix>in</span>
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['heightInches']"
+                            ></sol-messages>
+                        </div>
+                    </div>
+
+                    <h3>Primary Physician</h3>
+
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Doctor's Name</mat-label>
+                                <input
+                                    matInput
+                                    required
+                                    type="text"
+                                    id="docName"
+                                    name="docName"
+                                    [solValid]="!vm.errors['doctorName']"
+                                    [(ngModel)]="vm.student.doctorName"
+                                    (ngModelChange)="
+                                        updateStudentMedicalInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['doctorName']"
+                            ></sol-messages>
+                        </div>
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Doctor's Phone</mat-label>
+                                <input
+                                    matInput
+                                    type="tel"
+                                    id="docPhone"
+                                    name="docPhone"
+                                    placeholder="555-555-5555"
+                                    [solValid]="!vm.errors['doctorPhone']"
+                                    [(ngModel)]="vm.student.doctorPhone"
+                                    (ngModelChange)="
+                                        updateStudentMedicalInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['doctorPhone']"
+                            ></sol-messages>
+                        </div>
+                    </div>
+
+                    <h3>Insurance Information</h3>
+                    <p>If you have insurance, please add it here.</p>
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Insurance Company</mat-label>
+                                <input
+                                    matInput
+                                    required
+                                    type="text"
+                                    id="insuranceCo"
+                                    name="insuranceCo"
+                                    [solValid]="!vm.errors['insuranceCompany']"
+                                    [(ngModel)]="vm.student.insuranceCompany"
+                                    (ngModelChange)="
+                                        updateStudentMedicalInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['insuranceCompany']"
+                            ></sol-messages>
+                        </div>
+
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label
+                                    >Medical Insurance ID Number</mat-label
+                                >
+                                <input
+                                    matInput
+                                    type="text"
+                                    id="insuranceNo"
+                                    name="insuranceNo"
+                                    [solValid]="!vm.errors['insuranceId']"
+                                    [(ngModel)]="vm.student.insuranceId"
+                                    (ngModelChange)="
+                                        updateStudentMedicalInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['insuranceId']"
+                            ></sol-messages>
+                        </div>
+                    </div>
+
+                    <h3>Allergies</h3>
+                    <div class="field col-12 md:col-6">
+                        <mat-button-toggle-group
+                            name="hasAllergies"
+                            [solValid]="!vm.errors['lifeThreateningAllergy']"
+                            [(ngModel)]="vm.student.hasLifeThreateningAllergies"
+                            (ngModelChange)="
+                                updateStudentMedicalInfo(vm.student)
+                            "
+                        >
+                            @for (
+                                option of lifeThreateningOptions;
+                                track option.value
+                            ) {
+                                <mat-button-toggle [value]="option.value">{{
+                                    option.name
+                                }}</mat-button-toggle>
+                            }
+                        </mat-button-toggle-group>
+                        <sol-messages
+                            [messages]="
+                                vm.errors['hasLifeThreateningAllergies']
+                            "
+                        ></sol-messages>
+                    </div>
+                    <p>
+                        Please be specific about any allergies the child has and
+                        list the protocols for each allergy, especially if the
+                        allergy requires an Epi-Pen (or similar).
+                    </p>
+                    <div class="field">
+                        <mat-form-field
+                            appearance="outline"
+                            style="width: 100%"
+                        >
+                            <mat-label>Notes on Allergies (Optional)</mat-label>
+                            <textarea
+                                matInput
+                                id="allergies"
+                                name="allergies"
+                                rows="5"
+                                [(ngModel)]="vm.student.allergies"
+                                (ngModelChange)="
+                                    updateStudentMedicalInfo(vm.student)
+                                "
+                                [ngModelOptions]="{ updateOn: 'blur' }"
+                            ></textarea>
+                        </mat-form-field>
+                    </div>
+
+                    <h3>Medications</h3>
+                    <p>
+                        If your child routinely takes medication, please fill
+                        out the following, even if the medication is not
+                        dispensed during Mountain SOL programs. Any medication
+                        needed during the program should be given to a
+                        designated staff member and will be dispensed by the
+                        designated staff member. Please list the following
+                        information for each medication.
+                    </p>
+
+                    @for (
+                        medication of vm.student.medications;
+                        track trackByIndex(i);
+                        let i = $index;
+                        let last = $last
+                    ) {
+                        <div
+                            style="margin-bottom: 1rem"
+                            [ngStyle]="{
+                                'border-bottom': last
+                                    ? 'none'
+                                    : '1px solid lightgray',
+                            }"
+                        >
+                            <div class="formgrid grid">
+                                <div class="field col">
+                                    @let medicationName =
+                                        'medication_' + i + '_name';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Medication Name</mat-label>
+                                        <input
+                                            matInput
                                             type="text"
                                             [id]="medicationName"
                                             [name]="medicationName"
-                                            pInputText
-                                            [solValid]="!vm.errors[medicationName]"
+                                            [solValid]="
+                                                !vm.errors[medicationName]
+                                            "
                                             [(ngModel)]="medication.name"
                                             (ngModelChange)="
-                                                updateStudentMedicalInfo(vm.student)
+                                                updateStudentMedicalInfo(
+                                                    vm.student
+                                                )
                                             "
                                         />
-                                        <label [for]="medicationName"
-                                            >Medication Name</label
-                                        >
-                                    </span>
+                                    </mat-form-field>
                                     <sol-messages
                                         [messages]="vm.errors[medicationName]"
-                                     variant="primeng"></sol-messages>
+                                    ></sol-messages>
                                 </div>
-                                <div
-                                    class="field col"
-                                >
-                                    @let medicationDosage = 'medication_' + i + '_dosage';
-                                    <span class="p-float-label">
+                                <div class="field col">
+                                    @let medicationDosage =
+                                        'medication_' + i + '_dosage';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Dosage</mat-label>
                                         <input
+                                            matInput
                                             type="text"
                                             [id]="medicationDosage"
                                             [name]="medicationDosage"
-                                            pInputText
-                                            [solValid]="!vm.errors[medicationDosage]"
+                                            [solValid]="
+                                                !vm.errors[medicationDosage]
+                                            "
                                             [(ngModel)]="medication.dosage"
                                             (ngModelChange)="
-                                                updateStudentMedicalInfo(vm.student)
+                                                updateStudentMedicalInfo(
+                                                    vm.student
+                                                )
                                             "
                                         />
-                                        <label [for]="medicationDosage">Dosage</label>
-                                    </span>
+                                    </mat-form-field>
                                     <sol-messages
                                         [messages]="vm.errors[medicationDosage]"
-                                     variant="primeng"></sol-messages>
+                                    ></sol-messages>
                                 </div>
-                                <div
-                                    class="field col"
-                                >
-                                    @let medicationDoctor = 'medication_' + i + '_doctor';
-                                    <span class="p-float-label">
+                                <div class="field col">
+                                    @let medicationDoctor =
+                                        'medication_' + i + '_doctor';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Doctor</mat-label>
                                         <input
+                                            matInput
                                             type="text"
                                             [id]="medicationDoctor"
                                             [name]="medicationDoctor"
-                                            pInputText
-                                            [solValid]="!vm.errors[medicationDoctor]"
+                                            [solValid]="
+                                                !vm.errors[medicationDoctor]
+                                            "
                                             [(ngModel)]="medication.doctor"
                                             (ngModelChange)="
-                                                updateStudentMedicalInfo(vm.student)
+                                                updateStudentMedicalInfo(
+                                                    vm.student
+                                                )
                                             "
                                         />
-                                        <label [for]="medicationDoctor">Doctor</label>
-                                    </span>
+                                    </mat-form-field>
                                     <sol-messages
                                         [messages]="vm.errors[medicationDoctor]"
-                                     variant="primeng"></sol-messages>
+                                    ></sol-messages>
                                 </div>
                             </div>
                             <div style="width: 10rem; margin-bottom: 1rem">
                                 <button
-                                    label="Remove"
+                                    mat-stroked-button
+                                    color="warn"
                                     type="button"
-                                    pRipple
-                                    pButton
-                                    class="p-button-outlined p-button-danger"
                                     (click)="removeMedication(i)"
-                                ></button>
+                                >
+                                    Remove
+                                </button>
                             </div>
                         </div>
-                        }
-    
-                        <div
-                            class="field col-12 md:col-6"
-                            style="padding-bottom: 20px"
+                    }
+
+                    <div
+                        class="field col-12 md:col-6"
+                        style="padding-bottom: 20px"
+                    >
+                        <button
+                            mat-stroked-button
+                            type="button"
+                            (click)="addMedication()"
                         >
-                            <button
-                                pButton
-                                type="button"
-                                label="Add Medication"
-                                class="p-button-outlined"
-                                (click)="addMedication()"
-                            ></button>
-                        </div>
-    
-                        <div id="Privacy" style="padding-bottom: 20px">
-                            <h3>Medical Authorization</h3>
-                            <p>
-                                Do you authorize Mountain SOL Staff to assist in the
-                                dispensing of medication including epi-pen and
-                                inhalers, as prescribed above?
-                            </p>
-                            <div class="field col-12 md:col-6">
-                                <p-selectButton
-                                    [options]="medicationAuth"
-                                    name="authorizedToAdministerMedication"
-                                    optionLabel="name"
-                                    optionValue="value"
-                                    [solValid]="
-                                        !vm.errors[
-                                            'authorizedToAdministerMedication'
-                                        ]
-                                    "
-                                    [(ngModel)]="
-                                        vm.student.authorizedToAdministerMedication
-                                    "
-                                    (ngModelChange)="
-                                        updateStudentMedicalInfo(vm.student)
-                                    "
-                                ></p-selectButton>
-                            </div>
-                            <sol-messages
-                                [messages]="
-                                    vm.errors['authorizedToAdministerMedication']
-                                "
-                             variant="primeng"></sol-messages>
-                        </div>
-    
-                        <h3>Additional Notes about the Student</h3>
+                            Add Medication
+                        </button>
+                    </div>
+
+                    <div id="Privacy" style="padding-bottom: 20px">
+                        <h3>Medical Authorization</h3>
                         <p>
-                            Please list any other physical conditions that may
-                            affect your child's participation in our programs.
-                            Please also describe any behavioral or circumstantial
-                            conditions that staff should be aware of, especially if
-                            they might affect their participation in the program.
-                            Are there certain things that would be helpful to know
-                            about your child?
+                            Do you authorize Mountain SOL Staff to assist in the
+                            dispensing of medication including epi-pen and
+                            inhalers, as prescribed above?
                         </p>
-                        <div id="medicalNotes" class="field">
-                            <span class="p-float-label">
-                                <textarea
-                                    id="medicalNotes"
-                                    name="medicalNotes"
-                                    [rows]="5"
-                                    [cols]="50"
-                                    pInputTextarea
-                                    [(ngModel)]="vm.student.medicalNotes"
-                                    (ngModelChange)="
-                                        updateStudentMedicalInfo(vm.student)
-                                    "
-                                    [autoResize]="true"
-                                ></textarea>
-                                <label for="medicalNotes"
-                                    >Additional Health or Medical Notes
-                                    (Optional)</label
-                                ><br /><br />
-                            </span>
+                        <div class="field col-12 md:col-6">
+                            <mat-button-toggle-group
+                                name="authorizedToAdministerMedication"
+                                [solValid]="
+                                    !vm.errors[
+                                        'authorizedToAdministerMedication'
+                                    ]
+                                "
+                                [(ngModel)]="
+                                    vm.student.authorizedToAdministerMedication
+                                "
+                                (ngModelChange)="
+                                    updateStudentMedicalInfo(vm.student)
+                                "
+                            >
+                                @for (
+                                    option of medicationAuth;
+                                    track option.value
+                                ) {
+                                    <mat-button-toggle [value]="option.value">{{
+                                        option.name
+                                    }}</mat-button-toggle>
+                                }
+                            </mat-button-toggle-group>
                         </div>
+                        <sol-messages
+                            [messages]="
+                                vm.errors['authorizedToAdministerMedication']
+                            "
+                        ></sol-messages>
+                    </div>
+
+                    <h3>Additional Notes about the Student</h3>
+                    <p>
+                        Please list any other physical conditions that may
+                        affect your child's participation in our programs.
+                        Please also describe any behavioral or circumstantial
+                        conditions that staff should be aware of, especially if
+                        they might affect their participation in the program.
+                        Are there certain things that would be helpful to know
+                        about your child?
+                    </p>
+                    <div id="medicalNotes" class="field">
+                        <mat-form-field
+                            appearance="outline"
+                            style="width: 100%"
+                        >
+                            <mat-label
+                                >Additional Health or Medical Notes
+                                (Optional)</mat-label
+                            >
+                            <textarea
+                                matInput
+                                id="medicalNotes"
+                                name="medicalNotes"
+                                rows="5"
+                                [(ngModel)]="vm.student.medicalNotes"
+                                (ngModelChange)="
+                                    updateStudentMedicalInfo(vm.student)
+                                "
+                            ></textarea>
+                        </mat-form-field>
                     </div>
                 </form>
-            </p-accordionTab>
-        </p-accordion>
+            </mat-expansion-panel>
+        </mat-accordion>
     }
 }

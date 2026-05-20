@@ -1,935 +1,985 @@
 @if (isUpdatingExistingStudent() === true) {
-    <p-messages
-    [enableService]="false"
-    severity="info"
->
-    <ng-template pTemplate>
-        <div class="ml-2">
-            <i class="pi pi-info-circle" style="margin-right: 4px"></i>
+    <div class="alert alert-info">
+        <mat-icon>info</mat-icon>
+        <span>
             Your student's information from the previous enrollment has been
             automatically filled in. Please review and update as needed.
-        </div>
-    </ng-template>
-</p-messages>
+        </span>
+    </div>
 }
 @if (isStudentLoading()) {
     <div style="width: 100%; margin-top: 1rem">
         <div style="margin-left: auto; margin-right: auto; width: fit-content">
-            <p-progressSpinner></p-progressSpinner>
+            <mat-progress-spinner
+                mode="indeterminate"
+                diameter="50"
+            ></mat-progress-spinner>
         </div>
     </div>
 } @else {
     @let vm = viewModel();
     @let sectionConfirmation = accuracyConfirmations();
     @if (vm) {
-        <p-accordion>
-            <p-accordionTab [selected]="true">
-                <ng-template pTemplate="header"
-                    >
-                    @let valid = !vm.hasErrorsByGroup['student'];
-                    <div
-                        [solValid]="valid"
-                    >
+        <mat-accordion>
+            <mat-expansion-panel [expanded]="true">
+                <mat-expansion-panel-header>
+                    @let studentValid = !vm.hasErrorsByGroup['student'];
+                    <mat-panel-title [solValid]="studentValid">
                         Student
-                        @if (!valid) {
+                        @if (!studentValid) {
                             ⚠️
                         }
-                    </div>
-                </ng-template>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
                 <form>
-                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['student']" [messages]="vm.errors['confirmedAccuracyStudent']" (sectionConfirmedChange)="sectionConfirmationChanged('student', $event)"></sol-confirm-accuracy>
-                    <div class="p-fluid">
-                        <div class="formgrid grid">
-                            <div class="field col-12 md:col-6">
-                                <span class="p-float-label">
-                                    <p-inputMask
-                                        name="birthdate"
-                                        [(ngModel)]="vm.student.birthdate"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                        mask="99/99/9999"
-                                        (onFocus)="op.show($event)"
-                                        (onComplete)="op.hide()"
-                                        [solValid]="!vm.errors['birthdate']"
-                                        #dateInput
-                                    ></p-inputMask>
-                                    <p-overlayPanel
-                                        #op
-                                        styleClass="date-overlay-panel"
-                                    >
-                                        <ng-template pTemplate>
-                                            <p-calendar
-                                                name="birthdate"
-                                                id="birthdate"
-                                                [inline]="true"
-                                                dataType="string"
-                                                [(ngModel)]="vm.student.birthdate"
-                                                (ngModelChange)="
-                                                    updateStudentInfo(vm.student)
-                                                "
-                                            ></p-calendar>
-                                        </ng-template>
-                                    </p-overlayPanel>
-                                    <label for="birthdate"
-                                        >Birth Date (MM/DD/YYYY)</label
-                                    >
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['birthdate']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-    
-                            <div class="field col-12 md:col-6">
-                                <span class="p-float-label" width="20rem">
-                                    <input
-                                        name="age"
-                                        id="age"
-                                        disabled
-                                        pInputText
-                                        [value]="vm.student.age"
-                                    />
-                                    <label for="age">Age</label>
-                                </span>
-                            </div>
-                            <div class="field col-12 md:col-6">
-                                <span class="p-float-label">
-                                    <input
-                                        required
-                                        type="text"
-                                        id="firstName"
-                                        name="firstName"
-                                        pInputText
-                                        [solValid]="!vm.errors['firstName']"
-                                        [(ngModel)]="vm.student.firstName"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                        [ngModelOptions]="{ updateOn: 'blur' }"
-                                    />
-                                    <label for="firstName">First Name</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['firstName']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                            <div class="field col-12 md:col-6">
-                                <span class="p-float-label">
-                                    <input
-                                        required
-                                        type="text"
-                                        id="lastName"
-                                        name="lastName"
-                                        pInputText
-                                        [solValid]="!vm.errors['lastName']"
-                                        [(ngModel)]="vm.student.lastName"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                        [ngModelOptions]="{ updateOn: 'blur' }"
-                                    />
-                                    <label for="lastName">Last Name</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['lastName']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-    
-                            <div class="field col-12 md:col-6">
-                                <span class="p-float-label">
-                                    <input
-                                        type="email"
-                                        id="studentEmail"
-                                        name="studentEmail"
-                                        pInputText
-                                        [solValid]="!vm.errors['studentEmail']"
-                                        [(ngModel)]="vm.student.studentEmail"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                    />
-                                    <label for="studentEmail"
-                                        >Student Email (Optional)</label
-                                    >
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['studentEmail']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-    
-                            <div class="field col-12 md:col-6">
-                                <span class="p-float-label">
-                                    <p-inputMask
-                                        type="studentPhone"
-                                        id="studentPhone"
-                                        name="studentPhone"
-                                        mask="999-999-9999"
-                                        [solValid]="!vm.errors['studentPhone']"
-                                        [(ngModel)]="vm.student.studentPhone"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                    ></p-inputMask>
-                                    <label for="studentPhone"
-                                        >Student Phone (Optional)</label
-                                    >
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['studentPhone']"
-                                 variant="primeng"></sol-messages>
-                            </div>
+                    <sol-confirm-accuracy
+                        [sectionConfirmed]="sectionConfirmation['student']"
+                        [messages]="vm.errors['confirmedAccuracyStudent']"
+                        (sectionConfirmedChange)="
+                            sectionConfirmationChanged('student', $event)
+                        "
+                    ></sol-confirm-accuracy>
+                    <div class="formgrid grid">
+                        <div class="field col-12 md:col-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Birth Date</mat-label>
+                                <input
+                                    matInput
+                                    [matDatepicker]="birthdatePicker"
+                                    name="birthdate"
+                                    id="birthdate"
+                                    placeholder="MM/DD/YYYY"
+                                    [solValid]="!vm.errors['birthdate']"
+                                    [(ngModel)]="vm.student.birthdate"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                                <mat-datepicker-toggle
+                                    matIconSuffix
+                                    [for]="birthdatePicker"
+                                ></mat-datepicker-toggle>
+                                <mat-datepicker
+                                    #birthdatePicker
+                                ></mat-datepicker>
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['birthdate']"
+                            ></sol-messages>
                         </div>
-    
-                        <div class="formgrid grid">
-                            <div class="field col-12 md:col-6">
-                                <span class="p-float-label">
-                                    <input
-                                        required
-                                        type="text"
-                                        id="pronouns"
-                                        name="pronouns"
-                                        [solValid]="!vm.errors['pronouns']"
-                                        [(ngModel)]="vm.student.pronouns"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                        pInputText
-                                    />
-                                    <label for="pronouns">Pronouns</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['pronouns']"
-                                 variant="primeng"></sol-messages>
-                            </div>
+
+                        <div class="field col-12 md:col-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Age</mat-label>
+                                <input
+                                    matInput
+                                    name="age"
+                                    id="age"
+                                    disabled
+                                    [value]="vm.student.age"
+                                />
+                            </mat-form-field>
                         </div>
-    
-                        <div class="formgrid grid">
-                            <div class="field col-12 md:col-6">
-                                <span class="p-float-label">
-                                    <input
-                                        required
-                                        type="text"
-                                        id="school"
-                                        name="school"
-                                        pInputText
-                                        [solValid]="!vm.errors['school']"
-                                        [(ngModel)]="vm.student.school"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                    />
-                                    <label for="school">School</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['school']"
-                                 variant="primeng"></sol-messages>
-                            </div>
+                        <div class="field col-12 md:col-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>First Name</mat-label>
+                                <input
+                                    matInput
+                                    required
+                                    type="text"
+                                    id="firstName"
+                                    name="firstName"
+                                    [solValid]="!vm.errors['firstName']"
+                                    [(ngModel)]="vm.student.firstName"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['firstName']"
+                            ></sol-messages>
                         </div>
-                        <div class="formgrid grid">
-                            <div class="field col-12 md:col-6">
-                                <span class="p-float-label">
-                                    <p-dropdown
-                                        name="tshirtSize"
-                                        id="tshirtSize"
-                                        [options]="tshirtSizes"
-                                        [(ngModel)]="vm.student.tshirtSize"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                        placeholder="Select a size"
-                                        optionLabel="name"
-                                        optionValue="value"
-                                        [solValid]="!vm.errors['tshirtSize']"
-                                    ></p-dropdown>
-                                    <label for="tshirtSize">T-Shirt Size</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['tshirtSize']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-    
-                            <div class="col-12">
-                                <h3>Notes About Student</h3>
-                                <p>
-                                    Is there anything you would like us to know
-                                    about your child? Likes/dislikes, change in
-                                    family circumstances, fears, etc.
-                                </p>
-                            </div>
-    
-                            <div class="field col-12" style="margin-top: 8px">
-                                <span class="p-float-label">
-                                    <textarea
-                                        id="notes"
-                                        name="notes"
-                                        [rows]="5"
-                                        [cols]="50"
-                                        pInputTextarea
-                                        [(ngModel)]="vm.student.notes"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                        [autoResize]="true"
-                                    ></textarea>
-                                    <label for="notes">Notes (Optional)</label
-                                    ><br /><br />
-                                </span>
-                            </div>
+                        <div class="field col-12 md:col-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Last Name</mat-label>
+                                <input
+                                    matInput
+                                    required
+                                    type="text"
+                                    id="lastName"
+                                    name="lastName"
+                                    [solValid]="!vm.errors['lastName']"
+                                    [(ngModel)]="vm.student.lastName"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['lastName']"
+                            ></sol-messages>
+                        </div>
+
+                        <div class="field col-12 md:col-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Student Email (Optional)</mat-label>
+                                <input
+                                    matInput
+                                    type="email"
+                                    id="studentEmail"
+                                    name="studentEmail"
+                                    [solValid]="!vm.errors['studentEmail']"
+                                    [(ngModel)]="vm.student.studentEmail"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['studentEmail']"
+                            ></sol-messages>
+                        </div>
+
+                        <div class="field col-12 md:col-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Student Phone (Optional)</mat-label>
+                                <input
+                                    matInput
+                                    type="tel"
+                                    id="studentPhone"
+                                    name="studentPhone"
+                                    placeholder="555-555-5555"
+                                    [solValid]="!vm.errors['studentPhone']"
+                                    [(ngModel)]="vm.student.studentPhone"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['studentPhone']"
+                            ></sol-messages>
+                        </div>
+                    </div>
+
+                    <div class="formgrid grid">
+                        <div class="field col-12 md:col-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Pronouns</mat-label>
+                                <input
+                                    matInput
+                                    required
+                                    type="text"
+                                    id="pronouns"
+                                    name="pronouns"
+                                    [solValid]="!vm.errors['pronouns']"
+                                    [(ngModel)]="vm.student.pronouns"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['pronouns']"
+                            ></sol-messages>
+                        </div>
+                    </div>
+
+                    <div class="formgrid grid">
+                        <div class="field col-12 md:col-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>School</mat-label>
+                                <input
+                                    matInput
+                                    required
+                                    type="text"
+                                    id="school"
+                                    name="school"
+                                    [solValid]="!vm.errors['school']"
+                                    [(ngModel)]="vm.student.school"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['school']"
+                            ></sol-messages>
+                        </div>
+                    </div>
+                    <div class="formgrid grid">
+                        <div class="field col-12 md:col-6">
+                            <mat-form-field appearance="outline">
+                                <mat-label>T-Shirt Size</mat-label>
+                                <mat-select
+                                    name="tshirtSize"
+                                    id="tshirtSize"
+                                    [(ngModel)]="vm.student.tshirtSize"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                    placeholder="Select a size"
+                                    [solValid]="!vm.errors['tshirtSize']"
+                                >
+                                    @for (
+                                        size of tshirtSizes;
+                                        track size.value
+                                    ) {
+                                        <mat-option [value]="size.value">{{
+                                            size.name
+                                        }}</mat-option>
+                                    }
+                                </mat-select>
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['tshirtSize']"
+                            ></sol-messages>
+                        </div>
+
+                        <div class="col-12">
+                            <h3>Notes About Student</h3>
+                            <p>
+                                Is there anything you would like us to know
+                                about your child? Likes/dislikes, change in
+                                family circumstances, fears, etc.
+                            </p>
+                        </div>
+
+                        <div class="field col-12" style="margin-top: 8px">
+                            <mat-form-field
+                                appearance="outline"
+                                style="width: 100%"
+                            >
+                                <mat-label>Notes (Optional)</mat-label>
+                                <textarea
+                                    matInput
+                                    id="notes"
+                                    name="notes"
+                                    rows="5"
+                                    [(ngModel)]="vm.student.notes"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                ></textarea>
+                            </mat-form-field>
                         </div>
                     </div>
                 </form>
-            </p-accordionTab>
-    
-            <p-accordionTab>
-                <ng-template pTemplate="header"
-                    >
-                    @let valid = !vm.hasErrorsByGroup['contact'];
-                    <div
-                        [solValid]="valid"
-                    >
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    @let contactValid = !vm.hasErrorsByGroup['contact'];
+                    <mat-panel-title [solValid]="contactValid">
                         Primary Contact for Student Registration
-                        @if (!valid) {
+                        @if (!contactValid) {
                             ⚠️
                         }
-                    </div>
-                </ng-template>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
                 <form>
-                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['contact']"  [messages]="vm.errors['confirmedAccuracyContact']" (sectionConfirmedChange)="sectionConfirmationChanged('contact', $event)"></sol-confirm-accuracy>
-                    <div class="p-fluid">
-                        <!-- fields for primary contact first and last name -->
-                        <div class="formgrid grid">
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <input
-                                        required
-                                        type="text"
-                                        id="contactFirstName"
-                                        name="contactFirstName"
-                                        pInputText
-                                        [solValid]="!vm.errors['contactFirstName']"
-                                        [(ngModel)]="vm.student.contactFirstName"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                        [ngModelOptions]="{ updateOn: 'blur' }"
-                                    />
-                                    <label for="contactFirstName">First Name</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['contactFirstName']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <input
-                                        required
-                                        type="text"
-                                        id="contactLastName"
-                                        name="contactLastName"
-                                        pInputText
-                                        [solValid]="!vm.errors['contactLastName']"
-                                        [(ngModel)]="vm.student.contactLastName"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                        [ngModelOptions]="{ updateOn: 'blur' }"
-                                    />
-                                    <label for="contactLastName">Last Name</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['contactLastName']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                        </div>
-                        <div class="formgrid grid">
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <input
-                                        required
-                                        type="email"
-                                        id="email"
-                                        name="email"
-                                        pInputText
-                                        [solValid]="!vm.errors['contactEmail']"
-                                        [(ngModel)]="vm.student.contactEmail"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                    />
-                                    <label for="email">Primary Email</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['contactEmail']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                        </div>
-    
-                        <div class="formgrid grid">
-                            <div class="field col">
-                                <span class="p-float-label">
-                                    <p-inputMask
-                                        id="phone"
-                                        type="phone"
-                                        name="phone"
-                                        mask="999-999-9999"
-                                        [solValid]="!vm.errors['contactPhone']"
-                                        [(ngModel)]="vm.student.contactPhone"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                    ></p-inputMask>
-                                    <label for="phone">Primary Phone Number</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['contactPhone']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                        </div>
-    
-                        <div class="field" style="width: 49.35%">
-                            <span class="p-float-label">
+                    <sol-confirm-accuracy
+                        [sectionConfirmed]="sectionConfirmation['contact']"
+                        [messages]="vm.errors['confirmedAccuracyContact']"
+                        (sectionConfirmedChange)="
+                            sectionConfirmationChanged('contact', $event)
+                        "
+                    ></sol-confirm-accuracy>
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label>First Name</mat-label>
                                 <input
+                                    matInput
+                                    required
                                     type="text"
-                                    id="address"
-                                    name="address"
-                                    pInputText
-                                    [solValid]="!vm.errors['address']"
-                                    [(ngModel)]="vm.student.address"
-                                    (ngModelChange)="updateStudentInfo(vm.student)"
+                                    id="contactFirstName"
+                                    name="contactFirstName"
+                                    [solValid]="!vm.errors['contactFirstName']"
+                                    [(ngModel)]="vm.student.contactFirstName"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
                                 />
-                                <label for="address">Street Address</label>
-                            </span>
+                            </mat-form-field>
                             <sol-messages
-                                [messages]="vm.errors['address']"
-                             variant="primeng"></sol-messages>
+                                [messages]="vm.errors['contactFirstName']"
+                            ></sol-messages>
                         </div>
-                        <div class="field" style="padding-top: 1%">
-                            <span class="p-float-label">
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Last Name</mat-label>
                                 <input
+                                    matInput
+                                    required
                                     type="text"
-                                    id="city"
-                                    name="city"
-                                    pInputText
-                                    [solValid]="!vm.errors['city']"
-                                    [(ngModel)]="vm.student.city"
-                                    (ngModelChange)="updateStudentInfo(vm.student)"
+                                    id="contactLastName"
+                                    name="contactLastName"
+                                    [solValid]="!vm.errors['contactLastName']"
+                                    [(ngModel)]="vm.student.contactLastName"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                    [ngModelOptions]="{ updateOn: 'blur' }"
                                 />
-                                <label for="city">City</label>
-                            </span>
+                            </mat-form-field>
                             <sol-messages
-                                [messages]="vm.errors['city']"
-                             variant="primeng"></sol-messages>
+                                [messages]="vm.errors['contactLastName']"
+                            ></sol-messages>
                         </div>
-                        <div class="grid-wrapper">
-                            <div class="field area-quarter-left">
-                                <span class="p-float-label">
-                                    <p-inputMask
-                                        id="state"
-                                        type="text"
-                                        name="state"
-                                        mask="aa"
-                                        [style]="{ 'text-transform': 'uppercase' }"
-                                        slotChar=" "
-                                        [solValid]="!vm.errors['state']"
-                                        [(ngModel)]="vm.student.state"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                    ></p-inputMask>
-                                    <label for="state">State</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['state']"
-                                 variant="primeng"></sol-messages>
-                            </div>
-                            <div class="field area-quarter-left-center">
-                                <span class="p-float-label">
-                                    <p-inputMask
-                                        id="zip"
-                                        type="text"
-                                        name="zip"
-                                        mask="99999"
-                                        slotChar=" "
-                                        [solValid]="!vm.errors['zip']"
-                                        [(ngModel)]="vm.student.zip"
-                                        (ngModelChange)="
-                                            updateStudentInfo(vm.student)
-                                        "
-                                    ></p-inputMask>
-                                    <label for="zip">Zip Code</label>
-                                </span>
-                                <sol-messages
-                                    [messages]="vm.errors['zip']"
-                                 variant="primeng"></sol-messages>
-                            </div>
+                    </div>
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Primary Email</mat-label>
+                                <input
+                                    matInput
+                                    required
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    [solValid]="!vm.errors['contactEmail']"
+                                    [(ngModel)]="vm.student.contactEmail"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['contactEmail']"
+                            ></sol-messages>
+                        </div>
+                    </div>
+
+                    <div class="formgrid grid">
+                        <div class="field col">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Primary Phone Number</mat-label>
+                                <input
+                                    matInput
+                                    type="tel"
+                                    id="phone"
+                                    name="phone"
+                                    placeholder="555-555-5555"
+                                    [solValid]="!vm.errors['contactPhone']"
+                                    [(ngModel)]="vm.student.contactPhone"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['contactPhone']"
+                            ></sol-messages>
+                        </div>
+                    </div>
+
+                    <div class="field" style="width: 49.35%">
+                        <mat-form-field
+                            appearance="outline"
+                            style="width: 100%"
+                        >
+                            <mat-label>Street Address</mat-label>
+                            <input
+                                matInput
+                                type="text"
+                                id="address"
+                                name="address"
+                                [solValid]="!vm.errors['address']"
+                                [(ngModel)]="vm.student.address"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                            />
+                        </mat-form-field>
+                        <sol-messages
+                            [messages]="vm.errors['address']"
+                        ></sol-messages>
+                    </div>
+                    <div class="field" style="padding-top: 1%">
+                        <mat-form-field
+                            appearance="outline"
+                            style="width: 100%"
+                        >
+                            <mat-label>City</mat-label>
+                            <input
+                                matInput
+                                type="text"
+                                id="city"
+                                name="city"
+                                [solValid]="!vm.errors['city']"
+                                [(ngModel)]="vm.student.city"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                            />
+                        </mat-form-field>
+                        <sol-messages
+                            [messages]="vm.errors['city']"
+                        ></sol-messages>
+                    </div>
+                    <div class="grid-wrapper">
+                        <div class="field area-quarter-left">
+                            <mat-form-field appearance="outline">
+                                <mat-label>State</mat-label>
+                                <input
+                                    matInput
+                                    id="state"
+                                    type="text"
+                                    name="state"
+                                    maxlength="2"
+                                    style="text-transform: uppercase"
+                                    placeholder="WV"
+                                    [solValid]="!vm.errors['state']"
+                                    [(ngModel)]="vm.student.state"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['state']"
+                            ></sol-messages>
+                        </div>
+                        <div class="field area-quarter-left-center">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Zip Code</mat-label>
+                                <input
+                                    matInput
+                                    id="zip"
+                                    type="text"
+                                    name="zip"
+                                    maxlength="5"
+                                    placeholder="12345"
+                                    [solValid]="!vm.errors['zip']"
+                                    [(ngModel)]="vm.student.zip"
+                                    (ngModelChange)="
+                                        updateStudentInfo(vm.student)
+                                    "
+                                />
+                            </mat-form-field>
+                            <sol-messages
+                                [messages]="vm.errors['zip']"
+                            ></sol-messages>
                         </div>
                     </div>
                 </form>
-            </p-accordionTab>
-            <p-accordionTab>
-                <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['privacy']" [messages]="vm.errors['confirmedAccuracyPrivacy']" (sectionConfirmedChange)="sectionConfirmationChanged('privacy', $event)"></sol-confirm-accuracy>
-                <ng-template pTemplate="header"
-                    >
-                    @let valid = !vm.hasErrorsByGroup['privacy'];
-                    <div
-                        [solValid]="valid"
-                    >
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    @let privacyValid = !vm.hasErrorsByGroup['privacy'];
+                    <mat-panel-title [solValid]="privacyValid">
                         Privacy and Protectants
-                        @if (!valid) {
+                        @if (!privacyValid) {
                             ⚠️
                         }
-                    </div>
-                </ng-template>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <sol-confirm-accuracy
+                    [sectionConfirmed]="sectionConfirmation['privacy']"
+                    [messages]="vm.errors['confirmedAccuracyPrivacy']"
+                    (sectionConfirmedChange)="
+                        sectionConfirmationChanged('privacy', $event)
+                    "
+                ></sol-confirm-accuracy>
                 <h3>Protectants</h3>
                 <p>
-                    May Mountain SOL Staff apply these protectants to your child,
-                    depending on outdoor conditions?
+                    May Mountain SOL Staff apply these protectants to your
+                    child, depending on outdoor conditions?
                 </p>
                 <div class="formgrid grid" style="margin-top: -1rem">
                     <div class="field col-12 md:col-4">
                         <p>DEET bug spray?</p>
-                        <p-selectButton
-                            [options]="yesNoOptions"
-                            optionLabel="name"
-                            optionValue="value"
+                        <mat-button-toggle-group
+                            name="deetBugspray"
                             [solValid]="!vm.errors['deetspray']"
                             [(ngModel)]="vm.student.deetBugspray"
                             (ngModelChange)="updateStudentInfo(vm.student)"
-                        ></p-selectButton>
+                        >
+                            @for (option of yesNoOptions; track option.value) {
+                                <mat-button-toggle [value]="option.value">{{
+                                    option.name
+                                }}</mat-button-toggle>
+                            }
+                        </mat-button-toggle-group>
                         <sol-messages
                             [messages]="vm.errors['deetspray']"
-                         variant="primeng"></sol-messages>
+                        ></sol-messages>
                     </div>
                     <div class="field col-12 md:col-4">
                         <p>Natural bug spray?</p>
-                        <p-selectButton
-                            [options]="yesNoOptions"
-                            optionLabel="name"
-                            optionValue="value"
+                        <mat-button-toggle-group
+                            name="naturalBugspray"
                             [solValid]="!vm.errors['naturalspray']"
                             [(ngModel)]="vm.student.naturalBugspray"
                             (ngModelChange)="updateStudentInfo(vm.student)"
-                        ></p-selectButton>
+                        >
+                            @for (option of yesNoOptions; track option.value) {
+                                <mat-button-toggle [value]="option.value">{{
+                                    option.name
+                                }}</mat-button-toggle>
+                            }
+                        </mat-button-toggle-group>
                         <sol-messages
                             [messages]="vm.errors['naturalspray']"
-                         variant="primeng"></sol-messages>
+                        ></sol-messages>
                     </div>
                     <div class="field col-12 md:col-4">
                         <p>Sunscreen?</p>
-                        <p-selectButton
-                            [options]="yesNoOptions"
-                            optionLabel="name"
-                            optionValue="value"
+                        <mat-button-toggle-group
+                            name="sunscreen"
                             [solValid]="!vm.errors['sunscreen']"
                             [(ngModel)]="vm.student.sunscreen"
                             (ngModelChange)="updateStudentInfo(vm.student)"
-                        ></p-selectButton>
+                        >
+                            @for (option of yesNoOptions; track option.value) {
+                                <mat-button-toggle [value]="option.value">{{
+                                    option.name
+                                }}</mat-button-toggle>
+                            }
+                        </mat-button-toggle-group>
                         <sol-messages
                             [messages]="vm.errors['sunscreen']"
-                         variant="primeng"></sol-messages>
+                        ></sol-messages>
                     </div>
                 </div>
                 <p>
                     <em>
                         All students are responsible for their own skin care
                         routines and should be aware of their own needs.<br /><br />Mountain
-                        SOL Staff would like to assist students in protecting their
-                        skin from bugs and the sun, but Mountain SOL does not assume
-                        responsibility for general risks from the outdoors,
-                        including bug bites or sunburn. If your child has any
-                        specific skin care needs, please include it in the
-                        "Additional Health or Medical Notes" section on the next
-                        page, and we will do our best to assist them.<br /><br />If
+                        SOL Staff would like to assist students in protecting
+                        their skin from bugs and the sun, but Mountain SOL does
+                        not assume responsibility for general risks from the
+                        outdoors, including bug bites or sunburn. If your child
+                        has any specific skin care needs, please include it in
+                        the "Additional Health or Medical Notes" section on the
+                        next page, and we will do our best to assist them.<br /><br />If
                         you prefer to use your own protectants, please send your
                         student with their own sun screen and/or bug spray, and
                         Mountain SOL Staff will use your products instead of our
                         default protectants.</em
                     >
                 </p>
-    
-                <div id="Privacy" style="padding-bottom: 20px; margin-top: 2rem">
+
+                <div
+                    id="Privacy"
+                    style="padding-bottom: 20px; margin-top: 2rem"
+                >
                     <h3>Photos</h3>
                     <p>
-                        Can we use photos of the student for promotional material?
+                        Can we use photos of the student for promotional
+                        material?
                     </p>
-                    <p-selectButton
-                        [options]="photographyPrivacyOptions"
-                        optionLabel="name"
-                        optionValue="value"
+                    <mat-button-toggle-group
+                        name="photography"
                         [solValid]="!vm.errors['photography']"
                         [(ngModel)]="vm.student.photography"
                         (ngModelChange)="updateStudentInfo(vm.student)"
-                    ></p-selectButton>
+                    >
+                        @for (
+                            option of photographyPrivacyOptions;
+                            track option.value
+                        ) {
+                            <mat-button-toggle [value]="option.value">{{
+                                option.name
+                            }}</mat-button-toggle>
+                        }
+                    </mat-button-toggle-group>
                     <sol-messages
                         [messages]="vm.errors['photography']"
-                     variant="primeng"></sol-messages>
+                    ></sol-messages>
                 </div>
-            </p-accordionTab>
-            <p-accordionTab>
-                <ng-template pTemplate="header"
-                    >
-                    @let valid = !vm.hasErrorsByGroup['guardians'];
-                    <div
-                        [solValid]="valid"
-                    >
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    @let guardiansValid = !vm.hasErrorsByGroup['guardians'];
+                    <mat-panel-title [solValid]="guardiansValid">
                         Parents and Guardians
-                        @if (!valid) {
+                        @if (!guardiansValid) {
                             ⚠️
                         }
-                    </div>
-                </ng-template>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
                 <form>
-                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['guardians']" [messages]="vm.errors['confirmedAccuracyGuardians']" (sectionConfirmedChange)="sectionConfirmationChanged('guardians', $event)"></sol-confirm-accuracy>
-                    <div class="p-fluid">
-                        <h3>Parent/Guardian</h3>
-                        @for (
-                            guardian of vm.student.guardians;
-                            track guardian;
-                            let i = $index;
-                            let first = $first;
-                            let last = $last
-                        ) {
-                            <div
-                                style="margin-bottom: 1rem"
-                                [ngStyle]="{
-                                    'border-bottom': last
-                                        ? 'none'
-                                        : '1px solid lightgray'
-                                }"
-                            >
-                                <div class="formgrid grid">
-                                    <div
-                                        class="field col"
-                                    >
-                                        @let guardianName = 'guardian_' + i + '_name';
-                                        <span class="p-float-label">
-                                            <input
-                                                type="text"
-                                                [id]="guardianName"
-                                                [name]="guardianName"
-                                                pInputText
-                                                [solValid]="!vm.errors[guardianName]"
-                                                [(ngModel)]="guardian.guardianName"
-                                                (ngModelChange)="
-                                                    updateStudentInfo(vm.student)
-                                                "
-                                            />
-                                            <label [for]="guardianName">Name</label>
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[guardianName]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                    <div
-                                        class="field col"
-                                    >
-                                        @let guardianRelationship = 'guardian_' + i + '_relationship';
-                                        <span class="p-float-label">
-                                            <input
-                                                type="text"
-                                                [id]="guardianRelationship"
-                                                [name]="guardianRelationship"
-                                                pInputText
-                                                [solValid]="!vm.errors[guardianRelationship]"
-                                                [(ngModel)]="
-                                                    guardian.guardianRelationship
-                                                "
-                                                (ngModelChange)="
-                                                    updateStudentInfo(vm.student)
-                                                "
-                                            />
-                                            <label [for]="guardianRelationship"
-                                                >Relationship to Student</label
-                                            >
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[guardianRelationship]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                    <div
-                                        class="field col"
-                                    >
-                                        @let guardianPhone = 'guardian_' + i + '_phone';
-                                        <span class="p-float-label">
-                                            <p-inputMask
-                                                type="text"
-                                                [id]="guardianPhone"
-                                                [name]="guardianPhone"
-                                                mask="999-999-9999"
-                                                [solValid]="!vm.errors[guardianPhone]"
-                                                [(ngModel)]="guardian.guardianPhone"
-                                                (ngModelChange)="
-                                                    updateStudentInfo(vm.student)
-                                                "
-                                            ></p-inputMask>
-                                            <label [for]="guardianPhone"
-                                                >Phone Number</label
-                                            >
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[guardianPhone]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                </div>
-                                <div
-                                    class="formgrid grid"
-                                    style="margin-bottom: 1rem"
-                                >
-                                    <div
-                                        class="field col-12 md:col-6"
-                                    >
-                                        @let guardianEmail = 'guardian_' + i + '_email';
-                                        <span class="p-float-label">
-                                            <input
-                                                type="text"
-                                                [id]="guardianEmail"
-                                                [name]="guardianEmail"
-                                                pInputText
-                                                [solValid]="!vm.errors[guardianEmail]"
-                                                [(ngModel)]="guardian.guardianEmail"
-                                                (ngModelChange)="
-                                                    updateStudentInfo(vm.student)
-                                                "
-                                            />
-                                            <label [for]="guardianEmail">Email</label>
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[guardianEmail]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                    <div
-                                        class="field col-12 md:col-6"
-                                    >
-                                        @let guardianResidesWithStudent = 'guardian_' + i + '_residence';
-                                        <p-selectButton
-                                            [options]="
-                                                guardianResidesWithStudentOptions
+                    <sol-confirm-accuracy
+                        [sectionConfirmed]="sectionConfirmation['guardians']"
+                        [messages]="vm.errors['confirmedAccuracyGuardians']"
+                        (sectionConfirmedChange)="
+                            sectionConfirmationChanged('guardians', $event)
+                        "
+                    ></sol-confirm-accuracy>
+                    <h3>Parent/Guardian</h3>
+                    @for (
+                        guardian of vm.student.guardians;
+                        track guardian;
+                        let i = $index;
+                        let first = $first;
+                        let last = $last
+                    ) {
+                        <div
+                            style="margin-bottom: 1rem"
+                            [ngStyle]="{
+                                'border-bottom': last
+                                    ? 'none'
+                                    : '1px solid lightgray',
+                            }"
+                        >
+                            <div class="formgrid grid">
+                                <div class="field col">
+                                    @let guardianName =
+                                        'guardian_' + i + '_name';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Name</mat-label>
+                                        <input
+                                            matInput
+                                            type="text"
+                                            [id]="guardianName"
+                                            [name]="guardianName"
+                                            [solValid]="
+                                                !vm.errors[guardianName]
                                             "
-                                            optionLabel="name"
-                                            optionValue="value"
-                                            [id]="guardianResidesWithStudent"
-                                            [name]="guardianResidesWithStudent"
-                                            [solValid]="!vm.errors[guardianResidesWithStudent]"
+                                            [(ngModel)]="guardian.guardianName"
+                                            (ngModelChange)="
+                                                updateStudentInfo(vm.student)
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="vm.errors[guardianName]"
+                                    ></sol-messages>
+                                </div>
+                                <div class="field col">
+                                    @let guardianRelationship =
+                                        'guardian_' + i + '_relationship';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label
+                                            >Relationship to Student</mat-label
+                                        >
+                                        <input
+                                            matInput
+                                            type="text"
+                                            [id]="guardianRelationship"
+                                            [name]="guardianRelationship"
+                                            [solValid]="
+                                                !vm.errors[guardianRelationship]
+                                            "
                                             [(ngModel)]="
-                                                guardian.guardianResidesWithStudent
+                                                guardian.guardianRelationship
                                             "
                                             (ngModelChange)="
                                                 updateStudentInfo(vm.student)
                                             "
-                                        ></p-selectButton>
-                                        <sol-messages
-                                            [messages]="vm.errors[guardianResidesWithStudent]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="
+                                            vm.errors[guardianRelationship]
+                                        "
+                                    ></sol-messages>
                                 </div>
-                                @if (!first) {
-                                    <div class="col-6" style="margin-bottom: 1rem">
-                                        <button
-                                            label="Remove"
-                                            type="button"
-                                            pRipple
-                                            pButton
-                                            class="p-button-outlined p-button-danger"
-                                            (click)="removeGuardian(i)"
-                                        ></button>
-                                    </div>
-                                }
+                                <div class="field col">
+                                    @let guardianPhone =
+                                        'guardian_' + i + '_phone';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Phone Number</mat-label>
+                                        <input
+                                            matInput
+                                            type="tel"
+                                            [id]="guardianPhone"
+                                            [name]="guardianPhone"
+                                            placeholder="555-555-5555"
+                                            [solValid]="
+                                                !vm.errors[guardianPhone]
+                                            "
+                                            [(ngModel)]="guardian.guardianPhone"
+                                            (ngModelChange)="
+                                                updateStudentInfo(vm.student)
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="vm.errors[guardianPhone]"
+                                    ></sol-messages>
+                                </div>
                             </div>
-                        }
-    
-                        <div class="col-6" style="padding-bottom: 20px">
-                            <button
-                                pButton
-                                type="button"
-                                label="Add Parent or Guardian"
-                                class="p-button-outlined"
-                                (click)="addGuardian()"
-                            ></button>
-                        </div>
-                    </div>
-                </form>
-            </p-accordionTab>
-            <p-accordionTab>
-                <ng-template pTemplate="header">
-                    @let valid = !vm.hasErrorsByGroup['pickup'];
-                    <div
-                        [solValid]="valid"
-                    >
-                        Pickup
-                        @if (!valid) {
-                            ⚠️
-                        }
-                    </div>
-                </ng-template>
-                <form>
-                    <sol-confirm-accuracy [sectionConfirmed]="sectionConfirmation['pickup']" [messages]="vm.errors['confirmedAccuracyPickup']" (sectionConfirmedChange)="sectionConfirmationChanged('pickup', $event)"></sol-confirm-accuracy>
-                    <div class="p-fluid">
-                        <p>
-                            What code word should we ask for when picking up your
-                            child?
-                        </p>
-                        <div class="field" style="padding-bottom: 20px">
-                            <span class="p-float-label">
-                                <input
-                                    type="text"
-                                    id="codeWord"
-                                    name="codeWord"
-                                    [solValid]="!vm.errors['codeword']"
-                                    [(ngModel)]="vm.student.pickupCodeword"
-                                    (ngModelChange)="updateStudentInfo(vm.student)"
-                                    [ngModelOptions]="{ updateOn: 'blur' }"
-                                    pInputText
-                                />
-                                <label for="codeWord">Code Word</label>
-                            </span>
-                            <sol-messages
-                                [messages]="vm.errors['codeword']"
-                             variant="primeng"></sol-messages>
-                        </div>
-    
-                        <h3>Authorized For Student Pickup</h3>
-                        <p>
-                            These include any people who may pick up your child.
-                            This already includes the guardians from the previous
-                            section, and if you would like you can add additional
-                            people who can pick up your child.
-                        </p>
-                        <div class="margin-bottom:2rem">
-                            @for (
-                                guardian of vm.student.guardians;
-                                track guardian;
-                                let i = $index
-                            ) {
-                                <div style="width: 16rem; margin-bottom: 1rem">
-                                    @if (guardian.guardianName !== '') {
-                                        <p-toggleButton
-                                            [disabled]="true"
-                                            [onLabel]="guardian.guardianName"
-                                            offLabel="None"
-                                            onIcon="pi pi-check"
-                                            offIcon="pi pi-times"
-                                            [name]="'guardian_' + i"
-                                            [(ngModel)]="authorized"
-                                        ></p-toggleButton>
-                                    }
+                            <div
+                                class="formgrid grid"
+                                style="margin-bottom: 1rem"
+                            >
+                                <div class="field col-12 md:col-6">
+                                    @let guardianEmail =
+                                        'guardian_' + i + '_email';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Email</mat-label>
+                                        <input
+                                            matInput
+                                            type="text"
+                                            [id]="guardianEmail"
+                                            [name]="guardianEmail"
+                                            [solValid]="
+                                                !vm.errors[guardianEmail]
+                                            "
+                                            [(ngModel)]="guardian.guardianEmail"
+                                            (ngModelChange)="
+                                                updateStudentInfo(vm.student)
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="vm.errors[guardianEmail]"
+                                    ></sol-messages>
+                                </div>
+                                <div class="field col-12 md:col-6">
+                                    @let guardianResidesWithStudent =
+                                        'guardian_' + i + '_residence';
+                                    <mat-button-toggle-group
+                                        [id]="guardianResidesWithStudent"
+                                        [name]="guardianResidesWithStudent"
+                                        [solValid]="
+                                            !vm.errors[
+                                                guardianResidesWithStudent
+                                            ]
+                                        "
+                                        [(ngModel)]="
+                                            guardian.guardianResidesWithStudent
+                                        "
+                                        (ngModelChange)="
+                                            updateStudentInfo(vm.student)
+                                        "
+                                    >
+                                        @for (
+                                            option of guardianResidesWithStudentOptions;
+                                            track option.value
+                                        ) {
+                                            <mat-button-toggle
+                                                [value]="option.value"
+                                                >{{
+                                                    option.name
+                                                }}</mat-button-toggle
+                                            >
+                                        }
+                                    </mat-button-toggle-group>
+                                    <sol-messages
+                                        [messages]="
+                                            vm.errors[
+                                                guardianResidesWithStudent
+                                            ]
+                                        "
+                                    ></sol-messages>
+                                </div>
+                            </div>
+                            @if (!first) {
+                                <div class="col-6" style="margin-bottom: 1rem">
+                                    <button
+                                        mat-stroked-button
+                                        color="warn"
+                                        type="button"
+                                        (click)="removeGuardian(i)"
+                                    >
+                                        Remove
+                                    </button>
                                 </div>
                             }
                         </div>
-                        @for (
-                            authorized of vm.student.authorizedForPickup;
-                            track authorized;
-                            let i = $index;
-                            let last = $last
-                        ) {
-                            <div
-                                style="margin-bottom: 1rem"
-                                [ngStyle]="{
-                                    'border-bottom': last
-                                        ? 'none'
-                                        : '1px solid lightgray'
-                                }"
-                            >
-                                <div class="formgrid grid">
-                                    <div
-                                        class="field col"
-                                    >
-                                        @let pickupName = 'pickup_' + i + '_name';
-                                        <span class="p-float-label">
-                                            <input
-                                                type="text"
-                                                [id]="pickupName"
-                                                [name]="pickupName"
-                                                pInputText
-                                                [solValid]="!vm.errors[pickupName]"
-                                                [(ngModel)]="authorized.name"
-                                                (ngModelChange)="
-                                                    updateStudentInfo(vm.student)
-                                                "
-                                            />
-                                            <label [for]="pickupName">Name</label>
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[pickupName]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                    <div
-                                        class="field col"
-                                    >
-                                        @let pickupRelationship = 'pickup_' + i + '_relationship';
-                                        <span class="p-float-label">
-                                            <input
-                                                type="text"
-                                                [id]="pickupRelationship"
-                                                [name]="pickupRelationship"
-                                                pInputText
-                                                [solValid]="!vm.errors[pickupRelationship]"
-                                                [(ngModel)]="
-                                                    authorized.relationship
-                                                "
-                                                (ngModelChange)="
-                                                    updateStudentInfo(vm.student)
-                                                "
-                                            />
-                                            <label [for]="pickupRelationship"
-                                                >Relationship to Student</label
-                                            >
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[pickupRelationship]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                    <div
-                                        class="field col"
-                                    >
-                                        @let pickupPhone = 'pickup_' + i + '_phone';
-                                        <span class="p-float-label">
-                                            <p-inputMask
-                                                type="text"
-                                                [id]="pickupPhone"
-                                                [name]="pickupPhone"
-                                                mask="999-999-9999"
-                                                [solValid]="!vm.errors[pickupPhone]"
-                                                [(ngModel)]="authorized.phone"
-                                                (ngModelChange)="
-                                                    updateStudentInfo(vm.student)
-                                                "
-                                            ></p-inputMask>
-                                            <label [for]="pickupPhone"
-                                                >Phone Number</label
-                                            >
-                                        </span>
-                                        <sol-messages
-                                            [messages]="vm.errors[pickupPhone]"
-                                         variant="primeng"></sol-messages>
-                                    </div>
-                                </div>
-                                <div style="width: 10rem; margin-bottom: 1rem">
-                                    <button
-                                        label="Remove"
-                                        type="button"
-                                        pRipple
-                                        pButton
-                                        class="p-button-outlined p-button-danger"
-                                        (click)="removeAuthorized(i)"
-                                    ></button>
-                                </div>
-                            </div>
-                        }
-                        <div
-                            class="col-6"
-                            style="margin-top: 2rem; padding-bottom: 20px"
+                    }
+
+                    <div class="col-6" style="padding-bottom: 20px">
+                        <button
+                            mat-stroked-button
+                            type="button"
+                            (click)="addGuardian()"
                         >
-                            <button
-                                pButton
-                                type="button"
-                                label="Add Authorized to Pickup"
-                                class="p-button-outlined"
-                                (click)="addAuthorized()"
-                            ></button>
-                        </div>
+                            Add Parent or Guardian
+                        </button>
                     </div>
                 </form>
-            </p-accordionTab>
-        </p-accordion>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    @let pickupValid = !vm.hasErrorsByGroup['pickup'];
+                    <mat-panel-title [solValid]="pickupValid">
+                        Pickup
+                        @if (!pickupValid) {
+                            ⚠️
+                        }
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <form>
+                    <sol-confirm-accuracy
+                        [sectionConfirmed]="sectionConfirmation['pickup']"
+                        [messages]="vm.errors['confirmedAccuracyPickup']"
+                        (sectionConfirmedChange)="
+                            sectionConfirmationChanged('pickup', $event)
+                        "
+                    ></sol-confirm-accuracy>
+                    <p>
+                        What code word should we ask for when picking up your
+                        child?
+                    </p>
+                    <div class="field" style="padding-bottom: 20px">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Code Word</mat-label>
+                            <input
+                                matInput
+                                type="text"
+                                id="codeWord"
+                                name="codeWord"
+                                [solValid]="!vm.errors['codeword']"
+                                [(ngModel)]="vm.student.pickupCodeword"
+                                (ngModelChange)="updateStudentInfo(vm.student)"
+                                [ngModelOptions]="{ updateOn: 'blur' }"
+                            />
+                        </mat-form-field>
+                        <sol-messages
+                            [messages]="vm.errors['codeword']"
+                        ></sol-messages>
+                    </div>
+
+                    <h3>Authorized For Student Pickup</h3>
+                    <p>
+                        These include any people who may pick up your child.
+                        This already includes the guardians from the previous
+                        section, and if you would like you can add additional
+                        people who can pick up your child.
+                    </p>
+                    <div class="margin-bottom:2rem">
+                        @for (
+                            guardian of vm.student.guardians;
+                            track guardian;
+                            let i = $index
+                        ) {
+                            <div style="width: 16rem; margin-bottom: 1rem">
+                                @if (guardian.guardianName !== '') {
+                                    <mat-button-toggle
+                                        [disabled]="true"
+                                        [checked]="authorized"
+                                        [name]="'guardian_' + i"
+                                    >
+                                        <mat-icon>{{
+                                            authorized ? 'check' : 'close'
+                                        }}</mat-icon>
+                                        {{
+                                            authorized
+                                                ? guardian.guardianName
+                                                : 'None'
+                                        }}
+                                    </mat-button-toggle>
+                                }
+                            </div>
+                        }
+                    </div>
+                    @for (
+                        authorized of vm.student.authorizedForPickup;
+                        track authorized;
+                        let i = $index;
+                        let last = $last
+                    ) {
+                        <div
+                            style="margin-bottom: 1rem"
+                            [ngStyle]="{
+                                'border-bottom': last
+                                    ? 'none'
+                                    : '1px solid lightgray',
+                            }"
+                        >
+                            <div class="formgrid grid">
+                                <div class="field col">
+                                    @let pickupName = 'pickup_' + i + '_name';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Name</mat-label>
+                                        <input
+                                            matInput
+                                            type="text"
+                                            [id]="pickupName"
+                                            [name]="pickupName"
+                                            [solValid]="!vm.errors[pickupName]"
+                                            [(ngModel)]="authorized.name"
+                                            (ngModelChange)="
+                                                updateStudentInfo(vm.student)
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="vm.errors[pickupName]"
+                                    ></sol-messages>
+                                </div>
+                                <div class="field col">
+                                    @let pickupRelationship =
+                                        'pickup_' + i + '_relationship';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label
+                                            >Relationship to Student</mat-label
+                                        >
+                                        <input
+                                            matInput
+                                            type="text"
+                                            [id]="pickupRelationship"
+                                            [name]="pickupRelationship"
+                                            [solValid]="
+                                                !vm.errors[pickupRelationship]
+                                            "
+                                            [(ngModel)]="
+                                                authorized.relationship
+                                            "
+                                            (ngModelChange)="
+                                                updateStudentInfo(vm.student)
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="
+                                            vm.errors[pickupRelationship]
+                                        "
+                                    ></sol-messages>
+                                </div>
+                                <div class="field col">
+                                    @let pickupPhone = 'pickup_' + i + '_phone';
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Phone Number</mat-label>
+                                        <input
+                                            matInput
+                                            type="tel"
+                                            [id]="pickupPhone"
+                                            [name]="pickupPhone"
+                                            placeholder="555-555-5555"
+                                            [solValid]="!vm.errors[pickupPhone]"
+                                            [(ngModel)]="authorized.phone"
+                                            (ngModelChange)="
+                                                updateStudentInfo(vm.student)
+                                            "
+                                        />
+                                    </mat-form-field>
+                                    <sol-messages
+                                        [messages]="vm.errors[pickupPhone]"
+                                    ></sol-messages>
+                                </div>
+                            </div>
+                            <div style="width: 10rem; margin-bottom: 1rem">
+                                <button
+                                    mat-stroked-button
+                                    color="warn"
+                                    type="button"
+                                    (click)="removeAuthorized(i)"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    <div
+                        class="col-6"
+                        style="margin-top: 2rem; padding-bottom: 20px"
+                    >
+                        <button
+                            mat-stroked-button
+                            type="button"
+                            (click)="addAuthorized()"
+                        >
+                            Add Authorized to Pickup
+                        </button>
+                    </div>
+                </form>
+            </mat-expansion-panel>
+        </mat-accordion>
     }
 }

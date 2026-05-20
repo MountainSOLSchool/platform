@@ -1,23 +1,19 @@
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, inject } from '@angular/core';
-import { MessageModule } from 'primeng/message';
-import { MessageService } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { SolToastService } from '@sol/angular/toast';
 
 @Component({
     standalone: true,
-    imports: [ButtonModule, MessageModule, ToastModule],
+    imports: [MatButtonModule, MatIconModule],
     template: `
         <div class="min-w-[400px]">
             <div class="mt-2">
-                <button
-                    pButton
-                    icon="pi pi-copy"
-                    label="Copy All"
-                    class="p-button-primary"
-                    (click)="copyEmails()"
-                ></button>
+                <button mat-flat-button color="primary" (click)="copyEmails()">
+                    <mat-icon>content_copy</mat-icon>
+                    Copy All
+                </button>
             </div>
             <div class="max-h-[400px] overflow-auto pr-2 mt-4">
                 @for (email of data.emails; track email) {
@@ -34,11 +30,11 @@ export class ClassEmailsDialogComponent {
         emails: Array<string>;
     }>(DIALOG_DATA);
 
-    #messageService = inject(MessageService);
+    #toastService = inject(SolToastService);
 
     copyEmails() {
         navigator.clipboard.writeText(this.data.emails.join(', '));
-        this.#messageService.add({
+        this.#toastService.add({
             severity: 'success',
             detail: 'Copied emails!',
         });

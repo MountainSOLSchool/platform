@@ -1,49 +1,37 @@
 @if (login$ | async; as login) {
-    <p-card
-        [header]="
-            (isCreatingNewAccount$ | async) === true
-                ? 'Create Account'
-                : 'Sign In'
-        "
-        [style]="{ width: '100%', 'max-width': '600px', margin: '2rem auto' }"
-    >
-        <div style="margin-top: -10px">
+    <mat-card class="sol-login-card">
+        <mat-card-header>
+            <mat-card-title>
+                {{
+                    (isCreatingNewAccount$ | async) === true
+                        ? 'Create Account'
+                        : 'Sign In'
+                }}
+            </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
             @if ((isCreatingNewAccount$ | async) === false) {
-                <p-messages severity="boring" [enableService]="false">
-                    <ng-template pTemplate>
-                        <div class="ml-2">
-                            First time?
-                            @if (standalone) {
-                                <a
-                                    href="javascript:void(0)"
-                                    (click)="useCreation()"
-                                    >Create an account</a
-                                >.
-                            } @else {
-                                <a routerLink="/user/create"
-                                    >Create an account</a
-                                >.
-                            }
-                        </div>
-                    </ng-template>
-                </p-messages>
+                <div class="sol-login-info">
+                    First time?
+                    @if (standalone) {
+                        <a href="javascript:void(0)" (click)="useCreation()"
+                            >Create an account</a
+                        >.
+                    } @else {
+                        <a routerLink="/user/create">Create an account</a>.
+                    }
+                </div>
             } @else {
-                <p-messages severity="boring" [enableService]="false">
-                    <ng-template pTemplate>
-                        <div class="ml-2">
-                            Already have an account?
-                            @if (standalone) {
-                                <a
-                                    href="javascript:void(0)"
-                                    (click)="useSignIn()"
-                                    >Sign in</a
-                                >.
-                            } @else {
-                                <a routerLink="/user/login">Sign in</a>.
-                            }
-                        </div>
-                    </ng-template>
-                </p-messages>
+                <div class="sol-login-info">
+                    Already have an account?
+                    @if (standalone) {
+                        <a href="javascript:void(0)" (click)="useSignIn()"
+                            >Sign in</a
+                        >.
+                    } @else {
+                        <a routerLink="/user/login">Sign in</a>.
+                    }
+                </div>
             }
 
             @if (
@@ -51,111 +39,107 @@
                 !newAccountCreationMethod()
             ) {
                 <button
-                    pButton
-                    [loading]="(isLoggingIn$ | async) ?? false"
+                    mat-raised-button
+                    color="primary"
+                    class="sol-login-action"
+                    [disabled]="(isLoggingIn$ | async) ?? false"
                     (click)="createWithEmail()"
-                    label="Create With Email"
-                    class="w-full"
-                    icon="pi pi-envelope"
-                ></button>
+                >
+                    <mat-icon>mail</mat-icon>
+                    Create With Email
+                </button>
             } @else {
                 @if (!!newAccountCreationMethod()) {
                     <button
-                        pButton
-                        [loading]="(isLoggingIn$ | async) ?? false"
+                        mat-stroked-button
+                        class="sol-login-action"
+                        [disabled]="(isLoggingIn$ | async) ?? false"
                         (click)="changeCreationMethod()"
-                        label="Pick different account type"
-                        class="w-full mb-2 p-button-outlined"
-                        icon="pi pi-angle-left"
-                    ></button>
+                    >
+                        <mat-icon>chevron_left</mat-icon>
+                        Pick different account type
+                    </button>
                 }
                 @if (errors$ | async; as errors) {
-                    <form class="p-fluid">
-                        <div class="field">
-                            <label for="email">Email</label>
-                            <div class="p-inputgroup">
-                                <span class="p-inputgroup-addon"
-                                    ><i class="pi pi-user"></i
-                                ></span>
-                                <input
-                                    id="email"
-                                    name="email"
-                                    type="text"
-                                    pInputText
-                                    [autocomplete]="
-                                        (isCreatingNewAccount$ | async)
-                                            ? 'new-password'
-                                            : 'current-password'
-                                    "
-                                    [(ngModel)]="login.email"
-                                    (ngModelChange)="onUpdated(login)"
-                                    placeholder="somebody@email.com"
-                                />
-                            </div>
-                            @if (errors['email']; as emailErrors) {
-                                <p style="color: red">
-                                    {{ emailErrors.join(', ') }}
-                                </p>
-                            }
-                        </div>
-                        <div class="field">
-                            <label for="email">Password</label>
-                            <div class="p-inputgroup">
-                                <span class="p-inputgroup-addon"
-                                    ><i class="pi pi-lock"></i
-                                ></span>
-                                <input
-                                    pInputText
-                                    name="password"
-                                    type="password"
-                                    [autocomplete]="
-                                        (isCreatingNewAccount$ | async)
-                                            ? 'new-password'
-                                            : 'current-password'
-                                    "
-                                    [(ngModel)]="login.password"
-                                    (ngModelChange)="onUpdated(login)"
-                                    (keydown)="onPasswordKeydown($event)"
-                                />
-                            </div>
-                            @if (errors['password']; as passwordErrors) {
-                                <p style="color: red">
-                                    {{ passwordErrors.join(', ') }}
-                                </p>
-                            }
-                        </div>
+                    <form class="sol-login-form">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Email</mat-label>
+                            <mat-icon matPrefix>person</mat-icon>
+                            <input
+                                matInput
+                                id="email"
+                                name="email"
+                                type="text"
+                                [autocomplete]="
+                                    (isCreatingNewAccount$ | async)
+                                        ? 'new-password'
+                                        : 'current-password'
+                                "
+                                [(ngModel)]="login.email"
+                                (ngModelChange)="onUpdated(login)"
+                                placeholder="somebody@email.com"
+                            />
+                        </mat-form-field>
+                        @if (errors['email']; as emailErrors) {
+                            <p class="sol-login-error">
+                                {{ emailErrors.join(', ') }}
+                            </p>
+                        }
+                        <mat-form-field appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <mat-icon matPrefix>lock</mat-icon>
+                            <input
+                                matInput
+                                name="password"
+                                type="password"
+                                [autocomplete]="
+                                    (isCreatingNewAccount$ | async)
+                                        ? 'new-password'
+                                        : 'current-password'
+                                "
+                                [(ngModel)]="login.password"
+                                (ngModelChange)="onUpdated(login)"
+                                (keydown)="onPasswordKeydown($event)"
+                            />
+                        </mat-form-field>
+                        @if (errors['password']; as passwordErrors) {
+                            <p class="sol-login-error">
+                                {{ passwordErrors.join(', ') }}
+                            </p>
+                        }
                     </form>
                 }
 
                 <button
-                    pButton
-                    [loading]="(isLoggingIn$ | async) ?? false"
+                    mat-raised-button
+                    color="primary"
+                    class="sol-login-action"
+                    [disabled]="(isLoggingIn$ | async) ?? false"
                     (click)="onSubmit()"
-                    [label]="
+                >
+                    @if ((isLoggingIn$ | async) === true) {
+                        <mat-progress-spinner
+                            mode="indeterminate"
+                            diameter="18"
+                        ></mat-progress-spinner>
+                    } @else {
+                        <mat-icon>person</mat-icon>
+                    }
+                    {{
                         (isCreatingNewAccount$ | async) === true
                             ? 'Create Account'
                             : 'Sign In'
-                    "
-                    class="w-full"
-                    icon="pi pi-user"
-                ></button>
+                    }}
+                </button>
             }
-        </div>
-        @if (shouldShowResetSuggestion$ | async) {
-            <div>
-                <p-messages [enableService]="false" severity="warn">
-                    <ng-template pTemplate>
-                        <div class="ml-2">
-                            Forgot your password?
-                            <a
-                                href="javascript:void(0)"
-                                (click)="onResetPassword()"
-                                >Send a password reset email.</a
-                            >
-                        </div>
-                    </ng-template>
-                </p-messages>
-            </div>
-        }
-    </p-card>
+            @if (shouldShowResetSuggestion$ | async) {
+                <div class="sol-login-warn">
+                    Forgot your password?
+                    <a href="javascript:void(0)" (click)="onResetPassword()"
+                        >Send a password reset email.</a
+                    >
+                </div>
+            }
+        </mat-card-content>
+    </mat-card>
 }

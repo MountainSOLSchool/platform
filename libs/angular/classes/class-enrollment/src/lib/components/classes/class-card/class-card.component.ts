@@ -7,6 +7,7 @@ import {
     Input,
     Output,
     signal,
+    viewChild,
 } from '@angular/core';
 
 import { NgClass } from '@angular/common';
@@ -14,16 +15,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
-import { CardModule } from 'primeng/card';
-import { ChipModule } from 'primeng/chip';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MarkdownModule } from 'ngx-markdown';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
-import { AutoFocusModule } from 'primeng/autofocus';
-import { ButtonModule } from 'primeng/button';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
-import { SliderModule } from 'primeng/slider';
-import { ToggleButtonModule } from 'primeng/togglebutton';
 import { BeforeSelectOptionsComponent } from '../before-select-options/before-select-options.component';
 
 export interface ClassCardInfo {
@@ -63,21 +57,14 @@ export interface ClassCardInfo {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CardModule,
-        ChipModule,
         MarkdownModule,
-        OverlayPanelModule,
-        AutoFocusModule,
-        ButtonModule,
-        InputNumberModule,
         FormsModule,
-        SliderModule,
-        ToggleButtonModule,
         BeforeSelectOptionsComponent,
         MatCardModule,
         MatIconModule,
         MatButtonModule,
         MatDividerModule,
+        MatMenuModule,
         NgClass,
     ],
     selector: 'sol-class-card',
@@ -359,6 +346,12 @@ export interface ClassCardInfo {
                     --mdc-protected-button-container-height: 48px;
                 }
             }
+
+            .before-select-menu-content {
+                padding: 1rem;
+                min-width: 280px;
+                cursor: default;
+            }
         `,
     ],
 })
@@ -380,6 +373,8 @@ export class ClassCardComponent {
 
     readonly customCost = signal<number | undefined>(undefined);
     readonly selectedAdditionalOptionIds = signal<Array<string>>([]);
+
+    readonly beforeSelectingMenuTrigger = viewChild(MatMenuTrigger);
 
     readonly beforeSelectOptionsByClass = computed(() => {
         const classInfo = this.classInfo();
@@ -460,16 +455,13 @@ export class ClassCardComponent {
         );
     }
 
-    confirmed(
-        overlayRef: OverlayPanel,
-        optionsConfirmation: {
-            [classId: string]: {
-                userCost?: number;
-                selectedOptionIds?: Array<string>;
-            };
-        }
-    ) {
-        overlayRef.hide();
+    confirmed(optionsConfirmation: {
+        [classId: string]: {
+            userCost?: number;
+            selectedOptionIds?: Array<string>;
+        };
+    }) {
+        this.beforeSelectingMenuTrigger()?.closeMenu();
 
         const classInfo = this.classInfo();
         this.selectedChange.emit({

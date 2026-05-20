@@ -9,8 +9,9 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { EnrollmentWorkflowStore } from './enrollment-workflow.store';
-import { StepsModule } from 'primeng/steps';
-import { ButtonModule } from 'primeng/button';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { provideComponentStore } from '@ngrx/component-store';
 import { MatStep, MatStepperModule } from '@angular/material/stepper';
 import { BreakpointObserver } from '@angular/cdk/layout';
@@ -25,12 +26,8 @@ import {
     STEPPER_GLOBAL_OPTIONS,
 } from '@angular/cdk/stepper';
 import { MedicalComponent } from '../medical/medical.component';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { DialogModule } from 'primeng/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EventsComponent } from '../events/events.component';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { ToastModule } from 'primeng/toast';
 import { MatVerticalStepperScrollerDirective } from './vertical-steps.directive';
 import { SelectStudentComponent } from '../select-student/select-student.component';
 import { ReleasesComponent } from '../releases/releases.component';
@@ -54,80 +51,28 @@ import { MarkdownModule } from 'ngx-markdown';
         },
     ],
     templateUrl: './enrollment-workflow.component.html',
+    styleUrls: ['./enrollment-workflow.component.css'],
     imports: [
         AsyncPipe,
         NgTemplateOutlet,
         RouterModule,
-        StepsModule,
         CdkStepperModule,
-        ButtonModule,
+        MatButtonModule,
+        MatCardModule,
+        MatIconModule,
         MatStepperModule,
+        MatProgressSpinnerModule,
         ClassesComponent,
         InfoComponent,
         AccountComponent,
         ConfirmationComponent,
         MedicalComponent,
-        ProgressSpinnerModule,
-        DialogModule,
         EventsComponent,
-        MessagesModule,
-        MessageModule,
-        ToastModule,
         MatVerticalStepperScrollerDirective,
         SelectStudentComponent,
         ReleasesComponent,
         AcknowledgeOutOfDateComponent,
         MarkdownModule,
-    ],
-    styles: [
-        `
-            ::ng-deep .mat-vertical-stepper-content {
-                overflow: unset !important;
-            }
-            ::ng-deep .mat-horizontal-content-container {
-                overflow: unset !important;
-            }
-            :host ::ng-deep .p-message-promotional {
-                background-color: #ffff99;
-                border: solid #ffcc00;
-                border-width: 0 0 0 6px;
-                color: black;
-            }
-            :host ::ng-deep p-messages markdown {
-                display: contents;
-            }
-            :host ::ng-deep p-messages markdown p {
-                display: inline;
-                margin: 0;
-            }
-            :host ::ng-deep .mat-vertical-content-container {
-                margin-left: -5px;
-            }
-            @media (max-width: 800px) {
-                :host ::ng-deep .mat-vertical-content-container {
-                    padding-left: 0;
-                    padding-right: 0;
-                }
-                :host ::ng-deep .mat-vertical-content {
-                    padding-left: 0;
-                    padding-right: 0;
-                }
-            }
-            :host ::ng-deep .mat-stepper-vertical-line::before {
-                border: none;
-            }
-
-            :host ::ng-deep .mat-step-header {
-                padding: 10px 4px;
-                background-color: white;
-            }
-
-            @media (max-width: 620px) {
-                :host ::ng-deep .mat-step-header {
-                    padding: 10px 0;
-                }
-            }
-        `,
     ],
 })
 export class ClassEnrollmentComponent implements OnInit {

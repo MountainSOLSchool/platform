@@ -1,351 +1,433 @@
-<div style="max-width: 1100px; margin: auto; ">
-@if (addendumLoading()) {
-    <div style="text-align: center; padding: 3rem">
-        <p-progressSpinner></p-progressSpinner>
-        <p>Loading enrollment details...</p>
-    </div>
-} @else if (addendumError(); as error) {
-    <p-messages severity="error" [closable]="false">
-        <ng-template pTemplate>{{ error }}</ng-template>
-    </p-messages>
-}
-@if (isAddendumMode()) {
-    <p-messages severity="info" [closable]="false">
-        <ng-template pTemplate>
+<div style="max-width: 1100px; margin: auto">
+    @if (addendumLoading()) {
+        <div style="text-align: center; padding: 3rem">
+            <mat-progress-spinner
+                mode="indeterminate"
+                diameter="50"
+            ></mat-progress-spinner>
+            <p>Loading enrollment details...</p>
+        </div>
+    } @else if (addendumError(); as error) {
+        <div class="alert alert-error">
+            <mat-icon>error</mat-icon>
+            <div>{{ error }}</div>
+        </div>
+    }
+    @if (isAddendumMode()) {
+        <div class="alert alert-info">
+            <mat-icon>info</mat-icon>
             <div>
-                You are adding to an existing enrollment. Already-enrolled classes
-                are shown as selected and cannot be removed.
+                You are adding to an existing enrollment. Already-enrolled
+                classes are shown as selected and cannot be removed.
             </div>
-        </ng-template>
-    </p-messages>
-}
-@if (didLoadFromDraft() && !isAddendumMode()) {
-    <p-messages severity="info" [closable]="false">
-        <ng-template pTemplate>
-            <div class="flex justify-content-between align-items-center w-full">
+        </div>
+    }
+    @if (didLoadFromDraft() && !isAddendumMode()) {
+        <div class="alert alert-info">
+            <mat-icon>info</mat-icon>
+            <div
+                class="flex justify-content-between align-items-center w-full"
+                style="flex: 1"
+            >
                 <div>
                     We loaded your enrollment information from a previous
                     session. Please review each step to ensure accuracy.
                 </div>
                 <div>
-                    <p-button
-                        label="Start Over"
-                        [outlined]="true"
-                        (click)="showStartOverDialog()"
-                    ></p-button>
+                    <button mat-stroked-button (click)="showStartOverDialog()">
+                        Start Over
+                    </button>
                 </div>
             </div>
-        </ng-template>
-    </p-messages>
-}
-@if (enrollmentMessages.value(); as msgData) {
-    @for (msg of msgData.messages; track msg.id) {
-        <p-messages [severity]="msg.severity">
-            <ng-template pTemplate>
+        </div>
+    }
+    @if (enrollmentMessages.value(); as msgData) {
+        @for (msg of msgData.messages; track msg.id) {
+            <div class="alert alert-{{ msg.severity }}">
+                <mat-icon>info</mat-icon>
                 <markdown class="ml-2" [data]="msg.text"></markdown>
-            </ng-template>
-        </p-messages>
-    }
-}
-@if (showSecretAutofill$ | async) {
-    <button (click)="fillOutForTest()">Fill out form for test</button>
-}
-@let isUserLoggedIn = isUserLoggedIn$ | async;
-@if (isUserLoggedIn !== null) {
-    <mat-stepper
-    #stepper
-    [orientation]="(stepperOrientation | async)!"
-    style="height: 100%;"
->
-    <mat-step #classSelection label="Class Selection">
-        <ng-template matStepContent>
-            @if (stepper.selected === classSelection) {
-                <h2>Class Selection</h2>
-                <sol-class-picker
-                    [interacted]="classSelection.interacted"
-                    (validityChange)="classSelection.hasError = !$event"
-                ></sol-class-picker>
-                <ng-container
-                    *ngTemplateOutlet="navigation; context: { first: true }"
-                ></ng-container>
-            }
-        </ng-template>
-    </mat-step>
-    @let shouldShowEvents = shouldShowEventsStep.value();
-    @if (shouldShowEvents) {
-        <mat-step #events label="Events">
-            <ng-template matStepContent>
-                @if (stepper.selected === events) {
-                    <h2>Events</h2>
-                    <sol-event-selection
-                        (validityChange)="events.hasError = !$event"
-                    ></sol-event-selection>
-                    <ng-container
-                        *ngTemplateOutlet="navigation"
-                    ></ng-container>
-                }
-            </ng-template>
-        </mat-step>
-    }
-    <mat-step #account label="Account"
-        [completed]="isAddendumMode()"
-        [editable]="!isAddendumMode()">
-        <ng-template matStepContent>
-            @if (isAddendumMode()) {
-                <h2>Account</h2>
-                <p>You are already logged in. No changes needed.</p>
-                <ng-container *ngTemplateOutlet="navigation"></ng-container>
-            } @else if (stepper.selected === account) {
-                <h2>Account</h2>
-                <sol-class-account
-                    (validityChange)="account.hasError = !$event"
-                ></sol-class-account>
-
-                <ng-container *ngTemplateOutlet="navigation"></ng-container>
-            }
-        </ng-template>
-    </mat-step>
-    <mat-step #selectStudent label="Student Selection"
-        [completed]="isAddendumMode()"
-        [editable]="!isAddendumMode()">
-        <ng-template matStepContent>
-            @if (isAddendumMode()) {
-                <h2>Student Selection</h2>
-                <p>Student is pre-selected from the original enrollment.</p>
-                <ng-container *ngTemplateOutlet="navigation"></ng-container>
-            } @else if (stepper.selected === selectStudent) {
-                <h2>Student Selection</h2>
-                <sol-student-selection
-                    [interacted]="selectStudent.interacted"
-                    (validityChange)="selectStudent.hasError = !$event"
-                ></sol-student-selection>
-                <ng-container *ngTemplateOutlet="navigation"></ng-container>
-            }
-        </ng-template>
-    </mat-step>
-    <mat-step #studentInfo label="Student Info" disabled>
-        <ng-template matStepContent>
-            @if (stepper.selected === studentInfo) {
-                <h2>Student Info</h2>
-                @if (isAddendumMode() || allStepsComplete(isUserLoggedIn, selectStudent)) {
-                    @if (!isAddendumMode()) {
-                        <sol-acknowledge-out-of-date>
-                            <sol-student-info
-                                [interacted]="studentInfo.interacted"
-                                [isStudentLoading]="isStudentLoading()"
-                                (validityChange)="studentInfo.hasError = !$event"
-                            ></sol-student-info>
-                        </sol-acknowledge-out-of-date>
-                    } @else {
-                        <sol-student-info
-                            [interacted]="studentInfo.interacted"
-                            [isStudentLoading]="isStudentLoading()"
-                            (validityChange)="studentInfo.hasError = !$event"
-                        ></sol-student-info>
-                    }
-                } @else {
-                    <ng-container
-                        *ngTemplateOutlet="mustSelectStudent"
-                    ></ng-container>
-                }
-                <ng-container *ngTemplateOutlet="navigation"></ng-container>
-            }
-        </ng-template>
-    </mat-step>
-    <mat-step #medicalInfo label="Medical Info">
-        <ng-template matStepContent>
-            @if (stepper.selected === medicalInfo) {
-                <h2>Medical Info</h2>
-                @if (isAddendumMode() || allStepsComplete(isUserLoggedIn, selectStudent)) {
-                    @if (!isAddendumMode()) {
-                        <sol-acknowledge-out-of-date>
-                            <sol-medical
-                                [interacted]="medicalInfo.interacted"
-                                (validityChange)="medicalInfo.hasError = !$event"
-                            ></sol-medical>
-                        </sol-acknowledge-out-of-date>
-                    } @else {
-                        <sol-medical
-                            [interacted]="medicalInfo.interacted"
-                            (validityChange)="medicalInfo.hasError = !$event"
-                        ></sol-medical>
-                    }
-                } @else {
-                    <ng-container
-                        *ngTemplateOutlet="mustSelectStudent"
-                    ></ng-container>
-                }
-                <ng-container *ngTemplateOutlet="navigation"></ng-container>
-            }
-        </ng-template>
-    </mat-step>
-    <mat-step #releases label="Releases"
-        [completed]="isAddendumMode()"
-        [editable]="!isAddendumMode()">
-        <ng-template matStepContent>
-            @if (isAddendumMode()) {
-                <h2>Releases</h2>
-                <p>Releases were completed with the original enrollment.</p>
-                <ng-container *ngTemplateOutlet="navigation"></ng-container>
-            } @else if (stepper.selected === releases) {
-                <h2>Releases</h2>
-                @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
-                    <sol-releases
-                        [interacted]="releases.interacted"
-                        (validityChange)="releases.hasError = !$event"
-                    ></sol-releases>
-                } @else {
-                    <ng-container
-                        *ngTemplateOutlet="mustSelectStudent"
-                    ></ng-container>
-                }
-                <ng-container *ngTemplateOutlet="navigation"></ng-container>
-            }
-        </ng-template>
-    </mat-step>
-    <mat-step #confirmation label="Confirm Enrollment">
-        <ng-template matStepContent>
-            @if (stepper.selected === confirmation) {
-                <h2>Confirm Enrollment</h2>
-                <sol-class-confirmation
-                    [allStepsComplete]="
-                        allStepsComplete(
-                            isUserLoggedIn,
-                            classSelection,
-                            studentInfo,
-                            medicalInfo,
-                            releases,
-                            account
-                        )
-                    "
-                    [interacted]="confirmation.interacted"
-                    (validityChange)="confirmation.hasError = !$event"
-                ></sol-class-confirmation>
-                <ng-container
-                    *ngTemplateOutlet="navigation; context: { last: true }"
-                ></ng-container>
-            }
-        </ng-template>
-    </mat-step>
-
-    <ng-template #mustSelectStudent>
-        <p>Please complete the Student Selection step first.</p>
-    </ng-template>
-
-    <ng-template #mustBeLoggedIn>
-        <p>
-            Please log in or create an account on the Account step to
-            continue.
-        </p>
-    </ng-template>
-
-    <ng-template #navigation let-first="first" let-last="last">
-        <div style="margin-top: 2rem">
-            @if (!first) {
-                <button
-                    pButton
-                    matStepperPrevious
-                    class="p-button-outlined"
-                >
-                    Previous
-                </button>
-            }
-            @if (!last) {
-                <button pButton matStepperNext style="margin-left: 1rem">
-                    Next
-                </button>
-            } @else {
-                @if (
-                    allStepsComplete(
-                        isUserLoggedIn,
-                        classSelection,
-                        studentInfo,
-                        medicalInfo,
-                        account,
-                        releases,
-                        confirmation
-                    )
-                ) {
-                    <button
-                        pButton
-                        style="margin-left: 1rem"
-                        (click)="complete()"
-                    >
-                        Submit
-                    </button>
-                }
-            }
-        </div>
-    </ng-template>
-</mat-stepper>
-
-@let isSubmitting = isSubmitting$ | async;
-@if (isSubmitting) {
-    <p-dialog
-        header="Submitting..."
-        [visible]="isSubmitting"
-        [closable]="false"
-        [modal]="true"
-        [draggable]="false"
-    >
-        <p-progressSpinner></p-progressSpinner>
-    </p-dialog>
-}
-@let failureDialogState = failureDialogState$ | async;
-@if (failureDialogState) {
-    <p-dialog
-        header="Something went wrong"
-        [closable]="true"
-        [(visible)]="failureDialogState.visible"
-        [modal]="true"
-        [draggable]="false"
-        (onHide)="closeFailure()"
-    >
-        Something went wrong while submitting your enrollment. Please try
-        again or contact
-        <a href="mailto:info@mountainsol.org">info&#64;mountainsol.org</a>.
-    </p-dialog>
-}
-
-@let shouldShow = shouldShowSuccess$ | async;
-@if (shouldShow) {
-    <p-dialog
-        [header]="isAddendumMode() ? 'Addendum submitted!' : 'Successfully enrolled!'"
-        [visible]="shouldShow"
-        [closable]="false"
-        [modal]="true"
-        [draggable]="false"
-    >
-        <div style="width: 100%">
-            <div style="text-align: center">
-                <i
-                    style="color: green; font-size: 60px"
-                    class="pi pi-check-circle"
-                ></i>
             </div>
-        </div>
-        <div style="margin-top: 1rem">
-            @let email = userEmail$ | async;
-            A confirmation email has been sent to
-            <b>{{ email }}</b
-            >.
-        </div>
-        <div style="margin-top: 1rem">
-            @if (isAddendumMode()) {
-                <button
-                    pButton
-                    label="Back to Enrollments"
-                    (click)="enrollAnother(stepper)"
-                ></button>
-            } @else {
-                <button
-                    pButton
-                    label="Enroll Another Student"
-                    (click)="enrollAnother(stepper)"
-                ></button>
+        }
+    }
+    @if (showSecretAutofill$ | async) {
+        <button (click)="fillOutForTest()">Fill out form for test</button>
+    }
+    @let isUserLoggedIn = isUserLoggedIn$ | async;
+    @if (isUserLoggedIn !== null) {
+        <mat-stepper
+            #stepper
+            [orientation]="(stepperOrientation | async)!"
+            style="height: 100%"
+        >
+            <mat-step #classSelection label="Class Selection">
+                <ng-template matStepContent>
+                    @if (stepper.selected === classSelection) {
+                        <h2>Class Selection</h2>
+                        <sol-class-picker
+                            [interacted]="classSelection.interacted"
+                            (validityChange)="classSelection.hasError = !$event"
+                        ></sol-class-picker>
+                        <ng-container
+                            *ngTemplateOutlet="
+                                navigation;
+                                context: { first: true }
+                            "
+                        ></ng-container>
+                    }
+                </ng-template>
+            </mat-step>
+            @let shouldShowEvents = shouldShowEventsStep.value();
+            @if (shouldShowEvents) {
+                <mat-step #events label="Events">
+                    <ng-template matStepContent>
+                        @if (stepper.selected === events) {
+                            <h2>Events</h2>
+                            <sol-event-selection
+                                (validityChange)="events.hasError = !$event"
+                            ></sol-event-selection>
+                            <ng-container
+                                *ngTemplateOutlet="navigation"
+                            ></ng-container>
+                        }
+                    </ng-template>
+                </mat-step>
             }
-        </div>
-    </p-dialog>
-}
-}
+            <mat-step
+                #account
+                label="Account"
+                [completed]="isAddendumMode()"
+                [editable]="!isAddendumMode()"
+            >
+                <ng-template matStepContent>
+                    @if (isAddendumMode()) {
+                        <h2>Account</h2>
+                        <p>You are already logged in. No changes needed.</p>
+                        <ng-container
+                            *ngTemplateOutlet="navigation"
+                        ></ng-container>
+                    } @else if (stepper.selected === account) {
+                        <h2>Account</h2>
+                        <sol-class-account
+                            (validityChange)="account.hasError = !$event"
+                        ></sol-class-account>
+
+                        <ng-container
+                            *ngTemplateOutlet="navigation"
+                        ></ng-container>
+                    }
+                </ng-template>
+            </mat-step>
+            <mat-step
+                #selectStudent
+                label="Student Selection"
+                [completed]="isAddendumMode()"
+                [editable]="!isAddendumMode()"
+            >
+                <ng-template matStepContent>
+                    @if (isAddendumMode()) {
+                        <h2>Student Selection</h2>
+                        <p>
+                            Student is pre-selected from the original
+                            enrollment.
+                        </p>
+                        <ng-container
+                            *ngTemplateOutlet="navigation"
+                        ></ng-container>
+                    } @else if (stepper.selected === selectStudent) {
+                        <h2>Student Selection</h2>
+                        <sol-student-selection
+                            [interacted]="selectStudent.interacted"
+                            (validityChange)="selectStudent.hasError = !$event"
+                        ></sol-student-selection>
+                        <ng-container
+                            *ngTemplateOutlet="navigation"
+                        ></ng-container>
+                    }
+                </ng-template>
+            </mat-step>
+            <mat-step #studentInfo label="Student Info" disabled>
+                <ng-template matStepContent>
+                    @if (stepper.selected === studentInfo) {
+                        <h2>Student Info</h2>
+                        @if (
+                            isAddendumMode() ||
+                            allStepsComplete(isUserLoggedIn, selectStudent)
+                        ) {
+                            @if (!isAddendumMode()) {
+                                <sol-acknowledge-out-of-date>
+                                    <sol-student-info
+                                        [interacted]="studentInfo.interacted"
+                                        [isStudentLoading]="isStudentLoading()"
+                                        (validityChange)="
+                                            studentInfo.hasError = !$event
+                                        "
+                                    ></sol-student-info>
+                                </sol-acknowledge-out-of-date>
+                            } @else {
+                                <sol-student-info
+                                    [interacted]="studentInfo.interacted"
+                                    [isStudentLoading]="isStudentLoading()"
+                                    (validityChange)="
+                                        studentInfo.hasError = !$event
+                                    "
+                                ></sol-student-info>
+                            }
+                        } @else {
+                            <ng-container
+                                *ngTemplateOutlet="mustSelectStudent"
+                            ></ng-container>
+                        }
+                        <ng-container
+                            *ngTemplateOutlet="navigation"
+                        ></ng-container>
+                    }
+                </ng-template>
+            </mat-step>
+            <mat-step #medicalInfo label="Medical Info">
+                <ng-template matStepContent>
+                    @if (stepper.selected === medicalInfo) {
+                        <h2>Medical Info</h2>
+                        @if (
+                            isAddendumMode() ||
+                            allStepsComplete(isUserLoggedIn, selectStudent)
+                        ) {
+                            @if (!isAddendumMode()) {
+                                <sol-acknowledge-out-of-date>
+                                    <sol-medical
+                                        [interacted]="medicalInfo.interacted"
+                                        (validityChange)="
+                                            medicalInfo.hasError = !$event
+                                        "
+                                    ></sol-medical>
+                                </sol-acknowledge-out-of-date>
+                            } @else {
+                                <sol-medical
+                                    [interacted]="medicalInfo.interacted"
+                                    (validityChange)="
+                                        medicalInfo.hasError = !$event
+                                    "
+                                ></sol-medical>
+                            }
+                        } @else {
+                            <ng-container
+                                *ngTemplateOutlet="mustSelectStudent"
+                            ></ng-container>
+                        }
+                        <ng-container
+                            *ngTemplateOutlet="navigation"
+                        ></ng-container>
+                    }
+                </ng-template>
+            </mat-step>
+            <mat-step
+                #releases
+                label="Releases"
+                [completed]="isAddendumMode()"
+                [editable]="!isAddendumMode()"
+            >
+                <ng-template matStepContent>
+                    @if (isAddendumMode()) {
+                        <h2>Releases</h2>
+                        <p>
+                            Releases were completed with the original
+                            enrollment.
+                        </p>
+                        <ng-container
+                            *ngTemplateOutlet="navigation"
+                        ></ng-container>
+                    } @else if (stepper.selected === releases) {
+                        <h2>Releases</h2>
+                        @if (allStepsComplete(isUserLoggedIn, selectStudent)) {
+                            <sol-releases
+                                [interacted]="releases.interacted"
+                                (validityChange)="releases.hasError = !$event"
+                            ></sol-releases>
+                        } @else {
+                            <ng-container
+                                *ngTemplateOutlet="mustSelectStudent"
+                            ></ng-container>
+                        }
+                        <ng-container
+                            *ngTemplateOutlet="navigation"
+                        ></ng-container>
+                    }
+                </ng-template>
+            </mat-step>
+            <mat-step #confirmation label="Confirm Enrollment">
+                <ng-template matStepContent>
+                    @if (stepper.selected === confirmation) {
+                        <h2>Confirm Enrollment</h2>
+                        <sol-class-confirmation
+                            [allStepsComplete]="
+                                allStepsComplete(
+                                    isUserLoggedIn,
+                                    classSelection,
+                                    studentInfo,
+                                    medicalInfo,
+                                    releases,
+                                    account
+                                )
+                            "
+                            [interacted]="confirmation.interacted"
+                            (validityChange)="confirmation.hasError = !$event"
+                        ></sol-class-confirmation>
+                        <ng-container
+                            *ngTemplateOutlet="
+                                navigation;
+                                context: { last: true }
+                            "
+                        ></ng-container>
+                    }
+                </ng-template>
+            </mat-step>
+
+            <ng-template #mustSelectStudent>
+                <p>Please complete the Student Selection step first.</p>
+            </ng-template>
+
+            <ng-template #mustBeLoggedIn>
+                <p>
+                    Please log in or create an account on the Account step to
+                    continue.
+                </p>
+            </ng-template>
+
+            <ng-template #navigation let-first="first" let-last="last">
+                <div style="margin-top: 2rem">
+                    @if (!first) {
+                        <button mat-stroked-button matStepperPrevious>
+                            Previous
+                        </button>
+                    }
+                    @if (!last) {
+                        <button
+                            mat-raised-button
+                            color="primary"
+                            matStepperNext
+                            style="margin-left: 1rem"
+                        >
+                            Next
+                        </button>
+                    } @else {
+                        @if (
+                            allStepsComplete(
+                                isUserLoggedIn,
+                                classSelection,
+                                studentInfo,
+                                medicalInfo,
+                                account,
+                                releases,
+                                confirmation
+                            )
+                        ) {
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                style="margin-left: 1rem"
+                                (click)="complete()"
+                            >
+                                Submit
+                            </button>
+                        }
+                    }
+                </div>
+            </ng-template>
+        </mat-stepper>
+
+        @let isSubmitting = isSubmitting$ | async;
+        @if (isSubmitting) {
+            <div class="sol-modal-backdrop">
+                <mat-card class="sol-modal-card">
+                    <mat-card-header>
+                        <mat-card-title>Submitting...</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content style="text-align: center; padding: 1rem">
+                        <mat-progress-spinner
+                            mode="indeterminate"
+                            diameter="50"
+                        ></mat-progress-spinner>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        }
+        @let failureDialogState = failureDialogState$ | async;
+        @if (failureDialogState && failureDialogState.visible) {
+            <div class="sol-modal-backdrop">
+                <mat-card class="sol-modal-card">
+                    <mat-card-header>
+                        <mat-card-title>Something went wrong</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        Something went wrong while submitting your enrollment.
+                        Please try again or contact
+                        <a href="mailto:info@mountainsol.org"
+                            >info&#64;mountainsol.org</a
+                        >.
+                    </mat-card-content>
+                    <mat-card-actions align="end">
+                        <button mat-stroked-button (click)="closeFailure()">
+                            Close
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        }
+
+        @let shouldShow = shouldShowSuccess$ | async;
+        @if (shouldShow) {
+            <div class="sol-modal-backdrop">
+                <mat-card class="sol-modal-card">
+                    <mat-card-header>
+                        <mat-card-title>
+                            {{
+                                isAddendumMode()
+                                    ? 'Addendum submitted!'
+                                    : 'Successfully enrolled!'
+                            }}
+                        </mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div style="width: 100%">
+                            <div style="text-align: center">
+                                <mat-icon
+                                    style="
+                                        color: green;
+                                        font-size: 60px;
+                                        width: 60px;
+                                        height: 60px;
+                                    "
+                                    >check_circle</mat-icon
+                                >
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem">
+                            @let email = userEmail$ | async;
+                            A confirmation email has been sent to
+                            <b>{{ email }}</b
+                            >.
+                        </div>
+                    </mat-card-content>
+                    <mat-card-actions align="end">
+                        @if (isAddendumMode()) {
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                (click)="enrollAnother(stepper)"
+                            >
+                                Back to Enrollments
+                            </button>
+                        } @else {
+                            <button
+                                mat-raised-button
+                                color="primary"
+                                (click)="enrollAnother(stepper)"
+                            >
+                                Enroll Another Student
+                            </button>
+                        }
+                    </mat-card-actions>
+                </mat-card>
+            </div>
+        }
+    }
 </div>

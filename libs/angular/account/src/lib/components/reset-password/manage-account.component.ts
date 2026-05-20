@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { MatButtonModule } from '@angular/material/button';
 import { LoginStore } from '@sol/auth/login';
 import { map } from 'rxjs';
 import { UserService } from '@sol/auth/user';
@@ -15,14 +15,11 @@ import { rxResource } from '@angular/core/rxjs-interop';
         }
         <div style="margin-top: 2rem">
             <h3>Change Password</h3>
-            <button
-                pButton
-                type="button"
-                label="Email password reset link"
-                (click)="sendResetLink()"
-            ></button>
+            <button mat-raised-button type="button" (click)="sendResetLink()">
+                Email password reset link
+            </button>
         </div>`,
-    imports: [ButtonModule, LoginStore],
+    imports: [MatButtonModule, LoginStore],
 })
 export class ManageAccountComponent {
     readonly #loginStore = inject(LoginStore);

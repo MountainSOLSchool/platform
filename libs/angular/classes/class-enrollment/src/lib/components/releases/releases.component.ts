@@ -13,16 +13,9 @@ import {
     shareReplay,
 } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { InputTextModule } from 'primeng/inputtext';
-import { CalendarModule } from 'primeng/calendar';
-import { ButtonModule } from 'primeng/button';
-import { InputMaskModule } from 'primeng/inputmask';
-import { FieldsetModule } from 'primeng/fieldset';
-import { RippleModule } from 'primeng/ripple';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { AccordionModule } from 'primeng/accordion';
-import { ToggleButtonModule } from 'primeng/togglebutton';
-import { SelectButtonModule } from 'primeng/selectbutton';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import { create, enforce, group, test } from 'vest';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
@@ -31,17 +24,10 @@ import { AsyncPipe } from '@angular/common';
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        InputTextModule,
-        CalendarModule,
-        ButtonModule,
-        InputMaskModule,
-        FieldsetModule,
-        RippleModule,
-        InputNumberModule,
-        AccordionModule,
-        ToggleButtonModule,
-        SelectButtonModule,
         FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatExpansionModule,
         ValidDirective,
         MessagesComponent,
         AsyncPipe,

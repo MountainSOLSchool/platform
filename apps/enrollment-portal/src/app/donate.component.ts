@@ -3,15 +3,20 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
-import { ButtonModule } from 'primeng/button';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { CardModule } from 'primeng/card';
-import { MessagesModule } from 'primeng/messages';
-import { Message } from 'primeng/api';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { lastValueFrom } from 'rxjs';
 import { RequestedUtility } from '@sol/angular/request';
 import * as browserDetection from '@braintree/browser-detection';
+
+interface DonateMessage {
+    severity: 'error' | 'success' | 'info' | 'warn';
+    summary?: string;
+    detail: string;
+}
 
 @Component({
     selector: 'sol-donate',
@@ -19,101 +24,110 @@ import * as browserDetection from '@braintree/browser-detection';
     imports: [
         FormsModule,
         PaymentCollectorComponent,
-        ButtonModule,
-        InputNumberModule,
-        CardModule,
-        MessagesModule,
-        ProgressSpinnerModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
     ],
     template: `
         <div class="donation-container">
-            <p-card header="Make a Donation" class="donation-card">
-                @if (messages().length > 0) {
-                    <p-messages
-                        [value]="messages()"
-                        [closable]="false"
-                        [enableService]="false"
-                        class="mb-3"
-                    >
-                    </p-messages>
-                }
-
-                @if (donationComplete()) {
-                    <div class="success-content">
-                        <i class="pi pi-check-circle success-icon"></i>
-                        <h2 class="success-title">Thank You!</h2>
-                        <p class="success-message">
-                            Your donation of &#36;{{ donationAmount() }} has
-                            been processed successfully.
-                        </p>
-                        <p class="transaction-id">
-                            Transaction ID: {{ transactionId() }}
-                        </p>
-                        <button
-                            pButton
-                            label="Make Another Donation"
-                            class="reset-button"
-                            (click)="reset()"
-                        ></button>
-                    </div>
-                } @else {
-                    <div class="donation-form">
-                        <div class="form-field">
-                            <label for="amount" class="field-label"
-                                >Donation Amount</label
-                            >
-                            <div class="amount-input-container">
-                                <p-inputNumber
-                                    [(ngModel)]="donationAmount"
-                                    inputId="amount"
-                                    mode="currency"
-                                    currency="USD"
-                                    [showButtons]="false"
-                                    [min]="1"
-                                    placeholder="Enter amount"
-                                    class="amount-input"
-                                >
-                                </p-inputNumber>
-                            </div>
-                            <small class="field-hint"
-                                >Minimum donation: $1</small
-                            >
+            <mat-card class="donation-card">
+                <mat-card-header>
+                    <mat-card-title>Make a Donation</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    @for (m of messages(); track $index) {
+                        <div class="alert alert-{{ m.severity }} mb-3">
+                            @if (m.summary) {
+                                <strong>{{ m.summary }}: </strong>
+                            }
+                            {{ m.detail }}
                         </div>
+                    }
 
-                        @if (isIosButNotSafari()) {
-                            <div class="form-field">
-                                <strong
-                                    >Please use Safari on iOS to use Venmo as an
-                                    option.</strong
-                                >
-                            </div>
-                        }
-
-                        <div class="form-field">
-                            <label class="field-label">Payment Method</label>
-                            <sol-payment-collector
-                                [anonymous]="true"
-                                [paymentMethods]="['card', 'venmo']"
-                                (paymentMethod)="setPaymentMethod($event)"
-                                class="payment-collector"
+                    @if (donationComplete()) {
+                        <div class="success-content">
+                            <mat-icon class="success-icon"
+                                >check_circle</mat-icon
                             >
-                            </sol-payment-collector>
-                        </div>
-
-                        <div class="form-field">
+                            <h2 class="success-title">Thank You!</h2>
+                            <p class="success-message">
+                                Your donation of &#36;{{ donationAmount() }} has
+                                been processed successfully.
+                            </p>
+                            <p class="transaction-id">
+                                Transaction ID: {{ transactionId() }}
+                            </p>
                             <button
-                                pButton
-                                label="Donate"
-                                icon="pi pi-heart"
-                                class="donate-button"
-                                [loading]="processing()"
-                                [disabled]="!canDonate()"
-                                (click)="processDonation()"
-                            ></button>
+                                mat-raised-button
+                                color="primary"
+                                class="reset-button"
+                                (click)="reset()"
+                            >
+                                Make Another Donation
+                            </button>
                         </div>
-                    </div>
-                }
-            </p-card>
+                    } @else {
+                        <div class="donation-form">
+                            <div class="form-field">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Donation Amount</mat-label>
+                                    <span matTextPrefix>$&nbsp;</span>
+                                    <input
+                                        matInput
+                                        type="number"
+                                        id="amount"
+                                        [(ngModel)]="donationAmount"
+                                        [min]="1"
+                                        placeholder="Enter amount"
+                                    />
+                                    <mat-hint>Minimum donation: $1</mat-hint>
+                                </mat-form-field>
+                            </div>
+
+                            @if (isIosButNotSafari()) {
+                                <div class="form-field">
+                                    <strong
+                                        >Please use Safari on iOS to use Venmo
+                                        as an option.</strong
+                                    >
+                                </div>
+                            }
+
+                            <div class="form-field">
+                                <label class="field-label"
+                                    >Payment Method</label
+                                >
+                                <sol-payment-collector
+                                    [anonymous]="true"
+                                    [paymentMethods]="['card', 'venmo']"
+                                    (paymentMethod)="setPaymentMethod($event)"
+                                    class="payment-collector"
+                                >
+                                </sol-payment-collector>
+                            </div>
+
+                            <div class="form-field">
+                                <button
+                                    mat-raised-button
+                                    color="primary"
+                                    class="donate-button"
+                                    [disabled]="!canDonate()"
+                                    (click)="processDonation()"
+                                >
+                                    @if (processing()) {
+                                        <mat-icon>hourglass_empty</mat-icon>
+                                    } @else {
+                                        <mat-icon>favorite</mat-icon>
+                                    }
+                                    Donate
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </mat-card-content>
+            </mat-card>
         </div>
     `,
     styles: [
@@ -121,14 +135,6 @@ import * as browserDetection from '@braintree/browser-detection';
             :host {
                 display: block;
                 min-height: 100vh;
-            }
-
-            p-inputnumber {
-                width: 100%;
-            }
-
-            ::ng-deep .p-inputnumber {
-                width: 100%;
             }
 
             .donation-container {
@@ -142,7 +148,6 @@ import * as browserDetection from '@braintree/browser-detection';
             .donation-card {
                 width: 100%;
                 max-width: 500px;
-                box-shadow: 0 4px 6px var(--sol-shadow-sm);
             }
 
             .donation-form {
@@ -157,50 +162,44 @@ import * as browserDetection from '@braintree/browser-detection';
                 gap: 0.5rem;
             }
 
+            .form-field mat-form-field {
+                width: 100%;
+            }
+
             .field-label {
                 font-weight: 600;
                 color: var(--text-color);
                 font-size: 0.9rem;
             }
 
-            .amount-input-container {
-                display: flex;
-                align-items: center;
-                position: relative;
-            }
-
-            .currency-symbol {
-                position: absolute;
-                left: 0.75rem;
-                z-index: 1;
-                color: var(--text-color-secondary);
-                font-weight: 500;
-            }
-
-            .amount-input ::ng-deep .p-inputnumber-input {
-                padding-left: 2rem;
-                font-size: 1.1rem;
-                height: 3rem;
-            }
-
-            .amount-input ::ng-deep .p-inputnumber-button-group {
-                display: flex;
-                flex-direction: column;
-            }
-
-            .amount-input ::ng-deep .p-inputnumber-button {
-                height: 1.5rem;
-                width: 2rem;
-            }
-
-            .field-hint {
-                color: var(--text-color-secondary);
-                font-size: 0.8rem;
-                margin-top: 0.25rem;
-            }
-
             .payment-collector {
                 width: 100%;
+            }
+
+            .alert {
+                padding: 0.75rem 1rem;
+                border-radius: 4px;
+                border-left: 4px solid;
+            }
+            .alert-error {
+                background: #fee2e2;
+                color: #991b1b;
+                border-color: #ef4444;
+            }
+            .alert-warn {
+                background: #fef3c7;
+                color: #92400e;
+                border-color: #f59e0b;
+            }
+            .alert-info {
+                background: #dbeafe;
+                color: #1e40af;
+                border-color: #3b82f6;
+            }
+            .alert-success {
+                background: #d1fae5;
+                color: #065f46;
+                border-color: #10b981;
             }
 
             .donate-button {
@@ -208,24 +207,6 @@ import * as browserDetection from '@braintree/browser-detection';
                 height: 3rem;
                 font-size: 1.1rem;
                 font-weight: 600;
-                border-radius: 0.5rem;
-                background: linear-gradient(
-                    135deg,
-                    var(--sol-primary) 0%,
-                    var(--sol-primary-hover) 100%
-                );
-                border: none;
-                transition: all 0.3s ease;
-            }
-
-            .donate-button:hover:not(:disabled) {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 12px var(--sol-shadow-md);
-            }
-
-            .donate-button:disabled {
-                opacity: 0.6;
-                cursor: not-allowed;
             }
 
             .success-content {
@@ -239,7 +220,9 @@ import * as browserDetection from '@braintree/browser-detection';
 
             .success-icon {
                 font-size: 4rem;
-                color: var(--sol-success);
+                width: 4rem;
+                height: 4rem;
+                color: var(--sol-success, #10b981);
                 margin-bottom: 0.5rem;
             }
 
@@ -270,139 +253,13 @@ import * as browserDetection from '@braintree/browser-detection';
                 margin-top: 1rem;
             }
 
-            /* Mobile-specific styles */
             @media (max-width: 768px) {
                 .donation-container {
                     padding: 0.5rem;
                     align-items: stretch;
                 }
-
                 .donation-card {
                     margin: 0;
-                    border-radius: 0;
-                    box-shadow: none;
-                    border: none;
-                }
-
-                .donation-card ::ng-deep .p-card-header {
-                    padding: 1rem 1rem 0.5rem;
-                    font-size: 1.2rem;
-                    text-align: center;
-                }
-
-                .donation-card ::ng-deep .p-card-body {
-                    padding: 1rem;
-                }
-
-                .form-field {
-                    gap: 0.75rem;
-                }
-
-                .field-label {
-                    font-size: 1rem;
-                }
-
-                .amount-input ::ng-deep .p-inputnumber-input {
-                    height: 3.5rem;
-                    font-size: 1.2rem;
-                }
-
-                .donate-button {
-                    height: 3.5rem;
-                    font-size: 1.2rem;
-                    margin-top: 0.5rem;
-                }
-
-                .success-content {
-                    padding: 1.5rem 0.5rem;
-                }
-
-                .success-icon {
-                    font-size: 3.5rem;
-                }
-
-                .success-title {
-                    font-size: 1.3rem;
-                }
-
-                .success-message {
-                    font-size: 1rem;
-                }
-
-                .transaction-id {
-                    font-size: 0.8rem;
-                    padding: 0 0.5rem;
-                }
-            }
-
-            /* Small mobile devices */
-            @media (max-width: 480px) {
-                .donation-container {
-                    padding: 0;
-                }
-
-                .donation-card ::ng-deep .p-card-header {
-                    padding: 0.75rem 1rem 0.5rem;
-                    font-size: 1.1rem;
-                }
-
-                .donation-card ::ng-deep .p-card-body {
-                    padding: 0.75rem;
-                }
-
-                .form-field {
-                    gap: 0.5rem;
-                }
-
-                .amount-input ::ng-deep .p-inputnumber-input {
-                    height: 3rem;
-                    font-size: 1.1rem;
-                }
-
-                .donate-button {
-                    height: 3rem;
-                    font-size: 1.1rem;
-                }
-
-                .success-content {
-                    padding: 1rem 0.5rem;
-                }
-
-                .success-icon {
-                    font-size: 3rem;
-                }
-
-                .success-title {
-                    font-size: 1.2rem;
-                }
-            }
-
-            /* Landscape orientation on mobile */
-            @media (max-width: 768px) and (orientation: landscape) {
-                .donation-container {
-                    min-height: auto;
-                    padding: 0.5rem;
-                }
-
-                .success-content {
-                    padding: 1rem 0.5rem;
-                }
-
-                .success-icon {
-                    font-size: 2.5rem;
-                }
-            }
-
-            /* Touch-friendly improvements */
-            @media (pointer: coarse) {
-                .donate-button,
-                .reset-button {
-                    min-height: 44px; /* iOS/Android touch target minimum */
-                }
-
-                .amount-input ::ng-deep .p-inputnumber-button {
-                    min-width: 44px;
-                    min-height: 22px;
                 }
             }
         `,
@@ -412,9 +269,12 @@ export class DonateComponent {
     private readonly functions = inject(FirebaseFunctionsService);
 
     donationAmount = signal<number>(5);
-    paymentMethodData = signal<any>(null);
+    paymentMethodData = signal<{
+        nonce: string;
+        deviceData: string;
+    } | null>(null);
     processing = signal(false);
-    messages = signal<Message[]>([]);
+    messages = signal<DonateMessage[]>([]);
     donationComplete = signal(false);
     transactionId = signal<string>('');
 
@@ -426,8 +286,15 @@ export class DonateComponent {
         );
     };
 
-    setPaymentMethod(method: any) {
-        this.paymentMethodData.set(method);
+    setPaymentMethod(method?: { nonce: string; deviceData: string }) {
+        this.paymentMethodData.set(
+            method
+                ? {
+                      nonce: method.nonce,
+                      deviceData: method.deviceData,
+                  }
+                : null
+        );
     }
 
     async processDonation() {
@@ -444,8 +311,8 @@ export class DonateComponent {
                     message: string;
                 }>('donateVenmo', {
                     amount: this.donationAmount(),
-                    paymentMethodNonce: this.paymentMethodData().nonce,
-                    deviceData: this.paymentMethodData().deviceData,
+                    paymentMethodNonce: this.paymentMethodData()!.nonce,
+                    deviceData: this.paymentMethodData()!.deviceData,
                 })
             );
 

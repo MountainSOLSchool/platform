@@ -8,8 +8,8 @@ import {
     Output,
 } from '@angular/core';
 import { provideComponentStore } from '@ngrx/component-store';
+import { SkeletonComponent } from '@sol/angular/skeleton';
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
-import { SkeletonModule } from 'primeng/skeleton';
 import { Observable } from 'rxjs';
 import { PaymentCollectorStore } from './payment-collector.store';
 
@@ -24,7 +24,7 @@ export type PaymentCollector = {
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AsyncPipe, SkeletonModule],
+    imports: [AsyncPipe, SkeletonComponent],
     selector: 'sol-payment-collector',
     templateUrl: './payment-collector.component.html',
     providers: [provideComponentStore(PaymentCollectorStore)],

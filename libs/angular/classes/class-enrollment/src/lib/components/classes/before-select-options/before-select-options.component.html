@@ -31,4 +31,10 @@
     }
 }
 
-<p-button (click)="confirmed.emit(selectedOptionsByClass())">Confirm</p-button>
+<button
+    mat-raised-button
+    color="primary"
+    (click)="confirmed.emit(selectedOptionsByClass())"
+>
+    Confirm
+</button>

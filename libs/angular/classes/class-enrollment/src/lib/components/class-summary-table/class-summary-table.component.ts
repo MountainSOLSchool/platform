@@ -9,13 +9,12 @@ import {
 } from '@angular/core';
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { switchMap, of } from 'rxjs';
-import { TreeTableModule } from 'primeng/treetable';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MatTableModule } from '@angular/material/table';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ClassListService } from '@sol/angular/classes/list';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { TreeNode } from 'primeng/api';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 
 interface AdditionalOption {
@@ -40,11 +39,50 @@ interface ClassCostSummary {
     isPartOfGroup?: boolean;
 }
 
+interface SummaryRow {
+    key: string;
+    name: string;
+    semester: string;
+    date: string;
+    cost: number | '';
+    level: 0 | 1 | 2;
+    isOption: boolean;
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'sol-class-summary-table',
     templateUrl: './class-summary-table.component.html',
-    imports: [CurrencyPipe, TreeTableModule, ProgressSpinnerModule, NgClass],
+    styles: [
+        `
+            .summary-table-wrapper {
+                min-width: 300px;
+                width: 100%;
+            }
+            .summary-table {
+                width: 100%;
+            }
+            .summary-table .level-0 {
+                font-weight: 600;
+            }
+            .summary-table .level-2 {
+                padding-left: 2.5rem;
+                color: var(--sol-on-surface-variant, #555);
+            }
+            .summary-table .semester-row {
+                background: var(--sol-surface-variant, #f5f5f5);
+            }
+            .summary-table .option-row td {
+                border-top: none;
+            }
+            .loading {
+                display: flex;
+                justify-content: center;
+                padding: 2rem;
+            }
+        `,
+    ],
+    imports: [CurrencyPipe, MatTableModule, MatProgressSpinnerModule, NgClass],
     providers: [DatePipe],
 })
 export class ClassSummaryTableComponent {
@@ -94,14 +132,16 @@ export class ClassSummaryTableComponent {
         )
     );
 
-    readonly classCostSummaryRows: Signal<TreeNode[] | undefined> = computed(
+    readonly classCostSummaryRows: Signal<SummaryRow[] | undefined> = computed(
         () => {
             const tableData = this.prepareTableData();
-            return tableData ? mapToTreeTableData(tableData) : undefined;
+            return tableData ? mapToFlatRows(tableData) : undefined;
         }
     );
 
     readonly isLoading = computed(() => !this.classCostSummaryRows());
+
+    readonly displayedColumns = ['name', 'semester', 'date', 'cost'];
 
     @Input() set classes(classes: Array<{ id: string; semesterId: string }>) {
         this.classesSignal.set(classes);
@@ -286,26 +326,6 @@ export class ClassSummaryTableComponent {
         return `${startDate} - ${endDate}`;
     }
 
-    private calculateGroupAdditionalOptionsCost(
-        classes: SemesterClass[],
-        additionalOptionIdsByClassId: Record<string, string[]>
-    ): number {
-        return classes.reduce((sum, cls) => {
-            const selectedOptions = this.getSelectedOptions(
-                cls.id,
-                cls.additionalOptions,
-                additionalOptionIdsByClassId
-            );
-            return (
-                sum +
-                selectedOptions.reduce(
-                    (optSum, opt) => optSum + (opt.cost || 0),
-                    0
-                )
-            );
-        }, 0);
-    }
-
     private prepareClassesWithOptions(
         classes: SemesterClass[],
         additionalOptionIdsByClassId: Record<string, string[]>
@@ -321,10 +341,47 @@ export class ClassSummaryTableComponent {
     }
 }
 
-function mapToTreeTableData(data: ClassCostSummary[]): TreeNode[] {
-    return Object.entries(groupBySemester(data))
-        .map(createSemesterNode)
-        .sort(sortByDate);
+function mapToFlatRows(data: ClassCostSummary[]): SummaryRow[] {
+    const grouped = groupBySemester(data);
+    const semesters = Object.entries(grouped).sort(
+        ([, a], [, b]) => (a[0]?._startMs ?? 0) - (b[0]?._startMs ?? 0)
+    );
+    const rows: SummaryRow[] = [];
+    for (const [semester, items] of semesters) {
+        rows.push({
+            key: semester,
+            name: semester,
+            semester: '',
+            date: '',
+            cost: '',
+            level: 0,
+            isOption: false,
+        });
+        const sortedItems = items
+            .slice()
+            .sort((a, b) => a._startMs - b._startMs);
+        for (const item of sortedItems) {
+            const itemCost = item.isPartOfGroup ? 0 : item.cost || 0;
+            rows.push({
+                key: `${semester}-${item.name}`,
+                name: item.name,
+                semester: item.semester,
+                date: item.date,
+                cost: itemCost,
+                level: 1,
+                isOption: false,
+            });
+            const optionRows = item.classes
+                ? createGroupOptionRows(semester, item.name, item.classes)
+                : createClassOptionRows(
+                      semester,
+                      item.name,
+                      item.additionalOptions
+                  );
+            rows.push(...optionRows);
+        }
+    }
+    return rows;
 }
 
 function groupBySemester(
@@ -340,89 +397,36 @@ function groupBySemester(
     );
 }
 
-function createSemesterNode([semester, items]: [
-    string,
-    ClassCostSummary[],
-]): TreeNode {
-    return {
-        key: semester,
-        data: {
-            name: semester,
-            semester: '',
-            date: '',
-            cost: '',
-        },
-        children: items.map((item) => createClassNode(semester, item)),
-        expanded: true,
-    };
-}
-
-function createClassNode(semester: string, item: ClassCostSummary): TreeNode {
-    const optionsCost = calculateOptionsCost(item.additionalOptions);
-    const allOptions = item.classes
-        ? createGroupOptionsNodes(semester, item.name, item.classes)
-        : createClassOptionsNodes(semester, item.name, item.additionalOptions);
-
-    const hasOptions = allOptions.length > 0;
-    const classCost = item.isPartOfGroup ? 0 : item.cost || 0;
-
-    return {
-        key: `${semester}-${item.name}`,
-        data: {
-            name: item.name,
-            semester: item.semester,
-            date: item.date,
-            cost: classCost,
-            hasChildren: hasOptions,
-        },
-        children: allOptions,
-        leaf: !hasOptions,
-        expanded: hasOptions,
-    };
-}
-
-function createGroupOptionsNodes(
+function createGroupOptionRows(
     semester: string,
     groupName: string,
     classes: ClassDetails[]
-): TreeNode[] {
+): SummaryRow[] {
     return classes.flatMap((cls) =>
         (cls.additionalOptions || []).map((option) => ({
             key: `${semester}-${groupName}-${cls.title}-${option.id}`,
-            data: {
-                name: `${cls.title} - ${option.description}`,
-                semester: '',
-                date: '',
-                cost: option.cost || 0,
-                isOption: true,
-            },
-            leaf: true,
+            name: `${cls.title} - ${option.description}`,
+            semester: '',
+            date: '',
+            cost: option.cost || 0,
+            level: 2 as const,
+            isOption: true,
         }))
     );
 }
 
-function createClassOptionsNodes(
+function createClassOptionRows(
     semester: string,
     className: string,
     options?: AdditionalOption[]
-): TreeNode[] {
+): SummaryRow[] {
     return (options || []).map((option) => ({
         key: `${semester}-${className}-${option.id}`,
-        data: {
-            name: option.description,
-            semester: '',
-            date: '',
-            cost: option.cost || 0,
-            isOption: true,
-        },
-        leaf: true,
+        name: option.description,
+        semester: '',
+        date: '',
+        cost: option.cost || 0,
+        level: 2 as const,
+        isOption: true,
     }));
-}
-
-function calculateOptionsCost(options?: AdditionalOption[]): number {
-    return options?.reduce((sum, opt) => sum + (opt.cost || 0), 0) || 0;
-}
-
-function sortByDate(a: TreeNode, b: TreeNode): number {
-    return new Date(a.data.date).getTime() - new Date(b.data.date).getTime();
 }

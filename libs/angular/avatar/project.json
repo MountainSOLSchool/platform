@@ -1,0 +1,13 @@
+{
+    "name": "angular-avatar",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/angular/avatar/src",
+    "prefix": "sol",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "lint": {
+            "executor": "@nx/eslint:lint"
+        }
+    }
+}

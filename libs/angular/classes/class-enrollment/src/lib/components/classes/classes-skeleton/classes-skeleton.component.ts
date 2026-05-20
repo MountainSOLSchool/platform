@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { SkeletonModule } from 'primeng/skeleton';
+import { SkeletonComponent } from '@sol/angular/skeleton';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [SkeletonModule],
+    imports: [SkeletonComponent],
     selector: 'sol-classes-skeleton',
     templateUrl: './classes-skeleton.component.html',
 })

@@ -1,6 +1,6 @@
 import { Component, inject, input, model } from '@angular/core';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { CheckboxModule } from 'primeng/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
 import { MessagesComponent } from '@sol/form/validity';
 
@@ -12,28 +12,18 @@ import { MessagesComponent } from '@sol/form/validity';
             class="section-confirmation p-3 border-1 border-round border-dashed mb-3"
         >
             <div class="flex align-items-center">
-                <p-checkbox
-                    [binary]="true"
+                <mat-checkbox
                     [ngModel]="sectionConfirmed()"
                     (ngModelChange)="sectionConfirmed.set($event)"
-                    inputId="section-{{ sectionId }}-confirmed"
                     [required]="true"
                 >
-                </p-checkbox>
-                <label
-                    for="section-{{ sectionId }}-confirmed"
-                    class="ml-2 font-medium"
-                >
                     I have reviewed this section and confirm it is up-to-date
-                </label>
+                </mat-checkbox>
             </div>
-            <sol-messages
-                [messages]="messages()"
-                variant="primeng"
-            ></sol-messages>
+            <sol-messages [messages]="messages()"></sol-messages>
         </div>
     }`,
-    imports: [CheckboxModule, FormsModule, MessagesComponent],
+    imports: [MatCheckboxModule, FormsModule, MessagesComponent],
 })
 export class ConfirmAccuracyComponent {
     readonly #workflow = inject(EnrollmentWorkflowStore);

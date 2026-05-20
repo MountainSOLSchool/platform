@@ -3,39 +3,44 @@
         margin-bottom: 0.5rem;
         display: flex;
         flex-wrap: wrap;
-        gap: 4px;
+        gap: 8px;
         max-width: 600px;
+        align-items: flex-start;
     "
 >
-        <div class="p-input-icon-left" style="flex: 2; min-width: 200px">
-            <i class="pi pi-search"></i>
-            <span class="p-input-icon-right" style="width: 100%">
-                @if (searchInput.value.length > 0) {
-                    <i
-                        class="pi pi-times-circle"
-                        (click)="searchChange((searchInput.value = ''))"
-                        style="cursor: pointer"
-                    ></i>
-                }
-            <input
-                #searchInput
-                type="text"
-                pInputText
-                placeholder="Search for a class"
-                style="width: 100%"
-                (input)="searchChange(searchInput.value)"
-            />
-        </span>
-    </div>
-    <div>
-        <p-dropdown
-            [options]="filterOptions()"
-            placeholder="Select a grade range"
-            optionLabel="name"
-            [showClear]="true"
-            (onChange)="filterChange($event.value?.value ?? [])"
-        ></p-dropdown>
-    </div>
+    <mat-form-field appearance="outline" style="flex: 2; min-width: 200px">
+        <mat-label>Search for a class</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+            #searchInput
+            matInput
+            type="text"
+            placeholder="Search for a class"
+            (input)="searchChange(searchInput.value)"
+        />
+        @if (searchInput.value.length > 0) {
+            <button
+                mat-icon-button
+                matSuffix
+                type="button"
+                aria-label="Clear search"
+                (click)="searchChange((searchInput.value = ''))"
+            >
+                <mat-icon>cancel</mat-icon>
+            </button>
+        }
+    </mat-form-field>
+    <mat-form-field appearance="outline" style="min-width: 200px">
+        <mat-label>Select a grade range</mat-label>
+        <mat-select (selectionChange)="filterChange($event.value ?? [])">
+            <mat-option [value]="[]">All grades</mat-option>
+            @for (option of filterOptions(); track option.name) {
+                <mat-option [value]="option.value">{{
+                    option.name
+                }}</mat-option>
+            }
+        </mat-select>
+    </mat-form-field>
 </div>
 @if (selectedClasses(); as selectedClasses) {
     @if (selectedClasses.length > 0) {
@@ -56,38 +61,52 @@
             </p>
             @let view = { showChips: false };
             <div
-                style="display: flex; gap: 4px; flex-wrap: wrap"
+                style="
+                    display: flex;
+                    gap: 4px;
+                    flex-wrap: wrap;
+                    align-items: center;
+                "
             >
                 @if (view.showChips) {
                     @for (
                         selectedClass of selectedClasses;
                         track selectedClass.id
                     ) {
-                        <div>
-                            <p-chip
-                                [label]="selectedClass.title"
-                                [removable]="!lockedClassIds().includes(selectedClass.id)"
-                                (onRemove)="
-                                    selectionChanged({
-                                        classSelection: {
-                                            id: selectedClass.id,
-                                            semesterId:
-                                                selectedClass.semesterId,
-                                        },
-                                        selectedAdditionalOptionIds: [],
-                                        selected: false
-                                    })
-                                "
-                            ></p-chip>
-                        </div>
+                        <span class="chip">
+                            {{ selectedClass.title }}
+                            @if (!lockedClassIds().includes(selectedClass.id)) {
+                                <button
+                                    mat-icon-button
+                                    type="button"
+                                    class="chip-remove"
+                                    aria-label="Remove class"
+                                    (click)="
+                                        selectionChanged({
+                                            classSelection: {
+                                                id: selectedClass.id,
+                                                semesterId:
+                                                    selectedClass.semesterId,
+                                            },
+                                            selectedAdditionalOptionIds: [],
+                                            selected: false,
+                                        })
+                                    "
+                                >
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            }
+                        </span>
                     }
                 }
                 @if (selectedClasses.length > 0) {
-                    <p-button
-                        [label]="view.showChips ? 'Hide' : 'Show'"
+                    <button
+                        mat-raised-button
+                        type="button"
                         (click)="view.showChips = !view.showChips"
-                        styleClass="p-button-sm"
-                    ></p-button>
+                    >
+                        {{ view.showChips ? 'Hide' : 'Show' }}
+                    </button>
                 }
             </div>
             @if (multiClassDiscount(); as discount) {
@@ -96,21 +115,37 @@
                         <span
                             [ngStyle]="{
                                 color:
-                                    selectedDiscountClasses().length >= discount.minimum
+                                    selectedDiscountClasses().length >=
+                                    discount.minimum
                                         ? '#3c82f7'
                                         : 'black',
                             }"
                             ><b
-                                >({{ selectedDiscountClasses().length }}/{{ discount.minimum }}
+                                >({{ selectedDiscountClasses().length }}/{{
+                                    discount.minimum
+                                }}
                                 selected
-                                @if (selectedDiscountClasses().length >= discount.minimum) {
+                                @if (
+                                    selectedDiscountClasses().length >=
+                                    discount.minimum
+                                ) {
                                     🥳
                                 }
                                 )</b
                             ></span
                         >
-                        Use code <b>{{ discount.code }}</b> at checkout when you select
-                        {{ discount.minimum }} {{ discount.classTypes.slice(0, -1).join(', ') }}{{ discount.classTypes.length > 1 ? ', or ' + discount.classTypes[discount.classTypes.length - 1] : discount.classTypes[0] }} classes to get {{ discount.percent }}% off!
+                        Use code <b>{{ discount.code }}</b> at checkout when you
+                        select {{ discount.minimum }}
+                        {{ discount.classTypes.slice(0, -1).join(', ')
+                        }}{{
+                            discount.classTypes.length > 1
+                                ? ', or ' +
+                                  discount.classTypes[
+                                      discount.classTypes.length - 1
+                                  ]
+                                : discount.classTypes[0]
+                        }}
+                        classes to get {{ discount.percent }}% off!
                     </p>
                 }
             }
@@ -119,25 +154,26 @@
 }
 @if (isInvalid()) {
     <div style="width: 100%">
-        <p-messages severity="error">
-            <ng-template pTemplate>
-                <div class="ml-2">Please select at least one class.</div>
-            </ng-template>
-        </p-messages>
+        <div class="alert alert-danger">Please select at least one class.</div>
     </div>
 }
 @defer (when semesterOptions()) {
     <div style="margin-top: 1rem">
-        <p-tabView>
+        <mat-tab-group>
             @for (
                 semester of semesterOptions();
                 track semester;
                 let first = $first;
                 let last = $last
             ) {
-                <p-tabPanel [header]="semester.name">
-                    @if (semester.additionalInfoPanel && semester.additionalInfoPanel.active) {
-                        <sol-info-panel [config]="semester.additionalInfoPanel"></sol-info-panel>
+                <mat-tab [label]="semester.name">
+                    @if (
+                        semester.additionalInfoPanel &&
+                        semester.additionalInfoPanel.active
+                    ) {
+                        <sol-info-panel
+                            [config]="semester.additionalInfoPanel"
+                        ></sol-info-panel>
                     }
                     @if ((isFakeSearchLoading$ | async) === true) {
                         <ng-container
@@ -162,7 +198,9 @@
                                         <sol-class-row
                                             [row]="row"
                                             [lockedClassIds]="lockedClassIds()"
-                                            [lockedAdditionalOptionIdsByClassId]="lockedAdditionalOptionIdsByClassId()"
+                                            [lockedAdditionalOptionIdsByClassId]="
+                                                lockedAdditionalOptionIdsByClassId()
+                                            "
                                             (classSelection)="
                                                 selectionChanged($event)
                                             "
@@ -176,9 +214,9 @@
                             <sol-classes-skeleton></sol-classes-skeleton>
                         }
                     }
-                </p-tabPanel>
+                </mat-tab>
             }
-        </p-tabView>
+        </mat-tab-group>
     </div>
 } @placeholder (minimum 200ms) {
     <ng-container *ngTemplateOutlet="largeSpinner"></ng-container>
@@ -187,7 +225,10 @@
 <ng-template #largeSpinner>
     <div style="width: 100%; margin-top: 1rem">
         <div style="margin-left: auto; margin-right: auto; width: fit-content">
-            <p-progressSpinner></p-progressSpinner>
+            <mat-progress-spinner
+                mode="indeterminate"
+                diameter="50"
+            ></mat-progress-spinner>
         </div>
     </div>
 </ng-template>

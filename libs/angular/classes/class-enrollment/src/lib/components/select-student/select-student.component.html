@@ -2,20 +2,20 @@
 @if (vm) {
     <ng-container>
         @if (!vm.showAsReadonlyBlock) {
-            <div>
-                Select a student to enroll.
-            </div>
+            <div>Select a student to enroll.</div>
         } @else {
             <div style="margin-bottom: 1rem">
                 In order to change the student you are enrolling, you must start
                 over.
             </div>
             <button
+                mat-raised-button
+                color="primary"
                 style="margin-bottom: 2rem"
-                pButton
-                label="Start Over"
                 (click)="startOverIntent()"
-            ></button>
+            >
+                Start Over
+            </button>
         }
         <div class="mt-4 flex flex-wrap gap-3">
             @if (vm.students === undefined) {
@@ -45,32 +45,31 @@
 
 @let showStartOverModal = showStartOverModal$ | async;
 @if (showStartOverModal) {
-    <p-dialog
-        header="Start over?"
-        [visible]="showStartOverModal"
-        [closable]="false"
-        [modal]="true"
-        [draggable]="false"
-        (onHide)="canceledChange$.next(undefined)"
-    >
-        <div style="margin-top: 1rem">
-            Starting over the selected student will cause you to lose any new or
-            updated information you've entered on the subsequent steps. Are you sure
-            you want to start over and change students?
-        </div>
-        <div style="margin-top: 1rem">
-            <button
-                pButton
-                class="p-button-danger"
-                label="Yes, Start Over"
-                (click)="confirmStartOver()"
-            ></button>
-            <button
-                pButton
-                label="No, Cancel"
-                style="margin-left: 1rem"
-                (click)="canceledChange$.next(undefined)"
-            ></button>
-        </div>
-    </p-dialog>    
+    <div class="sol-modal-backdrop">
+        <mat-card class="sol-modal-card">
+            <mat-card-header>
+                <mat-card-title>Start over?</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div style="margin-top: 1rem">
+                    Starting over the selected student will cause you to lose
+                    any new or updated information you've entered on the
+                    subsequent steps. Are you sure you want to start over and
+                    change students?
+                </div>
+            </mat-card-content>
+            <mat-card-actions align="end">
+                <button mat-stroked-button (click)="canceledChange$.next()">
+                    No, Cancel
+                </button>
+                <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="confirmStartOver()"
+                >
+                    Yes, Start Over
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
 }

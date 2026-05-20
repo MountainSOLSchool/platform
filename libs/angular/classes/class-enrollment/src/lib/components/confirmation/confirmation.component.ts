@@ -7,16 +7,15 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { ChipModule } from 'primeng/chip';
+import { MatChipsModule } from '@angular/material/chips';
 import { combineLatest, filter, map, Subject, tap } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { FieldsetModule } from 'primeng/fieldset';
-import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { ButtonModule } from 'primeng/button';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { TagModule } from 'primeng/tag';
-import { TableModule } from 'primeng/table';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CheckoutComponent } from '../checkout/checkout.component';
 import { ClassSummaryTableComponent } from '../class-summary-table/class-summary-table.component';
 import { UserService } from '@sol/auth/user';
@@ -29,14 +28,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
     imports: [
         DatePipe,
         CurrencyPipe,
-        ChipModule,
-        FieldsetModule,
-        CardModule,
-        InputTextModule,
-        ButtonModule,
-        ProgressSpinnerModule,
-        TagModule,
-        TableModule,
+        MatChipsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
         CheckoutComponent,
         ClassSummaryTableComponent,
         DatePipe,

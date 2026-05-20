@@ -6,11 +6,10 @@ import {
     input,
 } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
-import { AvatarModule } from 'primeng/avatar';
-import { TagModule } from 'primeng/tag';
-import { SkeletonModule } from 'primeng/skeleton';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { AvatarComponent } from '@sol/angular/avatar';
+import { SkeletonComponent } from '@sol/angular/skeleton';
 import {
     AccountStudentsApiService,
     StudentSummary,
@@ -21,27 +20,22 @@ import {
     template: `@let s = student();
         <div class="student-card">
             <div class="student-header">
-                <p-avatar
+                <sol-avatar
                     [label]="initials()"
-                    size="xlarge"
+                    size="4rem"
                     shape="circle"
-                    [style]="{
-                        'background-color': avatarColor(),
-                        color: '#ffffff',
-                        'font-weight': '600',
-                    }"
+                    [style.background]="avatarColor()"
+                    [style.color]="'#ffffff'"
+                    [style.fontWeight]="600"
                 />
                 <div class="student-info">
                     <h3 class="student-name">{{ s.name }}</h3>
                     @if (s.currentClasses.length > 0) {
-                        <p-tag
-                            [value]="
-                                s.currentClasses.length +
-                                ' Active Class' +
-                                (s.currentClasses.length > 1 ? 'es' : '')
-                            "
-                            severity="success"
-                        />
+                        <span class="status-tag status-success">
+                            {{ s.currentClasses.length }} Active Class{{
+                                s.currentClasses.length > 1 ? 'es' : ''
+                            }}
+                        </span>
                     }
                 </div>
             </div>
@@ -66,11 +60,10 @@ import {
                     rel="noopener noreferrer"
                     class="action-link"
                 >
-                    <p-button
-                        label="View Learning Path"
-                        icon="pi pi-sitemap"
-                        styleClass="p-button-outlined w-full"
-                    />
+                    <button mat-stroked-button class="w-full" type="button">
+                        <mat-icon>account_tree</mat-icon>
+                        View Learning Path
+                    </button>
                 </a>
             </div>
         </div>`,
@@ -110,6 +103,21 @@ import {
                 font-size: 1.25rem;
                 font-weight: 600;
                 color: #1f2937;
+            }
+
+            .status-tag {
+                display: inline-block;
+                padding: 0.25rem 0.625rem;
+                border-radius: 999px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                line-height: 1.2;
+                width: fit-content;
+            }
+
+            .status-success {
+                background: #d1fae5;
+                color: #065f46;
             }
 
             .student-stats {
@@ -152,13 +160,13 @@ import {
                 display: block;
             }
 
-            :host ::ng-deep .w-full {
+            .w-full {
                 width: 100%;
             }
         `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CardModule, ButtonModule, AvatarModule, TagModule],
+    imports: [AvatarComponent, MatButtonModule, MatIconModule],
     standalone: true,
 })
 export class StudentCardComponent {
@@ -201,23 +209,23 @@ export class StudentCardComponent {
     template: `
         <div class="student-card">
             <div class="student-header">
-                <p-skeleton shape="circle" size="4rem" />
+                <sol-skeleton shape="circle" width="4rem" height="4rem" />
                 <div class="student-info">
-                    <p-skeleton width="10rem" height="1.5rem" />
-                    <p-skeleton width="6rem" height="1.25rem" />
+                    <sol-skeleton width="10rem" height="1.5rem" />
+                    <sol-skeleton width="6rem" height="1.25rem" />
                 </div>
             </div>
             <div class="student-stats">
                 <div class="stat">
-                    <p-skeleton width="2rem" height="1.5rem" />
-                    <p-skeleton width="5rem" height="0.75rem" />
+                    <sol-skeleton width="2rem" height="1.5rem" />
+                    <sol-skeleton width="5rem" height="0.75rem" />
                 </div>
                 <div class="stat">
-                    <p-skeleton width="2rem" height="1.5rem" />
-                    <p-skeleton width="5rem" height="0.75rem" />
+                    <sol-skeleton width="2rem" height="1.5rem" />
+                    <sol-skeleton width="5rem" height="0.75rem" />
                 </div>
             </div>
-            <p-skeleton width="100%" height="2.5rem" />
+            <sol-skeleton width="100%" height="2.5rem" />
         </div>
     `,
     styles: [
@@ -263,7 +271,7 @@ export class StudentCardComponent {
         `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [SkeletonModule],
+    imports: [SkeletonComponent],
     standalone: true,
 })
 export class StudentCardSkeletonComponent {}
@@ -286,13 +294,16 @@ export class StudentCardSkeletonComponent {}
             }
             @case ('error') {
                 <div class="error-state">
-                    <i class="pi pi-exclamation-circle"></i>
+                    <mat-icon class="state-icon">error</mat-icon>
                     <p>There was an error loading your students.</p>
-                    <p-button
-                        label="Try Again"
-                        icon="pi pi-refresh"
+                    <button
+                        mat-stroked-button
+                        type="button"
                         (click)="studentsResource.reload()"
-                    />
+                    >
+                        <mat-icon>refresh</mat-icon>
+                        Try Again
+                    </button>
                 </div>
             }
             @default {
@@ -308,7 +319,7 @@ export class StudentCardSkeletonComponent {}
                     </div>
                 } @else {
                     <div class="empty-state">
-                        <i class="pi pi-users"></i>
+                        <mat-icon class="state-icon">group</mat-icon>
                         <p>No students found</p>
                         <span
                             >Students will appear here after you complete an
@@ -344,14 +355,15 @@ export class StudentCardSkeletonComponent {}
                 border: 2px dashed #e5e7eb;
             }
 
-            .empty-state i,
-            .error-state i {
+            .state-icon {
                 font-size: 3rem;
+                width: 3rem;
+                height: 3rem;
                 color: #9ca3af;
                 margin-bottom: 1rem;
             }
 
-            .error-state i {
+            .error-state .state-icon {
                 color: #ef4444;
             }
 
@@ -369,7 +381,12 @@ export class StudentCardSkeletonComponent {}
         `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [StudentCardComponent, StudentCardSkeletonComponent, ButtonModule],
+    imports: [
+        StudentCardComponent,
+        StudentCardSkeletonComponent,
+        MatButtonModule,
+        MatIconModule,
+    ],
     standalone: true,
 })
 export class AccountStudentsComponent {

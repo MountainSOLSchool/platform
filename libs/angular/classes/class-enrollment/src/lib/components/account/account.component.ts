@@ -6,23 +6,14 @@ import {
     Output,
 } from '@angular/core';
 import { LoginComponent } from '@sol/auth/login';
-import { CardModule } from 'primeng/card';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { map } from 'rxjs';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { ToastModule } from 'primeng/toast';
 import { UserService } from '@sol/auth/user';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        AsyncPipe,
-        LoginComponent,
-        CardModule,
-        MessagesModule,
-        MessageModule,
-        ToastModule,
-    ],
+    imports: [AsyncPipe, LoginComponent, MatCardModule, MatIconModule],
     selector: 'sol-class-account',
     templateUrl: './account.component.html',
     styleUrls: ['./account.component.css'],

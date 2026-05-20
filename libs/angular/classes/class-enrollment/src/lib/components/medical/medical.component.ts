@@ -7,24 +7,18 @@ import {
 } from '@angular/core';
 import { map } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { InputTextModule } from 'primeng/inputtext';
-import { CalendarModule } from 'primeng/calendar';
-import { ButtonModule } from 'primeng/button';
-import { InputMaskModule } from 'primeng/inputmask';
-import { FieldsetModule } from 'primeng/fieldset';
-import { RippleModule } from 'primeng/ripple';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { AccordionModule } from 'primeng/accordion';
-import { ToggleButtonModule } from 'primeng/togglebutton';
-import { SelectButtonModule } from 'primeng/selectbutton';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { create, enforce, group, test } from 'vest';
 import { StudentForm } from '@sol/student/domain';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
-import { MessagesModule } from 'primeng/messages';
 import { AsyncPipe, NgStyle } from '@angular/common';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { outputFromObservable, toObservable } from '@angular/core/rxjs-interop';
 import { ConfirmAccuracyComponent } from '../confirm-accuracy/confirm-accuracy.component';
 
@@ -32,22 +26,16 @@ import { ConfirmAccuracyComponent } from '../confirm-accuracy/confirm-accuracy.c
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         NgStyle,
-        InputTextModule,
-        CalendarModule,
-        ButtonModule,
-        InputMaskModule,
-        FieldsetModule,
-        RippleModule,
-        InputTextareaModule,
-        InputNumberModule,
-        AccordionModule,
-        ToggleButtonModule,
-        SelectButtonModule,
         FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatExpansionModule,
+        MatButtonToggleModule,
+        MatProgressSpinnerModule,
         ValidDirective,
         MessagesComponent,
-        MessagesModule,
-        ProgressSpinnerModule,
         AsyncPipe,
         ConfirmAccuracyComponent,
     ],
