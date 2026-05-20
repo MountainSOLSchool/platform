@@ -39,11 +39,17 @@ Chart.register(...registerables);
             .chart-card {
                 margin-right: 20px;
                 margin-bottom: 20px;
+                box-shadow: none;
+                border: 1px solid var(--sol-input-border, #e0e0e0);
+                background: var(--sol-surface, #fff);
+            }
+            .chart-card {
+                flex: 1 1 auto;
+                min-width: 0;
             }
             .chart-canvas {
                 width: 100%;
-                max-width: 500px;
-                height: 200px;
+                height: 400px;
             }
             .chart-spinner {
                 margin-left: auto;
@@ -119,6 +125,41 @@ export class DashboardComponent {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: { top: 16, bottom: 16, left: 40, right: 40 },
+                    },
+                    scales: {
+                        r: {
+                            pointLabels: {
+                                font: { size: 11 },
+                                centerPointLabels: false,
+                                callback: (label: string) => {
+                                    if (label.length <= 18) return label;
+                                    const words = label.split(' ');
+                                    const lines: string[] = [];
+                                    let current = '';
+                                    for (const w of words) {
+                                        if (
+                                            (current + ' ' + w).trim().length >
+                                            18
+                                        ) {
+                                            if (current)
+                                                lines.push(current.trim());
+                                            current = w;
+                                        } else {
+                                            current = (
+                                                current +
+                                                ' ' +
+                                                w
+                                            ).trim();
+                                        }
+                                    }
+                                    if (current) lines.push(current);
+                                    return lines as unknown as string;
+                                },
+                            },
+                        },
+                    },
                 },
             };
             this.#chart = new Chart(canvasRef.nativeElement, config);
