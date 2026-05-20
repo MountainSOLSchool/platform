@@ -122,7 +122,9 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
                             ...response,
                             status: (code: number) => response.status(code),
                             send: (data: unknown) => {
-                                response.send({ data });
+                                response.send({
+                                    data: data === undefined ? null : data,
+                                });
                             },
                         } as express.Response,
                         Object.fromEntries(

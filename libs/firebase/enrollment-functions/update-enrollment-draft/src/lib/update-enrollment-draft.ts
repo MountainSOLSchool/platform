@@ -34,5 +34,5 @@ export const updateEnrollmentDraft = Functions.endpoint.handle<
         await draftDoc.update(enrollmentDraft);
     }
 
-    response.send();
+    response.send({ success: true });
 });
