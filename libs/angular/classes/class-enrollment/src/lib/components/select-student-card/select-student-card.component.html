@@ -1,6 +1,8 @@
 <div
     [ngStyle]="{
-        border: selected() ? '.2rem solid #3c82f7' : '.2rem solid transparent',
+        border: selected()
+            ? '.2rem solid var(--sol-primary, #006633)'
+            : '.2rem solid transparent',
         'border-radius': '6px',
         'box-sizing': 'border-box',
         height: 'fit-content',

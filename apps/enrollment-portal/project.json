@@ -27,7 +27,8 @@
                 "styles": [
                     "apps/enrollment-portal/src/design-tokens.scss",
                     "apps/enrollment-portal/src/custom-theme.scss",
-                    "apps/enrollment-portal/src/styles.css"
+                    "apps/enrollment-portal/src/styles.css",
+                    "node_modules/primeflex/primeflex.css"
                 ],
                 "scripts": []
             },
