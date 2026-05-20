@@ -131,6 +131,23 @@ body {
     --mdc-circular-progress-active-indicator-color: var(--sol-primary, #006633);
 }
 
+// Tabs — match prior PrimeNG p-tabView styling
+// (14px bold labels, SOL green active text, generous tab body padding)
+.mat-mdc-tab-group,
+.mat-mdc-tab-nav-bar {
+    --mat-tab-active-label-text-color: var(--sol-primary, #006633);
+    --mat-tab-active-focus-label-text-color: var(--sol-primary, #006633);
+    --mat-tab-active-hover-label-text-color: var(--sol-primary, #006633);
+    --mat-tab-active-indicator-color: var(--sol-primary, #006633);
+    --mat-tab-active-ripple-color: var(--sol-primary, #006633);
+    --mat-tab-label-text-size: 14px;
+    --mat-tab-label-text-weight: 700;
+}
+
+.mat-mdc-tab-body-content {
+    padding: 17.5px;
+}
+
 // Override slide toggle
 .mat-mdc-slide-toggle.mat-primary {
     --mdc-switch-selected-track-color: var(--sol-primary, #006633);
