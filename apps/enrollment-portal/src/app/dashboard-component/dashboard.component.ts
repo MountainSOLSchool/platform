@@ -57,6 +57,13 @@ Chart.register(...registerables);
                 width: fit-content;
                 padding: 1rem;
             }
+            .nav-card a {
+                color: var(--sol-primary, #006633);
+                text-decoration: none;
+            }
+            .nav-card a:hover {
+                text-decoration: underline;
+            }
         `,
     ],
 })
