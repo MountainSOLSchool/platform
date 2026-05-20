@@ -66,6 +66,15 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
                 width: 100%;
                 margin-top: 0.5rem;
             }
+            .sol-login-info a,
+            .sol-login-warn a {
+                color: var(--sol-primary, #006633);
+                text-decoration: none;
+            }
+            .sol-login-info a:hover,
+            .sol-login-warn a:hover {
+                text-decoration: underline;
+            }
         `,
     ],
 })
