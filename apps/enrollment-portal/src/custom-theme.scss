@@ -31,6 +31,20 @@ body {
     font-family: 'EB Garamond', Georgia, serif !important;
 }
 
+// Match prior PrimeNG button typography: 14px / 400.
+// Material's default reads --mat-button-{variant}-label-text-{size,weight}, falling
+// back to .875rem / 500 — at our 14px root that renders as 12.25px / 500.
+body {
+    --mat-button-protected-label-text-size: 14px;
+    --mat-button-protected-label-text-weight: 400;
+    --mat-button-filled-label-text-size: 14px;
+    --mat-button-filled-label-text-weight: 400;
+    --mat-button-outlined-label-text-size: 14px;
+    --mat-button-outlined-label-text-weight: 400;
+    --mat-button-text-label-text-size: 14px;
+    --mat-button-text-label-text-weight: 400;
+}
+
 // Override Material button styles to match Mountain SOL branding.
 // Angular Material 21 uses M3 tokens with the --mat-{variant}-button-* prefix,
 // not the older --mdc-* token names. We set both for safety.
