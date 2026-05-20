@@ -90,3 +90,10 @@
 .sol-modal-card mat-card-actions {
     gap: 0.5rem;
 }
+:host ::ng-deep mat-card-content a {
+    color: var(--sol-primary, #006633);
+    text-decoration: none;
+}
+:host ::ng-deep mat-card-content a:hover {
+    text-decoration: underline;
+}
