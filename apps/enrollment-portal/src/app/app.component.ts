@@ -21,6 +21,16 @@ import { RouterModule } from '@angular/router';
                 >
             </p>
         </footer>`,
-    styles: [``],
+    styles: [
+        `
+            footer a {
+                color: var(--sol-primary, #006633);
+                text-decoration: none;
+            }
+            footer a:hover {
+                text-decoration: underline;
+            }
+        `,
+    ],
 })
 export class AppComponent {}
