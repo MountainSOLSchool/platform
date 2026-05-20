@@ -108,7 +108,7 @@
         "braintree-web": "^3.124.0",
         "braintree-web-drop-in": "^1.45.1",
         "chart.js": "^4.3.2",
-        "firebase": "^11.3.1",
+        "firebase": "^12.13.0",
         "firebase-admin": "^13.1.0",
         "firebase-functions": "^7.0.2",
         "marked": "^18.0.3",
