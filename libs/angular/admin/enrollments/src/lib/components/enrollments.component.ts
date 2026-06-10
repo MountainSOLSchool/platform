@@ -67,6 +67,7 @@ export class EnrollmentsComponent {
                 .map((enrollment) => ({
                     ...enrollment,
                     date: enrollment.timestamp._seconds * 1000,
+                    classNamesDisplay: enrollment.classNames?.join(', ') ?? '',
                     ...enrollment.discounts
                         .map((discount, i) => ({
                             [`discount${i}_description`]: discount.description,
@@ -96,6 +97,7 @@ export class EnrollmentsComponent {
         map((longest) => [
             { field: 'studentName', header: 'Student Name' },
             { field: 'date', header: 'Date' },
+            { field: 'classNamesDisplay', header: 'Classes' },
             { field: 'finalCost', header: 'Final Cost' },
             { field: 'status', header: 'Status' },
             ...longest.map((_, i) => ({
