@@ -186,6 +186,39 @@ describe('Admin Enrollments', () => {
             expect(enrollment?.classNames).toHaveLength(2);
         });
 
+        // Regression: legacy records store the deprecated `classIds` array and
+        // no `classes` field. The repository still sets a `classes` key (value
+        // undefined), so a naive `'classes' in enrollment` check returned
+        // undefined and crashed the whole endpoint with a 500.
+        it('should not 500 on a legacy classIds-only enrollment', async () => {
+            await setFirestoreDoc('enrollment', 'legacy-classids', {
+                userId: nonAdminUser.uid,
+                studentName: 'Legacy Student',
+                contactEmail: 'parent@test.com',
+                studentId: 'student-legacy',
+                finalCost: 100,
+                discountIds: [],
+                discounts: [],
+                classIds: ['legacy-class-a', 'legacy-class-b'],
+                additionalOptionIdsByClassId: {},
+                status: 'enrolled',
+                transactionId: 'emulator-mock-txn',
+                timestamp: new FirestoreTimestamp(new Date()),
+            });
+
+            const result = await callFunction<void, SemesterEnrollment[]>({
+                functionName: 'adminEnrollments',
+                idToken: adminUser.idToken,
+            });
+
+            expect(result.status).toBe(200);
+            const enrollment = findEnrollment(result.data, 'legacy-classids');
+            expect(enrollment?.classNames).toEqual([
+                'legacy-class-a',
+                'legacy-class-b',
+            ]);
+        });
+
         it('should fall back to the class id when a class is missing', async () => {
             await setFirestoreDoc(
                 'enrollment',

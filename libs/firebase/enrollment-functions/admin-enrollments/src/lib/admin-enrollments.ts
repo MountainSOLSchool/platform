@@ -24,9 +24,17 @@ export const adminEnrollments = Functions.endpoint
 function classRefsOf(
     enrollment: SemesterEnrollment
 ): Array<{ id: string; semesterId: string }> {
-    return 'classes' in enrollment
-        ? enrollment.classes
-        : enrollment.classIds.map((id) => ({ id, semesterId: '' }));
+    // The repository always sets a `classes` key (value undefined for legacy
+    // records), so check the value rather than key presence, and fall back to
+    // the deprecated `classIds` array.
+    const classes = (
+        enrollment as { classes?: Array<{ id: string; semesterId: string }> }
+    ).classes;
+    if (classes?.length) {
+        return classes;
+    }
+    const classIds = (enrollment as { classIds?: Array<string> }).classIds;
+    return (classIds ?? []).map((id) => ({ id, semesterId: '' }));
 }
 
 /**
