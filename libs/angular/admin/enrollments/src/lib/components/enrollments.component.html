@@ -38,6 +38,9 @@
             <th pSortableColumn="date">
                 Date <p-sortIcon field="date"></p-sortIcon>
             </th>
+            <th pSortableColumn="classNamesDisplay">
+                Classes <p-sortIcon field="classNamesDisplay"></p-sortIcon>
+            </th>
             <th pSortableColumn="finalCost">
                 Final Cost <p-sortIcon field="finalCost"></p-sortIcon>
             </th>
@@ -69,6 +72,7 @@
         <tr [style.opacity]="enrollment.status === 'revoked' ? '0.6' : '1'">
             <td>{{ enrollment.studentName }}</td>
             <td>{{ enrollment.date | date }}</td>
+            <td>{{ enrollment.classNamesDisplay }}</td>
             <td>{{ enrollment.finalCost | currency }}</td>
             <td>
                 <span

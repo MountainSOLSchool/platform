@@ -10,6 +10,8 @@ export type SemesterEnrollment = {
     enrollmentType?: 'standard' | 'addendum';
     originalEnrollmentId?: string;
     additionalOptionIdsByClassId?: Record<string, Array<string>>;
+    /** Human-readable titles of the enrolled classes, resolved server-side. */
+    classNames?: Array<string>;
 } & (
     | {
           /** @deprecated Only old records have unqualified classes */
