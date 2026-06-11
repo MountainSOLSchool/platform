@@ -99,6 +99,7 @@
                     <button
                         mat-stroked-button
                         color="warn"
+                        style="white-space: nowrap"
                         [disabled]="revoking() === enrollment.id"
                         (click)="confirmRevoke(enrollment)"
                     >
