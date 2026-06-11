@@ -31,7 +31,7 @@ export const enrollAddendum = Functions.endpoint
         const user = await AuthUtility.getUserFromRequest(request, response);
 
         if (!user) {
-            response.status(401).send({ error: 'User not found' });
+            // getUserFromRequest already sent a 403.
             return;
         }
 
@@ -301,10 +301,9 @@ export const enrollAddendum = Functions.endpoint
                         if (!('classes' in originalEnrollment)) {
                             throw new Error('Legacy format not supported');
                         }
-                        const originalClass =
-                            originalEnrollment.classes.find(
-                                (c) => c.id === classId
-                            );
+                        const originalClass = originalEnrollment.classes.find(
+                            (c) => c.id === classId
+                        );
                         if (!originalClass) {
                             throw new Error(
                                 `Class ${classId} not found in original enrollment`
@@ -327,8 +326,7 @@ export const enrollAddendum = Functions.endpoint
             ];
             const failedClasses = allResults
                 .filter(
-                    (r): r is PromiseRejectedResult =>
-                        r.status === 'rejected'
+                    (r): r is PromiseRejectedResult => r.status === 'rejected'
                 )
                 .map((r) => r.reason?.message ?? 'Unknown error');
 
@@ -348,8 +346,7 @@ export const enrollAddendum = Functions.endpoint
             await ClassEnrollmentRepository.create({
                 ...enrollmentRecord,
                 relatedId: pendingEnrollmentId,
-                failures:
-                    errors?.deepErrors().map((e) => e.message) ?? [],
+                failures: errors?.deepErrors().map((e) => e.message) ?? [],
                 status: 'failed',
             });
             response.send({

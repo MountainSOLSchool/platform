@@ -8,21 +8,21 @@ export const paymentToken = Functions.endpoint
         anonymous?: boolean;
     }>(async (request, response, secrets, strings) => {
         const { anonymous = false } = request.body.data || {};
-        
+
         const braintree = new Braintree(secrets, strings);
-        
+
         if (anonymous) {
             const token = await braintree.getAnonymousClientToken();
             response.send(token);
             return;
         }
-        
+
         const user = await AuthUtility.getUserFromRequest(request, response);
         if (!user) {
-            response.status(401).send({ error: 'Unauthorized' });
+            // getUserFromRequest already sent a 403.
             return;
         }
-        
+
         const token = await braintree.getClientToken(user);
         response.send(token);
     });
