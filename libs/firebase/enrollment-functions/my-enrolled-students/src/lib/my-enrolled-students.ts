@@ -8,7 +8,7 @@ export const myEnrolledStudents = Functions.endpoint.handle(
         const user = await AuthUtility.getUserFromRequest(request, response);
 
         if (!user) {
-            response.send({ students: [] });
+            // getUserFromRequest already sent a 403.
             return;
         }
 
@@ -32,30 +32,38 @@ export const myEnrolledStudents = Functions.endpoint.handle(
             .filter(
                 (student): student is NonNullable<typeof student> => !!student
             )
-            .map(({ id, first_name, last_name, birth_date, completed_units }) => {
-                const currentClasses = enrollmentsByStudent
-                    .filter((e: SemesterEnrollment) => e.studentId === id)
-                    .flatMap((e: SemesterEnrollment) =>
-                        'classes' in e && Array.isArray(e.classes)
-                            ? e.classes
-                            : []
-                    )
-                    .filter(
-                        (c): c is { id: string; semesterId: string } =>
-                            c != null && typeof c.id === 'string'
-                    );
-
-                return {
+            .map(
+                ({
                     id,
-                    name: `${first_name} ${last_name}`,
-                    birthday: birth_date,
-                    completedUnitsCount: completed_units?.length ?? 0,
-                    currentClasses: currentClasses.map((c) => ({
-                        id: c.id,
-                        semesterId: c.semesterId,
-                    })),
-                };
-            });
+                    first_name,
+                    last_name,
+                    birth_date,
+                    completed_units,
+                }) => {
+                    const currentClasses = enrollmentsByStudent
+                        .filter((e: SemesterEnrollment) => e.studentId === id)
+                        .flatMap((e: SemesterEnrollment) =>
+                            'classes' in e && Array.isArray(e.classes)
+                                ? e.classes
+                                : []
+                        )
+                        .filter(
+                            (c): c is { id: string; semesterId: string } =>
+                                c != null && typeof c.id === 'string'
+                        );
+
+                    return {
+                        id,
+                        name: `${first_name} ${last_name}`,
+                        birthday: birth_date,
+                        completedUnitsCount: completed_units?.length ?? 0,
+                        currentClasses: currentClasses.map((c) => ({
+                            id: c.id,
+                            semesterId: c.semesterId,
+                        })),
+                    };
+                }
+            );
 
         response.send({ students });
     }

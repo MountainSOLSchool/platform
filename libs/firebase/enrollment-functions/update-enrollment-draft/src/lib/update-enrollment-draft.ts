@@ -9,7 +9,7 @@ export const updateEnrollmentDraft = Functions.endpoint.handle<
     const user = await AuthUtility.getUserFromRequest(request, response);
 
     if (!user) {
-        response.status(401).send({ error: 'User not found' });
+        // getUserFromRequest already sent a 403.
         return;
     }
 

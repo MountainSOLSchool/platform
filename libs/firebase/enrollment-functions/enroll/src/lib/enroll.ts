@@ -35,7 +35,7 @@ export const enroll = Functions.endpoint
         const user = await AuthUtility.getUserFromRequest(request, response);
 
         if (!user) {
-            response.status(401).send({ error: 'User not found' });
+            // getUserFromRequest already sent a 403.
             return;
         }
 
@@ -229,8 +229,7 @@ export const enroll = Functions.endpoint
             await ClassEnrollmentRepository.create({
                 ...enrollmentRecord,
                 relatedId: studentEnrollmentId,
-                failures:
-                    errors?.deepErrors().map((e) => e.message) ?? [],
+                failures: errors?.deepErrors().map((e) => e.message) ?? [],
                 releaseSignatures,
                 status: 'failed',
             });
