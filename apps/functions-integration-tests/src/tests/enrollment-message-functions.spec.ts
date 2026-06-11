@@ -28,10 +28,7 @@ describe('Enrollment Message Functions', () => {
         await clearAuthEmulator();
         await clearFirestoreEmulator();
 
-        adminUser = await createTestUser(
-            ADMIN_USER.email,
-            ADMIN_USER.password
-        );
+        adminUser = await createTestUser(ADMIN_USER.email, ADMIN_USER.password);
         nonAdminUser = await createTestUser(
             NON_ADMIN_USER.email,
             NON_ADMIN_USER.password
@@ -157,14 +154,13 @@ describe('Enrollment Message Functions', () => {
             expect(result.status).toBe(403);
         });
 
-        // Returns 500 instead of 403 due to missing await in AuthUtility.validateRole
         it('should reject non-admin users', async () => {
             const result = await callFunction<void>({
                 functionName: 'getEnrollmentMessagesAdmin',
                 idToken: nonAdminUser.idToken,
             });
 
-            expect([403, 500]).toContain(result.status);
+            expect(result.status).toBe(403);
         });
 
         it('should return ALL messages for admin', async () => {
@@ -208,7 +204,6 @@ describe('Enrollment Message Functions', () => {
             expect(result.status).toBe(403);
         });
 
-        // Returns 500 instead of 403 due to missing await in AuthUtility.validateRole
         it('should reject non-admin users', async () => {
             const result = await callFunction<UpdateEnrollmentMessagesRequest>({
                 functionName: 'updateEnrollmentMessages',
@@ -216,7 +211,7 @@ describe('Enrollment Message Functions', () => {
                 idToken: nonAdminUser.idToken,
             });
 
-            expect([403, 500]).toContain(result.status);
+            expect(result.status).toBe(403);
         });
 
         it('should replace all messages atomically', async () => {

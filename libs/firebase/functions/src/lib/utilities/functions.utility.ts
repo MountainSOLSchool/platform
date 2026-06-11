@@ -113,9 +113,15 @@ class FunctionBuilder<SecretNames extends string, StringNames extends string> {
             },
             async (request, response) => {
                 corsMiddleware(request, response, async () => {
-                    this.roles.forEach((role) => {
-                        AuthUtility.validateRole(request, response, role);
-                    });
+                    // Await each role check before running the handler. A failed
+                    // check sends a 403 (flipping headersSent), so bail out
+                    // rather than letting the handler race ahead and leak data.
+                    for (const role of this.roles) {
+                        await AuthUtility.validateRole(request, response, role);
+                        if (response.headersSent) {
+                            return;
+                        }
+                    }
                     handler(
                         request as Parameters<typeof handler>[0],
                         {

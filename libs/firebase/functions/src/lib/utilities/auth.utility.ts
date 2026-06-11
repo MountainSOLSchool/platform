@@ -14,27 +14,25 @@ export class AuthUtility {
         request: Request,
         response: express.Response,
         role: Role
-    ) {
+    ): Promise<void> {
         switch (role) {
-            case Role.Admin:
-                AuthUtility.validateIsAdmin(request, response);
-                break;
             case Role.MedicAdmin:
-                AuthUtility.validateIsMedicAdmin(request, response);
-                break;
+                return AuthUtility.validateIsMedicAdmin(request, response);
+            case Role.Admin:
+            default:
+                return AuthUtility.validateIsAdmin(request, response);
         }
     }
     public static async validateIsAdmin(req: Request, res: express.Response) {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
-            res.status(403).send('Unauthorized');
+            // validateFirebaseIdToken already sent a 403; sending again throws
+            // ERR_HTTP_HEADERS_SENT.
             return;
-        } else {
-            const isAdmin = await AuthUtility.isAdmin(decoded.uid);
-
-            if (!isAdmin) {
-                res.status(403).send();
-            }
+        }
+        const isAdmin = await AuthUtility.isAdmin(decoded.uid);
+        if (!isAdmin) {
+            res.status(403).send();
         }
     }
 
@@ -53,13 +51,13 @@ export class AuthUtility {
     ) {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
-            res.status(403).send('Unauthorized');
+            // validateFirebaseIdToken already sent a 403; sending again throws
+            // ERR_HTTP_HEADERS_SENT.
             return;
-        } else {
-            const isMedicAdmin = await AuthUtility.isMedicAdmin(decoded.uid);
-            if (!isMedicAdmin) {
-                res.status(403).send();
-            }
+        }
+        const isMedicAdmin = await AuthUtility.isMedicAdmin(decoded.uid);
+        if (!isMedicAdmin) {
+            res.status(403).send();
         }
     }
 
@@ -106,11 +104,11 @@ export class AuthUtility {
     ): Promise<admin.auth.UserRecord | void> {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
-            res.status(403).send('Unauthorized');
+            // validateFirebaseIdToken already sent a 403; sending again throws
+            // ERR_HTTP_HEADERS_SENT.
             return;
-        } else {
-            return await admin.auth().getUser(decoded.uid);
         }
+        return await admin.auth().getUser(decoded.uid);
     }
 
     public static async getUser(uid: string) {

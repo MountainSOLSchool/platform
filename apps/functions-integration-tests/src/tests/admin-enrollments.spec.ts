@@ -113,12 +113,24 @@ describe('Admin Enrollments', () => {
             expect(result.status).toBe(403);
         });
 
-        // NOTE: A wrong-role (authenticated non-admin) assertion is
-        // intentionally omitted. The shared `Functions.handle` wrapper does
-        // not await the role check before running the handler, so a non-admin
-        // request races between a 403 and a 200 with data. That non-awaited
-        // role guard is a framework-level concern tracked separately; asserting
-        // on it here is inherently flaky.
+        // Regression: the shared Functions.handle wrapper must await the role
+        // check before running the handler. Otherwise a non-admin races to a
+        // 200 with real enrollment data before the 403 is sent.
+        it('should reject non-admin users without leaking data', async () => {
+            await setFirestoreDoc(
+                'enrollment',
+                'leak-check',
+                makeEnrollmentDoc(nonAdminUser.uid)
+            );
+
+            const result = await callFunction<void, SemesterEnrollment[]>({
+                functionName: 'adminEnrollments',
+                idToken: nonAdminUser.idToken,
+            });
+
+            expect(result.status).toBe(403);
+            expect(result.data).toBeUndefined();
+        });
     });
 
     describe('Class name resolution', () => {
