@@ -421,6 +421,161 @@ export class EnrollmentPage {
         );
     }
 
+    /**
+     * Sign in via the standalone /user/login page (not the in-flow Account
+     * step). Used by the addendum flow, where the addendum route auto-completes
+     * the Account step and so never shows a login form, yet the
+     * getEnrollmentForAddendum function requires an authenticated owner.
+     *
+     * The login form is the same `sol-login` component used in-flow
+     * (login.component.html:63-110): input#email, input[name="password"], and a
+     * "Sign In" button. After a successful sign-in the form's "Sign In" submit
+     * button is removed, so we assert it disappears as the success signal.
+     */
+    async loginStandalone(email: string, password: string): Promise<void> {
+        await this.page.goto('/user/login');
+        await this.page.locator('sol-login input#email').fill(email);
+        await this.page
+            .locator('sol-login input[name="password"]')
+            .fill(password);
+        const signIn = this.page.getByRole('button', { name: 'Sign In' });
+        await signIn.click();
+        await expect(signIn).toBeHidden();
+    }
+
+    /**
+     * Apply a discount code on the Confirm Enrollment step.
+     *
+     * confirmation.component.html:58-85 renders a "Code" mat-form-field
+     * (input#discountCode) plus an "Apply" button. We type the code and click
+     * Apply.
+     */
+    async applyDiscountCode(code: string): Promise<void> {
+        await this.page.locator('input#discountCode').fill(code);
+        await this.page.getByRole('button', { name: /^apply$/i }).click();
+    }
+
+    /**
+     * Assert a discount code was accepted: confirmation.component.html:97-111
+     * renders a `.valid-chip` mat-chip showing "{CODE} (-{amount})". We assert
+     * the chip with the code text is visible.
+     */
+    async expectDiscountApplied(code: string): Promise<void> {
+        await expect(
+            this.page.locator('.valid-chip').filter({ hasText: code })
+        ).toBeVisible();
+    }
+
+    /**
+     * Assert the confirmation Total card shows the given final-total currency
+     * string. confirmation.component.html:224-233 renders
+     * "Final Total: {finalTotal | currency}" inside a <b>. We match the text on
+     * the page (currency pipe -> e.g. "$90.00").
+     */
+    async expectFinalTotal(currencyText: string): Promise<void> {
+        await expect(
+            this.page.getByText(`Final Total: ${currencyText}`)
+        ).toBeVisible();
+    }
+
+    /**
+     * Choose the single pre-seeded existing student on the Student Selection
+     * step (select-student.component.html). Existing students render a
+     * `sol-student-selection-card` titled with the student's name; its action
+     * button is "Select" / "Selected" (select-student-card.component.html:54-71).
+     */
+    async chooseExistingStudent(name: string): Promise<void> {
+        const card = this.page
+            .locator('sol-student-selection-card')
+            .filter({ hasText: name });
+        await expect(card).toBeVisible();
+        await card.getByRole('button', { name: /^select$/i }).click();
+        await expect(
+            card.getByRole('button', { name: /^selected$/i })
+        ).toBeVisible();
+    }
+
+    /**
+     * Assert the "information is out of date" review prompt is shown.
+     *
+     * When a student's info is >2yr stale, the Student Info step wraps its
+     * content in sol-acknowledge-out-of-date, which renders a "Review your
+     * student's information" card with a "Start reviewing" button
+     * (acknowledge-out-of-date.component.ts:19,33) until acknowledged.
+     */
+    async expectOutOfDateReview(): Promise<void> {
+        await expect(
+            this.page.getByRole('heading', {
+                name: "Review your student's information",
+            })
+        ).toBeVisible();
+        await expect(
+            this.page.getByRole('button', { name: 'Start reviewing' })
+        ).toBeVisible();
+    }
+
+    /**
+     * Acknowledge the out-of-date prompt and assert the per-section
+     * confirm-accuracy checkboxes appear. After clicking "Start reviewing" the
+     * sol-confirm-accuracy blocks render checkboxes labelled "I have reviewed
+     * this section and confirm it is up-to-date" (confirm-accuracy.component.ts:20).
+     */
+    async startReviewingAndExpectConfirmAccuracy(): Promise<void> {
+        await this.page
+            .getByRole('button', { name: 'Start reviewing' })
+            .click();
+        await expect(
+            this.page
+                .getByRole('checkbox', {
+                    name: 'I have reviewed this section and confirm it is up-to-date',
+                })
+                .first()
+        ).toBeVisible();
+    }
+
+    /**
+     * Navigate directly to the addendum route for an existing enrollment.
+     * Route: class-enrollment.ts:7 ('addendum/:enrollmentId').
+     */
+    async gotoAddendum(enrollmentId: string): Promise<void> {
+        await this.page.goto(`/classes/enrollment/addendum/${enrollmentId}`);
+    }
+
+    /**
+     * Assert the addendum mode loaded: the info banner explaining locked
+     * already-enrolled classes is shown (enrollment-workflow.component.html:16-23),
+     * and the seeded class is shown as selected on the Class Selection step.
+     */
+    async expectAddendumLocked(className: string): Promise<void> {
+        await expect(
+            this.page.getByText(
+                'You are adding to an existing enrollment. Already-enrolled classes are shown as selected and cannot be removed.'
+            )
+        ).toBeVisible();
+
+        // A locked (already-enrolled) class renders an "Enrolled…" button and
+        // exposes no remove/deselect control. If the class has add-ons that are
+        // NOT part of the original enrollment the button reads "Enrolled — Add
+        // Options" and stays enabled (to add options); with no unlocked options
+        // it reads "Enrolled" and is disabled
+        // (class-card.component.html:165-191). Either way it is NOT a
+        // "Select Class" / removable "Selected" control, which is the lock
+        // guarantee we assert.
+        const card = this.page
+            .locator('sol-class-card')
+            .filter({
+                has: this.page.getByRole('heading', { name: className }),
+            });
+        await expect(card).toBeVisible();
+        await expect(
+            card.getByRole('button', { name: /^enrolled/i })
+        ).toBeVisible();
+        // The removable "Select Class" affordance must be absent for a locked class.
+        await expect(
+            card.getByRole('button', { name: /select class/i })
+        ).toHaveCount(0);
+    }
+
     // ─── helpers ──────────────────────────────────────────────────────────────
 
     /** Open a collapsed mat-expansion-panel by its header title text. */

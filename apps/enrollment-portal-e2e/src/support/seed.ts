@@ -20,6 +20,8 @@
  *   - discount DBO:        libs/firebase/enrollment-functions/create-discount/.../create-discount.ts
  */
 
+import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { dirname, join } from 'path';
 import {
     EMULATOR_CONFIG,
     FirestoreRef,
@@ -29,6 +31,7 @@ import {
     clearAuthEmulator,
     clearFirestoreEmulator,
     createTestUser,
+    deleteFirestoreCollection,
     setFirestoreDoc,
 } from './emulator';
 
@@ -45,6 +48,15 @@ export const SEED = {
     /** FREE, open, under-capacity class. cost 0 => enroll() no-payment path. */
     freeClassId: 'e2e-free-class',
     freeClassName: 'E2E Free Class',
+
+    /**
+     * PAID ($100) open class, no add-ons. Lets the discount-code flow assert a
+     * meaningful (non-$0) total drop. Cannot complete a real enrollment
+     * hermetically (Braintree is required when finalTotal > 0).
+     */
+    paidClassId: 'e2e-paid-class',
+    paidClassName: 'E2E Paid Class',
+    paidClassCost: 100,
 
     /** PAID add-on on the free class (subcollection additional_options doc). */
     paidOptionId: 'e2e-paid-option',
@@ -110,6 +122,18 @@ export async function clearAll(): Promise<void> {
 }
 
 /**
+ * Delete all enrollment_draft docs. The enrollment flow autosaves a per-user
+ * draft (update-enrollment-draft) as the form is filled; on the next sign-in it
+ * is reloaded and shows a "previous session" banner that changes the Student
+ * Selection UI. Since these suites reuse a small set of fixed users across
+ * tests, clear drafts before each test so every flow starts clean.
+ * Draft doc location: enrollment_draft/{userId} (_deleteEnrollmentDraft.ts).
+ */
+export async function clearEnrollmentDrafts(): Promise<void> {
+    await deleteFirestoreCollection('enrollment_draft');
+}
+
+/**
  * Seed the active semester, a FREE open under-capacity class, a PAID additional
  * option on that class, and one active discount code. After this, the class is
  * returned by currentSemester / availableEnrollmentClasses and enroll() takes
@@ -132,6 +156,18 @@ export async function seedBaseFixtures(): Promise<void> {
         makeClassDoc({
             name: SEED.freeClassName,
             cost: 0,
+            students: [],
+        })
+    );
+
+    // PAID class (cost 100), open for registration, under capacity. Drives the
+    // discount-code flow where a 10% code is a meaningful $100 -> $90 drop.
+    await setFirestoreDoc(
+        `semesters/${SEED.semesterId}/classes`,
+        SEED.paidClassId,
+        makeClassDoc({
+            name: SEED.paidClassName,
+            cost: SEED.paidClassCost,
             students: [],
         })
     );
@@ -263,4 +299,28 @@ export async function seedAdmin(user: TestUser): Promise<void> {
 /** Convenience: a student reference for building roster fixtures. */
 export function studentRef(studentId: string): FirestoreRef {
     return new FirestoreRef(`students/${studentId}`);
+}
+
+// ─── Addendum enrollment id handoff (global-setup -> spec) ───────────────────
+//
+// seedExistingEnrollment() generates an auto-id we can't know statically, and
+// the addendum route needs it (/classes/enrollment/addendum/:enrollmentId).
+// global-setup writes it to a gitignored file under test-results/ which the
+// addendum spec reads back, keeping the id out of source while still shared.
+
+const ADDENDUM_ID_FILE = join(
+    __dirname,
+    '..',
+    '..',
+    'test-results',
+    'addendum-enrollment-id.txt'
+);
+
+export function writeAddendumEnrollmentId(id: string): void {
+    mkdirSync(dirname(ADDENDUM_ID_FILE), { recursive: true });
+    writeFileSync(ADDENDUM_ID_FILE, id, 'utf8');
+}
+
+export function readAddendumEnrollmentId(): string {
+    return readFileSync(ADDENDUM_ID_FILE, 'utf8').trim();
 }

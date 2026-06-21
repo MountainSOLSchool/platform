@@ -218,6 +218,20 @@ export async function listFirestoreCollection(
     }));
 }
 
+/** Delete every document in a (top-level) collection via the REST API. */
+export async function deleteFirestoreCollection(path: string): Promise<void> {
+    const docs = await listFirestoreCollection(path);
+    await Promise.all(
+        docs.map(({ id }) => {
+            const url = `${FIRESTORE_URL}/v1/projects/${EMULATOR_CONFIG.projectId}/databases/(default)/documents/${path}/${id}`;
+            return fetch(url, {
+                method: 'DELETE',
+                headers: { Authorization: 'Bearer owner' },
+            });
+        })
+    );
+}
+
 // ─── Firestore field encoding/decoding ──────────────────────────────────────
 
 function convertToFirestoreFields(
