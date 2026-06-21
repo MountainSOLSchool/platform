@@ -143,6 +143,7 @@
         "@nx/react": "22.7.2",
         "@nx/storybook": "22.7.2",
         "@nx/workspace": "22.7.2",
+        "@playwright/test": "^1.61.0",
         "@schematics/angular": "21.2.9",
         "@storybook/addon-a11y": "^10.2.8",
         "@storybook/angular": "^10.2.8",
@@ -190,6 +191,7 @@
         "jest-environment-jsdom": "30.4.1",
         "jest-environment-node": "^30.4.1",
         "jest-preset-angular": "16.0.0",
+        "jest-util": "30.4.1",
         "jsonc-eslint-parser": "^2.1.0",
         "lint-staged": "^15.0.2",
         "ng-packagr": "21.2.3",
@@ -202,7 +204,6 @@
         "storybook": "^10.2.8",
         "ts-jest": "29.4.6",
         "ts-node": "10.9.1",
-        "typescript": "5.9.3",
-        "jest-util": "30.4.1"
+        "typescript": "5.9.3"
     }
 }

@@ -17,7 +17,7 @@ import { environment } from './environments/environment';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideFirebaseApp } from '@angular/fire/app';
 import { getFunctions, provideFunctions } from '@angular/fire/functions';
-import { getAuth, provideAuth } from '@angular/fire/auth';
+import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
 import {
     provideFireAuth,
     provideFireConfig,
@@ -40,7 +40,15 @@ bootstrapApplication(AppComponent, {
         }),
         provideFirebaseApp(getSolApp),
         provideFunctions(() => getFunctions()),
-        provideAuth(() => getAuth()),
+        provideAuth(() => {
+            const auth = getAuth();
+            if (environment.useEmulators) {
+                connectAuthEmulator(auth, 'http://localhost:9099', {
+                    disableWarnings: true,
+                });
+            }
+            return auth;
+        }),
         provideFireAuth(),
         provideFireFunctions(),
         provideFireConfig(),

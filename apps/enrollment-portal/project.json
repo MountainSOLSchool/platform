@@ -62,6 +62,21 @@
                     "sourceMap": true,
                     "namedChunks": true,
                     "baseHref": "/"
+                },
+                "emulator": {
+                    "buildOptimizer": false,
+                    "optimization": false,
+                    "vendorChunk": true,
+                    "extractLicenses": false,
+                    "sourceMap": true,
+                    "namedChunks": true,
+                    "baseHref": "/",
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/enrollment-portal/src/environments/environment.ts",
+                            "with": "apps/enrollment-portal/src/environments/environment.emulator.ts"
+                        }
+                    ]
                 }
             },
             "defaultConfiguration": "production"
@@ -74,6 +89,10 @@
                 },
                 "development": {
                     "buildTarget": "enrollment-portal:build:development",
+                    "proxyConfig": "apps/enrollment-portal/proxy.conf.json"
+                },
+                "emulator": {
+                    "buildTarget": "enrollment-portal:build:emulator",
                     "proxyConfig": "apps/enrollment-portal/proxy.conf.json"
                 }
             },
