@@ -41,6 +41,25 @@ jobs:
             - name: Lint affected projects
               run: npx nx affected -t lint --parallel=4
 
+    unit-tests:
+        name: Unit Tests
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22'
+                  cache: 'npm'
+            - name: Derive affected SHAs
+              uses: nrwl/nx-set-shas@v4
+            - run: npm ci
+            - name: Test affected projects
+              run: npx nx affected -t test --exclude=functions-integration-tests --parallel=4
+
     storybook:
         name: Storybook Build & Tests
         runs-on: ubuntu-latest
