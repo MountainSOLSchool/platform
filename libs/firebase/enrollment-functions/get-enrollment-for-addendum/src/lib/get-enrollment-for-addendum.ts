@@ -8,7 +8,7 @@ export const getEnrollmentForAddendum = Functions.endpoint.handle<{
     const user = await AuthUtility.getUserFromRequest(request, response);
 
     if (!user) {
-        response.status(401).send({ error: 'User not found' });
+        // getUserFromRequest already sent a 403.
         return;
     }
 
@@ -32,9 +32,9 @@ export const getEnrollmentForAddendum = Functions.endpoint.handle<{
     }
 
     if (!('classes' in enrollment)) {
-        response
-            .status(400)
-            .send({ error: 'Legacy enrollment format not supported for addendums' });
+        response.status(400).send({
+            error: 'Legacy enrollment format not supported for addendums',
+        });
         return;
     }
 
@@ -50,21 +50,20 @@ export const getEnrollmentForAddendum = Functions.endpoint.handle<{
     );
 
     if (openSemesterIds.length === 0) {
-        response
-            .status(400)
-            .send({ error: 'No semesters in this enrollment are still open for registration' });
+        response.status(400).send({
+            error: 'No semesters in this enrollment are still open for registration',
+        });
         return;
     }
 
     // Get all prior addendums for this enrollment to know total existing selections
-    const allAddendums = await ClassEnrollmentRepository.getAddendumsByOriginalId(enrollmentId);
+    const allAddendums =
+        await ClassEnrollmentRepository.getAddendumsByOriginalId(enrollmentId);
 
     // Combine all classes and options from original + all addendums
     const allEnrolledClasses = [
         ...enrollment.classes,
-        ...allAddendums.flatMap((a) =>
-            'classes' in a ? a.classes : []
-        ),
+        ...allAddendums.flatMap((a) => ('classes' in a ? a.classes : [])),
     ];
     const allAdditionalOptionIdsByClassId: Record<string, Array<string>> = {};
 

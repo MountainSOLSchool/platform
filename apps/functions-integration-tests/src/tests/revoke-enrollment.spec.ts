@@ -80,10 +80,7 @@ describe('Revoke Enrollment', () => {
         await clearAuthEmulator();
         await clearFirestoreEmulator();
 
-        adminUser = await createTestUser(
-            ADMIN_USER.email,
-            ADMIN_USER.password
-        );
+        adminUser = await createTestUser(ADMIN_USER.email, ADMIN_USER.password);
         nonAdminUser = await createTestUser(
             NON_ADMIN_USER.email,
             NON_ADMIN_USER.password
@@ -117,16 +114,13 @@ describe('Revoke Enrollment', () => {
             expect(result.status).toBe(403);
         });
 
-        // Role validation runs without await, so the handler may execute
-        // before the role check rejects. With no matching enrollment doc,
-        // the handler returns 404. Accept any non-200 status.
         it('should reject non-admin users', async () => {
             const result = await callFunction<RevokeEnrollmentRequest>({
                 functionName: 'revokeEnrollment',
                 data: { enrollmentId: 'some-id' },
                 idToken: nonAdminUser.idToken,
             });
-            expect(result.status).not.toBe(200);
+            expect(result.status).toBe(403);
         });
     });
 
@@ -331,9 +325,7 @@ describe('Revoke Enrollment', () => {
                 functionName: 'adminEnrollments',
                 idToken: adminUser.idToken,
             });
-            const enrollment = after.data!.find(
-                (e) => e.id === 'full-via-ids'
-            );
+            const enrollment = after.data!.find((e) => e.id === 'full-via-ids');
             expect(enrollment?.status).toBe('revoked');
         });
     });
@@ -450,9 +442,7 @@ describe('Revoke Enrollment', () => {
             // Should have 2 remaining classes
             const classes = 'classes' in enrollment! ? enrollment!.classes : [];
             expect(classes).toHaveLength(2);
-            const classIds = classes.map(
-                (c: { id: string }) => c.id
-            );
+            const classIds = classes.map((c: { id: string }) => c.id);
             expect(classIds).toContain('class-x');
             expect(classIds).toContain('class-z');
             expect(classIds).not.toContain('class-y');
@@ -470,9 +460,7 @@ describe('Revoke Enrollment', () => {
                 'custom-refund',
                 makeEnrollmentDoc(nonAdminUser.uid, {
                     finalCost: 200,
-                    classes: [
-                        { id: 'custom-class', semesterId: SEMESTER_ID },
-                    ],
+                    classes: [{ id: 'custom-class', semesterId: SEMESTER_ID }],
                 })
             );
 
@@ -685,9 +673,7 @@ describe('Revoke Enrollment', () => {
                 'preview-all',
                 makeEnrollmentDoc(nonAdminUser.uid, {
                     finalCost: 150,
-                    classes: [
-                        { id: 'all-a', semesterId: SEMESTER_ID },
-                    ],
+                    classes: [{ id: 'all-a', semesterId: SEMESTER_ID }],
                 })
             );
 

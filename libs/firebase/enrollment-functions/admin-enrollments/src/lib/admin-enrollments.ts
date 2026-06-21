@@ -1,5 +1,7 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { ClassEnrollmentRepository } from '@sol/classes/enrollment/repository';
+import { _getClasses } from '@sol/firebase/enrollment-functions/shared';
+import { SemesterEnrollment } from '@sol/classes/domain';
 
 export const adminEnrollments = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -7,5 +9,62 @@ export const adminEnrollments = Functions.endpoint
         const enrollments =
             await ClassEnrollmentRepository.getCurrentSemesterEnrollments();
 
-        response.send(enrollments);
+        const classNamesById = await resolveClassNames(enrollments);
+
+        const enriched = enrollments.map((enrollment) => ({
+            ...enrollment,
+            classNames: classRefsOf(enrollment).map(
+                ({ id }) => classNamesById.get(id) ?? id
+            ),
+        }));
+
+        response.send(enriched);
     });
+
+function classRefsOf(
+    enrollment: SemesterEnrollment
+): Array<{ id: string; semesterId: string }> {
+    // The repository always sets a `classes` key (value undefined for legacy
+    // records), so check the value rather than key presence, and fall back to
+    // the deprecated `classIds` array.
+    const classes = (
+        enrollment as { classes?: Array<{ id: string; semesterId: string }> }
+    ).classes;
+    if (classes?.length) {
+        return classes;
+    }
+    const classIds = (enrollment as { classIds?: Array<string> }).classIds;
+    return (classIds ?? []).map((id) => ({ id, semesterId: '' }));
+}
+
+/**
+ * Resolves class titles for every class referenced across the given
+ * enrollments. Classes are deduplicated so each is only fetched once, and a
+ * deleted/missing class degrades gracefully (it is simply omitted from the map,
+ * leaving the caller to fall back to the raw id).
+ */
+async function resolveClassNames(
+    enrollments: Array<SemesterEnrollment>
+): Promise<Map<string, string>> {
+    const uniqueRefs = new Map<string, { id: string; semesterId: string }>();
+    for (const enrollment of enrollments) {
+        for (const ref of classRefsOf(enrollment)) {
+            uniqueRefs.set(ref.id, ref);
+        }
+    }
+
+    const namesById = new Map<string, string>();
+    await Promise.all(
+        [...uniqueRefs.values()].map(async (ref) => {
+            try {
+                const [aClass] = Object.values(await _getClasses([ref])).flat();
+                if (aClass) {
+                    namesById.set(ref.id, aClass.title);
+                }
+            } catch {
+                // Class may have been deleted since enrollment; fall back to id.
+            }
+        })
+    );
+    return namesById;
+}

@@ -36,6 +36,7 @@ import { MountainSolApiService } from '@sol/angular/firebase/api';
 
 type EnrollmentRow = SemesterEnrollment & {
     date: number;
+    classNamesDisplay: string;
     [key: `discount${number}_description`]: string | undefined;
     [key: `discount${number}_amount`]: number | undefined;
 };
@@ -82,6 +83,8 @@ export class EnrollmentsComponent {
                         .map((enrollment) => ({
                             ...enrollment,
                             date: enrollment.timestamp._seconds * 1000,
+                            classNamesDisplay:
+                                enrollment.classNames?.join(', ') ?? '',
                             ...enrollment.discounts
                                 .map((discount, i) => ({
                                     [`discount${i}_description`]:
@@ -115,6 +118,7 @@ export class EnrollmentsComponent {
     readonly displayedColumns = computed(() => [
         'studentName',
         'date',
+        'classNamesDisplay',
         'finalCost',
         'status',
         ...this.discountIndexes().flatMap((i) => [

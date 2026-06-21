@@ -73,7 +73,7 @@ export const getMyStudent = Functions.endpoint.handle<{ studentId: string }>(
     async (request, response) => {
         const user = await AuthUtility.getUserFromRequest(request, response);
         if (!user) {
-            response.send({ studentIds: [] });
+            // getUserFromRequest already sent a 403.
             return;
         }
         const { studentId } = request.body.data;
