@@ -1,4 +1,4 @@
-export const jestConfig = {
+module.exports = {
     displayName: 'angular-admin-enrollments',
     preset: '../../../../jest.preset.js',
     setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
@@ -19,5 +19,3 @@ export const jestConfig = {
         'jest-preset-angular/build/serializers/html-comment',
     ],
 };
-
-module.exports = jestConfig;
