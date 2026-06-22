@@ -93,7 +93,9 @@
                 },
                 "emulator": {
                     "buildTarget": "enrollment-portal:build:emulator",
-                    "proxyConfig": "apps/enrollment-portal/proxy.conf.json"
+                    "proxyConfig": "apps/enrollment-portal/proxy.conf.json",
+                    "liveReload": false,
+                    "hmr": false
                 }
             },
             "defaultConfiguration": "development",

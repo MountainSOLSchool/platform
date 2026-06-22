@@ -6,13 +6,17 @@ export default defineConfig({
     testDir: './src/e2e',
     testMatch: '**/*.spec.ts',
     globalSetup: './src/global-setup.ts',
+    outputDir: './test-results',
     timeout: 90_000,
     expect: { timeout: 15_000 },
     workers: 1,
     fullyParallel: false,
     retries: process.env['CI'] ? 1 : 0,
     reporter: process.env['CI']
-        ? [['html', { open: 'never' }], ['list']]
+        ? [
+              ['html', { open: 'never', outputFolder: 'playwright-report' }],
+              ['list'],
+          ]
         : 'list',
     use: {
         baseURL,

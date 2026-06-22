@@ -109,7 +109,12 @@ export class EnrollmentPage {
 
     /** Navigate to the enrollment flow. Route: app-routes.ts:118-131. */
     async goto(): Promise<void> {
-        await this.page.goto('/classes/enrollment');
+        // waitUntil 'domcontentloaded' (not the default 'load'): the Angular
+        // dev-server's live-reload connection can keep the page's load event
+        // pending on slower CI runners, hanging goto until the test times out.
+        await this.page.goto('/classes/enrollment', {
+            waitUntil: 'domcontentloaded',
+        });
     }
 
     /**
@@ -433,7 +438,7 @@ export class EnrollmentPage {
      * button is removed, so we assert it disappears as the success signal.
      */
     async loginStandalone(email: string, password: string): Promise<void> {
-        await this.page.goto('/user/login');
+        await this.page.goto('/user/login', { waitUntil: 'domcontentloaded' });
         await this.page.locator('sol-login input#email').fill(email);
         await this.page
             .locator('sol-login input[name="password"]')
@@ -538,7 +543,9 @@ export class EnrollmentPage {
      * Route: class-enrollment.ts:7 ('addendum/:enrollmentId').
      */
     async gotoAddendum(enrollmentId: string): Promise<void> {
-        await this.page.goto(`/classes/enrollment/addendum/${enrollmentId}`);
+        await this.page.goto(`/classes/enrollment/addendum/${enrollmentId}`, {
+            waitUntil: 'domcontentloaded',
+        });
     }
 
     /**
@@ -561,11 +568,9 @@ export class EnrollmentPage {
         // (class-card.component.html:165-191). Either way it is NOT a
         // "Select Class" / removable "Selected" control, which is the lock
         // guarantee we assert.
-        const card = this.page
-            .locator('sol-class-card')
-            .filter({
-                has: this.page.getByRole('heading', { name: className }),
-            });
+        const card = this.page.locator('sol-class-card').filter({
+            has: this.page.getByRole('heading', { name: className }),
+        });
         await expect(card).toBeVisible();
         await expect(
             card.getByRole('button', { name: /^enrolled/i })
