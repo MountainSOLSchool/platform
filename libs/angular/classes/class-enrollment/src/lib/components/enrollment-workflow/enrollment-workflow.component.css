@@ -1,0 +1,99 @@
+::ng-deep .mat-vertical-stepper-content {
+    overflow: unset !important;
+}
+::ng-deep .mat-horizontal-content-container {
+    overflow: unset !important;
+}
+:host ::ng-deep .mat-vertical-content-container {
+    margin-left: -5px;
+}
+@media (max-width: 800px) {
+    :host ::ng-deep .mat-vertical-content-container {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    :host ::ng-deep .mat-vertical-content {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+:host ::ng-deep .mat-stepper-vertical-line::before {
+    border: none;
+}
+:host ::ng-deep .mat-step-header {
+    padding: 10px 4px;
+    background-color: white;
+}
+@media (max-width: 620px) {
+    :host ::ng-deep .mat-step-header {
+        padding: 10px 0;
+    }
+}
+.alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    border-left: 4px solid;
+    margin: 0.5rem 0;
+}
+.alert-info {
+    background: #dbeafe;
+    border-left-color: #1e40af;
+    color: #1e3a8a;
+}
+.alert-error {
+    background: #fee2e2;
+    border-left-color: #991b1b;
+    color: #7f1d1d;
+}
+.alert-warn {
+    background: #fef3c7;
+    border-left-color: #92400e;
+    color: #78350f;
+}
+.alert-success {
+    background: #d1fae5;
+    border-left-color: #065f46;
+    color: #064e3b;
+}
+.alert-promotional {
+    background: #ffff99;
+    border-left-color: #ffcc00;
+    color: black;
+}
+.alert markdown {
+    display: contents;
+}
+.alert markdown p {
+    display: inline;
+    margin: 0;
+}
+.sol-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+.sol-modal-card {
+    max-width: 560px;
+    width: 100%;
+}
+.sol-modal-card mat-card-actions {
+    gap: 0.5rem;
+}
+:host ::ng-deep mat-card-content a {
+    color: var(--sol-primary, #006633);
+    text-decoration: none;
+}
+:host ::ng-deep mat-card-content a:hover {
+    text-decoration: underline;
+}

@@ -5,16 +5,15 @@ import {
     EventEmitter,
     input,
     Output,
+    viewChildren,
 } from '@angular/core';
 import { CurrencyPipe, NgClass } from '@angular/common';
-import { ToggleButtonModule } from 'primeng/togglebutton';
 import {
     ClassCardComponent,
     ClassCardInfo,
 } from '../class-card/class-card.component';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { BeforeSelectOptionsComponent } from '../before-select-options/before-select-options.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -71,12 +70,10 @@ interface ClassRow {
         NgClass,
         MatIconModule,
         MatButtonModule,
-        ButtonModule,
-        ToggleButtonModule,
+        MatMenuModule,
         ClassCardComponent,
         FormsModule,
         CurrencyPipe,
-        OverlayPanelModule,
         BeforeSelectOptionsComponent,
     ],
     selector: 'sol-class-row',
@@ -236,7 +233,7 @@ interface ClassRow {
                 }
             }
 
-            // Material button overrides for the select button
+            /* Material button overrides for the select button */
             ::ng-deep {
                 .select-all-button {
                     font-size: 1rem;
@@ -267,6 +264,8 @@ export class ClassRowComponent {
         selectedAdditionalOptionIds?: Array<string>;
         userCost?: number;
     }>();
+
+    readonly menuTriggers = viewChildren(MatMenuTrigger);
 
     getRandomNumber() {
         return Math.random();
@@ -362,16 +361,13 @@ export class ClassRowComponent {
         });
     }
 
-    confirmedExtras(
-        overlayRef: OverlayPanel,
-        optionsConfirmation: {
-            [classId: string]: {
-                userCost?: number;
-                selectedOptionIds?: Array<string>;
-            };
-        }
-    ) {
-        overlayRef.hide();
+    confirmedExtras(optionsConfirmation: {
+        [classId: string]: {
+            userCost?: number;
+            selectedOptionIds?: Array<string>;
+        };
+    }) {
+        this.menuTriggers().forEach((trigger) => trigger.closeMenu());
         this.row().classes.forEach((c) =>
             this.selectionChanged({
                 classSelection: { id: c.id, semesterId: c.semesterId },

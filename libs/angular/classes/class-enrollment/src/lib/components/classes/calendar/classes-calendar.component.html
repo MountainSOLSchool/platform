@@ -3,10 +3,12 @@
     (eventClick)="classSelected$.next($event)"
 ></sol-calendar>
 @for (selectedClass of selectedClasses$ | async; track selectedClass) {
-    <p-card
-        [header]="selectedClass.title"
-        [style]="{ width: '25rem', 'margin-bottom': '2em' }"
-    >
-        <p>Hey I'm the details.</p>
-    </p-card>
+    <mat-card style="width: 25rem; margin-bottom: 2em">
+        <mat-card-header>
+            <mat-card-title>{{ selectedClass.title }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Hey I'm the details.</p>
+        </mat-card-content>
+    </mat-card>
 }

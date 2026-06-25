@@ -8,13 +8,11 @@
     "
 >
     @for (option of options(); track option) {
-        <p-checkbox
-            [ngModel]="option.id"
-            (onChange)="optionSelected(option.id, $event.checked)"
-            [binary]="true"
-            [inputId]="option.id"
-            [label]="getLabel(option)"
+        <mat-checkbox
+            (change)="optionSelected(option.id, $event.checked)"
             [name]="option.description"
-        ></p-checkbox>
+        >
+            {{ getLabel(option) }}
+        </mat-checkbox>
     }
 </div>

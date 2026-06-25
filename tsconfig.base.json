@@ -46,6 +46,9 @@
                 "libs/angular/classes/class-semester-list/src/index.ts"
             ],
             "@sol/angular/dialog": ["libs/angular/dialog/src/index.ts"],
+            "@sol/angular/toast": ["libs/angular/toast/src/index.ts"],
+            "@sol/angular/skeleton": ["libs/angular/skeleton/src/index.ts"],
+            "@sol/angular/avatar": ["libs/angular/avatar/src/index.ts"],
             "@sol/angular/firebase/adapter": [
                 "libs/angular/firebase/adapter/src/index.ts"
             ],

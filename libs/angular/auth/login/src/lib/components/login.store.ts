@@ -15,7 +15,7 @@ import {
     FirebaseAuthModule,
 } from '@sol/angular/auth/firebase';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { SolToastService } from '@sol/angular/toast';
 import { loginSuite } from './login.suite';
 import { UserService } from '@sol/auth/user';
 
@@ -44,7 +44,7 @@ export class LoginStore extends ComponentStore<LoginState> {
     private readonly authService = inject(FirebaseAuthService);
     private readonly user$ = inject(UserService).getUser();
     private readonly router = inject(Router);
-    private readonly messageService = inject(MessageService);
+    private readonly messageService = inject(SolToastService);
 
     constructor() {
         super({

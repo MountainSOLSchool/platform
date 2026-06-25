@@ -5,12 +5,12 @@ import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { mergeMap, Observable, scan, Subject, map, startWith } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { CalendarComponent } from '@sol/calendar';
-import { CardModule } from 'primeng/card';
+import { MatCardModule } from '@angular/material/card';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AsyncPipe, CalendarComponent, CardModule],
+    imports: [AsyncPipe, CalendarComponent, MatCardModule],
     templateUrl: './classes-calendar.component.html',
 })
 export class SelectClassesCalendarComponent {

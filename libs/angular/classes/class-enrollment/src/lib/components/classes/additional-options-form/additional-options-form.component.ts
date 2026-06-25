@@ -6,9 +6,8 @@ import {
     signal,
 } from '@angular/core';
 
-import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { CheckboxModule } from 'primeng/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 type AdditionalOption = {
     description: string;
@@ -18,7 +17,7 @@ type AdditionalOption = {
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CheckboxModule, ButtonModule, FormsModule],
+    imports: [MatCheckboxModule, FormsModule],
     selector: 'sol-class-additional-options-form',
     templateUrl: './additional-options-form.component.html',
 })

@@ -10,7 +10,7 @@ import {
     selector: 'sol-messages',
     standalone: true,
     template: `@for (message of resolvedMessages(); track message) {
-        <small [class]="errorClass()">{{ message }}</small>
+        <small class="mat-error">{{ message }}</small>
     }`,
     styles: [
         `
@@ -24,12 +24,6 @@ import {
                 margin-left: 2px;
             }
 
-            /* PrimeNG variant (default) */
-            small.p-error {
-                color: var(--red-500, #ef4444);
-            }
-
-            /* Material variant */
             small.mat-error {
                 color: var(--mat-form-field-error-text-color, #f44336);
                 font-size: 75%;
@@ -39,10 +33,6 @@ import {
 })
 export class MessagesComponent {
     readonly messages = input<string[] | undefined>();
-    readonly variant = input<'material' | 'primeng'>('material');
 
     readonly resolvedMessages = computed(() => this.messages() ?? []);
-    readonly errorClass = computed(() =>
-        this.variant() === 'primeng' ? 'p-error block' : 'mat-error'
-    );
 }

@@ -32,11 +32,9 @@ export const getEnrollmentForAddendum = Functions.endpoint.handle<{
     }
 
     if (!('classes' in enrollment)) {
-        response
-            .status(400)
-            .send({
-                error: 'Legacy enrollment format not supported for addendums',
-            });
+        response.status(400).send({
+            error: 'Legacy enrollment format not supported for addendums',
+        });
         return;
     }
 
@@ -52,11 +50,9 @@ export const getEnrollmentForAddendum = Functions.endpoint.handle<{
     );
 
     if (openSemesterIds.length === 0) {
-        response
-            .status(400)
-            .send({
-                error: 'No semesters in this enrollment are still open for registration',
-            });
+        response.status(400).send({
+            error: 'No semesters in this enrollment are still open for registration',
+        });
         return;
     }
 

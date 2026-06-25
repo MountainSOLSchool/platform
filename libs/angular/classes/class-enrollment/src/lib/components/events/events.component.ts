@@ -8,32 +8,56 @@ import {
 } from '@angular/core';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { of } from 'rxjs';
-import { CheckboxModule } from 'primeng/checkbox';
-import { CardModule } from 'primeng/card';
-import { TagModule } from 'primeng/tag';
-import { ToggleButtonModule } from 'primeng/togglebutton';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
-import { ChipModule } from 'primeng/chip';
 import 'add-to-calendar-button';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.Default,
     imports: [
         NgStyle,
-        CheckboxModule,
-        CardModule,
-        TagModule,
-        ToggleButtonModule,
+        MatCheckboxModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonToggleModule,
         FormsModule,
-        ChipModule,
     ],
     selector: 'sol-event-selection',
     templateUrl: './events.component.html',
     styles: [
         `
-            :host ::ng-deep .p-chip.custom-chip {
-                background: var(--green-600);
-                color: var(--primary-color-text);
+            .status-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 4px 10px;
+                border-radius: 12px;
+                font-size: 0.85rem;
+                font-weight: 600;
+                line-height: 1.25;
+            }
+            .status-success {
+                background: #d1fae5;
+                color: #065f46;
+            }
+            .chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                background: #16a34a;
+                color: #fff;
+                padding: 4px 10px;
+                border-radius: 16px;
+                font-size: 0.85rem;
+                font-weight: 500;
+            }
+            .chip mat-icon {
+                font-size: 1rem;
+                width: 1rem;
+                height: 1rem;
             }
         `,
     ],

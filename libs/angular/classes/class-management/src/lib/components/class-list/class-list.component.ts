@@ -90,7 +90,7 @@ interface Semester {
             <div class="page-header">
                 <h1>Manage Classes</h1>
                 <button
-                    mat-raised-button
+                    mat-stroked-button
                     color="primary"
                     (click)="navigateToCreate()"
                 >

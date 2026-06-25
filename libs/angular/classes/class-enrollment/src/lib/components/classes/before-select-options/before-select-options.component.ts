@@ -7,9 +7,8 @@ import {
     signal,
 } from '@angular/core';
 
-import { ButtonModule } from 'primeng/button';
+import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { SlidingScaleFormComponent } from '../sliding-scale-form/sliding-scale-form.component';
 import { AdditionalOptionsFormComponent } from '../additional-options-form/additional-options-form.component';
 
@@ -22,8 +21,7 @@ type AdditionalOption = {
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        OverlayPanelModule,
-        ButtonModule,
+        MatButtonModule,
         FormsModule,
         SlidingScaleFormComponent,
         AdditionalOptionsFormComponent,

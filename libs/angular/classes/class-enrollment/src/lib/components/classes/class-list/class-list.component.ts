@@ -18,32 +18,21 @@ import {
     switchMap,
 } from 'rxjs';
 import { EnrollmentWorkflowStore } from '../../enrollment-workflow/enrollment-workflow.store';
-import { CardModule } from 'primeng/card';
 import {
     AsyncPipe,
     DatePipe,
     NgStyle,
     NgTemplateOutlet,
 } from '@angular/common';
-import { CheckboxModule } from 'primeng/checkbox';
-import { InputTextModule } from 'primeng/inputtext';
-import { ChipModule } from 'primeng/chip';
-import { SkeletonModule } from 'primeng/skeleton';
 import { FormsModule } from '@angular/forms';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { ToggleButtonModule } from 'primeng/togglebutton';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { DropdownModule } from 'primeng/dropdown';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { ToastModule } from 'primeng/toast';
-import { ButtonModule } from 'primeng/button';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { SliderModule } from 'primeng/slider';
-import { AutoFocusModule } from 'primeng/autofocus';
-import { InputNumberModule } from 'primeng/inputnumber';
 import { ClassListService } from '@sol/angular/classes/list';
 import {
     RequestedOperatorsUtility,
@@ -52,7 +41,6 @@ import {
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { MountainSolApiService } from '@sol/angular/firebase/api';
 import { ClassesSemesterListService } from '@sol/angular/classes/semester-list';
-import { TabViewModule } from 'primeng/tabview';
 import { ClassesSkeletonComponent } from '../classes-skeleton/classes-skeleton.component';
 import { ClassRowComponent } from '../class-row/class-row.component';
 import { InfoPanelComponent } from '../../info-panel/info-panel.component';
@@ -69,27 +57,15 @@ interface ClassRow {
     imports: [
         AsyncPipe,
         NgStyle,
-        CardModule,
-        CheckboxModule,
-        InputTextModule,
-        ChipModule,
-        SkeletonModule,
         FormsModule,
-        SelectButtonModule,
-        ToggleButtonModule,
-        ProgressSpinnerModule,
-        DropdownModule,
-        MultiSelectModule,
-        MessagesModule,
-        MessageModule,
-        ToastModule,
-        ButtonModule,
-        OverlayPanelModule,
-        SliderModule,
-        AutoFocusModule,
-        InputNumberModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatTabsModule,
+        MatProgressSpinnerModule,
         requestStateDirectives,
-        TabViewModule,
         NgTemplateOutlet,
         ClassesSkeletonComponent,
         ClassRowComponent,
@@ -283,7 +259,10 @@ export class ClassesComponent {
                   .sort(([a], [b]) => a.localeCompare(b))
                   .map(([label, { gradeRangeStart, gradeRangeEnd }]) => ({
                       name: label,
-                      value: [gradeRangeStart, gradeRangeEnd],
+                      value: [gradeRangeStart, gradeRangeEnd] as [
+                          number,
+                          number,
+                      ],
                   }))
             : undefined;
     });

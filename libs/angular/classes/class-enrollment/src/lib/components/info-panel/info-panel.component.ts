@@ -50,10 +50,7 @@ export interface PanelConfig {
             <div class="panel-content" [class.expanded]="isExpanded">
                 <div class="content-inner">
                     <!-- Highlight Boxes -->
-                    @for (
-                        highlight of config.highlightBoxes;
-                        track highlight.text
-                    ) {
+                    @for (highlight of config.highlightBoxes; track $index) {
                         <div
                             class="highlight-box"
                             [ngClass]="'highlight-' + highlight.type"
@@ -71,10 +68,7 @@ export interface PanelConfig {
                                     {{ card.title }}
                                 </h3>
 
-                                @for (
-                                    content of card.content;
-                                    track content.type
-                                ) {
+                                @for (content of card.content; track $index) {
                                     <div>
                                         <!-- Text Content -->
                                         @if (content.type === 'text') {

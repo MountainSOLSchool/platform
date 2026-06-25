@@ -208,11 +208,12 @@ import { MatDialogModule } from '@angular/material/dialog';
                             >
                                 @if (processing()) {
                                     <mat-spinner diameter="20"></mat-spinner>
-                                    <span>Processing...</span>
                                 } @else {
                                     <mat-icon>favorite</mat-icon>
-                                    <span>Donate</span>
                                 }
+                                <span>{{
+                                    processing() ? 'Processing...' : 'Donate'
+                                }}</span>
                             </button>
                         </form>
                     } @else {

@@ -1,31 +1,36 @@
 @if (user$ | async; as user) {
-    <p-card
-        [style]="{
-            width: '100%',
-            'max-width': '600px',
-            'margin-left': 'auto',
-            'margin-right': 'auto'
-        }"
+    <mat-card
+        style="
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        "
     >
-        <i
-            class="pi pi-check-circle"
-            style="color: green; font-size: x-large"
-        ></i>
-        <br /><br />Thank you for signing in with the account
-        <b>{{ user.email }}</b
-        >!<br /><br />With an account, you will be able re-use your students'
-        information and your payment methods.</p-card
-    >
+        <mat-card-content>
+            <mat-icon
+                style="
+                    color: green;
+                    font-size: x-large;
+                    width: auto;
+                    height: auto;
+                "
+                >check_circle</mat-icon
+            >
+            <br /><br />Thank you for signing in with the account
+            <b>{{ user.email }}</b
+            >!<br /><br />With an account, you will be able re-use your
+            students' information and your payment methods.
+        </mat-card-content>
+    </mat-card>
 } @else {
-    <p-messages [enableService]="false" severity="info">
-        <ng-template pTemplate>
-            <div class="ml-2">
-                <i class="pi pi-info-circle" style="margin-right: 4px"></i>
-                With an account, your student's information and your payment
-                information will be saved for future enrollment.
-            </div>
-        </ng-template>
-    </p-messages>
+    <div class="alert alert-info">
+        <mat-icon class="alert-icon">info</mat-icon>
+        <div>
+            With an account, your student's information and your payment
+            information will be saved for future enrollment.
+        </div>
+    </div>
     <div style="margin-top: 3rem">
         <sol-login
             [isCreatingNewAccount]="false"

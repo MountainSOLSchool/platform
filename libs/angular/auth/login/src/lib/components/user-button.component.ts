@@ -6,47 +6,80 @@ import {
     Input,
     OnInit,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { UserService } from '@sol/auth/user';
 import { FirebaseAuthService } from '@sol/angular/auth/firebase';
-import { MenuItem } from 'primeng/api';
-import { AvatarModule } from 'primeng/avatar';
-import { ButtonModule } from 'primeng/button';
-import { MenuModule } from 'primeng/menu';
+import { AvatarComponent } from '@sol/angular/avatar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { map, Observable } from 'rxjs';
+
+interface MenuItem {
+    label?: string;
+    icon?: string;
+    disabled?: boolean;
+    routerLink?: string;
+    command?: () => void;
+}
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AsyncPipe,
-        MenuModule,
-        AvatarModule,
-        ButtonModule,
+        RouterModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+        AvatarComponent,
         FirebaseAuthService,
     ],
     selector: 'sol-user-button',
     template: `@if (email$ | async; as email) {
             <div style="cursor: pointer">
-                <p-avatar
-                    size="large"
-                    icon="pi pi-user"
-                    (click)="menu.toggle($event)"
-                    [style]="{
-                        'background-color': '#aaa',
-                        color: '#ffffff',
-                    }"
-                ></p-avatar>
-                <p-menu
-                    #menu
-                    [popup]="true"
-                    [model]="(menuItems$ | async) ?? []"
-                ></p-menu>
+                <button
+                    mat-icon-button
+                    [matMenuTriggerFor]="menu"
+                    aria-label="Account menu"
+                >
+                    <sol-avatar [label]="email" size="2.5rem"></sol-avatar>
+                </button>
+                <mat-menu #menu="matMenu">
+                    @for (
+                        item of (menuItems$ | async) ?? [];
+                        track item.label
+                    ) {
+                        @if (item.routerLink) {
+                            <a
+                                mat-menu-item
+                                [routerLink]="item.routerLink"
+                                [disabled]="item.disabled ?? false"
+                            >
+                                @if (item.icon) {
+                                    <mat-icon>{{ item.icon }}</mat-icon>
+                                }
+                                <span>{{ item.label }}</span>
+                            </a>
+                        } @else {
+                            <button
+                                mat-menu-item
+                                type="button"
+                                [disabled]="item.disabled ?? false"
+                                (click)="item.command && item.command()"
+                            >
+                                @if (item.icon) {
+                                    <mat-icon>{{ item.icon }}</mat-icon>
+                                }
+                                <span>{{ item.label }}</span>
+                            </button>
+                        }
+                    }
+                </mat-menu>
             </div>
         } @else {
-            <p-button
-                routerLink="/user/create"
-                [label]="size === 'default' ? 'Register / Sign In' : 'Account'"
-                styleClass="p-button-md"
-            ></p-button>
+            <a mat-raised-button color="primary" routerLink="/user/create">
+                {{ size === 'default' ? 'Register / Sign In' : 'Account' }}
+            </a>
         }`,
 })
 export class UserButtonComponent implements OnInit {
@@ -81,7 +114,7 @@ export class UserButtonComponent implements OnInit {
                 },
                 {
                     label: 'Sign Out',
-                    icon: 'pi pi-sign-out',
+                    icon: 'logout',
                     command: () => this.signOut(),
                 },
             ])

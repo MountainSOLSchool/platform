@@ -390,7 +390,7 @@ const WEEKDAY_OPTIONS = [
 
                                     <sol-weekday-selector
                                         [(selectedDays)]="selectedWeekdays"
-                                        [errors]="errors()['weekday'] ?? []"
+                                        [errors]="errors()['weekday']"
                                         [existingValue]="weekday()"
                                         [showExisting]="editMode()"
                                         [required]="true"
@@ -399,7 +399,7 @@ const WEEKDAY_OPTIONS = [
                                     <sol-time-range-selector
                                         [(startTime)]="startTime"
                                         [(endTime)]="endTime"
-                                        [errors]="errors()['dailyTimes'] ?? []"
+                                        [errors]="errors()['dailyTimes']"
                                         [existingValue]="dailyTimes()"
                                         [showExisting]="editMode()"
                                         [required]="true"

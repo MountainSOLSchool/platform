@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MessageModule } from 'primeng/message';
-import { ToastModule } from 'primeng/toast';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ToastModule, MessageModule, RouterModule],
+    imports: [RouterModule],
     selector: 'sol-root',
     template: ` <div>
             <router-outlet></router-outlet>
-            <p-toast position="top-right"></p-toast>
         </div>
         <footer style="padding: 10px; border-top: 1px solid gray">
             <p>
@@ -24,6 +21,16 @@ import { ToastModule } from 'primeng/toast';
                 >
             </p>
         </footer>`,
-    styles: [``],
+    styles: [
+        `
+            footer a {
+                color: var(--sol-primary, #006633);
+                text-decoration: none;
+            }
+            footer a:hover {
+                text-decoration: underline;
+            }
+        `,
+    ],
 })
 export class AppComponent {}

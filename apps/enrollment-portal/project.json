@@ -28,11 +28,7 @@
                     "apps/enrollment-portal/src/design-tokens.scss",
                     "apps/enrollment-portal/src/custom-theme.scss",
                     "apps/enrollment-portal/src/styles.css",
-                    "node_modules/primeflex/primeflex.css",
-                    "node_modules/primeicons/primeicons.css",
-                    "node_modules/primeng/resources/primeng.min.css",
-                    "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
-                    "apps/enrollment-portal/src/primeng-theme-overrides.scss"
+                    "node_modules/primeflex/primeflex.css"
                 ],
                 "scripts": []
             },
@@ -66,6 +62,21 @@
                     "sourceMap": true,
                     "namedChunks": true,
                     "baseHref": "/"
+                },
+                "emulator": {
+                    "buildOptimizer": false,
+                    "optimization": false,
+                    "vendorChunk": true,
+                    "extractLicenses": false,
+                    "sourceMap": true,
+                    "namedChunks": true,
+                    "baseHref": "/",
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/enrollment-portal/src/environments/environment.ts",
+                            "with": "apps/enrollment-portal/src/environments/environment.emulator.ts"
+                        }
+                    ]
                 }
             },
             "defaultConfiguration": "production"
@@ -79,6 +90,12 @@
                 "development": {
                     "buildTarget": "enrollment-portal:build:development",
                     "proxyConfig": "apps/enrollment-portal/proxy.conf.json"
+                },
+                "emulator": {
+                    "buildTarget": "enrollment-portal:build:emulator",
+                    "proxyConfig": "apps/enrollment-portal/proxy.conf.json",
+                    "liveReload": false,
+                    "hmr": false
                 }
             },
             "defaultConfiguration": "development",

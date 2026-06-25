@@ -6,20 +6,22 @@ import {
     output,
 } from '@angular/core';
 
-import { AutoFocusModule } from 'primeng/autofocus';
-import { ButtonModule } from 'primeng/button';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { SliderModule } from 'primeng/slider';
+import { MatSliderModule } from '@angular/material/slider';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        AutoFocusModule,
-        ButtonModule,
-        InputNumberModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
         FormsModule,
-        SliderModule,
+        MatSliderModule,
     ],
     selector: 'sol-sliding-scale-form',
     templateUrl: './sliding-scale-form.component.html',

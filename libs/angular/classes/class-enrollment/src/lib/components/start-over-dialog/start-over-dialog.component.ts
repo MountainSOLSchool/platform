@@ -1,37 +1,37 @@
 import { Component, inject } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
-import { ButtonModule } from 'primeng/button';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
-    template: `<p-dialog
-        #startOverDialog
-        header="Start over?"
-        [visible]="true"
-        [closable]="false"
-        [modal]="true"
-        [draggable]="false"
-    >
-        <div style="margin-top: 1rem">
-            Starting over will cause you to lose any new or updated information
-            you've entered. Are you sure you want to start over?
-        </div>
-        <div style="margin-top: 1rem">
-            <button
-                pButton
-                class="p-button-danger"
-                label="Yes, Start Over"
-                (click)="confirm()"
-            ></button>
-            <button
-                pButton
-                label="No, Cancel"
-                style="margin-left: 1rem"
-                (click)="cancel()"
-            ></button>
-        </div>
-    </p-dialog> `,
-    imports: [DialogModule, ButtonModule],
+    template: `<mat-card class="start-over-dialog">
+        <mat-card-header>
+            <mat-card-title>Start over?</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <p>
+                Starting over will cause you to lose any new or updated
+                information you've entered. Are you sure you want to start over?
+            </p>
+        </mat-card-content>
+        <mat-card-actions align="end">
+            <button mat-stroked-button (click)="cancel()">No, Cancel</button>
+            <button mat-raised-button color="warn" (click)="confirm()">
+                Yes, Start Over
+            </button>
+        </mat-card-actions>
+    </mat-card>`,
+    styles: [
+        `
+            .start-over-dialog {
+                max-width: 480px;
+            }
+            mat-card-actions {
+                gap: 0.5rem;
+            }
+        `,
+    ],
+    imports: [MatButtonModule, MatCardModule],
 })
 export class StartOverDialogComponent {
     private readonly dialogRef = inject(DialogRef);

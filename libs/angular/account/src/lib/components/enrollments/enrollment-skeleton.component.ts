@@ -1,22 +1,22 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { SkeletonModule } from 'primeng/skeleton';
+import { SkeletonComponent } from '@sol/angular/skeleton';
 
 @Component({
     selector: 'sol-enrollment-skeleton',
     template: `<div class="flex mb-3">
             <div>
-                <p-skeleton width="10rem" styleClass="mb-2"></p-skeleton>
-                <p-skeleton width="5rem" styleClass="mb-2"></p-skeleton>
-                <p-skeleton height=".5rem"></p-skeleton>
+                <sol-skeleton width="10rem" class="mb-2"></sol-skeleton>
+                <sol-skeleton width="5rem" class="mb-2"></sol-skeleton>
+                <sol-skeleton height=".5rem"></sol-skeleton>
             </div>
         </div>
-        <p-skeleton width="100%" height="150px"></p-skeleton>
+        <sol-skeleton width="100%" height="150px"></sol-skeleton>
         <div class="flex justify-content-between mt-3">
-            <p-skeleton width="4rem" height="2rem"></p-skeleton>
-            <p-skeleton width="4rem" height="2rem"></p-skeleton>
+            <sol-skeleton width="4rem" height="2rem"></sol-skeleton>
+            <sol-skeleton width="4rem" height="2rem"></sol-skeleton>
         </div>`,
-    imports: [SkeletonModule],
+    imports: [SkeletonComponent],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EnrollmentSkeletonComponent {}

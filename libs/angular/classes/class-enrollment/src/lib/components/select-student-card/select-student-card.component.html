@@ -1,57 +1,76 @@
 <div
     [ngStyle]="{
-        border: selected() ? '.2rem solid #3c82f7' : '.2rem solid transparent',
+        border: selected()
+            ? '.2rem solid var(--sol-primary, #006633)'
+            : '.2rem solid transparent',
         'border-radius': '6px',
         'box-sizing': 'border-box',
-        height: 'fit-content'
+        height: 'fit-content',
     }"
 >
-    <p-card
-        [header]="
-            !!student() ? student()?.name : loading() ? '' : 'New Student'
+    <mat-card
+        style="
+            width: 16rem;
+            height: 20rem;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
         "
-        [style]="{
-            width: '16rem',
-            height: '20rem',
-            margin: 'auto'
-        }"
     >
-        @if (student()?.birthday) {
-            <ng-template pTemplate="subHeader">
-                <h3>Birthday</h3>
-                <p>{{ student()?.birthday }}</p>
-            </ng-template>
-        }
-        @if (!!loading()) {
-            <div style="display: flex; align-items: center; gap: 10px">
-                <p-progressSpinner
-                    [style]="{ width: '20px', height: '20px' }"
-                ></p-progressSpinner>
-                <p>Loading previously enrolled students...</p>
-            </div>
-        } @else {
-            @if (icon()) {
+        <mat-card-header>
+            <mat-card-title>{{
+                !!student() ? student()?.name : loading() ? '' : 'New Student'
+            }}</mat-card-title>
+            @if (student()?.birthday) {
+                <mat-card-subtitle>
+                    <h3 style="margin: 0">Birthday</h3>
+                    <p style="margin: 0">{{ student()?.birthday }}</p>
+                </mat-card-subtitle>
+            }
+        </mat-card-header>
+        <mat-card-content style="flex: 1">
+            @if (!!loading()) {
+                <div style="display: flex; align-items: center; gap: 10px">
+                    <mat-progress-spinner
+                        mode="indeterminate"
+                        diameter="20"
+                    ></mat-progress-spinner>
+                    <p>Loading previously enrolled students...</p>
+                </div>
+            } @else if (icon()) {
                 <div class="w-full flex justify-content-center">
                     <div>
-                        <span
-                            style="font-size: 6rem"
-                            [ngClass]="iconNgClass()"
-                        ></span>
+                        <mat-icon
+                            style="font-size: 6rem; width: 6rem; height: 6rem"
+                            >{{ matIconName() }}</mat-icon
+                        >
                     </div>
                 </div>
             }
-            <ng-template pTemplate="footer">
-                <button
-                    pButton
-                    class="w-full mt-3"
-                    [disabled]="disabled()"
-                    [ngClass]="{
-                        'p-button-outlined': !selected()
-                    }"
-                    [label]="selected() ? 'Selected' : 'Select'"
-                    (click)="clicked.emit()"
-                ></button>
-            </ng-template>
+        </mat-card-content>
+        @if (!loading()) {
+            <mat-card-actions>
+                @if (selected()) {
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="w-full mt-3"
+                        [disabled]="disabled()"
+                        (click)="clicked.emit()"
+                    >
+                        Selected
+                    </button>
+                } @else {
+                    <button
+                        mat-stroked-button
+                        class="w-full mt-3"
+                        [disabled]="disabled()"
+                        (click)="clicked.emit()"
+                    >
+                        Select
+                    </button>
+                }
+            </mat-card-actions>
         }
-    </p-card>
+    </mat-card>
 </div>

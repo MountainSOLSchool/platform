@@ -25,12 +25,12 @@ import {
     CalendarOptions,
 } from '@fullcalendar/core';
 import { AsyncPipe } from '@angular/common';
-import { SkeletonModule } from 'primeng/skeleton';
+import { SkeletonComponent } from '@sol/angular/skeleton';
 import { FullCalendarModule } from '@fullcalendar/angular';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [AsyncPipe, FullCalendarModule, SkeletonModule],
+    imports: [AsyncPipe, FullCalendarModule, SkeletonComponent],
     selector: 'sol-calendar',
     templateUrl: './calendar.component.html',
 })

@@ -1,0 +1,14 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2021",
+        "types": ["node"],
+        "sourceMap": false,
+        "outDir": "../../dist/out-tsc",
+        "allowJs": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true
+    },
+    "include": ["src/**/*.ts"]
+}

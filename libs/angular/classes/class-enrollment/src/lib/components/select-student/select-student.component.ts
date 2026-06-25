@@ -5,7 +5,7 @@ import {
     Input,
     Output,
 } from '@angular/core';
-import { CardModule } from 'primeng/card';
+import { MatCardModule } from '@angular/material/card';
 import {
     BehaviorSubject,
     combineLatest,
@@ -19,35 +19,29 @@ import {
     Subject,
     take,
 } from 'rxjs';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { ToastModule } from 'primeng/toast';
-import { DropdownModule } from 'primeng/dropdown';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
-import { RadioButtonModule } from 'primeng/radiobutton';
+import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { create, enforce, omitWhen, test } from 'vest';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SelectStudentCardComponent } from '../select-student-card/select-student-card.component';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CardModule,
-        MessagesModule,
-        MessageModule,
-        ToastModule,
-        DropdownModule,
-        RadioButtonModule,
+        MatCardModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatRadioModule,
         FormsModule,
-        ButtonModule,
-        DialogModule,
-        ProgressSpinnerModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
         SelectStudentCardComponent,
         AsyncPipe,
     ],

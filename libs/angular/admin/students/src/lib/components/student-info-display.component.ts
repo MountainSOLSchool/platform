@@ -1,5 +1,6 @@
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { ButtonModule } from 'primeng/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { StudentInfoService } from '../services/student-info.service';
@@ -9,20 +10,17 @@ import { rxResource } from '@angular/core/rxjs-interop';
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ButtonModule, ProgressSpinnerModule],
+    imports: [MatButtonModule, MatIconModule, MatProgressSpinnerModule],
     template: `<div class="flex flex-col m-4">
         @let infoSheetValue = infoSheet.value();
         @if (infoSheetValue) {
             <div class="relative w-full">
                 <div class="flex justify-between items-center mb-2">
                     <div class="flex gap-2">
-                        <button
-                            pButton
-                            icon="pi pi-print"
-                            label="Print"
-                            class="p-button-primary"
-                            (click)="print()"
-                        ></button>
+                        <button mat-raised-button (click)="print()">
+                            <mat-icon>print</mat-icon>
+                            Print
+                        </button>
                     </div>
                 </div>
                 <iframe
@@ -38,7 +36,10 @@ import { rxResource } from '@angular/core/rxjs-interop';
             </div>
         } @else {
             <div class="flex-1 flex justify-content-center items-center">
-                <p-progressSpinner />
+                <mat-progress-spinner
+                    mode="indeterminate"
+                    diameter="50"
+                ></mat-progress-spinner>
             </div>
         }
     </div>`,

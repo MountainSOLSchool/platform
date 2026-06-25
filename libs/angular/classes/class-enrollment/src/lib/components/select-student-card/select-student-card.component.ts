@@ -5,19 +5,24 @@ import {
     input,
     output,
 } from '@angular/core';
-import { CardModule } from 'primeng/card';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { NgStyle } from '@angular/common';
 
-import { ButtonModule } from 'primeng/button';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { NgClass, NgStyle } from '@angular/common';
+const PI_TO_MAT_ICON: Record<string, string> = {
+    'pi-user-plus': 'person_add',
+    'pi-user': 'person',
+};
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CardModule,
-        ButtonModule,
-        ProgressSpinnerModule,
-        NgClass,
+        MatCardModule,
+        MatButtonModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
         NgStyle,
     ],
     selector: 'sol-student-selection-card',
@@ -35,8 +40,9 @@ export class SelectStudentCardComponent {
 
     clicked = output<void>();
 
-    iconNgClass = computed(() => ({
-        pi: true,
-        [this.icon() || '']: true,
-    }));
+    matIconName = computed(() => {
+        const iconKey = this.icon();
+        if (!iconKey) return '';
+        return PI_TO_MAT_ICON[iconKey] ?? iconKey;
+    });
 }

@@ -11,7 +11,10 @@
             <tr>
                 @for (c of calendarColumns; track c) {
                     <td style="padding: 5px">
-                        <p-skeleton height="75px" width="95%"></p-skeleton>
+                        <sol-skeleton
+                            [height]="'75px'"
+                            [width]="'95%'"
+                        ></sol-skeleton>
                     </td>
                 }
             </tr>
