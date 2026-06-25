@@ -113,8 +113,11 @@ jobs:
                   BRAINTREE_VENMO_PROFILE_ID=fake_venmo_profile_id
                   BRAINTREE_VENMO_PROFILE_ID_PROD=fake_venmo_profile_id_prod
                   EOF
+            # Pin the emulator project to mountain-sol-platform: the seed
+            # helpers hardcode that project id in their REST URLs, and the
+            # `dev` alias now points at the real dev project (deploy-only).
             - name: Run integration tests with emulators
-              run: npx firebase emulators:exec --project=dev --only auth,firestore,functions "npx nx run functions-integration-tests:test"
+              run: npx firebase emulators:exec --project=mountain-sol-platform --only auth,firestore,functions "npx nx run functions-integration-tests:test"
 
     enrollment-e2e:
         name: Enrollment E2E
@@ -153,7 +156,7 @@ jobs:
             # to the wrapped command, so global-setup seeds the right ports. The
             # e2e target's Playwright webServer serves the app in emulator mode.
             - name: Run enrollment E2E with emulators
-              run: npx firebase emulators:exec --project=dev --config firebase.e2e.json --only auth,firestore,functions "npx nx run enrollment-portal-e2e:e2e"
+              run: npx firebase emulators:exec --project=mountain-sol-platform --config firebase.e2e.json --only auth,firestore,functions "npx nx run enrollment-portal-e2e:e2e"
             - name: Upload Playwright report on failure
               if: failure()
               uses: actions/upload-artifact@v4
