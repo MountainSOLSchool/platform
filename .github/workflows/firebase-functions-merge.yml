@@ -289,14 +289,27 @@ jobs:
             - name: Deploy portal to dev Hosting
               # firebase-tools pinned to match the functions job (keyless-token
               # deploys); retry absorbs transient upload 5xx.
+              #
+              # Idempotency: when the built portal is byte-identical to what's
+              # already live (every merge that doesn't change the portal bundle),
+              # the upload + version-finalize succeed but the release call returns
+              # HTTP 400 "is the current active version" and firebase deploy exits
+              # non-zero. The content IS live in that case, so treat that specific
+              # error as success rather than failing the job (maple #501).
               run: |
                 set -o pipefail
+                OUT=$(mktemp)
+                trap 'rm -f "$OUT"' EXIT
                 for attempt in 1 2 3; do
                   if npx -y firebase-tools@15.22.2 deploy \
                     --only hosting:portal \
                     --project dev \
                     --force \
-                    --token "${{ steps.auth.outputs.access_token }}"; then
+                    --token "${{ steps.auth.outputs.access_token }}" 2>&1 | tee "$OUT"; then
+                    exit 0
+                  fi
+                  if grep -q "is the current active version" "$OUT"; then
+                    echo "::notice::Portal already at the live version — treating as success."
                     exit 0
                   fi
                   if [ $attempt -lt 3 ]; then
