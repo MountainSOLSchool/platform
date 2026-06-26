@@ -86,12 +86,24 @@ jobs:
                     AFFECTED=$(npx nx show projects --affected --base=${{ steps.base.outputs.commit }} | grep 'firebase-enrollment-functions-' || true)
                   fi
 
+                  # Only functions actually wired into the deploy entry point
+                  # are deployable. A function library can exist without being
+                  # exported from apps/functions/src/functions/index.ts (e.g. the
+                  # orphaned current-semester lib) — `firebase deploy --only
+                  # functions:<name>` fails with "No function matches the filter"
+                  # for those. Build the set of exported names and skip the rest.
+                  EXPORTED=$(grep -oE "export \{ [a-zA-Z0-9_]+ \}" apps/functions/src/functions/index.ts | sed -E 's/export \{ ([a-zA-Z0-9_]+) \}/\1/')
+
                   FUNCTIONS=()
                   while IFS= read -r lib; do
                     FUNC_NAME=${lib#firebase-enrollment-functions-}
                     if [ "$FUNC_NAME" != "shared" ]; then
                       FUNC_NAME=$(echo "$FUNC_NAME" | awk -F'-' '{for(i=1;i<=NF;i++){if(i==1){printf("%s",$i)}else{printf("%s%s",toupper(substr($i,1,1)),substr($i,2))}}}')
-                      FUNCTIONS+=("$FUNC_NAME")
+                      if echo "$EXPORTED" | grep -qx "$FUNC_NAME"; then
+                        FUNCTIONS+=("$FUNC_NAME")
+                      else
+                        echo "Skipping $lib -> $FUNC_NAME (not exported in functions/index.ts)"
+                      fi
                     fi
                   done <<< "$AFFECTED"
 
