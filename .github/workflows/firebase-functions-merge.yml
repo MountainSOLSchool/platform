@@ -117,7 +117,18 @@ jobs:
 
                   echo "has_changes=true" >> $GITHUB_OUTPUT
 
-                  GROUP_SIZE=5
+                  # Deploy all affected functions in ONE `firebase deploy`
+                  # command (one matrix entry) rather than batches of 5. Every
+                  # separate deploy re-uploads the ~4 MB source, re-runs the
+                  # "ensuring API X enabled" checks, and re-does function
+                  # discovery — so 16 sequential batches spent most of their
+                  # wall time on that repeated overhead. A single command pays it
+                  # once. (We can't parallelize further: this is a single Firebase
+                  # codebase, and concurrent deploys to one codebase race on
+                  # Firebase's "deployment in progress" lock — hence max-parallel
+                  # stays 1. True parallel deploys would require splitting into
+                  # multiple codebases, maple-style.) Large GROUP_SIZE => one group.
+                  GROUP_SIZE=10000
                   TOTAL=${#FUNCTIONS[@]}
                   NUM_GROUPS=$(( (TOTAL + GROUP_SIZE - 1) / GROUP_SIZE ))
 
