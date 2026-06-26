@@ -1,13 +1,48 @@
 name: Deploy Firebase Functions on merge
 
+# Promotion pipeline (built up across epic #230):
+#
+#   merge to main
+#     ├── prepare_and_build       (compute affected functions, build artifact)
+#     └── deploy_functions_dev    (affected functions -> mountain-sol-platform-dev, WIF)
+#
+# As of #232 this workflow deploys to DEV ONLY. Dev deploys via keyless
+# Workload Identity Federation (a short-lived access token minted by
+# google-github-actions/auth, passed to `firebase deploy --token`; see #231).
+# Prod function deploys were intentionally removed here and return, behind the
+# manual approval gate, in #236 — with the deployed-dev E2E gate (#234) and the
+# approval gate (#235) slotting in between. Until then prod functions are not
+# auto-deployed on merge.
+#
+# workflow_dispatch (deploy_all) deploys ALL functions to dev, ignoring the
+# affected check, so the dev pipeline can be trial-verified end to end.
+
 on:
     push:
         branches:
             - main
+    workflow_dispatch:
+        inputs:
+            deploy_all:
+                description: 'Deploy ALL functions to dev (ignore the affected check).'
+                required: false
+                default: false
+                type: boolean
+
+env:
+    NX_DAEMON: 'false'
+
+# Serialize merge-pipeline runs. Two back-to-back merges otherwise race on the
+# shared dev project (B's deploy lands mid-pipeline for A). cancel-in-progress
+# stays false so an in-flight deploy is never aborted halfway.
+concurrency:
+    group: deploy-on-merge
+    cancel-in-progress: false
 
 jobs:
     prepare_and_build:
         runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
         outputs:
             matrix: ${{ steps.get_affected.outputs.matrix }}
             has_changes: ${{ steps.get_affected.outputs.has_changes }}
@@ -20,7 +55,7 @@ jobs:
             - name: Get base commit
               id: base
               run: echo "commit=$(git rev-parse HEAD~1)" >> $GITHUB_OUTPUT
-            
+
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
@@ -37,9 +72,17 @@ jobs:
             - name: Get affected functions
               id: get_affected
               run: |
-                  # Get affected libraries comparing to previous commit
-                  AFFECTED=$(npx nx show projects --affected --base=${{ steps.base.outputs.commit }} | grep 'firebase-enrollment-functions-' || true)
-                  
+                  DEPLOY_ALL="${{ github.event.inputs.deploy_all }}"
+
+                  # Manual deploy_all (dev-only trial): deploy every enrollment
+                  # function. Otherwise deploy only what's affected since HEAD~1.
+                  if [ "$DEPLOY_ALL" == "true" ]; then
+                    echo "Manual deploy_all requested — deploying all functions"
+                    AFFECTED=$(npx nx show projects | grep 'firebase-enrollment-functions-' || true)
+                  else
+                    AFFECTED=$(npx nx show projects --affected --base=${{ steps.base.outputs.commit }} | grep 'firebase-enrollment-functions-' || true)
+                  fi
+
                   FUNCTIONS=()
                   while IFS= read -r lib; do
                     FUNC_NAME=${lib#firebase-enrollment-functions-}
@@ -48,39 +91,39 @@ jobs:
                       FUNCTIONS+=("$FUNC_NAME")
                     fi
                   done <<< "$AFFECTED"
-                  
+
                   if [ ${#FUNCTIONS[@]} -eq 0 ]; then
                     echo "No functions were affected"
                     echo "has_changes=false" >> $GITHUB_OUTPUT
                     echo "matrix={\"include\":[]}" >> $GITHUB_OUTPUT
                     exit 0
                   fi
-                  
+
                   echo "has_changes=true" >> $GITHUB_OUTPUT
-                  
+
                   GROUP_SIZE=5
                   TOTAL=${#FUNCTIONS[@]}
                   NUM_GROUPS=$(( (TOTAL + GROUP_SIZE - 1) / GROUP_SIZE ))
-                  
+
                   VALID_GROUPS=()
-                  
+
                   for ((i=0; i<$NUM_GROUPS; i++)); do
                     START=$((i * GROUP_SIZE))
                     GROUP_FUNCTIONS=""
-                    
+
                     for ((j=0; j<GROUP_SIZE && START+j<TOTAL; j++)); do
                       if [ ! -z "$GROUP_FUNCTIONS" ]; then
                         GROUP_FUNCTIONS+=","
                       fi
                       GROUP_FUNCTIONS+="functions:${FUNCTIONS[START+j]}"
                     done
-                    
+
                     # Only add non-empty groups
                     if [ ! -z "$GROUP_FUNCTIONS" ] && [ "$GROUP_FUNCTIONS" != "functions:" ]; then
                       VALID_GROUPS+=("{\"functions\":\"$GROUP_FUNCTIONS\"}")
                     fi
                   done
-                  
+
                   # Combine valid groups into JSON array with include
                   GROUPS_JSON="{\"include\":["
                   for ((i=0; i<${#VALID_GROUPS[@]}; i++)); do
@@ -90,9 +133,9 @@ jobs:
                     GROUPS_JSON+="${VALID_GROUPS[i]}"
                   done
                   GROUPS_JSON+="]}"
-                  
+
                   echo "matrix=$GROUPS_JSON" >> $GITHUB_OUTPUT
-                  
+
                   echo "Total affected functions: $TOTAL"
                   echo "Number of groups: $NUM_GROUPS"
                   echo "Matrix: $GROUPS_JSON"
@@ -125,13 +168,16 @@ jobs:
                   dist/apps/functions/package-lock.json
                 retention-days: 1
 
-    deploy:
+    deploy_functions_dev:
         needs: prepare_and_build
         if: >-
-          needs.prepare_and_build.outputs.has_changes == 'true' && 
-          needs.prepare_and_build.outputs.matrix != '' && 
+          needs.prepare_and_build.outputs.has_changes == 'true' &&
+          needs.prepare_and_build.outputs.matrix != '' &&
           toJson(fromJson(needs.prepare_and_build.outputs.matrix).include) != '[]'
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            id-token: write
         strategy:
             max-parallel: 1
             matrix: ${{ fromJson(needs.prepare_and_build.outputs.matrix) }}
@@ -139,6 +185,23 @@ jobs:
             - uses: actions/checkout@v4
               with:
                 fetch-depth: 1
+
+            # Keyless WIF auth. token_format: access_token mints a short-lived
+            # OAuth token; firebase deploy gets it via --token below. Pure ADC
+            # (the external_account credential file) doesn't work for the deploy
+            # path and `gcloud auth print-access-token` is rejected by
+            # firebase-tools 15 — see #231 / maple #490.
+            - name: Authenticate to Google Cloud (Dev)
+              id: auth
+              uses: google-github-actions/auth@v2
+              with:
+                  workload_identity_provider: 'projects/1062901014652/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+                  service_account: 'github-deployer@mountain-sol-platform-dev.iam.gserviceaccount.com'
+                  create_credentials_file: true
+                  token_format: 'access_token'
+
+            - name: Setup gcloud CLI
+              uses: google-github-actions/setup-gcloud@v2
 
             - name: Setup Node.js
               uses: actions/setup-node@v4
@@ -150,23 +213,33 @@ jobs:
               with:
                 name: dist-functions
 
-            - name: Verify download
-              run: ls -la
-
             - name: Install dependencies
               run: npm ci
 
-            - name: Deploy functions group
-              id: deploy
+            - name: Deploy functions group to Dev
               if: matrix.functions != ''
-              uses: w9jds/firebase-action@v13.16.0
-              with:
-                  args: deploy --only ${{ matrix.functions }} --project prod
-              env:
-                  GCP_SA_KEY: ${{ secrets.FIREBASE_GCP_SA_KEY }}
-              
+              # firebase-tools is pinned to 15.22.x (the version that fixed
+              # keyless-token functions deploys — maple #497) and run via npx so
+              # we don't disturb the repo's 14.x used by the emulator suites.
+              # Retry absorbs transient GCS 5xx on the source upload.
+              run: |
+                set -o pipefail
+                for attempt in 1 2 3; do
+                  if npx -y firebase-tools@15.22.2 deploy \
+                    --only ${{ matrix.functions }} \
+                    --project dev \
+                    --force \
+                    --token "${{ steps.auth.outputs.access_token }}"; then
+                    exit 0
+                  fi
+                  if [ $attempt -lt 3 ]; then
+                    echo "::warning::firebase deploy to dev attempt $attempt failed; retrying in 30s"
+                    sleep 30
+                  fi
+                done
+                echo "::error::firebase deploy to dev failed after 3 attempts"
+                exit 1
+
             - name: Skip empty function group
               if: matrix.functions == ''
-              run: |
-                echo "Skipping deployment for empty function group"
-                exit 0
+              run: echo "Skipping deployment for empty function group"
