@@ -9,7 +9,7 @@
     },
     "hosting": [
         {
-            "site": "mountain-sol-platform",
+            "target": "portal",
             "public": "public",
             "ignore": [
                 "firebase.json",

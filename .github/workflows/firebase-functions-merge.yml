@@ -1,21 +1,24 @@
-name: Deploy Firebase Functions on merge
+name: Deploy on merge
 
 # Promotion pipeline (built up across epic #230):
 #
 #   merge to main
 #     ├── prepare_and_build       (compute affected functions, build artifact)
-#     └── deploy_functions_dev    (affected functions -> mountain-sol-platform-dev, WIF)
+#     ├── deploy_functions_dev    (affected functions -> mountain-sol-platform-dev, WIF)
+#     └── deploy_hosting_dev       (enrollment-portal `dev` build -> dev Hosting, WIF)
 #
-# As of #232 this workflow deploys to DEV ONLY. Dev deploys via keyless
+# As of #232/#233 this workflow deploys to DEV ONLY. Dev deploys via keyless
 # Workload Identity Federation (a short-lived access token minted by
 # google-github-actions/auth, passed to `firebase deploy --token`; see #231).
-# Prod function deploys were intentionally removed here and return, behind the
-# manual approval gate, in #236 — with the deployed-dev E2E gate (#234) and the
-# approval gate (#235) slotting in between. Until then prod functions are not
-# auto-deployed on merge.
+# Prod deploys (functions + hosting) were intentionally removed here and return,
+# behind the manual approval gate, in #236 — with the deployed-dev E2E gate
+# (#234) and the approval gate (#235) slotting in between. Until then nothing is
+# auto-deployed to prod on merge. (The old firebase-hosting-merge.yml, which
+# deployed the portal straight to prod, was deleted in #233.)
 #
-# workflow_dispatch (deploy_all) deploys ALL functions to dev, ignoring the
-# affected check, so the dev pipeline can be trial-verified end to end.
+# workflow_dispatch deploys to dev for trial verification: deploy_all also
+# deploys ALL functions (ignoring the affected check), and the hosting job
+# always runs.
 
 on:
     push:
@@ -243,3 +246,63 @@ jobs:
             - name: Skip empty function group
               if: matrix.functions == ''
               run: echo "Skipping deployment for empty function group"
+
+    deploy_hosting_dev:
+        # Build the enrollment-portal `dev` configuration (which targets the dev
+        # Firebase project — see #231) and deploy it to the dev Hosting site via
+        # the `portal` target. Independent of the functions matrix: runs on every
+        # merge so the deployed-dev portal stays current for the #234 E2E gate.
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                fetch-depth: 1
+
+            - name: Authenticate to Google Cloud (Dev)
+              id: auth
+              uses: google-github-actions/auth@v2
+              with:
+                  workload_identity_provider: 'projects/1062901014652/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+                  service_account: 'github-deployer@mountain-sol-platform-dev.iam.gserviceaccount.com'
+                  create_credentials_file: true
+                  token_format: 'access_token'
+
+            - name: Setup gcloud CLI
+              uses: google-github-actions/setup-gcloud@v2
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: '22'
+                cache: 'npm'
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build enrollment-portal (dev)
+              run: npx nx run enrollment-portal:build:dev --outputPath="public"
+
+            - name: Deploy portal to dev Hosting
+              # firebase-tools pinned to match the functions job (keyless-token
+              # deploys); retry absorbs transient upload 5xx.
+              run: |
+                set -o pipefail
+                for attempt in 1 2 3; do
+                  if npx -y firebase-tools@15.22.2 deploy \
+                    --only hosting:portal \
+                    --project dev \
+                    --force \
+                    --token "${{ steps.auth.outputs.access_token }}"; then
+                    exit 0
+                  fi
+                  if [ $attempt -lt 3 ]; then
+                    echo "::warning::dev hosting deploy attempt $attempt failed; retrying in 30s"
+                    sleep 30
+                  fi
+                done
+                echo "::error::dev hosting deploy failed after 3 attempts"
+                exit 1

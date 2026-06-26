@@ -4,5 +4,17 @@
         "dev": "mountain-sol-platform-dev",
         "prod": "mountain-sol-platform",
         "emulator": "mountain-sol-platform"
+    },
+    "targets": {
+        "mountain-sol-platform": {
+            "hosting": {
+                "portal": ["mountain-sol-platform"]
+            }
+        },
+        "mountain-sol-platform-dev": {
+            "hosting": {
+                "portal": ["mountain-sol-platform-dev"]
+            }
+        }
     }
 }
