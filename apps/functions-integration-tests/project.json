@@ -7,7 +7,9 @@
     "targets": {
         "test": {
             "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/apps/functions-integration-tests"],
+            "outputs": [
+                "{workspaceRoot}/coverage/apps/functions-integration-tests"
+            ],
             "options": {
                 "jestConfig": "apps/functions-integration-tests/jest.config.ts",
                 "runInBand": true
@@ -16,7 +18,7 @@
         "test-with-emulators": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx nx run functions:build && firebase emulators:exec --project=dev --only auth,firestore,functions \"npx nx run functions-integration-tests:test\""
+                "command": "npx nx run functions:build && firebase emulators:exec --project=emulator --only auth,firestore,functions \"npx nx run functions-integration-tests:test\""
             }
         }
     }

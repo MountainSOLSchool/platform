@@ -1,7 +1,8 @@
 {
     "projects": {
         "default": "mountain-sol-platform",
-        "dev": "mountain-sol-platform",
-        "prod": "mountain-sol-platform"
+        "dev": "mountain-sol-platform-dev",
+        "prod": "mountain-sol-platform",
+        "emulator": "mountain-sol-platform"
     }
 }

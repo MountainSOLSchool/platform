@@ -85,6 +85,11 @@ jobs:
     integration-tests:
         name: Firebase Integration Tests
         runs-on: ubuntu-latest
+        # Fail fast if the emulators hang on startup instead of burning the
+        # 6h job default (an unauthenticated emulators:exec given a literal
+        # real project id stalls fetching prod config — see the `emulator`
+        # alias below).
+        timeout-minutes: 25
         if: github.repository == 'MountainSOLSchool/platform'
         steps:
             - uses: actions/checkout@v4
@@ -113,12 +118,20 @@ jobs:
                   BRAINTREE_VENMO_PROFILE_ID=fake_venmo_profile_id
                   BRAINTREE_VENMO_PROFILE_ID_PROD=fake_venmo_profile_id_prod
                   EOF
+            # Use the `emulator` alias (-> mountain-sol-platform), NOT the
+            # literal project id: firebase-tools treats a literal id as an
+            # explicit prod project and, when unauthenticated (as CI is),
+            # stalls fetching its Admin SDK config. An alias key keeps the
+            # emulators offline. The alias resolves to the same id the seed
+            # helpers + app config hardcode, so no singleProjectMode bridging.
             - name: Run integration tests with emulators
-              run: npx firebase emulators:exec --project=dev --only auth,firestore,functions "npx nx run functions-integration-tests:test"
+              run: npx firebase emulators:exec --project=emulator --only auth,firestore,functions "npx nx run functions-integration-tests:test"
 
     enrollment-e2e:
         name: Enrollment E2E
         runs-on: ubuntu-latest
+        # Fail fast if the emulators hang on startup (see integration-tests).
+        timeout-minutes: 25
         if: github.repository == 'MountainSOLSchool/platform'
         steps:
             - uses: actions/checkout@v4
@@ -153,7 +166,7 @@ jobs:
             # to the wrapped command, so global-setup seeds the right ports. The
             # e2e target's Playwright webServer serves the app in emulator mode.
             - name: Run enrollment E2E with emulators
-              run: npx firebase emulators:exec --project=dev --config firebase.e2e.json --only auth,firestore,functions "npx nx run enrollment-portal-e2e:e2e"
+              run: npx firebase emulators:exec --project=emulator --config firebase.e2e.json --only auth,firestore,functions "npx nx run enrollment-portal-e2e:e2e"
             - name: Upload Playwright report on failure
               if: failure()
               uses: actions/upload-artifact@v4

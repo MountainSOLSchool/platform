@@ -54,6 +54,31 @@
                     ],
                     "outputHashing": "all"
                 },
+                "dev": {
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "1mb",
+                            "maximumError": "2mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "2kb",
+                            "maximumError": "4kb"
+                        }
+                    ],
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/enrollment-portal/src/environments/environment.ts",
+                            "with": "apps/enrollment-portal/src/environments/environment.dev.ts"
+                        },
+                        {
+                            "replace": "libs/ts/firebase/firebase-config/src/lib/sol-firebase-config.ts",
+                            "with": "libs/ts/firebase/firebase-config/src/lib/sol-firebase-config.dev.ts"
+                        }
+                    ],
+                    "outputHashing": "all"
+                },
                 "development": {
                     "buildOptimizer": false,
                     "optimization": false,
@@ -86,6 +111,9 @@
             "configurations": {
                 "production": {
                     "buildTarget": "enrollment-portal:build:production"
+                },
+                "dev": {
+                    "buildTarget": "enrollment-portal:build:dev"
                 },
                 "development": {
                     "buildTarget": "enrollment-portal:build:development",
