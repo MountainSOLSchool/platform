@@ -18,7 +18,7 @@
         "test-with-emulators": {
             "executor": "nx:run-commands",
             "options": {
-                "command": "npx nx run functions:build && firebase emulators:exec --project=mountain-sol-platform --only auth,firestore,functions \"npx nx run functions-integration-tests:test\""
+                "command": "npx nx run functions:build && firebase emulators:exec --project=emulator --only auth,firestore,functions \"npx nx run functions-integration-tests:test\""
             }
         }
     }
