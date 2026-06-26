@@ -5,7 +5,8 @@ name: Deploy on merge
 #   merge to main
 #     ├── prepare_and_build       (compute affected functions, build artifact)
 #     ├── deploy_functions_dev    (affected functions -> mountain-sol-platform-dev, WIF)
-#     └── deploy_hosting_dev       (enrollment-portal `dev` build -> dev Hosting, WIF)
+#     ├── deploy_hosting_dev       (enrollment-portal `dev` build -> dev Hosting, WIF)
+#     └── e2e_dev                  (core enrollment Playwright vs the deployed dev stack)
 #
 # As of #232/#233 this workflow deploys to DEV ONLY. Dev deploys via keyless
 # Workload Identity Federation (a short-lived access token minted by
@@ -331,3 +332,63 @@ jobs:
                 done
                 echo "::error::dev hosting deploy failed after 3 attempts"
                 exit 1
+
+    e2e_dev:
+        # The gate: run the core enrollment E2E against the deployed dev stack
+        # (portal on dev Hosting + callables on the dev project). Seeds dev
+        # Firestore/Auth via the Admin SDK over ADC. Runs once both dev deploys
+        # are healthy; deploy_functions_dev is skipped on no-op merges, so treat
+        # skipped as ok. always() is needed because a skipped need would
+        # otherwise skip this job too.
+        needs: [deploy_functions_dev, deploy_hosting_dev]
+        if: >-
+          always() &&
+          (needs.deploy_functions_dev.result == 'success' || needs.deploy_functions_dev.result == 'skipped') &&
+          needs.deploy_hosting_dev.result == 'success'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                fetch-depth: 1
+
+            # create_credentials_file exports GOOGLE_APPLICATION_CREDENTIALS so
+            # the Admin SDK seed/teardown reaches dev Firestore/Auth via ADC.
+            - name: Authenticate to Google Cloud (Dev)
+              uses: google-github-actions/auth@v2
+              with:
+                  workload_identity_provider: 'projects/1062901014652/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+                  service_account: 'github-deployer@mountain-sol-platform-dev.iam.gserviceaccount.com'
+                  create_credentials_file: true
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                # Pinned 22.22.3: Node 22.23.0 regressed node-fetch keep-alive
+                # (false "Premature close" on concurrent requests) — maple #503.
+                node-version: '22.22.3'
+                cache: 'npm'
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Install Playwright browser
+              run: npx playwright install --with-deps chromium
+
+            - name: Run deployed-dev E2E
+              env:
+                  E2E_TARGET: dev
+                  GOOGLE_CLOUD_PROJECT: mountain-sol-platform-dev
+              run: npx nx run enrollment-portal-e2e:e2e
+
+            - name: Upload Playwright report on failure
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report-dev
+                  path: |
+                      apps/enrollment-portal-e2e/playwright-report/**
+                      apps/enrollment-portal-e2e/test-results/**
+                  retention-days: 7

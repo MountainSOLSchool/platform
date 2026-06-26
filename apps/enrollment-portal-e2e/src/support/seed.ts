@@ -130,6 +130,12 @@ export async function clearAll(): Promise<void> {
  * Draft doc location: enrollment_draft/{userId} (_deleteEnrollmentDraft.ts).
  */
 export async function clearEnrollmentDrafts(): Promise<void> {
+    // Dev target has no emulator REST surface. The dev seed recreates the test
+    // user with a fresh uid each run, so there's no stale draft to clear — and
+    // global-teardown removes the user's draft anyway. No-op against dev.
+    if (process.env['E2E_TARGET'] === 'dev') {
+        return;
+    }
     await deleteFirestoreCollection('enrollment_draft');
 }
 
