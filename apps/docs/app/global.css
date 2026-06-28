@@ -1,0 +1,31 @@
+/* Screenshot placeholder + figure styling for the <Shot> component. */
+.sol-shot {
+    margin: 1.25rem 0;
+}
+
+.sol-shot img {
+    max-width: 100%;
+    border: 1px solid var(--nextra-border, #e5e7eb);
+    border-radius: 0.5rem;
+}
+
+.sol-shot figcaption {
+    margin-top: 0.4rem;
+    font-size: 0.85em;
+    opacity: 0.7;
+}
+
+.sol-shot--pending {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem 1.25rem;
+    border: 2px dashed var(--nextra-border, #d1d5db);
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.sol-shot--pending code {
+    font-size: 0.8em;
+    opacity: 0.6;
+}
