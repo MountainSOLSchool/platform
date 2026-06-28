@@ -1,0 +1,45 @@
+---
+title: Enrollment messages
+---
+
+# Enrollment messages
+
+**Enrollment messages** are banners shown at the **top of the enrollment flow** —
+use them for announcements, deadlines, or promotions. Several can be active at
+once. Open the editor from **Enrollment Messages** on the Admin Dashboard
+(`/admin/messages`).
+
+<Shot slug="enrollment-messages" caption="The Enrollment Messages editor." />
+
+> Unlike the info panel and confirmation email, enrollment messages are **not tied
+> to a semester** — they show across the enrollment flow until you turn them off or
+> they expire.
+
+## Adding a message
+
+Click **Add Message**. Each message is a card with:
+
+| Field | What it does |
+| --- | --- |
+| **Active** | Toggle the message on or off without deleting it. |
+| **Text** | The message itself — a markdown editor (`**bold**`, `[link](url)`). |
+| **Severity** | The color/tone: **Info** (blue), **Warning** (amber), **Success** (green), or **Promotional** (yellow). |
+| **Start Date** *(optional)* | When the message should begin showing. |
+| **End Date** *(optional)* | When it should stop — handy for time-limited notices. |
+
+Use the **trash icon** on a card to remove a message.
+
+## Saving
+
+Click **Save All** to save every message at once — you'll see *"Messages saved
+successfully!"* The dates let messages turn themselves on and off, so you can set up
+a promotion ahead of time and leave it.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/messages. Component: EnrollmentMessagesEditorComponent.
+  - Global (not per-semester). Per-message: active, text (markdown), severity
+    (info/warning/success/promotional), optional start/end dates; per-card delete.
+  - "Save All" persists the whole list (updateEnrollmentMessages).
+  - Source: libs/angular/admin/enrollment-messages/.
+*/}
