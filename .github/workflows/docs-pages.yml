@@ -1,0 +1,59 @@
+name: Deploy Docs to Pages
+
+# Builds the Admin Guide (apps/docs) as a static site and publishes it to
+# GitHub Pages. Independent of the Firebase functions/hosting pipeline — the
+# docs site is pure static output with no backend.
+
+on:
+    push:
+        branches: [main]
+        paths:
+            - 'apps/docs/**'
+            - '.github/workflows/docs-pages.yml'
+    workflow_dispatch:
+
+permissions:
+    contents: read
+    pages: write
+    id-token: write
+
+# Allow one concurrent Pages deployment; let in-flight runs finish.
+concurrency:
+    group: pages
+    cancel-in-progress: false
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        steps:
+            - uses: actions/checkout@v7
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '24'
+                  cache: 'npm'
+            - run: npm ci
+            - name: Build static site
+              run: npx nx run docs:build-pages
+              env:
+                  # Project Pages serve under /<repo>. Set to '' once the custom
+                  # domain (docs.mountainsol.org) is live (#259).
+                  DOCS_BASE_PATH: /platform
+            - uses: actions/configure-pages@v5
+            - uses: actions/upload-pages-artifact@v3
+              with:
+                  path: apps/docs/out
+
+    deploy:
+        name: Deploy
+        needs: build
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        steps:
+            - id: deployment
+              uses: actions/deploy-pages@v4

@@ -38,10 +38,12 @@
                 }
             }
         },
-        "export": {
-            "executor": "@nx/next:export",
+        "build-pages": {
+            "executor": "nx:run-commands",
+            "outputs": ["{projectRoot}/out"],
             "options": {
-                "buildTarget": "docs:build:production"
+                "cwd": "apps/docs",
+                "command": "DOCS_EXPORT=1 npx next build"
             }
         }
     }
