@@ -1,0 +1,48 @@
+{
+    "name": "docs",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "apps/docs",
+    "projectType": "application",
+    "tags": [],
+    "targets": {
+        "build": {
+            "executor": "@nx/next:build",
+            "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
+            "options": {
+                "outputPath": "apps/docs"
+            },
+            "configurations": {
+                "development": {
+                    "outputPath": "apps/docs"
+                },
+                "production": {}
+            }
+        },
+        "serve": {
+            "executor": "@nx/next:server",
+            "defaultConfiguration": "development",
+            "options": {
+                "buildTarget": "docs:build",
+                "dev": true
+            },
+            "configurations": {
+                "development": {
+                    "buildTarget": "docs:build:development",
+                    "dev": true,
+                    "port": 4202
+                },
+                "production": {
+                    "buildTarget": "docs:build:production",
+                    "dev": false
+                }
+            }
+        },
+        "export": {
+            "executor": "@nx/next:export",
+            "options": {
+                "buildTarget": "docs:build:production"
+            }
+        }
+    }
+}

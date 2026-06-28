@@ -1,0 +1,25 @@
+---
+title: Admin access & roles
+---
+
+# Admin access & roles
+
+> _Stub — full content tracked in [#250](https://github.com/MountainSOLSchool/platform/issues/250)._
+
+Mountain SOL staff sign in with the same email/password login families use
+(Firebase Auth). Two admin roles unlock the admin areas:
+
+- **`admin`** — full access to `/admin/*` (classes, enrollments, discounts,
+  students, reports, t-shirts, messages). Enforced by `admin.guard.ts`.
+- **`medicAdmin`** — access to the separate `/medic/admin/*` area only. Enforced
+  by `medic-admin.guard.ts`.
+
+Roles are granted via the `roles` Cloud Function; a person needs the role on
+their account before the admin nav appears.
+
+<Shot slug="admin-login" caption="The portal sign-in screen." />
+
+<Shot slug="admin-nav" caption="Admin navigation as seen by an admin user." />
+
+**Source:** `apps/enrollment-portal/src/app/admin.guard.ts`,
+`medic-admin.guard.ts`; `roles` function (see `firebase.json`).

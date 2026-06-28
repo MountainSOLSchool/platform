@@ -1,0 +1,25 @@
+---
+title: Enrollment & Discounts
+---
+
+# Enrollment & Discounts
+
+> _Stub — full content tracked in [#253](https://github.com/MountainSOLSchool/platform/issues/253)._
+
+View enrollments and manage discount codes.
+
+- **View enrollments** (`/admin/enrollments`) — table of enrollments with class
+  names, applied discounts, and refund status.
+- **Revoke & refund** — revoke an enrollment with a **Braintree refund**,
+  including **partial revocation with refund calculation**
+  ([#210](https://github.com/MountainSOLSchool/platform/pull/210)–[#213](https://github.com/MountainSOLSchool/platform/pull/213)).
+- **Discounts** (`/admin/discounts`) — create/edit/delete codes across several
+  types (fixed, percentage, expiring, class-specific, free-class, buy-X-get-%),
+  with active/inactive filtering.
+
+<Shot slug="admin-enrollments" caption="Admin enrollments table." />
+
+<Shot slug="discount-form" caption="Creating a discount code." />
+
+**Source:** `libs/angular/admin/enrollments/`,
+`libs/angular/admin/discounts/`.
