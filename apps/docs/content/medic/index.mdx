@@ -2,21 +2,68 @@
 title: Medic Admin
 ---
 
-# Medic Admin
+# Medic classes
 
-> _Stub — full content tracked in [#255](https://github.com/MountainSOLSchool/platform/issues/255)._
+The **Medic program** has its own separate admin area at
+<Portal path="/medic/admin/classes">/medic/admin</Portal>, for managing Medic
+classes and their enrollments. It requires **Medic admin** access (see
+[Admin access & roles](/getting-started/admin-access)) and works independently of
+the youth-program [Class Management](/class-management).
 
-A separate, parallel admin area for the Medic program, gated by `medicAdmin`
-(distinct from full `admin`).
+It's also simpler than youth classes — no units, images, or sliding scale; just
+the essentials below.
 
-- **Medic class list** (`/medic/admin`) — create/view classes; archived toggle.
-- **Create or edit a Medic class** — name, description, cost, location,
-  date/time, capacity.
-- **Medic enrollments** — view enrollments (student, email, transaction, amount,
-  status); filter by class; show archived.
+<Shot slug="medic-class-list" caption="The Medic Classes list." />
 
-<Shot slug="medic-class-list" caption="Medic admin class list." />
+## The Medic classes list
 
-<Shot slug="medic-enrollments" caption="Medic enrollments view." />
+The <Portal path="/medic/admin/classes">Medic Classes</Portal> screen lists each
+class with its **Name**, **Date & Time**, **Cost**, **Enrolled** (count / max), and
+**Status**. Each row has **Edit** (pencil) and **View Enrollments** (people)
+actions.
 
-**Source:** `libs/angular/medic/admin/`.
+- **Show Archived** — toggle on to include archived classes (hidden by default).
+- **New Class** — opens the blank class form.
+
+### Statuses
+
+| Status | Meaning |
+| --- | --- |
+| **Draft** | Not yet visible to families |
+| **Published** | Live and enrollable |
+| **Archived** | Retired and hidden (toggle **Show Archived** to see) |
+
+## Creating or editing a Medic class
+
+Click **New Class** (or **Edit** on a row) to open the form:
+
+| Field | Notes |
+| --- | --- |
+| **Class Name** | Required. |
+| **Description** | Free text. |
+| **Cost ($)** | Required; must be greater than 0. |
+| **Status** | **Draft** or **Published** (and **Archived** when editing). |
+| **Location** | Where it meets. |
+| **Date** | Free text, e.g. *March 15, 2026*. |
+| **Time** | Free text, e.g. *9:00 AM - 3:00 PM*. |
+| **Min / Max Students** | Capacity for the class. |
+
+> Unlike youth classes, the **Date** and **Time** here are plain text you type —
+> there's no calendar or day picker.
+
+Click **Create Class** / **Update Class** to save (you'll get a confirmation and a
+**Back to Classes** link), or **Cancel** to discard.
+
+<Shot slug="medic-class-form" caption="The Medic class form." />
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Routes: /medic/admin -> classes; classes/create; classes/edit/:id;
+    classes/enrollments/:classId; enrollments. Guard: userGuard + medicAdminGuard.
+  - List columns: name, date&time, cost, enrolled (count/max), status chip
+    (draft/published/archived), actions (edit, view enrollments). Show Archived toggle.
+  - Form fields: name (req), description, cost (req >0), status (draft/published;
+    archived only when editing), location, date (free text), time (free text),
+    minStudents, maxStudents.
+  - Source: libs/angular/medic/admin/.
+*/}

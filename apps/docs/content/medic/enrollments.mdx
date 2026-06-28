@@ -1,0 +1,32 @@
+---
+title: Medic enrollments
+---
+
+# Medic enrollments
+
+The <Portal path="/medic/admin/enrollments">Medic Enrollments</Portal> screen lists
+everyone enrolled in Medic classes. You can also reach a single class's enrollments
+from the **View Enrollments** (people) icon on the
+[Medic classes](/medic) list.
+
+<Shot slug="medic-enrollments" caption="The Medic enrollments screen." />
+
+Each row shows the **Student Name**, **Email**, **Class**, **Amount**,
+**Transaction ID**, and **Date**.
+
+Two controls at the top:
+
+- **Filter by Class** — narrow to a single Medic class, or **All Classes**.
+- **Show Archived Classes** — include classes that have been archived in the filter
+  list.
+
+If nothing matches, you'll see *"No enrollments found."*
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Routes: /medic/admin/enrollments and /medic/admin/classes/enrollments/:classId.
+    Component: MedicAdminEnrollmentsComponent.
+  - Columns: studentName, studentEmail, className, amount, transactionId, timestamp.
+    Filter by class + Show Archived Classes toggle.
+  - Source: libs/angular/medic/admin/.
+*/}
