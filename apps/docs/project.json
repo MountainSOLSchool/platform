@@ -43,7 +43,7 @@
             "outputs": ["{projectRoot}/out"],
             "options": {
                 "cwd": "apps/docs",
-                "command": "DOCS_EXPORT=1 npx next build"
+                "command": "DOCS_EXPORT=1 npx next build && npx pagefind --site out --output-subdir _pagefind"
             }
         }
     }
