@@ -1,0 +1,144 @@
+---
+title: Creating & editing a class
+---
+
+# Creating & editing a class
+
+Click **Create New Class** on the [Manage Classes](/class-management) screen (or
+**Edit** on an existing class) to open the class form. It's one long form, grouped
+into sections. You can **save a draft at any time** — only *publishing* a class
+requires every field to be filled in correctly (see [Visibility](#visibility)).
+
+<Shot slug="class-form-overview" caption="The class creation form." />
+
+## Basic information
+
+| Field | Notes |
+| --- | --- |
+| **Semester** | Which semester the class belongs to (pre-filled from the screen you came from). |
+| **Class Name** | Required. The name families see, e.g. *Forest Explorers*. |
+| **Description** | What students will learn. This is a [markdown editor](#the-description-editor) with **Write** and **Preview** tabs. |
+| **Class Type** | Required. A label like *Homeschool* or *Camp*; suggestions appear as you type. |
+| **Age Group** | *Zorros and Jaguares* is the standard group (leave it as the default for most classes). *Mallards* and *Mapaches* are the younger groups and change how [units](#units) work. |
+
+### The description editor
+
+The Description field is a small markdown editor:
+
+- **Write** tab — type your text. Toolbar buttons add **bold**, *italic*, bulleted
+  and numbered lists, and links.
+- **Preview** tab — see how it will look.
+
+Markdown basics: `**bold**`, `*italic*`, `- list item`, `[link text](https://…)`.
+
+## Class image
+
+Upload the picture shown on the class card. **Drag and drop** an image onto the box
+or click to browse. JPG, PNG, WebP, and GIF are supported, up to **5 MB**. After
+selecting, you'll see a preview with an **✕** to remove it and pick another.
+
+> Use a clear, landscape-oriented photo — it's displayed wide on the class card.
+
+<Shot slug="class-form-image" caption="The class image upload area with a preview." />
+
+## Schedule
+
+| Field | Notes |
+| --- | --- |
+| **Start Date** / **End Date** | The first and last class meetings. |
+| **Registration End Date** | The last day families can enroll. |
+| **Day(s) of Week** | Pick the meeting days. A preview shows how it'll read to families — e.g. *M-F*, *Weekends*, or *M, W, F*. |
+| **Start / End Time** | Set the class times. A preview shows the friendly form, e.g. *9am-12pm*. |
+| **Location** | Where the class meets; suggestions appear as you type. |
+
+## Enrollment settings
+
+| Field | Notes |
+| --- | --- |
+| **Minimum / Maximum Grade** | The grade range, from 2nd to 12th. |
+| **Minimum Students** | The fewest students needed to run the class. |
+| **Maximum Students** | The cap — once reached, the class is full. |
+
+## Pricing
+
+- **Cost ($)** — the standard price for the class.
+- **Enable sliding scale pricing** — turn this on to let families **choose what they
+  pay within a range**. It reveals a **Minimum ($)** and **Maximum ($)**. On the
+  class list and enrollment page the price then shows as a range (e.g. *$120 -
+  $180*). Use this for pay-what-you-can / affordability.
+
+<Shot slug="class-form-pricing" caption="Pricing with sliding scale enabled." />
+
+## Additional options
+
+Optional **paid add-ons** families can choose during enrollment — e.g. an extra
+hour of care, or a field-trip fee.
+
+1. Turn on **Enable additional options**.
+2. For each add-on, fill in a **Description** (e.g. *Additional hour after class,
+   4pm-5pm*) and a **Cost ($)**.
+3. Use **Add Option** for more, or the red trash icon to remove one.
+
+## Instructors
+
+**Select Instructors** — choose one or more instructors from the list (shown as
+first and last name). At least one is required to publish.
+
+## Units
+
+Units are the skills/badges students earn by completing the class. The **unit
+selector** shows a header with how many are selected and a **Clear All** button.
+
+- For standard classes (Zorros and Jaguares), units are laid out **by path** in
+  columns — each path lists its **Required** units and elective groups, plus an
+  **Other** column for units not in a path.
+- For **Mallards / Mapaches**, units show as a simple list.
+
+Check the units this class grants. Hover the info icon on a unit to see its
+description.
+
+<Shot slug="class-form-units" caption="The unit selector in paths view." />
+
+## Visibility
+
+Three toggles at the bottom control what families see. They map to the
+[statuses](/class-management#class-statuses) on the class list:
+
+- **Publish class (visible to public)** — makes the class **Live** and enrollable.
+- **Pause enrollment (visible but not enrollable)** — keep the class visible but
+  turn off the enroll button (**Paused**).
+- **Information only (no enrollment)** — show the class for info with no enrollment
+  (**Info Only**).
+
+Leaving **Publish** off keeps the class a **Draft** (admin-only).
+
+<Shot slug="class-form-visibility" caption="The visibility toggles." />
+
+### Why you might not be able to publish
+
+You can save a **Draft** with missing fields, but to **publish** (turn on
+*Publish class*) every required field must be valid: Semester, Class Name, Class
+Type, Start/End/Registration dates, days, times, Location, and at least one
+instructor.
+
+If something's missing, the **Publish** toggle is disabled and a **Why can't I
+publish?** link appears that lists exactly what to fix.
+
+## Saving
+
+- **Create Class** / **Save Changes** writes your changes; you'll see a green
+  confirmation, with a **Create Another** shortcut after creating.
+- **Cancel** returns to the list without saving.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Component: ClassFormComponent. Routes: .../create?semesterId, .../edit/:classId?semesterId.
+  - Required (classValidationSuite): semesterId, name, classType, startDate, endDate,
+    registrationEndDate, weekday, dailyTimes, location, instructorIds(length>0).
+  - Draft (live:false) saves without validation; live:true blocked while invalid.
+  - Sub-widgets: sol-markdown-editor, sol-image-upload (5MB, JPG/PNG/WebP/GIF, no crop UI),
+    sol-weekday-selector, sol-time-range-selector, sol-unit-selector (paths vs age-group view).
+  - Age group "": standard (paths); "mallards"/"mapaches": flat unit list.
+  - Image stored in Cloud Storage (thumbnailUrl) — do not surface to readers.
+  - pausedForEnrollment toggle only present in edit mode.
+*/}
