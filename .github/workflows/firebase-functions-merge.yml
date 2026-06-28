@@ -462,9 +462,15 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                # Pinned 22.22.3: Node 22.23.0 regressed node-fetch keep-alive
-                # (false "Premature close" on concurrent requests) — maple #503.
-                node-version: '22.22.3'
+                # Node 24 to match the rest of the workflow. The repo moved to
+                # Node 24 (#262/#264) and regenerated package-lock.json with
+                # Node 24's npm; the old 22.22.3 pin then broke `npm ci` here
+                # ("Missing ... from lock file") while every Node-24 job passed.
+                # The 22.22.3 pin originally avoided a node-fetch keep-alive
+                # regression backported to Node 22.23.0 (false "Premature close"
+                # on concurrent requests — maple #503); Node 24 carries the fix,
+                # and the Admin-SDK seed's withRetry absorbs any residual blips.
+                node-version: '24'
                 cache: 'npm'
 
             - name: Install dependencies
