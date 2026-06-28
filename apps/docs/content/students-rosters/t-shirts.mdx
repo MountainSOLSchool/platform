@@ -1,0 +1,28 @@
+---
+title: T-shirt sizes
+---
+
+# T-shirt sizes
+
+The **T-shirt Sizes** screen (`/admin/t-shirts`) shows the shirt sizes students
+picked, so you can place an order. Choose the term from the **Semester** dropdown.
+
+<Shot slug="tshirt-sizes" caption="The T-shirt sizes screen: size counts and per-student list." />
+
+## Size Counts
+
+A summary table of **Shirt Size** and **Count** — how many of each size to order for
+the semester.
+
+## Students
+
+Below that, a per-student list — **Last Name**, **First Name**, and **Shirt Size** —
+so you can see exactly who chose what. Both tables sort by clicking a column header.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/t-shirts. Component: TshirtsComponent.
+  - Size Counts table (size, count) + Students table (lastName, firstName, size),
+    scoped to selected semester.
+  - Source: apps/enrollment-portal/src/app/tshirts-component/.
+*/}

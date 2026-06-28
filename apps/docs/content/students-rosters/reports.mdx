@@ -1,0 +1,32 @@
+---
+title: Class forms & contacts
+---
+
+# Class forms & contacts
+
+The **Class Forms and Contacts** screen (`/admin/report`) gives you, per class, the
+printable forms and the contact emails you need to run the term. Pick the term from
+the **Semester** dropdown at the top.
+
+<Shot slug="class-forms-contacts" caption="The Class Forms and Contacts screen." />
+
+Each class is a row showing its **Name**, **# Enrolled Students**, and **Start** /
+**End** dates, with two buttons:
+
+| Button | What it does |
+| --- | --- |
+| **View Forms** | Opens the class's forms (the roster / sign-in and related printouts) to view, print, or save. |
+| **View Emails** | Opens the list of enrolled students' contact emails for that class — handy for sending a class-wide message. |
+
+Sort by any column header to find a class quickly.
+
+> Use **View Emails** to grab the whole class's email list in one go, rather than
+> copying addresses one student at a time.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/report. Component: ClassPrintoutsViewComponent.
+  - Columns: title, enrolledCount, start, end; actions View Forms (downloadClick ->
+    download-class-forms.service) and View Emails (copyEmailsClick -> copy-class-emails.service / class-emails dialog).
+  - Source: libs/angular/admin/class-printouts/.
+*/}
