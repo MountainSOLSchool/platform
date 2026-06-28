@@ -31,6 +31,16 @@ body {
     font-family: 'EB Garamond', Georgia, serif !important;
 }
 
+// Center CDK dialogs. CDK 21's popover-based global overlays don't apply the
+// GlobalPositionStrategy's centering to the wrapper, so dialogs land top-left
+// even with the overlay structural CSS loaded. Scoped via :has() to dialog
+// overlays only, so connected overlays (dropdowns/menus) and other global
+// overlays (snackbars/bottom-sheets) keep their own positioning.
+.cdk-global-overlay-wrapper:has(.cdk-dialog-container) {
+    justify-content: center;
+    align-items: center;
+}
+
 // Match prior PrimeNG button typography: 14px / 400.
 // Material's default reads --mat-button-{variant}-label-text-{size,weight}, falling
 // back to .875rem / 500 — at our 14px root that renders as 12.25px / 500.
