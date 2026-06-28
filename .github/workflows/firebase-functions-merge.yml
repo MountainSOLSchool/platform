@@ -5,17 +5,20 @@ name: Deploy on merge
 #   merge to main
 #     ├── prepare_and_build       (compute affected functions, build artifact)
 #     ├── deploy_functions_dev    (affected functions -> mountain-sol-platform-dev, WIF)
+#     ├── verify_functions_dev    (assert every intended function is ACTIVE)
 #     ├── deploy_hosting_dev       (enrollment-portal `dev` build -> dev Hosting, WIF)
-#     └── e2e_dev                  (core enrollment Playwright vs the deployed dev stack)
+#     ├── e2e_dev                  (core enrollment Playwright vs the deployed dev stack)
+#     └── approve_prod             (manual gate: GitHub Environment `firebase-prod`)
 #
 # As of #232/#233 this workflow deploys to DEV ONLY. Dev deploys via keyless
 # Workload Identity Federation (a short-lived access token minted by
 # google-github-actions/auth, passed to `firebase deploy --token`; see #231).
-# Prod deploys (functions + hosting) were intentionally removed here and return,
-# behind the manual approval gate, in #236 — with the deployed-dev E2E gate
-# (#234) and the approval gate (#235) slotting in between. Until then nothing is
-# auto-deployed to prod on merge. (The old firebase-hosting-merge.yml, which
-# deployed the portal straight to prod, was deleted in #233.)
+# The approve_prod gate (#235) is in place: on a real merge it pauses for a
+# required-reviewer approval once e2e_dev is green. The PROD DEPLOY jobs that
+# run after approval land in #236 — until then approval just proceeds to a
+# no-op, and nothing is auto-deployed to prod on merge. (The old
+# firebase-hosting-merge.yml, which deployed the portal straight to prod, was
+# deleted in #233.)
 #
 # workflow_dispatch deploys to dev for trial verification: deploy_all also
 # deploys ALL functions (ignoring the affected check), and the hosting job
@@ -476,3 +479,23 @@ jobs:
                       apps/enrollment-portal-e2e/playwright-report/**
                       apps/enrollment-portal-e2e/test-results/**
                   retention-days: 7
+
+    approve_prod:
+        # Manual prod-promotion gate (#235). The `firebase-prod` GitHub
+        # Environment carries a required-reviewers rule, so referencing it here
+        # makes GitHub PAUSE this job until a reviewer approves — that approval
+        # is the checkpoint #236's prod-deploy jobs depend on. This job itself
+        # does nothing but be the gate.
+        #
+        # Gated to real merges only: github.event_name == 'push' excludes the
+        # dev-only `deploy_all` workflow_dispatch trials, and the e2e_dev gate
+        # must be green first (only the dev-validated commit may reach prod).
+        needs: [e2e_dev]
+        if: >-
+          github.event_name == 'push' &&
+          needs.e2e_dev.result == 'success'
+        runs-on: ubuntu-latest
+        environment: firebase-prod
+        steps:
+            - name: Approved
+              run: echo "Approved — proceeding to prod promotion (#236)."
