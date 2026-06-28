@@ -198,6 +198,7 @@
         "lint-staged": "^15.0.2",
         "ng-packagr": "21.2.3",
         "nx": "22.7.2",
+        "pagefind": "^1.5.2",
         "postcss": "^8.5.10",
         "postcss-import": "14.1.0",
         "postcss-preset-env": "7.5.0",
