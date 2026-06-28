@@ -2,24 +2,49 @@
 title: Students & Rosters
 ---
 
-# Students & Rosters
+# Student information sheets
 
-> _Stub — full content tracked in [#254](https://github.com/MountainSOLSchool/platform/issues/254)._
+The **Student Info Sheets** screen (`/admin/students`) is a searchable directory of
+every student, with a printable **emergency information sheet** for each. This
+section also covers [Class forms & contacts](/students-rosters/reports) and
+[T-shirt sizes](/students-rosters/t-shirts).
 
-The read/report views for day-to-day operations.
+<Shot slug="student-info-table" caption="The Student Information Sheets directory." />
 
-- **Student information** (`/admin/students`) — roster table and full student
-  profiles (age, school, contact, allergies & health notes, with a
-  life-threatening-allergy flag).
-- **Reports & printouts** (`/admin/report`) — per-semester class forms with
-  student counts, downloadable forms, and copy-all-emails for a class.
-- **T-shirts** (`/admin/t-shirts`) — size selections per student and the
-  size-count summary for ordering.
+## The directory
 
-<Shot slug="student-info-table" caption="Admin student information table." />
+The top shows the **Total Students** count and a **search box** — type to filter by
+name, school, or email.
 
-<Shot slug="tshirt-summary" caption="T-shirt size summary for a semester." />
+Each student is a row:
 
-**Source:** `libs/angular/admin/students/`,
-`libs/angular/admin/class-printouts/`,
-`apps/enrollment-portal/src/app/tshirts-component/`.
+| Column | What it shows |
+| --- | --- |
+| **Name** | *Last, First* |
+| **Age** | Calculated from birth date |
+| **School** | The student's school |
+| **Contact** | Email and phone |
+| *(flag)* | A red **Life-Threatening Allergies** tag when applicable |
+| *(action)* | **View Info Sheet** |
+
+Sort by clicking a column header; page through 25 at a time (5/10/25/50 options).
+
+> The **Life-Threatening Allergies** tag is a quick visual warning — those students
+> have flagged severe allergies in their info.
+
+## The emergency info sheet
+
+Click **View Info Sheet** to open a student's full sheet — their emergency and
+health information, formatted for printing. Use the **Print** button to print it
+(or save as PDF from the print dialog) to take to class or keep on file.
+
+<Shot slug="student-info-sheet" caption="A student's printable emergency info sheet." />
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/students. Components: StudentInfoTableViewComponent, StudentInfoDisplayComponent.
+  - Columns: name (last,first), age, school, contact (email/phone), flags
+    (hasLifeThreateningAllergies), actions (View Info Sheet -> dialog with iframe + Print).
+  - Search filters firstName/lastName/school/email. Paginator 25 (5/10/25/50).
+  - Source: libs/angular/admin/students/.
+*/}
