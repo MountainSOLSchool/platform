@@ -8,15 +8,19 @@ name: Deploy on merge
 #     ├── verify_functions_dev    (assert every intended function is ACTIVE)
 #     ├── deploy_hosting_dev       (enrollment-portal `dev` build -> dev Hosting, WIF)
 #     ├── e2e_dev                  (core enrollment Playwright vs the deployed dev stack)
-#     └── approve_prod             (manual gate: GitHub Environment `firebase-prod`)
+#     ├── approve_prod             (manual gate: GitHub Environment `firebase-prod`)
+#     ├── deploy_functions_prod    (same affected functions -> mountain-sol-platform, WIF)
+#     ├── verify_functions_prod    (assert every intended function is ACTIVE in prod)
+#     └── deploy_hosting_prod      (enrollment-portal `production` build -> prod Hosting, WIF)
 #
-# As of #232/#233 this workflow deploys to DEV ONLY. Dev deploys via keyless
-# Workload Identity Federation (a short-lived access token minted by
-# google-github-actions/auth, passed to `firebase deploy --token`; see #231).
-# The approve_prod gate (#235) is in place: on a real merge it pauses for a
-# required-reviewer approval once e2e_dev is green. The PROD DEPLOY jobs that
-# run after approval land in #236 — until then approval just proceeds to a
-# no-op, and nothing is auto-deployed to prod on merge. (The old
+# Both tiers deploy via keyless Workload Identity Federation (a short-lived
+# access token minted by google-github-actions/auth, passed to `firebase deploy
+# --token`; see #231) — dev and prod each have their own WIF pool/provider +
+# github-deployer SA. A real merge first deploys + e2e-validates on dev, then
+# pauses at approve_prod for a required-reviewer approval; only after approval do
+# the prod jobs promote the SAME built artifact (#234 e2e gate, #235 approval
+# gate, #236 prod stage). deploy_all workflow_dispatch is a DEV-ONLY trial (it
+# is not a push, so it never reaches approve_prod/prod). (The old
 # firebase-hosting-merge.yml, which deployed the portal straight to prod, was
 # deleted in #233.)
 #
@@ -217,7 +221,12 @@ jobs:
                   dist/apps/functions/main.js.map
                   dist/apps/functions/package.json
                   dist/apps/functions/package-lock.json
-                retention-days: 1
+                # 5 days, not 1: deploy_functions_prod (#236) reuses this exact
+                # artifact AFTER the approve_prod gate, which can pause the run
+                # for days awaiting a reviewer. The window must outlast a
+                # realistic approval delay so prod deploys the bytes dev
+                # validated (re-run if approval takes longer than this).
+                retention-days: 5
 
     deploy_functions_dev:
         needs: prepare_and_build
@@ -499,3 +508,200 @@ jobs:
         steps:
             - name: Approved
               run: echo "Approved — proceeding to prod promotion (#236)."
+
+    deploy_functions_prod:
+        # Prod promotion (#236): deploy the SAME affected functions that were
+        # built once in prepare_and_build and validated in dev, now to
+        # mountain-sol-platform — only after approve_prod. needs approve_prod, so
+        # if that gate is skipped (non-merge, or e2e_dev red) this is skipped too.
+        # Reuses the dist-functions artifact (no rebuild) so prod gets the exact
+        # bytes dev ran.
+        needs: [prepare_and_build, approve_prod]
+        if: >-
+          needs.prepare_and_build.outputs.has_changes == 'true' &&
+          needs.prepare_and_build.outputs.matrix != '' &&
+          toJson(fromJson(needs.prepare_and_build.outputs.matrix).include) != '[]'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            id-token: write
+        strategy:
+            max-parallel: 1
+            matrix: ${{ fromJson(needs.prepare_and_build.outputs.matrix) }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                fetch-depth: 1
+
+            # Keyless WIF auth to the PROD project (mirrors the dev jobs; see
+            # #231). Prod WIF pool/provider + github-deployer SA set up to match
+            # dev exactly, swapping the project.
+            - name: Authenticate to Google Cloud (Prod)
+              id: auth
+              uses: google-github-actions/auth@v2
+              with:
+                  workload_identity_provider: 'projects/319228048592/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+                  service_account: 'github-deployer@mountain-sol-platform.iam.gserviceaccount.com'
+                  create_credentials_file: true
+                  token_format: 'access_token'
+
+            - name: Setup gcloud CLI
+              uses: google-github-actions/setup-gcloud@v2
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: '24'
+
+            - name: Download build artifacts
+              uses: actions/download-artifact@v4
+              with:
+                name: dist-functions
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Deploy functions group to Prod
+              if: matrix.functions != ''
+              # firebase-tools pinned to 15.22.x (keyless-token deploys — maple
+              # #497). Retry absorbs transient GCS 5xx on the source upload.
+              # Prod already hosts all functions, so these are UPDATES — no cold
+              # creates, so the 409 create-storm that forced GROUP_SIZE batching
+              # in dev does not apply here.
+              run: |
+                set -o pipefail
+                for attempt in 1 2 3; do
+                  if npx -y firebase-tools@15.22.2 deploy \
+                    --only ${{ matrix.functions }} \
+                    --project prod \
+                    --force \
+                    --token "${{ steps.auth.outputs.access_token }}"; then
+                    exit 0
+                  fi
+                  if [ $attempt -lt 3 ]; then
+                    echo "::warning::firebase deploy to prod attempt $attempt failed; retrying in 30s"
+                    sleep 30
+                  fi
+                done
+                echo "::error::firebase deploy to prod failed after 3 attempts"
+                exit 1
+
+            - name: Skip empty function group
+              if: matrix.functions == ''
+              run: echo "Skipping deployment for empty function group"
+
+    verify_functions_prod:
+        # Same fail-loud guard as verify_functions_dev, against the PROD project:
+        # firebase-tools exits 0 on per-function 409s, so reconcile the intended
+        # set vs the Cloud Functions API and fail if any isn't ACTIVE. Skipped
+        # when the prod deploy itself was skipped (no approval / no changes).
+        needs: [prepare_and_build, deploy_functions_prod]
+        if: >-
+          always() &&
+          needs.prepare_and_build.outputs.has_changes == 'true' &&
+          needs.deploy_functions_prod.result != 'skipped'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - name: Authenticate to Google Cloud (Prod)
+              id: auth
+              uses: google-github-actions/auth@v2
+              with:
+                  workload_identity_provider: 'projects/319228048592/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+                  service_account: 'github-deployer@mountain-sol-platform.iam.gserviceaccount.com'
+                  create_credentials_file: true
+                  token_format: 'access_token'
+
+            - name: Setup gcloud CLI
+              uses: google-github-actions/setup-gcloud@v2
+
+            - name: Assert every intended function is ACTIVE
+              run: |
+                set -o pipefail
+                EXPECTED="${{ needs.prepare_and_build.outputs.expected_functions }}"
+                TOKEN="${{ steps.auth.outputs.access_token }}"
+
+                ACTIVE=$(curl -s -H "Authorization: Bearer $TOKEN" \
+                  "https://cloudfunctions.googleapis.com/v2/projects/mountain-sol-platform/locations/-/functions?pageSize=300" \
+                  | python3 -c "import sys,json;[print(f['name'].split('/')[-1]) for f in json.load(sys.stdin).get('functions',[]) if f.get('state')=='ACTIVE']" \
+                  | sort -u)
+
+                MISSING=""
+                for fn in $EXPECTED; do
+                  echo "$ACTIVE" | grep -qx "$fn" || MISSING="$MISSING $fn"
+                done
+
+                if [ -n "$MISSING" ]; then
+                  echo "::error::Prod deploy verification FAILED — not ACTIVE in mountain-sol-platform:$MISSING"
+                  exit 1
+                fi
+                echo "✓ All $(echo $EXPECTED | wc -w) intended functions are ACTIVE in prod."
+
+    deploy_hosting_prod:
+        # Build the enrollment-portal `production` configuration and deploy it to
+        # prod Hosting (portal target → mountain-sol-platform), gated on
+        # approve_prod. Runs on every approved merge so the prod portal stays
+        # current even when no functions changed.
+        needs: [approve_prod]
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                fetch-depth: 1
+
+            - name: Authenticate to Google Cloud (Prod)
+              id: auth
+              uses: google-github-actions/auth@v2
+              with:
+                  workload_identity_provider: 'projects/319228048592/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+                  service_account: 'github-deployer@mountain-sol-platform.iam.gserviceaccount.com'
+                  create_credentials_file: true
+                  token_format: 'access_token'
+
+            - name: Setup gcloud CLI
+              uses: google-github-actions/setup-gcloud@v2
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                node-version: '24'
+                cache: 'npm'
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build enrollment-portal (production)
+              run: npx nx run enrollment-portal:build:production --outputPath="public"
+
+            - name: Deploy portal to prod Hosting
+              # Same idempotency handling as dev: a byte-identical redeploy makes
+              # the release call return HTTP 400 "is the current active version";
+              # treat that as success (maple #501).
+              run: |
+                set -o pipefail
+                OUT=$(mktemp)
+                trap 'rm -f "$OUT"' EXIT
+                for attempt in 1 2 3; do
+                  if npx -y firebase-tools@15.22.2 deploy \
+                    --only hosting:portal \
+                    --project prod \
+                    --force \
+                    --token "${{ steps.auth.outputs.access_token }}" 2>&1 | tee "$OUT"; then
+                    exit 0
+                  fi
+                  if grep -q "is the current active version" "$OUT"; then
+                    echo "::notice::Portal already at the live version — treating as success."
+                    exit 0
+                  fi
+                  if [ $attempt -lt 3 ]; then
+                    echo "::warning::prod hosting deploy attempt $attempt failed; retrying in 30s"
+                    sleep 30
+                  fi
+                done
+                echo "::error::prod hosting deploy failed after 3 attempts"
+                exit 1
