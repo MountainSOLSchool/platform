@@ -29,7 +29,7 @@
     },
     "main": "dist/apps/functions/main.js",
     "engines": {
-        "node": "22"
+        "node": "24"
     },
     "private": true,
     "overrides": {
