@@ -4,22 +4,87 @@ title: Class Management
 
 # Class Management
 
-> _Stub — full content tracked in [#251](https://github.com/MountainSOLSchool/platform/issues/251)._
+**Manage Classes** (`/admin/classes/management`) is where you create and run the
+classes families enroll in. This page covers the **class list** — the home screen
+for the area. From here you also reach:
 
-The most involved admin area: browse classes by semester and create, edit, copy,
-and bundle them.
+- [Creating & editing a class](/class-management/creating-a-class)
+- [Class groups](/class-management/class-groups) — bundle classes at a discount
+- Semester tools (Add Semester, Info Panel, Email Content) — see [Semester Setup](/semester-setup)
 
-- **Class list** — browse/filter by semester; create, view, copy, edit.
-- **Create or edit a class** — the multi-section form (basic info, image,
-  schedule, enrollment settings, pricing + sliding scale, additional paid
-  options, instructors, units/paths, visibility), validated before publish.
-- **Units & paths** — what students earn on completion; age-group variants.
-- **Class groups** — bundle classes at a discounted price.
+<Shot slug="class-list" caption="The Manage Classes screen for a selected semester." />
 
-<Shot slug="class-list" caption="Admin class list for a semester." />
+## Choosing a semester
 
-<Shot slug="class-form-overview" caption="The class creation/edit form." />
+Everything on this screen is scoped to one semester. Pick it from the **Select
+Semester** dropdown at the top (the current semester is listed first). The toolbar
+next to it has shortcuts:
 
-**Source:** `libs/angular/classes/class-management/` (`class-form/`, `class-list/`,
-`class-group-list/`, `unit-selector/`, `image-upload/`, `weekday-selector/`,
-`time-range-selector/`).
+| Button | What it does |
+| --- | --- |
+| **Add Semester** | Create a new semester — see [Semester Setup](/semester-setup) |
+| **Manage Semesters** | Set the active semester and archive old ones — see [Semester Setup](/semester-setup) |
+| **Info Panel** | Edit the info box on the enrollment page — see [Semester Setup](/semester-setup) |
+| **Email Content** | Edit the enrollment confirmation email — see [Semester Setup](/semester-setup) |
+| **Class Groups** | Bundle classes at a discount — see [Class groups](/class-management/class-groups) |
+
+> The semester buttons are disabled until you've selected a semester.
+
+## The class list
+
+Each class in the selected semester appears as a row:
+
+| Column | What it shows |
+| --- | --- |
+| **Status** | One or more colored tags — **Live** (green), **Draft** (orange), **Paused** (pink), **Info Only** (blue). See [statuses](#class-statuses) below. |
+| **Name** | The class name |
+| **Type** | The class type (e.g. Homeschool, Camp) |
+| **Schedule** | The day(s) on top (e.g. "M-F") and the time below (e.g. "9am-12pm") |
+| **Instructors** | Instructor first names |
+| **Enrolled** | How many are enrolled, and the max if one is set (e.g. "5 / 12") |
+| **Cost** | The price, or a range (e.g. "$120 - $180") if sliding scale is on |
+| **Actions** | Three icons: **View details**, **Edit**, **Copy** |
+
+At the bottom, a summary line reads e.g. *"8 classes • 5 live • 73 total enrolled."*
+
+If the semester has no classes yet, you'll see an empty state with a **Create First
+Class** button.
+
+### Class statuses
+
+The status tags tell you what families can see and do:
+
+| Status | What families see |
+| --- | --- |
+| **Live** | Published and open for enrollment |
+| **Paused** | Visible, but the enroll button is turned off |
+| **Info Only** | Shown for information, with no way to enroll |
+| **Draft** | Not visible to families at all — admin-only |
+
+A class can show more than one tag (for example, a Live class that's currently
+Paused). You set these on the class form — see
+[Visibility](/class-management/creating-a-class#visibility).
+
+## Row actions
+
+- **Create New Class** (top of the screen) — opens the blank class form. See
+  [Creating & editing a class](/class-management/creating-a-class).
+- **View details** (eye icon) — a read-only summary of the class: type, grade
+  range, description, schedule, location, dates, enrollment, cost, any add-on
+  options, and instructors.
+- **Edit** (pencil icon) — opens the class in the form.
+- **Copy** (copy icon) — duplicates the class. A dialog lets you set a **New Class
+  Name** (pre-filled with *"… (Copy)"*) and choose the **Destination Semester**
+  (handy for rolling a class forward to next term). The copy is created as a
+  **Draft** so you can review it before publishing.
+
+<Shot slug="class-copy-dialog" caption="The Copy Class dialog." />
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/classes/management (classManagementRoutes). Component: AdminClassListComponent.
+  - Status flags: live, pausedForEnrollment, forInformationOnly; Draft = live:false.
+  - Copy resets live=false, pausedForEnrollment=false, renames to user input; copies the rest.
+  - Toolbar routes: groups, info-panel/:semesterId, enrollment-email/:semesterId; Add/Manage Semesters are dialogs (reload on save).
+  - Source: libs/angular/classes/class-management/ (class-list/, copy-class dialog, class-detail dialog).
+*/}

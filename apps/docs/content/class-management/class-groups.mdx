@@ -1,0 +1,55 @@
+---
+title: Class groups
+---
+
+# Class groups
+
+A **class group** bundles two or more classes together at a single discounted
+price. When a family selects the whole bundle during enrollment, they pay the
+group price instead of the sum of the individual classes — handy for things like a
+*Morning + Afternoon Full Day*.
+
+Open it from **Class Groups** on the [Manage Classes](/class-management) toolbar
+(or go to `/admin/classes/management/groups`). Groups are per-semester — pick the
+semester at the top.
+
+<Shot slug="class-groups" caption="The Class Groups screen." />
+
+## What you see
+
+Each group is a card showing:
+
+- the **group name**,
+- the **group price**, with a **savings** badge versus paying for the classes
+  individually, and
+- the **classes in the group**, each with its individual cost.
+
+**Edit** and **Delete** buttons sit on each card. If there are no groups yet,
+you'll see a **Create First Group** button.
+
+## Creating or editing a group
+
+Click **Create Group** (or **Edit** on a card) to open the dialog:
+
+| Field | Notes |
+| --- | --- |
+| **Group Name** | What families see, e.g. *Morning + Afternoon Full Day*. |
+| **Group Cost** | The bundled price the family pays for all the classes together. |
+| **Select Classes** | Check the classes to include — **at least two**. Each shows its individual cost. |
+
+As you pick classes and set a price, a green **savings** badge shows how much the
+bundle saves versus the individual prices. The **Create / Update Group** button
+stays disabled until the group has a name and **two or more** classes.
+
+<Shot slug="class-group-dialog" caption="The create/edit class group dialog." />
+
+> A class that's already in a group won't appear in the list for another group. If
+> every class is already grouped, you'll see *"All classes are already in groups."*
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/classes/management/groups?semesterId. Components: ClassGroupListComponent,
+    ClassGroupFormDialogComponent.
+  - Min 2 classes enforced; savings = sum(individual) - group cost.
+  - Source: libs/angular/classes/class-management/class-group-list/.
+*/}
