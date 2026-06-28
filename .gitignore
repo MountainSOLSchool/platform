@@ -49,6 +49,12 @@ firebase-debug.log
 public/
 static/
 
+# Admin Guide (apps/docs) commits its own static assets — screenshots and
+# .nojekyll — so they ship in the Pages build. Re-include it despite the
+# root Firebase `public/` ignore above.
+!apps/docs/public/
+!apps/docs/public/**
+
 migrations.json
 .secret.local
 
