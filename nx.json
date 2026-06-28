@@ -175,5 +175,5 @@
             }
         }
     ],
-    "nxCloudId": "684c4ca4c2aab9206632cfd3"
+    "neverConnectToCloud": true
 }
