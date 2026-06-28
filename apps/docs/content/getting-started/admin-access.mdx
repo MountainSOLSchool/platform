@@ -4,22 +4,61 @@ title: Admin access & roles
 
 # Admin access & roles
 
-> _Stub — full content tracked in [#250](https://github.com/MountainSOLSchool/platform/issues/250)._
+Admins use the **same portal and the same email/password sign-in** as families —
+there's no separate admin login. After you sign in, the admin tools appear
+automatically if your account has been granted access.
 
-Mountain SOL staff sign in with the same email/password login families use
-(Firebase Auth). Two admin roles unlock the admin areas:
+<Shot slug="admin-login" caption="The portal sign-in screen (shared with families)." />
 
-- **`admin`** — full access to `/admin/*` (classes, enrollments, discounts,
-  students, reports, t-shirts, messages). Enforced by `admin.guard.ts`.
-- **`medicAdmin`** — access to the separate `/medic/admin/*` area only. Enforced
-  by `medic-admin.guard.ts`.
+## The two kinds of access
 
-Roles are granted via the `roles` Cloud Function; a person needs the role on
-their account before the admin nav appears.
+| Access | What it unlocks |
+| --- | --- |
+| **Admin** | The full admin suite — classes, enrollments, discounts, students, reports, t-shirts, and enrollment messages |
+| **Medic admin** | Only the separate Medic program admin |
 
-<Shot slug="admin-login" caption="The portal sign-in screen." />
+These are independent — a person can have one, both, or neither. Most staff who
+run youth-program enrollment have **Admin**; Medic-program coordinators have
+**Medic admin**. See [Medic Admin](/medic) for that area.
 
-<Shot slug="admin-nav" caption="Admin navigation as seen by an admin user." />
+## What Admin unlocks
 
-**Source:** `apps/enrollment-portal/src/app/admin.guard.ts`,
-`medic-admin.guard.ts`; `roles` function (see `firebase.json`).
+Once your account has Admin access, the **Admin Dashboard** appears at `/admin`
+with links to every area:
+
+- **Manage Classes** — create, edit, copy, and bundle classes ([Class Management](/class-management))
+- **Enrollments** — view, revoke, and refund enrollments ([Enrollment & Discounts](/enrollment-discounts))
+- **Manage Discounts** — discount codes ([Enrollment & Discounts](/enrollment-discounts))
+- **Student Info Sheets**, **Class Forms and Contacts**, **T-shirt Sizes** ([Students & Rosters](/students-rosters))
+- **Enrollment Messages** — banners on the enrollment page ([Semester Setup](/semester-setup))
+
+See the [Dashboard overview](/getting-started/dashboard) for the full map.
+
+<Shot slug="admin-nav" caption="The portal as seen by an admin, with the admin tools available." />
+
+## Getting access (or granting it)
+
+Access is granted by the Mountain SOL team — there's no self-serve setting in the
+portal. The person just needs to have **signed in to the portal at least once**
+so their account exists.
+
+To **get** Admin or Medic-admin access, or to **grant** it to a new staff member,
+contact **david@mountainsol.org** with the staff member's sign-in email and which
+access they need. Removing access works the same way.
+
+> If an admin link or page sends you back to the home screen, your account
+> doesn't have that access yet — reach out to get it added.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Sign-in: shared Firebase Auth email/password; same login as families.
+  - Roles resolved server-side via the `roles` Cloud Function.
+    Role enum: admin / medic_admin.
+  - Access is stored in Firestore `admins` / `medic_admins` collections keyed by
+    Firebase Auth userId; granting = add a doc, removing = delete it.
+  - Enforced by adminGuard / medicAdminGuard (redirect home) AND a server-side
+    re-check in every admin function.
+  - Source: apps/enrollment-portal/src/app/admin.guard.ts, medic-admin.guard.ts,
+    user.guard.ts; libs/angular/auth/user/.../user.service.ts;
+    libs/firebase/functions/src/lib/utilities/auth.utility.ts.
+*/}
