@@ -1,0 +1,73 @@
+---
+title: Discounts
+---
+
+# Discounts
+
+**Manage Discounts** (`/admin/discounts`) is where you create and manage discount
+codes families enter at checkout.
+
+<Shot slug="discount-list" caption="The discounts list with filters." />
+
+## The discount list
+
+Each code is a row showing its **Status** (Active/Inactive), **Code**, **Type**,
+and a plain-language **Details** summary (e.g. *"$10 off"*, *"15% off"*, *"$5 off
+(expires 12/31/2025)"*). The **Actions** column has **Edit** and **Delete**.
+
+Filter with:
+
+- the **Active / Inactive / All** toggle, and
+- the **Type** dropdown (All Types, or one specific type).
+
+If there are no codes yet, a **Create First Discount** button appears.
+
+## Creating or editing a discount
+
+Click **Create Discount** (or **Edit** on a row). Three fields always show:
+
+| Field | Notes |
+| --- | --- |
+| **Discount Code** | What families type at checkout, e.g. `EARLYBIRD25`. Saved in UPPERCASE and must be unique — you'll get *"Code … is already in use"* if it clashes. |
+| **Type** | Picks the kind of discount (below). The rest of the form changes to match. |
+| **Active** | Whether the code can be used right now. Toggle this off to disable a code without deleting it. |
+
+<Shot slug="discount-form" caption="The create discount form." />
+
+### Discount types
+
+| Type | What it does | Fields you fill in |
+| --- | --- | --- |
+| **Fixed Amount Off** | A flat dollar amount off | **Amount ($)** |
+| **Percentage Off** | A percent off the total | **Percent (%)** (0–100) |
+| **Fixed Amount Off (with Expiry)** | A flat amount that stops working after a date | **Amount ($)**, **Expiry Date** |
+| **Percentage Off Specific Classes** | A percent off, but only on certain classes | **Percent (%)**, **Class or Group IDs** |
+| **Free Classes** | Makes specific classes free | **Class or Group IDs** |
+| **Buy X Class Type, Get % Off** | A percent off once they buy enough of certain class types | **Percent (%)**, **Class Types**, **Minimum Classes** |
+
+> **Class or Group IDs** and **Class Types** are entered as comma-separated values
+> (e.g. `id1, id2` or `Mountain, Water`). To find a class's ID, open the class on
+> [Manage Classes](/class-management) and use **View details** — the Class ID is
+> shown there. Double-check IDs, since a typo means the discount silently won't
+> apply.
+
+Click **Create Discount** / **Update Discount** to save; you'll get a confirmation
+and return to the list.
+
+## Deleting a discount
+
+Click the **Delete** (trash) icon on a row. A dialog asks you to confirm —
+*"Are you sure you want to delete the discount code **CODE**? This action cannot be
+undone."* Click **Delete** to remove it, or disable it instead by editing and
+turning **Active** off.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Routes: /admin/discounts, .../create, .../edit/:id. Components: DiscountListComponent,
+    DiscountFormComponent, ConfirmDeleteDialogComponent.
+  - Types (value): amount, percent, amount-before-date, classes-percent, free-classes,
+    buy-x-class-type-percent. Code uppercased + unique-checked.
+  - Class/Group IDs + Class Types are raw comma-separated text (no picker) — IDs visible
+    in the class View Details dialog.
+  - Source: libs/angular/admin/discounts/.
+*/}

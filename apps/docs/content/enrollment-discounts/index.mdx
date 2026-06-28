@@ -1,25 +1,69 @@
 ---
-title: Enrollment & Discounts
+title: Enrollments
 ---
 
-# Enrollment & Discounts
+# Enrollments
 
-> _Stub — full content tracked in [#253](https://github.com/MountainSOLSchool/platform/issues/253)._
+The **Enrollments** screen (`/admin/enrollments`, or **Enrollments** on the
+dashboard) lists everyone enrolled, and is where you **revoke and refund**. For
+discount codes, see [Discounts](/enrollment-discounts/discounts).
 
-View enrollments and manage discount codes.
+<Shot slug="admin-enrollments" caption="The admin Enrollments table." />
 
-- **View enrollments** (`/admin/enrollments`) — table of enrollments with class
-  names, applied discounts, and refund status.
-- **Revoke & refund** — revoke an enrollment with a **Braintree refund**,
-  including **partial revocation with refund calculation**
-  ([#210](https://github.com/MountainSOLSchool/platform/pull/210)–[#213](https://github.com/MountainSOLSchool/platform/pull/213)).
-- **Discounts** (`/admin/discounts`) — create/edit/delete codes across several
-  types (fixed, percentage, expiring, class-specific, free-class, buy-X-get-%),
-  with active/inactive filtering.
+## The enrollments table
 
-<Shot slug="admin-enrollments" caption="Admin enrollments table." />
+Each row is one enrollment:
 
-<Shot slug="discount-form" caption="Creating a discount code." />
+| Column | What it shows |
+| --- | --- |
+| **Student Name** | The enrolled student |
+| **Date** | When they enrolled |
+| **Classes** | The classes in the enrollment |
+| **Final Cost** | Total paid after any discounts |
+| **Status** | **Enrolled**, or **Revoked** (shown in red) |
+| **Discount columns** | If discounts were applied, each one's name and amount |
 
-**Source:** `libs/angular/admin/enrollments/`,
-`libs/angular/admin/discounts/`.
+- **Sort** by clicking any column header.
+- **Pages** of 20 by default (5/10/20 options).
+- **Export to CSV** (top right) downloads the table as `enrollments.csv`.
+- Revoked enrollments appear dimmed.
+
+## Revoke & refund
+
+To cancel an enrollment (in whole or part) and issue a refund, click **Revoke &
+Refund** in the row's Actions. The button only shows for active enrollments.
+
+<Shot slug="revoke-refund-dialog" caption="The Revoke Enrollment dialog with refund calculation." />
+
+In the **Revoke Enrollment** dialog:
+
+1. **Choose which classes to revoke.** Each class in the enrollment has a
+   checkbox — tick the ones to cancel. You can revoke **some** classes (partial)
+   or **all** of them (full).
+2. **Review the refund.** As you check classes, a **Refund amount** is calculated
+   automatically. A message confirms what will happen — *"All classes selected —
+   enrollment will be fully revoked"* or *"Student will remain enrolled in N
+   class(es)."*
+3. **Adjust if needed.** The refund amount is an editable field — you can change it
+   before confirming (useful when the refund should differ from the automatic
+   amount).
+4. Click **Revoke & Refund** to process, or **Cancel** to back out. The button is
+   disabled until at least one class is selected and the amount has finished
+   calculating.
+
+### If a refund fails
+
+If something goes wrong, a red banner appears warning that **the refund may not
+have gone through** — don't simply retry, because you could double-refund. Verify
+the payment status first; if you're unsure, contact **david@mountainsol.org**
+before trying again. Dismiss the banner with **Dismiss**.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/enrollments. Component: EnrollmentsComponent.
+  - Revoke dialog: per-class checkboxes; previewPartialRevoke gives suggested refund;
+    refundAmount editable; full vs partial messaging; revokeEnrollment(enrollmentId,
+    classIdsToRevoke, refundAmount).
+  - Error copy mentions Braintree/unsettled txns — softened here to "verify / contact david".
+  - Source: libs/angular/admin/enrollments/.
+*/}
