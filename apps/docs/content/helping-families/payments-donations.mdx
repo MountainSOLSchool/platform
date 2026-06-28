@@ -1,0 +1,52 @@
+---
+title: Payments & donations
+---
+
+# Payments & donations
+
+Answers to the money questions families ask. For discount codes and refunds, see
+[Enrollment & Discounts](/enrollment-discounts).
+
+## Making a one-off payment
+
+For payments outside of class enrollment, families use the
+<Portal path="/make-payment">Make a Payment</Portal> page. They enter their name,
+email, billing address, the amount, and what it's for. An **Invoice Number** field
+is optional — only fill it in if they're paying against a specific invoice.
+
+- **Amount limits:** payments must be between **$1 and $9,999**. For anything over
+  **$9,999**, the page tells them to contact **info@mountainsol.org** — large
+  payments are handled directly rather than through the form.
+
+## Venmo: "the Venmo button isn't working on my phone"
+
+Venmo is offered alongside card payments, but on an **iPhone it only works in
+Safari**. If a family is using Chrome (or another browser) on iOS, they'll see a
+note to **switch to Safari** to use Venmo. The fix is simply to open the page in
+Safari — or pay by card instead.
+
+## "Are my card details saved?" — saved methods & guest checkout
+
+- A family can pay **as a guest** (without an account) or while signed in.
+- Saved payment methods aren't something to count on across sessions — if a family
+  asks, it's safest to tell them to re-enter their card, and to pay by card if
+  Venmo gives them trouble.
+
+## Donations
+
+Families can support Mountain SOL from the
+<Portal path="/make-donation">donation page</Portal> — they enter a name, email,
+optional address, and an amount (**minimum $1**), then pay by card or Venmo. There's
+also a <Portal path="/donate-venmo">Venmo donation</Portal> option. After donating
+they get a confirmation with a transaction ID.
+
+> The same **Safari-on-iPhone** rule applies to Venmo donations.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Payment: /make-payment (PaymentComponent). Amount 1–9,999; over 9,999 -> contact
+    info@mountainsol.org (exact in-app copy). Optional invoiceNumber.
+  - Venmo iOS: isIosButNotSafari() -> "Please use Safari on iOS to use Venmo".
+  - Donations: /make-donation (DonateFullComponent, min $1), /donate-venmo (DonateComponent).
+  - Braintree vault / guest checkout in libs/angular/braintree-client.
+*/}

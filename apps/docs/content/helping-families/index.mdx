@@ -2,28 +2,62 @@
 title: Helping Families
 ---
 
-# Helping Families
+# Helping families
 
-> _Stub — full content tracked in [#256](https://github.com/MountainSOLSchool/platform/issues/256)._
+Families don't read this guide — they email or call with a specific question. This
+section is your cheat sheet for answering them. Each entry says what the family is
+seeing and how to help. Payment-specific questions are on
+[Payments & donations](/helping-families/payments-donations).
 
-A cheat sheet for the questions families actually ask. Each entry describes what
-the family is experiencing and how to help.
+## "Can I add classes to a registration I already paid for?"
 
-- **"Can I add classes to a registration I already paid for?"** — yes, via an
-  **addendum**: already-enrolled classes are locked and only new charges apply.
-- **Sliding scale vs discount codes** — both lower the price; how each works and
-  when to point a family to which.
-- **Payments & limits** — the general payment flow, the $9,999 cap and what to do
-  above it, invoice-number and "paid by check" notes.
-- **Venmo quirks** — the iOS/non-Safari limitation and how to advise.
-- **Saved payment methods** — whether methods persist; guest vs account checkout.
-- **Donations** — the donation flow and Venmo alternative.
-- **Medical info "out of date" prompt** — what triggers the accuracy check.
-- **Account help** — password reset, managing email, viewing past enrollments.
+Yes — through an **addendum**. The family signs back in, opens their existing
+enrollment under their <Portal path="/account">account</Portal>, and adds the new
+classes. The classes they're already enrolled in are shown locked (they can't be
+removed or re-paid), and they're only charged for the **new** classes they add.
+
+So: there's no need to redo the whole enrollment or pay again for existing
+classes — just add the new ones.
 
 <Shot slug="addendum-enrollment" caption="Adding classes to an existing enrollment (addendum)." />
 
-**Source:** parent-flow audit (`libs/angular/classes/class-enrollment/`,
-`libs/angular/braintree-client/`, `libs/angular/account/`,
-`apps/enrollment-portal/src/app/donate-full.component.ts`,
-`payment.component.ts`).
+## "How do I get a lower price?" — sliding scale vs discount codes
+
+Two different things can lower what a family pays:
+
+- **Sliding scale** — set on a class by an admin (see [Pricing](/class-management/creating-a-class#pricing)).
+  When a class has it, the family **chooses what they pay** within a set range at
+  enrollment. It's built into the class — nothing to enter.
+- **Discount codes** — a code the family types at checkout. You create and manage
+  these (see [Discounts](/enrollment-discounts/discounts)).
+
+If a family needs help affording a class: point them to the **sliding scale** if
+the class has one; otherwise a **discount code** is the tool.
+
+## "It's asking me to confirm my student's info is up to date"
+
+During enrollment the portal asks the family to confirm previously-saved student
+and medical information is still accurate. This is normal — it just makes sure
+emergency and health details are current each term. They review it and either
+confirm it's still correct or update what's changed, then continue.
+
+## Account help
+
+- **Forgot password** — they can reset it from the sign-in screen
+  (<Portal path="/user/login">sign-in page</Portal>); a reset email is sent.
+- **Managing their account** — email and account settings live under their
+  <Portal path="/account">account</Portal>.
+- **Seeing past enrollments / students** — the
+  <Portal path="/account">account</Portal> area lists their students and past
+  enrollments (date, cost, classes, transaction).
+
+> When a family can't get into their account at all, or something looks wrong with
+> their data, that's a **contact david@mountainsol.org** situation.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Addendum: account enrollments -> "Add to existing enrollment" (class-enrollment
+    addendum mode); locked existing classes, only new charges.
+  - Accuracy check: confirm-accuracy / medical components.
+  - Account: libs/angular/account/ (login reset, manage account, enrollments, students).
+*/}
