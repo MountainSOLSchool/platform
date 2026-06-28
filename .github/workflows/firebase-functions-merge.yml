@@ -514,7 +514,14 @@ jobs:
         # dev-only `deploy_all` workflow_dispatch trials, and the e2e_dev gate
         # must be green first (only the dev-validated commit may reach prod).
         needs: [e2e_dev]
+        # !cancelled() is REQUIRED, not cosmetic: deploy_functions_dev skips on
+        # docs-only merges, and a skip propagates down the whole needs chain —
+        # through e2e_dev's always() — re-skipping approve_prod unless it opts
+        # out too. Without !cancelled() the gate silently skips (never pauses)
+        # on any merge that doesn't change functions. The explicit result check
+        # still ensures it only runs when e2e_dev actually passed.
         if: >-
+          !cancelled() &&
           github.event_name == 'push' &&
           needs.e2e_dev.result == 'success'
         runs-on: ubuntu-latest
@@ -531,7 +538,11 @@ jobs:
         # Reuses the dist-functions artifact (no rebuild) so prod gets the exact
         # bytes dev ran.
         needs: [prepare_and_build, approve_prod]
+        # !cancelled() + explicit approve_prod success: same skip-propagation
+        # guard, and prod must deploy ONLY after the gate was approved.
         if: >-
+          !cancelled() &&
+          needs.approve_prod.result == 'success' &&
           needs.prepare_and_build.outputs.has_changes == 'true' &&
           needs.prepare_and_build.outputs.matrix != '' &&
           toJson(fromJson(needs.prepare_and_build.outputs.matrix).include) != '[]'
@@ -611,9 +622,9 @@ jobs:
         # when the prod deploy itself was skipped (no approval / no changes).
         needs: [prepare_and_build, deploy_functions_prod]
         if: >-
-          always() &&
+          !cancelled() &&
           needs.prepare_and_build.outputs.has_changes == 'true' &&
-          needs.deploy_functions_prod.result != 'skipped'
+          needs.deploy_functions_prod.result == 'success'
         runs-on: ubuntu-latest
         permissions:
             contents: read
@@ -659,6 +670,11 @@ jobs:
         # approve_prod. Runs on every approved merge so the prod portal stays
         # current even when no functions changed.
         needs: [approve_prod]
+        # !cancelled() guards the skip-propagation footgun; the result check
+        # keeps the prod hosting deploy behind the approval gate.
+        if: >-
+          !cancelled() &&
+          needs.approve_prod.result == 'success'
         runs-on: ubuntu-latest
         permissions:
             contents: read
