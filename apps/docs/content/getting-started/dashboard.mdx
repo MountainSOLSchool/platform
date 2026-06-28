@@ -4,14 +4,56 @@ title: Dashboard overview
 
 # Dashboard overview
 
-> _Stub — full content tracked in [#250](https://github.com/MountainSOLSchool/platform/issues/250)._
+When you sign in with Admin access and go to `/admin`, you land on the **Admin
+Dashboard** — the home base for every admin task. It has two parts: a **Quick
+Navigation** list and an **enrollment chart**.
 
-The admin dashboard (`/admin`) is the map for everything else: quick links to
-each admin area, an enrollment chart, and the **semester selector**.
+<Shot slug="admin-dashboard" caption="The Admin Dashboard: quick navigation and the enrollment chart." />
 
-Most admin screens are **scoped to a selected semester** — set it once and the
-classes, enrollments, students, and reports you see all follow it.
+## Quick Navigation
 
-<Shot slug="admin-dashboard" caption="Admin dashboard with the enrollment chart and semester selector." />
+The list links to each admin area. Here's what each one is, and where to read more:
 
-**Source:** `apps/enrollment-portal/src/app/dashboard-component/`.
+| Link | What it's for |
+| --- | --- |
+| **Manage Classes** | Create, edit, copy, and bundle classes — see [Class Management](/class-management) |
+| **Enrollments** | View, revoke, and refund enrollments — see [Enrollment & Discounts](/enrollment-discounts) |
+| **Manage Discounts** | Create and manage discount codes — see [Enrollment & Discounts](/enrollment-discounts) |
+| **Student Info Sheets** | Look up student details, allergies, and health notes — see [Students & Rosters](/students-rosters) |
+| **Class Forms and Contacts** | Per-class rosters, printable forms, and email lists — see [Students & Rosters](/students-rosters) |
+| **T-shirt Sizes** | Size selections and counts for ordering — see [Students & Rosters](/students-rosters) |
+| **Enrollment Messages** | Banners shown on the enrollment page — see [Semester Setup](/semester-setup) |
+| **Class Calendar** | The class calendar view |
+
+> The **Medic program** has its own separate dashboard and isn't listed here —
+> see [Medic Admin](/medic).
+
+## The enrollment chart
+
+Next to the navigation is an **Enrollment** chart — a radar chart showing how many
+students are enrolled in each class, so you can see at a glance which classes are
+filling up and which have room.
+
+Use the **Semester** dropdown above the chart to switch which semester it shows.
+It defaults to the current enrollable semester.
+
+<Shot slug="admin-dashboard-chart" caption="The enrollment radar chart with the semester selector." />
+
+## A note on semesters
+
+Almost every admin screen works **within one semester at a time** — classes,
+enrollments, rosters, reports, and t-shirts all have their own semester picker.
+The dropdown on the dashboard only changes the chart; each screen remembers its
+own selection. Whenever a list looks empty or wrong, check the semester picker
+first.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Source: apps/enrollment-portal/src/app/dashboard-component/
+    (dashboard.component.ts + .html).
+  - Quick-nav links: /admin/report (Class Forms and Contacts), /admin/students,
+    /admin/t-shirts, /admin/enrollments, /calendar/classes, /admin/classes/management,
+    /admin/discounts, /admin/messages.
+  - Chart: radar of enrolledCount per class from the `classes` function for the
+    selected semester; selector = getEnrollableSemesters(), defaults to first.
+*/}
