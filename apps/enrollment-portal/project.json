@@ -25,6 +25,7 @@
                     }
                 ],
                 "styles": [
+                    "node_modules/@angular/cdk/overlay-prebuilt.css",
                     "apps/enrollment-portal/src/design-tokens.scss",
                     "apps/enrollment-portal/src/custom-theme.scss",
                     "apps/enrollment-portal/src/styles.css",
