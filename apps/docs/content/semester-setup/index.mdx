@@ -2,24 +2,56 @@
 title: Semester Setup
 ---
 
-# Semester Setup
+# Semesters
 
-> _Stub — full content tracked in [#252](https://github.com/MountainSOLSchool/platform/issues/252)._
+A **semester** is the term families enroll into (e.g. *Fall 2025*). This section
+covers creating and managing semesters, plus the things that shape the enrollment
+experience for a term:
 
-Everything that shapes what families see when a semester opens for enrollment.
+- [Info panel](/semester-setup/info-panel) — the info box on the enrollment page
+- [Enrollment messages](/semester-setup/enrollment-messages) — banners at the top of enrollment
+- [Confirmation email](/semester-setup/email-content) — what's added to the enrollment confirmation email
 
-- **Semesters** — add a semester and set the active one.
-- **Info panel editor** — the highlight boxes / info cards shown on the
-  enrollment page.
-- **Enrollment messages** — info / warning / success / promotional banners at the
-  top of the enrollment flow.
-- **Confirmation email content** — per-semester content for enrollment
-  confirmation emails, with **real-HTML preview, attachments, and admin
-  test-send** ([#217](https://github.com/MountainSOLSchool/platform/pull/217)).
+You manage semesters from the toolbar on the [Manage Classes](/class-management)
+screen.
 
-<Shot slug="info-panel-editor" caption="Editing the enrollment-page info panel." />
+## Add a semester
 
-<Shot slug="enrollment-email-editor" caption="Confirmation email content editor with preview." />
+Click **Add Semester**. Enter a **Semester Name** in the form *Season Year* — e.g.
+*Fall 2025* or *Summer 2026* — and click **Create**. The new semester then appears
+in the **Select Semester** dropdown everywhere.
 
-**Source:** `libs/angular/classes/class-management/info-panel-editor/`,
-`enrollment-email-content-editor/`; `libs/angular/admin/enrollment-messages/`.
+<Shot slug="add-semester" caption="The Add Semester dialog." />
+
+## Manage semesters
+
+Click **Manage Semesters** to control which semesters families can enroll in and to
+tidy up old ones. The dialog has two tabs.
+
+### Active
+
+- **Primary Active Semester** — the default semester for enrollment. Pick the one
+  families should land on.
+- **Additional Enrollable Semesters** — check any *other* semesters you also want
+  open for enrollment (for example, when two terms overlap). Families can enroll in
+  these as well as the primary one.
+
+### Archived
+
+- **Archive Semesters** — click **Archive** next to a semester to hide it from the
+  semester dropdowns. Archiving doesn't delete anything; it just gets old terms out
+  of the way.
+- **Archived Semesters** — click **Unarchive** to bring one back.
+
+<Shot slug="manage-semesters" caption="The Manage Semesters dialog (Active and Archived tabs)." />
+
+> After adding or managing semesters, the screen refreshes so the new state shows
+> everywhere.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Add Semester / Manage Semesters are dialogs launched from class-list toolbar; reload on save.
+  - Active tab: primary active semester + additional enrollable (active) semesters.
+  - Archived tab: archive/unarchive toggles a flag; hides from dropdowns.
+  - Source: libs/angular/classes/class-management/ (AddSemesterDialog, ActiveSemesterDialog).
+*/}

@@ -1,0 +1,58 @@
+---
+title: Info panel
+---
+
+# Info panel
+
+The **info panel** is the expandable information box families see at the top of the
+enrollment page for a semester — a good place for program highlights, schedules,
+what-to-bring notes, and the like. It's set per-semester.
+
+Open it from **Info Panel** on the [Manage Classes](/class-management) toolbar
+(it's enabled once you've selected a semester).
+
+<Shot slug="info-panel-editor" caption="The info panel editor." />
+
+## Header settings
+
+| Control | What it does |
+| --- | --- |
+| **Panel active (visible to students)** | Turns the whole panel on or off for families. |
+| **Expanded by default** | Whether the panel starts open or collapsed. |
+| **Title** | The panel heading, e.g. *Summer 2025 Program Information*. |
+| **Subtitle** | A short line under the title, e.g. *Click to expand for details*. |
+| **Gradient** | The panel's background. Pick a preset (Purple Blue, Orange Red, Green Teal, Sunset, Sky Blue, Forest) or paste a custom CSS gradient. |
+
+## Highlight boxes
+
+Short, colored callouts for the most important notes. Click **Add Highlight Box**,
+choose a **Type** — **Info**, **Warning**, **Success**, or **Promotional** (each is
+a different color) — and enter the text. Remove one with its trash icon.
+
+## Info cards
+
+Larger content blocks below the highlights. Click **Add Content Section**, give it a
+heading (e.g. *Schedule & Dates*), and choose a layout:
+
+- **Text** — a paragraph of information.
+- **List** — a bulleted list; use **Add Item** for each point.
+- **Grid** — items arranged in a grid.
+
+Add as many sections as you need; remove one with its trash icon.
+
+## Reusing a previous semester
+
+To start from a past term instead of a blank panel, use **Copy from another
+semester** — pick the semester under **Copy from** and click **Import**, then tweak.
+
+<Shot slug="info-panel-preview" caption="How the info panel appears on the enrollment page." />
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/classes/management/info-panel/:semesterId. Component: InfoPanelEditorComponent (~1700 lines).
+  - Header: active toggle, expandedByDefault, title, subtitle, gradient (6 presets + custom linear-gradient).
+  - Highlight boxes: type info/warning/success/promotional.
+  - Info cards / content sections: type text | list | grid; each with heading + items.
+  - Copy-from-semester imports another semester's panel config.
+  - Source: libs/angular/classes/class-management/info-panel-editor/.
+*/}

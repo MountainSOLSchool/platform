@@ -1,0 +1,50 @@
+---
+title: Confirmation email
+---
+
+# Confirmation email content
+
+When a family completes enrollment, they get a confirmation email. You can add
+your own **per-semester content** to it — what to bring, links to handouts, parking
+notes, and so on. The receipt and footer are added automatically.
+
+Open it from **Email Content** on the [Manage Classes](/class-management) toolbar
+(enabled once a semester is selected).
+
+<Shot slug="email-content-editor" caption="The confirmation email content editor with live preview." />
+
+> If a family enrolls in classes across more than one semester in a single
+> checkout, each semester's content gets its own section in the email.
+
+## Writing the content
+
+On the left, the **Content** box is a markdown editor — type what you want added to
+the email (e.g. *What to bring, links to handouts, parking notes…*). It supports
+`**bold**`, `*italic*`, lists, and `[links](url)`.
+
+## Attachments
+
+Use **Upload PDF** to attach files (like a packing list or waiver) to the
+confirmation email. Uploaded files appear in a list, each with a link and a delete
+button. There's no attachment until you add one.
+
+## Live preview
+
+The right side shows a **live preview** of the actual confirmation email — rendered
+with sample enrollment data — so you can see exactly how your content and
+attachments will look before saving.
+
+## Saving
+
+Your changes save with a status indicator at the bottom (*Saving…* → a green
+success message). 
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/classes/management/enrollment-email/:semesterId.
+    Component: EnrollmentEmailContentEditorComponent.
+  - Left: markdown body + PDF attachments (upload/list/delete). Right: live HTML iframe preview.
+  - Per-semester; multi-semester checkout => per-semester sections. Receipt/footer auto-generated.
+  - Attachments stored in Cloud Storage (don't surface). Shipped in #215/#217.
+  - Source: libs/angular/classes/class-management/enrollment-email-content-editor/.
+*/}
