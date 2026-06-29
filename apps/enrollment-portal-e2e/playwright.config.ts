@@ -21,9 +21,11 @@ const baseURL =
 
 export default defineConfig({
     testDir: './src/e2e',
-    // Against deployed dev, run only the core enrollment paths (basic $0 flow).
-    // The full variation matrix stays on the emulator PR job.
-    testMatch: target === 'dev' ? '**/enrollment.spec.ts' : '**/*.spec.ts',
+    // Against deployed dev, run the core enrollment paths: the basic $0 flow
+    // plus the Braintree-sandbox paid flow. The full variation matrix stays on
+    // the emulator PR job (the regex excludes enrollment-variations.spec.ts).
+    testMatch:
+        target === 'dev' ? /enrollment(-payment)?\.spec\.ts$/ : '**/*.spec.ts',
     globalSetup: './src/global-setup.ts',
     globalTeardown: './src/global-teardown.ts',
     outputDir: './test-results',

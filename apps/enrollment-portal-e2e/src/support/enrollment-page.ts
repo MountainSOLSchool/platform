@@ -104,6 +104,17 @@ export const SAMPLE_MEDICAL: MedicalData = {
     insuranceId: 'INS-12345',
 };
 
+/**
+ * Standard Braintree sandbox Visa — approves any transaction in the sandbox
+ * environment. Used only by the deployed-dev paid path.
+ * https://developer.paypal.com/braintree/docs/reference/general/testing
+ */
+export const SANDBOX_CARD = {
+    number: '4111111111111111',
+    expiration: '1230', // MM/YY -> 12/30 (Drop-in formats as typed)
+    cvv: '123',
+} as const;
+
 export class EnrollmentPage {
     constructor(private readonly page: Page) {}
 
@@ -420,10 +431,67 @@ export class EnrollmentPage {
      * (enrollment-workflow.component.html:379-431). The title is the stable,
      * assertable success indicator.
      */
-    async expectEnrolled(): Promise<void> {
+    async expectEnrolled(timeout = 30_000): Promise<void> {
         await expect(this.page.getByText('Successfully enrolled!')).toBeVisible(
-            { timeout: 30_000 }
+            { timeout }
         );
+    }
+
+    /**
+     * Pay with a Braintree **sandbox** test card via the Drop-in UI. Only used
+     * by the deployed-dev paid path (the emulator suite never tokenizes a card —
+     * it stops before payment).
+     *
+     * The portal renders braintree-web-drop-in (payment-collector.store.ts).
+     * With multiple payment methods enabled (Card + Venmo), Drop-in opens on a
+     * "Choose a way to pay" list; clicking the Card option activates the card
+     * sheet and reveals the hosted-field iframes, each wrapping a single input.
+     * This merchant collects number + expirationDate only (CVV not required, so
+     * no cvv field renders); we fill the standard Braintree sandbox Visa.
+     *
+     * Validated end-to-end against deployed dev (sandbox sale -> "Successfully
+     * enrolled!"). Drop-in loads asynchronously, so we wait for `.braintree-
+     * loaded` before interacting.
+     */
+    async payWithSandboxCard(card = SANDBOX_CARD): Promise<void> {
+        // Drop-in renders asynchronously after the confirm step, so wait for it
+        // to finish loading before interacting — guarding the click on
+        // count()/isVisible() races the load, finds no option yet, and skips the
+        // click, leaving the hosted fields collapsed.
+        await this.page.locator('.braintree-dropin.braintree-loaded').waitFor();
+
+        // Card + Venmo are both enabled, so Drop-in opens on a "Choose a way to
+        // pay" list; click the Card option to activate the card sheet and reveal
+        // the hosted-field iframes. .first() because Drop-in also renders a
+        // hidden duplicate in the (pre-rendered) card sheet.
+        await this.page
+            .getByRole('button', { name: 'Paying with Card' })
+            .first()
+            .click();
+
+        // Each hosted field is an input inside its own same-origin iframe; fill()
+        // auto-waits for the iframe + input to become visible.
+        await this.page
+            .frameLocator('iframe[id="braintree-hosted-field-number"]')
+            .locator('#credit-card-number')
+            .fill(card.number);
+        await this.page
+            .frameLocator('iframe[id="braintree-hosted-field-expirationDate"]')
+            .locator('#expiration')
+            .fill(card.expiration);
+        // This merchant's Drop-in collects number + expiration only (CVV is not
+        // a required field in its Braintree settings, so no cvv hosted field is
+        // rendered). Fill CVV only if present — the count() is safe here because
+        // the card sheet has already loaded (number/expiration just filled).
+        const cvvFrame = this.page.locator(
+            'iframe[id="braintree-hosted-field-cvv"]'
+        );
+        if ((await cvvFrame.count()) > 0) {
+            await this.page
+                .frameLocator('iframe[id="braintree-hosted-field-cvv"]')
+                .locator('#cvv')
+                .fill(card.cvv);
+        }
     }
 
     /**
