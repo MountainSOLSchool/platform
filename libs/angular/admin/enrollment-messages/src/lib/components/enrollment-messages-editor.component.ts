@@ -84,11 +84,13 @@ let nextId = 0;
                         (click)="save()"
                         [disabled]="saveState().status === 'saving'"
                     >
-                        @if (saveState().status === 'saving') {
-                            <mat-spinner diameter="20"></mat-spinner>
-                        } @else {
-                            Save All
-                        }
+                        <mat-spinner
+                            diameter="20"
+                            [hidden]="saveState().status !== 'saving'"
+                        ></mat-spinner>
+                        <span [hidden]="saveState().status === 'saving'"
+                            >Save All</span
+                        >
                     </button>
                 </div>
             </div>

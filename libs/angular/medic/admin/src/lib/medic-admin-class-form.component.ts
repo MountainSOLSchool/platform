@@ -42,15 +42,39 @@ type FormState =
         MatSelectModule,
         MatProgressSpinnerModule,
     ],
-    styles: [`
-        :host { display: block; max-width: 600px; }
-        .form-fields { display: flex; flex-direction: column; gap: 1rem; }
-        .form-fields mat-form-field { width: 100%; }
-        .row { display: flex; gap: 1rem; }
-        .row mat-form-field { flex: 1; }
-        .actions { display: flex; gap: 1rem; margin-top: 1.5rem; }
-        .spinner-container { display: flex; justify-content: center; padding: 3rem; }
-    `],
+    styles: [
+        `
+            :host {
+                display: block;
+                max-width: 600px;
+            }
+            .form-fields {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .form-fields mat-form-field {
+                width: 100%;
+            }
+            .row {
+                display: flex;
+                gap: 1rem;
+            }
+            .row mat-form-field {
+                flex: 1;
+            }
+            .actions {
+                display: flex;
+                gap: 1rem;
+                margin-top: 1.5rem;
+            }
+            .spinner-container {
+                display: flex;
+                justify-content: center;
+                padding: 3rem;
+            }
+        `,
+    ],
     template: `
         <h2>{{ isEditing() ? 'Edit' : 'Create' }} Medic Class</h2>
 
@@ -61,8 +85,13 @@ type FormState =
         } @else if (state().status === 'saved') {
             <mat-card appearance="outlined">
                 <mat-card-content>
-                    <p>Class {{ isEditing() ? 'updated' : 'created' }} successfully!</p>
-                    <button mat-flat-button color="primary" (click)="goBack()">Back to Classes</button>
+                    <p>
+                        Class
+                        {{ isEditing() ? 'updated' : 'created' }} successfully!
+                    </p>
+                    <button mat-flat-button color="primary" (click)="goBack()">
+                        Back to Classes
+                    </button>
                 </mat-card-content>
             </mat-card>
         } @else {
@@ -77,13 +106,21 @@ type FormState =
 
                 <mat-form-field>
                     <mat-label>Description</mat-label>
-                    <textarea matInput [formControl]="form.controls.description" rows="4"></textarea>
+                    <textarea
+                        matInput
+                        [formControl]="form.controls.description"
+                        rows="4"
+                    ></textarea>
                 </mat-form-field>
 
                 <div class="row">
                     <mat-form-field>
                         <mat-label>Cost ($)</mat-label>
-                        <input matInput type="number" [formControl]="form.controls.cost" />
+                        <input
+                            matInput
+                            type="number"
+                            [formControl]="form.controls.cost"
+                        />
                         @if (form.controls.cost.hasError('required')) {
                             <mat-error>Cost is required</mat-error>
                         }
@@ -98,7 +135,9 @@ type FormState =
                             <mat-option value="draft">Draft</mat-option>
                             <mat-option value="published">Published</mat-option>
                             @if (isEditing()) {
-                                <mat-option value="archived">Archived</mat-option>
+                                <mat-option value="archived"
+                                    >Archived</mat-option
+                                >
                             }
                         </mat-select>
                     </mat-form-field>
@@ -112,24 +151,40 @@ type FormState =
                 <div class="row">
                     <mat-form-field>
                         <mat-label>Date</mat-label>
-                        <input matInput [formControl]="form.controls.date" placeholder="e.g. March 15, 2026" />
+                        <input
+                            matInput
+                            [formControl]="form.controls.date"
+                            placeholder="e.g. March 15, 2026"
+                        />
                     </mat-form-field>
 
                     <mat-form-field>
                         <mat-label>Time</mat-label>
-                        <input matInput [formControl]="form.controls.time" placeholder="e.g. 9:00 AM - 3:00 PM" />
+                        <input
+                            matInput
+                            [formControl]="form.controls.time"
+                            placeholder="e.g. 9:00 AM - 3:00 PM"
+                        />
                     </mat-form-field>
                 </div>
 
                 <div class="row">
                     <mat-form-field>
                         <mat-label>Min Students</mat-label>
-                        <input matInput type="number" [formControl]="form.controls.minStudents" />
+                        <input
+                            matInput
+                            type="number"
+                            [formControl]="form.controls.minStudents"
+                        />
                     </mat-form-field>
 
                     <mat-form-field>
                         <mat-label>Max Students</mat-label>
-                        <input matInput type="number" [formControl]="form.controls.maxStudents" />
+                        <input
+                            matInput
+                            type="number"
+                            [formControl]="form.controls.maxStudents"
+                        />
                     </mat-form-field>
                 </div>
             </div>
@@ -146,11 +201,13 @@ type FormState =
                     [disabled]="form.invalid || state().status === 'saving'"
                     (click)="save()"
                 >
-                    @if (state().status === 'saving') {
-                        <mat-spinner diameter="20"></mat-spinner>
-                    } @else {
-                        {{ isEditing() ? 'Update' : 'Create' }} Class
-                    }
+                    <mat-spinner
+                        diameter="20"
+                        [hidden]="state().status !== 'saving'"
+                    ></mat-spinner>
+                    <span [hidden]="state().status === 'saving'"
+                        >{{ isEditing() ? 'Update' : 'Create' }} Class</span
+                    >
                 </button>
             </div>
         }
@@ -172,15 +229,29 @@ export class MedicAdminClassFormComponent {
     });
 
     readonly form = new FormGroup({
-        name: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+        name: new FormControl('', {
+            nonNullable: true,
+            validators: [Validators.required],
+        }),
         description: new FormControl('', { nonNullable: true }),
-        cost: new FormControl(0, { nonNullable: true, validators: [Validators.required, Validators.min(0.01)] }),
+        cost: new FormControl(0, {
+            nonNullable: true,
+            validators: [Validators.required, Validators.min(0.01)],
+        }),
         location: new FormControl('', { nonNullable: true }),
         date: new FormControl('', { nonNullable: true }),
         time: new FormControl('', { nonNullable: true }),
-        minStudents: new FormControl(1, { nonNullable: true, validators: [Validators.min(1)] }),
-        maxStudents: new FormControl(20, { nonNullable: true, validators: [Validators.min(1)] }),
-        status: new FormControl<'draft' | 'published' | 'archived'>('draft', { nonNullable: true }),
+        minStudents: new FormControl(1, {
+            nonNullable: true,
+            validators: [Validators.min(1)],
+        }),
+        maxStudents: new FormControl(20, {
+            nonNullable: true,
+            validators: [Validators.min(1)],
+        }),
+        status: new FormControl<'draft' | 'published' | 'archived'>('draft', {
+            nonNullable: true,
+        }),
     });
 
     constructor() {
@@ -206,14 +277,24 @@ export class MedicAdminClassFormComponent {
                         time: cls.time,
                         minStudents: cls.minStudents,
                         maxStudents: cls.maxStudents,
-                        status: cls.status as 'draft' | 'published' | 'archived',
+                        status: cls.status as
+                            | 'draft'
+                            | 'published'
+                            | 'archived',
                     });
                     this.state.set({ status: 'ready' });
                 } else {
-                    this.state.set({ status: 'error', message: 'Class not found' });
+                    this.state.set({
+                        status: 'error',
+                        message: 'Class not found',
+                    });
                 }
             },
-            error: () => this.state.set({ status: 'error', message: 'Failed to load class' }),
+            error: () =>
+                this.state.set({
+                    status: 'error',
+                    message: 'Failed to load class',
+                }),
         });
     }
 
@@ -224,21 +305,41 @@ export class MedicAdminClassFormComponent {
         const values = this.form.getRawValue();
 
         if (this.isEditing()) {
-            this.#api.updateMedicClass({
-                classId: this.classId()!,
-                ...values,
-            }).subscribe({
-                next: () => this.state.set({ status: 'saved', classId: this.classId()! }),
-                error: () => this.state.set({ status: 'error', message: 'Failed to update class' }),
-            });
+            this.#api
+                .updateMedicClass({
+                    classId: this.classId()!,
+                    ...values,
+                })
+                .subscribe({
+                    next: () =>
+                        this.state.set({
+                            status: 'saved',
+                            classId: this.classId()!,
+                        }),
+                    error: () =>
+                        this.state.set({
+                            status: 'error',
+                            message: 'Failed to update class',
+                        }),
+                });
         } else {
-            this.#api.createMedicClass({
-                ...values,
-                status: values.status as 'draft' | 'published',
-            }).subscribe({
-                next: (res) => this.state.set({ status: 'saved', classId: res.classId }),
-                error: () => this.state.set({ status: 'error', message: 'Failed to create class' }),
-            });
+            this.#api
+                .createMedicClass({
+                    ...values,
+                    status: values.status as 'draft' | 'published',
+                })
+                .subscribe({
+                    next: (res) =>
+                        this.state.set({
+                            status: 'saved',
+                            classId: res.classId,
+                        }),
+                    error: () =>
+                        this.state.set({
+                            status: 'error',
+                            message: 'Failed to create class',
+                        }),
+                });
         }
     }
 
