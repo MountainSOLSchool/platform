@@ -474,7 +474,7 @@ export class AdminClassListComponent {
     );
 
     readonly selectedSemesterId = linkedSignal<string>(() => {
-        const sems = this.semesters();
+        const sems = this.semesters().filter((s): s is Semester => !!s);
         const queryParamSemesterId = this.#semesterIdFromQuery();
         if (sems.length === 0) return '';
         // Use query param if valid, otherwise default to first semester

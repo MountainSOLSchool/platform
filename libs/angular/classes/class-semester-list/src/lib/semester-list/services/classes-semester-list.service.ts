@@ -66,7 +66,10 @@ export class ClassesSemesterListService {
                             (semester) => semester.id === r.activeSemesterId
                         ) ?? nonArchivedSemesters[0];
                     return [
-                        currentSemester,
+                        // When there are no non-archived semesters,
+                        // currentSemester is undefined — don't emit a list with
+                        // an undefined entry (consumers read `.id` on it).
+                        ...(currentSemester ? [currentSemester] : []),
                         ...this.sortSemesters(
                             nonArchivedSemesters
                                 .filter((semester) => !!semester.name)
