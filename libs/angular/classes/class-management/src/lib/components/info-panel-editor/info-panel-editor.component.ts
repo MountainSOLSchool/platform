@@ -179,13 +179,18 @@ interface Semester {
                                         "
                                         (click)="copyFromSemester()"
                                     >
-                                        @if (copyState().status === 'loading') {
-                                            <mat-spinner
-                                                diameter="18"
-                                            ></mat-spinner>
-                                        } @else {
-                                            Import
-                                        }
+                                        <mat-spinner
+                                            diameter="18"
+                                            [hidden]="
+                                                copyState().status !== 'loading'
+                                            "
+                                        ></mat-spinner>
+                                        <span
+                                            [hidden]="
+                                                copyState().status === 'loading'
+                                            "
+                                            >Import</span
+                                        >
                                     </button>
                                     <button
                                         mat-button

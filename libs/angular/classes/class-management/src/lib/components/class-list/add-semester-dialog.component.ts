@@ -55,11 +55,11 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
                     (click)="save()"
                     [disabled]="saving() || !semesterName.trim()"
                 >
-                    @if (saving()) {
-                        <mat-spinner diameter="20"></mat-spinner>
-                    } @else {
-                        Create
-                    }
+                    <mat-spinner
+                        diameter="20"
+                        [hidden]="!saving()"
+                    ></mat-spinner>
+                    <span [hidden]="saving()">Create</span>
                 </button>
             </div>
         </div>

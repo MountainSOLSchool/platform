@@ -202,12 +202,21 @@ const DISCOUNT_TYPES: { value: DiscountType; label: string }[] = [
                                 (click)="save()"
                                 [disabled]="formState().status === 'submitting'"
                             >
-                                @if (formState().status === 'submitting') {
-                                    <mat-spinner diameter="20"></mat-spinner>
-                                } @else {
-                                    {{ isEdit() ? 'Update' : 'Create' }}
-                                    Discount
-                                }
+                                <mat-spinner
+                                    diameter="20"
+                                    [hidden]="
+                                        formState().status !== 'submitting'
+                                    "
+                                ></mat-spinner>
+                                <span
+                                    [hidden]="
+                                        formState().status === 'submitting'
+                                    "
+                                    >{{
+                                        isEdit() ? 'Update' : 'Create'
+                                    }}
+                                    Discount</span
+                                >
                             </button>
                         </div>
                     </mat-card-content>

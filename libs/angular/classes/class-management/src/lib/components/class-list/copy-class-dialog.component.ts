@@ -112,11 +112,11 @@ export interface CopyClassDialogResult {
                     (click)="copy()"
                     [disabled]="!canCopy() || saving()"
                 >
-                    @if (saving()) {
-                        <mat-spinner diameter="20"></mat-spinner>
-                    } @else {
-                        Copy Class
-                    }
+                    <mat-spinner
+                        diameter="20"
+                        [hidden]="!saving()"
+                    ></mat-spinner>
+                    <span [hidden]="saving()">Copy Class</span>
                 </button>
             </div>
         </div>

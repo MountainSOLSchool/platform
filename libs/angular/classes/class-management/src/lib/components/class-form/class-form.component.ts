@@ -824,17 +824,24 @@ const WEEKDAY_OPTIONS = [
                                             formState().status === 'submitting'
                                         "
                                     >
-                                        @if (
-                                            formState().status === 'submitting'
-                                        ) {
-                                            <mat-spinner
-                                                diameter="20"
-                                            ></mat-spinner>
-                                        } @else if (editMode()) {
-                                            Save Changes
-                                        } @else {
-                                            Create Class
-                                        }
+                                        <mat-spinner
+                                            diameter="20"
+                                            [hidden]="
+                                                formState().status !==
+                                                'submitting'
+                                            "
+                                        ></mat-spinner>
+                                        <span
+                                            [hidden]="
+                                                formState().status ===
+                                                'submitting'
+                                            "
+                                            >{{
+                                                editMode()
+                                                    ? 'Save Changes'
+                                                    : 'Create Class'
+                                            }}</span
+                                        >
                                     </button>
                                 </div>
                             </form>

@@ -117,11 +117,13 @@ export type ClassGroupFormDialogResult = 'saved';
                     (click)="save()"
                     [disabled]="!canSave() || saving()"
                 >
-                    @if (saving()) {
-                        <mat-spinner diameter="20"></mat-spinner>
-                    } @else {
-                        {{ isEditing ? 'Update' : 'Create' }} Group
-                    }
+                    <mat-spinner
+                        diameter="20"
+                        [hidden]="!saving()"
+                    ></mat-spinner>
+                    <span [hidden]="saving()"
+                        >{{ isEditing ? 'Update' : 'Create' }} Group</span
+                    >
                 </button>
             </div>
         </div>

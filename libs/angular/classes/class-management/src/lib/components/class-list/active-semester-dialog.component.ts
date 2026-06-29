@@ -229,11 +229,11 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
                     (click)="save()"
                     [disabled]="saving() || loading() || !activeSemesterId"
                 >
-                    @if (saving()) {
-                        <mat-spinner diameter="20"></mat-spinner>
-                    } @else {
-                        Save
-                    }
+                    <mat-spinner
+                        diameter="20"
+                        [hidden]="!saving()"
+                    ></mat-spinner>
+                    <span [hidden]="saving()">Save</span>
                 </button>
             </div>
         </div>
