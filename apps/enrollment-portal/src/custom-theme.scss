@@ -172,6 +172,14 @@ body {
     --mdc-circular-progress-active-indicator-color: var(--sol-primary, #006633);
 }
 
+// Button save-spinners are toggled with [hidden], but Material sets
+// .mat-mdc-progress-spinner { display: block }, which overrides the `hidden`
+// attribute — so the 20px spinner still occupies space and pushes the button
+// label off-center. Force it to actually hide when [hidden] (#288, from #283).
+.mat-mdc-button-base .mat-mdc-progress-spinner[hidden] {
+    display: none !important;
+}
+
 // Tabs — match prior PrimeNG p-tabView styling
 // (14px bold labels, SOL green active text, generous tab body padding)
 .mat-mdc-tab-group,
