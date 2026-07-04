@@ -29,3 +29,24 @@
     font-size: 0.8em;
     opacity: 0.6;
 }
+
+/* <Portal> renders a raw <a>, which Tailwind's preflight leaves undecorated
+   (inherits body color, no underline). Style it to match Nextra's content
+   links, with an external-link marker since it opens the live portal. */
+.sol-portal-link {
+    color: #1a56db;
+    text-decoration: underline;
+    text-decoration-thickness: from-font;
+    text-underline-position: from-font;
+}
+.sol-portal-link:hover {
+    text-decoration: none;
+}
+.sol-portal-link::after {
+    content: ' ↗';
+    font-size: 0.85em;
+    opacity: 0.7;
+}
+:is(.dark, [data-theme='dark']) .sol-portal-link {
+    color: #7cc4ff;
+}

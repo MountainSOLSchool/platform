@@ -20,6 +20,7 @@ export interface PortalProps {
 export function Portal({ path, children }: PortalProps) {
     return (
         <a
+            className="sol-portal-link"
             href={`${PORTAL_BASE}${path}`}
             target="_blank"
             rel="noopener noreferrer"
