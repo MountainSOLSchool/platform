@@ -55,3 +55,23 @@
         padding-right: 0 !important;
     }
 }
+
+/*
+ * Let the season tab body scroll with the page instead of creating a nested
+ * scroll region. Material's active tab body defaults to `overflow-y: auto`,
+ * and the 17.5px content padding makes the content box slightly taller than
+ * the flex-sized body — producing a permanent inner scrollbar. Growing the
+ * body/wrapper to fit content removes the mismatch.
+ */
+:host ::ng-deep .mat-mdc-tab-body-wrapper {
+    overflow: visible;
+}
+:host ::ng-deep .mat-mdc-tab-body.mat-mdc-tab-body-active {
+    overflow: visible;
+    height: auto;
+}
+:host ::ng-deep .mat-mdc-tab-body.mat-mdc-tab-body-active
+    .mat-mdc-tab-body-content {
+    overflow: visible;
+    height: auto;
+}
