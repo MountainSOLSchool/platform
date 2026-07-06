@@ -78,6 +78,34 @@ export const getClassesForAdmin = Functions.endpoint
                     (data.students as admin.firestore.DocumentReference[]) ||
                     [];
 
+                // Options live in the `additional_options` subcollection for
+                // classes created/edited via the admin UI; fall back to the
+                // legacy inline field for classes that predate that.
+                const optionsSnapshot = await doc.ref
+                    .collection('additional_options')
+                    .get();
+                const additionalOptions =
+                    optionsSnapshot.docs.length > 0
+                        ? optionsSnapshot.docs.map((optionDoc) => {
+                              const option = optionDoc.data();
+                              return {
+                                  id: optionDoc.id,
+                                  description: option.description,
+                                  cost: option.cost,
+                              };
+                          })
+                        : data.additional_options?.map(
+                              (opt: {
+                                  id: string;
+                                  description: string;
+                                  cost: number;
+                              }) => ({
+                                  id: opt.id,
+                                  description: opt.description,
+                                  cost: opt.cost,
+                              })
+                          );
+
                 return {
                     id: doc.id,
                     name: data.name || '',
@@ -105,17 +133,7 @@ export const getClassesForAdmin = Functions.endpoint
                         : (data.paused_for_enrollment ?? false),
                     forInformationOnly: data.for_information_only ?? false,
                     thumbnailUrl: data.thumbnailUrl,
-                    additionalOptions: data.additional_options?.map(
-                        (opt: {
-                            id: string;
-                            description: string;
-                            cost: number;
-                        }) => ({
-                            id: opt.id,
-                            description: opt.description,
-                            cost: opt.cost,
-                        })
-                    ),
+                    additionalOptions,
                 };
             })
         );

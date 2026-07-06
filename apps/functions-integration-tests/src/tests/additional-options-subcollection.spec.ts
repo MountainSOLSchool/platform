@@ -122,10 +122,7 @@ describe('Additional Options Subcollection', () => {
 
     beforeAll(async () => {
         await clearAuthEmulator();
-        adminUser = await createTestUser(
-            ADMIN_USER.email,
-            ADMIN_USER.password
-        );
+        adminUser = await createTestUser(ADMIN_USER.email, ADMIN_USER.password);
         await setFirestoreDoc('admins', adminUser.uid, {
             userId: adminUser.uid,
             email: adminUser.email,
@@ -603,9 +600,7 @@ describe('Additional Options Subcollection', () => {
 
             expect(result.status).toBe(200);
             const classes = result.data![SEMESTER_ID].classes;
-            const testClass = classes.find(
-                (c) => c.id === 'class-roster-test'
-            );
+            const testClass = classes.find((c) => c.id === 'class-roster-test');
             expect(testClass).toBeDefined();
             expect(testClass!.additionalOptions).toHaveLength(1);
             expect(testClass!.additionalOptions![0].description).toBe(
@@ -614,6 +609,137 @@ describe('Additional Options Subcollection', () => {
             expect(testClass!.additionalOptions![0].studentsIds).toContain(
                 'student-1'
             );
+        });
+    });
+
+    // createClass stores options only in the subcollection, so every class made
+    // through the admin UI is subcollection-only. The admin read paths must
+    // surface those options — otherwise the edit form loads empty and a save
+    // wipes the options (data loss), and the copy/detail views show nothing.
+    describe('admin read paths surface subcollection options', () => {
+        async function createClassWithOptions(
+            name: string,
+            additionalOptions: Array<{
+                id: string;
+                description: string;
+                cost: number;
+            }>
+        ): Promise<string> {
+            const result = await callFunction<
+                CreateClassRequest,
+                CreateClassResponse
+            >({
+                functionName: 'createClass',
+                data: makeCreateClassRequest({ name, additionalOptions }),
+                idToken: adminUser.idToken,
+            });
+            expect(result.status).toBe(200);
+            return result.data!.classId;
+        }
+
+        it('getClassForEdit returns options for a subcollection-only class', async () => {
+            const classId = await createClassWithOptions('Editable Class', [
+                { id: 'opt-a', description: 'Before care', cost: 25 },
+                { id: 'opt-b', description: 'After care', cost: 30 },
+            ]);
+
+            const edit = await callFunction<
+                { semesterId: string; classId: string },
+                {
+                    class: {
+                        additionalOptions?: Array<{
+                            id: string;
+                            description: string;
+                            cost: number;
+                        }>;
+                    };
+                }
+            >({
+                functionName: 'getClassForEdit',
+                data: { semesterId: SEMESTER_ID, classId },
+                idToken: adminUser.idToken,
+            });
+
+            expect(edit.status).toBe(200);
+            const options = edit.data!.class.additionalOptions ?? [];
+            expect(options.map((o) => o.description).sort()).toEqual([
+                'After care',
+                'Before care',
+            ]);
+        });
+
+        it('getClassesForAdmin returns options for a subcollection-only class', async () => {
+            const classId = await createClassWithOptions('Listed Class', [
+                { id: 'opt-list', description: 'Early dropoff', cost: 15 },
+            ]);
+
+            const result = await callFunction<
+                { semesterId: string },
+                {
+                    classes: Array<{
+                        id: string;
+                        additionalOptions?: Array<{
+                            id: string;
+                            description: string;
+                            cost: number;
+                        }>;
+                    }>;
+                }
+            >({
+                functionName: 'getClassesForAdmin',
+                data: { semesterId: SEMESTER_ID },
+                idToken: adminUser.idToken,
+            });
+
+            expect(result.status).toBe(200);
+            const listed = result.data!.classes.find((c) => c.id === classId);
+            expect(listed?.additionalOptions).toEqual([
+                { id: 'opt-list', description: 'Early dropoff', cost: 15 },
+            ]);
+        });
+
+        // The data-loss regression: load a subcollection-only class through the
+        // edit form and save it straight back. The option must survive.
+        it('editing a subcollection-only class does not wipe its options', async () => {
+            const classId = await createClassWithOptions('Round Trip Class', [
+                { id: 'opt-keep', description: 'Early dropoff', cost: 25 },
+            ]);
+
+            // Simulate the admin edit form: read via getClassForEdit, then save
+            // back exactly what the form received.
+            const edit = await callFunction<
+                { semesterId: string; classId: string },
+                {
+                    class: {
+                        additionalOptions?: Array<{
+                            id: string;
+                            description: string;
+                            cost: number;
+                        }>;
+                    };
+                }
+            >({
+                functionName: 'getClassForEdit',
+                data: { semesterId: SEMESTER_ID, classId },
+                idToken: adminUser.idToken,
+            });
+
+            await callFunction<UpdateClassRequest, UpdateClassResponse>({
+                functionName: 'updateClass',
+                data: {
+                    ...makeCreateClassRequest({ name: 'Round Trip Class' }),
+                    classId,
+                    additionalOptions: edit.data!.class.additionalOptions ?? [],
+                },
+                idToken: adminUser.idToken,
+            });
+
+            const options = await listFirestoreCollection(
+                `semesters/${SEMESTER_ID}/classes/${classId}/additional_options`
+            );
+            expect(options).toHaveLength(1);
+            expect(options[0].id).toBe('opt-keep');
+            expect(options[0].fields.description).toBe('Early dropoff');
         });
     });
 });

@@ -78,6 +78,37 @@ export const getClassForEdit = Functions.endpoint
             (data.units as admin.firestore.DocumentReference[]) || [];
         const unitIds = unitRefs.map((ref) => ref.id);
 
+        // Options live in the `additional_options` subcollection for classes
+        // created/edited via the admin UI; fall back to the legacy inline field
+        // for classes that predate that. Reading only the inline field here
+        // loaded the edit form with no options, and saving then wiped them.
+        const optionsSnapshot = await db
+            .collection(
+                `semesters/${semesterId}/classes/${classId}/additional_options`
+            )
+            .get();
+        const additionalOptions =
+            optionsSnapshot.docs.length > 0
+                ? optionsSnapshot.docs.map((optionDoc) => {
+                      const option = optionDoc.data();
+                      return {
+                          id: optionDoc.id,
+                          description: option.description,
+                          cost: option.cost,
+                      };
+                  })
+                : data.additional_options?.map(
+                      (opt: {
+                          id: string;
+                          description: string;
+                          cost: number;
+                      }) => ({
+                          id: opt.id,
+                          description: opt.description,
+                          cost: opt.cost,
+                      })
+                  );
+
         const classForEdit: ClassForEdit = {
             id: classDoc.id,
             name: data.name || '',
@@ -104,13 +135,7 @@ export const getClassForEdit = Functions.endpoint
             thumbnailUrl: data.thumbnailUrl,
             unitIds: unitIds.length > 0 ? unitIds : undefined,
             ageGroup: data.age_group || undefined,
-            additionalOptions: data.additional_options?.map(
-                (opt: { id: string; description: string; cost: number }) => ({
-                    id: opt.id,
-                    description: opt.description,
-                    cost: opt.cost,
-                })
-            ),
+            additionalOptions,
         };
 
         response.send({ class: classForEdit });
