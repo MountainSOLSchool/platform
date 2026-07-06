@@ -181,6 +181,9 @@ export class ClassRepository {
         const additionalOptionsCollection =
             classRef.collection('additional_options');
 
+        let inlineOptions = classData?.additional_options;
+        let inlineOptionsChanged = false;
+
         for (const optionId of additionalOptionIds) {
             const optionRef = additionalOptionsCollection.doc(optionId);
             const optionDoc = await optionRef.get();
@@ -197,7 +200,27 @@ export class ClassRepository {
                         students: updatedOptionStudents,
                     });
                 }
+            } else if (inlineOptions?.some((o) => o.id === optionId)) {
+                // Legacy option stored inline on the class doc (predates the
+                // additional_options subcollection). Mirror the subcollection
+                // logic against the inline array so the option lives in one
+                // place per class and the roster stays consistent.
+                inlineOptions = inlineOptions.map((option) => {
+                    if (option.id !== optionId) return option;
+                    const existing = option.students ?? [];
+                    const filtered = existing.filter(
+                        (ref) => ref.id !== studentRef.id
+                    );
+                    if (filtered.length !== existing.length) {
+                        inlineOptionsChanged = true;
+                    }
+                    return { ...option, students: filtered };
+                });
             }
+        }
+
+        if (inlineOptionsChanged && inlineOptions) {
+            await classRef.update({ additional_options: inlineOptions });
         }
     }
 
@@ -237,6 +260,9 @@ export class ClassRepository {
         const additionalOptionsCollection =
             classRef.collection('additional_options');
 
+        let inlineOptions = classData?.additional_options;
+        let inlineOptionsChanged = false;
+
         for (const optionId of additionalOptionIds) {
             const optionRef = additionalOptionsCollection.doc(optionId);
             const optionDoc = await optionRef.get();
@@ -254,7 +280,25 @@ export class ClassRepository {
                         students: [...currentStudents, studentRef],
                     });
                 }
+            } else if (inlineOptions?.some((o) => o.id === optionId)) {
+                // Legacy option stored inline on the class doc (predates the
+                // additional_options subcollection). Without this branch the
+                // purchase is silently dropped — it never reaches the class,
+                // so it never appears on the roster.
+                inlineOptions = inlineOptions.map((option) => {
+                    if (option.id !== optionId) return option;
+                    const existing = option.students ?? [];
+                    if (existing.some((ref) => ref.id === studentRef.id)) {
+                        return option;
+                    }
+                    inlineOptionsChanged = true;
+                    return { ...option, students: [...existing, studentRef] };
+                });
             }
+        }
+
+        if (inlineOptionsChanged && inlineOptions) {
+            await classRef.update({ additional_options: inlineOptions });
         }
     }
 }
