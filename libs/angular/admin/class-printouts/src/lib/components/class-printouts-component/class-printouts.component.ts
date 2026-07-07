@@ -20,6 +20,7 @@ import { Dialog } from '@angular/cdk/dialog';
 import { ClassPrintoutsDisplayComponent } from './class-printouts-display.component';
 import { ClassEmailsDialogComponent } from './class-emails.component';
 import { DialogContainerComponent } from '@sol/angular/dialog';
+import { ClassRosterService } from '../../services/class-roster.service';
 
 @Component({
     template: `<sol-class-printouts-view
@@ -27,9 +28,13 @@ import { DialogContainerComponent } from '@sol/angular/dialog';
         [classIdOfEmailsBeingCopied]="rowOfEmailsBeingCopied()?.id"
         [semesters]="semesters.value()"
         [selectedSemester]="selectedSemester()"
+        [expandedClassId]="expandedClassId()"
+        [expandedRoster]="roster.value()"
+        [rosterLoading]="roster.isLoading()"
         (selectedSemesterChange)="selectedSemesterChange($event)"
         (downloadClick)="downloadClick($event)"
         (copyEmailsClick)="copyEmailsClick($event)"
+        (rowToggle)="rowToggle($event)"
     ></sol-class-printouts-view>`,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ClassPrintoutsViewComponent],
@@ -38,7 +43,20 @@ export class ClassPrintoutsComponent implements OnInit {
     readonly #classSemesterListService = inject(ClassesSemesterListService);
     readonly #classListService = inject(ClassListService);
     readonly #copyClassEmailsService = inject(CopyClassEmailsService);
+    readonly #classRosterService = inject(ClassRosterService);
     readonly #dialog = inject(Dialog);
+
+    readonly expandedClassId = signal<string | undefined>(undefined);
+
+    readonly roster = rxResource({
+        params: () => {
+            const classId = this.expandedClassId();
+            const semesterId = this.selectedSemester();
+            return classId && semesterId ? { classId, semesterId } : undefined;
+        },
+        stream: ({ params: { classId, semesterId } }) =>
+            this.#classRosterService.getClassRoster(classId, semesterId),
+    });
 
     readonly semesters = rxResource({
         stream: () =>
@@ -101,7 +119,14 @@ export class ClassPrintoutsComponent implements OnInit {
     }
 
     selectedSemesterChange(semester: string) {
+        this.expandedClassId.set(undefined);
         this.selectedSemester.set(semester);
+    }
+
+    rowToggle(classId: string) {
+        this.expandedClassId.update((current) =>
+            current === classId ? undefined : classId
+        );
     }
 
     copyEmailsClick(row: ClassPrintoutRow) {

@@ -4,14 +4,14 @@ title: Class forms & contacts
 
 # Class forms & contacts
 
-The **Class Forms and Contacts** screen (`/admin/report`) gives you, per class, the
-printable forms and the contact emails you need to run the term. Pick the term from
-the **Semester** dropdown at the top.
+The **Class Forms and Contacts** screen (`/admin/report`) gives you, per class, a
+quick look at who's enrolled plus the printable forms and contact emails you need to
+run the term. Pick the term from the **Semester** dropdown at the top.
 
 <Shot slug="class-forms-contacts" caption="The Class Forms and Contacts screen." />
 
 Each class is a row showing its **Name**, **# Enrolled Students**, and **Start** /
-**End** dates, with two buttons:
+**End** dates. On the right are two buttons:
 
 | Button | What it does |
 | --- | --- |
@@ -20,13 +20,35 @@ Each class is a row showing its **Name**, **# Enrolled Students**, and **Start**
 
 Sort by any column header to find a class quickly.
 
+## See who's enrolled at a glance
+
+Click a class row (or the arrow on its left) to **expand** it and see the enrolled
+students right there — no need to open the printable forms. Click again to collapse it.
+
+<Shot slug="class-roster-expanded" caption="Expanding a class shows its enrolled students and their key details." />
+
+For each student you'll see:
+
+- **Name and age**
+- **Parent/guardian contact** — name, phone, and email
+- **Add-ons** they signed up for, such as **early dropoff** or **late pickup**
+- **Safety details** — allergies (highlighted when life-threatening), medications,
+  the family's **code word**, and who's **authorized for pickup**
+
+This is the fastest way to answer "who's in this class and what do I need to know
+about them?" For a printable copy to bring to class, use **View Forms**.
+
 > Use **View Emails** to grab the whole class's email list in one go, rather than
 > copying addresses one student at a time.
 
 {/*
   Doc-maintainer notes (not shown to readers):
-  - Route: /admin/report. Component: ClassPrintoutsViewComponent.
-  - Columns: title, enrolledCount, start, end; actions View Forms (downloadClick ->
+  - Route: /admin/report. Component: ClassPrintoutsViewComponent + ClassPrintoutsComponent.
+  - Columns: expand, title, enrolledCount, start, end; actions View Forms (downloadClick ->
     download-class-forms.service) and View Emails (copyEmailsClick -> copy-class-emails.service / class-emails dialog).
-  - Source: libs/angular/admin/class-printouts/.
+  - Expandable rows: rowToggle -> ClassRosterService.getClassRoster -> `classRoster` function
+    (structured JSON: name/age, guardians, additionalOptions, allergies, medications, codeWord,
+    authorizedPickUp). Lazy-loaded per class on expand.
+  - Source: libs/angular/admin/class-printouts/, libs/firebase/enrollment-functions/class-roster/.
+  - New screenshot slug to capture: class-roster-expanded (a class row expanded showing student rows).
 */}
