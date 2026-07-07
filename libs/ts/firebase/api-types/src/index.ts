@@ -42,6 +42,14 @@ export type {
     SendTestEnrollmentEmailResponse,
 } from './lib/semester-enrollment-email-content.types';
 
+// Class Roster (structured, for admin report expandable rows)
+export type {
+    RosterStudentContact,
+    RosterStudent,
+    ClassRosterRequest,
+    ClassRosterResponse,
+} from './lib/class-roster.types';
+
 // Medic Class Management
 export type {
     CreateMedicClassRequest,

@@ -1,4 +1,5 @@
 export { roster } from '@sol/firebase/enrollment-functions/roster';
+export { classRoster } from '@sol/firebase/enrollment-functions/class-roster';
 export { signIn } from '@sol/firebase/enrollment-functions/sign-in';
 export { classes } from '@sol/firebase/enrollment-functions/classes';
 export { classesBySemester } from '@sol/firebase/enrollment-functions/classes-by-semester';

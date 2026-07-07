@@ -1,0 +1,9 @@
+{
+    "name": "firebase-enrollment-functions-class-roster",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/firebase/enrollment-functions/class-roster/src",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project firebase-enrollment-functions-class-roster --web",
+    "targets": {}
+}

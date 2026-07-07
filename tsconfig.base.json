@@ -270,6 +270,9 @@
             "@sol/firebase/enrollment-functions/roster": [
                 "libs/firebase/enrollment-functions/roster/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/class-roster": [
+                "libs/firebase/enrollment-functions/class-roster/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/semesters-available-to-enroll": [
                 "libs/firebase/enrollment-functions/semesters-available-to-enroll/src/index.ts"
             ],
