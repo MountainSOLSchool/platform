@@ -103,6 +103,15 @@ import { MatDividerModule } from '@angular/material/divider';
                 <mat-icon matListItemIcon>assignment</mat-icon>
                 Student Units
             </a>
+            <!-- GitHub Pages project URL; redirects to docs.mountainsol.org once #259 lands. -->
+            <a
+                mat-list-item
+                href="https://mountainsolschool.github.io/platform/"
+                target="_blank"
+            >
+                <mat-icon matListItemIcon>menu_book</mat-icon>
+                Admin Guide
+            </a>
             @if (isMedicAdmin()) {
                 <mat-divider></mat-divider>
                 <div class="nav-section">Medic Admin</div>
