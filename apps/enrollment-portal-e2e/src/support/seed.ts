@@ -70,6 +70,32 @@ export const SEED = {
     /** Existing-enrollment fixture ids (seedExistingEnrollment). */
     existingStudentId: 'e2e-existing-student',
     existingStudentName: 'Existing E2E Student',
+
+    // ─── Contact-audience fixtures (seedContactFamilies) ────────────────────
+    //
+    // Shaped to exercise the three behaviours the contacts page turns on:
+    // sibling de-duplication, second-guardian expansion, and the inclusion of
+    // families whose class is no longer listed.
+
+    /** Listed class holding the two siblings. */
+    contactsClassId: 'e2e-contacts-class',
+    contactsClassName: 'E2E Contacts Class',
+    /** Unlisted (live: false) class — its family must still be reachable. */
+    contactsUnlistedClassId: 'e2e-contacts-unlisted-class',
+    contactsUnlistedClassName: 'E2E Contacts Unlisted Class',
+
+    /** Two siblings sharing one primary contact — they must collapse to one. */
+    siblingStudentIds: ['e2e-contact-sibling-a', 'e2e-contact-sibling-b'],
+    siblingPrimaryName: 'Robin Redwood',
+    siblingPrimaryEmail: 'robin.redwood@e2e.test',
+    /** Second guardian on the siblings — only present with the toggle on. */
+    siblingSecondGuardianName: 'Sage Redwood',
+    siblingSecondGuardianEmail: 'sage.redwood@e2e.test',
+
+    /** Sole student of the unlisted class. */
+    unlistedStudentId: 'e2e-contact-unlisted-student',
+    unlistedPrimaryName: 'Wren Willow',
+    unlistedPrimaryEmail: 'wren.willow@e2e.test',
 } as const;
 
 const futureDate = (() => {
@@ -281,6 +307,84 @@ export async function seedExistingEnrollment(uid: string): Promise<string> {
         releaseSignatures: [],
         timestamp: new FirestoreTimestamp(oldTimestamp),
     });
+}
+
+/**
+ * Fixtures for the admin contact-lists page: two siblings on a listed class who
+ * share a primary contact (and carry a second guardian), plus one family whose
+ * only class is unlisted.
+ *
+ * Both classes are extra rather than reused: the enrollment specs select
+ * classes by name, so additional classes don't disturb them, and keeping the
+ * rosters separate means an enrollment run can't shift a contact assertion.
+ */
+export async function seedContactFamilies(): Promise<void> {
+    const [siblingA, siblingB] = SEED.siblingStudentIds;
+    const [primaryFirst, primaryLast] = SEED.siblingPrimaryName.split(' ');
+    const [guardianFirst, guardianLast] =
+        SEED.siblingSecondGuardianName.split(' ');
+    const [unlistedFirst, unlistedLast] = SEED.unlistedPrimaryName.split(' ');
+
+    for (const [id, firstName] of [
+        [siblingA, 'Ada'],
+        [siblingB, 'Abel'],
+    ] as const) {
+        await setFirestoreDoc('students', id, {
+            first_name: firstName,
+            last_name: primaryLast,
+            primary_first_name: primaryFirst,
+            primary_last_name: primaryLast,
+            primary_email: SEED.siblingPrimaryEmail,
+            guardians: [
+                {
+                    first_name: primaryFirst,
+                    last_name: primaryLast,
+                    relationship: 'Parent',
+                    phone: '555-0100',
+                    email: SEED.siblingPrimaryEmail,
+                },
+                {
+                    first_name: guardianFirst,
+                    last_name: guardianLast,
+                    relationship: 'Parent',
+                    phone: '555-0101',
+                    email: SEED.siblingSecondGuardianEmail,
+                },
+            ],
+        });
+    }
+
+    await setFirestoreDoc('students', SEED.unlistedStudentId, {
+        first_name: 'Wilder',
+        last_name: unlistedLast,
+        primary_first_name: unlistedFirst,
+        primary_last_name: unlistedLast,
+        primary_email: SEED.unlistedPrimaryEmail,
+        guardians: [],
+    });
+
+    await setFirestoreDoc(
+        `semesters/${SEED.semesterId}/classes`,
+        SEED.contactsClassId,
+        makeClassDoc({
+            name: SEED.contactsClassName,
+            cost: 0,
+            students: SEED.siblingStudentIds.map((id) => studentRef(id)),
+        })
+    );
+
+    // live: false — the class no longer appears anywhere families can see, but
+    // the people who enrolled in it are still people you need to email.
+    await setFirestoreDoc(
+        `semesters/${SEED.semesterId}/classes`,
+        SEED.contactsUnlistedClassId,
+        makeClassDoc({
+            name: SEED.contactsUnlistedClassName,
+            cost: 0,
+            live: false,
+            students: [studentRef(SEED.unlistedStudentId)],
+        })
+    );
 }
 
 /**

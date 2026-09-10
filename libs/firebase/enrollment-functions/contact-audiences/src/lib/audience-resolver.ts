@@ -231,7 +231,27 @@ function dedupe(sources: Array<StudentContactSource>): ContactAudienceResponse {
     let studentsWithoutEmail = 0;
 
     for (const source of sources) {
-        const usable = source.contacts.filter(({ email }) => isEmailish(email));
+        // Collapse within the student first. A primary contact is normally
+        // listed again in `guardians`, and counting that as a duplicate would
+        // report a figure no one can make sense of ("4 duplicates collapsed"
+        // for 3 addresses). After this the reported number only reflects
+        // addresses genuinely shared between students — siblings.
+        const usable = [
+            ...source.contacts
+                .filter(({ email }) => isEmailish(email))
+                .reduce((unique, contact) => {
+                    const key = contact.email.trim().toLowerCase();
+                    const seen = unique.get(key);
+                    if (!seen) {
+                        unique.set(key, { ...contact });
+                    } else if (!seen.name && contact.name) {
+                        seen.name = contact.name;
+                    }
+                    return unique;
+                }, new Map<string, { name: string; email: string }>())
+                .values(),
+        ];
+
         if (!usable.length) {
             studentsWithoutEmail++;
             continue;

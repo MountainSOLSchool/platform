@@ -187,6 +187,11 @@ describe('contactAudiences (family contact lists)', () => {
             'bea@test.com',
             'omar@test.com',
         ]);
+
+        // Amina is on each sibling twice (primary_email and guardians[]), but
+        // only the sibling overlap is a duplicate a coordinator would recognise:
+        // 2 addresses per sibling + 1 for Bea = 5, collapsing to 3.
+        expect(data?.totalBeforeDedupe).toBe(5);
     });
 
     it('scopes a class audience to that class', async () => {

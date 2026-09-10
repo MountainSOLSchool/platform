@@ -40,22 +40,50 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
         MatSlideToggleModule,
     ],
     styles: [
+        // This app has no Tailwind — utilities come from PrimeFlex, whose class
+        // names differ (align-items-center, border-1, border-round) and which
+        // has no arbitrary-value syntax. Anything PrimeFlex lacks lives here.
         `
+            :host {
+                display: block;
+            }
+            .page {
+                max-width: 56rem;
+                margin: 0 auto;
+            }
+            .muted {
+                color: var(--sol-on-surface-variant, #666);
+            }
+            .field {
+                min-width: 14rem;
+            }
+            .field-wide {
+                min-width: 18rem;
+            }
+            .list {
+                max-height: 28rem;
+                overflow: auto;
+                border: 1px solid var(--sol-input-border, rgba(0, 0, 0, 0.23));
+                border-radius: 4px;
+            }
             .contact-row:nth-child(odd) {
+                background: var(--sol-surface-variant, #f5f5f5);
+            }
+            .notice {
                 background: var(--sol-surface-variant, #f5f5f5);
             }
         `,
     ],
     template: `
-        <div class="p-4 max-w-4xl mx-auto">
+        <div class="page p-4">
             <h1 class="text-2xl mb-1">Family Contact Lists</h1>
-            <p class="mb-6 text-sm opacity-75">
+            <p class="mb-6 text-sm muted">
                 Pick an audience, then paste it into the
                 <strong>Bcc</strong> field of a Gmail message.
             </p>
 
-            <div class="flex flex-wrap gap-4 items-center mb-4">
-                <mat-form-field class="min-w-[16rem]">
+            <div class="flex flex-wrap gap-4 align-items-center mb-4">
+                <mat-form-field class="field">
                     <mat-label>Audience</mat-label>
                     <mat-select
                         [value]="kind()"
@@ -73,7 +101,7 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
                 </mat-form-field>
 
                 @if (kind() === 'semester' || kind() === 'class') {
-                    <mat-form-field class="min-w-[14rem]">
+                    <mat-form-field class="field">
                         <mat-label>Semester</mat-label>
                         <mat-select
                             [value]="semesterId()"
@@ -89,7 +117,7 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
                 }
 
                 @if (kind() === 'class') {
-                    <mat-form-field class="min-w-[18rem]">
+                    <mat-form-field class="field-wide">
                         <mat-label>Class</mat-label>
                         <mat-select
                             [value]="classId()"
@@ -105,7 +133,7 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
                 }
 
                 @if (kind() === 'recentYears') {
-                    <mat-form-field class="min-w-[14rem]">
+                    <mat-form-field class="field">
                         <mat-label>Enrolled within</mat-label>
                         <mat-select
                             [value]="years()"
@@ -132,19 +160,19 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
             </mat-slide-toggle>
 
             @if (loading()) {
-                <div class="flex justify-center p-8">
+                <div class="flex justify-content-center p-8">
                     <mat-progress-spinner mode="indeterminate" diameter="36" />
                 </div>
             } @else if (contacts(); as list) {
                 <div
-                    class="flex flex-wrap gap-4 items-center justify-between mb-3"
+                    class="flex flex-wrap gap-4 align-items-center justify-content-between mb-3"
                 >
                     <div>
                         <div class="text-lg">
                             {{ list.length }}
                             {{ list.length === 1 ? 'address' : 'addresses' }}
                         </div>
-                        <div class="text-sm opacity-75">{{ summary() }}</div>
+                        <div class="text-sm muted">{{ summary() }}</div>
                     </div>
                     <button
                         mat-flat-button
@@ -158,10 +186,7 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
                 </div>
 
                 @if (list.length > limit) {
-                    <div
-                        class="mb-4 p-3 rounded text-sm"
-                        style="background: var(--sol-surface-variant, #f5f5f5)"
-                    >
+                    <div class="notice mb-4 p-3 border-round text-sm">
                         Gmail will not send to more than about {{ limit }}
                         outside addresses in one message. Split this list across
                         {{ sendsNeeded() }} messages.
@@ -169,11 +194,11 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
                 }
 
                 @if (list.length === 0) {
-                    <div class="p-6 text-center opacity-75">
+                    <div class="p-6 text-center muted">
                         No addresses in this audience.
                     </div>
                 } @else {
-                    <div class="max-h-[28rem] overflow-auto rounded border">
+                    <div class="list">
                         @for (contact of list; track contact.email) {
                             <div class="contact-row px-3 py-2">
                                 <div>
@@ -196,7 +221,7 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
                     </div>
                 }
             } @else {
-                <div class="p-6 text-center opacity-75">
+                <div class="p-6 text-center muted">
                     Could not load this audience.
                 </div>
             }
