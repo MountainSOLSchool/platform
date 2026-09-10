@@ -139,12 +139,12 @@
             </div>
         }
 
-        <mat-menu #beforeSelectingForm="matMenu">
+        <mat-menu
+            #beforeSelectingForm="matMenu"
+            class="before-select-menu-panel"
+        >
             <ng-template matMenuContent>
-                <div
-                    class="before-select-menu-content"
-                    (click)="$event.stopPropagation()"
-                >
+                <div (click)="$event.stopPropagation()">
                     <sol-class-before-select-options-form
                         [optionsByClass]="beforeSelectOptionsByClass()"
                         (confirmed)="confirmed($event)"

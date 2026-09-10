@@ -1,52 +1,47 @@
-<div>Sliding Scale Cost</div>
-<div
-    style="
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    "
->
-    @let paymentRangeValue = paymentRange();
-    @let userCostValue = userCost();
+@let paymentRangeValue = paymentRange();
+@let userCostValue = userCost();
+
+<div class="sliding-scale-label">Sliding Scale Cost</div>
+
+<mat-form-field appearance="outline" class="amount-field">
+    <mat-label>Amount (USD)</mat-label>
+    <span matTextPrefix>$&nbsp;</span>
+    <input
+        matInput
+        type="number"
+        [min]="paymentRangeValue.lowest"
+        [max]="paymentRangeValue.highest"
+        [ngModel]="userCostValue"
+        (ngModelChange)="customCostSelected($event)"
+    />
+</mat-form-field>
+
+<div class="slider-row">
     <button
-        mat-stroked-button
+        mat-icon-button
         type="button"
+        aria-label="Decrease amount"
         [disabled]="userCostValue <= paymentRangeValue.lowest"
         (click)="customCostSelected(userCostValue - 5)"
     >
         <mat-icon>remove</mat-icon>
     </button>
-    <div style="flex: 1">
-        <mat-form-field appearance="outline" style="width: 100%">
-            <mat-label>Amount (USD)</mat-label>
-            <span matTextPrefix>$&nbsp;</span>
-            <input
-                matInput
-                type="number"
-                [min]="paymentRangeValue.lowest"
-                [max]="paymentRangeValue.highest"
-                [ngModel]="userCostValue"
-                (ngModelChange)="customCostSelected($event)"
-            />
-        </mat-form-field>
-        <mat-slider
-            [step]="5"
-            [min]="paymentRangeValue.lowest"
-            [max]="paymentRangeValue.highest"
-            style="width: 100%"
-        >
-            <input
-                matSliderThumb
-                [ngModel]="userCostValue"
-                (ngModelChange)="customCostSelected($event)"
-            />
-        </mat-slider>
-    </div>
+    <mat-slider
+        class="amount-slider"
+        [step]="5"
+        [min]="paymentRangeValue.lowest"
+        [max]="paymentRangeValue.highest"
+    >
+        <input
+            matSliderThumb
+            [ngModel]="userCostValue"
+            (ngModelChange)="customCostSelected($event)"
+        />
+    </mat-slider>
     <button
-        mat-stroked-button
+        mat-icon-button
         type="button"
+        aria-label="Increase amount"
         [disabled]="userCostValue >= paymentRangeValue.highest"
         (click)="customCostSelected(userCostValue + 5)"
     >
