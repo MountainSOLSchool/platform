@@ -103,14 +103,24 @@ export class ClassEnrollmentRepository {
             >
         >
     > {
+        // Firestore needs a composite index for an equality filter combined
+        // with a range on a different field, and this repo has no index
+        // deployment in CI (see #238) — so `status == 'enrolled'` alongside the
+        // timestamp range failed in production while passing everywhere else,
+        // because the emulator does not enforce indexes.
+        //
+        // The range alone is served by the automatic single-field index, so
+        // status is filtered in memory instead. It only excludes the minority
+        // of records that never completed, so the extra reads are marginal.
         const snapshot = await this.database
             .collection('enrollment')
-            .where('status', '==', 'enrolled')
             .where('timestamp', '>=', cutoff)
-            .select('studentId', 'studentName', 'contactEmail')
+            .select('studentId', 'studentName', 'contactEmail', 'status')
             .get();
 
-        return snapshot.docs.map((doc) => doc.data() as ClassEnrollmentDbo);
+        return snapshot.docs
+            .map((doc) => doc.data() as ClassEnrollmentDbo)
+            .filter(({ status }) => status === 'enrolled');
     }
 
     static async getCurrentSemesterEnrollments(): Promise<

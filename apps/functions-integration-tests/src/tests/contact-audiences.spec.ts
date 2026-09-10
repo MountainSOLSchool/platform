@@ -280,6 +280,37 @@ describe('contactAudiences (family contact lists)', () => {
         expect(data?.contacts.map((c) => c.email)).toEqual(['dani@test.com']);
     });
 
+    it('excludes enrollments in the window that never completed', async () => {
+        const recent = new Date();
+        recent.setMonth(recent.getMonth() - 1);
+
+        for (const [id, status, email] of [
+            ['enr-ok', 'enrolled', 'ok@test.com'],
+            ['enr-pending', 'pending', 'pending@test.com'],
+            ['enr-failed', 'failed', 'failed@test.com'],
+            ['enr-revoked', 'revoked', 'revoked@test.com'],
+        ] as const) {
+            await setFirestoreDoc('enrollment', id, {
+                status,
+                studentName: `Student ${status}`,
+                contactEmail: email,
+                timestamp: new FirestoreTimestamp(recent),
+            });
+        }
+
+        const { data } = await fetchAudience(
+            {
+                selector: { type: 'recentYears', years: 2 },
+                includeAllGuardians: false,
+            },
+            adminUser.idToken
+        );
+
+        // Status is filtered in memory rather than in the query, because the
+        // query form that filters it server-side needs a composite index.
+        expect(data?.contacts.map((c) => c.email)).toEqual(['ok@test.com']);
+    });
+
     it('keeps legacy enrollments that predate studentId', async () => {
         const recent = new Date();
         recent.setMonth(recent.getMonth() - 1);
