@@ -15,8 +15,9 @@ import { E2E_USERS } from './support/test-users';
  * Runs once before the Playwright suite. Branches on E2E_TARGET:
  *
  * - `dev` — seed the deployed dev project via the Admin SDK (seed-admin.ts):
- *   the `fresh` scenario for the core enrollment spec, plus the admin user and
- *   contact fixtures so admin specs can run against deployed dev too.
+ *   the `fresh` and `payment` scenarios for the core enrollment specs (kept
+ *   separate so neither inherits the other's enrollment draft — #295), plus the
+ *   admin user and contact fixtures so admin specs can run against dev too.
  * - `emulator` (default) — seed the local emulators via REST, inside
  *   `firebase emulators:exec` (FIRESTORE/AUTH emulator host env already set).
  *   Seeds the shared catalog plus one user per scenario.
@@ -24,7 +25,9 @@ import { E2E_USERS } from './support/test-users';
 export default async function globalSetup(): Promise<void> {
     if (process.env['E2E_TARGET'] === 'dev') {
         await seedDev();
-        console.log('[e2e] global-setup: seeded dev catalog + fresh user');
+        console.log(
+            '[e2e] global-setup: seeded dev catalog + enrolling users + admin/contact fixtures'
+        );
         return;
     }
 

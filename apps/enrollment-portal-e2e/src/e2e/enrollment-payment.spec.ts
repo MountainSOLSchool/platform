@@ -5,7 +5,7 @@ import {
     SAMPLE_MEDICAL,
 } from '../support/enrollment-page';
 import { E2E_USERS } from '../support/test-users';
-import { SEED } from '../support/seed';
+import { SEED, clearEnrollmentDrafts } from '../support/seed';
 
 /**
  * The paid happy path — runs ONLY against deployed dev (E2E_TARGET=dev).
@@ -20,6 +20,10 @@ import { SEED } from '../support/seed';
 const isDev = process.env['E2E_TARGET'] === 'dev';
 
 test.describe('Paid enrollment (Braintree sandbox)', () => {
+    test.beforeEach(async () => {
+        await clearEnrollmentDrafts();
+    });
+
     test.skip(
         !isDev,
         'Runs only against deployed dev (real Braintree sandbox)'
@@ -35,7 +39,7 @@ test.describe('Paid enrollment (Braintree sandbox)', () => {
         const addOnLabel = `${SEED.paidOptionDescription} ($${SEED.paidOptionCost})`;
         await flow.selectClassByName(SEED.freeClassName, [addOnLabel]);
         await flow.continue();
-        await flow.signIn(E2E_USERS.fresh.email, E2E_USERS.fresh.password);
+        await flow.signIn(E2E_USERS.payment.email, E2E_USERS.payment.password);
         await flow.continue();
         await flow.chooseNewStudent();
         await flow.continue();

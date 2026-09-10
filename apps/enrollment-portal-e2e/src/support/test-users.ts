@@ -8,6 +8,12 @@ export const E2E_USERS = {
     fresh: { email: 'fresh@e2e.mountainsol.test', password: 'E2eTester!1' },
     /** Owns a student whose info is >2 years stale — drives the review flow. */
     stale: { email: 'stale@e2e.mountainsol.test', password: 'E2eTester!1' },
+    /**
+     * Drives the deployed-dev paid flow. Separate from `fresh` on purpose: an
+     * enrollment leaves a draft that only a Firestore trigger clears, so two
+     * specs sharing one user race that trigger (#295).
+     */
+    payment: { email: 'payment@e2e.mountainsol.test', password: 'E2eTester!1' },
     /** Owns an existing enrollment — drives the addendum flow. */
     addendum: {
         email: 'addendum@e2e.mountainsol.test',
