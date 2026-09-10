@@ -156,10 +156,15 @@ export async function clearAll(): Promise<void> {
  * Draft doc location: enrollment_draft/{userId} (_deleteEnrollmentDraft.ts).
  */
 export async function clearEnrollmentDrafts(): Promise<void> {
-    // Dev target has no emulator REST surface. The dev seed recreates the test
-    // user with a fresh uid each run, so there's no stale draft to clear — and
-    // global-teardown removes the user's draft anyway. No-op against dev.
+    // Dev has no emulator REST surface, so it goes through the Admin SDK.
+    // This used to be a no-op on dev, reasoning that recreating the user each
+    // run left no stale draft — true across runs, but not within one, where an
+    // earlier spec's completed enrollment leaves a draft for the same uid that
+    // only a Firestore trigger clears. That was #295. Imported lazily so an
+    // emulator run never loads firebase-admin.
     if (process.env['E2E_TARGET'] === 'dev') {
+        const { clearDevEnrollmentDrafts } = await import('./seed-admin');
+        await clearDevEnrollmentDrafts();
         return;
     }
     await deleteFirestoreCollection('enrollment_draft');

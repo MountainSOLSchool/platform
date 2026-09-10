@@ -260,6 +260,7 @@ export async function seedDev(): Promise<void> {
     );
 
     await recreateUser(E2E_USERS.fresh.email, E2E_USERS.fresh.password);
+    await recreateUser(E2E_USERS.payment.email, E2E_USERS.payment.password);
 
     // Admin scenario: the Auth user plus the `admins` doc that the /admin route
     // guard and every admin-only callable check.
@@ -275,6 +276,41 @@ export async function seedDev(): Promise<void> {
     await seedContactFamiliesDev();
 }
 
+/** The scenario users whose enrolment data a dev run creates and must clean up. */
+const ENROLLING_USERS = [E2E_USERS.fresh, E2E_USERS.payment] as const;
+
+async function uidOf(email: string): Promise<string | undefined> {
+    try {
+        return (await auth().getUserByEmail(email)).uid;
+    } catch {
+        return undefined;
+    }
+}
+
+/**
+ * Delete the scenario users' enrollment drafts on the deployed dev project.
+ *
+ * Completing an enrollment leaves a draft that only the
+ * `onSuccessfulEnrollDeleteDraft` Firestore trigger removes, and on deployed
+ * dev that trigger has real latency. A draft still present when the next spec
+ * reaches Student Selection restores `selectedStudentType`, which renders the
+ * step read-only and its Select button disabled — so the click waits on
+ * actionability until the test times out. That is #295; clearing the drafts
+ * between specs is what actually prevents it.
+ */
+export async function clearDevEnrollmentDrafts(): Promise<void> {
+    const firestore = db();
+    const uids = (
+        await Promise.all(ENROLLING_USERS.map(({ email }) => uidOf(email)))
+    ).filter((uid): uid is string => !!uid);
+
+    await withRetry('clearDrafts', () =>
+        Promise.all(
+            uids.map((uid) => firestore.doc(`enrollment_draft/${uid}`).delete())
+        )
+    );
+}
+
 /**
  * Remove everything the run touched: the test user, its enrollment_draft, the
  * students + enrollments it created, and the seeded catalog. Idempotent and
@@ -283,20 +319,16 @@ export async function seedDev(): Promise<void> {
 export async function teardownDev(): Promise<void> {
     const firestore = db();
 
-    // The fresh user's created data (enrollments reference userId + studentId).
-    let freshUid: string | undefined;
-    try {
-        freshUid = (await auth().getUserByEmail(E2E_USERS.fresh.email)).uid;
-    } catch {
-        freshUid = undefined;
-    }
+    // Each enrolling user's created data (enrollments reference userId +
+    // studentId).
+    for (const { email } of ENROLLING_USERS) {
+        const uid = await uidOf(email);
+        if (!uid) {
+            continue;
+        }
 
-    if (freshUid) {
         const enrollments = await withRetry('teardown:queryEnrollments', () =>
-            firestore
-                .collection('enrollment')
-                .where('userId', '==', freshUid)
-                .get()
+            firestore.collection('enrollment').where('userId', '==', uid).get()
         );
         const studentIds = new Set<string>();
         enrollments.docs.forEach((d) => {
@@ -314,11 +346,9 @@ export async function teardownDev(): Promise<void> {
             )
         );
         await withRetry('teardown:deleteDraft', () =>
-            firestore.doc(`enrollment_draft/${freshUid}`).delete()
+            firestore.doc(`enrollment_draft/${uid}`).delete()
         );
-        await withRetry('teardown:deleteUser', () =>
-            auth().deleteUser(freshUid as string)
-        );
+        await withRetry('teardown:deleteUser', () => auth().deleteUser(uid));
     }
 
     // Seeded catalog. recursiveDelete clears the semester's classes +
