@@ -11,6 +11,7 @@ This document describes Firebase integration patterns used in the Mountain SOL p
 **Library location**: `libs/firebase/enrollment-functions/{function-name}/`
 
 **Required files for a new function library**:
+
 ```
 libs/firebase/enrollment-functions/{function-name}/
 ├── src/
@@ -28,6 +29,7 @@ libs/firebase/enrollment-functions/{function-name}/
 1. Create the directory structure (see above)
 
 2. Create `project.json`:
+
 ```json
 {
     "name": "firebase-enrollment-functions-{function-name}",
@@ -40,6 +42,7 @@ libs/firebase/enrollment-functions/{function-name}/
 ```
 
 3. Create `package.json`:
+
 ```json
 {
     "name": "@sol/firebase/enrollment-functions/{function-name}",
@@ -50,6 +53,7 @@ libs/firebase/enrollment-functions/{function-name}/
 ```
 
 4. Create `tsconfig.json`:
+
 ```json
 {
     "extends": "../../../../tsconfig.base.json",
@@ -61,6 +65,7 @@ libs/firebase/enrollment-functions/{function-name}/
 ```
 
 5. Create `tsconfig.lib.json`:
+
 ```json
 {
     "extends": "./tsconfig.json",
@@ -74,6 +79,7 @@ libs/firebase/enrollment-functions/{function-name}/
 ```
 
 6. Add path mapping to `tsconfig.base.json`:
+
 ```json
 "@sol/firebase/enrollment-functions/{function-name}": [
     "libs/firebase/enrollment-functions/{function-name}/src/index.ts"
@@ -81,6 +87,7 @@ libs/firebase/enrollment-functions/{function-name}/
 ```
 
 7. Export from `apps/functions/src/functions/index.ts`:
+
 ```typescript
 export { functionName } from '@sol/firebase/enrollment-functions/{function-name}';
 ```
@@ -96,6 +103,7 @@ Request/response types for Firebase functions are defined in a shared library th
 **Import path**: `@sol/ts/firebase/api-types`
 
 **Pattern**:
+
 1. Define types in `libs/ts/firebase/api-types/src/lib/{feature}.types.ts`
 2. Export from `libs/ts/firebase/api-types/src/index.ts`
 3. Import in both Angular services and Firebase functions using `import type`
@@ -103,12 +111,14 @@ Request/response types for Firebase functions are defined in a shared library th
 **Reference**: `libs/ts/firebase/api-types/src/lib/class-management.types.ts`
 
 **Usage in Firebase function** (`libs/firebase/enrollment-functions/create-class/src/lib/create-class.ts`):
+
 ```typescript
 import type { CreateClassRequest, CreateClassResponse } from '@sol/ts/firebase/api-types';
 export type { CreateClassRequest, CreateClassResponse };
 ```
 
 **Usage in Angular** (`libs/angular/firebase/api/src/lib/services/mountain-sol-api.service.ts`):
+
 ```typescript
 import type { CreateClassRequest, CreateClassResponse } from '@sol/ts/firebase/api-types';
 ```
@@ -124,6 +134,7 @@ Cloud Functions are located in `/libs/firebase/enrollment-functions/*/src/lib/`.
 **Utility location**: `libs/firebase/functions/src/lib/utilities/functions.utility.ts`
 
 **Key patterns**:
+
 - Use `Functions.endpoint` builder for function declaration
 - Chain `.usingSecrets()` and `.usingStrings()` for configuration (lines 66-89)
 - Add role restrictions with `.restrictedToRoles()` (lines 91-93)
@@ -153,6 +164,7 @@ The codebase uses repository classes for Firestore access.
 **Shared repository example**: `libs/firebase/payments/src/lib/payment.repository.ts`
 
 **Methods**:
+
 - `create()` - Add new document
 - `get()` - Retrieve by ID
 - `update()` - Update existing document
@@ -166,24 +178,29 @@ Define TypeScript interfaces for Firestore documents.
 **Naming**: Use `Dbo` suffix (Database Object) for Firestore document interfaces.
 
 **Location pattern**:
+
 - Shared DBOs go in `libs/ts/*/domain/` (framework-agnostic)
 - Function-specific DBOs can be in the function library
 
 ### Key Collections
 
 **Classes**: Stored at `semesters/{semesterId}/classes/{classId}`
+
 - Uses `ClassDbo` structure with snake_case fields
 - Instructors stored as `DocumentReference` array to `teachers` collection
 
 **Teachers**: Top-level `teachers` collection
+
 - Fields: `first_name`, `last_name`, `archived` (optional)
 - Referenced from classes via `DocumentReference` (not string IDs)
 
 **Semesters**: Top-level `semesters` collection
+
 - Fields: `displayName`
 - Config at `config/activeSemester` specifies current semester
 
 **Students**: Top-level `students` collection
+
 - Referenced from classes via `DocumentReference` array
 
 ### Timestamp Handling
@@ -205,6 +222,7 @@ Emails are sent by writing to the `mail` collection. The `PaymentHandler` does t
 **Handler email sending**: `libs/firebase/payments/src/lib/payment-handler.ts` (sendConfirmationEmail method)
 
 **Required fields**:
+
 - `to` - Recipient email
 - `message.subject` - Email subject
 - `message.from` - Sender (must be verified in SendGrid/Firebase)
@@ -218,10 +236,12 @@ Email content is generated using the **Strategy Pattern** for flexibility.
 **Strategy interface**: `libs/ts/payments/domain/src/lib/payment-email.strategy.ts`
 
 **Implementations**:
+
 - `ServicePaymentEmailStrategy` - No tax language (`libs/firebase/payments/src/lib/email-strategies/service-payment.email-strategy.ts`)
 - `DonationEmailStrategy` - Includes 501(c)(3) info (`libs/firebase/payments/src/lib/email-strategies/donation.email-strategy.ts`)
 
 **Best Practices**:
+
 - Keep HTML simple (email clients have limited CSS support)
 - Use inline styles in `<head>` (not inline on elements)
 - Test across email clients
@@ -230,6 +250,7 @@ Email content is generated using the **Strategy Pattern** for flexibility.
 ### Email for Receipts
 
 For donation/payment receipts, include:
+
 - Organization name
 - Tax ID (EIN) for 501(c)(3) organizations (donations only)
 - Transaction details (amount, date, method)
@@ -245,6 +266,7 @@ For donation/payment receipts, include:
 **Function**: See enrollment functions for payment token generation pattern
 
 **Key logic**:
+
 - Anonymous tokens for guest checkout
 - Customer tokens with vault access for logged-in users
 - Use `request.auth?.uid` for authenticated user ID
@@ -254,19 +276,23 @@ For donation/payment receipts, include:
 Payment processing uses a **Template Method** pattern with **Strategy** and **Factory** patterns.
 
 **Template Method**: `libs/firebase/payments/src/lib/payment-handler.ts`
+
 - Defines the processing skeleton: validate → create record → process → update → send email
 - Concrete handlers implement `getFactory()` to provide type-specific behavior
 
 **Factory Pattern**: Each payment type has a factory that provides:
+
 - `validate(request)` - Type-specific validation
 - `createPayment(request)` - Creates the PaymentDbo
 - `getEmailStrategy()` - Returns the appropriate email strategy
 
 **Factories**:
+
 - `ServicePaymentFactory` (`libs/firebase/payments/src/lib/factories/service-payment.factory.ts`)
 - `DonationFactory` (`libs/firebase/payments/src/lib/factories/donation.factory.ts`)
 
 **Strategy Pattern**: Email generation varies by payment type
+
 - `ServicePaymentEmailStrategy` - No tax language
 - `DonationEmailStrategy` - Includes 501(c)(3) info
 
@@ -277,6 +303,7 @@ Cloud Functions are thin wrappers that wire up handlers:
 **Example**: `libs/firebase/enrollment-functions/payment/src/lib/payment.ts`
 
 Pattern:
+
 1. Create Braintree instance with secrets
 2. Create appropriate handler
 3. Call `handler.handle(request.body.data)`
@@ -285,6 +312,7 @@ Pattern:
 ### Error Handling
 
 The `PaymentHandler` returns structured results:
+
 - Success: `{ success: true, paymentId, transactionId, amount }`
 - Failure: `{ success: false, errors, message }`
 
@@ -323,6 +351,7 @@ For HTTP functions (using `onRequest`), configure CORS manually.
 Located in `firestore.rules` at repository root.
 
 **Pattern**:
+
 - Define collections and their access rules
 - Use `request.auth` to check authentication
 - Use `request.auth.uid` to verify ownership
@@ -364,8 +393,49 @@ Always log errors for debugging with `console.error()`.
 ### 6. Use Compositional Patterns
 
 For related functionality with variations:
+
 - **Factory Pattern** - Different validation/creation per type
 - **Strategy Pattern** - Different behaviors (email content)
 - **Template Method** - Shared processing flow with extension points
 
 **Reference**: `libs/firebase/payments/` for payment processing patterns
+
+## Firestore Composite Indexes
+
+**The emulator does not enforce composite indexes.** A query can pass every
+local run, the integration suite and the full e2e, and still fail in production
+with `FAILED_PRECONDITION: The query requires an index`. That is how the
+recent-years contact audience shipped broken (#314).
+
+Firestore requires a declared composite index when a query combines:
+
+- a range/inequality (`<`, `<=`, `>`, `>=`) on one field with **any** filter on
+  another,
+- a filter on one field with an `orderBy` on another,
+- `array-contains` / `array-contains-any` with any other filter or `orderBy`,
+- more than one `orderBy` field.
+
+Multiple _equality_ filters alone do not need one — Firestore merges
+single-field indexes — but the analyzer flags them anyway. Over-declaring is
+harmless; under-declaring takes production down.
+
+**The guardrail**: `tools/check-firestore-indexes.ts` walks every Firestore
+query in `libs/firebase/**`, `apps/functions/src/**` and `tools/**`, derives the
+indexes they need, and diffs against `firestore.indexes.json`. It runs as the
+**Firestore Indexes** PR gate and prints paste-ready JSON for anything missing.
+It understands both `.collection().where()` chains and this repo's
+`DatabaseUtility.fetchMatchingDocuments(col, [field, op, value], ...)` helper,
+whose filters live in variadic tuples.
+
+Run it locally with `npx tsx tools/check-firestore-indexes.ts` (add `--verbose`
+to see every query it found). To exempt a query, put
+`// firestore-index-analyzer-ignore: <reason>` on the line above it.
+
+**Deployment**: `deploy_firestore_indexes_dev` and `deploy_firestore_indexes` in
+`firebase-functions-merge.yml` deploy `firestore.indexes.json` to each project
+when that file changes. They run outside the approval chain because index builds
+are asynchronous and additive. Neither uses `--force`, so indexes present in a
+project but absent from the file are reported as a warning rather than deleted.
+
+Ported from maple-and-spruce, where the same analyzer was written after a
+composite-index gap caused a 20-day production outage.

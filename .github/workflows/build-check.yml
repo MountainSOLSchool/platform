@@ -22,6 +22,26 @@ jobs:
             - run: npx nx run student-portal:build:production
             - run: npx nx run functions:build
 
+    firestore-indexes:
+        name: Firestore Indexes
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        steps:
+            - uses: actions/checkout@v7
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '24'
+                  cache: 'npm'
+            - run: npm ci
+            # Static analysis of every Firestore query against
+            # firestore.indexes.json. The emulator does NOT enforce composite
+            # indexes, so the integration and e2e suites can be green while a
+            # query is unrunnable in production — which is exactly how the
+            # recent-years contact audience shipped broken (#314).
+            - name: Check Firestore indexes
+              run: npx tsx tools/check-firestore-indexes.ts
+
     lint:
         name: Lint
         runs-on: ubuntu-latest

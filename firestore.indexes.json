@@ -1,11 +1,123 @@
 {
     "indexes": [
         {
+            "collectionGroup": "classes",
+            "queryScope": "COLLECTION",
+            "fields": [
+                {
+                    "fieldPath": "registration_end_date",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "live",
+                    "order": "ASCENDING"
+                }
+            ]
+        },
+        {
+            "collectionGroup": "discounts",
+            "queryScope": "COLLECTION",
+            "fields": [
+                {
+                    "fieldPath": "type",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "active",
+                    "order": "ASCENDING"
+                }
+            ]
+        },
+        {
+            "collectionGroup": "enrollment",
+            "queryScope": "COLLECTION",
+            "fields": [
+                {
+                    "fieldPath": "originalEnrollmentId",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "status",
+                    "order": "ASCENDING"
+                }
+            ]
+        },
+        {
+            "collectionGroup": "enrollment",
+            "queryScope": "COLLECTION",
+            "fields": [
+                {
+                    "fieldPath": "status",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "timestamp",
+                    "order": "ASCENDING"
+                }
+            ]
+        },
+        {
+            "collectionGroup": "enrollment",
+            "queryScope": "COLLECTION",
+            "fields": [
+                {
+                    "fieldPath": "studentId",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "status",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "timestamp",
+                    "order": "DESCENDING"
+                }
+            ]
+        },
+        {
+            "collectionGroup": "enrollment",
+            "queryScope": "COLLECTION",
+            "fields": [
+                {
+                    "fieldPath": "userId",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "status",
+                    "order": "ASCENDING"
+                }
+            ]
+        },
+        {
             "collectionGroup": "medic_enrollments",
             "queryScope": "COLLECTION",
             "fields": [
-                { "fieldPath": "classId", "order": "ASCENDING" },
-                { "fieldPath": "timestamp", "order": "DESCENDING" }
+                {
+                    "fieldPath": "classId",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "timestamp",
+                    "order": "DESCENDING"
+                }
+            ]
+        },
+        {
+            "collectionGroup": "students",
+            "queryScope": "COLLECTION",
+            "fields": [
+                {
+                    "fieldPath": "first_name",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "last_name",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "birth_date",
+                    "order": "ASCENDING"
+                }
             ]
         }
     ],

@@ -13,6 +13,13 @@ name: Deploy on merge
 #     ├── verify_functions_prod    (assert every intended function is ACTIVE in prod)
 #     └── deploy_hosting_prod      (enrollment-portal `production` build -> prod Hosting, WIF)
 #
+#     ├── deploy_firestore_indexes_dev   (independent — declared indexes -> dev)
+#     └── deploy_firestore_indexes       (independent — declared indexes -> prod)
+#         Both run only when firestore.indexes.json changed, and both sit
+#         outside the approval chain: index builds are asynchronous and
+#         additive, and a query that needs one is already failing without it.
+#         The PR-time `Firestore Indexes` analyzer enforces declaration.
+#
 # Both tiers deploy via keyless Workload Identity Federation (a short-lived
 # access token minted by google-github-actions/auth, passed to `firebase deploy
 # --token`; see #231) — dev and prod each have their own WIF pool/provider +
@@ -735,3 +742,181 @@ jobs:
                 done
                 echo "::error::prod hosting deploy failed after 3 attempts"
                 exit 1
+
+    deploy_firestore_indexes_dev:
+        # Independent of the dev -> e2e_dev -> approve_prod -> prod chain. Index
+        # builds are asynchronous and additive: declaring one never breaks an
+        # existing query, and a query that needs one is already failing without
+        # it. Gating on the approval chain would only delay the fix. The PR-time
+        # analyzer is what enforces that indexes are declared at all.
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  fetch-depth: 2
+
+            - name: Check if firestore.indexes.json changed
+              id: changed
+              run: |
+                  if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                    echo "Manual run — deploying"
+                    echo "changed=true" >> $GITHUB_OUTPUT
+                  elif git diff --name-only HEAD~1 HEAD | grep -q '^firestore.indexes.json$'; then
+                    echo "firestore.indexes.json changed in this push — deploying"
+                    echo "changed=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "firestore.indexes.json unchanged — skipping"
+                    echo "changed=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Authenticate to Google Cloud (dev)
+              id: auth
+              if: steps.changed.outputs.changed == 'true'
+              uses: google-github-actions/auth@v2
+              with:
+                  workload_identity_provider: 'projects/1062901014652/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+                  service_account: 'github-deployer@mountain-sol-platform-dev.iam.gserviceaccount.com'
+                  create_credentials_file: true
+                  token_format: 'access_token'
+
+            - name: Deploy Firestore indexes (dev)
+              if: steps.changed.outputs.changed == 'true'
+              timeout-minutes: 10
+              # No `--force`: without it, firebase-tools leaves indexes that are
+              # in the project but absent from the file alone. With it, it
+              # deletes them — and this file was not a source of truth until
+              # now, so several production indexes exist that predate it.
+              #
+              # firebase-tools creates declared indexes one at a time and aborts
+              # on the first error. A 409 "index already exists" is benign: the
+              # declared index is already there, and the next pass moves past
+              # it. So retry while each attempt fails on a DIFFERENT index
+              # (forward progress), and give up only when stuck on the same one
+              # twice or on any non-409 error.
+              run: |
+                  set -o pipefail
+                  OUTPUT=$(mktemp)
+                  trap 'rm -f "$OUTPUT"' EXIT
+
+                  prev_err=""
+                  for attempt in $(seq 1 12); do
+                    npx -y firebase-tools@latest deploy --only firestore:indexes \
+                      --project mountain-sol-platform-dev \
+                      --token "${{ steps.auth.outputs.access_token }}" \
+                      < /dev/null 2>&1 | tee "$OUTPUT"
+                    status=${PIPESTATUS[0]}
+                    [ "$status" -eq 0 ] && break
+
+                    if ! grep -qi "index already exists" "$OUTPUT"; then
+                      echo "::error::firestore index deploy failed (exit=$status) with a non-409 error"
+                      exit 1
+                    fi
+                    cur_err=$(grep -i "index already exists" "$OUTPUT" | tail -1)
+                    if [ "$cur_err" = "$prev_err" ]; then
+                      echo "::error::firestore index deploy stuck on the same 409 — not converging: $cur_err"
+                      exit 1
+                    fi
+                    prev_err="$cur_err"
+                    echo "::warning::benign 409 (index already exists), retrying ($attempt/12)"
+                    sleep 15
+                  done
+
+                  # Orphans are indexes in the project but not in the file.
+                  # A warning, not a failure: they are unused and harmless, and
+                  # blocking unrelated merges on pre-existing drift is friction.
+                  if grep -qi "not present in your firestore indexes file" "$OUTPUT"; then
+                    echo "::warning title=Firestore index orphans (dev)::dev has composite indexes not declared in firestore.indexes.json. Either add them to the file or delete a stale one with: gcloud firestore indexes composite delete <INDEX_ID> --project mountain-sol-platform-dev"
+                  fi
+
+    deploy_firestore_indexes:
+        # Independent of the dev -> e2e_dev -> approve_prod -> prod chain. Index
+        # builds are asynchronous and additive: declaring one never breaks an
+        # existing query, and a query that needs one is already failing without
+        # it. Gating on the approval chain would only delay the fix. The PR-time
+        # analyzer is what enforces that indexes are declared at all.
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  fetch-depth: 2
+
+            - name: Check if firestore.indexes.json changed
+              id: changed
+              run: |
+                  if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                    echo "Manual run — deploying"
+                    echo "changed=true" >> $GITHUB_OUTPUT
+                  elif git diff --name-only HEAD~1 HEAD | grep -q '^firestore.indexes.json$'; then
+                    echo "firestore.indexes.json changed in this push — deploying"
+                    echo "changed=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "firestore.indexes.json unchanged — skipping"
+                    echo "changed=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Authenticate to Google Cloud (prod)
+              id: auth
+              if: steps.changed.outputs.changed == 'true'
+              uses: google-github-actions/auth@v2
+              with:
+                  workload_identity_provider: 'projects/319228048592/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+                  service_account: 'github-deployer@mountain-sol-platform.iam.gserviceaccount.com'
+                  create_credentials_file: true
+                  token_format: 'access_token'
+
+            - name: Deploy Firestore indexes (prod)
+              if: steps.changed.outputs.changed == 'true'
+              timeout-minutes: 10
+              # No `--force`: without it, firebase-tools leaves indexes that are
+              # in the project but absent from the file alone. With it, it
+              # deletes them — and this file was not a source of truth until
+              # now, so several production indexes exist that predate it.
+              #
+              # firebase-tools creates declared indexes one at a time and aborts
+              # on the first error. A 409 "index already exists" is benign: the
+              # declared index is already there, and the next pass moves past
+              # it. So retry while each attempt fails on a DIFFERENT index
+              # (forward progress), and give up only when stuck on the same one
+              # twice or on any non-409 error.
+              run: |
+                  set -o pipefail
+                  OUTPUT=$(mktemp)
+                  trap 'rm -f "$OUTPUT"' EXIT
+
+                  prev_err=""
+                  for attempt in $(seq 1 12); do
+                    npx -y firebase-tools@latest deploy --only firestore:indexes \
+                      --project mountain-sol-platform \
+                      --token "${{ steps.auth.outputs.access_token }}" \
+                      < /dev/null 2>&1 | tee "$OUTPUT"
+                    status=${PIPESTATUS[0]}
+                    [ "$status" -eq 0 ] && break
+
+                    if ! grep -qi "index already exists" "$OUTPUT"; then
+                      echo "::error::firestore index deploy failed (exit=$status) with a non-409 error"
+                      exit 1
+                    fi
+                    cur_err=$(grep -i "index already exists" "$OUTPUT" | tail -1)
+                    if [ "$cur_err" = "$prev_err" ]; then
+                      echo "::error::firestore index deploy stuck on the same 409 — not converging: $cur_err"
+                      exit 1
+                    fi
+                    prev_err="$cur_err"
+                    echo "::warning::benign 409 (index already exists), retrying ($attempt/12)"
+                    sleep 15
+                  done
+
+                  # Orphans are indexes in the project but not in the file.
+                  # A warning, not a failure: they are unused and harmless, and
+                  # blocking unrelated merges on pre-existing drift is friction.
+                  if grep -qi "not present in your firestore indexes file" "$OUTPUT"; then
+                    echo "::warning title=Firestore index orphans (prod)::prod has composite indexes not declared in firestore.indexes.json. Either add them to the file or delete a stale one with: gcloud firestore indexes composite delete <INDEX_ID> --project mountain-sol-platform"
+                  fi
