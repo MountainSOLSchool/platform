@@ -66,7 +66,15 @@ export class ContactAudiencesComponent {
     );
 
     readonly classes = rxResource({
-        params: () => (this.kind() === 'class' ? this.semesterId() : undefined),
+        // The semester id is empty until the semester list resolves, and an
+        // empty one builds the path `semesters//classes`, which Firestore
+        // rejects — leaving the class picker empty rather than merely late.
+        params: () => {
+            const semesterId = this.semesterId();
+            return this.kind() === 'class' && semesterId
+                ? semesterId
+                : undefined;
+        },
         stream: ({ params: semesterId }) =>
             this.#classListService.getClassesBySemesterIds([semesterId]).pipe(
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),

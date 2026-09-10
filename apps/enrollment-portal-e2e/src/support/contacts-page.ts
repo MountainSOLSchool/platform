@@ -28,10 +28,28 @@ export class ContactsPage {
      * "semester" and "class", which makes a text filter ambiguous.
      */
     async select(label: string, optionText: string): Promise<void> {
-        await this.page.getByRole('combobox', { name: label }).click();
-        await this.page
-            .getByRole('option', { name: optionText, exact: true })
-            .click();
+        const combobox = this.page.getByRole('combobox', { name: label });
+        const option = this.page.getByRole('option', {
+            name: optionText,
+            exact: true,
+        });
+
+        // The field only exists once the audience kind that needs it is chosen.
+        await expect(combobox).toBeVisible();
+
+        // Two things can leave the panel without the option we want: the click
+        // that should open it lands while the previous overlay is still tearing
+        // down, or the panel opens before its options have loaded. Both are
+        // timing, not failure, so drive the open off aria-expanded and retry
+        // rather than waiting out the test timeout on a panel that never opened.
+        await expect(async () => {
+            if ((await combobox.getAttribute('aria-expanded')) !== 'true') {
+                await combobox.click();
+            }
+            await expect(option).toBeVisible({ timeout: 2_000 });
+        }).toPass({ timeout: 30_000 });
+
+        await option.click();
         // The overlay animates out; waiting for it keeps the next click from
         // landing on the backdrop.
         await expect(this.page.locator('.cdk-overlay-backdrop')).toHaveCount(0);
