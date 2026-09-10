@@ -54,6 +54,15 @@ export const appRoutes: Routes = [
                                             ),
                                     },
                                     {
+                                        path: 'contacts',
+                                        providers: [provideClassList()],
+                                        loadComponent: () =>
+                                            import('@sol/angular/admin/contacts').then(
+                                                (m) =>
+                                                    m.ContactAudiencesComponent
+                                            ),
+                                    },
+                                    {
                                         path: 'students',
                                         loadComponent: () =>
                                             import('@sol/angular/admin/students').then(

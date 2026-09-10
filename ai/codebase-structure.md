@@ -95,6 +95,7 @@ Admin-only features:
 - `students/` - Student management
 - `enrollments/` - Enrollment management
 - `class-printouts/` - Printable class forms
+- `contacts/` - Family contact lists (computed email audiences for Gmail)
 
 #### `/libs/angular/classes/class-management/`
 Admin class management (create, edit, list):

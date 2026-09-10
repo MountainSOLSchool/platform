@@ -98,3 +98,11 @@ export type {
     UpdateEnrollmentMessagesRequest,
     UpdateEnrollmentMessagesResponse,
 } from './lib/enrollment-message.types';
+
+// Contact Audiences
+export type {
+    AudienceSelector,
+    AudienceContact,
+    ContactAudienceRequest,
+    ContactAudienceResponse,
+} from './lib/contact-audiences.types';

@@ -61,6 +61,10 @@ import type {
     RevokeEnrollmentResponse,
     PreviewPartialRevokeRequest,
     PreviewPartialRevokeResponse,
+    AudienceSelector,
+    AudienceContact,
+    ContactAudienceRequest,
+    ContactAudienceResponse,
 } from '@sol/ts/firebase/api-types';
 
 // Re-export types for consumers
@@ -124,6 +128,10 @@ export type {
     RevokeEnrollmentResponse,
     PreviewPartialRevokeRequest,
     PreviewPartialRevokeResponse,
+    AudienceSelector,
+    AudienceContact,
+    ContactAudienceRequest,
+    ContactAudienceResponse,
 };
 
 /**
@@ -351,4 +359,13 @@ export class MountainSolApiService {
         PreviewPartialRevokeRequest,
         PreviewPartialRevokeResponse
     >(this.#functions, 'previewPartialRevoke');
+
+    // =========================================================================
+    // Contact Audiences
+    // =========================================================================
+
+    readonly contactAudiences = declareFunction<
+        ContactAudienceRequest,
+        ContactAudienceResponse
+    >(this.#functions, 'contactAudiences');
 }

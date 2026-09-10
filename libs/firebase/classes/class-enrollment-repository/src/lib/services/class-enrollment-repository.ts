@@ -89,6 +89,30 @@ export class ClassEnrollmentRepository {
             .update({ classes, additionalOptionIdsByClassId, finalCost });
     }
 
+    /**
+     * Every completed enrollment since the given date, for building
+     * time-windowed contact audiences ("families from the last two years").
+     */
+    static async getEnrolledSince(
+        cutoff: Date
+    ): Promise<
+        Array<
+            Pick<
+                ClassEnrollmentDbo,
+                'studentId' | 'studentName' | 'contactEmail'
+            >
+        >
+    > {
+        const snapshot = await this.database
+            .collection('enrollment')
+            .where('status', '==', 'enrolled')
+            .where('timestamp', '>=', cutoff)
+            .select('studentId', 'studentName', 'contactEmail')
+            .get();
+
+        return snapshot.docs.map((doc) => doc.data() as ClassEnrollmentDbo);
+    }
+
     static async getCurrentSemesterEnrollments(): Promise<
         Array<SemesterEnrollment>
     > {
