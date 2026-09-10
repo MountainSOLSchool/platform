@@ -58,6 +58,33 @@ Click **Copy for Bcc**, then paste into the **Bcc** field of a new Gmail message
 
 Gmail turns the pasted text into individual recipients automatically.
 
+## Save it as a reusable Gmail label
+
+Copying works for a one-off message, but you have to redo it every time. To make
+an audience reusable, download it once and import it into Google Contacts as a
+**label** — after that you type the label's name into Bcc and Gmail fills in
+everyone.
+
+Click **Download CSV**. The screen tells you the label name it will use (for
+example *Fall 2026 Families*), and the file is named to match.
+
+Then, in [Google Contacts](https://contacts.google.com):
+
+1. Click **Import** in the left sidebar.
+2. Choose **Select file**, pick the downloaded `.csv`, and click **Import**.
+3. The contacts arrive already grouped under the label named on the screen.
+
+From then on, start a message in Gmail, type that label name in the **Bcc**
+field, and Gmail expands it to every address in it. This works in the Gmail
+mobile app too.
+
+> **Re-importing next season creates duplicate contacts.** Google doesn't
+> recognise that it's the same family twice; it adds a second copy. Google
+> Contacts offers a **Merge & fix** tool that cleans these up, but it's manual.
+> If you find yourself importing the same audience repeatedly, that's worth
+> mentioning — there's a way to keep these lists updated automatically that
+> doesn't involve importing at all.
+
 ### If the list is large
 
 Gmail won't send to more than about **500 outside addresses in a single message**.
@@ -88,4 +115,10 @@ years, or every family you've ever had.
     against the E2E_USERS.admin fixture seeded by seedContactFamilies().
   - 500 is EXTERNAL_RECIPIENT_LIMIT in the view component — Workspace's per-message external cap.
   - Tests: apps/functions-integration-tests/src/tests/contact-audiences.spec.ts.
+  - CSV is generated client-side (lib/utilities/google-contacts-csv.ts) from the
+    contacts already on screen — no second endpoint, and the file can't disagree
+    with the list the admin is looking at. Four columns only; an unrecognised
+    header would import as a junk custom field rather than being ignored.
+  - The "there's a way to keep these lists updated automatically" hint points at
+    the Google Group sync (#307). Reword once that ships.
 */}

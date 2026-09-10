@@ -86,6 +86,23 @@ export class ContactsPage {
         await expect(this.rowsFor(email)).toHaveCount(0);
     }
 
+    /** Click Download CSV and return {filename, text} of the downloaded file. */
+    async downloadCsv(): Promise<{ filename: string; text: string }> {
+        const [download] = await Promise.all([
+            this.page.waitForEvent('download'),
+            this.page.getByRole('button', { name: 'Download CSV' }).click(),
+        ]);
+        const stream = await download.createReadStream();
+        const chunks: Array<Buffer> = [];
+        for await (const chunk of stream) {
+            chunks.push(Buffer.from(chunk));
+        }
+        return {
+            filename: download.suggestedFilename(),
+            text: Buffer.concat(chunks).toString('utf8'),
+        };
+    }
+
     async copyForBcc(): Promise<string> {
         await this.page.getByRole('button', { name: 'Copy for Bcc' }).click();
         return await this.page.evaluate(() => navigator.clipboard.readText());

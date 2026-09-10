@@ -19,6 +19,10 @@ import {
     AudienceOption,
     ContactAudiencesViewComponent,
 } from './contact-audiences.view.component';
+import {
+    csvFileName,
+    toGoogleContactsCsv,
+} from '../utilities/google-contacts-csv';
 
 @Component({
     standalone: true,
@@ -36,12 +40,14 @@ import {
         [totalBeforeDedupe]="audience.value()?.totalBeforeDedupe ?? 0"
         [studentsWithoutEmail]="audience.value()?.studentsWithoutEmail ?? 0"
         [loading]="audience.isLoading()"
+        [audienceName]="audienceName()"
         (kindChange)="kind.set($event)"
         (semesterIdChange)="semesterId.set($event)"
         (classIdChange)="classId.set($event)"
         (yearsChange)="years.set($event)"
         (includeAllGuardiansChange)="includeAllGuardians.set($event)"
         (copyClick)="copy()"
+        (downloadCsvClick)="downloadCsv()"
     ></sol-contact-audiences-view>`,
 })
 export class ContactAudiencesComponent {
@@ -132,6 +138,60 @@ export class ContactAudiencesComponent {
         },
         stream: ({ params }) => this.#api.contactAudiences(params),
     });
+
+    /**
+     * The audience's name in an admin's terms. It becomes the Google Contacts
+     * label and the download filename, so it has to read as something a person
+     * would recognise in a Gmail Bcc field a season later.
+     */
+    readonly audienceName = computed(() => {
+        switch (this.kind()) {
+            case 'allTime':
+                return 'All Mountain SOL Families';
+            case 'recentYears': {
+                const years = this.years();
+                return `Enrolled in the Last ${years === 1 ? 'Year' : `${years} Years`}`;
+            }
+            case 'semester': {
+                const name = this.semesters
+                    .value()
+                    ?.find(({ id }) => id === this.semesterId())?.name;
+                return name ? `${name} Families` : 'Semester Families';
+            }
+            case 'class': {
+                const name = this.classes
+                    .value()
+                    ?.find(({ id }) => id === this.classId())?.name;
+                return name ? `${name} Families` : 'Class Families';
+            }
+        }
+    });
+
+    downloadCsv() {
+        const contacts = this.audience.value()?.contacts ?? [];
+        if (!contacts.length) {
+            return;
+        }
+
+        const label = this.audienceName();
+        // A BOM so Excel opens the file as UTF-8 rather than mangling accented
+        // names; Google Contacts skips it.
+        const blob = new Blob(
+            ['\ufeff' + toGoogleContactsCsv(contacts, label)],
+            { type: 'text/csv;charset=utf-8' }
+        );
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = csvFileName(label);
+        link.click();
+        URL.revokeObjectURL(url);
+
+        this.#toastService.add({
+            severity: 'success',
+            detail: `Downloaded ${contacts.length} contacts as "${label}"`,
+        });
+    }
 
     copy() {
         const contacts = this.audience.value()?.contacts ?? [];
