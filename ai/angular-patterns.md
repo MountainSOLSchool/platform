@@ -185,6 +185,29 @@ readonly sizeCounts = computed(() => {
 
 **Full example**: `libs/angular/account/src/lib/components/students/account-students.component.ts`
 
+#### Gotcha: only `undefined` skips the request
+
+`rxResource` skips loading when `params` returns `undefined` — **not** when it
+returns a falsy value. An empty string, `0`, or `null` are all defined, so the
+request fires with them.
+
+This bites whenever a param comes from a `linkedSignal` that defaults to `''`
+while its source list loads: the resource fires immediately with the empty
+value, and a path built from it (`semesters//classes`) is rejected by Firestore,
+leaving the dependent picker empty rather than merely late. It only shows up on
+slow connections, which is why it can pass locally and fail in CI.
+
+Guard the falsy case explicitly rather than relying on the value being skipped:
+
+```ts
+params: () => {
+    const semesterId = this.semesterId();
+    return this.kind() === 'class' && semesterId ? semesterId : undefined;
+},
+```
+
+**Reference**: `libs/angular/admin/contacts/src/lib/components/contact-audiences.component.ts`
+
 ---
 
 ### rxMethod: Reactive Side Effects
