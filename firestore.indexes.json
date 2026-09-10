@@ -5,11 +5,11 @@
             "queryScope": "COLLECTION",
             "fields": [
                 {
-                    "fieldPath": "registration_end_date",
+                    "fieldPath": "live",
                     "order": "ASCENDING"
                 },
                 {
-                    "fieldPath": "live",
+                    "fieldPath": "registration_end_date",
                     "order": "ASCENDING"
                 }
             ]

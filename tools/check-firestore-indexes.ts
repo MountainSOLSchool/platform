@@ -625,23 +625,47 @@ function needsCompositeIndex(chain: PartialChain): boolean {
 }
 
 /**
- * Build the index shape Firestore wants. Field order:
- *   1. array-contains field (if any)
- *   2. equality / range fields, in source order
- *   3. orderBy fields, in source order
+ * Build the index shape Firestore wants. Field order is not cosmetic — an
+ * index whose fields are in the wrong order does not serve the query at all:
+ *
+ *   1. equality fields (==, in, !=, not-in), in source order
+ *   2. array-contains / array-contains-any field, if any
+ *   3. the range/inequality field (<, <=, >, >=)
+ *   4. orderBy fields, in source order
+ *
+ * Emitting filters in *source* order — as this did when it was ported — is
+ * wrong whenever a query is written range-first, e.g.
+ * `['registration_end_date', '>=', now], ['live', '==', true]`. That produced
+ * `(registration_end_date, live)`, which Firestore will happily create and
+ * never use, while the index the query actually needs stays undeclared and the
+ * check reports green. A silent false pass in the one tool whose job is to stop
+ * exactly that.
  */
 function deriveIndexFields(chain: PartialChain): IndexField[] {
     const fields: IndexField[] = [];
     const seen = new Set<string>();
 
+    // 1. Equality filters first.
     for (const f of chain.filters) {
-        if (ARRAY_OPS.has(f.op)) {
+        if (
+            !ARRAY_OPS.has(f.op) &&
+            !RANGE_OPS.has(f.op) &&
+            !seen.has(f.field)
+        ) {
+            fields.push({ fieldPath: f.field, order: 'ASCENDING' });
+            seen.add(f.field);
+        }
+    }
+    // 2. Then array-contains.
+    for (const f of chain.filters) {
+        if (ARRAY_OPS.has(f.op) && !seen.has(f.field)) {
             fields.push({ fieldPath: f.field, arrayConfig: 'CONTAINS' });
             seen.add(f.field);
         }
     }
+    // 3. Then the range/inequality field.
     for (const f of chain.filters) {
-        if (!ARRAY_OPS.has(f.op) && !seen.has(f.field)) {
+        if (RANGE_OPS.has(f.op) && !seen.has(f.field)) {
             fields.push({ fieldPath: f.field, order: 'ASCENDING' });
             seen.add(f.field);
         }

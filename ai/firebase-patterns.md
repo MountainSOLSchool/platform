@@ -427,6 +427,13 @@ It understands both `.collection().where()` chains and this repo's
 `DatabaseUtility.fetchMatchingDocuments(col, [field, op, value], ...)` helper,
 whose filters live in variadic tuples.
 
+**Field order is not cosmetic.** A composite index must list equality fields
+first, then `array-contains`, then the range/inequality field, then `orderBy`
+fields. An index in any other order is created happily by Firestore and never
+used, so a query written range-first (`['registration_end_date', '>=', now],
+['live', '==', true]`) needs `(live, registration_end_date)` — not the order it
+appears in the source.
+
 Run it locally with `npx tsx tools/check-firestore-indexes.ts` (add `--verbose`
 to see every query it found). To exempt a query, put
 `// firestore-index-analyzer-ignore: <reason>` on the line above it.
