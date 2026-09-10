@@ -173,16 +173,30 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
                             {{ list.length === 1 ? 'address' : 'addresses' }}
                         </div>
                         <div class="text-sm muted">{{ summary() }}</div>
+                        <div class="text-sm muted">
+                            CSV imports into Google Contacts as
+                            <strong>{{ audienceName() }}</strong>
+                        </div>
                     </div>
-                    <button
-                        mat-flat-button
-                        color="primary"
-                        [disabled]="list.length === 0"
-                        (click)="copyClick.emit()"
-                    >
-                        <mat-icon>content_copy</mat-icon>
-                        <span>Copy for Bcc</span>
-                    </button>
+                    <div class="flex flex-wrap gap-2 align-items-center">
+                        <button
+                            mat-flat-button
+                            color="primary"
+                            [disabled]="list.length === 0"
+                            (click)="copyClick.emit()"
+                        >
+                            <mat-icon>content_copy</mat-icon>
+                            <span>Copy for Bcc</span>
+                        </button>
+                        <button
+                            mat-stroked-button
+                            [disabled]="list.length === 0"
+                            (click)="downloadCsvClick.emit()"
+                        >
+                            <mat-icon>download</mat-icon>
+                            <span>Download CSV</span>
+                        </button>
+                    </div>
                 </div>
 
                 @if (list.length > limit) {
@@ -240,6 +254,8 @@ export class ContactAudiencesViewComponent {
     readonly totalBeforeDedupe = input(0);
     readonly studentsWithoutEmail = input(0);
     readonly loading = input(false);
+    /** Doubles as the Google Contacts label name and the download filename. */
+    readonly audienceName = input('');
 
     readonly kindChange = output<AudienceKind>();
     readonly semesterIdChange = output<string>();
@@ -247,6 +263,7 @@ export class ContactAudiencesViewComponent {
     readonly yearsChange = output<number>();
     readonly includeAllGuardiansChange = output<boolean>();
     readonly copyClick = output<void>();
+    readonly downloadCsvClick = output<void>();
 
     readonly limit = EXTERNAL_RECIPIENT_LIMIT;
 

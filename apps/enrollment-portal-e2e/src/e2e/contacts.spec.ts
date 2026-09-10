@@ -86,6 +86,30 @@ test.describe('Admin family contact lists', () => {
         );
     });
 
+    test('downloads a Google Contacts CSV labelled for the audience', async ({
+        page,
+    }) => {
+        const contacts = new ContactsPage(page);
+        await contacts.goto();
+        await contacts.select('Audience', 'A single class');
+        await contacts.select('Semester', SEED.semesterDisplayName);
+        await contacts.select('Class', SEED.contactsClassName);
+        await contacts.waitForResults();
+
+        const { filename, text } = await contacts.downloadCsv();
+
+        expect(filename).toMatch(
+            /^e2e-contacts-class-families-\d{4}-\d{2}-\d{2}\.csv$/
+        );
+
+        // Strip the UTF-8 BOM that keeps Excel from mangling accented names.
+        const [header, ...rows] = text.replace(/^\ufeff/, '').split('\r\n');
+        expect(header).toBe('First Name,Last Name,Labels,E-mail 1 - Value');
+        expect(rows).toEqual([
+            `Robin,Redwood,* myContacts ::: ${SEED.contactsClassName} Families,${SEED.siblingPrimaryEmail}`,
+        ]);
+    });
+
     test('recently-enrolled audience finds the seeded enrollment', async ({
         page,
     }) => {
