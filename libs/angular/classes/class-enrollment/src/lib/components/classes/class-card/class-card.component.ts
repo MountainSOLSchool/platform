@@ -346,12 +346,6 @@ export interface ClassCardInfo {
                     --mdc-protected-button-container-height: 48px;
                 }
             }
-
-            .before-select-menu-content {
-                padding: 1rem;
-                min-width: 280px;
-                cursor: default;
-            }
         `,
     ],
 })

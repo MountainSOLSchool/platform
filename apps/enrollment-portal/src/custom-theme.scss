@@ -209,3 +209,18 @@ body {
 .accent-theme {
     @include mat.theme((color: colors.$tertiary-palette));
 }
+
+// Menus holding the before-selecting options form (sliding scale + add-ons)
+// need more room than Material's 280px menu default, which clipped the amount
+// field and the +/- buttons on desktop and mobile alike.
+// px, not rem: the app's root font-size is not 16px, so rem here would
+// silently land back near that 280px default.
+.before-select-menu-panel.mat-mdc-menu-panel {
+    min-width: min(92vw, 300px);
+    max-width: min(92vw, 380px);
+
+    .mat-mdc-menu-content {
+        padding: 1rem;
+        cursor: default;
+    }
+}
