@@ -628,10 +628,16 @@ function needsCompositeIndex(chain: PartialChain): boolean {
  * Build the index shape Firestore wants. Field order is not cosmetic — an
  * index whose fields are in the wrong order does not serve the query at all:
  *
- *   1. equality fields (==, in, !=, not-in), in source order
- *   2. array-contains / array-contains-any field, if any
+ *   1. array-contains / array-contains-any field, if any
+ *   2. equality fields (==, in, !=, not-in), in source order
  *   3. the range/inequality field (<, <=, >, >=)
  *   4. orderBy fields, in source order
+ *
+ * array-contains leading is not a guess. maple-and-spruce's deployed
+ * agreementTemplates indexes, which serve live array-contains queries, all lead
+ * with the array field; an earlier pass at this moved it after the equality
+ * fields and consequently reported two of those working indexes as missing.
+ * Only the range field was ever in the wrong place.
  *
  * Emitting filters in *source* order — as this did when it was ported — is
  * wrong whenever a query is written range-first, e.g.
@@ -645,7 +651,14 @@ function deriveIndexFields(chain: PartialChain): IndexField[] {
     const fields: IndexField[] = [];
     const seen = new Set<string>();
 
-    // 1. Equality filters first.
+    // 1. array-contains leads.
+    for (const f of chain.filters) {
+        if (ARRAY_OPS.has(f.op) && !seen.has(f.field)) {
+            fields.push({ fieldPath: f.field, arrayConfig: 'CONTAINS' });
+            seen.add(f.field);
+        }
+    }
+    // 2. Then equality filters.
     for (const f of chain.filters) {
         if (
             !ARRAY_OPS.has(f.op) &&
@@ -653,13 +666,6 @@ function deriveIndexFields(chain: PartialChain): IndexField[] {
             !seen.has(f.field)
         ) {
             fields.push({ fieldPath: f.field, order: 'ASCENDING' });
-            seen.add(f.field);
-        }
-    }
-    // 2. Then array-contains.
-    for (const f of chain.filters) {
-        if (ARRAY_OPS.has(f.op) && !seen.has(f.field)) {
-            fields.push({ fieldPath: f.field, arrayConfig: 'CONTAINS' });
             seen.add(f.field);
         }
     }
