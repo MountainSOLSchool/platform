@@ -1,0 +1,91 @@
+---
+title: Family contact lists
+---
+
+# Family contact lists
+
+The **Family Contact Lists** screen (`/admin/contacts`) answers the question "who
+should I be emailing about this?" Pick an audience, copy the addresses, and paste
+them into Gmail — no digging through past seasons or old inbox threads.
+
+<Shot slug="family-contact-lists" caption="The Family Contact Lists screen." />
+
+## Pick an audience
+
+The **Audience** dropdown offers four ways to slice the families:
+
+| Audience | Who it includes |
+| --- | --- |
+| **A semester** | Every family with a student enrolled in that term |
+| **Recently enrolled** | Every family who enrolled within the last one, two, or three years |
+| **A single class** | Just that class's families |
+| **All families of all time** | Everyone in the system |
+
+For **A semester** and **A single class**, a second dropdown appears so you can
+choose which one. For **Recently enrolled**, choose the time window.
+
+## Primary contact or every guardian
+
+By default each family contributes one address — the primary contact on the
+student's record.
+
+Turn on **Include every guardian's email** to also pull in second parents and
+other guardians listed on the student. Use it when you want both parents to see a
+message; leave it off when one address per family is enough.
+
+## Read the count before you send
+
+Above the list you'll see how many addresses the audience came to, and a note
+explaining anything that was adjusted:
+
+- **Duplicate addresses collapsed** — siblings share a parent, so the same address
+  would otherwise appear more than once. Each address is listed exactly once. The
+  count reflects addresses shared *between students*; a parent listed twice on the
+  same student isn't counted as a duplicate.
+- **Students with no email on file** — those students couldn't be reached and
+  aren't in the list. If the number surprises you, it's worth checking those
+  records.
+
+Each row shows the contact's name, their address, and which students they're
+attached to — so if an entry looks unexpected, you can see why it's there.
+
+## Copy into Gmail
+
+Click **Copy for Bcc**, then paste into the **Bcc** field of a new Gmail message.
+
+> Always use **Bcc**, never **To** or **Cc**. Addresses in To or Cc are visible to
+> every recipient, which shares families' contact details with each other.
+
+Gmail turns the pasted text into individual recipients automatically.
+
+### If the list is large
+
+Gmail won't send to more than about **500 outside addresses in a single message**.
+When an audience is bigger than that, the screen tells you how many messages it
+needs to be split across. Copy the list, then send it in batches rather than trying
+to send all at once — Gmail will reject the oversized message.
+
+## When to use this instead of View Emails
+
+[Class forms & contacts](/students-rosters/reports) has a **View Emails** button
+that's still the quickest way to grab a single class. Use Family Contact Lists when
+you need more than one class at a time — a whole semester, everyone from recent
+years, or every family you've ever had.
+
+{/*
+  Doc-maintainer notes (not shown to readers):
+  - Route: /admin/contacts. Components: ContactAudiencesComponent + ContactAudiencesViewComponent
+    (libs/angular/admin/contacts/).
+  - Backend: `contactAudiences` function (libs/firebase/enrollment-functions/contact-audiences/),
+    admin-restricted. Audience resolution lives in audience-resolver.ts and is the shared
+    source of truth for future CSV export (#305) and Google Group sync (#307).
+  - Semester audience reads raw class docs (no `live` filter) so unlisted classes' families
+    are still reached; grouped classes live in the same collection so groups need no special case.
+  - Dedupe is on lowercased email, applied per-student FIRST (a primary contact is
+    normally repeated in guardians[]) and then across students, so totalBeforeDedupe
+    reports only genuine cross-family overlap.
+  - E2E: apps/enrollment-portal-e2e/src/e2e/contacts.spec.ts + support/contacts-page.ts,
+    against the E2E_USERS.admin fixture seeded by seedContactFamilies().
+  - 500 is EXTERNAL_RECIPIENT_LIMIT in the view component — Workspace's per-message external cap.
+  - Tests: apps/functions-integration-tests/src/tests/contact-audiences.spec.ts.
+*/}

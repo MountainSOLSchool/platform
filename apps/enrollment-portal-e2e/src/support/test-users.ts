@@ -13,4 +13,10 @@ export const E2E_USERS = {
         email: 'addendum@e2e.mountainsol.test',
         password: 'E2eTester!1',
     },
+    /**
+     * Carries an `admins` document, so admin-only routes and the role checks on
+     * admin-only callables both pass. Owns no students or enrollments — the
+     * admin specs read seeded fixtures rather than data they created.
+     */
+    admin: { email: 'admin@e2e.mountainsol.test', password: 'E2eTester!1' },
 } as const;

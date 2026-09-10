@@ -57,6 +57,14 @@ import { MatDividerModule } from '@angular/material/divider';
             </a>
             <a
                 mat-list-item
+                routerLink="/admin/contacts"
+                routerLinkActive="active-link"
+            >
+                <mat-icon matListItemIcon>contact_mail</mat-icon>
+                Family Contact Lists
+            </a>
+            <a
+                mat-list-item
                 routerLink="/admin/t-shirts"
                 routerLinkActive="active-link"
             >

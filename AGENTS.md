@@ -206,6 +206,8 @@ libs/
           unit-selector/      # Unit selection with path columns
         services/
           class-form.service  # Form submission logic
+    admin/
+      contacts/               # Family contact lists (email audiences for Gmail)
     firebase/
       api/                    # MountainSolApiService (typed Firebase function calls)
     braintree-client/         # Payment UI
@@ -216,6 +218,7 @@ libs/
     request/                  # React request utilities
   firebase/
     enrollment-functions/     # Cloud Functions (one library per function!)
+      contact-audiences/      # Computed family email audiences (semester/recent/class/all)
       create-class/           # Create class function
       update-class/           # Update class function
       upload-class-image/     # Upload class image to Storage

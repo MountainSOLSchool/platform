@@ -1,0 +1,22 @@
+{
+    "name": "angular-admin-contacts",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/angular/admin/contacts/src",
+    "prefix": "sol",
+    "projectType": "library",
+    "tags": [],
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "libs/angular/admin/contacts/jest.config.ts",
+                "tsConfig": "libs/angular/admin/contacts/tsconfig.spec.json"
+            }
+        },
+        "lint": {
+            "executor": "@nx/eslint:lint",
+            "outputs": ["{options.outputFile}"]
+        }
+    }
+}

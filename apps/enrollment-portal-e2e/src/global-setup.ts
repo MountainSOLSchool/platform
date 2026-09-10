@@ -1,7 +1,9 @@
 import {
     clearAll,
     createUser,
+    seedAdmin,
     seedBaseFixtures,
+    seedContactFamilies,
     seedExistingEnrollment,
     seedStaleStudent,
     writeAddendumEnrollmentId,
@@ -12,8 +14,9 @@ import { E2E_USERS } from './support/test-users';
 /**
  * Runs once before the Playwright suite. Branches on E2E_TARGET:
  *
- * - `dev` — seed the deployed dev project via the Admin SDK (seed-admin.ts).
- *   Only the `fresh` scenario is needed for the deployed core enrollment spec.
+ * - `dev` — seed the deployed dev project via the Admin SDK (seed-admin.ts):
+ *   the `fresh` scenario for the core enrollment spec, plus the admin user and
+ *   contact fixtures so admin specs can run against deployed dev too.
  * - `emulator` (default) — seed the local emulators via REST, inside
  *   `firebase emulators:exec` (FIRESTORE/AUTH emulator host env already set).
  *   Seeds the shared catalog plus one user per scenario.
@@ -50,5 +53,14 @@ export default async function globalSetup(): Promise<void> {
     const addendumEnrollmentId = await seedExistingEnrollment(addendum.uid);
     writeAddendumEnrollmentId(addendumEnrollmentId);
 
-    console.log('[e2e] global-setup: seeded catalog + 3 scenario users');
+    // Admin user + the fixtures the admin specs read. The admins doc is what
+    // both the /admin route guard and the admin-only callables check.
+    const admin = await createUser(
+        E2E_USERS.admin.email,
+        E2E_USERS.admin.password
+    );
+    await seedAdmin(admin);
+    await seedContactFamilies();
+
+    console.log('[e2e] global-setup: seeded catalog + 4 scenario users');
 }

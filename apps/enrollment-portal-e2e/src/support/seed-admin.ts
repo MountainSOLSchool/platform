@@ -108,16 +108,102 @@ function makeClassDoc(overrides: Record<string, unknown> = {}) {
 }
 
 /** Create the scenario Auth user fresh (delete any leftover from a prior run). */
-async function recreateUser(email: string, password: string): Promise<void> {
-    await withRetry(`seed:user:${email}`, async () => {
+async function recreateUser(email: string, password: string): Promise<string> {
+    return await withRetry(`seed:user:${email}`, async () => {
         try {
             const existing = await auth().getUserByEmail(email);
             await auth().deleteUser(existing.uid);
         } catch {
             // No existing user — fine.
         }
-        await auth().createUser({ email, password });
+        const created = await auth().createUser({ email, password });
+        return created.uid;
     });
+}
+
+/**
+ * Contact-audience fixtures — the dev-mode mirror of seedContactFamilies() in
+ * seed.ts. Same ids and shapes, so the same spec asserts against either backend.
+ */
+async function seedContactFamiliesDev(): Promise<void> {
+    const firestore = db();
+    const [siblingA, siblingB] = SEED.siblingStudentIds;
+    const [primaryFirst, primaryLast] = SEED.siblingPrimaryName.split(' ');
+    const [guardianFirst, guardianLast] =
+        SEED.siblingSecondGuardianName.split(' ');
+    const [unlistedFirst, unlistedLast] = SEED.unlistedPrimaryName.split(' ');
+
+    const siblingGuardians = [
+        {
+            first_name: primaryFirst,
+            last_name: primaryLast,
+            relationship: 'Parent',
+            phone: '555-0100',
+            email: SEED.siblingPrimaryEmail,
+        },
+        {
+            first_name: guardianFirst,
+            last_name: guardianLast,
+            relationship: 'Parent',
+            phone: '555-0101',
+            email: SEED.siblingSecondGuardianEmail,
+        },
+    ];
+
+    await withRetry('seed:contactFamilies', () =>
+        Promise.all([
+            ...(
+                [
+                    [siblingA, 'Ada'],
+                    [siblingB, 'Abel'],
+                ] as const
+            ).map(([id, firstName]) =>
+                firestore.doc(`students/${id}`).set({
+                    first_name: firstName,
+                    last_name: primaryLast,
+                    primary_first_name: primaryFirst,
+                    primary_last_name: primaryLast,
+                    primary_email: SEED.siblingPrimaryEmail,
+                    guardians: siblingGuardians,
+                })
+            ),
+            firestore.doc(`students/${SEED.unlistedStudentId}`).set({
+                first_name: 'Wilder',
+                last_name: unlistedLast,
+                primary_first_name: unlistedFirst,
+                primary_last_name: unlistedLast,
+                primary_email: SEED.unlistedPrimaryEmail,
+                guardians: [],
+            }),
+            firestore
+                .doc(
+                    `semesters/${SEED.semesterId}/classes/${SEED.contactsClassId}`
+                )
+                .set(
+                    makeClassDoc({
+                        name: SEED.contactsClassName,
+                        cost: 0,
+                        students: SEED.siblingStudentIds.map((id) =>
+                            firestore.doc(`students/${id}`)
+                        ),
+                    })
+                ),
+            firestore
+                .doc(
+                    `semesters/${SEED.semesterId}/classes/${SEED.contactsUnlistedClassId}`
+                )
+                .set(
+                    makeClassDoc({
+                        name: SEED.contactsUnlistedClassName,
+                        cost: 0,
+                        live: false,
+                        students: [
+                            firestore.doc(`students/${SEED.unlistedStudentId}`),
+                        ],
+                    })
+                ),
+        ])
+    );
 }
 
 /**
@@ -174,6 +260,19 @@ export async function seedDev(): Promise<void> {
     );
 
     await recreateUser(E2E_USERS.fresh.email, E2E_USERS.fresh.password);
+
+    // Admin scenario: the Auth user plus the `admins` doc that the /admin route
+    // guard and every admin-only callable check.
+    const adminUid = await recreateUser(
+        E2E_USERS.admin.email,
+        E2E_USERS.admin.password
+    );
+    await withRetry('seed:adminDoc', () =>
+        db()
+            .doc(`admins/${adminUid}`)
+            .set({ userId: adminUid, email: E2E_USERS.admin.email })
+    );
+    await seedContactFamiliesDev();
 }
 
 /**
@@ -227,6 +326,31 @@ export async function teardownDev(): Promise<void> {
     await withRetry('teardown:deleteSemester', () =>
         firestore.recursiveDelete(firestore.doc(`semesters/${SEED.semesterId}`))
     );
+    // Admin scenario: the user, its admins doc, and the contact fixtures. The
+    // seeded classes go with the semester's recursiveDelete above; the student
+    // documents are top-level and have to be removed explicitly.
+    let adminUid: string | undefined;
+    try {
+        adminUid = (await auth().getUserByEmail(E2E_USERS.admin.email)).uid;
+    } catch {
+        adminUid = undefined;
+    }
+    if (adminUid) {
+        await withRetry('teardown:deleteAdmin', () =>
+            Promise.all([
+                firestore.doc(`admins/${adminUid}`).delete(),
+                auth().deleteUser(adminUid as string),
+            ])
+        );
+    }
+    await withRetry('teardown:deleteContactStudents', () =>
+        Promise.all(
+            [...SEED.siblingStudentIds, SEED.unlistedStudentId].map((id) =>
+                firestore.doc(`students/${id}`).delete()
+            )
+        )
+    );
+
     await withRetry('teardown:deleteRest', () =>
         Promise.all([
             firestore.doc('config/activeSemester').delete(),
