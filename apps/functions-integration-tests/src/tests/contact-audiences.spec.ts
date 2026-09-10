@@ -280,6 +280,39 @@ describe('contactAudiences (family contact lists)', () => {
         expect(data?.contacts.map((c) => c.email)).toEqual(['dani@test.com']);
     });
 
+    it('excludes enrollments in the window that never completed', async () => {
+        const recent = new Date();
+        recent.setMonth(recent.getMonth() - 1);
+
+        for (const [id, status, email] of [
+            ['enr-ok', 'enrolled', 'ok@test.com'],
+            ['enr-pending', 'pending', 'pending@test.com'],
+            ['enr-failed', 'failed', 'failed@test.com'],
+            ['enr-revoked', 'revoked', 'revoked@test.com'],
+        ] as const) {
+            await setFirestoreDoc('enrollment', id, {
+                status,
+                studentName: `Student ${status}`,
+                contactEmail: email,
+                timestamp: new FirestoreTimestamp(recent),
+            });
+        }
+
+        const { data } = await fetchAudience(
+            {
+                selector: { type: 'recentYears', years: 2 },
+                includeAllGuardians: false,
+            },
+            adminUser.idToken
+        );
+
+        // The status filter is what makes this query need a composite index
+        // (equality plus a range on another field) — the combination that took
+        // production down before the index existed. Worth asserting it still
+        // does what it is there for.
+        expect(data?.contacts.map((c) => c.email)).toEqual(['ok@test.com']);
+    });
+
     it('keeps legacy enrollments that predate studentId', async () => {
         const recent = new Date();
         recent.setMonth(recent.getMonth() - 1);
