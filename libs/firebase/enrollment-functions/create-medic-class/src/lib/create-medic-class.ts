@@ -1,7 +1,10 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
-import admin from 'firebase-admin';
-import type { CreateMedicClassRequest, CreateMedicClassResponse } from '@sol/ts/firebase/api-types';
+import { FieldValue } from 'firebase-admin/firestore';
+import type {
+    CreateMedicClassRequest,
+    CreateMedicClassResponse,
+} from '@sol/ts/firebase/api-types';
 
 export const createMedicClass = Functions.endpoint
     .restrictedToRoles(Role.MedicAdmin)
@@ -31,8 +34,8 @@ export const createMedicClass = Functions.endpoint
             time: data.time || '',
             status: data.status || 'draft',
             enrolledCount: 0,
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            createdAt: FieldValue.serverTimestamp(),
+            updatedAt: FieldValue.serverTimestamp(),
         };
 
         const docRef = await db.collection('medic_classes').add(classDoc);

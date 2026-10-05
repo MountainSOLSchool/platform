@@ -13,14 +13,15 @@
  * `db` stays a value-shaped export (via a Proxy) so existing call sites
  * (`db.collection(...)`) keep working unchanged.
  */
-import admin from 'firebase-admin';
+import { getApps, initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
 
 let dbInstance: FirebaseFirestore.Firestore | undefined;
 let settingsApplied = false;
 
 function ensureAdminInitialized(): void {
-    if (admin.apps.length === 0) {
-        admin.initializeApp();
+    if (getApps().length === 0) {
+        initializeApp();
     }
 }
 
@@ -28,7 +29,7 @@ function ensureAdminInitialized(): void {
 export function getDb(): FirebaseFirestore.Firestore {
     if (!dbInstance) {
         ensureAdminInitialized();
-        dbInstance = admin.firestore();
+        dbInstance = getFirestore();
 
         // settings() must run once, before any operation — guard so a
         // double-call (or post-use call) can't throw.

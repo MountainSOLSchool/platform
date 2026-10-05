@@ -1,7 +1,10 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
-import admin from 'firebase-admin';
-import type { UpdateMedicClassRequest, UpdateMedicClassResponse } from '@sol/ts/firebase/api-types';
+import { FieldValue } from 'firebase-admin/firestore';
+import type {
+    UpdateMedicClassRequest,
+    UpdateMedicClassResponse,
+} from '@sol/ts/firebase/api-types';
 
 export const updateMedicClass = Functions.endpoint
     .restrictedToRoles(Role.MedicAdmin)
@@ -37,7 +40,7 @@ export const updateMedicClass = Functions.endpoint
             date: data.date || '',
             time: data.time || '',
             status: data.status,
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: FieldValue.serverTimestamp(),
         });
 
         const result: UpdateMedicClassResponse = { success: true };

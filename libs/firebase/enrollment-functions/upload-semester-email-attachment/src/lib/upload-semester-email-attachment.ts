@@ -5,7 +5,7 @@ import type {
     UploadSemesterEmailAttachmentResponse,
     SemesterEmailAttachment,
 } from '@sol/ts/firebase/api-types';
-import admin from 'firebase-admin';
+import { getStorage } from 'firebase-admin/storage';
 
 const MAX_FILENAME_LENGTH = 100;
 const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10 MB
@@ -66,7 +66,7 @@ export const uploadSemesterEmailAttachment = Functions.endpoint
         const timestamp = Date.now();
         const storagePath = `semesters/${semesterId}/email-attachments/${timestamp}_${safeName}`;
 
-        const bucket = admin.storage().bucket();
+        const bucket = getStorage().bucket();
         const file = bucket.file(storagePath);
 
         await file.save(buffer, {

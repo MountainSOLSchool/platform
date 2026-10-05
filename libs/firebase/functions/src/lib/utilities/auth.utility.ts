@@ -1,4 +1,4 @@
-import admin from 'firebase-admin';
+import { UserRecord, getAuth } from 'firebase-admin/auth';
 import type { DecodedIdToken } from 'firebase-admin/auth';
 import { Request } from 'firebase-functions/v2/https';
 import type * as express from 'express';
@@ -71,7 +71,7 @@ export class AuthUtility {
     }
 
     public static async getUserStudentIds(
-        user: admin.auth.UserRecord
+        user: UserRecord
     ): Promise<Array<string>> {
         const db = DatabaseUtility.getDatabase();
         const studentEnrollments = await db
@@ -85,9 +85,7 @@ export class AuthUtility {
         return Array.from(new Set(nonUniqueStudents));
     }
 
-    public static async getUserRoles(
-        user: admin.auth.UserRecord
-    ): Promise<Array<Role>> {
+    public static async getUserRoles(user: UserRecord): Promise<Array<Role>> {
         const roles = new Array<Role>();
         if (await AuthUtility.isAdmin(user.uid)) {
             roles.push(Role.Admin);
@@ -101,18 +99,18 @@ export class AuthUtility {
     public static async getUserFromRequest(
         req: Request,
         res: express.Response
-    ): Promise<admin.auth.UserRecord | void> {
+    ): Promise<UserRecord | void> {
         const decoded = await AuthUtility.validateFirebaseIdToken(req, res);
         if (!decoded) {
             // validateFirebaseIdToken already sent a 403; sending again throws
             // ERR_HTTP_HEADERS_SENT.
             return;
         }
-        return await admin.auth().getUser(decoded.uid);
+        return await getAuth().getUser(decoded.uid);
     }
 
     public static async getUser(uid: string) {
-        return await admin.auth().getUser(uid);
+        return await getAuth().getUser(uid);
     }
 
     public static async validateFirebaseIdToken(
@@ -152,7 +150,7 @@ export class AuthUtility {
 
         try {
             // TODO: validate user is admin, not just valid user
-            const decodedIdToken = await admin.auth().verifyIdToken(idToken);
+            const decodedIdToken = await getAuth().verifyIdToken(idToken);
             return decodedIdToken;
         } catch (error) {
             console.error('Error while verifying Firebase ID token:', error);

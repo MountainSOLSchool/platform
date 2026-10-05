@@ -5,7 +5,7 @@ import {
     TransactionRequest,
 } from 'braintree';
 import { PreparedTransaction } from '@sol/payments/transactions';
-import admin from 'firebase-admin';
+import { UserRecord } from 'firebase-admin/auth';
 
 export class Braintree {
     private readonly venmoProfileId: string;
@@ -63,7 +63,7 @@ export class Braintree {
         errors: import('braintree').ValidationErrorsCollection | undefined;
     };
 
-    public async getClientToken(user: admin.auth.UserRecord) {
+    public async getClientToken(user: UserRecord) {
         if (this.isEmulator) {
             return 'emulator-mock-client-token';
         }
