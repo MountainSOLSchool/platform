@@ -200,8 +200,7 @@ export class EnrollmentWorkflowStore extends ComponentStore<State> {
                     })),
                     userCostsToClassIds,
                     overrideCosts: undefined as
-                        | Record<string, number>
-                        | undefined,
+                        Record<string, number> | undefined,
                 };
             }
             // In addendum mode, include new classes + locked classes that have new options

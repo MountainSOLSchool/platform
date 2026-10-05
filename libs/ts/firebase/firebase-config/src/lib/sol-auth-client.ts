@@ -9,8 +9,7 @@ import {
 } from 'firebase/auth';
 
 let _solAuthClient:
-    | ReturnType<typeof FirebaseServiceFactory.create>
-    | undefined;
+    ReturnType<typeof FirebaseServiceFactory.create> | undefined;
 
 export const getSolAuthClient = () => {
     _solAuthClient ??= FirebaseServiceFactory.create(getSolAuth(), {

@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 import type { DecodedIdToken } from 'firebase-admin/auth';
 import { Request } from 'firebase-functions/v2/https';
-import * as express from 'express';
+import type * as express from 'express';
 import { DatabaseUtility } from '@sol/firebase/database';
 
 export enum Role {

@@ -3,7 +3,7 @@ import { DatabaseUtility } from '@sol/firebase/database';
 import { AuthUtility } from '@sol/firebase/functions';
 import { type Firestore } from 'firebase-admin/firestore';
 import { Request } from 'firebase-functions/v2/https';
-import * as express from 'express';
+import type * as express from 'express';
 import { SemesterEnrollment } from '@sol/classes/domain';
 
 export class ClassEnrollmentRepository {

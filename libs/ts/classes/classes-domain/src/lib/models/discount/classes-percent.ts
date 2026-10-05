@@ -6,10 +6,9 @@ export class ClassesPercentDiscount extends ClassesDiscount {
     override type = 'classes-percent';
 
     constructor(discount: {
-        [K in keyof Omit<
-            ClassesPercentDiscount,
-            'type'
-        >]: ClassesPercentDiscount[K];
+        [
+            K in keyof Omit<ClassesPercentDiscount, 'type'>
+        ]: ClassesPercentDiscount[K];
     }) {
         super(discount);
         Object.assign(this, discount);

@@ -23,12 +23,10 @@ export interface ImageUploadData {
 }
 
 export type SubmitResult =
-    | { success: true; classId: string }
-    | { success: false; error: string };
+    { success: true; classId: string } | { success: false; error: string };
 
 export type ImageUploadResult =
-    | { success: true; url: string }
-    | { success: false; error: string };
+    { success: true; url: string } | { success: false; error: string };
 
 @Injectable({ providedIn: 'root' })
 export class ClassFormService {

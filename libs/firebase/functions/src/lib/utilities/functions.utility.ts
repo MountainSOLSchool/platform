@@ -7,7 +7,7 @@ import {
 } from 'firebase-functions/params';
 import { onRequest } from 'firebase-functions/v2/https';
 import { type Request } from 'firebase-functions/v2/https';
-import * as express from 'express';
+import type * as express from 'express';
 
 const ALLOWED_ORIGINS = defineString('ALLOWED_ORIGINS');
 

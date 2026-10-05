@@ -1,8 +1,5 @@
 export type EnrollmentMessageSeverity =
-    | 'info'
-    | 'warning'
-    | 'success'
-    | 'promotional';
+    'info' | 'warning' | 'success' | 'promotional';
 
 export interface EnrollmentMessage {
     id: string;

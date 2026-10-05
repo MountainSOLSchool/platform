@@ -13,7 +13,7 @@ import {
     _mapStudentFormToStudentDbEntry,
 } from '@sol/firebase/enrollment-functions/shared';
 import { Request } from 'firebase-functions/v2/https';
-import * as express from 'express';
+import type * as express from 'express';
 
 export const enroll = Functions.endpoint
     .usingSecrets(...Braintree.SECRET_NAMES)

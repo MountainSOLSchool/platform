@@ -2,12 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 
 export type ToastSeverity =
-    | 'success'
-    | 'info'
-    | 'warn'
-    | 'error'
-    | 'secondary'
-    | 'contrast';
+    'success' | 'info' | 'warn' | 'error' | 'secondary' | 'contrast';
 
 export interface ToastMessage {
     severity?: ToastSeverity;
