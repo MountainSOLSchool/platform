@@ -9,7 +9,7 @@ This repository is configured for GitHub Codespaces, enabling development from a
 **Setup**: `.devcontainer/devcontainer.json`
 
 **What's pre-configured**:
-- Node 22 with npm (the devcontainer image; CI and `package.json` `engines` use Node 24 — see [Development Workflow](./ai/development-workflow.md#prerequisites))
+- Node 24 with npm (matches `package.json` `engines` — see [Development Workflow](./ai/development-workflow.md#prerequisites))
 - Java 21 (for Firebase emulators)
 - Firebase CLI, GitHub CLI, and ngrok installed globally
 - SSH server for terminal access from mobile apps (Termius)

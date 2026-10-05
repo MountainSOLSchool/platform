@@ -64,7 +64,7 @@ Phone Safari → Angular (4200) → Local Functions (5001) → Remote Firebase (
 
 ### What's Pre-installed
 
-- Node 22, npm
+- Node 24, npm
 - Firebase CLI, GitHub CLI
 - ngrok for SSH tunneling
 
@@ -72,11 +72,12 @@ Phone Safari → Angular (4200) → Local Functions (5001) → Remote Firebase (
 
 ### Prerequisites
 
-- Node.js 24 (`package.json` `engines`, and what every CI job uses). There is no `.nvmrc`. Node is pinned in several places that don't agree yet:
-  - `package.json` `engines` and `.github/workflows/*.yml` use **24**
-  - `firebase.json` / `firebase.e2e.json` deploy functions on the **`nodejs22`** runtime
-  - `apps/functions/project.json` bundles with esbuild target **`node20`**
-  - `.devcontainer/devcontainer.json` uses the **Node 22** image
+- Node.js 24. `package.json` `engines` is the source of truth (there is no `.nvmrc`); keep these in step with it when it changes:
+  - `.github/workflows/*.yml` (`node-version`)
+  - `firebase.json` / `firebase.e2e.json` functions `runtime` (`nodejs24`)
+  - `apps/functions/project.json` esbuild `target` (`node24`)
+  - `.devcontainer/devcontainer.json` image (`javascript-node:24`)
+  - Exception: the `e2e_dev` job in `firebase-functions-merge.yml` deliberately runs Node 22.22.3 (see the comment there)
 - npm
 - Firebase CLI: `npm install -g firebase-tools`
 - Git

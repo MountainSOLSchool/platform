@@ -1,6 +1,6 @@
 {
     "name": "Mountain SOL Platform",
-    "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+    "image": "mcr.microsoft.com/devcontainers/javascript-node:24",
     "features": {
         "ghcr.io/devcontainers/features/sshd:1": {
             "version": "latest"

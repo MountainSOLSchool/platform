@@ -17,7 +17,7 @@
                 "bundle": true,
                 "thirdParty": false,
                 "dependenciesFieldType": "dependencies",
-                "target": "node20",
+                "target": "node24",
                 "format": ["esm"],
                 "esbuildOptions": {
                     "sourcemap": true,
