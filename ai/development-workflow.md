@@ -72,7 +72,11 @@ Phone Safari → Angular (4200) → Local Functions (5001) → Remote Firebase (
 
 ### Prerequisites
 
-- Node.js (check `.nvmrc` or `package.json` for version)
+- Node.js 24 (`package.json` `engines`, and what every CI job uses). There is no `.nvmrc`. Node is pinned in several places that don't agree yet:
+  - `package.json` `engines` and `.github/workflows/*.yml` use **24**
+  - `firebase.json` / `firebase.e2e.json` deploy functions on the **`nodejs22`** runtime
+  - `apps/functions/project.json` bundles with esbuild target **`node20`**
+  - `.devcontainer/devcontainer.json` uses the **Node 22** image
 - npm
 - Firebase CLI: `npm install -g firebase-tools`
 - Git

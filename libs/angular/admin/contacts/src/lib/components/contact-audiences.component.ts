@@ -86,16 +86,15 @@ export class ContactAudiencesComponent {
                 RequestedOperatorsUtility.ignoreAllStatesButLoaded(),
                 // Grouped classes are ordinary classes that a group points at,
                 // so flatten them in rather than offering groups separately.
-                map(
-                    ({ [semesterId]: semester }): Array<AudienceOption> =>
-                        [
-                            ...(semester?.classes ?? []),
-                            ...(semester?.groups ?? []).flatMap(
-                                ({ classes }) => classes
-                            ),
-                        ]
-                            .map(({ id, title }) => ({ id, name: title }))
-                            .sort((a, b) => a.name.localeCompare(b.name))
+                map(({ [semesterId]: semester }): Array<AudienceOption> =>
+                    [
+                        ...(semester?.classes ?? []),
+                        ...(semester?.groups ?? []).flatMap(
+                            ({ classes }) => classes
+                        ),
+                    ]
+                        .map(({ id, title }) => ({ id, name: title }))
+                        .sort((a, b) => a.name.localeCompare(b.name))
                 )
             ),
     });

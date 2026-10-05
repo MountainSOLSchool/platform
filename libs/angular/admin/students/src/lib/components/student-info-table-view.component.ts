@@ -279,8 +279,7 @@ export class StudentInfoTableViewComponent {
                     return row.age;
                 default:
                     return (row as unknown as Record<string, unknown>)[prop] as
-                        | string
-                        | number;
+                        string | number;
             }
         };
     }

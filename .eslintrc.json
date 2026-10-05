@@ -51,19 +51,11 @@
         },
         {
             "files": ["*.ts"],
-            "extends": ["plugin:@nx/typescript"],
-            "rules": {
-                "@typescript-eslint/no-extra-semi": "error",
-                "no-extra-semi": "off"
-            }
+            "extends": ["plugin:@nx/typescript"]
         },
         {
             "files": ["*.js", "*.jsx"],
-            "extends": ["plugin:@nx/javascript"],
-            "rules": {
-                "@typescript-eslint/no-extra-semi": "error",
-                "no-extra-semi": "off"
-            }
+            "extends": ["plugin:@nx/javascript"]
         },
         {
             "files": ["*.tsx"],
@@ -71,7 +63,9 @@
             "parserOptions": {
                 "ecmaVersion": "latest",
                 "sourceType": "module",
-                "ecmaFeatures": { "jsx": true }
+                "ecmaFeatures": {
+                    "jsx": true
+                }
             }
         },
         {
@@ -85,13 +79,40 @@
             "parserOptions": {
                 "project": ["./tsconfig.base.json"]
             },
-            "extends": ["plugin:ngrx/recommended"]
+            "plugins": ["@ngrx"],
+            "rules": {
+                "@ngrx/no-effects-in-providers": "error",
+                "@ngrx/updater-explicit-return-type": "warn",
+                "@ngrx/no-dispatch-in-effects": "warn",
+                "@ngrx/prefer-action-creator-in-of-type": "warn",
+                "@ngrx/prefer-concat-latest-from": "warn",
+                "@ngrx/prefer-effect-callback-in-block-statement": "warn",
+                "@ngrx/use-effects-lifecycle-interface": "warn",
+                "@ngrx/avoid-combining-selectors": "warn",
+                "@ngrx/avoid-dispatching-multiple-actions-sequentially": "warn",
+                "@ngrx/avoid-duplicate-actions-in-reducer": "warn",
+                "@ngrx/avoid-mapping-selectors": "warn",
+                "@ngrx/good-action-hygiene": "warn",
+                "@ngrx/no-multiple-global-stores": "warn",
+                "@ngrx/no-reducer-in-key-names": "warn",
+                "@ngrx/no-store-subscription": "warn",
+                "@ngrx/no-typed-global-store": "warn",
+                "@ngrx/on-function-explicit-return-type": "warn",
+                "@ngrx/prefer-action-creator-in-dispatch": "warn",
+                "@ngrx/prefer-action-creator": "warn",
+                "@ngrx/prefer-inline-action-props": "warn",
+                "@ngrx/prefer-one-generic-in-create-for-feature-selector": "warn",
+                "@ngrx/prefer-selector-in-select": "warn",
+                "@ngrx/prefix-selectors-with-select": "warn",
+                "@ngrx/select-style": "warn",
+                "@ngrx/use-consistent-global-store-name": "warn"
+            }
         },
         {
             "files": ["*.ts", "*.tsx"],
-            "extends": ["plugin:eslint-comments/recommended"],
+            "extends": ["plugin:@eslint-community/eslint-comments/recommended"],
             "rules": {
-                "eslint-comments/no-use": [
+                "@eslint-community/eslint-comments/no-use": [
                     "error",
                     {
                         "allow": []

@@ -16,7 +16,6 @@ class _ClassesDiscount extends Discount<{
         };
         amount: number;
     } {
-        _config;
         throw new Error('Not implemented in private class');
     }
 }

@@ -9,10 +9,9 @@ export class BuyXClassTypePercentDiscount extends ClassesDiscount {
     override type = 'buy-x-class-type-percent';
 
     constructor(discount: {
-        [K in keyof Omit<
-            BuyXClassTypePercentDiscount,
-            'type'
-        >]: BuyXClassTypePercentDiscount[K];
+        [
+            K in keyof Omit<BuyXClassTypePercentDiscount, 'type'>
+        ]: BuyXClassTypePercentDiscount[K];
     }) {
         super(discount);
         Object.assign(this, discount);

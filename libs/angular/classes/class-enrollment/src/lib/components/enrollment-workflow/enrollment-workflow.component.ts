@@ -145,9 +145,9 @@ export class ClassEnrollmentComponent implements OnInit {
                     { visible: failed },
                     {
                         set: (target, prop, newValue) => {
-                            prop === 'visible' && newValue === false
-                                ? this.store.setStatusToDraft()
-                                : undefined;
+                            if (prop === 'visible' && newValue === false) {
+                                this.store.setStatusToDraft();
+                            }
                             return Reflect.set(target, prop, newValue);
                         },
                     }

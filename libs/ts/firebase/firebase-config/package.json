@@ -5,7 +5,7 @@
         "tslib": "^2.3.0",
         "firebase": "^12.13.0",
         "@sol/ts/firebase/adapter": "0.0.1",
-        "@firebase/app": "^0.14.12"
+        "@firebase/app": "^0.16.2"
     },
     "type": "commonjs",
     "main": "./src/index.js",
