@@ -5,7 +5,7 @@ import type {
     UpdateClassRequest,
     UpdateClassResponse,
 } from '@sol/ts/firebase/api-types';
-import admin from 'firebase-admin';
+import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 
 export type { UpdateClassRequest, UpdateClassResponse };
 
@@ -84,27 +84,21 @@ export const updateClass = Functions.endpoint
 
         // Only set date fields if they have values, otherwise delete them
         if (data.startDate) {
-            updateData['start'] = admin.firestore.Timestamp.fromDate(
-                new Date(data.startDate)
-            );
+            updateData['start'] = Timestamp.fromDate(new Date(data.startDate));
         } else {
-            updateData['start'] = admin.firestore.FieldValue.delete();
+            updateData['start'] = FieldValue.delete();
         }
         if (data.endDate) {
-            updateData['end'] = admin.firestore.Timestamp.fromDate(
-                new Date(data.endDate)
-            );
+            updateData['end'] = Timestamp.fromDate(new Date(data.endDate));
         } else {
-            updateData['end'] = admin.firestore.FieldValue.delete();
+            updateData['end'] = FieldValue.delete();
         }
         if (data.registrationEndDate) {
-            updateData['registration_end_date'] =
-                admin.firestore.Timestamp.fromDate(
-                    new Date(data.registrationEndDate)
-                );
+            updateData['registration_end_date'] = Timestamp.fromDate(
+                new Date(data.registrationEndDate)
+            );
         } else {
-            updateData['registration_end_date'] =
-                admin.firestore.FieldValue.delete();
+            updateData['registration_end_date'] = FieldValue.delete();
         }
 
         if (
@@ -114,10 +108,8 @@ export const updateClass = Functions.endpoint
             updateData['payment_range_lowest'] = data.paymentRangeLowest;
             updateData['payment_range_highest'] = data.paymentRangeHighest;
         } else {
-            updateData['payment_range_lowest'] =
-                admin.firestore.FieldValue.delete();
-            updateData['payment_range_highest'] =
-                admin.firestore.FieldValue.delete();
+            updateData['payment_range_lowest'] = FieldValue.delete();
+            updateData['payment_range_highest'] = FieldValue.delete();
         }
 
         if (data.unitIds && data.unitIds.length > 0) {
@@ -128,18 +120,17 @@ export const updateClass = Functions.endpoint
                 db.doc(`${unitCollection}/${id}`)
             );
         } else {
-            updateData['units'] = admin.firestore.FieldValue.delete();
+            updateData['units'] = FieldValue.delete();
         }
 
         if (data.ageGroup) {
             updateData['age_group'] = data.ageGroup;
         } else {
-            updateData['age_group'] = admin.firestore.FieldValue.delete();
+            updateData['age_group'] = FieldValue.delete();
         }
 
         // Remove the inline field if it exists (options live in subcollection)
-        updateData['additional_options'] =
-            admin.firestore.FieldValue.delete();
+        updateData['additional_options'] = FieldValue.delete();
 
         await classRef.update(updateData);
 

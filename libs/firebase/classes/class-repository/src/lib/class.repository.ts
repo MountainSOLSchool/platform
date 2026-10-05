@@ -1,8 +1,7 @@
 import { SemesterClass } from '@sol/classes/domain';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { SemesterRepository } from './semester.repository';
-import admin from 'firebase-admin';
-import { DocumentReference } from 'firebase-admin/firestore';
+import { DocumentReference, Timestamp } from 'firebase-admin/firestore';
 
 export type ClassDbo = {
     id: string;
@@ -14,13 +13,13 @@ export type ClassDbo = {
     thumbnailUrl: string;
     payment_range_lowest?: number;
     payment_range_highest?: number;
-    instructors: Array<admin.firestore.DocumentReference>;
-    students?: Array<admin.firestore.DocumentReference>;
-    units?: Array<admin.firestore.DocumentReference>;
+    instructors: Array<DocumentReference>;
+    students?: Array<DocumentReference>;
+    units?: Array<DocumentReference>;
     name: string;
-    start: admin.firestore.Timestamp;
-    end: admin.firestore.Timestamp;
-    registration_end_date: admin.firestore.Timestamp;
+    start: Timestamp;
+    end: Timestamp;
+    registration_end_date: Timestamp;
     class_type: string;
     grade_range_start: number;
     grade_range_end: number;
@@ -33,7 +32,7 @@ export type ClassDbo = {
         id: string;
         description: string;
         cost: number;
-        students?: Array<admin.firestore.DocumentReference>;
+        students?: Array<DocumentReference>;
     }>;
 };
 
@@ -119,7 +118,7 @@ export class ClassRepository {
             location: dbo.location,
             instructors: (
                 (await DatabaseUtility.getHydratedDocuments(
-                    dbo.instructors as unknown as Array<admin.firestore.DocumentReference>
+                    dbo.instructors as unknown as Array<DocumentReference>
                 )) as Array<{
                     id: string;
                     first_name: string;

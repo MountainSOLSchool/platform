@@ -1,6 +1,6 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
-import admin from 'firebase-admin';
+import { DocumentReference } from 'firebase-admin/firestore';
 
 export interface AdminClass {
     id: string;
@@ -60,8 +60,7 @@ export const getClassesForAdmin = Functions.endpoint
                 const data = doc.data();
 
                 const instructorRefs =
-                    (data.instructors as admin.firestore.DocumentReference[]) ||
-                    [];
+                    (data.instructors as DocumentReference[]) || [];
                 const instructors = await Promise.all(
                     instructorRefs.map(async (ref) => {
                         const instructorDoc = await ref.get();
@@ -75,8 +74,7 @@ export const getClassesForAdmin = Functions.endpoint
                 );
 
                 const studentRefs =
-                    (data.students as admin.firestore.DocumentReference[]) ||
-                    [];
+                    (data.students as DocumentReference[]) || [];
 
                 // Options live in the `additional_options` subcollection for
                 // classes created/edited via the admin UI; fall back to the

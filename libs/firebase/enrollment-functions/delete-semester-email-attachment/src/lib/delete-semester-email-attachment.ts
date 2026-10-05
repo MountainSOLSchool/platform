@@ -5,7 +5,7 @@ import type {
     DeleteSemesterEmailAttachmentResponse,
     SemesterEmailAttachment,
 } from '@sol/ts/firebase/api-types';
-import admin from 'firebase-admin';
+import { getStorage } from 'firebase-admin/storage';
 
 export const deleteSemesterEmailAttachment = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -53,7 +53,7 @@ export const deleteSemesterEmailAttachment = Functions.endpoint
         // Storage deletion is best-effort: if the file is already gone,
         // continue. Don't surface that as a failure to the admin.
         try {
-            await admin.storage().bucket().file(storagePath).delete();
+            await getStorage().bucket().file(storagePath).delete();
         } catch (err) {
             console.warn(
                 `[deleteSemesterEmailAttachment] Storage delete failed for ${storagePath} (continuing):`,

@@ -4,7 +4,7 @@ import type {
     CreateDiscountRequest,
     CreateDiscountResponse,
 } from '@sol/ts/firebase/api-types';
-import admin from 'firebase-admin';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export const createDiscount = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -12,9 +12,7 @@ export const createDiscount = Functions.endpoint
         const data = request.body.data;
 
         if (!data.code || !data.type) {
-            response
-                .status(400)
-                .send({ error: 'code and type are required' });
+            response.status(400).send({ error: 'code and type are required' });
             return;
         }
 
@@ -45,9 +43,7 @@ export const createDiscount = Functions.endpoint
         if (data.amount !== undefined) doc['amount'] = data.amount;
         if (data.percent !== undefined) doc['percent'] = data.percent;
         if (data.date) {
-            doc['date'] = admin.firestore.Timestamp.fromDate(
-                new Date(data.date)
-            );
+            doc['date'] = Timestamp.fromDate(new Date(data.date));
         }
         if (data.classOrGroupIds) doc['classOrGroupIds'] = data.classOrGroupIds;
         if (data.classTypes) doc['classTypes'] = data.classTypes;

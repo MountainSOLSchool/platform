@@ -4,7 +4,7 @@ import type {
     UpdateDiscountRequest,
     UpdateDiscountResponse,
 } from '@sol/ts/firebase/api-types';
-import admin from 'firebase-admin';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export const updateDiscount = Functions.endpoint
     .restrictedToRoles(Role.Admin)
@@ -51,9 +51,7 @@ export const updateDiscount = Functions.endpoint
         if (data.amount !== undefined) doc['amount'] = data.amount;
         if (data.percent !== undefined) doc['percent'] = data.percent;
         if (data.date) {
-            doc['date'] = admin.firestore.Timestamp.fromDate(
-                new Date(data.date)
-            );
+            doc['date'] = Timestamp.fromDate(new Date(data.date));
         }
         if (data.classOrGroupIds) doc['classOrGroupIds'] = data.classOrGroupIds;
         if (data.classTypes) doc['classTypes'] = data.classTypes;

@@ -1,6 +1,6 @@
 import { Functions, Role } from '@sol/firebase/functions';
 import { DatabaseUtility } from '@sol/firebase/database';
-import admin from 'firebase-admin';
+import { DocumentReference } from 'firebase-admin/firestore';
 
 export interface GetClassForEditRequest {
     semesterId: string;
@@ -70,12 +70,10 @@ export const getClassForEdit = Functions.endpoint
 
         const data = classDoc.data()!;
 
-        const instructorRefs =
-            (data.instructors as admin.firestore.DocumentReference[]) || [];
+        const instructorRefs = (data.instructors as DocumentReference[]) || [];
         const instructorIds = instructorRefs.map((ref) => ref.id);
 
-        const unitRefs =
-            (data.units as admin.firestore.DocumentReference[]) || [];
+        const unitRefs = (data.units as DocumentReference[]) || [];
         const unitIds = unitRefs.map((ref) => ref.id);
 
         // Options live in the `additional_options` subcollection for classes

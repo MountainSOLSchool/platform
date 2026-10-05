@@ -2,7 +2,7 @@ import { Functions } from '@sol/firebase/functions';
 import { SemesterClass, SemesterClassGroup } from '@sol/classes/domain';
 import { DatabaseUtility } from '@sol/firebase/database';
 import { ClassDbo, SemesterClassGroupDbo } from '@sol/classes/repository';
-import admin from 'firebase-admin';
+import { DocumentReference, Timestamp } from 'firebase-admin/firestore';
 
 interface InstructorDbo {
     id: string;
@@ -24,7 +24,7 @@ interface AdditionalOptionDbo {
     id: string;
     description: string;
     cost: number;
-    students?: admin.firestore.DocumentReference[];
+    students?: DocumentReference[];
 }
 
 interface AdditionalOptionResponse {
@@ -38,21 +38,17 @@ interface RequestConfig {
     onlyOpenForRegistration?: boolean;
 }
 
-function transformTimestamp(
-    timestamp: admin.firestore.Timestamp | null | undefined
-): number {
+function transformTimestamp(timestamp: Timestamp | null | undefined): number {
     return timestamp && timestamp.seconds ? timestamp.seconds * 1000 : 0;
 }
 
-function extractIdFromReference(
-    ref: admin.firestore.DocumentReference | string
-): string {
+function extractIdFromReference(ref: DocumentReference | string): string {
     if (typeof ref === 'string') return ref;
     return ref.id;
 }
 
 async function fetchInstructorData(
-    ref: admin.firestore.DocumentReference
+    ref: DocumentReference
 ): Promise<InstructorResponse> {
     const doc = await DatabaseUtility.getDatabase().doc(ref.path).get();
     const data = doc.data() as InstructorDbo | undefined;

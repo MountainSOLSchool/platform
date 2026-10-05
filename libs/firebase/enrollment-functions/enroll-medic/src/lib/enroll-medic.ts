@@ -1,8 +1,11 @@
 import { Functions } from '@sol/firebase/functions';
 import { Braintree } from '@sol/payments/braintree';
 import { DatabaseUtility } from '@sol/firebase/database';
-import admin from 'firebase-admin';
-import type { MedicEnrollRequest, MedicEnrollResponse } from '@sol/ts/firebase/api-types';
+import { FieldValue } from 'firebase-admin/firestore';
+import type {
+    MedicEnrollRequest,
+    MedicEnrollResponse,
+} from '@sol/ts/firebase/api-types';
 import { MedicPaymentHandler } from '@sol/firebase/payments';
 
 export const enrollMedic = Functions.endpoint
@@ -16,19 +19,26 @@ export const enrollMedic = Functions.endpoint
         const classDoc = await classRef.get();
 
         if (!classDoc.exists) {
-            response.status(404).send({ success: false, error: 'Class not found' });
+            response
+                .status(404)
+                .send({ success: false, error: 'Class not found' });
             return;
         }
 
         const classData = classDoc.data()!;
 
         if (classData.status !== 'published') {
-            response.status(400).send({ success: false, error: 'Class is not available for enrollment' });
+            response.status(400).send({
+                success: false,
+                error: 'Class is not available for enrollment',
+            });
             return;
         }
 
         if (classData.enrolledCount >= classData.maxStudents) {
-            response.status(400).send({ success: false, error: 'Class is full' });
+            response
+                .status(400)
+                .send({ success: false, error: 'Class is full' });
             return;
         }
 
@@ -66,13 +76,15 @@ export const enrollMedic = Functions.endpoint
                 transactionId: paymentResult.transactionId,
                 amount: classData.cost,
                 status: 'enrolled',
-                timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                timestamp: FieldValue.serverTimestamp(),
             };
 
-            const enrollmentRef = await db.collection('medic_enrollments').add(enrollmentDoc);
+            const enrollmentRef = await db
+                .collection('medic_enrollments')
+                .add(enrollmentDoc);
 
             await classRef.update({
-                enrolledCount: admin.firestore.FieldValue.increment(1),
+                enrolledCount: FieldValue.increment(1),
             });
 
             const result: MedicEnrollResponse = {
@@ -85,7 +97,10 @@ export const enrollMedic = Functions.endpoint
         } catch (error) {
             console.error('Error processing medic enrollment:', error);
 
-            if (error instanceof Error && error.message.includes('token_issuance')) {
+            if (
+                error instanceof Error &&
+                error.message.includes('token_issuance')
+            ) {
                 response.status(503).send({
                     success: false,
                     error: 'Temporary payment processing issue. Please try again.',

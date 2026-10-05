@@ -5,7 +5,7 @@
     },
     "functions": {
         "source": ".",
-        "runtime": "nodejs22"
+        "runtime": "nodejs24"
     },
     "hosting": [
         {

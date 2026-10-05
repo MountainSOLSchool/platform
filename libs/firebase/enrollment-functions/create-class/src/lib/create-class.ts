@@ -5,7 +5,7 @@ import type {
     CreateClassRequest,
     CreateClassResponse,
 } from '@sol/ts/firebase/api-types';
-import admin from 'firebase-admin';
+import { Timestamp } from 'firebase-admin/firestore';
 
 export type { CreateClassRequest, CreateClassResponse };
 
@@ -74,17 +74,13 @@ export const createClass = Functions.endpoint
 
         // Only set date fields if they have values
         if (data.startDate) {
-            classDoc['start'] = admin.firestore.Timestamp.fromDate(
-                new Date(data.startDate)
-            );
+            classDoc['start'] = Timestamp.fromDate(new Date(data.startDate));
         }
         if (data.endDate) {
-            classDoc['end'] = admin.firestore.Timestamp.fromDate(
-                new Date(data.endDate)
-            );
+            classDoc['end'] = Timestamp.fromDate(new Date(data.endDate));
         }
         if (data.registrationEndDate) {
-            classDoc['registration_end_date'] = admin.firestore.Timestamp.fromDate(
+            classDoc['registration_end_date'] = Timestamp.fromDate(
                 new Date(data.registrationEndDate)
             );
         }
