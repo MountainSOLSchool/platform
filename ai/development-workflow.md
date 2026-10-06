@@ -176,6 +176,8 @@ nx lint enrollment-portal
 nx lint enrollment-portal --fix
 ```
 
+ESLint 9 uses flat config (`eslint.config.mjs`). Unlike the old `.eslintrc.json` cascade, ESLint only looks up the config from the **current directory**, not per file. `nx lint` passes each project's own config explicitly, so always lint through Nx. A bare `npx eslint <file>` from the repo root uses only the root config, which misses project rules (selector prefixes, React/Angular presets). If you must call ESLint directly, pass `--config <project>/eslint.config.mjs`.
+
 ### Formatting
 
 ```bash
@@ -190,15 +192,7 @@ The project uses Prettier with configuration in `.prettierrc`.
 
 ### Pre-commit Hooks
 
-Husky and lint-staged automatically run on commit:
-
-```javascript
-// lint-staged.config.js
-module.exports = {
-    '*.{ts,js,json,md}': ['prettier --write'],
-    '*.ts': ['eslint --fix'],
-};
-```
+Husky 9 and lint-staged 17 run on commit. `npm install` runs the `prepare` script (`is-ci || husky || true`), which points git's `core.hooksPath` at `.husky/_`. The hook (`.husky/pre-commit`) runs lint-staged with the rules in `lint-staged.config.js`: typecheck and `nx format:write` plus `nx affected:lint` on staged files under `apps/`, `libs/` and `tools/`.
 
 ## Testing
 

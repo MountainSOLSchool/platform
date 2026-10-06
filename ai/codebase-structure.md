@@ -430,7 +430,7 @@ apps/enrollment-portal/src/assets/
 
 ### Linting
 
-- `.eslintrc.json` - ESLint configuration
+- `eslint.config.mjs` - ESLint 9 flat config: the root file holds shared rules; each project's own `eslint.config.mjs` spreads it and adds project rules
 - `lint-staged.config.js` - Pre-commit linting
 
 ### Formatting
