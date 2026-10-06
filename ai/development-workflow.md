@@ -77,7 +77,6 @@ Phone Safari → Angular (4200) → Local Functions (5001) → Remote Firebase (
   - `firebase.json` / `firebase.e2e.json` functions `runtime` (`nodejs24`)
   - `apps/functions/project.json` esbuild `target` (`node24`)
   - `.devcontainer/devcontainer.json` image (`javascript-node:24`)
-  - Exception: the `e2e_dev` job in `firebase-functions-merge.yml` deliberately runs Node 22.22.3 (see the comment there)
 - npm
 - Firebase CLI: `npm install -g firebase-tools`
 - Git
