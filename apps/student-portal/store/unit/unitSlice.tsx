@@ -7,7 +7,9 @@ export const units = createSlice({
         loadedUnits: (_, action) => {
             return action.payload;
         },
-        requestUnits: () => {},
+        requestUnits: () => {
+            // No state change: the action only triggers the units epic.
+        },
         overrideUnits: (_, action) => {
             return action.payload;
         },

@@ -125,7 +125,7 @@
             "inputs": [
                 "default",
                 "^default",
-                "{workspaceRoot}/.eslintrc.json",
+                "{workspaceRoot}/eslint.config.mjs",
                 "{workspaceRoot}/tools/eslint-rules/**/*"
             ],
             "cache": true
@@ -151,7 +151,7 @@
             "!{projectRoot}/tsconfig.spec.json",
             "!{projectRoot}/tsconfig.storybook.json",
             "!{projectRoot}/jest.config.[jt]s",
-            "!{projectRoot}/.eslintrc.json",
+            "!{projectRoot}/eslint.config.mjs",
             "!{projectRoot}/.storybook/**/*",
             "!{projectRoot}/src/test-setup.[jt]s"
         ]

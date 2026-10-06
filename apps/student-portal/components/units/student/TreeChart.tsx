@@ -85,7 +85,9 @@ const SmartTreeChart = memo(function SmartTreeChart({
                 // Skip if unit doesn't exist in the units array
                 if (!unitData) return;
 
-                let newUnit = Object.assign({}, unitData, { status: 'locked' });
+                const newUnit = Object.assign({}, unitData, {
+                    status: 'locked',
+                });
 
                 // MARK COMPLETED UNITS
                 if (completeUnits.includes(unit)) {
@@ -110,7 +112,7 @@ const SmartTreeChart = memo(function SmartTreeChart({
             });
 
             // SORT CATEGORIES
-            let categories = [];
+            const categories = [];
             newPath['children'].forEach((unit) => {
                 let category = categories.find(
                     (category) => category['name'] === unit['category']
@@ -196,7 +198,7 @@ const SmartTreeChart = memo(function SmartTreeChart({
             } else {
                 // INACTIVE PATHS
                 animatedTreePaths.push(newPath);
-                let lockedChildren = [...newPath.children];
+                const lockedChildren = [...newPath.children];
                 newPath = Object.assign({}, newPath, {
                     children: [],
                     lockedChildren: lockedChildren,
@@ -381,8 +383,8 @@ const SmartTreeChart = memo(function SmartTreeChart({
                     return d.data.status === 'ghost' ? 'none' : undefined;
                 })
                 .on('click', (e: any) => {
-                    let nodeData = e.target['__data__'].data;
-                    if (nodeData.hasOwnProperty('description')) {
+                    const nodeData = e.target['__data__'].data;
+                    if (Object.hasOwn(nodeData, 'description')) {
                         onUnitSelect({
                             name: nodeData['name'],
                             description: nodeData['description'],
@@ -498,7 +500,7 @@ const SmartTreeChart = memo(function SmartTreeChart({
         root['x0'] = dy / 2;
         root['y0'] = 0;
         root.descendants().forEach((d, i) => {
-            // @ts-ignore muatintg id on purpose for now
+            // @ts-expect-error mutating id on purpose for now
             d['id'] = i;
             d['_children'] = d.children;
             if (d.data.status) {
