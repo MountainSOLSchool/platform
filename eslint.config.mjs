@@ -11,29 +11,6 @@ const compat = new FlatCompat({
     recommendedConfig: js.configs.recommended,
 });
 
-// Template accessibility rules that Nx's flat `angular-template` preset turns
-// on but the eslintrc preset never did. Kept off so the flat-config migration
-// changes no lint results; enabling them (and fixing the templates they flag)
-// is a separate change. Spread this AFTER nx.configs['flat/angular-template'].
-export const templateA11yNotYetEnabled = [
-    {
-        files: ['**/*.html'],
-        rules: {
-            '@angular-eslint/template/alt-text': 'off',
-            '@angular-eslint/template/click-events-have-key-events': 'off',
-            '@angular-eslint/template/elements-content': 'off',
-            '@angular-eslint/template/interactive-supports-focus': 'off',
-            '@angular-eslint/template/label-has-associated-control': 'off',
-            '@angular-eslint/template/mouse-events-have-key-events': 'off',
-            '@angular-eslint/template/no-autofocus': 'off',
-            '@angular-eslint/template/no-distracting-elements': 'off',
-            '@angular-eslint/template/role-has-required-aria': 'off',
-            '@angular-eslint/template/table-scope': 'off',
-            '@angular-eslint/template/valid-aria': 'off',
-        },
-    },
-];
-
 export default [
     ...nx.configs['flat/base'],
     { plugins: { 'unused-imports': eslintPluginUnusedImports } },

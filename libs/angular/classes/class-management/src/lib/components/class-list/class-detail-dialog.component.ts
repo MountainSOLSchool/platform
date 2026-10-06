@@ -78,22 +78,22 @@ interface AdminClass {
                     <h3>Basic Information</h3>
                     <div class="info-grid">
                         <div class="info-item">
-                            <label>Class ID</label>
+                            <span class="info-label">Class ID</span>
                             <span class="mono">{{ data.id }}</span>
                         </div>
                         <div class="info-item">
-                            <label>Type</label>
+                            <span class="info-label">Type</span>
                             <span>{{ data.classType }}</span>
                         </div>
                         <div class="info-item">
-                            <label>Grade Range</label>
+                            <span class="info-label">Grade Range</span>
                             <span
                                 >{{ formatGrade(data.gradeRangeStart) }} -
                                 {{ formatGrade(data.gradeRangeEnd) }}</span
                             >
                         </div>
                         <div class="info-item full-width">
-                            <label>Description</label>
+                            <span class="info-label">Description</span>
                             <span>{{
                                 data.description || 'No description'
                             }}</span>
@@ -107,29 +107,29 @@ interface AdminClass {
                     <h3>Schedule</h3>
                     <div class="info-grid">
                         <div class="info-item">
-                            <label>Day</label>
+                            <span class="info-label">Day</span>
                             <span>{{ data.weekday }}</span>
                         </div>
                         <div class="info-item">
-                            <label>Time</label>
+                            <span class="info-label">Time</span>
                             <span>{{ data.dailyTimes }}</span>
                         </div>
                         <div class="info-item">
-                            <label>Location</label>
+                            <span class="info-label">Location</span>
                             <span>{{ data.location }}</span>
                         </div>
                         <div class="info-item">
-                            <label>Start Date</label>
+                            <span class="info-label">Start Date</span>
                             <span>{{
                                 data.startDate | date: 'mediumDate'
                             }}</span>
                         </div>
                         <div class="info-item">
-                            <label>End Date</label>
+                            <span class="info-label">End Date</span>
                             <span>{{ data.endDate | date: 'mediumDate' }}</span>
                         </div>
                         <div class="info-item">
-                            <label>Registration Ends</label>
+                            <span class="info-label">Registration Ends</span>
                             <span>{{
                                 data.registrationEndDate | date: 'mediumDate'
                             }}</span>
@@ -143,7 +143,7 @@ interface AdminClass {
                     <h3>Enrollment & Pricing</h3>
                     <div class="info-grid">
                         <div class="info-item">
-                            <label>Enrolled</label>
+                            <span class="info-label">Enrolled</span>
                             <span class="enrollment-count">
                                 {{ data.enrolledCount }}
                                 @if (data.maxStudentSize > 0) {
@@ -152,7 +152,7 @@ interface AdminClass {
                             </span>
                         </div>
                         <div class="info-item">
-                            <label>Max Students</label>
+                            <span class="info-label">Max Students</span>
                             <span>{{
                                 data.maxStudentSize > 0
                                     ? data.maxStudentSize
@@ -160,7 +160,7 @@ interface AdminClass {
                             }}</span>
                         </div>
                         <div class="info-item">
-                            <label>Cost</label>
+                            <span class="info-label">Cost</span>
                             <span>{{ formatCost() }}</span>
                         </div>
                     </div>
@@ -304,7 +304,7 @@ interface AdminClass {
                 grid-column: 1 / -1;
             }
 
-            .info-item label {
+            .info-item .info-label {
                 font-size: 12px;
                 color: #666;
                 font-weight: 500;

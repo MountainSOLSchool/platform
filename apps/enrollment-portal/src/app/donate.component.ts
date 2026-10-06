@@ -96,10 +96,14 @@ interface DonateMessage {
                             }
 
                             <div class="form-field">
-                                <label class="field-label"
-                                    >Payment Method</label
+                                <span
+                                    class="field-label"
+                                    id="donate-payment-method-label"
+                                    >Payment Method</span
                                 >
                                 <sol-payment-collector
+                                    role="group"
+                                    aria-labelledby="donate-payment-method-label"
                                     [anonymous]="true"
                                     [paymentMethods]="['card', 'venmo']"
                                     (paymentMethod)="setPaymentMethod($event)"

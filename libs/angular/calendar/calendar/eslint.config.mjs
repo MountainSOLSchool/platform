@@ -2,7 +2,7 @@ import { FlatCompat } from '@eslint/eslintrc';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import js from '@eslint/js';
-import baseConfig, { templateA11yNotYetEnabled } from '../../../../eslint.config.mjs';
+import baseConfig from '../../../../eslint.config.mjs';
 import nx from '@nx/eslint-plugin';
 
 const compat = new FlatCompat({
@@ -44,5 +44,4 @@ export default [
             },
         })),
     ...nx.configs['flat/angular-template'],
-    ...templateA11yNotYetEnabled,
 ];

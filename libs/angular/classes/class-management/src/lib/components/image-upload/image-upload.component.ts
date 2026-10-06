@@ -37,7 +37,8 @@ export type ImageUploadState =
                     </button>
                 </div>
             } @else {
-                <div
+                <button
+                    type="button"
                     class="image-dropzone"
                     (click)="fileInput.click()"
                     (dragover)="onDragOver($event)"
@@ -48,7 +49,7 @@ export type ImageUploadState =
                     <mat-icon>cloud_upload</mat-icon>
                     <span>{{ dropzoneText() }}</span>
                     <small>{{ supportedFormatsText() }}</small>
-                </div>
+                </button>
             }
             <input
                 #fileInput
@@ -87,7 +88,10 @@ export type ImageUploadState =
                 align-items: center;
                 justify-content: center;
                 gap: 0.5rem;
+                width: 100%;
                 padding: 2rem;
+                font: inherit;
+                color: inherit;
                 border: 2px dashed #ccc;
                 border-radius: 8px;
                 cursor: pointer;

@@ -74,10 +74,16 @@ export type ClassGroupFormDialogResult = 'saved';
             </mat-form-field>
 
             <div class="classes-section">
-                <label class="section-label">Select Classes (minimum 2)</label>
-                <div class="class-list">
+                <span class="section-label" id="class-group-classes-label"
+                    >Select Classes (minimum 2)</span
+                >
+                <div
+                    class="class-list"
+                    role="group"
+                    aria-labelledby="class-group-classes-label"
+                >
                     @for (cls of availableClasses; track cls.id) {
-                        <label class="class-option">
+                        <div class="class-option">
                             <mat-checkbox
                                 [(ngModel)]="cls.selected"
                                 [disabled]="saving()"
@@ -85,7 +91,7 @@ export type ClassGroupFormDialogResult = 'saved';
                                 <span class="class-name">{{ cls.name }}</span>
                                 <span class="class-cost">\${{ cls.cost }}</span>
                             </mat-checkbox>
-                        </label>
+                        </div>
                     }
                     @if (availableClasses.length === 0) {
                         <p class="no-classes">
