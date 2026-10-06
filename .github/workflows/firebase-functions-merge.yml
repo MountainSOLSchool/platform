@@ -285,14 +285,20 @@ jobs:
 
             - name: Deploy functions group to Dev
               if: matrix.functions != ''
-              # Uses the repo's firebase-tools (package.json). It must stay
-              # >= 15.22, the version that fixed keyless-token functions
-              # deploys (maple #497).
+              # firebase-tools is fetched by npx, pinned to the repo's version.
+              # It CANNOT come from `npm ci` here: the dist-functions artifact
+              # lands in the repo root (firebase.json deploys functions from
+              # "."), so its package.json replaces the root one and `npm ci`
+              # installs only the functions' runtime deps — no firebase-tools.
+              # A bare `npx firebase` then resolves the `firebase` SDK package,
+              # which has no bin ("could not determine executable to run").
+              # Keep the pin >= 15.22, the version that fixed keyless-token
+              # functions deploys (maple #497), and bump it with package.json.
               # Retry absorbs transient GCS 5xx on the source upload.
               run: |
                 set -o pipefail
                 for attempt in 1 2 3; do
-                  if npx firebase deploy \
+                  if npx -y firebase-tools@15.32.1 deploy \
                     --only ${{ matrix.functions }} \
                     --project dev \
                     --force \
@@ -595,15 +601,23 @@ jobs:
 
             - name: Deploy functions group to Prod
               if: matrix.functions != ''
-              # Repo firebase-tools, >= 15.22 for keyless-token deploys (maple
-              # #497). Retry absorbs transient GCS 5xx on the source upload.
+              # firebase-tools is fetched by npx, pinned to the repo's version.
+              # It CANNOT come from `npm ci` here: the dist-functions artifact
+              # lands in the repo root (firebase.json deploys functions from
+              # "."), so its package.json replaces the root one and `npm ci`
+              # installs only the functions' runtime deps — no firebase-tools.
+              # A bare `npx firebase` then resolves the `firebase` SDK package,
+              # which has no bin ("could not determine executable to run").
+              # Keep the pin >= 15.22, the version that fixed keyless-token
+              # functions deploys (maple #497), and bump it with package.json.
+              # Retry absorbs transient GCS 5xx on the source upload.
               # Prod already hosts all functions, so these are UPDATES — no cold
               # creates, so the 409 create-storm that forced GROUP_SIZE batching
               # in dev does not apply here.
               run: |
                 set -o pipefail
                 for attempt in 1 2 3; do
-                  if npx firebase deploy \
+                  if npx -y firebase-tools@15.32.1 deploy \
                     --only ${{ matrix.functions }} \
                     --project prod \
                     --force \
