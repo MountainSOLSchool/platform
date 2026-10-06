@@ -49,10 +49,13 @@ import { MatIconModule } from '@angular/material/icon';
                     @if (!paymentComplete()) {
                         <form class="form-content">
                             <div class="form-field">
-                                <label class="field-label required"
+                                <label
+                                    class="field-label required"
+                                    for="payment-payer-name"
                                     >Full Name</label
                                 >
                                 <input
+                                    id="payment-payer-name"
                                     type="text"
                                     [(ngModel)]="payerName"
                                     name="payerName"
@@ -62,10 +65,13 @@ import { MatIconModule } from '@angular/material/icon';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label required"
+                                <label
+                                    class="field-label required"
+                                    for="payment-payer-email"
                                     >Email Address</label
                                 >
                                 <input
+                                    id="payment-payer-email"
                                     type="email"
                                     [(ngModel)]="payerEmail"
                                     name="payerEmail"
@@ -75,10 +81,13 @@ import { MatIconModule } from '@angular/material/icon';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label required"
+                                <label
+                                    class="field-label required"
+                                    for="payment-street"
                                     >Street Address</label
                                 >
                                 <input
+                                    id="payment-street"
                                     type="text"
                                     [(ngModel)]="street"
                                     name="street"
@@ -89,10 +98,13 @@ import { MatIconModule } from '@angular/material/icon';
 
                             <div class="address-row">
                                 <div class="form-field city-field">
-                                    <label class="field-label required"
+                                    <label
+                                        class="field-label required"
+                                        for="payment-city"
                                         >City</label
                                     >
                                     <input
+                                        id="payment-city"
                                         type="text"
                                         [(ngModel)]="city"
                                         name="city"
@@ -102,10 +114,13 @@ import { MatIconModule } from '@angular/material/icon';
                                 </div>
 
                                 <div class="form-field state-field">
-                                    <label class="field-label required"
+                                    <label
+                                        class="field-label required"
+                                        for="payment-state"
                                         >State</label
                                     >
                                     <input
+                                        id="payment-state"
                                         type="text"
                                         [(ngModel)]="state"
                                         name="state"
@@ -116,10 +131,13 @@ import { MatIconModule } from '@angular/material/icon';
                                 </div>
 
                                 <div class="form-field zip-field">
-                                    <label class="field-label required"
+                                    <label
+                                        class="field-label required"
+                                        for="payment-zip"
                                         >ZIP</label
                                     >
                                     <input
+                                        id="payment-zip"
                                         type="text"
                                         [(ngModel)]="zip"
                                         name="zip"
@@ -131,10 +149,13 @@ import { MatIconModule } from '@angular/material/icon';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label"
+                                <label
+                                    class="field-label"
+                                    for="payment-invoice-number"
                                     >Invoice Number (optional)</label
                                 >
                                 <input
+                                    id="payment-invoice-number"
                                     type="text"
                                     [(ngModel)]="invoiceNumber"
                                     name="invoiceNumber"
@@ -144,10 +165,13 @@ import { MatIconModule } from '@angular/material/icon';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label required"
+                                <label
+                                    class="field-label required"
+                                    for="payment-purpose"
                                     >Purpose</label
                                 >
                                 <input
+                                    id="payment-purpose"
                                     type="text"
                                     [(ngModel)]="purpose"
                                     name="purpose"
@@ -157,12 +181,15 @@ import { MatIconModule } from '@angular/material/icon';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label required"
+                                <label
+                                    class="field-label required"
+                                    for="payment-amount"
                                     >Payment Amount</label
                                 >
                                 <div class="amount-input-wrapper">
                                     <span class="currency-prefix">$</span>
                                     <input
+                                        id="payment-amount"
                                         type="number"
                                         [(ngModel)]="paymentAmount"
                                         name="paymentAmount"
@@ -199,10 +226,14 @@ import { MatIconModule } from '@angular/material/icon';
 
                             @if (isLoggedIn() !== undefined) {
                                 <div class="form-field">
-                                    <label class="field-label required"
-                                        >Payment Method</label
+                                    <span
+                                        class="field-label required"
+                                        id="payment-method-label"
+                                        >Payment Method</span
                                     >
                                     <sol-payment-collector
+                                        role="group"
+                                        aria-labelledby="payment-method-label"
                                         [anonymous]="!isLoggedIn()"
                                         [paymentMethods]="['card', 'venmo']"
                                         (paymentMethod)="

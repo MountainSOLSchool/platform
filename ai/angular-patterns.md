@@ -413,6 +413,19 @@ Keep validation simple and declarative.
 
 **Example**: `apps/enrollment-portal/src/app/donate-full.component.ts:478-490`
 
+### Template Accessibility (lint-enforced)
+
+`nx.configs['flat/angular-template']` enables the `@angular-eslint/template/*` a11y rules (label-has-associated-control, click-events-have-key-events, interactive-supports-focus, elements-content, …), and `nx lint` fails on them. Fix the markup rather than disabling:
+
+- **Label + native input**: pair `<label for="x">` with `<input id="x">`. Prefix ids per component (`donate-`, `payment-`) so they stay unique on the page. Example: `apps/enrollment-portal/src/app/payment.component.ts`
+- **Label for a custom component** (no native control to point at): make the text a `<span id="…">` and give the component `role="group" aria-labelledby="…"`. Example: Payment Method in `apps/enrollment-portal/src/app/donate.component.ts`
+- **Custom control wrapping a native one**: expose an id input and forward it (`inputId` on `sol-markdown-editor`, used by the Description label in `class-form.component.ts`)
+- **Read-only "label: value" pairs** aren't form labels; use a styled `<span>` (`class-detail-dialog.component.ts`)
+- **Clickable regions**: prefer `<button type="button">` (`image-upload.component.ts` dropzone). Where a button can't hold the content (headings inside), use `role="button" tabindex="0"` plus `(keydown.enter)`/`(keydown.space)` and `aria-expanded` for toggles (`info-panel.component.ts` header)
+- **Icon-only/empty buttons** need `[attr.aria-label]` (gradient swatches in `info-panel-editor.component.ts`)
+
+The only disables are on `<div (click)="$event.stopPropagation()">` wrappers inside `mat-menu` panels (class-card, class-row, mobile-menu). mat-menu closes on any click inside its panel, and these wrappers are just there to block that. Use `<!-- eslint-disable-next-line <rules> -- reason -->` directly above the element.
+
 ## Component Communication
 
 ### Payment Collector Pattern

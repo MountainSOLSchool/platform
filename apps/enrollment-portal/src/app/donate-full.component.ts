@@ -55,10 +55,13 @@ import { MatDialogModule } from '@angular/material/dialog';
                     @if (!donationComplete()) {
                         <form class="form-content">
                             <div class="form-field">
-                                <label class="field-label required"
+                                <label
+                                    class="field-label required"
+                                    for="donate-donor-name"
                                     >Full Name</label
                                 >
                                 <input
+                                    id="donate-donor-name"
                                     type="text"
                                     [ngModel]="donorName()"
                                     (ngModelChange)="donorName.set($event)"
@@ -69,10 +72,13 @@ import { MatDialogModule } from '@angular/material/dialog';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label required"
+                                <label
+                                    class="field-label required"
+                                    for="donate-donor-email"
                                     >Email Address</label
                                 >
                                 <input
+                                    id="donate-donor-email"
                                     type="email"
                                     [ngModel]="donorEmail()"
                                     (ngModelChange)="donorEmail.set($event)"
@@ -83,10 +89,11 @@ import { MatDialogModule } from '@angular/material/dialog';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label"
+                                <label class="field-label" for="donate-street"
                                     >Street Address</label
                                 >
                                 <input
+                                    id="donate-street"
                                     type="text"
                                     [ngModel]="street()"
                                     (ngModelChange)="street.set($event)"
@@ -98,8 +105,11 @@ import { MatDialogModule } from '@angular/material/dialog';
 
                             <div class="address-row">
                                 <div class="form-field city-field">
-                                    <label class="field-label">City</label>
+                                    <label class="field-label" for="donate-city"
+                                        >City</label
+                                    >
                                     <input
+                                        id="donate-city"
                                         type="text"
                                         [ngModel]="city()"
                                         (ngModelChange)="city.set($event)"
@@ -110,8 +120,13 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 </div>
 
                                 <div class="form-field state-field">
-                                    <label class="field-label">State</label>
+                                    <label
+                                        class="field-label"
+                                        for="donate-state"
+                                        >State</label
+                                    >
                                     <input
+                                        id="donate-state"
                                         type="text"
                                         [ngModel]="state()"
                                         (ngModelChange)="state.set($event)"
@@ -123,8 +138,11 @@ import { MatDialogModule } from '@angular/material/dialog';
                                 </div>
 
                                 <div class="form-field zip-field">
-                                    <label class="field-label">ZIP</label>
+                                    <label class="field-label" for="donate-zip"
+                                        >ZIP</label
+                                    >
                                     <input
+                                        id="donate-zip"
                                         type="text"
                                         [ngModel]="zip()"
                                         (ngModelChange)="zip.set($event)"
@@ -137,10 +155,13 @@ import { MatDialogModule } from '@angular/material/dialog';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label"
+                                <label
+                                    class="field-label"
+                                    for="donate-referral-source"
                                     >How did you hear about Mountain SOL?</label
                                 >
                                 <input
+                                    id="donate-referral-source"
                                     type="text"
                                     [ngModel]="referralSource()"
                                     (ngModelChange)="referralSource.set($event)"
@@ -151,12 +172,15 @@ import { MatDialogModule } from '@angular/material/dialog';
                             </div>
 
                             <div class="form-field">
-                                <label class="field-label required"
+                                <label
+                                    class="field-label required"
+                                    for="donate-donation-amount"
                                     >Donation Amount</label
                                 >
                                 <div class="amount-input-wrapper">
                                     <span class="currency-prefix">$</span>
                                     <input
+                                        id="donate-donation-amount"
                                         type="number"
                                         [ngModel]="donationAmount()"
                                         (ngModelChange)="
@@ -185,10 +209,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 
                             @if (isLoggedIn() !== undefined) {
                                 <div class="form-field">
-                                    <label class="field-label required"
-                                        >Payment Method</label
+                                    <span
+                                        class="field-label required"
+                                        id="donate-payment-method-label"
+                                        >Payment Method</span
                                     >
                                     <sol-payment-collector
+                                        role="group"
+                                        aria-labelledby="donate-payment-method-label"
                                         [anonymous]="!isLoggedIn()"
                                         [paymentMethods]="['card', 'venmo']"
                                         (paymentMethod)="

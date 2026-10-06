@@ -86,6 +86,7 @@ import { MarkdownModule } from 'ngx-markdown';
                         <textarea
                             #textareaRef
                             class="markdown-textarea"
+                            [attr.id]="inputId()"
                             [ngModel]="value()"
                             (ngModelChange)="onValueChange($event)"
                             [placeholder]="placeholder()"
@@ -222,6 +223,7 @@ import { MarkdownModule } from 'ngx-markdown';
     ],
 })
 export class MarkdownEditorComponent implements ControlValueAccessor {
+    readonly inputId = input<string>();
     readonly placeholder = input<string>('');
     readonly rows = input<number>(5);
 

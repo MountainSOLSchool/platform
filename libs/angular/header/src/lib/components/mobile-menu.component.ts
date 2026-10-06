@@ -48,6 +48,7 @@ import { ProgramTabsComponent } from './program-tabs.component';
 
         <mat-menu #mobileMenu="matMenu">
             @if (showProgramTabs()) {
+                <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events, @angular-eslint/template/interactive-supports-focus -- not a control: mat-menu closes on any click inside its panel, so this wrapper stops clicks on the program tabs from closing it -->
                 <div (click)="$event.stopPropagation()">
                     <sol-program-tabs variant="menu" />
                 </div>

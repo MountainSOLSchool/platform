@@ -256,8 +256,16 @@ interface Semester {
                                 </mat-form-field>
 
                                 <div class="gradient-section">
-                                    <label class="field-label">Gradient</label>
-                                    <div class="gradient-presets">
+                                    <span
+                                        class="field-label"
+                                        id="info-panel-gradient-label"
+                                        >Gradient</span
+                                    >
+                                    <div
+                                        class="gradient-presets"
+                                        role="group"
+                                        aria-labelledby="info-panel-gradient-label"
+                                    >
                                         @for (
                                             preset of gradientPresets;
                                             track preset.name
@@ -272,6 +280,10 @@ interface Semester {
                                                     preset.value
                                                 "
                                                 [matTooltip]="preset.name"
+                                                [attr.aria-label]="preset.name"
+                                                [attr.aria-pressed]="
+                                                    gradient() === preset.value
+                                                "
                                                 (click)="
                                                     gradient.set(preset.value)
                                                 "

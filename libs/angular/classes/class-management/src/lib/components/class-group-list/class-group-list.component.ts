@@ -150,7 +150,9 @@ interface AdminClass {
                                 </div>
 
                                 <div class="group-classes">
-                                    <label>Classes in this group:</label>
+                                    <span class="group-classes-label"
+                                        >Classes in this group:</span
+                                    >
                                     <ul>
                                         @for (
                                             cls of group.classes;
@@ -300,7 +302,7 @@ interface AdminClass {
                 height: 14px;
             }
 
-            .group-classes label {
+            .group-classes-label {
                 font-size: 13px;
                 color: rgba(0, 0, 0, 0.6);
                 font-weight: 500;

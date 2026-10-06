@@ -231,10 +231,13 @@ const WEEKDAY_OPTIONS = [
                                     </mat-form-field>
 
                                     <div class="description-field">
-                                        <label class="field-label"
+                                        <label
+                                            class="field-label"
+                                            for="class-description"
                                             >Description</label
                                         >
                                         <sol-markdown-editor
+                                            inputId="class-description"
                                             [(ngModel)]="description"
                                             name="description"
                                             placeholder="Describe what students will learn..."

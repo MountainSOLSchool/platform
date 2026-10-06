@@ -39,12 +39,25 @@ export interface PanelConfig {
     selector: 'sol-info-panel',
     template: `
         <div class="info-panel" [style.background]="config.gradient">
-            <div class="panel-header" (click)="togglePanel()">
+            <div
+                class="panel-header"
+                role="button"
+                tabindex="0"
+                [attr.aria-expanded]="isExpanded"
+                (click)="togglePanel()"
+                (keydown.enter)="togglePanel()"
+                (keydown.space)="$event.preventDefault(); togglePanel()"
+            >
                 <div>
                     <h2 class="panel-title">{{ config.title }}</h2>
                     <p class="panel-subtitle">{{ config.subtitle }}</p>
                 </div>
-                <span class="chevron" [class.expanded]="isExpanded">▼</span>
+                <span
+                    class="chevron"
+                    [class.expanded]="isExpanded"
+                    aria-hidden="true"
+                    >▼</span
+                >
             </div>
 
             <div class="panel-content" [class.expanded]="isExpanded">
