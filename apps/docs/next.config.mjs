@@ -1,6 +1,6 @@
 // @ts-check
 import nextra from 'nextra';
-import nxPlugin from '@nx/next/plugins/with-nx.js';
+import nxPlugin from '@nx/next/plugins/with-nx';
 
 const { withNx } = nxPlugin;
 
