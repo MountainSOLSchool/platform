@@ -38,7 +38,8 @@
         "smol-toml": "nx 22.7.12 pins smol-toml 1.6.1 exactly. Remove once nx pins >=1.9.0.",
         "nx > brace-expansion": "nx 22.7.12 (and 23.2.1) pin brace-expansion 5.0.8 exactly. Remove once nx pins >=5.0.12.",
         "@xmldom/xmldom": "speech-rule-engine 4.1.4 (nextra > better-react-mathjax > mathjax-full, docs site only) pins 0.9.10 exactly. Remove once it pins >=0.9.12.",
-        "@nx/react > express": "@nx/react 23 lists express ^4.21.2 as an optional peer (module-federation dev server, unused here), which clashes with our express 5 (firebase-functions). Remove once @nx/react allows express 5."
+        "@nx/react > express": "@nx/react 23 lists express ^4.21.2 as an optional peer (module-federation dev server, unused here), which clashes with our express 5 (firebase-functions). Remove once @nx/react allows express 5.",
+        "shell-quote": "concurrently (9.2.4 and 10.0.5) pins shell-quote 1.9.0 exactly (GHSA-pqg4-j6r4-53mv, critical). Remove once concurrently pins >=1.11.0."
     },
     "overrides": {
         "postcss": "$postcss",
@@ -51,7 +52,8 @@
         "@xmldom/xmldom": "^0.9.12",
         "@nx/react": {
             "express": "$express"
-        }
+        },
+        "shell-quote": "^1.12.0"
     },
     "dependencies": {
         "@angular-devkit/schematics": "21.2.24",
