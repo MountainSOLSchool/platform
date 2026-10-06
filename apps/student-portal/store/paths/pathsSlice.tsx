@@ -7,7 +7,9 @@ export const paths = createSlice({
         loadedPaths: (state, action) => {
             return action.payload;
         },
-        requestPaths: () => {},
+        requestPaths: () => {
+            // No state change: the action only triggers the paths epic.
+        },
     },
 });
 
