@@ -15,10 +15,8 @@ import { appRoutes } from './app/app-routes';
 import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { provideFirebaseApp } from '@angular/fire/app';
-import { getFunctions, provideFunctions } from '@angular/fire/functions';
-import { connectAuthEmulator, getAuth, provideAuth } from '@angular/fire/auth';
 import {
+    provideFirebase,
     provideFireAuth,
     provideFireConfig,
     provideFireFunctions,
@@ -38,16 +36,10 @@ bootstrapApplication(AppComponent, {
         provideStoreDevtools({
             maxAge: 50,
         }),
-        provideFirebaseApp(getSolApp),
-        provideFunctions(() => getFunctions()),
-        provideAuth(() => {
-            const auth = getAuth();
-            if (environment.useEmulators) {
-                connectAuthEmulator(auth, 'http://localhost:9099', {
-                    disableWarnings: true,
-                });
-            }
-            return auth;
+        provideFirebase(getSolApp, {
+            authEmulatorUrl: environment.useEmulators
+                ? 'http://localhost:9099'
+                : undefined,
         }),
         provideFireAuth(),
         provideFireFunctions(),

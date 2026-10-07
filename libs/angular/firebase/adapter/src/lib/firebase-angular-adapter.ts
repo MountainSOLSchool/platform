@@ -1,20 +1,65 @@
 import {
+    Auth,
+    connectAuthEmulator,
     createUserWithEmailAndPassword,
+    getAuth,
+    onIdTokenChanged,
     sendPasswordResetEmail,
     signInWithEmailAndPassword,
     signOut,
+    User,
 } from 'firebase/auth';
-import { Auth, user } from '@angular/fire/auth';
 import { FirebaseServiceFactory } from '@sol/ts/firebase/adapter';
 import { inject, InjectionToken } from '@angular/core';
-import { Functions, httpsCallable } from '@angular/fire/functions';
+import { Functions, getFunctions, httpsCallable } from 'firebase/functions';
 import {
     getRemoteConfig,
     getValue,
     fetchAndActivate,
     RemoteConfig,
 } from 'firebase/remote-config';
-import { FirebaseApp } from '@angular/fire/app';
+import { FirebaseApp } from 'firebase/app';
+import { Observable } from 'rxjs';
+
+export const FIREBASE_APP = new InjectionToken<FirebaseApp>('FIREBASE_APP');
+export const FIREBASE_AUTH = new InjectionToken<Auth>('FIREBASE_AUTH');
+export const FIREBASE_FUNCTIONS = new InjectionToken<Functions>(
+    'FIREBASE_FUNCTIONS'
+);
+
+export const provideFirebase = (
+    app: () => FirebaseApp,
+    options: { authEmulatorUrl?: string } = {}
+) => [
+    { provide: FIREBASE_APP, useFactory: app },
+    {
+        provide: FIREBASE_AUTH,
+        useFactory: () => {
+            const auth = getAuth(inject(FIREBASE_APP));
+            if (options.authEmulatorUrl) {
+                connectAuthEmulator(auth, options.authEmulatorUrl, {
+                    disableWarnings: true,
+                });
+            }
+            return auth;
+        },
+    },
+    {
+        provide: FIREBASE_FUNCTIONS,
+        useFactory: () => getFunctions(inject(FIREBASE_APP)),
+    },
+];
+
+// Emits on sign-in, sign-out and token refresh (what @angular/fire's `user` did).
+const user = (auth: Auth) =>
+    new Observable<User | null>((subscriber) =>
+        onIdTokenChanged(
+            auth,
+            (u) => subscriber.next(u),
+            (e) => subscriber.error(e),
+            () => subscriber.complete()
+        )
+    );
 
 export const fireAuth = (auth: Auth) =>
     FirebaseServiceFactory.create(auth, {
@@ -31,7 +76,7 @@ export const FIRE_AUTH = new InjectionToken<ReturnType<typeof fireAuth>>(
 
 export const provideFireAuth = () => ({
     provide: FIRE_AUTH,
-    useFactory: () => fireAuth(inject(Auth)),
+    useFactory: () => fireAuth(inject(FIREBASE_AUTH)),
 });
 
 const fireFunctions = (functions: Functions) =>
@@ -45,7 +90,7 @@ export const FIRE_FUNCTIONS = new InjectionToken<
 
 export const provideFireFunctions = () => ({
     provide: FIRE_FUNCTIONS,
-    useFactory: () => fireFunctions(inject(Functions)),
+    useFactory: () => fireFunctions(inject(FIREBASE_FUNCTIONS)),
 });
 
 const fireConfigApp = (app: FirebaseApp) =>
@@ -59,7 +104,7 @@ export const FIRE_CONFIG_APP = new InjectionToken<
 
 export const provideFireConfigApp = () => ({
     provide: FIRE_CONFIG_APP,
-    useFactory: () => fireConfigApp(inject(FirebaseApp)),
+    useFactory: () => fireConfigApp(inject(FIREBASE_APP)),
 });
 
 const fireConfigInstance = (remoteConfig: RemoteConfig) =>
@@ -80,12 +125,12 @@ export const provideFireConfigInstance = (remoteConfig: RemoteConfig) => ({
 export const provideFireConfig = () => [
     {
         provide: FIRE_CONFIG_APP,
-        useFactory: () => fireConfigApp(inject(FirebaseApp)),
+        useFactory: () => fireConfigApp(inject(FIREBASE_APP)),
     },
     {
         provide: FIRE_CONFIG_INSTANCE,
         useFactory: () => {
-            const app = inject(FirebaseApp);
+            const app = inject(FIREBASE_APP);
             const configApp = fireConfigApp(app);
             const remoteConfig = configApp.getRemoteConfig();
             return fireConfigInstance(remoteConfig);

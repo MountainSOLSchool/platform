@@ -1,4 +1,8 @@
 export {
+    provideFirebase,
+    FIREBASE_APP,
+    FIREBASE_AUTH,
+    FIREBASE_FUNCTIONS,
     provideFireAuth,
     provideFireFunctions,
     provideFireConfigApp,

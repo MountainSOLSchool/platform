@@ -59,6 +59,11 @@ Use discriminated unions to represent async operation states declaratively.
 
 **Usage in processDonation()**: `apps/enrollment-portal/src/app/donate-full.component.ts:501-546`
 
+## Firebase SDK Access
+
+The app uses the modular `firebase` SDK directly; there is no `@angular/fire`.
+`provideFirebase(getSolApp, { authEmulatorUrl })` (`libs/angular/firebase/adapter/src/lib/firebase-angular-adapter.ts:30-51`, called in `apps/enrollment-portal/src/main.ts`) provides the `FIREBASE_APP`, `FIREBASE_AUTH` and `FIREBASE_FUNCTIONS` tokens. Feature code should inject the higher-level `FIRE_AUTH` / `FIRE_FUNCTIONS` / `FIRE_CONFIG_INSTANCE` wrappers (or `MountainSolApiService`) rather than the raw instances, so specs can mock them (see `libs/angular/auth/login/src/lib/components/login.component.spec.ts`). `FIRE_AUTH.user()` emits on sign-in, sign-out and token refresh (`onIdTokenChanged`).
+
 ## Firebase Functions Integration
 
 ### MountainSolApiService (Preferred)
