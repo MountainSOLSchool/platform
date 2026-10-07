@@ -4,9 +4,9 @@
     "dependencies": {
         "tslib": "^2.3.0",
         "firebase": "^12.13.0",
-        "@angular/fire": "21.0.0-rc.1",
         "@sol/ts/firebase/adapter": "0.0.1",
-        "@angular/core": "^21.2.9"
+        "@angular/core": "^21.2.9",
+        "rxjs": "^7.8.2"
     },
     "type": "commonjs",
     "main": "./src/index.js",
