@@ -37,7 +37,9 @@
         "axios": "nx 22.7.12 pins axios 1.18.1 exactly. Remove once nx pins >=1.20.0.",
         "smol-toml": "nx 22.7.12 pins smol-toml 1.6.1 exactly. Remove once nx pins >=1.9.0.",
         "nx > brace-expansion": "nx 22.7.12 (and 23.2.1) pin brace-expansion 5.0.8 exactly. Remove once nx pins >=5.0.12.",
-        "@xmldom/xmldom": "speech-rule-engine 4.1.4 (nextra > better-react-mathjax > mathjax-full, docs site only) pins 0.9.10 exactly. Remove once it pins >=0.9.12."
+        "@xmldom/xmldom": "speech-rule-engine 4.1.4 (nextra > better-react-mathjax > mathjax-full, docs site only) pins 0.9.10 exactly. Remove once it pins >=0.9.12.",
+        "@nx/react > express": "@nx/react 23 lists express ^4.21.2 as an optional peer (module-federation dev server, unused here), which clashes with our express 5 (firebase-functions). Remove once @nx/react allows express 5.",
+        "shell-quote": "concurrently (9.2.4 and 10.0.5) pins shell-quote 1.9.0 exactly (GHSA-pqg4-j6r4-53mv, critical). Remove once concurrently pins >=1.11.0."
     },
     "overrides": {
         "postcss": "$postcss",
@@ -47,7 +49,11 @@
         "nx": {
             "brace-expansion": "^5.0.12"
         },
-        "@xmldom/xmldom": "^0.9.12"
+        "@xmldom/xmldom": "^0.9.12",
+        "@nx/react": {
+            "express": "$express"
+        },
+        "shell-quote": "^1.12.0"
     },
     "dependencies": {
         "@angular-devkit/schematics": "21.2.24",
@@ -75,7 +81,7 @@
         "@ngrx/signals": "21.1.0",
         "@ngrx/store": "21.1.0",
         "@ngrx/store-devtools": "21.1.0",
-        "@nx/angular": "22.7.12",
+        "@nx/angular": "23.2.1",
         "@reduxjs/toolkit": "^2.5.1",
         "add-to-calendar-button": "^2.6.0",
         "braintree": "^3.40.0",
@@ -121,16 +127,16 @@
         "@eslint/eslintrc": "^3.3.7",
         "@eslint/js": "^9.39.5",
         "@ngrx/eslint-plugin": "21.1.1",
-        "@nx/esbuild": "22.7.12",
-        "@nx/eslint": "22.7.12",
-        "@nx/eslint-plugin": "22.7.12",
-        "@nx/jest": "22.7.12",
-        "@nx/js": "22.7.12",
-        "@nx/next": "22.7.12",
-        "@nx/node": "22.7.12",
-        "@nx/react": "22.7.12",
-        "@nx/storybook": "22.7.12",
-        "@nx/workspace": "22.7.12",
+        "@nx/esbuild": "23.2.1",
+        "@nx/eslint": "23.2.1",
+        "@nx/eslint-plugin": "23.2.1",
+        "@nx/jest": "23.2.1",
+        "@nx/js": "23.2.1",
+        "@nx/next": "23.2.1",
+        "@nx/node": "23.2.1",
+        "@nx/react": "23.2.1",
+        "@nx/storybook": "23.2.1",
+        "@nx/workspace": "23.2.1",
         "@playwright/test": "^1.63.0",
         "@schematics/angular": "21.2.24",
         "@storybook/addon-a11y": "^10.6.1",
@@ -177,7 +183,7 @@
         "jsonc-eslint-parser": "^2.1.0",
         "lint-staged": "^17.6.0",
         "ng-packagr": "21.2.7",
-        "nx": "22.7.12",
+        "nx": "23.2.1",
         "pagefind": "^1.5.2",
         "postcss": "^8.5.10",
         "prettier": "^3.9.9",
