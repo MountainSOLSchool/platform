@@ -1,47 +1,33 @@
-import { FlatCompat } from '@eslint/eslintrc';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import js from '@eslint/js';
-import baseConfig from '../../../../eslint.config.mjs';
+import baseConfig, {
+    onPushNotYetRequired,
+} from '../../../../eslint.config.mjs';
 import nx from '@nx/eslint-plugin';
-
-const compat = new FlatCompat({
-    baseDirectory: dirname(fileURLToPath(import.meta.url)),
-    recommendedConfig: js.configs.recommended,
-});
 
 export default [
     ...baseConfig,
     ...nx.configs['flat/angular'],
-    ...compat
-        .config({
-            extends: [
-                'plugin:@angular-eslint/template/process-inline-templates',
+    {
+        files: ['**/*.ts'],
+        rules: {
+            '@angular-eslint/directive-selector': [
+                'warn',
+                {
+                    type: 'attribute',
+                    prefix: 'sol',
+                    style: 'camelCase',
+                },
             ],
-        })
-        .map((config) => ({
-            ...config,
-            files: ['**/*.ts'],
-            rules: {
-                ...config.rules,
-                '@angular-eslint/directive-selector': [
-                    'warn',
-                    {
-                        type: 'attribute',
-                        prefix: 'sol',
-                        style: 'camelCase',
-                    },
-                ],
-                '@angular-eslint/component-selector': [
-                    'error',
-                    {
-                        type: 'element',
-                        prefix: 'sol',
-                        style: 'kebab-case',
-                    },
-                ],
-                '@angular-eslint/prefer-standalone': 'off',
-            },
-        })),
+            '@angular-eslint/component-selector': [
+                'error',
+                {
+                    type: 'element',
+                    prefix: 'sol',
+                    style: 'kebab-case',
+                },
+            ],
+            '@angular-eslint/prefer-standalone': 'off',
+        },
+    },
+    ...onPushNotYetRequired,
     ...nx.configs['flat/angular-template'],
 ];
