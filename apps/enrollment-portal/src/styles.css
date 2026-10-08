@@ -12,7 +12,7 @@ body {
 }
 
 /* Heading typography - EB Garamond for elegant, nature-forward feel */
-/* Using !important to override PrimeNG/PrimeFlex utility classes */
+/* Using !important to override the utility classes in utilities.css */
 /* Font sizes use design tokens for consistency across apps */
 h1, h2, h3, h4 {
     font-family: var(--sol-font-heading, 'EB Garamond', Georgia, serif) !important;

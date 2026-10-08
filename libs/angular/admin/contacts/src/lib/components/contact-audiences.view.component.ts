@@ -40,9 +40,9 @@ const EXTERNAL_RECIPIENT_LIMIT = 500;
         MatSlideToggleModule,
     ],
     styles: [
-        // This app has no Tailwind — utilities come from PrimeFlex, whose class
-        // names differ (align-items-center, border-1, border-round) and which
-        // has no arbitrary-value syntax. Anything PrimeFlex lacks lives here.
+        // This app has no Tailwind — utilities come from apps/enrollment-portal/
+        // src/utilities.css (PrimeFlex names: align-items-center, border-1,
+        // border-round), with no arbitrary values. Anything else lives here.
         `
             :host {
                 display: block;

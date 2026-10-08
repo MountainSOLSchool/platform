@@ -525,6 +525,14 @@ Dialog components use:
 
 **Why Material**: Better long-term support, more comprehensive component set, better accessibility, no breaking styling changes in updates
 
+### Utility Classes
+
+Global utility classes (`flex`, `align-items-center`, `mb-3`, `col-12 md:col-6`, …) use PrimeFlex names, but the PrimeFlex package is gone: each app ships only the rules it uses, in `apps/enrollment-portal/src/utilities.css` and `apps/student-portal/app/utilities.css`. There is no Tailwind, so Tailwind-only names (`items-center`, `rounded`, `max-h-[400px]`) do nothing.
+
+- Prefer component styles for anything new
+- To use another PrimeFlex utility, copy its rule from PrimeFlex 3.3.1 into the app's `utilities.css`. Otherwise the class silently does nothing.
+- PrimeFlex colour/surface utilities (`text-blue-600`, `surface-card`, `border-round`) read PrimeNG theme variables (`--blue-600`, `--surface-card`, `--border-radius`). The enrollment portal defines none of them, so these classes have no effect there; use design tokens instead.
+
 ### Design Tokens
 
 **IMPORTANT**: Use CSS custom properties (design tokens) instead of hardcoded hex/rgb colors.
