@@ -4,6 +4,7 @@ import {
     signal,
     computed,
     linkedSignal,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -281,6 +282,7 @@ import { MatDialogModule } from '@angular/material/dialog';
             </mat-card>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             :host {

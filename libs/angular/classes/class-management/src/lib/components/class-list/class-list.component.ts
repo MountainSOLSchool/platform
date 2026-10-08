@@ -4,6 +4,7 @@ import {
     computed,
     effect,
     linkedSignal,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -305,6 +306,7 @@ interface Semester {
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .page-container {

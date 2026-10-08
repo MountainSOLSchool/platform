@@ -1,4 +1,11 @@
-import { Component, input, model, computed, forwardRef } from '@angular/core';
+import {
+    Component,
+    input,
+    model,
+    computed,
+    forwardRef,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import {
     ControlValueAccessor,
@@ -66,6 +73,7 @@ const DAY_ORDER = ['Su', 'M', 'Tu', 'W', 'Th', 'F', 'Sa'];
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .weekday-section {

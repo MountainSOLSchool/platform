@@ -1,4 +1,8 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import {
+    provideHttpClient,
+    withInterceptors,
+    withXhr,
+} from '@angular/common/http';
 import {
     enableProdMode,
     importProvidersFrom,
@@ -44,7 +48,7 @@ bootstrapApplication(AppComponent, {
         provideFireAuth(),
         provideFireFunctions(),
         provideFireConfig(),
-        provideHttpClient(withInterceptors([authInterceptor])),
+        provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
         provideStore(),
         provideEffects(),
         provideRouter(appRoutes),

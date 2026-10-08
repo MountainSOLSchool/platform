@@ -46,6 +46,12 @@ This subscribes to the observable and converts emissions to signal updates, with
 
 **Reference**: See the pattern in `apps/enrollment-portal/src/app/donate-full.component.ts:439-443`
 
+## Change Detection (Angular 22)
+
+Angular 22 made `OnPush` the default for components that don't set `changeDetection`. The upgrade migration pinned the components that relied on the old default to `ChangeDetectionStrategy.Eager` to keep their behaviour; treat those as legacy. New components should be `OnPush` (the default) and drive the template from signals. angular-eslint 22's `prefer-on-push-component-change-detection` is switched off via `onPushNotYetRequired` in the root `eslint.config.mjs` until the `Eager` components are converted; remove that export when they are.
+
+Templates: `?.` now returns `undefined` (TypeScript semantics) instead of `null`. The migration wrapped the few bindings that depended on `null` in `$safeNavigationMigration(...)`; when touching one, fix the input type to accept `undefined` and drop the wrapper.
+
 ## State Machines for Async Operations
 
 Use discriminated unions to represent async operation states declaratively.

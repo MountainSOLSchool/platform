@@ -5,12 +5,9 @@
         "rootDir": ".",
         "module": "es2022",
         "target": "es5",
-        "types": [
-            "node"
-        ],
-        "importHelpers": false
+        "types": ["node"],
+        "importHelpers": false,
+        "ignoreDeprecations": "6.0"
     },
-    "include": [
-        "**/*.ts"
-    ]
+    "include": ["**/*.ts"]
 }

@@ -21,7 +21,8 @@
         "target": "es2022",
         "lib": ["es2022", "dom"],
         "module": "preserve",
-        "moduleResolution": "bundler"
+        "moduleResolution": "bundler",
+        "ignoreDeprecations": "6.0"
     },
     "angularCompilerOptions": {
         "strictInjectionParameters": true,

@@ -1,4 +1,10 @@
-import { Component, inject, computed, signal } from '@angular/core';
+import {
+    Component,
+    inject,
+    computed,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { Router } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
@@ -205,6 +211,7 @@ const DISCOUNT_TYPE_LABELS: Record<string, string> = {
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .page-container {

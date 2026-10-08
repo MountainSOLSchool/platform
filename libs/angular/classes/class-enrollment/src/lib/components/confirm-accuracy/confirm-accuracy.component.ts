@@ -1,4 +1,10 @@
-import { Component, inject, input, model } from '@angular/core';
+import {
+    Component,
+    inject,
+    input,
+    model,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
@@ -23,6 +29,7 @@ import { MessagesComponent } from '@sol/form/validity';
             <sol-messages [messages]="messages()"></sol-messages>
         </div>
     }`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatCheckboxModule, FormsModule, MessagesComponent],
 })
 export class ConfirmAccuracyComponent {

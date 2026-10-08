@@ -1,4 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import {
+    Component,
+    inject,
+    signal,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
@@ -134,6 +139,7 @@ interface DonateMessage {
             </mat-card>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             :host {

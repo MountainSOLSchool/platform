@@ -1,5 +1,5 @@
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SolToastService } from '@sol/angular/toast';
@@ -7,6 +7,7 @@ import { SolToastService } from '@sol/angular/toast';
 @Component({
     standalone: true,
     imports: [MatButtonModule, MatIconModule],
+    changeDetection: ChangeDetectionStrategy.Eager,
     template: `
         <div class="min-w-[400px]">
             <div class="mt-2">

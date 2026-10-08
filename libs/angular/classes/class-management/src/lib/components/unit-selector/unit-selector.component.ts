@@ -6,6 +6,7 @@ import {
     input,
     output,
     effect,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
@@ -251,6 +252,7 @@ interface PathUnitGroup {
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .unit-selector {

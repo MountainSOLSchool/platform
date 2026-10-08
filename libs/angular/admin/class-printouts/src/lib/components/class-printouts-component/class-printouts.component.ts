@@ -25,7 +25,9 @@ import { ClassRosterService } from '../../services/class-roster.service';
 @Component({
     template: `<sol-class-printouts-view
         [rows]="classRows.value()"
-        [classIdOfEmailsBeingCopied]="rowOfEmailsBeingCopied()?.id"
+        [classIdOfEmailsBeingCopied]="
+            $safeNavigationMigration(rowOfEmailsBeingCopied()?.id)
+        "
         [semesters]="semesters.value()"
         [selectedSemester]="selectedSemester()"
         [expandedClassId]="expandedClassId()"

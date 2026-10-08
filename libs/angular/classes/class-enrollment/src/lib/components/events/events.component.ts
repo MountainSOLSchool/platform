@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
 import 'add-to-calendar-button';
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         NgStyle,
         MatCheckboxModule,

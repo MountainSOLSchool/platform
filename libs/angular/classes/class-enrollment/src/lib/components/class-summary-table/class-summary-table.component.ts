@@ -4,7 +4,7 @@ import {
     computed,
     inject,
     Input,
-    Signal,
+    type Signal,
     signal,
 } from '@angular/core';
 import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';

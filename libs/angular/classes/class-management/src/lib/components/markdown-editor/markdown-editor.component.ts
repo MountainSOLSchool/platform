@@ -1,4 +1,10 @@
-import { Component, input, signal, forwardRef } from '@angular/core';
+import {
+    Component,
+    input,
+    signal,
+    forwardRef,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import {
     FormsModule,
@@ -116,6 +122,7 @@ import { MarkdownModule } from 'ngx-markdown';
             </div>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .markdown-editor {
