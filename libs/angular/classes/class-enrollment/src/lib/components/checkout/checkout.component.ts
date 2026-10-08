@@ -44,9 +44,11 @@ export class CheckoutComponent {
 
     readonly errors$ = this.hasPaymentMethod$.pipe(
         map((hasPaymentMethod) => {
-            return this.suite({
-                hasPaymentMethod,
-            }).getErrors();
+            return this.suite
+                .run({
+                    hasPaymentMethod,
+                })
+                .getErrors();
         })
     );
 

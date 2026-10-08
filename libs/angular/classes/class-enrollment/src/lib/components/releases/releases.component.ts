@@ -47,7 +47,7 @@ export class ReleasesComponent {
 
     private readonly validation$ = this.enrollment$.pipe(
         map((enrollment) => {
-            return this.validationSuite(enrollment);
+            return this.validationSuite.run(enrollment);
         }),
         shareReplay()
     );

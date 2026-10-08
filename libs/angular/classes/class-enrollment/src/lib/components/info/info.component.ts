@@ -88,7 +88,7 @@ export class InfoComponent {
     );
 
     private readonly validation = computed(() => {
-        return this.validationSuite(this.student(), {
+        return this.validationSuite.run(this.student(), {
             isOutOfDate: this.isOutOfDate(),
             accuracyConfirmations: this.accuracyConfirmations(),
         });

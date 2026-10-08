@@ -2,7 +2,35 @@
 
 exports[`classValidationSuite focused runs (field argument) keep earlier results for other fields 1`] = `
 {
-  "errors": {},
+  "errors": {
+    "classType": [
+      "Class type is required",
+    ],
+    "dailyTimes": [
+      "Time is required",
+    ],
+    "endDate": [
+      "End date is required",
+    ],
+    "instructorIds": [
+      "At least one instructor is required",
+    ],
+    "location": [
+      "Location is required",
+    ],
+    "registrationEndDate": [
+      "Registration end date is required",
+    ],
+    "semesterId": [
+      "Semester is required",
+    ],
+    "startDate": [
+      "Start date is required",
+    ],
+    "weekday": [
+      "Day(s) of week is required",
+    ],
+  },
   "valid": false,
 }
 `;

@@ -71,7 +71,8 @@ describe('classValidationSuite', () => {
     });
 
     it('focused runs (field argument) keep earlier results for other fields', () => {
-        // Not used by any caller today, but the suite supports it.
+        // Not used by any caller today. vest 5 returned {} here; vest 6 keeps
+        // the other fields' errors from the previous run.
         run(classValidationSuite, {});
         const focused = run(
             classValidationSuite,
