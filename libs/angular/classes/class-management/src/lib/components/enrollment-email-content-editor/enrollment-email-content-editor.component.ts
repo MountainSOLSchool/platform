@@ -6,6 +6,7 @@ import {
     inject,
     signal,
     viewChild,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
@@ -295,6 +296,7 @@ type TestSendState =
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .editor-container {

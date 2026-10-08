@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -38,6 +38,7 @@ import { MatIconModule } from '@angular/material/icon';
         } @else {
             <ng-content></ng-content>
         }`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatCardModule, MatButtonModule, MatIconModule],
 })
 export class AcknowledgeOutOfDateComponent {

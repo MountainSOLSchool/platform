@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import {
-    HttpEvent,
-    HttpInterceptor,
+    type HttpEvent,
+    type HttpInterceptor,
     HttpHandler,
     HttpRequest,
-    HttpInterceptorFn,
+    type HttpInterceptorFn,
 } from '@angular/common/http';
 
 import { from, map, Observable, switchMap, take } from 'rxjs';

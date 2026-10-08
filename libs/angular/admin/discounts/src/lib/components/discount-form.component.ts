@@ -1,4 +1,11 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import {
+    Component,
+    inject,
+    signal,
+    computed,
+    effect,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -224,6 +231,7 @@ const DISCOUNT_TYPES: { value: DiscountType; label: string }[] = [
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .page-container {

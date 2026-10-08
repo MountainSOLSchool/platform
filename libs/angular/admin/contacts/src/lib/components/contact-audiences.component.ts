@@ -36,7 +36,7 @@ import {
         [classId]="classId()"
         [years]="years()"
         [includeAllGuardians]="includeAllGuardians()"
-        [contacts]="audience.value()?.contacts"
+        [contacts]="$safeNavigationMigration(audience.value()?.contacts)"
         [totalBeforeDedupe]="audience.value()?.totalBeforeDedupe ?? 0"
         [studentsWithoutEmail]="audience.value()?.studentsWithoutEmail ?? 0"
         [loading]="audience.isLoading()"

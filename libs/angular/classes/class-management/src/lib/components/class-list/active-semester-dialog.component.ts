@@ -1,4 +1,11 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+import {
+    Component,
+    inject,
+    signal,
+    computed,
+    effect,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { DialogRef } from '@angular/cdk/dialog';
@@ -238,6 +245,7 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
             </div>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .dialog-container {

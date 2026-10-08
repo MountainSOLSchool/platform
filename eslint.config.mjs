@@ -3,6 +3,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import js from '@eslint/js';
 import nx from '@nx/eslint-plugin';
+import angular from 'angular-eslint';
 import eslintPluginUnusedImports from 'eslint-plugin-unused-imports';
 import typescriptEslintParser from '@typescript-eslint/parser';
 
@@ -11,17 +12,30 @@ const compat = new FlatCompat({
     recommendedConfig: js.configs.recommended,
 });
 
+// Angular 22 makes OnPush the default and angular-eslint 22 errors on any
+// component that isn't OnPush. The Angular 22 migration pinned the components
+// that relied on the old default to ChangeDetectionStrategy.Eager to keep their
+// behaviour; moving them to OnPush is its own change, so the rule stays off
+// until then. Spread this AFTER nx.configs['flat/angular'] (which enables it).
+export const onPushNotYetRequired = [
+    {
+        files: ['**/*.ts'],
+        rules: {
+            '@angular-eslint/prefer-on-push-component-change-detection': 'off',
+        },
+    },
+];
+
 export default [
     ...nx.configs['flat/base'],
     { plugins: { 'unused-imports': eslintPluginUnusedImports } },
+    ...angular.configs.tsRecommended.map((config) => ({
+        ...config,
+        files: ['**/*.ts'],
+    })),
+    { files: ['**/*.ts'], processor: angular.processInlineTemplates },
     ...compat
-        .config({
-            extends: [
-                'plugin:@angular-eslint/recommended',
-                'plugin:@angular-eslint/template/process-inline-templates',
-                'plugin:prettier/recommended',
-            ],
-        })
+        .config({ extends: ['plugin:prettier/recommended'] })
         .map((config) => ({
             ...config,
             files: ['**/*.ts'],

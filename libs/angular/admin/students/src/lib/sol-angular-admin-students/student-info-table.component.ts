@@ -22,7 +22,9 @@ import {
 @Component({
     template: `<sol-student-info-table-view
         [students]="studentRows.value()"
-        [studentIdBeingViewed]="studentBeingViewed()?.id"
+        [studentIdBeingViewed]="
+            $safeNavigationMigration(studentBeingViewed()?.id)
+        "
         (viewInfoClick)="viewInfoClick($event)"
     ></sol-student-info-table-view>`,
     changeDetection: ChangeDetectionStrategy.OnPush,

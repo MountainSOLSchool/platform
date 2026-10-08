@@ -1,4 +1,11 @@
-import { Component, inject, computed, signal, effect } from '@angular/core';
+import {
+    Component,
+    inject,
+    computed,
+    signal,
+    effect,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -184,6 +191,7 @@ interface AdminClass {
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .page-container {

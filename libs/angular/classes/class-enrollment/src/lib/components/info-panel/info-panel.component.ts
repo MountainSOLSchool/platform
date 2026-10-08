@@ -1,5 +1,10 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import {
+    Component,
+    Input,
+    OnInit,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 import { MarkdownComponent } from 'ngx-markdown';
 
 export interface InfoCard {
@@ -304,6 +309,7 @@ export interface PanelConfig {
             }
         `,
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, MarkdownComponent],
 })
 export class InfoPanelComponent implements OnInit {

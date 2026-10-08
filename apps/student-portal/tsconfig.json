@@ -1,40 +1,38 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "compilerOptions": {
-    "jsx": "preserve",
-    "allowJs": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "incremental": true,
-    "types": [
-      "jest",
-      "node"
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "jsx": "preserve",
+        "allowJs": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "strict": false,
+        "forceConsistentCasingInFileNames": true,
+        "noEmit": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "incremental": true,
+        "types": ["jest", "node"],
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ],
+        "ignoreDeprecations": "6.0"
+    },
+    "include": [
+        "**/*.js",
+        "**/*.jsx",
+        "**/*.ts",
+        "**/*.tsx",
+        "../../dist/apps/student-portal/.next/types/**/*.ts",
+        ".next/types/**/*.ts",
+        "next-env.d.ts",
+        "../../apps/student-portal/.next/types/**/*.ts"
     ],
-    "plugins": [
-      {
-        "name": "next"
-      }
+    "exclude": [
+        "node_modules",
+        "jest.config.ts",
+        "src/**/*.spec.ts",
+        "src/**/*.test.ts"
     ]
-  },
-  "include": [
-    "**/*.js",
-    "**/*.jsx",
-    "**/*.ts",
-    "**/*.tsx",
-    "../../dist/apps/student-portal/.next/types/**/*.ts",
-    ".next/types/**/*.ts",
-    "next-env.d.ts",
-    "../../apps/student-portal/.next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "jest.config.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ]
 }

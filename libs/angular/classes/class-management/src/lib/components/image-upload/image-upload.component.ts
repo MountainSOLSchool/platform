@@ -5,6 +5,7 @@ import {
     signal,
     model,
     computed,
+    ChangeDetectionStrategy,
 } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -74,6 +75,7 @@ export type ImageUploadState =
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .image-upload-container {

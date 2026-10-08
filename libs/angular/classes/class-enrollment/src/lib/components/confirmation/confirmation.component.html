@@ -14,7 +14,13 @@
                                 Name: {{ student?.firstName }}
                                 {{ student?.lastName }}
                             </p>
-                            <p>Birthdate: {{ student?.birthdate | date }}</p>
+                            <p>
+                                Birthdate:
+                                {{
+                                    $safeNavigationMigration(student?.birthdate)
+                                        | date
+                                }}
+                            </p>
                         </mat-card-content>
                     </mat-card>
                 }

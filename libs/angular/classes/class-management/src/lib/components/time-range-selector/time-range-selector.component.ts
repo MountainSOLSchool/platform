@@ -1,4 +1,11 @@
-import { Component, input, model, computed, output } from '@angular/core';
+import {
+    Component,
+    input,
+    model,
+    computed,
+    output,
+    ChangeDetectionStrategy,
+} from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -55,6 +62,7 @@ export interface TimeRange {
             }
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `
             .time-section {
