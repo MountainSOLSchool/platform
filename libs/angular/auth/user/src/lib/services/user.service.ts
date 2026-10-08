@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
-import { filter, map, Observable, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { FIRE_AUTH } from '@sol/angular/firebase/adapter';
 
@@ -20,12 +20,16 @@ export class UserService {
     }
 
     private getRoles(): Observable<string[]> {
+        // Signed out must emit [] (not be filtered) so role-gated UI resets.
         return this.getUser().pipe(
-            filter((u) => !!u),
-            switchMap(() =>
-                this.functions
-                    .call<Array<string>>('roles')
-                    .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
+            switchMap((u) =>
+                u
+                    ? this.functions
+                          .call<Array<string>>('roles')
+                          .pipe(
+                              RequestedOperatorsUtility.ignoreAllStatesButLoaded()
+                          )
+                    : of([])
             )
         );
     }

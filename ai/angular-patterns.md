@@ -62,7 +62,7 @@ Use discriminated unions to represent async operation states declaratively.
 ## Firebase SDK Access
 
 The app uses the modular `firebase` SDK directly; there is no `@angular/fire`.
-`provideFirebase(getSolApp, { authEmulatorUrl })` (`libs/angular/firebase/adapter/src/lib/firebase-angular-adapter.ts:30-51`, called in `apps/enrollment-portal/src/main.ts`) provides the `FIREBASE_APP`, `FIREBASE_AUTH` and `FIREBASE_FUNCTIONS` tokens. Feature code should inject the higher-level `FIRE_AUTH` / `FIRE_FUNCTIONS` / `FIRE_CONFIG_INSTANCE` wrappers (or `MountainSolApiService`) rather than the raw instances, so specs can mock them (see `libs/angular/auth/login/src/lib/components/login.component.spec.ts`). `FIRE_AUTH.user()` emits on sign-in, sign-out and token refresh (`onIdTokenChanged`).
+`provideFirebase(getSolApp, { authEmulatorUrl })` (`libs/angular/firebase/adapter/src/lib/firebase-angular-adapter.ts:30-51`, called in `apps/enrollment-portal/src/main.ts`) provides the `FIREBASE_APP`, `FIREBASE_AUTH` and `FIREBASE_FUNCTIONS` tokens. Feature code should inject the higher-level `FIRE_AUTH` / `FIRE_FUNCTIONS` / `FIRE_CONFIG_INSTANCE` wrappers (or `MountainSolApiService`) rather than the raw instances, so specs can mock them (see `libs/angular/auth/login/src/lib/components/login.component.spec.ts`). `FIRE_AUTH.user()` emits on sign-in, sign-out and token refresh (`onIdTokenChanged`). Streams derived from it must map the signed-out `null` to a value rather than `filter` it out, or a `toSignal` consumer keeps the previous user's state until reload — see `UserService.getRoles()` (`libs/angular/auth/user/src/lib/services/user.service.ts:22-35`), which emits `[]` when signed out so the header's admin menu and `adminGuard` reset.
 
 ## Firebase Functions Integration
 
