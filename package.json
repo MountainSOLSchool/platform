@@ -32,7 +32,6 @@
     },
     "private": true,
     "//overrides": {
-        "postcss": "next@15 pins postcss 8.4.31 exactly. Remove at Next 16.",
         "piscina": "@angular-devkit/build-angular 21.2.24 pins piscina 5.2.0 exactly. Remove at Angular 22.",
         "axios": "nx 22.7.12 pins axios 1.18.1 exactly. Remove once nx pins >=1.20.0.",
         "smol-toml": "nx 22.7.12 pins smol-toml 1.6.1 exactly. Remove once nx pins >=1.9.0.",
@@ -46,7 +45,6 @@
         "marked-katex-extension": "Not imported by our code: ngx-markdown 22 dynamically imports it (optional peer) and webpack (build-angular:browser) resolves that import at build time, so the build fails without it. Remove if ngx-markdown stops importing it or we leave webpack."
     },
     "overrides": {
-        "postcss": "$postcss",
         "piscina": "^5.3.2",
         "axios": "^1.20.0",
         "smol-toml": "^1.9.0",
@@ -103,7 +101,7 @@
         "firebase-functions": "^7.4.0",
         "marked": "^18.0.3",
         "marked-katex-extension": "^5.1.13",
-        "next": "^15.5.27",
+        "next": "^16.4.0",
         "nextra": "^4.6.1",
         "nextra-theme-docs": "^4.6.1",
         "ngx-markdown": "^22.1.0",
@@ -175,7 +173,7 @@
         "concurrently": "^9.2.4",
         "d3": "^7.9.0",
         "eslint": "^9.39.5",
-        "eslint-config-next": "15.5.27",
+        "eslint-config-next": "16.4.0",
         "eslint-config-prettier": "10.1.1",
         "eslint-plugin-import": "2.31.0",
         "eslint-plugin-jsx-a11y": "6.10.1",

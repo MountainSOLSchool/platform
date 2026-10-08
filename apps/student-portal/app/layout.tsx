@@ -22,7 +22,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
     const { authStatus } = useAuthStatus(publicRoutes);
 
     return (
-        <html>
+        <html data-scroll-behavior="smooth">
             <head>
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link

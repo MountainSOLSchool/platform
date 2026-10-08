@@ -92,3 +92,6 @@ apps/*/playwright-report/
 apps/*/test-results/
 
 .nx/migrate-runs
+
+# Managed by Next.js (contents differ between next dev and next build)
+next-env.d.ts
