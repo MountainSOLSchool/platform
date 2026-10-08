@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`loginSuite requires email and password, and clears errors once filled 1`] = `
+{
+  "email": [
+    "Email is required",
+  ],
+  "password": [
+    "Password is required",
+  ],
+}
+`;
+
+exports[`loginSuite requires email and password, and clears errors once filled 2`] = `
+{
+  "password": [
+    "Password is required",
+  ],
+}
+`;
+
+exports[`loginSuite requires email and password, and clears errors once filled 3`] = `
+{
+  "errors": {},
+  "valid": true,
+}
+`;

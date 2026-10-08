@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`selectValidationErrors shows required-field errors after an attempt 1`] = `
+{
+  "email": "Please enter an email",
+  "password": "Please enter a password",
+}
+`;
+
+exports[`selectValidationErrors shows required-field errors after an attempt 2`] = `
+{
+  "email": "",
+  "password": "Please enter a password",
+}
+`;

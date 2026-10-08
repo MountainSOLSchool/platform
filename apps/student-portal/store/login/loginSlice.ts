@@ -5,7 +5,6 @@ import { Requested, RequestState } from '@sol/react/request';
 
 const getSuite = () =>
     create(
-        'login',
         (login: {
             email: string;
             password: string;
@@ -97,7 +96,7 @@ export const selectValidationErrors = createSelector(
     [selectEmail, selectPassword, selectHasTriedToLogInOnce],
     (email, password, hasTriedToLogInOnce) => {
         const suite = getSuite();
-        const result = suite({
+        const result = suite.run({
             email,
             password,
             hasTriedToLogInOnce,

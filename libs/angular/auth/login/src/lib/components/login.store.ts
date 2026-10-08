@@ -157,7 +157,7 @@ export class LoginStore extends ComponentStore<LoginState> {
     private selectValidation() {
         return this.state$.pipe(
             map(({ email, password }) => {
-                return loginSuite({ email, password });
+                return loginSuite.run({ email, password });
             })
         );
     }

@@ -14,7 +14,6 @@ export interface ClassValidationData {
 }
 
 export const classValidationSuite = create(
-    'class',
     (data: ClassValidationData, fieldToValidate?: string) => {
         if (fieldToValidate) {
             only(fieldToValidate);
@@ -66,7 +65,7 @@ export function validateClassForPublish(data: ClassValidationData): {
     valid: boolean;
     errors: string[];
 } {
-    const result = classValidationSuite(data);
+    const result = classValidationSuite.run(data);
     const errors = result.getErrors();
 
     const allErrors: string[] = [];

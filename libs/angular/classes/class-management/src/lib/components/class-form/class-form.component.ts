@@ -1295,7 +1295,7 @@ export class ClassFormComponent {
 
     // Vest validation - runs the suite and returns the result
     readonly #validation = computed(() => {
-        return classValidationSuite({
+        return classValidationSuite.run({
             semesterId: this.semesterId(),
             name: this.name(),
             classType: this.classType(),

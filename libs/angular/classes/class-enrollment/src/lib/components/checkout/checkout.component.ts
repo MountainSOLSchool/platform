@@ -9,7 +9,7 @@ import { PaymentCollectorComponent } from '@sol/payments/braintree-client';
 import { cardPaymentMethodPayload } from 'braintree-web-drop-in';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
 import { MessagesComponent } from '@sol/form/validity';
-import { create, enforce, test } from 'vest';
+import { createCheckoutSuite } from './checkout.suite';
 import { BehaviorSubject, combineLatest, map, skip, startWith } from 'rxjs';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { UserService } from '@sol/auth/user';
@@ -40,20 +40,15 @@ export class CheckoutComponent {
         );
     private readonly interacted$ = new BehaviorSubject(false);
 
-    private readonly suite = create(
-        'checkout',
-        (checkout: { hasPaymentMethod: boolean }) => {
-            test('hasPaymentMethod', 'Please select a payment method', () => {
-                enforce(checkout.hasPaymentMethod).isTruthy();
-            });
-        }
-    );
+    private readonly suite = createCheckoutSuite();
 
     readonly errors$ = this.hasPaymentMethod$.pipe(
         map((hasPaymentMethod) => {
-            return this.suite({
-                hasPaymentMethod,
-            }).getErrors();
+            return this.suite
+                .run({
+                    hasPaymentMethod,
+                })
+                .getErrors();
         })
     );
 
