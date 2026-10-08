@@ -9,3 +9,4 @@
 /.nx/workspace-data
 
 .nx/self-healing
+next-env.d.ts
