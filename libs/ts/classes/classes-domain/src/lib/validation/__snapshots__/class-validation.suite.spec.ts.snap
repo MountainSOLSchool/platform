@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`classValidationSuite focused runs (field argument) keep earlier results for other fields 1`] = `
+{
+  "errors": {},
+  "valid": false,
+}
+`;
+
+exports[`classValidationSuite full runs replace the previous result 1`] = `
+{
+  "classType": [
+    "Class type is required",
+  ],
+  "dailyTimes": [
+    "Time is required",
+  ],
+  "endDate": [
+    "End date is required",
+  ],
+  "instructorIds": [
+    "At least one instructor is required",
+  ],
+  "location": [
+    "Location is required",
+  ],
+  "name": [
+    "Class name is required",
+  ],
+  "registrationEndDate": [
+    "Registration end date is required",
+  ],
+  "semesterId": [
+    "Semester is required",
+  ],
+  "startDate": [
+    "Start date is required",
+  ],
+  "weekday": [
+    "Day(s) of week is required",
+  ],
+}
+`;
+
+exports[`validateClassForPublish does not leak state between calls (one suite serves every request) 1`] = `
+{
+  "errors": [
+    "Location is required",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`validateClassForPublish lists every missing field for an empty class 1`] = `
+{
+  "errors": [
+    "Semester is required",
+    "Class name is required",
+    "Class type is required",
+    "Start date is required",
+    "End date is required",
+    "Registration end date is required",
+    "Day(s) of week is required",
+    "Time is required",
+    "Location is required",
+    "At least one instructor is required",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`validateClassForPublish treats a whitespace-only name and no instructors as missing 1`] = `
+{
+  "errors": [
+    "Class name is required",
+    "At least one instructor is required",
+  ],
+  "valid": false,
+}
+`;

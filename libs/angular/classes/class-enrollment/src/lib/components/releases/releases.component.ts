@@ -17,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
-import { create, enforce, group, test } from 'vest';
+import { createReleasesSuite } from './releases.suite';
 import { MessagesComponent, ValidDirective } from '@sol/form/validity';
 import { AsyncPipe } from '@angular/common';
 
@@ -39,36 +39,7 @@ import { AsyncPipe } from '@angular/common';
 export class ReleasesComponent {
     private readonly workflow = inject(EnrollmentWorkflowStore);
 
-    private readonly validationSuite = create(
-        (enrollment: {
-            releaseSignatures: Array<{ name: string; signature: string }>;
-        }) => {
-            group('healthRelease', () => {
-                test('medicalReleaseSignature', 'Must sign to continue', () => {
-                    enforce(
-                        enrollment.releaseSignatures.find(
-                            ({ name }) => name === 'MEDICAL_RELEASE_FALL_2023'
-                        )?.signature
-                    ).isNotBlank();
-                });
-            });
-
-            group('liabilityRelease', () => {
-                test(
-                    'releaseOfLiabilitySignature',
-                    'Must sign to continue',
-                    () => {
-                        enforce(
-                            enrollment.releaseSignatures.find(
-                                ({ name }) =>
-                                    name === 'LIABILITY_RELEASE_FALL_2023'
-                            )?.signature
-                        ).isNotBlank();
-                    }
-                );
-            });
-        }
-    );
+    private readonly validationSuite = createReleasesSuite();
 
     readonly enrollment$ = this.workflow.select((state) => state.enrollment);
 

@@ -25,7 +25,7 @@ import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { EnrollmentWorkflowStore } from '../enrollment-workflow/enrollment-workflow.store';
-import { create, enforce, omitWhen, test } from 'vest';
+import { createSelectStudentSuite } from './select-student.suite';
 import { MatButtonModule } from '@angular/material/button';
 import { RequestedOperatorsUtility } from '@sol/angular/request';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -53,29 +53,7 @@ export class SelectStudentComponent {
     private api = inject(FirebaseFunctionsService);
     private workflow = inject(EnrollmentWorkflowStore);
 
-    private readonly validationSuite = create(
-        (enrollment: {
-            isStudentNew: boolean | undefined;
-            student?: { id?: string };
-        }) => {
-            test(
-                'studentSelectionType',
-                'Student type selection is required',
-                () => {
-                    enforce(enrollment.isStudentNew).isNotUndefined();
-                }
-            );
-            omitWhen(enrollment.isStudentNew === true, () => {
-                test(
-                    'studentSelection',
-                    'Student selection is required',
-                    () => {
-                        enforce(enrollment.student?.id).isNotUndefined();
-                    }
-                );
-            });
-        }
-    );
+    private readonly validationSuite = createSelectStudentSuite();
 
     private readonly interactedFromWorkflow$ = new BehaviorSubject(false);
 

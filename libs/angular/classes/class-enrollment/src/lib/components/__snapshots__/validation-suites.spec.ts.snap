@@ -1,0 +1,688 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`checkout suite requires a payment method 1`] = `
+{
+  "byGroup": {},
+  "errors": {
+    "hasPaymentMethod": [
+      "Please select a payment method",
+    ],
+  },
+  "groups": [],
+  "valid": false,
+}
+`;
+
+exports[`checkout suite requires a payment method 2`] = `
+{
+  "byGroup": {},
+  "errors": {},
+  "groups": [],
+  "valid": true,
+}
+`;
+
+exports[`info suite drops a removed guardian/pickup entry on the next run (stateful suite) 1`] = `
+{
+  "byGroup": {
+    "contact": {},
+    "guardians": {
+      "guardian_1_email": [
+        "Email is required",
+      ],
+      "guardian_1_name": [
+        "Name is required",
+      ],
+      "guardian_1_phone": [
+        "Phone is required",
+      ],
+      "guardian_1_relationship": [
+        "Relationship is required",
+      ],
+      "guardian_1_residence": [
+        "Residence is required",
+      ],
+    },
+    "pickup": {
+      "pickup_1_name": [
+        "Name is required",
+      ],
+      "pickup_1_phone": [
+        "Phone is required",
+      ],
+      "pickup_1_relationship": [
+        "Relationship is required",
+      ],
+    },
+    "privacy": {},
+    "student": {},
+  },
+  "errors": {
+    "guardian_1_email": [
+      "Email is required",
+    ],
+    "guardian_1_name": [
+      "Name is required",
+    ],
+    "guardian_1_phone": [
+      "Phone is required",
+    ],
+    "guardian_1_relationship": [
+      "Relationship is required",
+    ],
+    "guardian_1_residence": [
+      "Residence is required",
+    ],
+    "pickup_1_name": [
+      "Name is required",
+    ],
+    "pickup_1_phone": [
+      "Phone is required",
+    ],
+    "pickup_1_relationship": [
+      "Relationship is required",
+    ],
+  },
+  "groups": [
+    "contact",
+    "guardians",
+    "pickup",
+    "privacy",
+    "student",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`info suite drops a removed guardian/pickup entry on the next run (stateful suite) 2`] = `
+{
+  "byGroup": {
+    "contact": {},
+    "guardians": {},
+    "pickup": {},
+    "privacy": {},
+    "student": {},
+  },
+  "errors": {},
+  "groups": [
+    "contact",
+    "guardians",
+    "pickup",
+    "privacy",
+    "student",
+  ],
+  "valid": true,
+}
+`;
+
+exports[`info suite passes a complete, up-to-date student 1`] = `
+{
+  "byGroup": {
+    "contact": {},
+    "guardians": {},
+    "pickup": {},
+    "privacy": {},
+    "student": {},
+  },
+  "errors": {},
+  "groups": [
+    "contact",
+    "guardians",
+    "pickup",
+    "privacy",
+    "student",
+  ],
+  "valid": true,
+}
+`;
+
+exports[`info suite reports every missing field, grouped 1`] = `
+{
+  "byGroup": {
+    "contact": {
+      "address": [
+        "Address is required",
+      ],
+      "city": [
+        "City is required",
+      ],
+      "contactEmail": [
+        "Email is required",
+      ],
+      "contactFirstName": [
+        "First name is required",
+      ],
+      "contactLastName": [
+        "Last name is required",
+      ],
+      "contactPhone": [
+        "Phone is required",
+      ],
+      "state": [
+        "State is required",
+      ],
+      "zip": [
+        "Zip is required",
+      ],
+    },
+    "guardians": {},
+    "pickup": {
+      "codeword": [
+        "Codeword is required",
+      ],
+    },
+    "privacy": {
+      "deetspray": [
+        "DEET bug spray choice is required",
+      ],
+      "naturalspray": [
+        "Natural bug spray choice is required",
+      ],
+      "photography": [
+        "Photography privacy is required",
+      ],
+      "sunscreen": [
+        "Sunscreen choice is required",
+      ],
+    },
+    "student": {
+      "birthdate": [
+        "Birthdate is required",
+      ],
+      "firstName": [
+        "First name is required",
+      ],
+      "lastName": [
+        "Last name is required",
+      ],
+      "pronouns": [
+        "Pronouns are required",
+      ],
+      "school": [
+        "School is required",
+      ],
+      "tshirtSize": [
+        "T-shirt size is required",
+      ],
+    },
+  },
+  "errors": {
+    "address": [
+      "Address is required",
+    ],
+    "birthdate": [
+      "Birthdate is required",
+    ],
+    "city": [
+      "City is required",
+    ],
+    "codeword": [
+      "Codeword is required",
+    ],
+    "contactEmail": [
+      "Email is required",
+    ],
+    "contactFirstName": [
+      "First name is required",
+    ],
+    "contactLastName": [
+      "Last name is required",
+    ],
+    "contactPhone": [
+      "Phone is required",
+    ],
+    "deetspray": [
+      "DEET bug spray choice is required",
+    ],
+    "firstName": [
+      "First name is required",
+    ],
+    "lastName": [
+      "Last name is required",
+    ],
+    "naturalspray": [
+      "Natural bug spray choice is required",
+    ],
+    "photography": [
+      "Photography privacy is required",
+    ],
+    "pronouns": [
+      "Pronouns are required",
+    ],
+    "school": [
+      "School is required",
+    ],
+    "state": [
+      "State is required",
+    ],
+    "sunscreen": [
+      "Sunscreen choice is required",
+    ],
+    "tshirtSize": [
+      "T-shirt size is required",
+    ],
+    "zip": [
+      "Zip is required",
+    ],
+  },
+  "groups": [
+    "contact",
+    "guardians",
+    "pickup",
+    "privacy",
+    "student",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`info suite requires accuracy confirmations only when the record is out of date 1`] = `
+{
+  "byGroup": {
+    "contact": {
+      "confirmedAccuracyContact": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+    "guardians": {
+      "confirmedAccuracyGuardians": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+    "pickup": {
+      "confirmedAccuracyPickup": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+    "privacy": {
+      "confirmedAccuracyPrivacy": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+    "student": {
+      "confirmedAccuracyStudent": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+  },
+  "errors": {
+    "confirmedAccuracyContact": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+    "confirmedAccuracyGuardians": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+    "confirmedAccuracyPickup": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+    "confirmedAccuracyPrivacy": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+    "confirmedAccuracyStudent": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+  },
+  "groups": [
+    "contact",
+    "guardians",
+    "pickup",
+    "privacy",
+    "student",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`info suite requires accuracy confirmations only when the record is out of date 2`] = `
+{
+  "byGroup": {
+    "contact": {},
+    "guardians": {
+      "confirmedAccuracyGuardians": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+    "pickup": {
+      "confirmedAccuracyPickup": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+    "privacy": {
+      "confirmedAccuracyPrivacy": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+    "student": {},
+  },
+  "errors": {
+    "confirmedAccuracyGuardians": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+    "confirmedAccuracyPickup": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+    "confirmedAccuracyPrivacy": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+  },
+  "groups": [
+    "contact",
+    "guardians",
+    "pickup",
+    "privacy",
+    "student",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`medical suite drops a removed medication on the next run (stateful suite) 1`] = `
+{
+  "byGroup": {
+    "contacts": {
+      "confirmedAccuracyContacts": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+    "health": {
+      "confirmedAccuracyHealth": [
+        "Please confirm this section is up-to-date or make necessary changes",
+      ],
+    },
+    "medications": {
+      "medication_1_doctor": [
+        "Prescribing doctor is required",
+      ],
+      "medication_1_dosage": [
+        "Medication dosage is required",
+      ],
+      "medication_1_name": [
+        "Medication name is required",
+      ],
+    },
+  },
+  "errors": {
+    "confirmedAccuracyContacts": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+    "confirmedAccuracyHealth": [
+      "Please confirm this section is up-to-date or make necessary changes",
+    ],
+    "medication_1_doctor": [
+      "Prescribing doctor is required",
+    ],
+    "medication_1_dosage": [
+      "Medication dosage is required",
+    ],
+    "medication_1_name": [
+      "Medication name is required",
+    ],
+  },
+  "groups": [
+    "contacts",
+    "health",
+    "medications",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`medical suite drops a removed medication on the next run (stateful suite) 2`] = `
+{
+  "byGroup": {
+    "contacts": {},
+    "health": {},
+    "medications": {},
+  },
+  "errors": {},
+  "groups": [
+    "contacts",
+    "health",
+    "medications",
+  ],
+  "valid": true,
+}
+`;
+
+exports[`medical suite passes a complete student 1`] = `
+{
+  "byGroup": {
+    "contacts": {},
+    "health": {},
+    "medications": {},
+  },
+  "errors": {},
+  "groups": [
+    "contacts",
+    "health",
+    "medications",
+  ],
+  "valid": true,
+}
+`;
+
+exports[`medical suite reports every missing field, including the nested medications group 1`] = `
+{
+  "byGroup": {
+    "contacts": {
+      "contact_0_name": [
+        "Name is required",
+      ],
+      "contact_0_phone": [
+        "Phone is required",
+      ],
+      "contact_0_relationship": [
+        "Relationship is required",
+      ],
+    },
+    "health": {
+      "authorizedToAdministerMedication": [
+        "Medication authorization selection is required",
+      ],
+      "doctorName": [
+        "Doctor's name is required",
+      ],
+      "doctorPhone": [
+        "Doctor's phone is required",
+      ],
+      "hasLifeThreateningAllergies": [
+        "Must select an option",
+      ],
+      "heightFeet": [
+        "Height (ft) is required",
+      ],
+      "heightInches": [
+        "Height (in) is required",
+      ],
+      "insuranceCompany": [
+        "Insurance name is required",
+      ],
+      "insuranceId": [
+        "Insurance ID is required",
+      ],
+      "weight": [
+        "Weight is required",
+      ],
+    },
+    "medications": {
+      "medication_0_doctor": [
+        "Prescribing doctor is required",
+      ],
+      "medication_0_dosage": [
+        "Medication dosage is required",
+      ],
+      "medication_0_name": [
+        "Medication name is required",
+      ],
+    },
+  },
+  "errors": {
+    "authorizedToAdministerMedication": [
+      "Medication authorization selection is required",
+    ],
+    "contact_0_name": [
+      "Name is required",
+    ],
+    "contact_0_phone": [
+      "Phone is required",
+    ],
+    "contact_0_relationship": [
+      "Relationship is required",
+    ],
+    "doctorName": [
+      "Doctor's name is required",
+    ],
+    "doctorPhone": [
+      "Doctor's phone is required",
+    ],
+    "hasLifeThreateningAllergies": [
+      "Must select an option",
+    ],
+    "heightFeet": [
+      "Height (ft) is required",
+    ],
+    "heightInches": [
+      "Height (in) is required",
+    ],
+    "insuranceCompany": [
+      "Insurance name is required",
+    ],
+    "insuranceId": [
+      "Insurance ID is required",
+    ],
+    "medication_0_doctor": [
+      "Prescribing doctor is required",
+    ],
+    "medication_0_dosage": [
+      "Medication dosage is required",
+    ],
+    "medication_0_name": [
+      "Medication name is required",
+    ],
+    "weight": [
+      "Weight is required",
+    ],
+  },
+  "groups": [
+    "contacts",
+    "health",
+    "medications",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`releases suite requires both release signatures 1`] = `
+{
+  "byGroup": {
+    "healthRelease": {
+      "medicalReleaseSignature": [
+        "Must sign to continue",
+      ],
+    },
+    "liabilityRelease": {
+      "releaseOfLiabilitySignature": [
+        "Must sign to continue",
+      ],
+    },
+  },
+  "errors": {
+    "medicalReleaseSignature": [
+      "Must sign to continue",
+    ],
+    "releaseOfLiabilitySignature": [
+      "Must sign to continue",
+    ],
+  },
+  "groups": [
+    "healthRelease",
+    "liabilityRelease",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`releases suite requires both release signatures 2`] = `
+{
+  "byGroup": {
+    "healthRelease": {},
+    "liabilityRelease": {
+      "releaseOfLiabilitySignature": [
+        "Must sign to continue",
+      ],
+    },
+  },
+  "errors": {
+    "releaseOfLiabilitySignature": [
+      "Must sign to continue",
+    ],
+  },
+  "groups": [
+    "healthRelease",
+    "liabilityRelease",
+  ],
+  "valid": false,
+}
+`;
+
+exports[`releases suite requires both release signatures 3`] = `
+{
+  "byGroup": {
+    "healthRelease": {},
+    "liabilityRelease": {},
+  },
+  "errors": {},
+  "groups": [
+    "healthRelease",
+    "liabilityRelease",
+  ],
+  "valid": true,
+}
+`;
+
+exports[`select-student suite requires a choice, then a student only for existing students (omitWhen) 1`] = `
+{
+  "byGroup": {},
+  "errors": {
+    "studentSelection": [
+      "Student selection is required",
+    ],
+    "studentSelectionType": [
+      "Student type selection is required",
+    ],
+  },
+  "groups": [],
+  "valid": false,
+}
+`;
+
+exports[`select-student suite requires a choice, then a student only for existing students (omitWhen) 2`] = `
+{
+  "byGroup": {},
+  "errors": {
+    "studentSelection": [
+      "Student selection is required",
+    ],
+  },
+  "groups": [],
+  "valid": false,
+}
+`;
+
+exports[`select-student suite requires a choice, then a student only for existing students (omitWhen) 3`] = `
+{
+  "byGroup": {},
+  "errors": {},
+  "groups": [],
+  "valid": true,
+}
+`;
+
+exports[`select-student suite requires a choice, then a student only for existing students (omitWhen) 4`] = `
+{
+  "byGroup": {},
+  "errors": {},
+  "groups": [],
+  "valid": true,
+}
+`;
