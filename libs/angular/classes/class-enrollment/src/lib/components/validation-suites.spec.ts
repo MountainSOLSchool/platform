@@ -107,6 +107,29 @@ describe('info suite', () => {
         ).toMatchSnapshot();
     });
 
+    it('accepts the Date the birthdate datepicker stores', () => {
+        const suite = createInfoSuite();
+        const withDate = {
+            ...completeStudent,
+            birthdate: new Date(2015, 0, 1),
+        };
+        expect(summarize(run(suite, withDate, upToDate)).valid).toBe(true);
+        expect(
+            run(
+                suite,
+                { ...completeStudent, birthdate: '  ' },
+                upToDate
+            ).getErrors()['birthdate']
+        ).toEqual(['Birthdate is required']);
+        expect(
+            run(
+                suite,
+                { ...completeStudent, birthdate: null },
+                upToDate
+            ).getErrors()['birthdate']
+        ).toEqual(['Birthdate is required']);
+    });
+
     it('requires accuracy confirmations only when the record is out of date', () => {
         const suite = createInfoSuite();
         expect(

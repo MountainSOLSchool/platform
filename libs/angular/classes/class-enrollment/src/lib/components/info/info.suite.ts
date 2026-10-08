@@ -32,7 +32,12 @@ export const createInfoSuite = () =>
                 });
 
                 test('birthdate', 'Birthdate is required', () => {
-                    enforce(student.birthdate).isNotBlank();
+                    // The datepicker stores a Date despite the string type, and
+                    // vest 6's isNotBlank() rejects every non-string.
+                    enforce(student.birthdate).isNotNullish();
+                    if (typeof student.birthdate === 'string') {
+                        enforce(student.birthdate).isNotBlank();
+                    }
                 });
 
                 test('pronouns', 'Pronouns are required', () => {
