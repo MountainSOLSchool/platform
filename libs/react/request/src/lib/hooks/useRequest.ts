@@ -9,12 +9,11 @@ import {
 } from 'rxjs';
 import { RequestState, Requested } from '../models/requested.type';
 import { requestActions } from '../store/request.actions';
-import { v4 as uuidv4 } from 'uuid';
 import { selectRequest } from '../store/request.feature';
 
 export class UseRequest {
     declareRequest<T>(requestStreamFactory: () => Observable<T>) {
-        const uid = uuidv4();
+        const uid = crypto.randomUUID();
         return {
             getCachedAndLoadWhenEmptyOrFailed: (): Observable<Requested<T>> => {
                 return this.store.select(selectRequest(uid)).pipe(
