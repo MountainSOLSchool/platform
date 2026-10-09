@@ -14,7 +14,8 @@ body {
 /* Heading typography - EB Garamond for elegant, nature-forward feel */
 /* Using !important to override the utility classes in utilities.css */
 /* Font sizes use design tokens for consistency across apps */
-h1, h2, h3, h4 {
+h1, h2, h3, h4,
+full-calendar [role='heading'] {
     font-family: var(--sol-font-heading, 'EB Garamond', Georgia, serif) !important;
     font-weight: 500;
 }

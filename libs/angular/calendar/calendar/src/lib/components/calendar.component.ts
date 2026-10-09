@@ -69,6 +69,16 @@ export class CalendarComponent {
         selectMirror: true,
         dayMaxEvents: true,
         height: 600,
+        views: {
+            // FullCalendar 7 dropped the day range from week titles by default.
+            timeGridWeek: {
+                titleFormat: {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                },
+            },
+        },
         eventClick: ({ event }: EventClickInfo) => this.eventClick.next(event),
     };
 
