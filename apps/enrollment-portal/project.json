@@ -26,6 +26,9 @@
                 ],
                 "styles": [
                     "node_modules/@angular/cdk/overlay-prebuilt.css",
+                    "node_modules/@fullcalendar/angular/skeleton.css",
+                    "node_modules/@fullcalendar/angular/themes/classic/theme.css",
+                    "node_modules/@fullcalendar/angular/themes/classic/palette.css",
                     "apps/enrollment-portal/src/design-tokens.scss",
                     "apps/enrollment-portal/src/custom-theme.scss",
                     "apps/enrollment-portal/src/styles.css",

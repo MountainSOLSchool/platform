@@ -15,18 +15,19 @@ import {
     startWith,
     ReplaySubject,
 } from 'rxjs';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import timeGridPlugin from '@fullcalendar/timegrid';
+import dayGridPlugin from '@fullcalendar/angular/daygrid';
+import interactionPlugin from '@fullcalendar/angular/interaction';
+import timeGridPlugin from '@fullcalendar/angular/timegrid';
+import classicThemePlugin from '@fullcalendar/angular/themes/classic';
 import {
-    EventApi,
-    EventInput,
-    EventClickArg,
-    CalendarOptions,
-} from '@fullcalendar/core';
+    type EventApi,
+    type EventInput,
+    type EventClickInfo,
+    type CalendarOptions,
+    FullCalendarModule,
+} from '@fullcalendar/angular';
 import { AsyncPipe } from '@angular/common';
 import { SkeletonComponent } from '@sol/angular/skeleton';
-import { FullCalendarModule } from '@fullcalendar/angular';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,7 +52,12 @@ export class CalendarComponent {
     @Output() eventClick = new Subject<EventApi>();
 
     private _options: CalendarOptions = {
-        plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
+        plugins: [
+            classicThemePlugin,
+            dayGridPlugin,
+            interactionPlugin,
+            timeGridPlugin,
+        ],
         initialDate: new Date(),
         headerToolbar: {
             left: 'prev,next today',
@@ -63,7 +69,17 @@ export class CalendarComponent {
         selectMirror: true,
         dayMaxEvents: true,
         height: 600,
-        eventClick: ({ event }: EventClickArg) => this.eventClick.next(event),
+        views: {
+            // FullCalendar 7 dropped the day range from week titles by default.
+            timeGridWeek: {
+                titleFormat: {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                },
+            },
+        },
+        eventClick: ({ event }: EventClickInfo) => this.eventClick.next(event),
     };
 
     public options$: Observable<CalendarOptions> = of(this._options).pipe(
