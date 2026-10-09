@@ -278,7 +278,7 @@ git push origin main  # Triggers deployment
 4. **Match existing patterns** - Follow the patterns in similar features
 5. **No premature abstraction** - Three similar lines > unnecessary abstraction
 6. **Reference file paths** - Point to actual code rather than duplicating examples
-7. **Use Angular Material** - For all new components and updates, use Angular Material (not PrimeNG)
+7. **Use Angular Material** - The Angular apps use Angular Material only; PrimeNG has been removed, so don't reintroduce it
 8. **Minimal comments** - Code should be self-documenting through clear names and structure. Comment "why", not "what". Don't annotate obvious operations.
 
 ## For AI Assistants
@@ -296,7 +296,7 @@ When working on this codebase:
 7. **Keep components focused** - One responsibility per component
 8. **Validate server-side** - All business logic in Cloud Functions
 9. **Type everything** - No `any` types, proper error typing
-10. **Use Angular Material only** - Do NOT use PrimeNG for new components or updates
+10. **Use Angular Material only** - Do NOT add PrimeNG or another component library to the Angular apps
 
 ### Maintaining This Documentation
 

@@ -408,21 +408,19 @@ When state may be `undefined` during loading, wait before rendering.
 
 ### Input Masking
 
-**Current implementation**: Uses PrimeNG `p-inputMask` (legacy)
+There is no mask library. Constrained fields are plain inputs with `maxlength`, plus CSS `text-transform: uppercase` where needed:
 
-**State field (2 uppercase letters)**: `apps/enrollment-portal/src/app/donate-full.component.ts:108-117`
+**State field (2 uppercase letters)**: `apps/enrollment-portal/src/app/donate-full.component.ts:130-137`
 
-**ZIP field (5 digits)**: `apps/enrollment-portal/src/app/donate-full.component.ts:122-130`
+**ZIP field (5 digits)**: `apps/enrollment-portal/src/app/donate-full.component.ts:146-152`
 
-**For new implementations**: Consider using Angular Material `<mat-form-field>` with custom directives or third-party mask libraries compatible with Material (e.g., `ngx-mask`)
-
-**Note**: When migrating masked inputs from PrimeNG, preserve the same UX (uppercase transform, placeholder behavior, validation)
+If a field needs real masking, add a Material-compatible directive (e.g. `ngx-mask`) rather than a component library.
 
 ### Validation
 
 Keep validation simple and declarative.
 
-**Example**: `apps/enrollment-portal/src/app/donate-full.component.ts:478-490`
+**Example**: `apps/enrollment-portal/src/app/donate-full.component.ts:556-568` (`canDonate`)
 
 ### Template Accessibility (lint-enforced)
 
@@ -506,24 +504,11 @@ Dialog components use:
 
 ### UI Component Libraries
 
-**IMPORTANT**: The codebase is transitioning from PrimeNG to Angular Material.
+The Angular apps use **Angular Material only** (`@angular/material/*`). PrimeNG has been fully removed; don't reintroduce it or any other component library.
 
-**For NEW components and updates**:
-- Use Angular Material components only
-- Import from `@angular/material/*`
-- Follow Material Design guidelines
+The React student portal (`apps/student-portal`) still uses **PrimeReact** with the Lara theme and PrimeIcons, loaded in `apps/student-portal/app/layout.tsx`. That is separate from the Angular apps and out of scope for these Angular patterns.
 
-**Legacy PrimeNG usage**:
-- Existing components still use PrimeNG (p-card, p-button, p-dialog, p-inputNumber, p-inputMask, p-inputText, p-messages)
-- Do NOT use PrimeNG for new work
-- When updating existing components, prefer migrating to Material if feasible
-- Goal: Eventually remove PrimeNG dependency
-
-**Angular Material examples in codebase**:
-- Search for existing Material usage to see patterns
-- Reference Material documentation: https://material.angular.io/components
-
-**Why Material**: Better long-term support, more comprehensive component set, better accessibility, no breaking styling changes in updates
+**Why Material**: Better long-term support, more comprehensive component set, better accessibility, no breaking styling changes in updates. Reference: https://material.angular.io/components
 
 ### Utility Classes
 
