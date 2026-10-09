@@ -86,7 +86,7 @@
         "@ngrx/store-devtools": "22.0.1",
         "@nx/angular": "23.2.1",
         "@reduxjs/toolkit": "^2.5.1",
-        "add-to-calendar-button": "^2.6.0",
+        "add-to-calendar-button": "^3.3.0",
         "braintree": "^3.40.0",
         "braintree-web": "^3.146.0",
         "braintree-web-drop-in": "^1.48.0",
