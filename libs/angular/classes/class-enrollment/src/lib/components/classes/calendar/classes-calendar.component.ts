@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { EventApi, EventInput } from '@fullcalendar/core';
+import type { EventApi, EventInput } from '@fullcalendar/angular';
 import { SemesterClass } from '@sol/classes/domain';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import { mergeMap, Observable, scan, Subject, map, startWith } from 'rxjs';
