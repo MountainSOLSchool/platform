@@ -7,16 +7,10 @@
     "tags": ["scope:student"],
     "targets": {
         "test": {
-            "executor": "@nx/jest:jest",
             "outputs": [
-                "{workspaceRoot}/coverage/libs/firebase/student/repository"
-            ],
-            "options": {
-                "jestConfig": "libs/firebase/student/repository/jest.config.ts"
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
+                "{workspaceRoot}/coverage/libs/firebase/student/repository",
+                "{workspaceRoot}/libs/coverage/libs/firebase/student/repository"
+            ]
         }
     }
 }

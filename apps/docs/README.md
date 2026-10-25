@@ -2,14 +2,14 @@
 
 Internal documentation site for Mountain SOL admins. Built with **Next.js +
 [Nextra](https://nextra.site)** — the same React/Next stack as `student-portal`,
-wired into Nx via `@nx/next`. Dependencies live in the **root `package.json`**
+wired into Nx via the `@nx/next/plugin` inferred targets. Dependencies live in the **root `package.json`**
 (no per-app `node_modules`).
 
 ## Run it
 
 ```bash
 npx nx run docs:serve        # dev server on http://localhost:4202
-npx nx run docs:build        # production build (server output, via @nx/next)
+npx nx run docs:build        # production build (server output in apps/docs/.next)
 npx nx run docs:build-pages  # static export → apps/docs/out (for GitHub Pages)
 ```
 
@@ -20,8 +20,8 @@ builds the static export and publishes it to GitHub Pages (also runnable via
 **workflow_dispatch**).
 
 - Static export is gated behind `DOCS_EXPORT=1` (set by the `build-pages` target),
-  because the `@nx/next:build` executor can't relocate an App-Router static
-  export. `build-pages` runs `next build` directly → `apps/docs/out`.
+  so the regular `build` target keeps producing a server build in `.next/`.
+  `build-pages` runs `next build` directly → `apps/docs/out`.
 - `DOCS_BASE_PATH` sets the path prefix. The workflow uses `/platform` (project
   Pages serve under `/<repo>`); set it to `''` once the custom domain
   (`docs.mountainsol.org`) is live (#259).

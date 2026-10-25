@@ -27,6 +27,7 @@
         },
         "serve": {
             "executor": "nx:run-commands",
+            "defaultConfiguration": "development",
             "options": {
                 "command": "npx nx run functions:build && (npx nx run functions:build --watch &) && firebase serve --only functions --project=dev --port=5001"
             },
@@ -37,18 +38,6 @@
                 "development": {
                     "command": "npx nx run functions:build && (npx nx run functions:build --watch &) && firebase serve --only functions --project=dev --port=5001"
                 }
-            },
-            "defaultConfiguration": "development"
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/apps/functions"],
-            "options": {
-                "jestConfig": "apps/functions/jest.config.ts"
             }
         }
     }

@@ -1,8 +1,5 @@
 // @ts-check
 import nextra from 'nextra';
-import nxPlugin from '@nx/next/plugins/with-nx';
-
-const { withNx } = nxPlugin;
 
 const withNextra = nextra({
     // Nextra 4 reads MDX from the `content/` directory by default.
@@ -14,14 +11,13 @@ const withNextra = nextra({
 const basePath = process.env.DOCS_BASE_PATH ?? '';
 
 /**
- * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
+ * @type {import('next').NextConfig}
  */
 const nextConfig = {
-    nx: {},
     // Static HTML export for GitHub Pages (no Node server) — only when building
     // for Pages (the `build-pages` target sets DOCS_EXPORT=1 and runs
-    // `next build` directly, which emits the site to `out/`). Gated because the
-    // @nx/next:build executor can't relocate an App-Router static export.
+    // `next build` directly, which emits the site to `out/`). Gated so the
+    // regular `build` target keeps producing a server build in `.next/`.
     output: process.env.DOCS_EXPORT === '1' ? 'export' : undefined,
     // Pages serves each route as a directory/index.html — trailing slashes
     // avoid 404s on nested routes.
@@ -34,5 +30,4 @@ const nextConfig = {
     images: { unoptimized: true },
 };
 
-// Nextra inner (registers the MDX pipeline), Nx outer (Nx build wiring).
-export default withNx(withNextra(nextConfig));
+export default withNextra(nextConfig);

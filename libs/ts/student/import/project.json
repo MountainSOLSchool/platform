@@ -7,14 +7,10 @@
     "tags": ["scope:student"],
     "targets": {
         "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/ts/student/import"],
-            "options": {
-                "jestConfig": "libs/ts/student/import/jest.config.ts"
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/ts/student/import",
+                "{workspaceRoot}/libs/coverage/libs/ts/student/import"
+            ]
         }
     }
 }

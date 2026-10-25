@@ -4,17 +4,6 @@
     "sourceRoot": "libs/firebase/database/src",
     "projectType": "library",
     "tags": ["scope:firebase", "type:api"],
-    "targets": {
-        "lint": {
-            "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/firebase/database"],
-            "options": {
-                "jestConfig": "libs/firebase/database/jest.config.ts"
-            }
-        }
-    }
+    "// targets": "to see all targets run: nx show project firebase-database --web",
+    "targets": {}
 }

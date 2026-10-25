@@ -7,16 +7,10 @@
     "tags": ["scope:classes"],
     "targets": {
         "test": {
-            "executor": "@nx/jest:jest",
             "outputs": [
-                "{workspaceRoot}/coverage/libs/ts/classes/classes-domain"
-            ],
-            "options": {
-                "jestConfig": "libs/ts/classes/classes-domain/jest.config.ts"
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
+                "{workspaceRoot}/coverage/libs/ts/classes/classes-domain",
+                "{workspaceRoot}/libs/coverage/libs/ts/classes/classes-domain"
+            ]
         }
     }
 }

@@ -7,17 +7,10 @@
     "tags": ["scope:classes"],
     "targets": {
         "test": {
-            "executor": "@nx/jest:jest",
             "outputs": [
-                "{workspaceRoot}/coverage/libs/angular/classes/class-management"
-            ],
-            "options": {
-                "jestConfig": "libs/angular/classes/class-management/jest.config.ts",
-                "tsConfig": "libs/angular/classes/class-management/tsconfig.spec.json"
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
+                "{workspaceRoot}/coverage/libs/angular/classes/class-management",
+                "{workspaceRoot}/libs/coverage/libs/angular/classes/class-management"
+            ]
         }
     }
 }

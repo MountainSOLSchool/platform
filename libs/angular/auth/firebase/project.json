@@ -7,15 +7,10 @@
     "tags": ["scope:firebase"],
     "targets": {
         "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/angular/auth/firebase"],
-            "options": {
-                "jestConfig": "libs/angular/auth/firebase/jest.config.ts",
-                "tsConfig": "libs/angular/auth/firebase/tsconfig.spec.json"
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/angular/auth/firebase",
+                "{workspaceRoot}/libs/coverage/libs/firebase/firebase"
+            ]
         }
     }
 }

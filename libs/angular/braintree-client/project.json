@@ -5,19 +5,6 @@
     "sourceRoot": "src",
     "prefix": "sol",
     "tags": [],
-    "targets": {
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": [
-                "{workspaceRoot}/coverage/libs/angular/braintree-client"
-            ],
-            "options": {
-                "jestConfig": "libs/angular/braintree-client/jest.config.ts",
-                "tsConfig": "libs/angular/braintree-client/tsconfig.spec.json"
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
-        }
-    }
+    "// targets": "to see all targets run: nx show project payments-braintree-client --web",
+    "targets": {}
 }

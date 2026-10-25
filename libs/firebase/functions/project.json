@@ -4,17 +4,6 @@
     "sourceRoot": "libs/firebase/functions/src",
     "projectType": "library",
     "tags": ["scope:firebase", "type:api"],
-    "targets": {
-        "lint": {
-            "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/firebase/functions"],
-            "options": {
-                "jestConfig": "libs/firebase/functions/jest.config.ts"
-            }
-        }
-    }
+    "// targets": "to see all targets run: nx show project firebase-functions --web",
+    "targets": {}
 }

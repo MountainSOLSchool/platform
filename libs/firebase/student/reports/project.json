@@ -5,18 +5,11 @@
     "projectType": "library",
     "tags": ["scope:student"],
     "targets": {
-        "lint": {
-            "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
-        },
         "test": {
-            "executor": "@nx/jest:jest",
             "outputs": [
-                "{workspaceRoot}/coverage/libs/firebase/student/reports"
-            ],
-            "options": {
-                "jestConfig": "libs/firebase/student/reports/jest.config.ts"
-            }
+                "{workspaceRoot}/coverage/libs/firebase/student/reports",
+                "{workspaceRoot}/libs/coverage/libs/firebase/student/reports"
+            ]
         }
     }
 }
