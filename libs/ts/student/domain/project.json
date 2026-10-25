@@ -5,16 +5,11 @@
     "projectType": "library",
     "tags": ["scope:student"],
     "targets": {
-        "lint": {
-            "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
-        },
         "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/ts/student/domain"],
-            "options": {
-                "jestConfig": "libs/ts/student/domain/jest.config.ts"
-            }
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/ts/student/domain",
+                "{workspaceRoot}/libs/coverage/libs/ts/student/domain"
+            ]
         }
     }
 }

@@ -5,17 +5,6 @@
     "sourceRoot": "libs/firebase/functions-api/src",
     "prefix": "sol",
     "tags": [],
-    "targets": {
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/firebase/functions-api"],
-            "options": {
-                "jestConfig": "libs/firebase/functions-api/jest.config.ts",
-                "tsConfig": "libs/firebase/functions-api/tsconfig.spec.json"
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
-        }
-    }
+    "// targets": "to see all targets run: nx show project firebase-functions-api --web",
+    "targets": {}
 }

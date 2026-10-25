@@ -5,17 +5,6 @@
     "prefix": "sol",
     "projectType": "library",
     "tags": [],
-    "targets": {
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-            "options": {
-                "jestConfig": "libs/angular/admin/students/jest.config.ts",
-                "tsConfig": "libs/angular/admin/students/tsconfig.spec.json"
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
-        }
-    }
+    "// targets": "to see all targets run: nx show project sol-angular-admin-students --web",
+    "targets": {}
 }

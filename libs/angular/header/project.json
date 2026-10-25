@@ -7,15 +7,10 @@
     "tags": ["scope:header"],
     "targets": {
         "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/angular/header"],
-            "options": {
-                "jestConfig": "libs/angular/header/jest.config.ts",
-                "tsConfig": "libs/angular/header/tsconfig.spec.json"
-            }
-        },
-        "lint": {
-            "executor": "@nx/eslint:lint"
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/angular/header",
+                "{workspaceRoot}/libs/coverage/libs/angular/header"
+            ]
         }
     }
 }

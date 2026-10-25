@@ -9,6 +9,7 @@
         "build": {
             "executor": "@angular-devkit/build-angular:browser",
             "outputs": ["{options.outputPath}"],
+            "defaultConfiguration": "production",
             "options": {
                 "outputPath": "dist/apps/enrollment-portal",
                 "index": "apps/enrollment-portal/src/index.html",
@@ -107,11 +108,12 @@
                         }
                     ]
                 }
-            },
-            "defaultConfiguration": "production"
+            }
         },
         "serve": {
             "executor": "@angular-devkit/build-angular:dev-server",
+            "defaultConfiguration": "development",
+            "continuous": true,
             "configurations": {
                 "production": {
                     "buildTarget": "enrollment-portal:build:production"
@@ -130,8 +132,9 @@
                     "hmr": false
                 }
             },
-            "defaultConfiguration": "development",
-            "continuous": true
+            "readyWhen": {
+                "signal": true
+            }
         },
         "extract-i18n": {
             "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -139,20 +142,13 @@
                 "buildTarget": "enrollment-portal:build"
             }
         },
-        "lint": {
-            "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
-        },
-        "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/apps/enrollment-portal"],
-            "options": {
-                "jestConfig": "apps/enrollment-portal/jest.config.ts",
-                "tsConfig": "apps/enrollment-portal/tsconfig.spec.json"
-            }
-        },
         "storybook": {
             "executor": "@storybook/angular:start-storybook",
+            "continuous": true,
+            "readyWhen": {
+                "port": "{env.SBCONFIG_PORT ?? options.port ?? 9009}",
+                "host": "{env.SBCONFIG_HOSTNAME ?? options.host ?? localhost}"
+            },
             "options": {
                 "configDir": "apps/enrollment-portal/.storybook",
                 "browserTarget": "enrollment-portal:build",

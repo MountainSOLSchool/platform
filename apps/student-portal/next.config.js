@@ -1,13 +1,9 @@
 //@ts-check
 
-const { withNx } = require('@nx/next/plugins/with-nx');
-
 /**
- * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
+ * @type {import('next').NextConfig}
  **/
 const nextConfig = {
-    nx: {},
-
     output: 'standalone',
 
     redirects: async () => {
@@ -31,4 +27,4 @@ const nextConfig = {
     },
 };
 
-module.exports = withNx(nextConfig);
+module.exports = nextConfig;

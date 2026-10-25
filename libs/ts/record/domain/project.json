@@ -5,16 +5,11 @@
     "projectType": "library",
     "tags": ["scope:record", "type:api"],
     "targets": {
-        "lint": {
-            "executor": "@nx/eslint:lint",
-            "outputs": ["{options.outputFile}"]
-        },
         "test": {
-            "executor": "@nx/jest:jest",
-            "outputs": ["{workspaceRoot}/coverage/libs/ts/record/domain"],
-            "options": {
-                "jestConfig": "libs/ts/record/domain/jest.config.ts"
-            }
+            "outputs": [
+                "{workspaceRoot}/coverage/libs/ts/record/domain",
+                "{workspaceRoot}/libs/coverage/libs/ts/record/domain"
+            ]
         }
     }
 }

@@ -201,33 +201,14 @@ The monorepo uses path mapping in `tsconfig.base.json`:
 
 ## Nx Project Configuration
 
-Each library has a `project.json` defining:
-- Build targets
-- Test configuration
-- Dependencies
+Since Nx 24, most targets are **inferred by plugins** registered in `nx.json` (`plugins`), not declared in `project.json`. Run `npx nx show project <name> --json` (or `--web`) to see a project's full target list.
 
-Example:
+- **`test`**: `@nx/jest/plugin` adds it to every project with a `jest.config.ts` (runs `jest` in the project root). Shared options, such as `passWithNoTests` and the `ci` configuration, live in `nx.json` → `targetDefaults.test`.
+- **`lint`**: `@nx/eslint/plugin` with `targetName: "lint"` adds it only to the projects in that plugin entry's `include` list (runs `eslint .` in the project root). **When you add a project that should be linted in CI (`nx affected -t lint`), add its folder to that `include` list.** A second `@nx/eslint/plugin` entry adds `eslint:lint` to every project with an ESLint config, but CI doesn't run it.
+- **Next.js apps (`docs`, `student-portal`)**: `@nx/next/plugin` infers `build` (`next build`), `serve` (`next dev`), `start` and `serve-static`. `next.config.*` is a plain Next config (no `withNx`), and the build output goes to `apps/<app>/.next`.
+- **Still declared in `project.json`**: the Angular builders (`enrollment-portal` build/serve/extract-i18n), Storybook, `functions:build` (`@nx/esbuild:esbuild`), the three `@nx/js:tsc` builds, and `nx:run-commands` targets such as `docs:build-pages` and `functions-integration-tests:test-with-emulators`.
 
-```json
-{
-  "name": "firebase-enrollment-functions-donate",
-  "sourceRoot": "libs/firebase/enrollment-functions/donate/src",
-  "projectType": "library",
-  "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/libs/firebase/enrollment-functions/donate",
-        "tsConfig": "libs/firebase/enrollment-functions/donate/tsconfig.lib.json",
-        "packageJson": "libs/firebase/enrollment-functions/donate/package.json",
-        "main": "libs/firebase/enrollment-functions/donate/src/index.ts"
-      }
-    }
-  },
-  "tags": ["type:firebase-function"]
-}
-```
+Function libraries declare no targets at all; see `libs/firebase/enrollment-functions/get-age-group-units/project.json`.
 
 ## Dependency Graph
 
