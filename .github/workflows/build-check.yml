@@ -4,6 +4,10 @@ on:
     pull_request:
         branches:
             - '**'
+    # The daily security-autofix workflow opens its PRs with GITHUB_TOKEN.
+    # GitHub holds their `pull_request` run for approval; if the workflow
+    # cannot approve it, it dispatches this workflow on the PR branch instead.
+    workflow_dispatch:
 
 jobs:
     build:
@@ -21,6 +25,28 @@ jobs:
             - run: npx nx run enrollment-portal:build:production
             - run: npx nx run student-portal:build:production
             - run: npx nx run functions:build
+
+    security-audit:
+        name: Security Audit
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  fetch-depth: 0
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '24'
+            - name: Test the audit gate
+              run: npx -y tsx --test tools/security-autofix.spec.ts
+            # Fails only on high/critical advisories this PR ADDS. Ones already
+            # on main show as warnings; the daily security-autofix workflow
+            # fixes those. A registry outage (exit 3) warns, never fails.
+            - name: Audit for advisories added by this change
+              env:
+                  BASE: ${{ github.event.pull_request.base.sha || 'origin/main' }}
+              run: npx -y tsx tools/security-autofix.ts pr-check --base "$BASE" || [ $? -eq 3 ]
 
     firestore-indexes:
         name: Firestore Indexes

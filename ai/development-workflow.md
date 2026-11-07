@@ -338,6 +338,10 @@ Example PR description:
 **Build check**: `.github/workflows/build-check.yml`
 - Runs on pull requests
 - Validates builds before merge
+- `Security Audit` job fails only on high/critical advisories the PR adds (see [Security Advisories](#security-advisories))
+
+**Security autofix**: `.github/workflows/security-autofix.yml`
+- Runs daily; fixes advisories already on `main` (see [Security Advisories](#security-advisories))
 
 ### Manual Deployment (if needed)
 
@@ -365,6 +369,31 @@ firebase deploy --only firestore:indexes
    - Deploys to production
 3. Monitor deployment in GitHub Actions UI
 4. Check Firebase Console for function status
+
+## Security Advisories
+
+`npm audit` is the source of truth (Dependabot is off for this repo). The logic lives in `tools/security-autofix.ts`, with tests in `tools/security-autofix.spec.ts` (`npx tsx --test tools/security-autofix.spec.ts`). Ported from Maple & Spruce's ADR-039.
+
+**On every PR** the `Security Audit` job in `build-check.yml` runs `tools/security-autofix.ts pr-check`. It fails only on high/critical advisories the PR **adds** (when the PR changes the root `package.json`/`package-lock.json`, base and head are both audited and compared). Advisories already on `main` show as warnings, so a CVE published overnight never fails an unrelated PR. A registry outage (exit 3) warns instead of failing.
+
+**Daily** `security-autofix.yml` fixes high/critical advisories on `main`:
+1. `npm audit fix --package-lock-only` (in-range updates only, never `--force`).
+2. Claude, for what a parent pins: bump the parent within its range, or add an `overrides` entry to the root `package.json`, scoped to the parent when one parent is responsible (`"nx": { "brace-expansion": "^5.0.12" }`). npm allows no comments in `package.json`, so the GHSA id and parent for each new override go in the PR description. Skipped if `CLAUDE_CODE_OAUTH_TOKEN` is not set.
+3. The gate (`tools/security-autofix.ts gate`) lets the PR merge itself only when it changes the root manifests and nothing else, fixes at least one advisory, adds none, and moves no package across a major version. A nested package's major change is allowed when its owner moved too (firebase-tools 15.34 -> 15.35 bringing chokidar 4), since that is the owner's own published dependency.
+4. It opens a PR labelled `security-autofix`, approves its held `Check builds on PR` run (or dispatches it on the branch), and waits. Green and gate passed: squash-merge, then dispatch `Deploy on merge` with `promote=true`, which deploys to dev, runs the dev e2e, and **waits for the `firebase-prod` approval** like any merge. Otherwise the PR gets `needs-review` and the run fails, which emails you.
+
+While an autofix PR is open, later runs skip. Everything acts as `GITHUB_TOKEN`, which starts no `pull_request`/`push` runs on its own, so the workflow approves or dispatches CI and dispatches the deploy itself. It needs "Allow GitHub Actions to create and approve pull requests" on.
+
+**Claude token**: `claude setup-token` makes a one-year token that a machine cannot renew. Store it and its expiry date:
+
+```bash
+gh secret set CLAUDE_CODE_OAUTH_TOKEN
+gh variable set CLAUDE_CODE_OAUTH_TOKEN_EXPIRES --body <today + 1 year, YYYY-MM-DD>
+```
+
+The workflow's `token-expiry` job fails (emailing you) from 30 days before that date.
+
+**Overrides**: root `package.json` `overrides` are security pins. Review them when updating the package that needed them (Nx, firebase-tools, Storybook); remove one when `npm audit` stays clean without it.
 
 ## Nx Commands
 
