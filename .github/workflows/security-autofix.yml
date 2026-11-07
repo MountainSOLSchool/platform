@@ -1,0 +1,297 @@
+name: Security autofix
+
+# Daily: find high/critical advisories with `npm audit`, fix them, open a PR,
+# run the full PR checks on it, and merge it when it is safe to. Ported from
+# Maple & Spruce (its ADR-039); see ai/development-workflow.md#security-advisories.
+#
+#   audit ─ none? done
+#     └ fix: 1. `npm audit fix`                      (in-range updates only, never --force)
+#            2. Claude, for what a parent pins       (parent bump or scoped override)
+#     └ gate (tools/security-autofix.ts): root manifests only, fixes >=1 advisory,
+#       adds none, no major version jump in package.json or the lockfile
+#     └ PR → approve its held "Check builds on PR" run (or dispatch it) → wait
+#         ├ green + gate passed → squash-merge → dispatch "Deploy on merge" (promote)
+#         │                       → dev deploy + e2e → waits for the firebase-prod approval
+#         └ otherwise           → leave the PR open and fail this run (emails you)
+#
+# Why the approvals and dispatches: everything here acts as GITHUB_TOKEN.
+# GitHub holds `pull_request` runs on a GITHUB_TOKEN PR for approval and starts
+# no `push` workflow for a GITHUB_TOKEN merge, so CI and the deploy are
+# started explicitly.
+
+on:
+    schedule:
+        # 13:00 UTC = 8am Eastern (9am in summer).
+        - cron: '0 13 * * *'
+    workflow_dispatch:
+
+permissions:
+    contents: write
+    pull-requests: write
+    issues: write # labels
+    actions: write # approve or dispatch CI, dispatch the deploy
+    statuses: write # mirror the check result onto the PR
+
+concurrency:
+    group: security-autofix
+    cancel-in-progress: false
+
+env:
+    CLAUDE_CODE_VERSION: '2.1.311'
+    LABEL: security-autofix
+
+jobs:
+    # The Claude token from `claude setup-token` lasts a year and cannot be
+    # renewed by a machine (it needs a browser login). Its expiry date lives in
+    # the CLAUDE_CODE_OAUTH_TOKEN_EXPIRES repo variable; from 30 days out this
+    # job fails, so every daily run emails a reminder until it is replaced.
+    # Separate job so an expiring token never stops the fixes themselves.
+    # To rotate:  claude setup-token
+    #             gh secret set CLAUDE_CODE_OAUTH_TOKEN
+    #             gh variable set CLAUDE_CODE_OAUTH_TOKEN_EXPIRES --body <today + 1 year>
+    token-expiry:
+        name: Claude token expiry
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        env:
+            EXPIRES: ${{ vars.CLAUDE_CODE_OAUTH_TOKEN_EXPIRES }}
+        steps:
+            - name: Check
+              run: |
+                  if [ -z "$EXPIRES" ]; then
+                    echo "::warning::CLAUDE_CODE_OAUTH_TOKEN_EXPIRES is not set, so token expiry is not tracked."
+                    exit 0
+                  fi
+                  days=$(( ($(date -d "$EXPIRES" +%s) - $(date +%s)) / 86400 ))
+                  echo "Claude token expires $EXPIRES ($days days)."
+                  if [ "$days" -le 30 ]; then
+                    echo "::error title=Rotate the Claude token::CLAUDE_CODE_OAUTH_TOKEN expires $EXPIRES ($days days). Run: claude setup-token; gh secret set CLAUDE_CODE_OAUTH_TOKEN; gh variable set CLAUDE_CODE_OAUTH_TOKEN_EXPIRES --body <today + 1 year>"
+                    exit 1
+                  fi
+
+    autofix:
+        name: Audit, fix, verify, merge
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        timeout-minutes: 240
+        env:
+            GH_TOKEN: ${{ github.token }}
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  fetch-depth: 0
+                  # Claude runs in this checkout; it gets no push credentials.
+                  persist-credentials: false
+
+            - name: Skip while an earlier autofix PR is open
+              id: open
+              run: |
+                  pr=$(gh pr list --label "$LABEL" --state open --json url --jq '.[0].url // ""')
+                  if [ -n "$pr" ]; then
+                    echo "::notice title=Autofix PR still open::$pr needs a look before another one is opened."
+                    echo "skip=true" >> "$GITHUB_OUTPUT"
+                  fi
+
+            # No `npm ci`: every step works on package-lock.json alone
+            # (--package-lock-only), so nothing is installed or run here.
+            # The PR checks do the real install and build.
+            - name: Setup Node.js
+              if: steps.open.outputs.skip != 'true'
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '24'
+
+            - name: Audit
+              id: before
+              if: steps.open.outputs.skip != 'true'
+              run: |
+                  npx -y tsx tools/security-autofix.ts audit --out "$RUNNER_TEMP/before.json" || {
+                    [ $? -eq 3 ] && echo "count=0" >> "$GITHUB_OUTPUT"   # registry outage: try tomorrow
+                  }
+
+            - name: 'Fix 1: npm audit fix (in-range only)'
+              if: steps.before.outputs.count > 0
+              # Exits non-zero when some advisories remain; that is what Fix 2 is for.
+              run: npm audit fix --package-lock-only --ignore-scripts || true
+
+            - name: Re-audit
+              id: mid
+              if: steps.before.outputs.count > 0
+              run: npx -y tsx tools/security-autofix.ts audit --out "$RUNNER_TEMP/mid.json"
+
+            - name: 'Fix 2: Claude, for advisories a parent package pins'
+              if: steps.mid.outputs.count > 0
+              env:
+                  CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+                  GH_TOKEN: ''
+              run: |
+                  if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+                    echo "::warning::CLAUDE_CODE_OAUTH_TOKEN is not set; advisories a parent pins are left for a person."
+                    exit 0
+                  fi
+                  cat > "$RUNNER_TEMP/prompt.md" <<'EOF'
+                  You are fixing security advisories in this npm workspace, unattended in CI.
+                  `npm audit fix` (without --force) already ran and did not clear these,
+                  so a parent package pins the vulnerable range.
+
+                  Advisories still open (from `npm audit`):
+                  EOF
+                  cat "$RUNNER_TEMP/mid.json" >> "$RUNNER_TEMP/prompt.md"
+                  cat >> "$RUNNER_TEMP/prompt.md" <<'EOF'
+
+                  Read the "Security advisories" section of ai/development-workflow.md first. Then, in
+                  order of preference:
+                  1. Bump the parent that pins it, within its current major and its current range in
+                     package.json: find it with `npm ls <pkg> --all --package-lock-only`, check
+                     releases with `npm view <parent> versions dependencies`, then
+                     `npm update <parent> --package-lock-only --ignore-scripts`.
+                  2. Otherwise add an override to the root package.json `overrides`. Scope it to the
+                     parent when one parent is responsible (`"parent": { "pkg": "^x.y.z" }`, like the
+                     existing `nx` entry); use a top-level entry only when many parents pin it. Then
+                     `npm install --package-lock-only --ignore-scripts`.
+
+                  Rules:
+                  - Change only package.json and package-lock.json at the repo root.
+                  - Do NOT delete and rebuild the lockfile; keep the diff small.
+                  - Never cross a major version of any package. If the only fix is a major bump,
+                    leave that advisory and say so.
+                  - Verify with `npx -y tsx tools/security-autofix.ts audit`.
+                  - Do not commit; the workflow does that.
+                  Finish with a short summary: what you changed, and for each override you added,
+                  the GHSA id it fixes and the parent that pins it. Name anything you could not fix.
+                  EOF
+                  npx -y "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}" -p "$(cat "$RUNNER_TEMP/prompt.md")" \
+                    --max-turns 60 \
+                    --allowedTools "Read,Grep,Glob,Edit,Bash(npm ls:*),Bash(npm view:*),Bash(npm audit:*),Bash(npm update:*),Bash(npm install --package-lock-only:*),Bash(npx -y tsx tools/security-autofix.ts:*),Bash(git diff:*),Bash(git status:*)" \
+                    | tee "$RUNNER_TEMP/claude.md"
+
+            - name: Gate
+              id: gate
+              if: steps.before.outputs.count > 0
+              run: |
+                  # Only the root manifests ship. Drop anything else a fixer touched.
+                  stray=$(git diff --name-only | grep -vE '^(package\.json|package-lock\.json)$' || true)
+                  if [ -n "$stray" ]; then
+                    echo "::warning::Discarding changes outside the root manifests: $stray"
+                    echo "$stray" | xargs git checkout --
+                  fi
+                  npx -y tsx tools/security-autofix.ts audit --out "$RUNNER_TEMP/after.json"
+                  if git diff --quiet; then
+                    echo "::error title=Could not fix advisories::Nothing changed. See the audit output above; these need a hand-made fix."
+                    exit 1
+                  fi
+                  npx -y tsx tools/security-autofix.ts gate --base HEAD \
+                    --before "$RUNNER_TEMP/before.json" --after "$RUNNER_TEMP/after.json"
+
+            - name: Open PR
+              id: pr
+              if: steps.gate.outcome == 'success'
+              env:
+                  BODY: ${{ steps.gate.outputs.body }}
+                  AUTOMERGE: ${{ steps.gate.outputs.automerge }}
+                  FIXED: ${{ steps.gate.outputs.fixed_count }}
+              run: |
+                  branch="security/autofix-${GITHUB_RUN_ID}"
+                  git config user.name 'github-actions[bot]'
+                  git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                  git switch -c "$branch"
+                  git add -- package.json package-lock.json
+                  title="fix(deps): resolve ${FIXED} security advisor$([ "$FIXED" = 1 ] && echo y || echo ies)"
+                  git -c core.hooksPath=/dev/null commit -q -m "$title" -m "Automated by the security-autofix workflow."
+                  git push -q "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "HEAD:refs/heads/${branch}"
+
+                  { printf '%s\n' "$BODY"
+                    if [ -f "$RUNNER_TEMP/claude.md" ]; then
+                      printf '\n<details><summary>Claude'"'"'s notes</summary>\n\n%s\n\n</details>\n' "$(cat "$RUNNER_TEMP/claude.md")"
+                    fi
+                    printf '\nRun: %s/%s/actions/runs/%s\n' "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+                  } > "$RUNNER_TEMP/body.md"
+
+                  gh label create "$LABEL" --color B60205 --description "Opened by the security-autofix workflow" --force >/dev/null
+                  gh label create needs-review --color FBCA04 --description "Automation could not merge this on its own" --force >/dev/null
+                  labels="$LABEL"
+                  [ "$AUTOMERGE" = true ] || labels="$labels,needs-review"
+                  url=$(gh pr create --base main --head "$branch" --label "$labels" \
+                    --title "$title" --body-file "$RUNNER_TEMP/body.md")
+                  { echo "url=$url"; echo "branch=$branch"; echo "sha=$(git rev-parse HEAD)"; } >> "$GITHUB_OUTPUT"
+                  echo "Opened $url"
+
+            - name: Run the PR checks
+              id: ci
+              if: steps.pr.outcome == 'success'
+              env:
+                  BRANCH: ${{ steps.pr.outputs.branch }}
+                  SHA: ${{ steps.pr.outputs.sha }}
+              run: |
+                  # GitHub queues the PR's own "Check builds on PR" run and holds it
+                  # for approval, because GITHUB_TOKEN opened the PR. Approving it is
+                  # best: the checks then show on the PR like any other. If the API
+                  # refuses, dispatch the same workflow on the branch instead; its
+                  # check runs land on the same commit, which satisfies the required
+                  # "Build" check.
+                  held=""
+                  for _ in $(seq 1 12); do
+                    held=$(gh run list --workflow build-check.yml --branch "$BRANCH" --event pull_request \
+                      --json databaseId,conclusion --jq '[.[]|select(.conclusion=="action_required")][0].databaseId // ""')
+                    [ -n "$held" ] && break
+                    sleep 5
+                  done
+                  run=""
+                  if [ -n "$held" ] && gh api -X POST "repos/${GITHUB_REPOSITORY}/actions/runs/${held}/approve" > /dev/null; then
+                    echo "Approved the PR's own check run."
+                    run=$held
+                  else
+                    echo "::notice::Could not approve the PR's check run; dispatching it on the branch instead."
+                    gh workflow run build-check.yml --ref "$BRANCH"
+                    for _ in $(seq 1 30); do
+                      run=$(gh run list --workflow build-check.yml --branch "$BRANCH" --event workflow_dispatch \
+                        --json databaseId --jq '.[0].databaseId // ""')
+                      [ -n "$run" ] && break
+                      sleep 10
+                    done
+                  fi
+                  [ -n "$run" ] || { echo "::error::The check run never appeared."; exit 1; }
+                  url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$run"
+                  echo "Watching $url"
+
+                  # Mirror the result as one commit status, so it shows on the PR
+                  # even when the run was dispatched rather than approved.
+                  status() {
+                    gh api "repos/${GITHUB_REPOSITORY}/statuses/${SHA}" -f state="$1" -f description="$2" \
+                      -f context='security-autofix / PR checks' -f target_url="$url" > /dev/null
+                  }
+                  status pending 'Full PR check suite running'
+                  if gh run watch "$run" --exit-status --interval 60 > /dev/null; then
+                    status success 'Full PR check suite passed'
+                  else
+                    status failure 'Full PR check suite failed'
+                    exit 1
+                  fi
+
+            - name: Merge and deploy
+              if: steps.ci.outcome == 'success' && steps.gate.outputs.automerge == 'true'
+              env:
+                  URL: ${{ steps.pr.outputs.url }}
+                  SHA: ${{ steps.pr.outputs.sha }}
+              run: |
+                  gh pr merge "$URL" --squash --delete-branch --match-head-commit "$SHA"
+                  # A merge made by GITHUB_TOKEN starts no push workflow, so start
+                  # the deploy explicitly. `promote` sends it on to the prod approval.
+                  gh workflow run firebase-functions-merge.yml --ref main -f promote=true
+                  echo "::notice title=Merged; deploying to dev, prod awaits approval::$URL"
+
+            - name: Hand it to a human
+              if: failure() && steps.pr.outputs.url != ''
+              env:
+                  URL: ${{ steps.pr.outputs.url }}
+              run: |
+                  gh pr edit "$URL" --add-label needs-review
+                  gh pr comment "$URL" --body "Checks failed, so this was not merged. Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+
+            - name: Needs review
+              if: steps.ci.outcome == 'success' && steps.gate.outputs.automerge != 'true'
+              env:
+                  URL: ${{ steps.pr.outputs.url }}
+              run: |
+                  echo "::error title=Security fix needs review::$URL passed CI but is not eligible to merge itself (see its description)."
+                  exit 1

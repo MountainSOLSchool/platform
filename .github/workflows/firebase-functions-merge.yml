@@ -46,6 +46,11 @@ on:
                 required: false
                 default: false
                 type: boolean
+            promote:
+                description: 'Continue to the prod approval gate after dev, like a merge does. Used by security-autofix, whose merges start no push run.'
+                required: false
+                default: false
+                type: boolean
 
 env:
     NX_DAEMON: 'false'
@@ -519,6 +524,9 @@ jobs:
         # Gated to real merges only: github.event_name == 'push' excludes the
         # dev-only `deploy_all` workflow_dispatch trials, and the e2e_dev gate
         # must be green first (only the dev-validated commit may reach prod).
+        # The one dispatch allowed through is `promote` on main: security-autofix
+        # merges as GITHUB_TOKEN, which starts no push run, so it dispatches
+        # this instead. The firebase-prod approval still applies.
         needs: [e2e_dev]
         # !cancelled() is REQUIRED, not cosmetic: deploy_functions_dev skips on
         # docs-only merges, and a skip propagates down the whole needs chain —
@@ -528,7 +536,7 @@ jobs:
         # still ensures it only runs when e2e_dev actually passed.
         if: >-
           !cancelled() &&
-          github.event_name == 'push' &&
+          (github.event_name == 'push' || (inputs.promote && github.ref == 'refs/heads/main')) &&
           needs.e2e_dev.result == 'success'
         runs-on: ubuntu-latest
         environment: firebase-prod
