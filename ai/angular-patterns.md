@@ -221,6 +221,12 @@ params: () => {
 
 ---
 
+#### Showing "not found" instead of loading forever
+
+`declareFunction` drops the `Error` state, so a failed call never emits and the resource stays loading. When a page must tell the user something went wrong (e.g. a bad ID in a shared link), declare the function with `declareFunctionWithState` and keep only complete states, then branch on `RequestedUtility.isError()`.
+
+**Example**: `getStudentCompletedUnits` in `libs/angular/firebase/api/src/lib/services/mountain-sol-api.service.ts`, consumed by `libs/angular/units/src/lib/components/student-units-page.component.ts` (`#student` resource and `state`)
+
 ### rxMethod: Reactive Side Effects
 
 **Import**: `import { rxMethod } from '@ngrx/signals/rxjs-interop';`
@@ -558,6 +564,12 @@ If a component's inline styles exceed 4 KB, the build will fail. Strategies to s
 - Remove rules that duplicate inherited or default styles
 
 **Reference**: The info-panel-editor component is near the budget limit — be careful when adding styles to `libs/angular/classes/class-management/src/lib/components/info-panel-editor/info-panel-editor.component.ts`.
+
+### d3 Charts
+
+Render d3 into an element the component owns (a `viewChild`), from `afterRenderEffect`, and select only inside it. Never use document-wide selections like `d3.selectAll('svg')`: the header's Material icons are SVGs too. Elements d3 creates don't get Angular's style-scoping attribute, so such components use `ViewEncapsulation.None` with every selector prefixed by the host tag, and colour nodes with classes rather than inline fills so tokens and a `.selected` state apply. Jest needs d3's ES modules transformed (`transformIgnorePatterns` in `libs/angular/units/jest.config.ts`).
+
+**Reference**: `libs/angular/units/src/lib/components/unit-tree-chart.component.ts`
 
 ### Material 3 Theme & Button Color (Known Issue #193)
 

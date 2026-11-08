@@ -106,3 +106,12 @@ export type {
     ContactAudienceRequest,
     ContactAudienceResponse,
 } from './lib/contact-audiences.types';
+
+// Units & Paths
+export type {
+    UnitSummary,
+    PathSummary,
+    FullUnitsAndPathsResponse,
+    GetStudentCompletedUnitsRequest,
+    GetStudentCompletedUnitsResponse,
+} from './lib/units.types';

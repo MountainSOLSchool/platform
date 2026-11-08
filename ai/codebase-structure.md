@@ -104,6 +104,13 @@ Admin class management (create, edit, list):
 - `components/unit-selector/` - Unit selection component with path columns
 - `class-management-routes.ts` - Routes for `/admin/classes/management/*`
 
+#### `/libs/angular/units/` (`@sol/angular/units`)
+Student units and paths, being ported from the student portal (epic #341):
+- `utilities/student-unit-tree.ts` - Pure builder for the student → path → category → unit tree (locked/unlocked/complete/partial)
+- `components/unit-tree-chart.component.ts` - d3 tree chart, rendered into its own element
+- `components/unit-details-panel.component.ts` - Selected unit's details (floating on desktop, bottom sheet on phones)
+- `components/student-units-page.component.ts` - Public page at `/students/:id/units` (not linked from the nav yet)
+
 #### `/libs/angular/request/`
 HTTP request utilities:
 - `requested.type.ts` - Requested<T> type for async states
