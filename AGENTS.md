@@ -138,6 +138,7 @@ Comprehensive guide to Braintree payment integration:
 
 ### [Development Workflow](./ai/development-workflow.md)
 Day-to-day development practices and tooling:
+- Claude review gate on PRs and `@claude` / `up-next` builds (never merges)
 - Local development setup
 - Running dev servers and emulators
 - Code quality tools (linting, formatting)
@@ -260,6 +261,8 @@ npx nx graph
 # Deployment (automated via GitHub Actions)
 git push origin main  # Triggers deployment
 ```
+
+**PR review gate**: every non-draft PR gets a Claude review comment (`<!-- claude-review -->`) that fails only on blockers. Payments, rules, pricing, and family/student data changes need the `for:david` label. See [Claude in GitHub](./ai/development-workflow.md#claude-in-github).
 
 ### Firebase Emulator Ports
 

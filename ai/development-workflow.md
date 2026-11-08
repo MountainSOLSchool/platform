@@ -343,6 +343,12 @@ Example PR description:
 **Security autofix**: `.github/workflows/security-autofix.yml`
 - Runs daily; fixes advisories already on `main` (see [Security Advisories](#security-advisories))
 
+**Claude review**: `.github/workflows/claude-review.yml`
+- Runs on non-draft PRs from this repo; fails only on blockers (see [Claude review](#claude-review))
+
+**Claude**: `.github/workflows/claude.yml`
+- `@claude` mentions and the `up-next` label; opens PRs but never merges (see [Claude in GitHub](#claude-in-github))
+
 ### Manual Deployment (if needed)
 
 ```bash
@@ -394,6 +400,36 @@ gh variable set CLAUDE_CODE_OAUTH_TOKEN_EXPIRES --body <today + 1 year, YYYY-MM-
 The workflow's `token-expiry` job fails (emailing you) from 30 days before that date.
 
 **Overrides**: root `package.json` `overrides` are security pins. Review them when updating the package that needed them (Nx, firebase-tools, Storybook); remove one when `npm audit` stays clean without it.
+
+## Claude in GitHub
+
+Modelled on Everything Morgantown. Both workflows use `CLAUDE_CODE_OAUTH_TOKEN` (see the token notes in [Security Advisories](#security-advisories)) and pin Claude Code with `CLAUDE_CODE_VERSION`, installed with npm and passed to `anthropics/claude-code-action@v1` as `path_to_claude_code_executable`. Keep that pin in step with `security-autofix.yml`.
+
+### Claude review
+
+`.github/workflows/claude-review.yml` reviews every non-draft PR opened from this repo, including PRs opened by `claude[bot]`. PRs from forks are skipped, because the repo is public and forks get no secrets; those get a human review. A new push cancels the older run.
+
+It reads the standards from the base branch (so a PR cannot relax its own review): `AGENTS.md` and `ai/angular-patterns.md`, `ai/firebase-patterns.md`, `ai/codebase-structure.md`, `ai/payment-processing.md`, plus correctness and security. When `apps/docs` changes, it also checks the Admin Guide is plain language for non-technical admins with no internals.
+
+Claude writes `PASS` or `BLOCK` to `review-verdict.txt`, which the `Enforce the verdict` step reads, and posts or updates one PR comment marked `<!-- claude-review -->`. The check fails only on blockers:
+
+- A bug or regression.
+- A new `any` (no type safety).
+- PrimeNG in new code.
+- A security problem: secrets, auth or rule mistakes, injection.
+- Payments, Firestore/Storage rules, pricing, or family/student data changed without the `for:david` label.
+- Hosting or infrastructure details added to this public repo.
+
+Everything else is a suggestion. The `for:david` label is read live, so after adding it, use "Re-run jobs" on the check. Claude only has read-only tools, `Write` (for the verdict and comment files), and `gh pr comment`.
+
+### @claude and up-next
+
+`.github/workflows/claude.yml` runs only for the repo's OWNER, MEMBER, and COLLABORATOR users.
+
+- **Mention `@claude`** in an issue, PR comment, or review comment to ask for something.
+- **Label an issue `up-next`** and Claude claims it (`in-progress`), builds it on a `claude/issue-<n>-*` branch, runs `nx affected -t lint test build`, opens a PR, and fixes Claude review blockers. It **never merges**: merging to `main` deploys, so every PR waits for David. If a change needs a sensitive area or it disagrees with a blocker, it labels the PR `for:david` and stops.
+
+Hard limits (in the prompts and, where possible, as `--disallowedTools`): no deploys, no secrets, no contacting people, no merging or pushing to `main`, and no changes to workflows, Firestore/Storage rules, payments, or pricing.
 
 ## Nx Commands
 
