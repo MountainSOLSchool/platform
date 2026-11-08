@@ -206,6 +206,7 @@ libs/
           unit-selector/      # Unit selection with path columns
         services/
           class-form.service  # Form submission logic
+    units/                    # Student units tree (public /students/:id/units)
     admin/
       contacts/               # Family contact lists (email audiences for Gmail)
     firebase/

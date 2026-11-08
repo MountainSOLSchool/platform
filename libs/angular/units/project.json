@@ -1,0 +1,10 @@
+{
+    "name": "angular-units",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/angular/units/src",
+    "prefix": "sol",
+    "projectType": "library",
+    "tags": [],
+    "// targets": "to see all targets run: nx show project angular-units --web",
+    "targets": {}
+}

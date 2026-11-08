@@ -30,6 +30,7 @@
             "@sol/angular/admin/contacts": [
                 "libs/angular/admin/contacts/src/index.ts"
             ],
+            "@sol/angular/units": ["libs/angular/units/src/index.ts"],
             "@sol/angular/admin/students": [
                 "libs/angular/admin/students/src/index.ts"
             ],
