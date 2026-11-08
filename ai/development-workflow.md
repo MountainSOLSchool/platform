@@ -323,17 +323,16 @@ Example PR description:
 
 ### GitHub Actions Workflows
 
-**Functions deployment**: `.github/workflows/firebase-functions-merge.yml`
-- Runs on push to `main`
-- Uses Nx to detect affected functions (lines 37-98)
-- Builds all functions (line 102)
-- Deploys affected functions in groups of 5 (lines 61-92, 154-161)
-- Parallel build, sequential deploy (line 131)
+**Deploy on merge**: `.github/workflows/firebase-functions-merge.yml`
+- Runs on push to `main` (see the pipeline diagram at the top of the file)
+- Builds once, then deploys affected functions and the enrollment portal to dev
+- Runs the enrollment e2e tests against dev
+- Waits for a required-reviewer approval, then promotes the same build to prod
+- Deploys declared Firestore indexes only when `firestore.indexes.json` changed
+- `workflow_dispatch` is a dev-only trial unless `promote` is set
 
-**Hosting deployment**: `.github/workflows/firebase-hosting-merge.yml`
-- Runs on push to `main`
-- Builds enrollment-portal (line 16)
-- Deploys to Firebase Hosting (lines 17-21)
+**Docs site**: `.github/workflows/docs-pages.yml`
+- Runs on push to `main` when `apps/docs` changes; publishes the Admin Guide to GitHub Pages
 
 **Build check**: `.github/workflows/build-check.yml`
 - Runs on pull requests
@@ -369,11 +368,11 @@ firebase deploy --only firestore:indexes
 ### Deployment Process
 
 1. Push changes to `main` branch
-2. GitHub Actions automatically:
-   - Detects affected projects
-   - Builds changed functions
-   - Deploys to production
-3. Monitor deployment in GitHub Actions UI
+2. "Deploy on merge" automatically:
+   - Detects affected functions and builds once
+   - Deploys to dev and runs the enrollment e2e tests there
+   - Waits for a required-reviewer approval before promoting to prod
+3. Approve the prod stage in the GitHub Actions UI once dev looks right
 4. Check Firebase Console for function status
 
 ## Security Advisories
