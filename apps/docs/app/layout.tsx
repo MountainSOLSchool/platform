@@ -7,22 +7,20 @@ import type { ReactNode } from 'react';
 
 export const metadata = {
     title: {
-        default: 'Mountain SOL Admin Guide',
-        template: '%s — Mountain SOL Admin Guide',
+        default: 'Mountain SOL Staff Help',
+        template: '%s | Mountain SOL Staff Help',
     },
     description:
-        'Reference for Mountain SOL admins — every admin tool and workflow, plus how to help families who reach out.',
+        'Help for Mountain SOL staff: the admin portal, the public website, and how to help families who reach out.',
     // Internal reference; not for public search indexing until visibility is
     // decided (#259).
     robots: { index: false, follow: false },
 };
 
-const navbar = <Navbar logo={<b>Mountain SOL Admin Guide</b>} />;
+const navbar = <Navbar logo={<b>Mountain SOL Staff Help</b>} />;
 
 const footer = (
-    <Footer>
-        Mountain SOL — internal admin reference. © {new Date().getFullYear()}
-    </Footer>
+    <Footer>Mountain SOL staff help. © {new Date().getFullYear()}</Footer>
 );
 
 export default async function RootLayout({

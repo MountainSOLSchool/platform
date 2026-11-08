@@ -1,6 +1,7 @@
-# Mountain SOL Admin Guide (`apps/docs`)
+# Mountain SOL Staff Help (`apps/docs`)
 
-Internal documentation site for Mountain SOL admins. Built with **Next.js +
+Help site for Mountain SOL staff. It covers the admin portal (enrollment portal
+admin tools) and the public WordPress website (`content/website/`). Built with **Next.js +
 [Nextra](https://nextra.site)** — the same React/Next stack as `student-portal`,
 wired into Nx via the `@nx/next/plugin` inferred targets. Dependencies live in the **root `package.json`**
 (no per-app `node_modules`).
@@ -22,9 +23,11 @@ builds the static export and publishes it to GitHub Pages (also runnable via
 - Static export is gated behind `DOCS_EXPORT=1` (set by the `build-pages` target),
   so the regular `build` target keeps producing a server build in `.next/`.
   `build-pages` runs `next build` directly → `apps/docs/out`.
-- `DOCS_BASE_PATH` sets the path prefix. The workflow uses `/platform` (project
-  Pages serve under `/<repo>`); set it to `''` once the custom domain
-  (`docs.mountainsol.org`) is live (#259).
+- `DOCS_BASE_PATH` sets the path prefix. The workflow takes it from
+  `actions/configure-pages` (`base_path`): `/platform` on the default project
+  Pages URL, empty once the custom domain `help.mountainsol.org` is set in
+  **Settings → Pages**. Locally it's unset (served at the root).
+- `public/CNAME` holds the custom domain.
 - One-time setup: enable Pages with **Settings → Pages → Source: GitHub Actions**.
 - `public/.nojekyll` and committed screenshots under `public/` are force-included
   via a `.gitignore` negation (the repo otherwise ignores all `public/`).
@@ -52,6 +55,11 @@ Write pages **text-first**. Where a screenshot belongs, drop:
 
 Keep slugs stable and descriptive (`area-screen-detail`), e.g.
 `class-form-pricing`, `admin-enrollments`.
+
+Website (WordPress) pages use `wp-` slugs (e.g. `wp-page-editor`). The portal
+screenshot automation doesn't cover WordPress, so these are captured by hand
+from the practice copy of the site and committed as
+`public/screenshots/wp-<name>.png`.
 
 ## Structure
 
