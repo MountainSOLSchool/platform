@@ -346,6 +346,10 @@ Cloud Functions v2 automatically handles CORS for callable functions (using `onC
 
 For HTTP functions (using `onRequest`), configure CORS manually.
 
+`Functions.endpoint` (`libs/firebase/functions/src/lib/utilities/functions.utility.ts:13-55`) rejects any request without an `Origin` from `ALLOWED_ORIGINS`, so servers (which send no `Origin`) can't call it.
+
+**Public server-to-server endpoints** use plain `onRequest({ cors: true })` instead, return only public fields through a tested mapper, and set `Cache-Control` so Firebase Hosting's CDN absorbs repeat calls. Reference: `libs/firebase/enrollment-functions/public-classes/src/lib/public-classes.ts` (handler) and `to-public-classes.ts` + its spec (the allowlist of fields, with a test that student IDs, instructors and counts never appear). Used by the mountainsol.org Afterschool Classes page. Never return rosters, `studentIds`, `enrolledCount`, instructor docs or email content from one of these.
+
 ## Database Security Rules
 
 Located in `firestore.rules` at repository root.
