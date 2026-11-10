@@ -53,6 +53,43 @@ describe('parseAuditReport', () => {
         );
     });
 
+    it('leaves out an accepted advisory only when every install path is in scope', () => {
+        const accepted = [
+            {
+                id: 'GHSA-z',
+                paths: /^node_modules\/docs\/node_modules\/z$/,
+                reason: 'r',
+            },
+        ];
+        const report = (nodes: string[]) =>
+            JSON.stringify({
+                auditReportVersion: 2,
+                vulnerabilities: {
+                    z: { nodes, via: [via('GHSA-z', 'z', 'high')] },
+                    docs: { nodes: ['node_modules/docs'], via: ['z'] },
+                },
+            });
+
+        assert.deepEqual(
+            parseAuditReport(
+                report(['node_modules/docs/node_modules/z']),
+                accepted
+            ),
+            []
+        );
+        assert.deepEqual(
+            parseAuditReport(
+                report(['node_modules/docs/node_modules/z', 'node_modules/z']),
+                accepted
+            )?.map((a) => a.id),
+            ['GHSA-z']
+        );
+        assert.deepEqual(
+            parseAuditReport(report([]), accepted)?.map((a) => a.id),
+            ['GHSA-z']
+        );
+    });
+
     it('returns an empty list for a clean report', () => {
         assert.deepEqual(
             parseAuditReport('{"auditReportVersion":2,"vulnerabilities":{}}'),

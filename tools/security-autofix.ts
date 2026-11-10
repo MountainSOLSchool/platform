@@ -43,6 +43,26 @@ export interface Advisory {
 /** Files the fixer may touch. Only the root install is audited and deployed. */
 export const MANIFEST_PATTERN = /^(package\.json|package-lock\.json)$/;
 
+export interface AcceptedAdvisory {
+    id: string; // GHSA id
+    /** Accepted only while every vulnerable install path matches this. */
+    paths: RegExp;
+    reason: string;
+}
+
+/**
+ * Advisories we have chosen to live with, each scoped to install paths so the
+ * same advisory anywhere else still counts. Remove an entry once its reason
+ * no longer holds.
+ */
+export const ACCEPTED_ADVISORIES: AcceptedAdvisory[] = [
+    {
+        id: 'GHSA-mrhx-c7xc-m3w5',
+        paths: /^node_modules\/(nextra|nextra-theme-docs)\/node_modules\/zod$/,
+        reason: 'nextra 4.6.1 cannot prerender with zod >=4.4, so overrides keep its private zod on 4.3.x. Docs build only; see "//overrides" in package.json. Remove with nextra 5.',
+    },
+];
+
 const AUDIT_ATTEMPTS = Number(process.env.AUDIT_ATTEMPTS ?? 3);
 const AUDIT_BACKOFF_MS = Number(process.env.AUDIT_BACKOFF_SECONDS ?? 10) * 1000;
 
@@ -62,8 +82,14 @@ interface RawVia {
  * GHSA id. Advisories live in each vulnerability's `via` list; string entries
  * there only point at another vulnerable package. Returns null when the
  * output is not an audit report (registry error).
+ *
+ * An advisory in `accepted` is left out, but only when every install path
+ * (`nodes`) it is reported at matches that entry's `paths`.
  */
-export function parseAuditReport(raw: string): Advisory[] | null {
+export function parseAuditReport(
+    raw: string,
+    accepted: AcceptedAdvisory[] = ACCEPTED_ADVISORIES
+): Advisory[] | null {
     let report: unknown;
     try {
         report = JSON.parse(raw);
@@ -72,7 +98,10 @@ export function parseAuditReport(raw: string): Advisory[] | null {
     }
     const vulns = (
         report as {
-            vulnerabilities?: Record<string, { via: (string | RawVia)[] }>;
+            vulnerabilities?: Record<
+                string,
+                { via: (string | RawVia)[]; nodes?: string[] }
+            >;
         }
     )?.vulnerabilities;
     if (!vulns || typeof vulns !== 'object') return null;
@@ -86,6 +115,14 @@ export function parseAuditReport(raw: string): Advisory[] | null {
             const id =
                 /GHSA-[\w-]+/.exec(via.url ?? '')?.[0] ?? `npm-${via.source}`;
             if (byId.has(id)) continue;
+            const exception = accepted.find((a) => a.id === id);
+            const nodes = v.nodes ?? [];
+            if (
+                exception &&
+                nodes.length > 0 &&
+                nodes.every((n) => exception.paths.test(n))
+            )
+                continue;
             byId.set(id, {
                 id,
                 module: via.name,
