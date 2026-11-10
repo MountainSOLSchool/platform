@@ -399,6 +399,8 @@ gh variable set CLAUDE_CODE_OAUTH_TOKEN_EXPIRES --body <today + 1 year, YYYY-MM-
 
 The workflow's `token-expiry` job fails (emailing you) from 30 days before that date.
 
+**Accepted advisories**: an advisory we have chosen to live with goes in `ACCEPTED_ADVISORIES` in `tools/security-autofix.ts`, with the install paths it is accepted at and why. Every audit (PR check and daily job) leaves it out only while all its vulnerable copies sit at those paths, so the same advisory anywhere else still counts. Remove the entry when its reason goes away. Today: GHSA-mrhx-c7xc-m3w5, zod inside nextra (see `"//overrides"` in `package.json`).
+
 **Overrides**: root `package.json` `overrides` are security pins. Review them when updating the package that needed them (Nx, firebase-tools, Storybook); remove one when `npm audit` stays clean without it.
 
 ## Claude in GitHub
