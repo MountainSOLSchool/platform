@@ -220,6 +220,7 @@ libs/
   firebase/
     enrollment-functions/     # Cloud Functions (one library per function!)
       contact-audiences/      # Computed family email audiences (semester/recent/class/all)
+      public-classes/         # Public, cacheable class list for mountainsol.org (no family data)
       create-class/           # Create class function
       update-class/           # Update class function
       upload-class-image/     # Upload class image to Storage

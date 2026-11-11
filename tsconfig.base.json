@@ -279,6 +279,9 @@
             "@sol/firebase/enrollment-functions/contact-audiences": [
                 "libs/firebase/enrollment-functions/contact-audiences/src/index.ts"
             ],
+            "@sol/firebase/enrollment-functions/public-classes": [
+                "libs/firebase/enrollment-functions/public-classes/src/index.ts"
+            ],
             "@sol/firebase/enrollment-functions/semesters-available-to-enroll": [
                 "libs/firebase/enrollment-functions/semesters-available-to-enroll/src/index.ts"
             ],

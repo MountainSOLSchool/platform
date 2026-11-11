@@ -74,6 +74,10 @@
                     "function": "semestersAvailableToEnroll"
                 },
                 {
+                    "source": "/publicClasses",
+                    "function": "publicClasses"
+                },
+                {
                     "source": "/historicalSemesters",
                     "function": "historicalSemesters"
                 },
