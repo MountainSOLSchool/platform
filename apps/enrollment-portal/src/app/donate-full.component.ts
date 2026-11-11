@@ -173,6 +173,22 @@ import { MatDialogModule } from '@angular/material/dialog';
                             </div>
 
                             <div class="form-field">
+                                <label class="field-label" for="donate-memo"
+                                    >Note (optional)</label
+                                >
+                                <input
+                                    id="donate-memo"
+                                    type="text"
+                                    [ngModel]="memo()"
+                                    (ngModelChange)="memo.set($event)"
+                                    name="memo"
+                                    placeholder="e.g., T-shirt order, Spring fundraiser"
+                                    maxlength="255"
+                                    class="form-input"
+                                />
+                            </div>
+
+                            <div class="form-field">
                                 <label
                                     class="field-label required"
                                     for="donate-donation-amount"
@@ -522,6 +538,7 @@ export class DonateFullComponent {
     state = signal<string>('');
     zip = signal<string>('');
     referralSource = signal<string>('');
+    memo = signal<string>('');
     paymentMethodData = signal<
         | {
               nonce: string;
@@ -614,6 +631,7 @@ export class DonateFullComponent {
                 donorEmail: this.donorEmail(),
                 donorAddress: fullAddress || undefined,
                 referralSource: this.referralSource() || undefined,
+                memo: this.memo().trim() || undefined,
             })
             .pipe(RequestedOperatorsUtility.ignoreAllStatesButLoaded())
             .subscribe((result) => {
@@ -642,6 +660,7 @@ export class DonateFullComponent {
         this.state.set('');
         this.zip.set('');
         this.referralSource.set('');
+        this.memo.set('');
         this.paymentMethodData.set(undefined);
         this.processing.set(false);
         this.donationResult.set({ status: 'idle' });

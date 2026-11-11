@@ -13,6 +13,7 @@ export interface DonationDbo {
     completedAt?: Date;
     errors?: string[];
     source?: 'donation_page_venmo';
+    purpose?: string;
 }
 
 export interface DonationSummary {
@@ -26,18 +27,20 @@ export class DonationRepository {
         return DatabaseUtility.getDatabase();
     }
 
-    static async create(donation: Omit<DonationDbo, 'timestamp'>): Promise<string> {
+    static async create(
+        donation: Omit<DonationDbo, 'timestamp'>
+    ): Promise<string> {
         const { id } = await this.database
             .collection('donations')
             .add({ ...donation, timestamp: new Date() });
         return id;
     }
 
-        static async update(id: string, updates: Partial<DonationDbo>): Promise<void> {
-        await this.database
-            .collection('donations')
-            .doc(id)
-            .update(updates);
+    static async update(
+        id: string,
+        updates: Partial<DonationDbo>
+    ): Promise<void> {
+        await this.database.collection('donations').doc(id).update(updates);
     }
 }
 
@@ -48,21 +51,27 @@ export const donateVenmo = Functions.endpoint
         amount: number;
         paymentMethodNonce: string;
         deviceData: string;
+        memo?: string;
     }>(async (request, response, secrets, strings) => {
-        try {            
-            const {
-                amount,
-                                            paymentMethodNonce,
-                deviceData,
-            } = request.body.data;
+        try {
+            const { amount, paymentMethodNonce, deviceData, memo } =
+                request.body.data;
+            const purpose =
+                typeof memo === 'string'
+                    ? memo.trim().slice(0, 255) || undefined
+                    : undefined;
 
             if (!amount || amount <= 0 || amount > 249) {
-                response.status(400).send({ error: 'Invalid donation amount. Please donate an amount under $250' });
+                response.status(400).send({
+                    error: 'Invalid donation amount. Please donate an amount under $250',
+                });
                 return;
             }
 
             if (!paymentMethodNonce) {
-                response.status(400).send({ error: 'Payment method nonce is required' });
+                response
+                    .status(400)
+                    .send({ error: 'Payment method nonce is required' });
                 return;
             }
 
@@ -71,31 +80,30 @@ export const donateVenmo = Functions.endpoint
                 currency: 'USD',
                 paymentMethod: 'venmo',
                 status: 'pending',
-                source: 'donation_page_venmo'
+                source: 'donation_page_venmo',
+                purpose,
             };
 
             const donationId = await DonationRepository.create(donationRecord);
 
             const braintree = new Braintree(secrets, strings);
 
-            const {
-                success,
-                transaction,
-                errors
-            } = await braintree.transactWithVenmo({
-                amount: amount,
-                nonce: paymentMethodNonce,
-                deviceData: deviceData,
-                customFields: {
-                    purpose: 'charitable_donation',
-                }
-            });
+            const { success, transaction, errors } =
+                await braintree.transactWithVenmo({
+                    amount: amount,
+                    nonce: paymentMethodNonce,
+                    deviceData: deviceData,
+                    orderId: purpose,
+                    customFields: {
+                        purpose: 'charitable_donation',
+                    },
+                });
 
             if (success && transaction) {
                 await DonationRepository.update(donationId, {
                     status: 'completed',
                     transactionId: transaction.id,
-                    completedAt: new Date()
+                    completedAt: new Date(),
                 });
 
                 response.send({
@@ -103,36 +111,40 @@ export const donateVenmo = Functions.endpoint
                     donationId,
                     transactionId: transaction.id,
                     amount: amount,
-                });                
+                });
             } else {
-                const errorMessages = errors?.deepErrors().map((e) => e.message) || ['Transaction failed'];
-                
+                const errorMessages = errors
+                    ?.deepErrors()
+                    .map((e) => e.message) || ['Transaction failed'];
+
                 await DonationRepository.update(donationId, {
                     status: 'failed',
-                    errors: errorMessages
+                    errors: errorMessages,
                 });
 
                 response.status(400).send({
                     success: false,
                     errors: errorMessages,
-                    message: 'Unable to process donation. Please try again.'
+                    message: 'Unable to process donation. Please try again.',
                 });
             }
-
         } catch (error) {
             console.error('Error processing Venmo donation:', error);
-            
+
             // Handle gateway rejection for token_issuance
-            if (error instanceof Error && error.message.includes('token_issuance')) {
+            if (
+                error instanceof Error &&
+                error.message.includes('token_issuance')
+            ) {
                 response.status(503).send({
                     success: false,
                     error: 'Temporary payment processing issue. Please try again.',
-                    retry: true
+                    retry: true,
                 });
             } else {
                 response.status(500).send({
                     success: false,
-                    error: 'An unexpected error occurred while processing your donation.'
+                    error: 'An unexpected error occurred while processing your donation.',
                 });
             }
         }

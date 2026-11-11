@@ -91,6 +91,20 @@ interface DonateMessage {
                                 </mat-form-field>
                             </div>
 
+                            <div class="form-field">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Note (optional)</mat-label>
+                                    <input
+                                        matInput
+                                        type="text"
+                                        id="memo"
+                                        [(ngModel)]="memo"
+                                        maxlength="255"
+                                        placeholder="e.g., T-shirt order, Spring fundraiser"
+                                    />
+                                </mat-form-field>
+                            </div>
+
                             @if (isIosButNotSafari()) {
                                 <div class="form-field">
                                     <strong
@@ -279,6 +293,7 @@ export class DonateComponent {
     private readonly functions = inject(FirebaseFunctionsService);
 
     donationAmount = signal<number>(5);
+    memo = signal<string>('');
     paymentMethodData = signal<{
         nonce: string;
         deviceData: string;
@@ -321,6 +336,7 @@ export class DonateComponent {
                     message: string;
                 }>('donateVenmo', {
                     amount: this.donationAmount(),
+                    memo: this.memo().trim() || undefined,
                     paymentMethodNonce: this.paymentMethodData()!.nonce,
                     deviceData: this.paymentMethodData()!.deviceData,
                 })
@@ -367,6 +383,7 @@ export class DonateComponent {
 
     reset() {
         this.donationAmount.set(5);
+        this.memo.set('');
         this.paymentMethodData.set(null);
         this.processing.set(false);
         this.messages.set([]);

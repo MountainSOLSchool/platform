@@ -206,7 +206,17 @@ The Cloud Function is a thin wrapper:
 **Collection**: `payments` (with `paymentType: 'donation'`)
 
 **Required fields**: name, email, amount, payment method
-**Optional fields**: address, referral source
+**Optional fields**: address, referral source, note
+
+**Venmo donation page**: `/donate-venmo` → `apps/enrollment-portal/src/app/donate.component.ts` → `donateVenmo` function (`donations` collection). Optional field: note.
+
+### Payment Notes → Braintree Order ID
+
+The donation note and the service-payment purpose are stored as `purpose` and sent to Braintree as the transaction `orderId` (max 255 chars), so accounting can see what each payment was for in the Braintree dashboard and reports.
+
+- Shared handler: `libs/firebase/payments/src/lib/payment-handler.ts` (`processTransaction`)
+- Venmo donation function: `libs/firebase/enrollment-functions/donate-venmo/src/lib/donate-venmo.ts`
+- Donor-entered text is escaped with `escapeHtml` (`email-strategies/base-email.styles.ts`) before it goes into receipt HTML.
 
 ### Platform Detection
 

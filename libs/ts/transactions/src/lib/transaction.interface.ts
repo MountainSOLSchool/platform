@@ -3,6 +3,7 @@ export interface PreparedTransaction {
     nonce: string;
     customer: { email: string };
     deviceData: string;
+    orderId?: string;
 }
 
 export interface UnpreparedTransaction {

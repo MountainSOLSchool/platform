@@ -7,6 +7,7 @@ import {
     baseEmailStyles,
     formatDate,
     formatPaymentMethod,
+    escapeHtml,
 } from './base-email.styles';
 
 export class DonationEmailStrategy implements PaymentEmailStrategy {
@@ -23,6 +24,7 @@ export class DonationEmailStrategy implements PaymentEmailStrategy {
             paymentMethod,
             address,
             referralSource,
+            purpose,
         } = config;
 
         const currentDate = formatDate();
@@ -41,7 +43,7 @@ export class DonationEmailStrategy implements PaymentEmailStrategy {
                     </div>
 
                     <div class="content">
-                        <p>Dear ${recipientName},</p>
+                        <p>Dear ${escapeHtml(recipientName)},</p>
 
                         <p>Thank you so much for your generous donation to Mountain SOL School! Your support helps us provide exceptional outdoor education experiences for students in our community.</p>
 
@@ -53,18 +55,18 @@ export class DonationEmailStrategy implements PaymentEmailStrategy {
                             </div>
                             <div class="receipt-row">
                                 <span class="label">Donor Name:</span>
-                                <span class="value">${recipientName}</span>
+                                <span class="value">${escapeHtml(recipientName)}</span>
                             </div>
                             <div class="receipt-row">
                                 <span class="label">Email:</span>
-                                <span class="value">${recipientEmail}</span>
+                                <span class="value">${escapeHtml(recipientEmail)}</span>
                             </div>
                             ${
                                 address
                                     ? `
                             <div class="receipt-row">
                                 <span class="label">Address:</span>
-                                <span class="value">${address}</span>
+                                <span class="value">${escapeHtml(address)}</span>
                             </div>
                             `
                                     : ''
@@ -74,7 +76,17 @@ export class DonationEmailStrategy implements PaymentEmailStrategy {
                                     ? `
                             <div class="receipt-row">
                                 <span class="label">How you heard about us:</span>
-                                <span class="value">${referralSource}</span>
+                                <span class="value">${escapeHtml(referralSource)}</span>
+                            </div>
+                            `
+                                    : ''
+                            }
+                            ${
+                                purpose
+                                    ? `
+                            <div class="receipt-row">
+                                <span class="label">Note:</span>
+                                <span class="value">${escapeHtml(purpose)}</span>
                             </div>
                             `
                                     : ''
@@ -125,7 +137,7 @@ DONATION RECEIPT
 Date: ${currentDate}
 Donor Name: ${recipientName}
 Email: ${recipientEmail}
-${address ? `Address: ${address}\n` : ''}${referralSource ? `How you heard about us: ${referralSource}\n` : ''}Payment Method: ${paymentMethodDisplay}
+${address ? `Address: ${address}\n` : ''}${referralSource ? `How you heard about us: ${referralSource}\n` : ''}${purpose ? `Note: ${purpose}\n` : ''}Payment Method: ${paymentMethodDisplay}
 Transaction ID: ${transactionId}
 
 Donation Amount: $${amount.toFixed(2)}

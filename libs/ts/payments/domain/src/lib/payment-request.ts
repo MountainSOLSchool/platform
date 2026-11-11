@@ -16,4 +16,5 @@ export interface ServicePaymentRequest extends BasePaymentRequest {
 
 export interface DonationRequest extends BasePaymentRequest {
     referralSource?: string;
+    purpose?: string;
 }

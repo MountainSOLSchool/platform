@@ -7,6 +7,7 @@ import {
     baseEmailStyles,
     formatDate,
     formatPaymentMethod,
+    escapeHtml,
 } from './base-email.styles';
 
 export class ServicePaymentEmailStrategy implements PaymentEmailStrategy {
@@ -42,7 +43,7 @@ export class ServicePaymentEmailStrategy implements PaymentEmailStrategy {
                     </div>
 
                     <div class="content">
-                        <p>Dear ${recipientName},</p>
+                        <p>Dear ${escapeHtml(recipientName)},</p>
 
                         <p>Thank you for your payment to Mountain SOL. This email serves as your receipt.</p>
 
@@ -54,18 +55,18 @@ export class ServicePaymentEmailStrategy implements PaymentEmailStrategy {
                             </div>
                             <div class="receipt-row">
                                 <span class="label">Name:</span>
-                                <span class="value">${recipientName}</span>
+                                <span class="value">${escapeHtml(recipientName)}</span>
                             </div>
                             <div class="receipt-row">
                                 <span class="label">Email:</span>
-                                <span class="value">${recipientEmail}</span>
+                                <span class="value">${escapeHtml(recipientEmail)}</span>
                             </div>
                             ${
                                 address
                                     ? `
                             <div class="receipt-row">
                                 <span class="label">Address:</span>
-                                <span class="value">${address}</span>
+                                <span class="value">${escapeHtml(address)}</span>
                             </div>
                             `
                                     : ''
@@ -75,7 +76,7 @@ export class ServicePaymentEmailStrategy implements PaymentEmailStrategy {
                                     ? `
                             <div class="receipt-row">
                                 <span class="label">Invoice Number:</span>
-                                <span class="value">${invoiceNumber}</span>
+                                <span class="value">${escapeHtml(invoiceNumber)}</span>
                             </div>
                             `
                                     : ''
@@ -85,7 +86,7 @@ export class ServicePaymentEmailStrategy implements PaymentEmailStrategy {
                                     ? `
                             <div class="receipt-row">
                                 <span class="label">Purpose:</span>
-                                <span class="value">${purpose}</span>
+                                <span class="value">${escapeHtml(purpose)}</span>
                             </div>
                             `
                                     : ''
