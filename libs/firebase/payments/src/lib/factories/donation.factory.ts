@@ -31,7 +31,7 @@ export class DonationFactory implements PaymentFactory<DonationRequest> {
             errors.push('Donor email is required.');
         }
 
-        if (request.purpose && request.purpose.length > 255) {
+        if ((request.purpose?.trim().length ?? 0) > 255) {
             errors.push('Payment note must be 255 characters or fewer.');
         }
 
