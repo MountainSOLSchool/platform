@@ -93,9 +93,9 @@ export const donateVenmo = Functions.endpoint
                     amount: amount,
                     nonce: paymentMethodNonce,
                     deviceData: deviceData,
-                    orderId: purpose,
                     customFields: {
                         purpose: 'charitable_donation',
+                        ...(purpose ? { note: purpose } : {}),
                     },
                 });
 
