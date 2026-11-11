@@ -72,6 +72,9 @@ export abstract class PaymentHandler<TRequest extends BasePaymentRequest> {
         payment: Omit<PaymentDbo, 'timestamp'>
     ): Promise<TransactionResult> {
         const isVenmo = request.paymentMethodType === 'VenmoAccount';
+        // Order ID is the field Braintree shows in its dashboard and reports,
+        // so accounting can see what each payment was for.
+        const orderId = payment.purpose?.slice(0, 255);
 
         try {
             const result = isVenmo
@@ -79,6 +82,7 @@ export abstract class PaymentHandler<TRequest extends BasePaymentRequest> {
                       amount: request.amount,
                       nonce: request.paymentMethodNonce,
                       deviceData: request.deviceData,
+                      orderId,
                       customFields: {
                           purpose: payment.paymentType,
                       },
@@ -88,6 +92,7 @@ export abstract class PaymentHandler<TRequest extends BasePaymentRequest> {
                       nonce: request.paymentMethodNonce,
                       deviceData: request.deviceData,
                       customer: { email: request.payerEmail },
+                      orderId,
                   });
 
             if (result.success && result.transaction) {

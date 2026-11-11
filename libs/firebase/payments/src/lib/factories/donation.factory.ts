@@ -31,6 +31,10 @@ export class DonationFactory implements PaymentFactory<DonationRequest> {
             errors.push('Donor email is required.');
         }
 
+        if (request.purpose && request.purpose.length > 255) {
+            errors.push('Payment note must be 255 characters or fewer.');
+        }
+
         return errors.length === 0
             ? validationSuccess()
             : validationFailure(errors);
@@ -50,6 +54,7 @@ export class DonationFactory implements PaymentFactory<DonationRequest> {
             payerEmail: request.payerEmail,
             payerAddress: request.payerAddress,
             referralSource: request.referralSource,
+            purpose: request.purpose?.trim() || undefined,
         };
     }
 

@@ -98,6 +98,7 @@ export class Braintree {
             },
             customer: transaction.customer,
             deviceData: transaction.deviceData,
+            orderId: transaction.orderId,
         });
     }
 
@@ -119,6 +120,7 @@ export class Braintree {
                 },
             },
             deviceData: transaction.deviceData,
+            orderId: transaction.orderId,
             customFields: transaction.customFields,
         };
 

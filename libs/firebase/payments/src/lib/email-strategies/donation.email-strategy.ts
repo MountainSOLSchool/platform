@@ -23,6 +23,7 @@ export class DonationEmailStrategy implements PaymentEmailStrategy {
             paymentMethod,
             address,
             referralSource,
+            purpose,
         } = config;
 
         const currentDate = formatDate();
@@ -79,6 +80,16 @@ export class DonationEmailStrategy implements PaymentEmailStrategy {
                             `
                                     : ''
                             }
+                            ${
+                                purpose
+                                    ? `
+                            <div class="receipt-row">
+                                <span class="label">Note:</span>
+                                <span class="value">${purpose}</span>
+                            </div>
+                            `
+                                    : ''
+                            }
                             <div class="receipt-row">
                                 <span class="label">Payment Method:</span>
                                 <span class="value">${paymentMethodDisplay}</span>
@@ -125,7 +136,7 @@ DONATION RECEIPT
 Date: ${currentDate}
 Donor Name: ${recipientName}
 Email: ${recipientEmail}
-${address ? `Address: ${address}\n` : ''}${referralSource ? `How you heard about us: ${referralSource}\n` : ''}Payment Method: ${paymentMethodDisplay}
+${address ? `Address: ${address}\n` : ''}${referralSource ? `How you heard about us: ${referralSource}\n` : ''}${purpose ? `Note: ${purpose}\n` : ''}Payment Method: ${paymentMethodDisplay}
 Transaction ID: ${transactionId}
 
 Donation Amount: $${amount.toFixed(2)}
