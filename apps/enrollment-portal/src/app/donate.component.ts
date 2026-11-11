@@ -93,10 +93,7 @@ interface DonateMessage {
 
                             <div class="form-field">
                                 <mat-form-field appearance="outline">
-                                    <mat-label
-                                        >What is this payment for?
-                                        (optional)</mat-label
-                                    >
+                                    <mat-label>Note (optional)</mat-label>
                                     <input
                                         matInput
                                         type="text"

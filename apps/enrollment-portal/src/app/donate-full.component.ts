@@ -174,7 +174,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 
                             <div class="form-field">
                                 <label class="field-label" for="donate-memo"
-                                    >What is this payment for? (optional)</label
+                                    >Note (optional)</label
                                 >
                                 <input
                                     id="donate-memo"
