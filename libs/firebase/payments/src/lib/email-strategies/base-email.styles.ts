@@ -23,3 +23,12 @@ export function formatDate(date: Date = new Date()): string {
 export function formatPaymentMethod(method: 'venmo' | 'card'): string {
     return method === 'venmo' ? 'Venmo' : 'Credit Card';
 }
+
+export function escapeHtml(value: string): string {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}

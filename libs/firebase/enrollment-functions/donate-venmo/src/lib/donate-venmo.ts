@@ -56,14 +56,15 @@ export const donateVenmo = Functions.endpoint
         try {
             const { amount, paymentMethodNonce, deviceData, memo } =
                 request.body.data;
-            const purpose = memo?.trim().slice(0, 255) || undefined;
+            const purpose =
+                typeof memo === 'string'
+                    ? memo.trim().slice(0, 255) || undefined
+                    : undefined;
 
             if (!amount || amount <= 0 || amount > 249) {
-                response
-                    .status(400)
-                    .send({
-                        error: 'Invalid donation amount. Please donate an amount under $250',
-                    });
+                response.status(400).send({
+                    error: 'Invalid donation amount. Please donate an amount under $250',
+                });
                 return;
             }
 

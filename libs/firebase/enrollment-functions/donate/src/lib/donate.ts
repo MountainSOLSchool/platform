@@ -42,7 +42,7 @@ export const donate = Functions.endpoint
                     payerEmail: donorEmail,
                     payerAddress: donorAddress,
                     referralSource,
-                    purpose: memo,
+                    purpose: typeof memo === 'string' ? memo : undefined,
                 };
 
                 const braintree = new Braintree(secrets, strings);
