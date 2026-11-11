@@ -4,6 +4,7 @@ export interface PreparedTransaction {
     customer: { email: string };
     deviceData: string;
     orderId?: string;
+    customFields?: Record<string, string>;
 }
 
 export interface UnpreparedTransaction {

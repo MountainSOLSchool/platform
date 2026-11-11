@@ -99,13 +99,12 @@ export class Braintree {
             customer: transaction.customer,
             deviceData: transaction.deviceData,
             orderId: transaction.orderId,
+            customFields: transaction.customFields,
         });
     }
 
     public async transactWithVenmo(
-        transaction: Omit<PreparedTransaction, 'customer'> & {
-            customFields?: Record<string, string>;
-        }
+        transaction: Omit<PreparedTransaction, 'customer'>
     ) {
         if (this.isEmulator) {
             return Braintree.EMULATOR_MOCK_TRANSACTION;

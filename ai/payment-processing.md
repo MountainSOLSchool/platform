@@ -210,9 +210,11 @@ The Cloud Function is a thin wrapper:
 
 **Venmo donation page**: `/donate-venmo` → `apps/enrollment-portal/src/app/donate.component.ts` → `donateVenmo` function (`donations` collection). Optional field: note.
 
-### Payment Notes → Braintree Order ID
+### Payment Notes → Braintree Custom Fields
 
-The donation note and the service-payment purpose are stored as `purpose` and sent to Braintree as the transaction `orderId` (max 255 chars), so accounting can see what each payment was for in the Braintree dashboard and reports.
+The donation note and the service-payment purpose are stored as `purpose` and sent to Braintree in the `note` custom field (max 255 chars), so accounting can see what each payment was for in the Braintree dashboard and reports. The `purpose` custom field carries the payment type (`donation`, `service_payment`, `charitable_donation`). For service payments the invoice number goes in the transaction `orderId`.
+
+Custom fields must be defined in Braintree (Account Settings → Processing Options → Custom Fields, "Store and Pass Back") before code sends them; an undefined custom field makes the sale fail.
 
 - Shared handler: `libs/firebase/payments/src/lib/payment-handler.ts` (`processTransaction`)
 - Venmo donation function: `libs/firebase/enrollment-functions/donate-venmo/src/lib/donate-venmo.ts`
