@@ -2,14 +2,21 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+    ACCEPTED_ADVISORIES,
+    AcceptedAdvisory,
     Advisory,
+    advisoryNodes,
     breakingKey,
     diffAdvisories,
     directDependencyJumps,
     evaluateGate,
+    gateBlockers,
     majorJumps,
     parseAuditReport,
+    parseGithubAdvisory,
     parseLockVersions,
+    recheckAccepted,
+    recheckExitCode,
 } from './security-autofix';
 
 const adv = (id: string, module = 'pkg'): Advisory => ({
@@ -59,6 +66,7 @@ describe('parseAuditReport', () => {
                 id: 'GHSA-z',
                 paths: /^node_modules\/docs\/node_modules\/z$/,
                 reason: 'r',
+                knownPatches: [],
             },
         ];
         const report = (nodes: string[]) =>
@@ -316,5 +324,213 @@ describe('evaluateGate', () => {
             evaluateGate({ ...base, directJumps: [jump] }).automerge,
             false
         );
+    });
+});
+
+describe('gateBlockers', () => {
+    it('passes a change that fixes one advisory and adds none', () => {
+        assert.deepEqual(gateBlockers([adv('A'), adv('B')], [adv('B')]), []);
+    });
+
+    it('blocks lockfile churn that fixes nothing (run 44181712900)', () => {
+        assert.deepEqual(gateBlockers([adv('P')], [adv('P')]), [
+            'Fixes no advisory.',
+        ]);
+    });
+
+    it('blocks a change that adds an advisory, even if it fixes another', () => {
+        assert.deepEqual(gateBlockers([adv('P')], [adv('T1'), adv('T2')]), [
+            'Introduces advisories: T1, T2',
+        ]);
+    });
+});
+
+describe('ACCEPTED_ADVISORIES', () => {
+    const picomatch = ACCEPTED_ADVISORIES.find(
+        (a) => a.id === 'GHSA-fc5q-39xc-vjpf'
+    );
+
+    it('accepts picomatch only at the reviewed build-tool paths', () => {
+        assert.ok(picomatch);
+        for (const p of [
+            'node_modules/picomatch',
+            'node_modules/@angular-devkit/build-angular/node_modules/picomatch',
+            'node_modules/@angular-devkit/core/node_modules/picomatch',
+            'node_modules/@angular/build/node_modules/picomatch',
+            'node_modules/anymatch/node_modules/picomatch',
+            'node_modules/lint-staged/node_modules/picomatch',
+            'node_modules/micromatch/node_modules/picomatch',
+            'node_modules/vite/node_modules/picomatch',
+        ]) {
+            assert.ok(picomatch.paths.test(p), p);
+        }
+        for (const p of [
+            'node_modules/firebase-admin/node_modules/picomatch',
+            'node_modules/picomatch-extra',
+            'node_modules/vite/node_modules/picomatch/node_modules/x',
+        ]) {
+            assert.ok(!picomatch.paths.test(p), p);
+        }
+    });
+});
+
+describe('advisoryNodes', () => {
+    it('collects every install path per GHSA id, at any severity', () => {
+        const raw = JSON.stringify({
+            auditReportVersion: 2,
+            vulnerabilities: {
+                a: {
+                    nodes: ['node_modules/a'],
+                    via: [via('GHSA-a', 'a', 'moderate')],
+                },
+                b: {
+                    nodes: ['node_modules/x/node_modules/a'],
+                    via: [via('GHSA-a', 'a', 'moderate'), 'c'],
+                },
+            },
+        });
+        assert.deepEqual(advisoryNodes(raw)?.get('GHSA-a'), [
+            'node_modules/a',
+            'node_modules/x/node_modules/a',
+        ]);
+    });
+
+    it('returns null for a registry error', () => {
+        assert.equal(advisoryNodes('{"error":{"code":"ETIMEDOUT"}}'), null);
+    });
+});
+
+describe('parseGithubAdvisory', () => {
+    it('reads npm patched versions in either API shape, and withdrawal', () => {
+        const raw = JSON.stringify({
+            ghsa_id: 'GHSA-x',
+            withdrawn_at: null,
+            vulnerabilities: [
+                {
+                    package: { ecosystem: 'npm' },
+                    first_patched_version: '4.0.8',
+                },
+                {
+                    package: { ecosystem: 'npm' },
+                    first_patched_version: { identifier: '2.3.3' },
+                },
+                { package: { ecosystem: 'npm' }, first_patched_version: null },
+                {
+                    package: { ecosystem: 'pip' },
+                    first_patched_version: '9.9.9',
+                },
+            ],
+        });
+        assert.deepEqual(parseGithubAdvisory(raw), {
+            withdrawn: false,
+            patches: ['4.0.8', '2.3.3'],
+        });
+        assert.equal(
+            parseGithubAdvisory(
+                JSON.stringify({
+                    ghsa_id: 'GHSA-x',
+                    withdrawn_at: '2026-01-01',
+                })
+            )?.withdrawn,
+            true
+        );
+    });
+
+    it('returns null for an error body', () => {
+        assert.equal(
+            parseGithubAdvisory('{"message":"Bad credentials"}'),
+            null
+        );
+        assert.equal(parseGithubAdvisory('<html>'), null);
+    });
+});
+
+describe('recheckAccepted', () => {
+    const entry: AcceptedAdvisory = {
+        id: 'GHSA-p',
+        paths: /^node_modules\/tool\/node_modules\/p$/,
+        reason: 'r',
+        knownPatches: ['1.5.0'],
+    };
+    const found = (patches: string[], withdrawn = false) =>
+        ({ kind: 'found', advisory: { withdrawn, patches } }) as const;
+    const installed = new Map([
+        ['GHSA-p', ['node_modules/tool/node_modules/p']],
+    ]);
+
+    it('is ok while there is no new patch and it is still installed in scope', () => {
+        assert.equal(
+            recheckAccepted(entry, found(['1.5.0']), installed).status,
+            'ok'
+        );
+    });
+
+    it('flags a patch released since the entry was accepted', () => {
+        const r = recheckAccepted(entry, found(['1.5.0', '2.0.1']), installed);
+        assert.equal(r.status, 'patched');
+        assert.match(r.message, /2\.0\.1/);
+    });
+
+    it('flags an entry whose advisory is no longer reported at its paths', () => {
+        assert.equal(
+            recheckAccepted(entry, found(['1.5.0']), new Map()).status,
+            'stale'
+        );
+        assert.equal(
+            recheckAccepted(
+                entry,
+                found(['1.5.0']),
+                new Map([['GHSA-p', ['node_modules/p']]])
+            ).status,
+            'stale'
+        );
+    });
+
+    it('flags a withdrawn or missing advisory', () => {
+        assert.equal(
+            recheckAccepted(entry, found([], true), installed).status,
+            'stale'
+        );
+        assert.equal(
+            recheckAccepted(entry, { kind: 'missing' }, installed).status,
+            'stale'
+        );
+    });
+
+    it('is unknown, never ok, when either source is down', () => {
+        assert.equal(
+            recheckAccepted(entry, { kind: 'unreachable' }, installed).status,
+            'unknown'
+        );
+        assert.equal(
+            recheckAccepted(entry, found(['1.5.0']), null).status,
+            'unknown'
+        );
+    });
+
+    it('still reports what it can prove while one source is down', () => {
+        assert.equal(
+            recheckAccepted(entry, found(['2.0.1']), null).status,
+            'patched'
+        );
+        assert.equal(
+            recheckAccepted(entry, { kind: 'unreachable' }, new Map()).status,
+            'stale'
+        );
+    });
+});
+
+describe('recheckExitCode', () => {
+    const r = (status: 'ok' | 'stale' | 'patched' | 'unknown') => ({
+        id: 'x',
+        status,
+        message: '',
+    });
+
+    it('fails on stale or patched, before unknown', () => {
+        assert.equal(recheckExitCode([r('ok')]), 0);
+        assert.equal(recheckExitCode([r('ok'), r('unknown')]), 3);
+        assert.equal(recheckExitCode([r('unknown'), r('patched')]), 1);
+        assert.equal(recheckExitCode([r('stale')]), 1);
     });
 });

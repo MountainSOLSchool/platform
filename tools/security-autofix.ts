@@ -13,7 +13,10 @@
  *        npx tsx tools/security-autofix.ts audit --out before.json
  *        npx tsx tools/security-autofix.ts gate --base HEAD \
  *          --before before.json --after after.json
- *      `gate` decides whether the fix PR may merge itself. See evaluateGate.
+ *      `gate` refuses to open a PR that fixes nothing or adds an advisory
+ *      (gateBlockers), then decides whether it may merge itself (evaluateGate).
+ *        npx tsx tools/security-autofix.ts recheck
+ *      Fails when an ACCEPTED_ADVISORIES entry has a new patch or is stale.
  *
  * `npm audit` exits 1 both for advisories and for a registry error. The JSON
  * tells them apart: a report has `vulnerabilities`, an error has `error`.
@@ -48,6 +51,12 @@ export interface AcceptedAdvisory {
     /** Accepted only while every vulnerable install path matches this. */
     paths: RegExp;
     reason: string;
+    /**
+     * The advisory's first patched versions when it was accepted ([] when it
+     * had none). `recheck` fails once the advisory lists any other, so a
+     * newly shipped fix is never left unused behind the exception.
+     */
+    knownPatches: string[];
 }
 
 /**
@@ -60,6 +69,13 @@ export const ACCEPTED_ADVISORIES: AcceptedAdvisory[] = [
         id: 'GHSA-mrhx-c7xc-m3w5',
         paths: /^node_modules\/(nextra|nextra-theme-docs)\/node_modules\/zod$/,
         reason: 'nextra 4.6.1 cannot prerender with zod >=4.4, so overrides keep its private zod on 4.3.x. Docs build only; see "//overrides" in package.json. Remove with nextra 5.',
+        knownPatches: ['4.6.6'],
+    },
+    {
+        id: 'GHSA-fc5q-39xc-vjpf',
+        paths: /^node_modules\/(@angular-devkit\/build-angular\/node_modules\/|@angular-devkit\/core\/node_modules\/|@angular\/build\/node_modules\/|anymatch\/node_modules\/|lint-staged\/node_modules\/|micromatch\/node_modules\/|vite\/node_modules\/)?picomatch$/,
+        reason: 'picomatch ReDoS with no patched release on any line (<=4.0.7, Nov 2026). Every copy is a build or dev tool (Nx, Angular CLI/build, Vite, Jest, lint-staged, nextra via fast-glob) matching our own globs; the deployed Functions package installs no picomatch.',
+        knownPatches: [],
     },
 ];
 
@@ -269,6 +285,23 @@ export interface GateVerdict {
 }
 
 /**
+ * Reasons no PR may be opened at all. A change that fixes nothing or adds an
+ * advisory is lockfile churn from `npm audit fix`, not a fix (run
+ * 44181712900 opened a "Fixed (0)" PR that pulled in 9 tar advisories).
+ */
+export function gateBlockers(before: Advisory[], after: Advisory[]): string[] {
+    const { added, fixed } = diffAdvisories(before, after);
+    const blockers: string[] = [];
+    if (fixed.length === 0) blockers.push('Fixes no advisory.');
+    if (added.length > 0) {
+        blockers.push(
+            `Introduces advisories: ${added.map((a) => a.id).join(', ')}`
+        );
+    }
+    return blockers;
+}
+
+/**
  * May the fix PR merge itself once CI is green? Only when the change is the
  * kind a person would wave through without reading:
  *   - it touches the root package.json / package-lock.json and nothing else,
@@ -286,13 +319,7 @@ export function evaluateGate(input: GateInput): GateVerdict {
         );
     }
 
-    const { added, fixed } = diffAdvisories(input.before, input.after);
-    if (fixed.length === 0) reasons.push('Fixes no advisory.');
-    if (added.length > 0) {
-        reasons.push(
-            `Introduces advisories: ${added.map((a) => a.id).join(', ')}`
-        );
-    }
+    reasons.push(...gateBlockers(input.before, input.after));
 
     for (const j of input.directJumps) {
         reasons.push(
@@ -304,6 +331,165 @@ export function evaluateGate(input: GateInput): GateVerdict {
     }
 
     return { automerge: reasons.length === 0, reasons };
+}
+
+// ---------------------------------------------------------------- recheck --
+
+/**
+ * GHSA id -> every install path `npm audit` reports it at, at any severity
+ * and with no acceptances applied. null = not an audit report (outage).
+ */
+export function advisoryNodes(raw: string): Map<string, string[]> | null {
+    let report: unknown;
+    try {
+        report = JSON.parse(raw);
+    } catch {
+        return null;
+    }
+    const vulns = (
+        report as {
+            vulnerabilities?: Record<
+                string,
+                { via: (string | RawVia)[]; nodes?: string[] }
+            >;
+        }
+    )?.vulnerabilities;
+    if (!vulns || typeof vulns !== 'object') return null;
+
+    const nodes = new Map<string, string[]>();
+    for (const v of Object.values(vulns)) {
+        for (const via of v.via ?? []) {
+            if (typeof via !== 'object') continue;
+            const id = /GHSA-[\w-]+/.exec(via.url ?? '')?.[0];
+            if (!id) continue;
+            const list = nodes.get(id) ?? [];
+            for (const n of v.nodes ?? []) if (!list.includes(n)) list.push(n);
+            nodes.set(id, list);
+        }
+    }
+    return nodes;
+}
+
+export interface GithubAdvisory {
+    withdrawn: boolean;
+    /** First patched version of each affected npm package line. */
+    patches: string[];
+}
+
+/**
+ * The parts of a GitHub global advisory (`GET /advisories/{ghsa_id}`) the
+ * recheck needs. Returns null for anything that is not an advisory.
+ */
+export function parseGithubAdvisory(raw: string): GithubAdvisory | null {
+    let body: unknown;
+    try {
+        body = JSON.parse(raw);
+    } catch {
+        return null;
+    }
+    const adv = body as {
+        ghsa_id?: string;
+        withdrawn_at?: string | null;
+        vulnerabilities?: {
+            package?: { ecosystem?: string };
+            first_patched_version?: string | { identifier?: string } | null;
+        }[];
+    };
+    if (typeof adv?.ghsa_id !== 'string') return null;
+    const patches = new Set<string>();
+    for (const v of adv.vulnerabilities ?? []) {
+        if (v.package?.ecosystem && v.package.ecosystem !== 'npm') continue;
+        const p = v.first_patched_version;
+        const version = typeof p === 'string' ? p : p?.identifier;
+        if (version) patches.add(version);
+    }
+    return { withdrawn: Boolean(adv.withdrawn_at), patches: [...patches] };
+}
+
+export type AdvisoryLookup =
+    | { kind: 'found'; advisory: GithubAdvisory }
+    | { kind: 'missing' } // 404: no such advisory
+    | { kind: 'unreachable' };
+
+export interface RecheckResult {
+    id: string;
+    status: 'ok' | 'stale' | 'patched' | 'unknown';
+    message: string;
+}
+
+/**
+ * Does an accepted advisory still deserve its exception?
+ *   - stale:   withdrawn, unknown to GitHub, or no longer reported at any of
+ *              the accepted paths (the exception does nothing; delete it).
+ *   - patched: the advisory now lists a patched version that was not there
+ *              when it was accepted (try the fix, then drop the exception).
+ *   - unknown: the registry or the advisory API did not answer. Never "ok".
+ * `nodes` is null when the audit itself was unreachable.
+ */
+export function recheckAccepted(
+    entry: AcceptedAdvisory,
+    lookup: AdvisoryLookup,
+    nodes: Map<string, string[]> | null
+): RecheckResult {
+    const { id } = entry;
+    if (lookup.kind === 'missing') {
+        return {
+            id,
+            status: 'stale',
+            message: `GitHub has no advisory ${id}; fix or remove the entry.`,
+        };
+    }
+    if (lookup.kind === 'found' && lookup.advisory.withdrawn) {
+        return {
+            id,
+            status: 'stale',
+            message: `${id} was withdrawn; remove the entry.`,
+        };
+    }
+    if (lookup.kind === 'found') {
+        const fresh = lookup.advisory.patches.filter(
+            (p) => !entry.knownPatches.includes(p)
+        );
+        if (fresh.length > 0) {
+            return {
+                id,
+                status: 'patched',
+                message: `${id} now has a patched release (${fresh.join(', ')}). Update to it, then remove the entry (or, if it cannot be used yet, add it to knownPatches with the reason).`,
+            };
+        }
+    }
+    if (nodes !== null) {
+        const inScope = (nodes.get(id) ?? []).filter((n) =>
+            entry.paths.test(n)
+        );
+        if (inScope.length === 0) {
+            return {
+                id,
+                status: 'stale',
+                message: `npm audit no longer reports ${id} at any accepted path; remove the entry.`,
+            };
+        }
+    }
+    if (lookup.kind === 'unreachable' || nodes === null) {
+        return {
+            id,
+            status: 'unknown',
+            message: `Could not recheck ${id}: ${lookup.kind === 'unreachable' ? 'the GitHub advisory API' : 'the npm advisories endpoint'} did not answer.`,
+        };
+    }
+    return {
+        id,
+        status: 'ok',
+        message: `${id}: no new patched release (known: ${entry.knownPatches.join(', ') || 'none'}); still installed at the accepted paths.`,
+    };
+}
+
+/** 1 when any entry needs a person, else 3 when any is unknown, else 0. */
+export function recheckExitCode(results: RecheckResult[]): number {
+    if (results.some((r) => r.status === 'stale' || r.status === 'patched'))
+        return 1;
+    if (results.some((r) => r.status === 'unknown')) return 3;
+    return 0;
 }
 
 // ---------------------------------------------------------------- running --
@@ -427,6 +613,25 @@ function prCheck(base: string): void {
 function gate(base: string, beforeFile: string, afterFile: string): void {
     const before = JSON.parse(readFileSync(beforeFile, 'utf8')) as Advisory[];
     const after = JSON.parse(readFileSync(afterFile, 'utf8')) as Advisory[];
+    const blockers = gateBlockers(before, after);
+    if (blockers.length > 0) {
+        const added = diffAdvisories(before, after).added;
+        for (const b of blockers) {
+            console.log(`::error title=Not opening a security fix PR::${b}`);
+        }
+        summary(
+            [
+                '### :x: No security fix PR opened',
+                '',
+                ...blockers.map((b) => `- ${b}`),
+                '',
+                added.map(line).join('\n'),
+                '',
+                'The manifest changes were discarded. Fix by hand, or accept the advisory in `ACCEPTED_ADVISORIES` (tools/security-autofix.ts).',
+            ].join('\n')
+        );
+        process.exit(1);
+    }
     const files = changedFiles(base);
 
     const lockJumps = files.includes('package-lock.json')
@@ -472,6 +677,78 @@ function gate(base: string, beforeFile: string, afterFile: string): void {
     output('body', body);
 }
 
+/** Raw `npm audit` JSON with retries. null = the registry never answered. */
+function runRawAudit(dir: string): string | null {
+    for (let attempt = 1; attempt <= AUDIT_ATTEMPTS; attempt++) {
+        const res = spawnSync(
+            'npm',
+            ['audit', '--json', '--package-lock-only'],
+            { cwd: dir, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 }
+        );
+        if (advisoryNodes(res.stdout ?? '')) return res.stdout;
+        if (attempt < AUDIT_ATTEMPTS) sleep(AUDIT_BACKOFF_MS);
+    }
+    return null;
+}
+
+async function lookupAdvisory(id: string): Promise<AdvisoryLookup> {
+    const token = process.env['GH_TOKEN'] || process.env['GITHUB_TOKEN'];
+    for (let attempt = 1; attempt <= AUDIT_ATTEMPTS; attempt++) {
+        try {
+            const res = await fetch(
+                `https://api.github.com/advisories/${encodeURIComponent(id)}`,
+                {
+                    headers: {
+                        Accept: 'application/vnd.github+json',
+                        'X-GitHub-Api-Version': '2022-11-28',
+                        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    },
+                }
+            );
+            if (res.status === 404) return { kind: 'missing' };
+            if (res.ok) {
+                const advisory = parseGithubAdvisory(await res.text());
+                if (advisory) return { kind: 'found', advisory };
+            }
+        } catch {
+            // network error: retry, then report unreachable
+        }
+        if (attempt < AUDIT_ATTEMPTS) sleep(AUDIT_BACKOFF_MS);
+    }
+    return { kind: 'unreachable' };
+}
+
+async function recheck(dir: string): Promise<void> {
+    const raw = runRawAudit(dir);
+    const nodes = raw === null ? null : advisoryNodes(raw);
+    const results: RecheckResult[] = [];
+    for (const entry of ACCEPTED_ADVISORIES) {
+        results.push(
+            recheckAccepted(entry, await lookupAdvisory(entry.id), nodes)
+        );
+    }
+    for (const r of results) {
+        if (r.status === 'ok') console.log(r.message);
+        else if (r.status === 'unknown')
+            console.log(
+                `::warning title=Recheck skipped (${r.id})::${r.message}`
+            );
+        else
+            console.log(
+                `::error title=Accepted advisory ${r.id} is ${r.status}::${r.message}`
+            );
+    }
+    const needsHand = results.filter(
+        (r) => r.status === 'stale' || r.status === 'patched'
+    );
+    if (needsHand.length > 0) {
+        summary(
+            `### Accepted advisories to revisit\n\n${needsHand.map((r) => `- **${r.status}** ${r.message}`).join('\n')}\n\nSee \`ACCEPTED_ADVISORIES\` in tools/security-autofix.ts.`
+        );
+    }
+    process.exit(recheckExitCode(results));
+}
+
 function main(): void {
     const [cmd] = process.argv.slice(2);
     if (cmd === 'audit') {
@@ -492,7 +769,13 @@ function main(): void {
             throw new Error('gate needs --before and --after');
         return gate(arg('base') ?? 'origin/main', before, after);
     }
-    console.error('Usage: security-autofix.ts audit|pr-check|gate [options]');
+    if (cmd === 'recheck') {
+        void recheck(arg('dir') ?? '.');
+        return;
+    }
+    console.error(
+        'Usage: security-autofix.ts audit|pr-check|gate|recheck [options]'
+    );
     process.exit(2);
 }
 

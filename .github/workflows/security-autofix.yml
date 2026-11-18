@@ -7,8 +7,8 @@ name: Security autofix
 #   audit ─ none? done
 #     └ fix: 1. `npm audit fix`                      (in-range updates only, never --force)
 #            2. Claude, for what a parent pins       (parent bump or scoped override)
-#     └ gate (tools/security-autofix.ts): root manifests only, fixes >=1 advisory,
-#       adds none, no major version jump in package.json or the lockfile
+#     └ gate (tools/security-autofix.ts): fixes 0 or adds any advisory → discard, fail, no PR;
+#       auto-merge only for root manifests, no major version jump in package.json or the lockfile
 #     └ PR → approve its held "Check builds on PR" run (or dispatch it) → wait
 #         ├ green + gate passed → squash-merge → dispatch "Deploy on merge" (promote)
 #         │                       → dev deploy + e2e → waits for the firebase-prod approval
@@ -18,6 +18,9 @@ name: Security autofix
 # GitHub holds `pull_request` runs on a GITHUB_TOKEN PR for approval and starts
 # no `push` workflow for a GITHUB_TOKEN merge, so CI and the deploy are
 # started explicitly.
+#
+# Separately, `accepted-advisories` rechecks every ACCEPTED_ADVISORIES entry
+# daily and fails once a patch ships or the entry no longer matches anything.
 
 on:
     schedule:
@@ -68,6 +71,27 @@ jobs:
                     echo "::error title=Rotate the Claude token::CLAUDE_CODE_OAUTH_TOKEN expires $EXPIRES ($days days). Run: claude setup-token; gh secret set CLAUDE_CODE_OAUTH_TOKEN; gh variable set CLAUDE_CODE_OAUTH_TOKEN_EXPIRES --body <today + 1 year>"
                     exit 1
                   fi
+
+    # An accepted advisory must not outlive its reason. Fails (emailing you)
+    # when one now has a patched release it did not have when accepted, or
+    # npm audit no longer reports it at the accepted paths. An npm registry
+    # or GitHub API outage (exit 3) warns instead: unknown, not clean.
+    accepted-advisories:
+        name: Recheck accepted advisories
+        runs-on: ubuntu-latest
+        if: github.repository == 'MountainSOLSchool/platform'
+        env:
+            GH_TOKEN: ${{ github.token }}
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  persist-credentials: false
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                  node-version: '24'
+            - name: Recheck
+              run: npx -y tsx tools/security-autofix.ts recheck || [ $? -eq 3 ]
 
     autofix:
         name: Audit, fix, verify, merge
@@ -180,8 +204,13 @@ jobs:
                     echo "::error title=Could not fix advisories::Nothing changed. See the audit output above; these need a hand-made fix."
                     exit 1
                   fi
-                  npx -y tsx tools/security-autofix.ts gate --base HEAD \
-                    --before "$RUNNER_TEMP/before.json" --after "$RUNNER_TEMP/after.json"
+                  # Fails (no PR) when the change fixes nothing or adds an advisory:
+                  # that is `npm audit fix` lockfile churn, not a fix.
+                  if ! npx -y tsx tools/security-autofix.ts gate --base HEAD \
+                    --before "$RUNNER_TEMP/before.json" --after "$RUNNER_TEMP/after.json"; then
+                    git checkout -- package.json package-lock.json
+                    exit 1
+                  fi
 
             - name: Open PR
               id: pr
