@@ -91,6 +91,7 @@ jobs:
               with:
                   node-version: '24'
             - name: Recheck
+              # Exit 3 = registry/API outage: warn only, retry tomorrow.
               run: npx -y tsx tools/security-autofix.ts recheck || [ $? -eq 3 ]
 
     autofix:

@@ -770,7 +770,12 @@ function main(): void {
         return gate(arg('base') ?? 'origin/main', before, after);
     }
     if (cmd === 'recheck') {
-        void recheck(arg('dir') ?? '.');
+        recheck(arg('dir') ?? '.').catch((err: unknown) => {
+            console.log(
+                `::error title=Recheck crashed::${err instanceof Error ? err.message : String(err)}`
+            );
+            process.exit(1);
+        });
         return;
     }
     console.error(
