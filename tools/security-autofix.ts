@@ -71,12 +71,6 @@ export const ACCEPTED_ADVISORIES: AcceptedAdvisory[] = [
         reason: 'nextra 4.6.1 cannot prerender with zod >=4.4, so overrides keep its private zod on 4.3.x. Docs build only; see "//overrides" in package.json. Remove with nextra 5.',
         knownPatches: ['4.6.6'],
     },
-    {
-        id: 'GHSA-fc5q-39xc-vjpf',
-        paths: /^node_modules\/(@angular-devkit\/build-angular\/node_modules\/|@angular-devkit\/core\/node_modules\/|@angular\/build\/node_modules\/|anymatch\/node_modules\/|lint-staged\/node_modules\/|micromatch\/node_modules\/|vite\/node_modules\/)?picomatch$/,
-        reason: 'picomatch ReDoS with no patched release on any line (<=4.0.7, Nov 2026). Every copy is a build or dev tool (Nx, Angular CLI/build, Vite, Jest, lint-staged, nextra via fast-glob) matching our own globs; the deployed Functions package installs no picomatch.',
-        knownPatches: [],
-    },
 ];
 
 const AUDIT_ATTEMPTS = Number(process.env.AUDIT_ATTEMPTS ?? 3);

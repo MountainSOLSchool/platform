@@ -346,30 +346,12 @@ describe('gateBlockers', () => {
 });
 
 describe('ACCEPTED_ADVISORIES', () => {
-    const picomatch = ACCEPTED_ADVISORIES.find(
-        (a) => a.id === 'GHSA-fc5q-39xc-vjpf'
-    );
-
-    it('accepts picomatch only at the reviewed build-tool paths', () => {
-        assert.ok(picomatch);
-        for (const p of [
-            'node_modules/picomatch',
-            'node_modules/@angular-devkit/build-angular/node_modules/picomatch',
-            'node_modules/@angular-devkit/core/node_modules/picomatch',
-            'node_modules/@angular/build/node_modules/picomatch',
-            'node_modules/anymatch/node_modules/picomatch',
-            'node_modules/lint-staged/node_modules/picomatch',
-            'node_modules/micromatch/node_modules/picomatch',
-            'node_modules/vite/node_modules/picomatch',
-        ]) {
-            assert.ok(picomatch.paths.test(p), p);
-        }
-        for (const p of [
-            'node_modules/firebase-admin/node_modules/picomatch',
-            'node_modules/picomatch-extra',
-            'node_modules/vite/node_modules/picomatch/node_modules/x',
-        ]) {
-            assert.ok(!picomatch.paths.test(p), p);
+    it('gives every entry a GHSA id, anchored paths, a reason and knownPatches', () => {
+        for (const a of ACCEPTED_ADVISORIES) {
+            assert.match(a.id, /^GHSA-[\w-]+$/);
+            assert.match(a.paths.source, /^\^.*\$$/, a.id);
+            assert.ok(a.reason.length > 0, a.id);
+            assert.ok(Array.isArray(a.knownPatches), a.id);
         }
     });
 });
