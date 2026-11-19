@@ -7,6 +7,7 @@ export { classesBySemester } from '@sol/firebase/enrollment-functions/classes-by
 export { classGroups } from '@sol/firebase/enrollment-functions/class-groups';
 export { availableEnrollmentClasses } from '@sol/firebase/enrollment-functions/available-enrollment-classes';
 export { semestersAvailableToEnroll } from '@sol/firebase/enrollment-functions/semesters-available-to-enroll';
+export { publicClasses } from '@sol/firebase/enrollment-functions/public-classes';
 export { emails } from '@sol/firebase/enrollment-functions/emails';
 export { tshirts } from '@sol/firebase/enrollment-functions/tshirts';
 export { paymentToken } from '@sol/firebase/enrollment-functions/payment-token';
