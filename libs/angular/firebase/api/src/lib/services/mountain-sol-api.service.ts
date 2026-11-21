@@ -1,5 +1,8 @@
 import { Injectable, inject } from '@angular/core';
-import { declareFunction } from '@sol/angular/request';
+import {
+    declareFunction,
+    declareFunctionWithState,
+} from '@sol/angular/request';
 import { FirebaseFunctionsService } from '@sol/firebase/functions-api';
 import type {
     AdditionalOptionInput,
@@ -65,6 +68,9 @@ import type {
     AudienceContact,
     ContactAudienceRequest,
     ContactAudienceResponse,
+    FullUnitsAndPathsResponse,
+    GetStudentCompletedUnitsRequest,
+    GetStudentCompletedUnitsResponse,
 } from '@sol/ts/firebase/api-types';
 
 // Re-export types for consumers
@@ -132,6 +138,9 @@ export type {
     AudienceContact,
     ContactAudienceRequest,
     ContactAudienceResponse,
+    FullUnitsAndPathsResponse,
+    GetStudentCompletedUnitsRequest,
+    GetStudentCompletedUnitsResponse,
 };
 
 /**
@@ -368,4 +377,22 @@ export class MountainSolApiService {
         ContactAudienceRequest,
         ContactAudienceResponse
     >(this.#functions, 'contactAudiences');
+
+    // =========================================================================
+    // Units & Paths
+    // =========================================================================
+
+    readonly fullUnitsAndPaths = declareFunction<
+        void,
+        FullUnitsAndPathsResponse
+    >(this.#functions, 'fullUnitsAndPaths');
+
+    /**
+     * Public: no sign-in needed. Keeps the request state so callers can show
+     * "not found" for a bad student ID instead of loading forever.
+     */
+    readonly getStudentCompletedUnits = declareFunctionWithState<
+        GetStudentCompletedUnitsRequest,
+        GetStudentCompletedUnitsResponse
+    >(this.#functions, 'getStudentCompletedUnits');
 }

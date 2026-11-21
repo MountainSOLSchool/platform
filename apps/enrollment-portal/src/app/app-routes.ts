@@ -117,6 +117,15 @@ export const appRoutes: Routes = [
                         ],
                     },
                     {
+                        // Public: a student's units link is shared with
+                        // families and works signed out.
+                        path: 'students/:id/units',
+                        loadComponent: () =>
+                            import('@sol/angular/units').then(
+                                (m) => m.StudentUnitsPageComponent
+                            ),
+                    },
+                    {
                         path: 'calendar',
                         loadChildren: () =>
                             import('@sol/classes/calendar').then(
