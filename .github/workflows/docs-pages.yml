@@ -1,6 +1,6 @@
 name: Deploy Docs to Pages
 
-# Builds the Admin Guide (apps/docs) as a static site and publishes it to
+# Builds the Staff Help site (apps/docs) as a static site and publishes it to
 # GitHub Pages. Independent of the Firebase functions/hosting pipeline — the
 # docs site is pure static output with no backend.
 
@@ -35,13 +35,16 @@ jobs:
                   node-version: '24'
                   cache: 'npm'
             - run: npm ci
+            # Reports the path Pages serves the site under: /platform on the
+            # default project URL, empty once a custom domain is set in
+            # Settings -> Pages. The build follows it, so no edit is needed here
+            # when the domain is switched.
+            - id: pages
+              uses: actions/configure-pages@v5
             - name: Build static site
               run: npx nx run docs:build-pages
               env:
-                  # Project Pages serve under /<repo>. Set to '' once the custom
-                  # domain (docs.mountainsol.org) is live (#259).
-                  DOCS_BASE_PATH: /platform
-            - uses: actions/configure-pages@v5
+                  DOCS_BASE_PATH: ${{ steps.pages.outputs.base_path }}
             - uses: actions/upload-pages-artifact@v3
               with:
                   path: apps/docs/out

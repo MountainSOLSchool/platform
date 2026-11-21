@@ -5,9 +5,9 @@ const withNextra = nextra({
     // Nextra 4 reads MDX from the `content/` directory by default.
 });
 
-// GitHub Pages serves the site under a path (the repo name) until the custom
-// domain is wired up. The Pages workflow sets DOCS_BASE_PATH=/platform; locally
-// and on the future custom domain it's empty (served at the root).
+// Path prefix the site is served under. The Pages workflow passes the base path
+// GitHub Pages reports: /platform on the default project URL, empty once the
+// custom domain (help.mountainsol.org) is set. Locally it's empty.
 const basePath = process.env.DOCS_BASE_PATH ?? '';
 
 /**
